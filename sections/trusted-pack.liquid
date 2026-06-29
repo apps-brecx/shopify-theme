@@ -1,0 +1,351 @@
+<style>
+      .trusted-pack__wrapper{
+          display: flex;
+          gap: 40px;
+          flex-wrap: wrap;
+          padding: 60px 0;
+          align-items: center;
+      }
+      .trusted-pack__image{
+          flex: 1 0 40%;
+          max-width: 50%;
+          border-radius: 20px;
+          overflow: hidden;
+      }
+
+      .trusted-pack__image img{
+          width: 100%;
+          display: block;
+          height: 100%;
+          object-fit: cover;
+      }
+      .trusted-pack__content{
+          flex: 1 0 40%;
+          max-width: 50%;
+      }
+      .trusted-pack__title h2{
+          font-family: "Epilogue", sans-serif !important;
+          font-size: 36px;
+          font-weight: 700;
+          text-align: center;
+      }
+      .trusted-pack__description p{
+                font-family: "Manrope", sans-serif !important;
+                text-align: center;
+                margin-bottom: 40px;
+      }
+      .trusted-pack__items{
+          display: flex;
+          gap: 20px;
+          justify-content: center;
+          flex-wrap: wrap;
+          width: fit-content;
+          margin: 0 auto 40px;
+      }
+      .trusted-pack__item{
+          flex: 1 0 40%;
+          max-width: 50%;
+      }
+      .trusted-pack__item-icon{
+          display: flex;
+          justify-content: center;
+          margin-bottom: 15px;
+      }
+      .trusted-pack__item-text{
+            font-family: "Manrope", sans-serif !important;
+          text-align: center;
+      }
+      .trusted-pack__item-icon img{
+          width: 60px;
+          height: 60px;
+
+      }
+      .trusted-pack__form{
+        display: flex;
+        justify-content: center;
+    }
+    .trusted-pack__button{
+      font-weight: 700 !important;
+        background:  {{ section.settings.background_color }};
+        border-radius: 100px;
+         font-family: "Manrope", sans-serif !important;
+         font-size: 16px;
+         overflow: hidden;
+    }
+    .trusted-pack__heading{
+          display: none;
+      }
+      @media(max-width: 991px){
+          .trusted-pack__items{
+              margin: 0 auto 16px;
+          }
+          .trusted-pack__wrapper{
+              gap: 10px;
+          }
+          .trusted-pack__heading{
+          display: block;
+      }
+      .trusted-pack__content-heading{
+          display: none;
+      }
+      .trusted-pack__description p{
+          margin: 0;
+      }
+      }
+        @media(max-width: 750px){
+                .trusted-pack__image img{
+                  height: 300px;
+                }
+          .trusted-pack__wrapper{
+              padding: 20px 0 40px;
+          }
+            .trusted-pack__items{
+          gap: 10px;
+      }
+         .trusted-pack__item-icon img{
+          width: 40px;
+          height: 40px;
+
+      }
+        .trusted-pack__button{
+          padding: 0 14px;
+          font-size: 14px;
+      }
+      .trusted-pack__item-text {
+      text-align: center;
+      font-size: 11px;
+      line-height: 100%;
+  }
+
+.trusted-pack__title{ 
+  padding-top: 20px;
+}
+        .trusted-pack__title h2{
+          margin: 0;
+      }
+
+      }
+</style>
+<div class="trusted-pack__inner">
+  <div class="page-width">
+    <div class="trusted-pack__heading">
+      {% if section.settings.title != blank %}
+        <div class="trusted-pack__title">
+          {{ section.settings.title }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="trusted-pack__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+    </div>
+    <div class="trusted-pack__wrapper">
+      <div class="trusted-pack__image">
+        {% if product.media.size > 3 %}
+          <img
+            src="{{ product.media[3] | image_url: width: 1200 }}"
+            alt="{{ product.title | escape }}"
+            width="{{ product.media[3].width }}"
+            height="{{ product.media[3].height }}"
+            loading="lazy"
+          >
+        {% elsif product.featured_image %}
+          <img
+            src="{{ product.featured_image | image_url: width: 1200 }}"
+            alt="{{ product.title | escape }}"
+            loading="lazy"
+          >
+        {% endif %}
+      </div>
+
+      <div class="trusted-pack__content">
+        <div class="trusted-pack__content-heading">
+          {% if section.settings.title != blank %}
+            <div class="trusted-pack__title">
+              {{ section.settings.title }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.description != blank %}
+            <div class="trusted-pack__description">
+              {{ section.settings.description }}
+            </div>
+          {% endif %}
+        </div>
+        <div class="trusted-pack__items">
+          {% for block in section.blocks %}
+            <div class="trusted-pack__item" {{ block.shopify_attributes }}>
+              <div class="trusted-pack__item-icon">
+                {% if block.settings.icon != blank %}
+                  <img
+                    src="{{ block.settings.icon | image_url: width: 100 }}"
+                    alt="{{ block.settings.text | escape }}"
+                    width="{{ block.settings.icon.width }}"
+                    height="{{ block.settings.icon.height }}"
+                    loading="lazy"
+                  >
+                {% endif %}
+              </div>
+
+              <div class="trusted-pack__item-text">
+                {{ block.settings.text }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        {% assign package_products = product.metafields.custom.package_products.value %}
+        {% assign product_form_id = 'trusted-pack-form-' | append: section.id %}
+
+        {%- form 'product', product, id: product_form_id, class: 'trusted-pack__form' -%}
+          <input
+            type="hidden"
+            name="id"
+            value="{{ product.selected_or_first_available_variant.id }}"
+          >
+
+          {% for item in package_products %}
+            {% assign p = item.product.value %}
+
+            <input
+              type="hidden"
+              name="properties[Item {{ forloop.index }}]"
+              value="{{ item.quantity }}x {{ p.title }}"
+            >
+          {% endfor %}
+
+          <button
+            type="button"
+            class="button trusted-pack__button js-trusted-checkout"
+            data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+          >
+            {{ section.settings.button_text }}
+          </button>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+    const button = document.querySelector('.js-trusted-checkout');
+
+    if (!button) return;
+
+    button.addEventListener('click', async function () {
+
+      const variantId = this.dataset.variantId;
+
+      const properties = {};
+
+      {% for item in package_products %}
+        {% assign p = item.product.value %}
+
+        properties["Item {{ forloop.index }}"] = "{{ item.quantity }}x {{ p.title }}";
+
+      {% endfor %}
+
+      try {
+
+        await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            items: [
+              {
+                id: variantId,
+                quantity: 1,
+                properties: properties
+              }
+            ]
+          })
+        });
+
+        window.location.href = '/checkout';
+
+      } catch (error) {
+
+        console.error('Checkout error:', error);
+
+      }
+
+    });
+
+  });
+</script>
+{% schema %}
+{
+  "name": "Trusted Pack",
+  "tag": "section",
+  "class": "section trusted-pack-section",
+  "settings": [
+      {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background Color",
+          "default": "#61155b"
+        },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop The Pack Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Trusted Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Trusted feature"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trusted Pack",
+      "blocks": [
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        },
+        {
+          "type": "item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

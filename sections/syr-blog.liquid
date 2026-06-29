@@ -1,0 +1,101 @@
+{%- comment -%} Syruvia blog index — brand style. {%- endcomment -%}
+{%- assign s = section.settings -%}
+<style id="sb-{{ section.id }}-css">
+  #sb-{{ section.id }}{--ink:#39220f;--ink-2:#5a4632;--paper:#FFFBF4;--white:#fff;--butter:#FCE2A0;--copper:#c58548;--peach:#ffd4b8;--mint:#c5e4d4;--sky:#b8dceb;--fh:'Archivo Black','Arial Black',sans-serif;--fb:'Josefin Sans','Josefin',sans-serif;background:var(--paper);color:var(--ink);font-family:var(--fb);}
+  #sb-{{ section.id }} *{box-sizing:border-box;}
+  #sb-{{ section.id }} .sb-wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  #sb-{{ section.id }} .sb-rev{opacity:0;transform:translateY(18px) scale(.94);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.3,1.25);}
+  #sb-{{ section.id }} .sb-rev.in{opacity:1;transform:none;}
+  #sb-{{ section.id }} .sb-hero{text-align:center;padding:66px 0 18px;position:relative;}
+  #sb-{{ section.id }} .sb-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(circle, rgba(57,34,15,.05) 1.4px, transparent 1.6px);background-size:26px 26px;opacity:.5;pointer-events:none;}
+  #sb-{{ section.id }} .sb-eyebrow{position:relative;display:inline-flex;align-items:center;gap:7px;background:var(--butter);color:var(--ink);border:2px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-family:var(--fh);font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:8px 18px;line-height:1;}
+  #sb-{{ section.id }} .sb-hero h1{position:relative;font-family:var(--fh);font-weight:400;font-size:clamp(40px,7vw,80px);line-height:.92;letter-spacing:-.02em;text-transform:uppercase;margin:20px 0 0;}
+  #sb-{{ section.id }} .sb-hero h1 em{font-family:var(--fb);font-style:italic;font-weight:300;color:var(--copper);text-transform:none;}
+  #sb-{{ section.id }} .sb-hero p{position:relative;font-size:clamp(15px,2vw,18px);color:var(--ink-2);font-weight:500;margin:18px auto 0;max-width:52ch;line-height:1.6;}
+  #sb-{{ section.id }} .sb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;padding:34px 0 20px;}
+  #sb-{{ section.id }} .sb-card{display:flex;flex-direction:column;background:var(--white);border:2.5px solid var(--ink);border-radius:20px;box-shadow:6px 6px 0 var(--ink);overflow:hidden;text-decoration:none;color:var(--ink);transition:transform .2s ease, box-shadow .2s ease, opacity .6s ease;}
+  #sb-{{ section.id }} .sb-card:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink);}
+  #sb-{{ section.id }} .sb-img{aspect-ratio:16/10;border-bottom:2.5px solid var(--ink);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  #sb-{{ section.id }} .sb-grid .sb-card:nth-child(3n+1) .sb-img{background:var(--peach);}
+  #sb-{{ section.id }} .sb-grid .sb-card:nth-child(3n+2) .sb-img{background:var(--mint);}
+  #sb-{{ section.id }} .sb-grid .sb-card:nth-child(3n+3) .sb-img{background:var(--sky);}
+  #sb-{{ section.id }} .sb-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;}
+  #sb-{{ section.id }} .sb-card:hover .sb-img img{transform:scale(1.05);}
+  #sb-{{ section.id }} .sb-b{padding:20px 20px 22px;display:flex;flex-direction:column;gap:10px;flex:1;}
+  #sb-{{ section.id }} .sb-meta{font-family:'Archivo',sans-serif;font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--copper);}
+  #sb-{{ section.id }} .sb-t{font-family:var(--fh);font-weight:400;font-size:18px;line-height:1.15;text-transform:uppercase;letter-spacing:-.01em;}
+  #sb-{{ section.id }} .sb-x{font-size:14px;line-height:1.6;color:var(--ink-2);font-weight:500;}
+  #sb-{{ section.id }} .sb-read{margin-top:auto;font-family:var(--fh);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);}
+  #sb-{{ section.id }} .sb-empty{text-align:center;padding:40px 0 60px;color:var(--ink-2);}
+  #sb-{{ section.id }} .sb-pager{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:14px 0 64px;}
+  #sb-{{ section.id }} .sb-pg{display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:42px;padding:0 12px;background:var(--white);border:2.5px solid var(--ink);border-radius:12px;box-shadow:3px 3px 0 var(--ink);font-family:var(--fh);font-size:13px;color:var(--ink);text-decoration:none;}
+  #sb-{{ section.id }} .sb-pg[aria-current]{background:var(--butter);}
+  #sb-{{ section.id }} .sb-pg:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);}
+  @media (max-width:860px){#sb-{{ section.id }} .sb-grid{grid-template-columns:1fr;} #sb-{{ section.id }} .sb-hero{padding:44px 0 8px;}}
+  @media (prefers-reduced-motion: reduce){#sb-{{ section.id }} .sb-rev{opacity:1;transform:none;}}
+</style>
+
+<section id="sb-{{ section.id }}">
+  <div class="sb-hero">
+    <div class="sb-wrap">
+      <span class="sb-eyebrow sb-rev">{{ s.eyebrow }}</span>
+      <h1 class="sb-rev">{{ s.title }}</h1>
+      <p class="sb-rev">{{ s.sub }}</p>
+    </div>
+  </div>
+  <div class="sb-wrap">
+    {%- paginate blog.articles by 12 -%}
+      {%- if blog.articles.size > 0 -%}
+        <div class="sb-grid">
+          {%- for article in blog.articles -%}
+            <a class="sb-card sb-rev" href="{{ article.url }}">
+              <div class="sb-img">{%- if article.image -%}<img src="{{ article.image | image_url: width: 700 }}" alt="{{ article.title | escape }}" loading="lazy">{%- endif -%}</div>
+              <div class="sb-b">
+                <span class="sb-meta">{{ article.published_at | date: '%b %d, %Y' }}{%- if article.tags.size > 0 %} · {{ article.tags.first }}{% endif -%}</span>
+                <h3 class="sb-t">{{ article.title }}</h3>
+                <p class="sb-x">{{ article.excerpt_or_content | strip_html | truncatewords: 22 }}</p>
+                <span class="sb-read">Read →</span>
+              </div>
+            </a>
+          {%- endfor -%}
+        </div>
+        {%- if paginate.pages > 1 -%}
+          <div class="sb-pager">
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}<a class="sb-pg" href="{{ part.url }}">{{ part.title }}</a>
+              {%- elsif part.title == paginate.current_page -%}<span class="sb-pg" aria-current="page">{{ part.title }}</span>
+              {%- else -%}<span class="sb-pg" style="opacity:.4;">{{ part.title }}</span>{%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        <div class="sb-empty">No posts yet — check back soon.</div>
+      {%- endif -%}
+    {%- endpaginate -%}
+  </div>
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('sb-{{ section.id }}');
+  if(!root) return;
+  if('IntersectionObserver' in window && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
+    root.querySelectorAll('.sb-rev').forEach(function(el){io.observe(el);});
+    setTimeout(function(){root.querySelectorAll('.sb-rev:not(.in)').forEach(function(el){el.classList.add('in');});},2600);
+  } else { root.querySelectorAll('.sb-rev').forEach(function(el){el.classList.add('in');}); }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Blog index",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Syruvia Blog" },
+    { "type": "text", "id": "title", "label": "Title (use <em> for accent)", "default": "Sips, tips & <em>flavor</em>." },
+    { "type": "textarea", "id": "sub", "label": "Subtitle", "default": "Coffee inspiration, syrup pairings, recipes and the latest from the Syruvia kitchen." }
+  ],
+  "presets": [ { "name": "Blog index" } ]
+}
+{% endschema %}

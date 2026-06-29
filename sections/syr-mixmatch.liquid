@@ -1,0 +1,312 @@
+{%- comment -%} Mix & Match — 1:1 port of PDP pd-mm-section + editable badge size controls {%- endcomment -%}
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+{%- assign badge_font = section.settings.badge_font_size | default: 14 -%}
+{%- assign badge_min_pct = section.settings.badge_min_scale_pct | default: 80 -%}
+{%- assign badge_max_pct = section.settings.badge_max_scale_pct | default: 145 -%}
+{%- assign badge_min_scale = badge_min_pct | times: 1.0 | divided_by: 100.0 -%}
+{%- assign badge_max_scale = badge_max_pct | times: 1.0 | divided_by: 100.0 -%}
+{%- assign badge_min_rot = section.settings.badge_min_rot | default: -6 -%}
+{%- assign badge_max_rot = section.settings.badge_max_rot | default: 2 -%}
+<style id="syr-mm-{{ section.id }}-css">
+  #syr-mm-{{ section.id }}.pd-mixmatch{
+    background:{{ section.settings.bg_color | default: '#FFFBF4' }} !important;
+    padding:120px 0 80px !important;
+    position:relative !important;
+  }
+  #syr-mm-{{ section.id }} .pd-wrap{ max-width:1240px; margin:0 auto; padding:0 24px; }
+
+  #syr-mm-{{ section.id }} .pd-mm-card{
+    position:relative !important; overflow:visible !important;
+    display:flex !important; flex-direction:column !important;
+    align-items:center !important; justify-content:center !important;
+    text-align:center !important;
+    max-width:760px !important; margin:0 auto !important;
+    background:{{ section.settings.card_bg | default: '#FFFFFF' }} !important;
+    border:2px solid #1a1a1a !important;
+    border-radius:28px !important;
+    box-shadow:8px 8px 0 {{ section.settings.card_shadow | default: '#1a1a1a' }} !important;
+    padding:56px !important;
+  }
+
+  #syr-mm-{{ section.id }} .pd-mm-badge{
+    --mm-s:{{ badge_min_scale }}; --mm-r:{{ badge_min_rot }}deg;
+    position:absolute !important; top:-22px !important; left:50% !important;
+    transform:translateX(-50%) scale(var(--mm-s)) rotate(var(--mm-r)) !important;
+    transform-origin:center center !important;
+    background:{{ section.settings.badge_bg | default: '#FCE2A0' }} !important;
+    color:{{ section.settings.badge_color | default: '#1a1a1a' }} !important;
+    border:2px solid #1a1a1a !important;
+    border-radius:999px !important;
+    padding:10px 20px !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important;
+    font-weight:400 !important;
+    font-size:{{ badge_font }}px !important; letter-spacing:.14em !important; text-transform:uppercase !important;
+    box-shadow:4px 4px 0 #1a1a1a !important;
+    white-space:nowrap !important;
+    z-index:5 !important;
+    display:inline-flex !important; align-items:center !important; gap:8px !important;
+    transition:transform .15s linear !important;
+    will-change:transform !important;
+  }
+  #syr-mm-{{ section.id }} .pd-mm-badge svg{
+    flex:0 0 auto !important;
+    width:calc({{ badge_font }}px * var(--mm-s)) !important;
+    height:calc({{ badge_font }}px * var(--mm-s)) !important;
+  }
+
+  #syr-mm-{{ section.id }} .pd-mm-content{ display:flex !important; flex-direction:column !important; align-items:center !important; text-align:center !important; width:100% !important; gap:0 !important; }
+
+  #syr-mm-{{ section.id }} .pd-eyebrow{
+    font-family:'Archivo Black','Archivo',sans-serif !important;
+    font-size:12px !important; letter-spacing:.18em !important; text-transform:uppercase !important;
+    display:inline-block !important; padding:6px 14px !important;
+    border:1.5px solid #1a1a1a !important; border-radius:999px !important;
+    background:#FFFBF4 !important; color:#1a1a1a !important; margin:0 0 20px !important;
+  }
+  #syr-mm-{{ section.id }} .pd-h2{
+    font-family:'Archivo Black','Archivo',sans-serif !important;
+    font-weight:900 !important; font-size:clamp(32px, 5vw, 56px) !important;
+    line-height:.95 !important; letter-spacing:-.01em !important;
+    text-transform:uppercase !important; margin:0 0 18px !important;
+    text-wrap:balance !important; color:#1a1a1a !important;
+  }
+  #syr-mm-{{ section.id }} .pd-h2 em{
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    font-weight:300 !important; font-style:italic !important;
+    text-transform:none !important;
+    color:{{ section.settings.accent_color | default: '#FF6B5C' }} !important;
+    letter-spacing:0 !important;
+  }
+  #syr-mm-{{ section.id }} .pd-mm-lead{
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    font-size:17px !important; line-height:1.6 !important;
+    color:#3a3a3a !important; max-width:48ch !important;
+    margin:0 auto 32px !important; font-weight:500 !important; text-align:center !important;
+  }
+  #syr-mm-{{ section.id }} .pd-mm-tiers{
+    display:flex !important; align-items:stretch !important; justify-content:center !important;
+    gap:12px !important; width:100% !important; max-width:560px !important; margin:0 auto 36px !important;
+  }
+  #syr-mm-{{ section.id }} .pd-mm-tier{
+    position:relative !important; flex:1 1 0 !important;
+    display:flex !important; flex-direction:column !important; align-items:center !important; justify-content:center !important;
+    padding:20px 8px 16px !important; background:#FFFBF4 !important;
+    border:2px solid #1a1a1a !important; border-radius:18px !important;
+    box-shadow:3px 3px 0 #1a1a1a !important;
+    transition:transform .2s ease, box-shadow .2s ease !important;
+    text-align:center !important; line-height:1.1 !important;
+  }
+  #syr-mm-{{ section.id }} .pd-mm-tier:hover{ transform:translate(-1px,-2px) !important; box-shadow:5px 5px 0 #1a1a1a !important; }
+  #syr-mm-{{ section.id }} .pd-mm-tier-qty{
+    font-family:'Archivo Black','Archivo',sans-serif !important;
+    font-weight:400 !important; font-size:38px !important;
+    color:#1a1a1a !important; line-height:1 !important; letter-spacing:-.02em !important;
+  }
+  #syr-mm-{{ section.id }} .pd-mm-tier-label{
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    font-size:10.5px !important; letter-spacing:.18em !important; text-transform:uppercase !important;
+    color:#1a1a1a !important; font-weight:700 !important; margin-top:4px !important;
+  }
+  #syr-mm-{{ section.id }} .pd-mm-tier-save{
+    margin-top:10px !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important;
+    font-weight:400 !important; font-size:13px !important;
+    letter-spacing:.04em !important; color:#1a1a1a !important;
+    background:{{ section.settings.save_pill_bg | default: '#C5E4D4' }} !important;
+    border:1.5px solid #1a1a1a !important; border-radius:999px !important;
+    padding:4px 10px !important; line-height:1 !important; white-space:nowrap !important;
+  }
+  #syr-mm-{{ section.id }} .pd-mm-tier--best{ background:{{ section.settings.best_bg | default: '#FF6B5C' }} !important; }
+  #syr-mm-{{ section.id }} .pd-mm-tier--best .pd-mm-tier-qty,
+  #syr-mm-{{ section.id }} .pd-mm-tier--best .pd-mm-tier-label{ color:{{ section.settings.best_color | default: '#FFFBF4' }} !important; }
+  #syr-mm-{{ section.id }} .pd-mm-tier--best .pd-mm-tier-save{ background:#1a1a1a !important; color:#FFFBF4 !important; border-color:#1a1a1a !important; }
+  #syr-mm-{{ section.id }} .pd-mm-tier-flag{
+    position:absolute !important; top:-12px !important; left:50% !important;
+    transform:translateX(-50%) !important; background:#1a1a1a !important; color:#FFFBF4 !important;
+    border:1.5px solid #1a1a1a !important; border-radius:999px !important;
+    padding:4px 9px !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:10px !important; letter-spacing:.14em !important; text-transform:uppercase !important;
+    white-space:nowrap !important; z-index:2 !important;
+  }
+  #syr-mm-{{ section.id }} .pd-mm-tier-arrow{
+    flex:0 0 auto !important;
+    display:flex !important; align-items:center !important; justify-content:center !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important;
+    font-size:18px !important; color:#1a1a1a !important; opacity:.35 !important; align-self:center !important;
+  }
+  #syr-mm-{{ section.id }} .pd-mm-btn{
+    display:inline-flex !important; align-items:center !important; gap:12px !important;
+    background:{{ section.settings.cta_bg | default: '#1a1a1a' }} !important;
+    color:{{ section.settings.cta_color | default: '#FFFBF4' }} !important;
+    border:2px solid #1a1a1a !important; border-radius:999px !important;
+    padding:18px 36px !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:15px !important; letter-spacing:.14em !important; text-transform:uppercase !important;
+    text-decoration:none !important;
+    box-shadow:5px 5px 0 {{ section.settings.cta_shadow | default: '#FF6B5C' }} !important;
+    transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s cubic-bezier(.34,1.56,.64,1), filter .2s ease !important;
+  }
+  #syr-mm-{{ section.id }} .pd-mm-btn:hover{ transform:translate(-2px,-2px) !important; box-shadow:7px 7px 0 {{ section.settings.cta_shadow | default: '#FF6B5C' }} !important; filter:brightness(1.05) !important; }
+  #syr-mm-{{ section.id }} .pd-mm-btn svg{ transition:transform .25s cubic-bezier(.34,1.56,.64,1) !important; }
+  #syr-mm-{{ section.id }} .pd-mm-btn:hover svg{ transform:translateX(4px) !important; }
+
+  @media (max-width:760px){
+    #syr-mm-{{ section.id }}.pd-mixmatch{ padding:80px 0 44px !important; }
+    #syr-mm-{{ section.id }} .pd-wrap{ padding:0 16px; }
+    #syr-mm-{{ section.id }} .pd-mm-card{ padding:48px 22px 36px !important; border-radius:24px !important; box-shadow:5px 5px 0 #1a1a1a !important; }
+    #syr-mm-{{ section.id }} .pd-mm-lead{ font-size:15px !important; margin-bottom:24px !important; }
+    #syr-mm-{{ section.id }} .pd-mm-tiers{ gap:6px !important; margin-bottom:26px !important; }
+    #syr-mm-{{ section.id }} .pd-mm-tier{ padding:14px 4px 12px !important; border-radius:14px !important; }
+    #syr-mm-{{ section.id }} .pd-mm-tier-qty{ font-size:26px !important; }
+    #syr-mm-{{ section.id }} .pd-mm-tier-label{ font-size:9px !important; letter-spacing:.14em !important; margin-top:2px !important; }
+    #syr-mm-{{ section.id }} .pd-mm-tier-save{ font-size:10.5px !important; padding:3px 7px !important; margin-top:6px !important; }
+    #syr-mm-{{ section.id }} .pd-mm-tier-flag{ font-size:8.5px !important; padding:3px 7px !important; top:-10px !important; }
+    #syr-mm-{{ section.id }} .pd-mm-tier-arrow{ display:none !important; }
+    #syr-mm-{{ section.id }} .pd-mm-btn{ font-size:13.5px !important; padding:16px 28px !important; box-shadow:4px 4px 0 #FF6B5C !important; }
+  }
+</style>
+
+<div class="pd">
+  <section id="syr-mm-{{ section.id }}" class="pd-mixmatch" data-mm-section
+           data-min-scale="{{ badge_min_scale }}" data-max-scale="{{ badge_max_scale }}"
+           data-min-rot="{{ badge_min_rot }}" data-max-rot="{{ badge_max_rot }}">
+    <div class="pd-wrap">
+      <div class="pd-mm-card">
+        {%- if section.settings.badge_text != blank -%}
+          <span class="pd-mm-badge" data-mm-badge aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 L14 9 L21 11 L14 13 L12 20 L10 13 L3 11 L10 9 Z"/></svg>
+            {{ section.settings.badge_text }}
+          </span>
+        {%- endif -%}
+        <div class="pd-mm-content">
+          {%- if section.settings.eyebrow != blank -%}<span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+          <h2 class="pd-h2">{{ section.settings.headline }}</h2>
+          {%- if section.settings.lead != blank -%}<p class="pd-mm-lead">{{ section.settings.lead }}</p>{%- endif -%}
+          <div class="pd-mm-tiers" role="list">
+            <div class="pd-mm-tier" role="listitem">
+              {%- if section.settings.t1_flag != blank -%}<span class="pd-mm-tier-flag">{{ section.settings.t1_flag }}</span>{%- endif -%}
+              <span class="pd-mm-tier-qty">{{ section.settings.t1_num }}</span>
+              <span class="pd-mm-tier-label">{{ section.settings.t1_label }}</span>
+              <span class="pd-mm-tier-save">{{ section.settings.t1_save }}</span>
+            </div>
+            <div class="pd-mm-tier-arrow" aria-hidden="true">→</div>
+            <div class="pd-mm-tier" role="listitem">
+              {%- if section.settings.t2_flag != blank -%}<span class="pd-mm-tier-flag">{{ section.settings.t2_flag }}</span>{%- endif -%}
+              <span class="pd-mm-tier-qty">{{ section.settings.t2_num }}</span>
+              <span class="pd-mm-tier-label">{{ section.settings.t2_label }}</span>
+              <span class="pd-mm-tier-save">{{ section.settings.t2_save }}</span>
+            </div>
+            <div class="pd-mm-tier-arrow" aria-hidden="true">→</div>
+            <div class="pd-mm-tier pd-mm-tier--best" role="listitem">
+              {%- if section.settings.t3_flag != blank -%}<span class="pd-mm-tier-flag">{{ section.settings.t3_flag }}</span>{%- endif -%}
+              <span class="pd-mm-tier-qty">{{ section.settings.t3_num }}</span>
+              <span class="pd-mm-tier-label">{{ section.settings.t3_label }}</span>
+              <span class="pd-mm-tier-save">{{ section.settings.t3_save }}</span>
+            </div>
+          </div>
+          {%- if section.settings.cta_text != blank -%}
+            <a href="{{ section.settings.cta_link | default: '/pages/build-your-bundle' }}" class="pd-mm-btn">
+              {{ section.settings.cta_text }}
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 H19 M13 6 l6 6 -6 6"/></svg>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  function init(){
+    var section = document.querySelector('#syr-mm-{{ section.id }}[data-mm-section]');
+    var badge   = section && section.querySelector('[data-mm-badge]');
+    if (!section || !badge) return;
+    var minScale = parseFloat(section.dataset.minScale) || 0.80;
+    var maxScale = parseFloat(section.dataset.maxScale) || 1.45;
+    var minRot   = parseFloat(section.dataset.minRot)   || -6;
+    var maxRot   = parseFloat(section.dataset.maxRot)   || 2;
+    var raf = null;
+    function update(){
+      raf = null;
+      var r  = section.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var start = vh;
+      var end   = vh * 0.20;
+      var denom = (start - end) || 1;
+      var p = (start - r.top) / denom;
+      if (p < 0) p = 0;
+      if (p > 1) p = 1;
+      var ease = p * p * (3 - 2 * p);
+      var scale = minScale + (maxScale - minScale) * ease;
+      var rot   = minRot   + (maxRot   - minRot)   * ease;
+      badge.style.setProperty('--mm-s', scale.toFixed(3));
+      badge.style.setProperty('--mm-r', rot.toFixed(2) + 'deg');
+    }
+    function onScroll(){ if (raf) return; raf = requestAnimationFrame(update); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Mix & Match (Syr)",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Header content" },
+    { "type": "text", "id": "badge_text", "label": "Floating badge text", "default": "Save up to 48%" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow pill", "default": "Bundle & Save" },
+    { "type": "text", "id": "headline", "label": "Headline (use <em>...</em> for italic accent)", "default": "Mix flavors. <em>Save bigger</em>." },
+    { "type": "textarea", "id": "lead", "label": "Lead text", "default": "Build a bundle of any flavors and any sizes. The more bottles you stack, the more you save. Up to 48% off when you go big." },
+
+    { "type": "header", "content": "Badge size & grow effect" },
+    { "type": "paragraph", "content": "Controls the SAVE badge: base font size, and how big/tilted it gets as you scroll past it. Scales are %, so 100 = no grow, 145 = grow 45%." },
+    { "type": "range", "id": "badge_font_size", "label": "Badge base font size (px)", "min": 10, "max": 28, "step": 1, "default": 14, "unit": "px" },
+    { "type": "range", "id": "badge_min_scale_pct", "label": "Starting size (when entering view)", "min": 40, "max": 150, "step": 5, "default": 80, "unit": "%" },
+    { "type": "range", "id": "badge_max_scale_pct", "label": "Max size (when fully grown)", "min": 100, "max": 250, "step": 5, "default": 145, "unit": "%" },
+    { "type": "range", "id": "badge_min_rot", "label": "Starting tilt", "min": -20, "max": 20, "step": 1, "default": -6, "unit": "deg" },
+    { "type": "range", "id": "badge_max_rot", "label": "End tilt", "min": -20, "max": 20, "step": 1, "default": 2, "unit": "deg" },
+
+    { "type": "header", "content": "Tier 1" },
+    { "type": "text", "id": "t1_num", "label": "Number", "default": "2" },
+    { "type": "text", "id": "t1_label", "label": "Label", "default": "Bottles" },
+    { "type": "text", "id": "t1_save", "label": "Savings text", "default": "Save 41%" },
+    { "type": "text", "id": "t1_flag", "label": "Flag (optional)" },
+    { "type": "header", "content": "Tier 2" },
+    { "type": "text", "id": "t2_num", "label": "Number", "default": "6" },
+    { "type": "text", "id": "t2_label", "label": "Label", "default": "Bottles" },
+    { "type": "text", "id": "t2_save", "label": "Savings text", "default": "Save 45%" },
+    { "type": "text", "id": "t2_flag", "label": "Flag (optional)" },
+    { "type": "header", "content": "Tier 3 (Best Value)" },
+    { "type": "text", "id": "t3_num", "label": "Number", "default": "12" },
+    { "type": "text", "id": "t3_label", "label": "Label", "default": "Bottles" },
+    { "type": "text", "id": "t3_save", "label": "Savings text", "default": "Save 48%" },
+    { "type": "text", "id": "t3_flag", "label": "Flag", "default": "Best Value" },
+
+    { "type": "header", "content": "Bottom CTA" },
+    { "type": "text", "id": "cta_text", "label": "Button text", "default": "Build your bundle" },
+    { "type": "url", "id": "cta_link", "label": "Button link (defaults to /pages/build-your-bundle)" },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#FFFBF4" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#FFFFFF" },
+    { "type": "color", "id": "card_shadow", "label": "Card offset shadow", "default": "#1a1a1a" },
+    { "type": "color", "id": "badge_bg", "label": "Floating badge background", "default": "#FCE2A0" },
+    { "type": "color", "id": "badge_color", "label": "Floating badge text", "default": "#1a1a1a" },
+    { "type": "color", "id": "accent_color", "label": "Headline italic accent color", "default": "#FF6B5C" },
+    { "type": "color", "id": "save_pill_bg", "label": "Save pill background (regular tiers)", "default": "#C5E4D4" },
+    { "type": "color", "id": "best_bg", "label": "Best Value tier background", "default": "#FF6B5C" },
+    { "type": "color", "id": "best_color", "label": "Best Value tier text", "default": "#FFFBF4" },
+    { "type": "color", "id": "cta_bg", "label": "CTA background", "default": "#1a1a1a" },
+    { "type": "color", "id": "cta_color", "label": "CTA text color", "default": "#FFFBF4" },
+    { "type": "color", "id": "cta_shadow", "label": "CTA offset shadow color", "default": "#FF6B5C" }
+  ],
+  "presets": [ { "name": "Mix & Match" } ]
+}
+{% endschema %}

@@ -1,0 +1,166 @@
+<div class="recipe-body-syruvia" id="recipe-list">
+  <div class="bg-images-gt">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Group_24_680d533d-0b43-4c61-aa02-327bd95051ca.png?v=1731932628" class="bg-one-gt" loading="lazy">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object1_32341e86-a0be-42ab-90a2-0a0cf818edd6.png?v=1731932735" class="bg-two-gt" loading="lazy">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/ewdfwedwedwe.png?v=1730286283" class="bg-three-gt" loading="lazy">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/vfdgfdg.png?v=1730286347" class="bg-four-gt" loading="lazy">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/wedwededw.png?v=1730288187" class="bg-five-gt" loading="lazy">
+  </div>
+
+  <section class="syruvia-main-recipe-section">
+    <div class="container sy-main-container">
+      <div class="sy-filter-outer-wrap">
+        <div class="sy-filter-flex-display">
+          <div class="sy-filter-box sy-dropdown-part">
+            <div id="dropdownTrigger" class="sy-dropdown-button">
+              <span id="selectedCategoryText">All Recipes</span>
+              <i class="fa fa-chevron-down"></i>
+            </div>
+            <ul id="dropdownMenu" class="sy-dropdown-content-list">
+              <li data-tag="all">All Recipes</li>
+              <li data-tag="recipe_coffee">Coffee</li>
+              <li data-tag="recipe_cocktail">Cocktails</li>
+              <li data-tag="recipe_shaved-iced">Shaved Iced</li>
+              <li data-tag="recipe_topping">Toppings</li>
+              <li data-tag="recipe_bursting-balls">Bursting Balls</li>
+              <li data-tag="dietary_sugar-free">Sugar Free</li>
+            </ul>
+          </div>
+          <div class="sy-filter-box sy-search-part">
+            <input type="text" id="searchKeyword" placeholder="Search All Recipes">
+            <button type="button"><i class="fa fa-search"></i></button>
+          </div>
+        </div>
+      </div>
+
+      {% paginate blogs['recipe-blogs'].articles by 250 %}
+      <div id="blog-posts-container" class="row sy-recipes-grid-row">
+        {% for article in blogs['recipe-blogs'].articles %}
+          <div class="col-lg-4 col-md-6 mb-5 blog-post-card-item" 
+               data-tags="{% for tag in article.tags %}{{ tag | downcase | strip }}{% unless forloop.last %},{% endunless %}{% endfor %}">
+            <div class="sy-recipe-card-main">
+              <a href="{{ article.url }}">
+                <div class="sy-img-container-box">
+                  <img src="{{ article.image | img_url: '800x800', crop: 'center' }}" alt="{{ article.title }}" loading="lazy">
+                </div>
+                <div class="sy-text-content-box">
+                  <h3 class="sy-recipe-title-text">{{ article.title }}</h3>
+                  <span class="sy-recipe-view-link">VIEW RECIPE</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      {% endpaginate %}
+
+      <div id="noRecipesMessage" style="display: none; text-align: center; padding: 100px 0;">
+        <h3 style="color: #4a2c2a; font-family: 'Playfair Display', serif;">No recipes found.</h3>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+.recipe-body-syruvia { position: relative; min-height: 100vh; background-color: #fdfcf9 !important; overflow-x: hidden; z-index: 1; }
+.bg-images-gt img { position: absolute; z-index: -1; pointer-events: none; opacity: 0.5; }
+.sy-filter-outer-wrap { max-width: 900px; margin: 40px auto; padding: 0 15px; position: relative; z-index: 99; }
+.sy-filter-flex-display { display: flex; gap: 20px; justify-content: center; }
+.sy-filter-box { flex: 1; background: #fff; border: 1px solid #dcdcdc; height: 52px; position: relative; }
+.sy-dropdown-button { width: 100%; height: 100%; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; color: #4a2c2a; font-weight: 600; }
+.sy-dropdown-content-list { display: none; position: absolute; top: 100%; left: -1px; right: -1px; background: #fff; border: 1px solid #dcdcdc; list-style: none; padding: 0; margin: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 999; }
+.sy-dropdown-content-list li { padding: 12px 20px; cursor: pointer; color: #4a2c2a; border-bottom: 1px solid #f9f9f9; font-size: 14px; }
+.sy-dropdown-content-list li:hover { background: #fdfcf9; color: #c5a059; }
+.sy-search-part input { width: 100%; height: 100%; border: none; padding: 0 20px; outline: none; color: #4a2c2a; font-size: 15px; }
+.sy-search-part button { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #4a2c2a; }
+.blog-post-card-item { transition: opacity 0.4s ease; }
+.sy-recipe-card-main { transition: transform 0.3s ease; height: 100%; position: relative; }
+.sy-recipe-card-main:hover { transform: translateY(-8px); }
+.sy-recipe-card-main a { text-decoration: none !important; display: block; }
+.sy-img-container-box { width: 100%; aspect-ratio: 1 / 1; border-radius: 20px; overflow: hidden; margin-bottom: 10px; background: #f9f9f9; }
+.sy-img-container-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.sy-recipe-card-main:hover .sy-img-container-box img { transform: scale(1.08); }
+.sy-text-content-box { text-align: left; padding: 0 5px; }
+.sy-recipe-title-text { font-family: 'Playfair Display', serif; font-size: 22px; color: #4a2c2a; margin-bottom: 8px; font-weight: 800; line-height: 1.2; }
+.sy-recipe-view-link { font-size: 12px; color: #c5a059; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid #c5a059; padding-bottom: 3px; transition: 0.3s; }
+
+@media (max-width: 767px) {
+  .sy-filter-outer-wrap { margin: 20px auto; padding: 0 25px; }
+  .sy-filter-flex-display { flex-direction: column; gap: 10px; }
+  .sy-filter-box { width: 100% !important; height: 48px; flex: 0 0 auto !important; }
+  .sy-main-container { padding-left: 15px !important; padding-right: 15px !important; }
+  
+  /* Forcing Single Column Row */
+  .sy-recipes-grid-row { display: flex !important; flex-direction: column !important; margin: 0 !important; align-items: center; }
+  .blog-post-card-item { 
+    width: 100% !important; 
+    max-width: 100% !important; 
+    flex: 0 0 100% !important; 
+    padding: 0 10px !important; 
+    margin-bottom: 25px !important; 
+  }
+  .sy-recipe-title-text { font-size: 19px; }
+}
+</style>
+
+<script>
+$(document).ready(function() {
+  var activeCategory = "all";
+
+  $('#dropdownTrigger').on('click', function(e) {
+    e.stopPropagation();
+    $('#dropdownMenu').stop().slideToggle(200);
+  });
+
+  $('#dropdownMenu li').on('click', function() {
+    var tag = $(this).data('tag');
+    activeCategory = tag;
+    $('#selectedCategoryText').text($(this).text());
+    $('#dropdownMenu').slideUp(150);
+    runFilters();
+  });
+
+  $(document).on('click', function() { 
+    $('#dropdownMenu').slideUp(150); 
+  });
+
+  function runFilters() {
+    var query = $('#searchKeyword').val().toLowerCase().trim();
+    var matchCount = 0;
+
+    $('.blog-post-card-item').each(function() {
+      var itemTagsStr = $(this).attr('data-tags') || "";
+      var itemTags = itemTagsStr.toLowerCase().split(',');
+      var itemTitle = $(this).find('.sy-recipe-title-text').text().toLowerCase();
+      
+      var isCategoryMatch = (activeCategory === "all") || (itemTags.includes(activeCategory.toLowerCase()));
+      var isSearchMatch = (query === "") || (itemTitle.indexOf(query) !== -1);
+
+      if (isCategoryMatch && isSearchMatch) {
+        $(this).show().css('display', 'block').css('opacity', '1');
+        matchCount++;
+      } else {
+        $(this).hide().css('display', 'none').css('opacity', '0');
+      }
+    });
+
+    if (matchCount === 0) {
+      $('#noRecipesMessage').show();
+    } else {
+      $('#noRecipesMessage').hide();
+    }
+  }
+
+  $('#searchKeyword').on('keyup', function() {
+    runFilters();
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Recipe Blog section",
+  "settings": [],
+  "presets": [{ "name": "Recipe Blog section" }]
+}
+{% endschema %}

@@ -1,0 +1,161 @@
+<style>
+   .about-craving__inner{
+       background-color: #fff6ee;
+       padding-bottom: 50px;
+   }
+   .about-craving__heading{
+       margin-bottom: 40px;
+   }
+   .about-craving__title h2{
+       margin: 0;
+       font-size: 45px;
+       text-align: center;
+       color: #4a3827;
+   }
+   .about-craving__wrapper{
+       display: flex;
+       gap: 10px;
+   }
+   .about-craving__wrapper img{
+       width: 100%;
+       height: 100%;
+       object-fit: cover;
+       display: block;
+       transition: all 0.3s ease;
+   }
+    .about-craving__wrapper a{
+       display: block;       
+   }
+     .about-craving__left-image{
+        height: 100%;
+    }
+     .about-craving__right-image{
+        height: auto;
+    }
+   .about-craving__left{
+       max-width: 65.9%
+   }
+   .about-craving__right{
+       max-width: calc(100% - 65.9%);
+       display: flex;
+       flex-direction: column;
+               gap: 10px;
+   }
+   .about-craving__right-image{
+       flex: 1 0 45%;
+       max-height: calc(100% / 2 - 5px);
+   }
+   .about-craving__right-image, .about-craving__left-image{
+       border-radius: 20px;
+       overflow: hidden;
+   }
+   .about-craving__right-image:hover img, .about-craving__left-image:hover img{
+       transform: scale(1.1);
+   }
+   @media(max-width: 768px){
+        .about-craving__title h2{
+            font-size: 36px;
+
+        }
+       .about-craving__wrapper{
+           flex-direction: column;
+       }
+         .about-craving__left{
+        max-width: 100%
+    }
+    .about-craving__right{
+        max-width: 100%;        
+        flex-direction: row;
+    }
+    
+   }
+</style>
+<div class="about-craving__inner">
+  <div class="page-width">
+    <div class="about-craving__heading">
+      <div class="about-craving__title">
+        {{ section.settings.title }}
+      </div>
+    </div>
+
+    <div class="about-craving__wrapper">
+      <div class="about-craving__left">
+        <a href="{{ section.settings.left_link }}" class="about-craving__left-image">
+          {% if section.settings.left_image != blank %}
+            {{ section.settings.left_image | image_url: width: 800 | image_tag: loading: 'lazy', alt: 'Left image' }}
+          {% endif %}
+        </a>
+      </div>
+
+      <div class="about-craving__right">
+        <a href="{{ section.settings.right_link_1 }}" class="about-craving__right-image">
+          {% if section.settings.right_image_1 != blank %}
+            {{
+              section.settings.right_image_1
+              | image_url: width: 600
+              | image_tag: loading: 'lazy', alt: 'Right image 1'
+            }}
+          {% endif %}
+        </a>
+
+        <a href="{{ section.settings.right_link_2 }}" class="about-craving__right-image">
+          {% if section.settings.right_image_2 != blank %}
+            {{
+              section.settings.right_image_2
+              | image_url: width: 600
+              | image_tag: loading: 'lazy', alt: 'Right image 2'
+            }}
+          {% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "About Craving",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Section Title"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "Left Image"
+    },
+    {
+      "type": "url",
+      "id": "left_link",
+      "label": "Left Image Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image_1",
+      "label": "Right Image 1"
+    },
+    {
+      "type": "url",
+      "id": "right_link_1",
+      "label": "Right Image 1 Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image_2",
+      "label": "Right Image 2"
+    },
+    {
+      "type": "url",
+      "id": "right_link_2",
+      "label": "Right Image 2 Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Craving"
+    }
+  ]
+}
+{% endschema %}

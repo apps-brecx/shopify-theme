@@ -1,0 +1,20 @@
+{%- comment -%} Visibility split with correct section-group ID matching. {%- endcomment -%}
+<style id="syr-nav-visibility-css">
+/* MOBILE ≤ 900px: hide the desktop nav */
+@media (max-width: 900px) {
+  html body [id$="__syr_nav"],
+  html body [id$="--syr_nav"],
+  html body #shopify-section-syr_nav {
+    display: none !important;
+  }
+}
+/* DESKTOP ≥ 901px: hide the mobile nav */
+@media (min-width: 901px) {
+  html body [id$="__syruvia_nav"],
+  html body [id$="--syruvia_nav"],
+  html body #shopify-section-syruvia_nav,
+  html body #syrnav {
+    display: none !important;
+  }
+}
+</style>

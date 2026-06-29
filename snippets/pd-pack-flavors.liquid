@@ -1,0 +1,136 @@
+{%- comment -%} What's inside: sticky-stack flavor cards colored to match each flavor. Source: custom.pack_flavors metafield (preferred) OR parsed from product title. {%- endcomment -%}
+
+{%- assign pf_arr = '' | split: ',' -%}
+{%- assign mf = product.metafields.custom.pack_flavors -%}
+{%- if mf and mf.value -%}
+  {%- assign pf_str = mf.value | strip -%}
+  {%- assign pf_arr = pf_str | split: ',' -%}
+{%- else -%}
+  {%- assign pf_raw = product.title -%}
+  {%- assign pf_clean = pf_raw | remove_first: 'Variety Pack,' | remove_first: 'Variety Pack' -%}
+  {%- assign pf_clean = pf_clean | remove: ' Coffee Syrup' | remove: ' Tea Syrup' | remove: ' Syrup' | remove: ' Coffee' -%}
+  {%- assign pf_clean = pf_clean | replace: ' and ', ', ' -%}
+  {%- assign pf_arr = pf_clean | split: ',' -%}
+{%- endif -%}
+
+{%- assign pf_show = false -%}
+{%- if pf_arr.size >= 2 -%}{%- assign pf_show = true -%}{%- endif -%}
+
+{%- if pf_show -%}
+
+<style>
+html body .pd .pd-pack-flavors{padding:80px 0 180px!important;background:#FFFBF4!important;border-top:2px solid #39220f!important;overflow:visible!important;position:relative!important}
+@media (max-width:760px){html body .pd .pd-pack-flavors{padding:56px 0 140px!important}}
+html body .pd .pd-pack-flavors .pd-wrap{overflow:visible!important}
+html body .pd .pd-pack-flavors-head{text-align:center!important;max-width:680px!important;margin:0 auto 48px!important;padding:0 18px!important}
+html body .pd .pd-pack-flavors-head .pd-eyebrow{--packflv-s:0.85;display:inline-block!important;margin:0 auto 18px!important;font-size:calc(11px * var(--packflv-s))!important;padding:calc(7px * var(--packflv-s)) calc(16px * var(--packflv-s))!important;will-change:font-size,padding!important}
+html body .pd .pd-pack-flavors-head .pd-h2{margin:0 auto 12px!important;text-align:center!important}
+html body .pd .pd-pack-flavors-lede{font-family:'Josefin Sans',sans-serif!important;font-size:15.5px!important;line-height:1.55!important;color:#3a3a3a!important;font-weight:500!important;margin:0 auto!important;max-width:42ch!important}
+@media (max-width:760px){html body .pd .pd-pack-flavors-head{margin-bottom:36px!important}html body .pd .pd-pack-flavors-lede{font-size:14px!important}}
+
+html body .pd .pd-flavor-stack{display:block!important;max-width:560px!important;margin:0 auto!important;position:relative!important;overflow:visible!important}
+html body .pd .pd-flavor-card{position:sticky!important;width:100%!important;max-width:560px!important;margin:0 auto 24px!important;padding:24px 28px!important;border:2px solid #39220f!important;border-radius:22px!important;box-shadow:6px 6px 0 #39220f!important;display:grid!important;grid-template-columns:auto 1fr!important;align-items:center!important;gap:18px!important;text-align:left!important;transition:transform .25s ease, box-shadow .25s ease!important}
+html body .pd .pd-flavor-card:hover{transform:translate(-2px,-2px)!important;box-shadow:8px 8px 0 #39220f!important}
+html body .pd .pd-flavor-card:nth-child(1){top:100px!important;z-index:1!important}
+html body .pd .pd-flavor-card:nth-child(2){top:118px!important;z-index:2!important}
+html body .pd .pd-flavor-card:nth-child(3){top:136px!important;z-index:3!important}
+html body .pd .pd-flavor-card:nth-child(4){top:154px!important;z-index:4!important}
+html body .pd .pd-flavor-card:nth-child(5){top:172px!important;z-index:5!important}
+html body .pd .pd-flavor-card:nth-child(6){top:190px!important;z-index:6!important}
+html body .pd .pd-flavor-card:nth-child(7){top:208px!important;z-index:7!important}
+html body .pd .pd-flavor-card:nth-child(8){top:226px!important;z-index:8!important}
+html body .pd .pd-flavor-num{flex:0 0 auto!important;width:48px!important;height:48px!important;border-radius:50%!important;background:#FFFBF4!important;border:2px solid #39220f!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:18px!important;color:#39220f!important;box-shadow:2.5px 2.5px 0 #39220f!important;line-height:1!important}
+html body .pd .pd-flavor-body{min-width:0!important}
+html body .pd .pd-flavor-name{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:18px!important;letter-spacing:.005em!important;text-transform:uppercase!important;color:#39220f!important;margin:0 0 4px!important;line-height:1.15!important}
+html body .pd .pd-flavor-desc{font-family:'Josefin Sans',sans-serif!important;font-size:13.5px!important;line-height:1.5!important;color:#39220f!important;font-weight:500!important;margin:0!important;max-width:38ch!important}
+@media (max-width:760px){
+  html body .pd .pd-flavor-stack{max-width:380px!important;padding:0 8px!important}
+  html body .pd .pd-flavor-card{padding:18px 18px!important;border-radius:18px!important;box-shadow:4px 4px 0 #39220f!important;margin-bottom:18px!important;gap:14px!important}
+  html body .pd .pd-flavor-card:nth-child(1){top:84px!important}
+  html body .pd .pd-flavor-card:nth-child(2){top:100px!important}
+  html body .pd .pd-flavor-card:nth-child(3){top:116px!important}
+  html body .pd .pd-flavor-card:nth-child(4){top:132px!important}
+  html body .pd .pd-flavor-card:nth-child(5){top:148px!important}
+  html body .pd .pd-flavor-card:nth-child(6){top:164px!important}
+  html body .pd .pd-flavor-card:nth-child(7){top:180px!important}
+  html body .pd .pd-flavor-card:nth-child(8){top:196px!important}
+  html body .pd .pd-flavor-num{width:40px!important;height:40px!important;font-size:15px!important;box-shadow:2px 2px 0 #39220f!important}
+  html body .pd .pd-flavor-name{font-size:15px!important}
+  html body .pd .pd-flavor-desc{font-size:12.5px!important;line-height:1.45!important}
+}
+</style>
+
+<section class="pd-pack-flavors">
+  <div class="pd-wrap pd-pack-flavors-head">
+    <span class="pd-eyebrow">What's inside</span>
+    <h2 class="pd-h2">All <em>{{ pf_arr.size }}</em> flavors.</h2>
+    <p class="pd-pack-flavors-lede">Every bottle in this pack, lined up.</p>
+  </div>
+  <div class="pd-wrap">
+    <div class="pd-flavor-stack">
+      {%- for flavor_raw in pf_arr -%}
+        {%- assign flavor = flavor_raw | strip -%}
+        {%- if flavor == '' -%}{%- continue -%}{%- endif -%}
+        {%- assign flavor_lc = flavor | downcase -%}
+        {%- assign flavor_bg = '#FCE2A0' -%}
+        {%- assign flavor_desc = 'Real ' | append: flavor | append: ' flavor. Café-quality, no artificial aftertaste.' -%}
+        {%- comment -%} ===== Color mapping (specific keywords first to win over generic) ===== {%- endcomment -%}
+        {%- if flavor_lc contains 'green tea' or flavor_lc contains 'green apple' -%}{%- assign flavor_bg = '#C5E4D4' -%}
+        {%- elsif flavor_lc contains 'honey lime' or flavor_lc contains 'lime' -%}{%- assign flavor_bg = '#C5E4D4' -%}
+        {%- elsif flavor_lc contains 'matcha' or flavor_lc contains 'mint' or flavor_lc contains 'peppermint' or flavor_lc contains 'pistachio' -%}{%- assign flavor_bg = '#C5E4D4' -%}
+        {%- elsif flavor_lc contains 'white chocolate' -%}{%- assign flavor_bg = '#FFF8EE' -%}
+        {%- elsif flavor_lc contains 'chocolate' or flavor_lc contains 'mocha' or flavor_lc contains 'brownie' or flavor_lc contains 'cookie butter' -%}{%- assign flavor_bg = '#c58548' -%}
+        {%- elsif flavor_lc contains 'cookie' or flavor_lc contains 's\'mores' or flavor_lc contains 'smores' -%}{%- assign flavor_bg = '#FFD4B8' -%}
+        {%- elsif flavor_lc contains 'salted caramel' or flavor_lc contains 'butterscotch' or flavor_lc contains 'butter pecan' or flavor_lc contains 'caramel' or flavor_lc contains 'toffee' -%}{%- assign flavor_bg = '#FFD4B8' -%}
+        {%- elsif flavor_lc contains 'blueberry' or flavor_lc contains 'blackberry' or flavor_lc contains 'lavender' or flavor_lc contains 'blue curacao' or flavor_lc contains 'blue raspberry' or flavor_lc contains 'cotton candy' or flavor_lc contains 'grape' -%}{%- assign flavor_bg = '#B8DCEB' -%}
+        {%- elsif flavor_lc contains 'raspberry' or flavor_lc contains 'strawberry' or flavor_lc contains 'cherry' or flavor_lc contains 'cranberry' or flavor_lc contains 'pomegranate' or flavor_lc contains 'watermelon' or flavor_lc contains 'rose' or flavor_lc contains 'bubble gum' -%}{%- assign flavor_bg = '#F5C7BE' -%}
+        {%- elsif flavor_lc contains 'french vanilla' or flavor_lc contains 'vanilla' or flavor_lc contains 'irish cream' or flavor_lc contains 'sweet cream' or flavor_lc contains 'cream' -%}{%- assign flavor_bg = '#FCE2A0' -%}
+        {%- elsif flavor_lc contains 'apple' or flavor_lc contains 'peach' or flavor_lc contains 'mango' or flavor_lc contains 'apricot' or flavor_lc contains 'orange' or flavor_lc contains 'pumpkin' or flavor_lc contains 'tangerine' -%}{%- assign flavor_bg = '#FFD4B8' -%}
+        {%- elsif flavor_lc contains 'lemon' or flavor_lc contains 'banana' or flavor_lc contains 'pineapple' or flavor_lc contains 'honey' or flavor_lc contains 'passion' or flavor_lc contains 'pina colada' -%}{%- assign flavor_bg = '#FCE2A0' -%}
+        {%- elsif flavor_lc contains 'hazelnut' or flavor_lc contains 'almond' or flavor_lc contains 'walnut' or flavor_lc contains 'pecan' -%}{%- assign flavor_bg = '#FFD4B8' -%}
+        {%- elsif flavor_lc contains 'coconut' -%}{%- assign flavor_bg = '#FFF8EE' -%}
+        {%- elsif flavor_lc contains 'cinnamon' or flavor_lc contains 'gingerbread' or flavor_lc contains 'maple' or flavor_lc contains 'chai' or flavor_lc contains 'brown sugar' or flavor_lc contains 'glazed donut' or flavor_lc contains 'oatmeal' or flavor_lc contains 'snickerdoodle' -%}{%- assign flavor_bg = '#FFD4B8' -%}
+        {%- elsif flavor_lc contains 'root beer' or flavor_lc contains 'cola' -%}{%- assign flavor_bg = '#c58548' -%}
+        {%- elsif flavor_lc contains 'sweet tea' or flavor_lc contains 'tea' -%}{%- assign flavor_bg = '#FCE2A0' -%}
+        {%- endif -%}
+
+        <div class="pd-flavor-card" style="background:{{ flavor_bg }};">
+          <span class="pd-flavor-num">{{ forloop.index }}</span>
+          <div class="pd-flavor-body">
+            <h3 class="pd-flavor-name">{{ flavor }}</h3>
+            <p class="pd-flavor-desc">{{ flavor_desc }}</p>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  function init(){
+    var section = document.querySelector('.pd-pack-flavors');
+    var badge = section && section.querySelector('.pd-pack-flavors-head .pd-eyebrow');
+    if (!badge) return;
+    var minS = 0.85, maxS = 1.45, raf = null;
+    function update(){
+      raf = null;
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var r = section.getBoundingClientRect();
+      var denom = (vh - vh * 0.20) || 1;
+      var p = (vh - r.top) / denom;
+      if (p < 0) p = 0; if (p > 1) p = 1;
+      var ease = p * p * (3 - 2 * p);
+      badge.style.setProperty('--packflv-s', (minS + (maxS - minS) * ease).toFixed(3));
+    }
+    function onScroll(){ if (raf) return; raf = requestAnimationFrame(update); }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    window.addEventListener('resize', onScroll, {passive:true});
+    update();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+{%- endif -%}

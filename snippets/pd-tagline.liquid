@@ -1,0 +1,27 @@
+{%- comment -%} One-line tagline shown under the title in the hero {%- endcomment -%}
+{%- assign t = product.title | downcase -%}
+{%- if t contains 'pack' or t contains 'bundle' -%}Three fan favorites, one café-quality lineup.
+{%- elsif t contains 'sugar-free' or t contains 'sugar free' -%}Zero sugar. Full flavor. Same café pour.
+{%- elsif t contains 'vanilla' -%}Smooth, balanced, café-quality. The everyday pour.
+{%- elsif t contains 'caramel' -%}Buttery, slow-cooked, ready to layer.
+{%- elsif t contains 'hazelnut' -%}Roasted-nut warmth meets clean cane sugar.
+{%- elsif t contains 'matcha' or t contains 'green tea' -%}Lightly sweet. Built for matcha and green tea.
+{%- elsif t contains 'mango' -%}Bright, ripe mango with a tropical edge.
+{%- elsif t contains 'raspberry' -%}Bold, tart-sweet, real berry flavor.
+{%- elsif t contains 'apple' -%}Crisp, orchard-fresh green apple.
+{%- elsif t contains 'lavender' -%}Soft, floral, botanical — not perfumy.
+{%- elsif t contains 'pumpkin' -%}Warm, spiced, the official taste of fall.
+{%- elsif t contains 'peppermint' or t contains 'mint' -%}Cool, crisp, holiday-mocha ready.
+{%- elsif t contains 'cinnamon' -%}Warm baking-spice cinnamon with a clean finish.
+{%- elsif t contains 'coconut' -%}Toasted, tropical, beach-vibe coconut.
+{%- elsif t contains 'strawberry' -%}Sweet, ripe, real berry flavor.
+{%- elsif t contains 'blueberry' -%}Wild blueberry depth, balanced finish.
+{%- elsif t contains 'lemon' -%}Bright citrus zing, made for sippers.
+{%- elsif t contains 'orange' -%}Sun-ripe orange essence with a clean base.
+{%- elsif t contains 'cherry' -%}Dark, sweet-tart, real fruit flavor.
+{%- elsif t contains 'chocolate' -%}Rich, deep cocoa with cane sugar warmth.
+{%- elsif t contains 'banana' -%}Sweet, ripe banana — smoothie-shop perfect.
+{%- elsif t contains 'honey' -%}Soft floral honey with a balanced finish.
+{%- elsif t contains 'almond' or t contains 'amaretto' -%}Toasted-almond warmth, croissant-pour ready.
+{%- else -%}Small-batch, café-quality syrup. One pump, perfect pour.
+{%- endif -%}

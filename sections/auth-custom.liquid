@@ -1,0 +1,229 @@
+{%- comment -%} Syruvia — Auth (login/register/reset) Split layout. Scoped .sauth. Real Shopify customer forms. {%- endcomment -%}
+{%- liquid
+  assign initview = 'signin'
+  if request.path contains '/account/register'
+    assign initview = 'create'
+  endif
+  assign bcoll = collections[section.settings.bottles_collection] | default: collections['coffee']
+-%}
+{%- if customer -%}<script>window.location.replace({{ routes.account_url | json }});</script><style>.sauth{display:none !important;}</style>{%- endif -%}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700;800&family=Josefin+Sans:ital,wght@0,300..700;1,300..600&display=swap');
+  .sauth{ --bg:#FFFBF4; --bg-2:#FFF8EE; --surface:#FFFFFF; --ink:#39220f; --ink-2:#5a4632; --muted:#8a7a68; --hair:color-mix(in srgb,var(--ink) 16%,transparent);
+    --accent:#c58548; --butter:#FCE2A0; --peach:#FFD4B8; --mint:#C5E4D4; --sky:#B8DCEB; --blush:#F5C7BE; --sf-ink:#1f6b4f;
+    --vip:#C53156; --vip-soft:#FBE0E5; --vip-ink:#8e1e3c; --rule:2px solid var(--ink); --rule-1:1.5px solid var(--ink); --shadow:4px 4px 0 var(--ink); --shadow-sm:3px 3px 0 var(--ink);
+    --font-head:'Archivo Black',sans-serif; --font-body:'Josefin Sans',sans-serif; background:var(--bg); color:var(--ink); font-family:var(--font-body); overflow-x:clip; }
+  .sauth *,.sauth *::before,.sauth *::after{ box-sizing:border-box; }
+  .sauth h1,.sauth h2,.sauth h3,.sauth h4{ font-family:var(--font-head); margin:0; font-weight:400; letter-spacing:-.01em; }
+  .sauth button{ font-family:inherit; cursor:pointer; } .sauth a{ cursor:pointer; }
+  .sauth,.sauth p,.sauth span,.sauth a,.sauth input,.sauth label{ font-family:'Josefin Sans',sans-serif; }
+  .sauth h1,.sauth h2,.sauth .auth-tab,.sauth .btn-ink,.sauth .btn-vip,.sauth .btn-ghost,.sauth .soc-btn,.sauth .auth-aside-brand,.sauth .aside-stat .big,.sauth .perk-row b,.sauth .auth-head p b{ font-family:'Archivo Black',sans-serif; }
+  .sauth .auth-eyebrow,.sauth .field label,.sauth .auth-or,.sauth .auth-foot a,.sauth .auth-back,.sauth .aside-vip-link{ font-family:'Archivo',sans-serif; }
+  .sauth .auth-stage{ display:grid; grid-template-columns:1.05fr 1fr; align-items:stretch; min-height:560px; }
+  .sauth .auth-aside{ position:relative; overflow:hidden; padding:56px; display:flex; flex-direction:column; justify-content:center; gap:20px; background:radial-gradient(120% 90% at 100% 0%,color-mix(in srgb,var(--vip) 78%,#000 4%),var(--vip) 55%,var(--vip-ink)); color:#fff; border-right:var(--rule); }
+  .sauth .auth-aside .grain{ position:absolute; inset:0; opacity:.5; mix-blend-mode:soft-light; background-image:radial-gradient(rgba(255,255,255,.5) 1px,transparent 1.4px); background-size:12px 12px; pointer-events:none; }
+  .sauth .auth-aside-brand{ font-size:22px; text-transform:uppercase; letter-spacing:-.02em; color:#fff; text-decoration:none; position:relative; }
+  .sauth .auth-aside-brand::after{ content:"."; color:var(--butter); }
+  .sauth .aside-seal{ width:58px; height:58px; border-radius:50%; background:rgba(255,255,255,.16); border:2px solid rgba(255,255,255,.6); display:grid; place-items:center; color:#fff; position:relative; }
+  .sauth .auth-aside h2{ font-size:clamp(30px,3.4vw,44px); line-height:.98; text-transform:uppercase; letter-spacing:-.02em; color:#fff; max-width:14ch; position:relative; }
+  .sauth .auth-aside h2 .hl{ color:var(--butter); }
+  .sauth .auth-aside .lede{ font-size:15.5px; line-height:1.5; color:rgba(255,255,255,.88); max-width:34ch; position:relative; }
+  .sauth .perk-list{ display:flex; flex-direction:column; gap:11px; position:relative; }
+  .sauth .perk-row{ display:flex; align-items:flex-start; gap:11px; font-size:14.5px; line-height:1.35; }
+  .sauth .perk-row .pic{ flex:0 0 auto; width:30px; height:30px; border-radius:50%; border:var(--rule-1); display:grid; place-items:center; margin-top:1px; }
+  .sauth .perk-row.on-dark{ color:rgba(255,255,255,.92); } .sauth .perk-row.on-dark .pic{ background:rgba(255,255,255,.14); border-color:rgba(255,255,255,.5); color:#fff; }
+  .sauth .perk-row b{ font-weight:400; }
+  .sauth .aside-stat{ display:flex; align-items:baseline; gap:12px; padding:16px 18px; border:2px solid rgba(255,255,255,.5); border-radius:16px; background:rgba(255,255,255,.1); align-self:flex-start; position:relative; }
+  .sauth .aside-stat .big{ font-size:34px; color:var(--butter); line-height:1; }
+  .sauth .aside-stat .lbl{ font-size:13px; color:rgba(255,255,255,.85); line-height:1.3; max-width:16ch; }
+  .sauth .aside-vip-link{ display:inline-flex; align-items:center; gap:8px; align-self:flex-start; height:46px; padding:0 18px; border:2px solid #fff; border-radius:999px; background:rgba(255,255,255,.12); color:#fff; font-size:11.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; text-decoration:none; transition:background .16s,transform .14s; position:relative; }
+  .sauth .aside-vip-link:hover{ background:#fff; color:var(--vip-ink); transform:translateY(-1px); }
+  .sauth .aside-bottles{ position:absolute; right:-30px; bottom:-30px; width:230px; height:230px; pointer-events:none; opacity:.9; }
+  .sauth .aside-bottles img{ position:absolute; width:120px; filter:drop-shadow(4px 6px 0 rgba(0,0,0,.18)); mix-blend-mode:normal; }
+  .sauth .aside-bottles img:nth-child(1){ right:30px; bottom:10px; transform:rotate(8deg); }
+  .sauth .aside-bottles img:nth-child(2){ right:96px; bottom:-10px; width:96px; transform:rotate(-10deg); }
+  .sauth .auth-formwrap{ display:flex; align-items:center; justify-content:center; padding:48px 32px; background:var(--bg); }
+  .sauth .auth-card{ background:var(--surface); border:var(--rule); border-radius:22px; box-shadow:var(--shadow); padding:30px 32px 28px; width:100%; max-width:440px; }
+  .sauth .auth-tabs{ display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:5px; border:var(--rule-1); border-radius:999px; background:var(--bg-2); margin-bottom:22px; position:relative; }
+  .sauth .auth-tab{ position:relative; z-index:2; height:42px; border:0; background:transparent; border-radius:999px; font-size:12px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); transition:color .2s; }
+  .sauth .auth-tab.on{ color:var(--ink); } .sauth .auth-tab.on.vip{ color:var(--vip-ink); }
+  .sauth .auth-tabglide{ position:absolute; z-index:1; top:5px; bottom:5px; width:calc(50% - 5px); border:var(--rule-1); border-radius:999px; background:var(--surface); box-shadow:2px 2px 0 var(--ink); transition:transform .26s cubic-bezier(.4,1.2,.5,1),background .2s,box-shadow .2s; }
+  .sauth .auth-tabglide.r{ transform:translateX(calc(100% + 0px)); background:var(--vip-soft); box-shadow:2px 2px 0 var(--vip); }
+  .sauth .auth-head{ margin-bottom:18px; }
+  .sauth .auth-eyebrow{ display:inline-flex; align-items:center; gap:7px; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--vip-ink); margin-bottom:8px; }
+  .sauth .auth-eyebrow svg{ color:var(--vip); }
+  .sauth .auth-head h1{ font-size:clamp(26px,4vw,32px); line-height:.98; text-transform:uppercase; letter-spacing:-.02em; }
+  .sauth .auth-head h1 em{ font-style:normal; color:var(--accent); } .sauth .auth-head.vip h1 em{ color:var(--vip); }
+  .sauth .auth-head p{ color:var(--ink-2); font-size:14.5px; margin:9px 0 0; line-height:1.45; } .sauth .auth-head p b{ color:var(--vip-ink); font-weight:400; }
+  .sauth .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:13px; }
+  .sauth .field label{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); display:flex; justify-content:space-between; align-items:baseline; }
+  .sauth .field label a{ color:var(--vip-ink); font-size:11px; text-decoration:underline; text-transform:none; letter-spacing:.02em; }
+  .sauth .field-wrap{ position:relative; display:flex; align-items:center; }
+  .sauth .field input{ width:100%; height:52px; border:var(--rule); border-radius:13px; background:var(--surface); padding:0 16px; font-size:16px; color:var(--ink); outline:none; transition:box-shadow .14s; }
+  .sauth .field-wrap.hasic input{ padding-left:44px !important; } .sauth .field input:focus{ box-shadow:var(--shadow-sm); }
+  .sauth .field-ic{ position:absolute; left:15px; color:var(--muted); display:grid; place-items:center; pointer-events:none; }
+  .sauth .field-eye{ position:absolute; right:12px; background:transparent; border:0; color:var(--muted); padding:6px; border-radius:8px; display:grid; place-items:center; } .sauth .field-eye:hover{ color:var(--ink); }
+  .sauth .auth-remember{ display:flex; align-items:center; justify-content:space-between; margin:2px 0 18px; }
+  .sauth .check{ display:inline-flex; align-items:center; gap:9px; font-size:13.5px; color:var(--ink-2); user-select:none; cursor:pointer; }
+  .sauth .check input{ display:none; } .sauth .check .box{ width:22px; height:22px; border:var(--rule-1); border-radius:7px; background:var(--surface); display:grid; place-items:center; color:transparent; transition:background .15s,color .15s; flex:0 0 auto; }
+  .sauth .check input:checked + .box{ background:var(--mint); color:var(--sf-ink); }
+  .sauth .btn-ink{ display:inline-flex; align-items:center; justify-content:center; gap:9px; width:100%; height:56px; padding:0 22px; border:var(--rule); border-radius:999px; background:var(--ink); color:var(--bg); font-size:13px; letter-spacing:.07em; text-transform:uppercase; box-shadow:var(--shadow-sm); transition:transform .14s,box-shadow .14s,background .2s,color .2s; }
+  .sauth .btn-ink:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--accent); background:var(--accent); color:var(--ink); }
+  .sauth .btn-vip{ display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; height:56px; padding:0 20px; border:var(--rule); border-radius:999px; background:var(--vip); color:#fff; font-size:12.5px; letter-spacing:.07em; text-transform:uppercase; box-shadow:var(--shadow-sm); transition:transform .14s,box-shadow .14s; }
+  .sauth .btn-vip:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+  .sauth .btn-ghost{ display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; height:46px; padding:0 18px; border:var(--rule-1); border-radius:999px; background:var(--surface); color:var(--vip-ink); border-color:var(--vip); font-size:12px; letter-spacing:.05em; text-transform:uppercase; text-decoration:none; margin-top:14px; transition:transform .14s,box-shadow .14s; }
+  .sauth .btn-ghost:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-sm); }
+  .sauth .auth-or{ text-align:center; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); position:relative; margin:20px 0 16px; }
+  .sauth .auth-or::before,.sauth .auth-or::after{ content:""; position:absolute; top:50%; width:38%; height:1px; background:var(--hair); } .sauth .auth-or::before{ left:0; } .sauth .auth-or::after{ right:0; }
+  .sauth .auth-social{ display:flex; flex-direction:column; gap:9px; }
+  .sauth .soc-btn{ display:flex; align-items:center; justify-content:center; gap:10px; width:100%; height:50px; border:var(--rule-1); border-radius:13px; background:var(--surface); font-size:12.5px; letter-spacing:.02em; color:var(--ink); transition:transform .14s,box-shadow .14s; }
+  .sauth .soc-btn:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-sm); } .sauth .soc-btn.shop{ background:#5a31f4; color:#fff; border-color:var(--ink); }
+  .sauth .soc-ic{ width:19px; height:19px; display:grid; place-items:center; }
+  .sauth .auth-foot{ text-align:center; font-size:14px; color:var(--ink-2); margin-top:18px; }
+  .sauth .auth-foot a{ color:var(--vip-ink); font-weight:700; text-transform:uppercase; font-size:12.5px; letter-spacing:.03em; text-decoration:underline; }
+  .sauth .auth-fine{ text-align:center; font-size:11.5px; color:var(--muted); margin-top:14px; line-height:1.5; } .sauth .auth-fine a{ color:var(--ink-2); text-decoration:underline; }
+  .sauth .auth-back{ display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; background:transparent; border:0; transition:color .15s; } .sauth .auth-back:hover{ color:var(--ink); }
+  .sauth .auth-set2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .sauth .auth-err{ background:var(--vip-soft); border:var(--rule-1); border-color:var(--vip); border-radius:12px; padding:10px 14px; font-size:13px; color:var(--vip-ink); margin-bottom:14px; }
+  .sauth .auth-ok{ background:var(--mint); border:var(--rule-1); border-radius:12px; padding:10px 14px; font-size:13px; color:var(--sf-ink); margin-bottom:14px; }
+  .sauth .auth-view{ display:none; } .sauth .auth-view.show{ display:block; }
+  .sauth .social-login-container{ position:absolute !important; left:-9999px !important; top:auto !important; width:1px !important; height:1px !important; overflow:hidden !important; }
+  .sauth .soc-ic{ width:18px; height:18px; display:grid; place-items:center; flex:0 0 auto; }
+  .sauth .soc-btn.shop .soc-ic svg{ color:#fff; }
+  @media (max-width:920px){ .sauth .auth-stage{ grid-template-columns:1fr; } .sauth .auth-formwrap{ order:1; padding-top:34px; } .sauth .auth-aside{ order:2; border-right:0; border-top:var(--rule); border-bottom:0; padding:40px 28px; } .sauth .aside-bottles{ display:none; } }
+  @media (max-width:680px){ .sauth .auth-formwrap{ padding:22px 14px 30px; } .sauth .auth-card{ padding:22px 18px; box-shadow:var(--shadow-sm); } .sauth .auth-tabs{ margin-bottom:18px; } }
+  /* App-injected Google / social login button — restyle to match the brand (was a raw coral button) */
+  .sauth .social-login-container{ margin-top:14px; }
+  .sauth .social-login-container .buttons-container,
+  .sauth .social-login-container .button-container{ margin:0 !important; padding:0 !important; }
+  .sauth .social-login-container .btn-social{ background:#fff !important; color:var(--ink) !important; border:var(--rule-1) !important; border-radius:13px !important; height:50px !important; width:100% !important; font-family:'Archivo Black',sans-serif !important; font-weight:400 !important; font-size:12.5px !important; letter-spacing:.02em !important; text-transform:none !important; box-shadow:none !important; text-shadow:none !important; opacity:1 !important; display:flex !important; align-items:center !important; justify-content:center !important; gap:10px !important; transition:transform .14s, box-shadow .14s !important; }
+  .sauth .social-login-container .btn-social:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-sm) !important; }
+  .sauth .social-login-container .btn-social .fa{ color:#dd4b39 !important; font-size:17px !important; }
+  .sauth .social-login-container .btn-social span{ color:var(--ink) !important; }
+  .sauth .social-login-container .buttons-container .btn-social,
+  .sauth .social-login-container .buttons-container.square .btn-social,
+  .sauth .social-login-container .buttons-container.square .button-container .btn-social{ border-radius:13px !important; height:50px !important; }
+  .sauth .social-login-container .privacy-message{ font-size:11px !important; color:var(--muted) !important; text-align:center !important; margin-top:10px !important; line-height:1.5 !important; }
+  @media (prefers-reduced-motion:reduce){ .sauth *{ animation-duration:.001ms !important; transition-duration:.001ms !important; } }
+</style>
+
+{%- capture icDiamond -%}<svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor"><path d="M8 1.6l5.6 4.4L8 14.4 2.4 6 8 1.6z"/></svg>{%- endcapture -%}
+{%- capture icDiamondLg -%}<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 2.5l8.5 6.6L12 21.5 3.5 9.1 12 2.5z"/></svg>{%- endcapture -%}
+{%- capture icCheck -%}<svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 8.5l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icTruck -%}<svg viewBox="0 0 22 16" width="17" height="15" fill="none"><path d="M1 2.5h12v8H1zM13 5.5h4l3 3v2h-7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="5" cy="12.5" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="16.5" cy="12.5" r="2" stroke="currentColor" stroke-width="1.6"/></svg>{%- endcapture -%}
+{%- capture icSpark -%}<svg viewBox="0 0 18 18" width="16" height="16" fill="none"><path d="M9 1.5v15M1.5 9h15M3.8 3.8l10.4 10.4M14.2 3.8L3.8 14.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>{%- endcapture -%}
+{%- capture icLock -%}<svg viewBox="0 0 16 18" width="14" height="15" fill="none"><rect x="2.5" y="7.5" width="11" height="8" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M5 7.5V5a3 3 0 016 0v2.5" stroke="currentColor" stroke-width="1.6"/></svg>{%- endcapture -%}
+{%- capture icArrow -%}<svg viewBox="0 0 16 14" width="15" height="13" fill="none"><path d="M2 7h11M9 3l4 4-4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icArrowL -%}<svg viewBox="0 0 16 14" width="14" height="12" fill="none"><path d="M14 7H3M7 3L3 7l4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icMail -%}<svg viewBox="0 0 18 14" width="17" height="14" fill="none"><rect x="1.5" y="1.5" width="15" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><path d="M2 3l7 5 7-5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>{%- endcapture -%}
+
+<div class="sauth" data-sauth data-view="{{ initview }}">
+  <div class="auth-stage split">
+    <aside class="auth-aside">
+      <span class="grain"></span>
+      <a class="auth-aside-brand" href="{{ routes.root_url }}">Syruvia</a>
+      <span class="aside-seal">{{ icDiamondLg }}</span>
+      <h2>Join the <span class="hl">VIP Rewards club.</span></h2>
+      <p class="lede">Earn points on everything you buy, climb from Taster to Legend, and unlock perks money can't — free for every account.</p>
+      <div class="perk-list">
+        <div class="perk-row on-dark"><span class="pic">{{ icDiamond }}</span><span><b>Earn points</b> on every order, redeem for credit</span></div>
+        <div class="perk-row on-dark"><span class="pic">{{ icSpark }}</span><span><b>Daily games</b> &amp; members-only codes</span></div>
+        <div class="perk-row on-dark"><span class="pic">{{ icTruck }}</span><span><b>Free shipping</b> &amp; first dibs on new drops</span></div>
+      </div>
+      <div class="aside-stat"><span class="big">4</span><span class="lbl">reward tiers to climb — Taster to Legend</span></div>
+      <a class="aside-vip-link" href="/apps/vip/rewards">{{ icDiamond }} See how VIP Rewards works {{ icArrow }}</a>
+      {%- if bcoll and bcoll.products.size > 0 -%}
+        <div class="aside-bottles">
+          {%- for product in bcoll.products limit: 2 -%}<img src="{{ product.featured_image | image_url: width: 240 }}" alt="">{%- endfor -%}
+        </div>
+      {%- endif -%}
+    </aside>
+
+    <div class="auth-formwrap">
+      <div class="auth-card">
+        {%- comment -%} ---------- RESET (recover password request) ---------- {%- endcomment -%}
+        <div class="auth-view" data-v="reset">
+          <button class="auth-back" data-goto="signin" type="button">{{ icArrowL }} Back to sign in</button>
+          <div class="auth-head"><h1>Reset your <em>password</em></h1><p>Enter the email on your account and we'll send a link to set a new password.</p></div>
+          {%- form 'recover_customer' -%}
+            {%- if form.posted_successfully? -%}<div class="auth-ok">{{ icCheck }} We've sent you an email with a link to reset your password.</div>{%- endif -%}
+            {%- if form.errors -%}<div class="auth-err">{{ form.errors | default_errors }}</div>{%- endif -%}
+            <div class="field"><label>Email address</label><div class="field-wrap hasic"><span class="field-ic">{{ icMail }}</span><input type="email" name="email" placeholder="you@email.com" autocomplete="email" required></div></div>
+            <button class="btn-ink" type="submit">Send reset link {{ icArrow }}</button>
+          {%- endform -%}
+          <p class="auth-fine">Remembered it? <a data-goto="signin" style="font-weight:700;cursor:pointer">Sign in instead</a></p>
+        </div>
+
+        {%- comment -%} ---------- SIGN IN ---------- {%- endcomment -%}
+        <div class="auth-view" data-v="signin">
+          <div class="auth-tabs"><span class="auth-tabglide"></span><button class="auth-tab on" data-goto="signin" type="button">Sign in</button><button class="auth-tab" data-goto="create" type="button">Join free</button></div>
+          <div class="auth-head"><h1>Welcome <em>back</em></h1><p>Sign in to see your orders, favorites &amp; VIP savings.</p></div>
+          {%- form 'customer_login' -%}
+            {%- if form.errors -%}<div class="auth-err">{{ form.errors | default_errors }}</div>{%- endif -%}
+            <div class="field"><label>Email address</label><div class="field-wrap hasic"><span class="field-ic">{{ icMail }}</span><input type="email" name="customer[email]" placeholder="you@email.com" autocomplete="email" required></div></div>
+            <div class="field"><label><span>Password</span><a data-goto="reset" style="cursor:pointer">Forgot?</a></label><div class="field-wrap hasic"><span class="field-ic">{{ icLock }}</span><input type="password" name="customer[password]" placeholder="Your password" autocomplete="current-password" data-pw required><button type="button" class="field-eye" data-eye aria-label="Show"></button></div></div>
+            <button class="btn-ink" type="submit">Sign in {{ icArrow }}</button>
+          {%- endform -%}
+          <div class="auth-or">or continue with</div>
+          <div class="auth-social">
+            <button type="button" class="soc-btn" data-soc="google"><span class="soc-ic"><svg viewBox="0 0 18 18" width="17" height="17"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.17-1.84H9v3.49h4.84a4.14 4.14 0 0 1-1.79 2.72v2.26h2.9c1.7-1.57 2.69-3.88 2.69-6.63z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.81.54-1.84.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.96v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.95 10.7a5.4 5.4 0 0 1 0-3.42V4.95H.96a9 9 0 0 0 0 8.08l2.99-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59C13.46.9 11.43 0 9 0A9 9 0 0 0 .96 4.95l2.99 2.33C4.66 5.16 6.65 3.58 9 3.58z"/></svg></span> Continue with Google</button>
+            <button type="button" class="soc-btn" data-soc="apple"><span class="soc-ic"><svg viewBox="0 0 24 24" width="17" height="17" fill="#000"><path d="M16.36 12.6c.02 2.6 2.27 3.47 2.3 3.48-.02.06-.36 1.23-1.18 2.44-.71 1.04-1.45 2.08-2.61 2.1-1.14.02-1.51-.67-2.81-.67s-1.71.65-2.79.69c-1.12.04-1.97-1.12-2.69-2.16-1.47-2.12-2.59-6-1.08-8.63.75-1.3 2.09-2.12 3.54-2.14 1.1-.02 2.14.74 2.81.74.67 0 1.93-.91 3.26-.78.55.02 2.11.22 3.11 1.67-.08.05-1.86 1.09-1.84 3.25M14.2 4.3c.59-.72 1-1.71.89-2.71-.86.04-1.9.58-2.51 1.3-.55.63-1.03 1.63-.9 2.6.96.08 1.93-.48 2.52-1.19"/></svg></span> Continue with Apple</button>
+            <button type="button" class="soc-btn shop" data-soc="shop"><span class="soc-ic"><svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor"><path d="M6 6V5a4 4 0 1 1 8 0v1h2.2l.9 11.5H2.9L3.8 6H6zm2 0h4V5a2 2 0 1 0-4 0v1z"/></svg></span> Continue with Shop</button>
+          </div>
+          <div class="auth-foot">New to Syruvia? <a data-goto="create">Create a free VIP account</a></div>
+          <a class="btn-ghost" href="/apps/vip/rewards">{{ icDiamond }} Explore the VIP program {{ icArrow }}</a>
+          <p class="auth-fine">By continuing you agree to Syruvia's <a href="/policies/terms-of-service">Terms</a> &amp; <a href="/policies/privacy-policy">Privacy Policy</a>.</p>
+        </div>
+
+        {%- comment -%} ---------- CREATE (= join VIP) ---------- {%- endcomment -%}
+        <div class="auth-view" data-v="create">
+          <div class="auth-tabs"><span class="auth-tabglide r"></span><button class="auth-tab" data-goto="signin" type="button">Sign in</button><button class="auth-tab on vip" data-goto="create" type="button">Join free</button></div>
+          <div class="auth-head vip"><span class="auth-eyebrow">{{ icDiamond }} Free VIP Rewards club</span><h1>Join the <em>VIP Rewards</em> club</h1><p>One free account starts you earning <b>points on every order</b>, climbing tiers and unlocking members-only perks, free shipping &amp; early drops.</p></div>
+          {%- form 'create_customer' -%}
+            {%- if form.errors -%}<div class="auth-err">{{ form.errors | default_errors }}</div>{%- endif -%}
+            <div class="auth-set2">
+              <div class="field"><label>First name</label><div class="field-wrap"><input type="text" name="customer[first_name]" placeholder="Maya" autocomplete="given-name"></div></div>
+              <div class="field"><label>Last name</label><div class="field-wrap"><input type="text" name="customer[last_name]" placeholder="Okafor" autocomplete="family-name"></div></div>
+            </div>
+            <div class="field"><label>Email address</label><div class="field-wrap hasic"><span class="field-ic">{{ icMail }}</span><input type="email" name="customer[email]" placeholder="you@email.com" autocomplete="email" required></div></div>
+            <div class="field"><label>Password</label><div class="field-wrap hasic"><span class="field-ic">{{ icLock }}</span><input type="password" name="customer[password]" placeholder="Create a password" autocomplete="new-password" data-pw required><button type="button" class="field-eye" data-eye aria-label="Show"></button></div></div>
+            <label class="check" style="margin:2px 0 16px"><input type="checkbox" name="customer[accepts_marketing]" value="true" checked><span class="box">{{ icCheck }}</span><span>Email me flavor drops &amp; VIP perks</span></label>
+            <button class="btn-vip" type="submit">{{ icDiamond }} Create account &amp; unlock VIP</button>
+          {%- endform -%}
+          <div class="auth-or">or continue with</div>
+          <div class="auth-social">
+            <button type="button" class="soc-btn" data-soc="google"><span class="soc-ic"><svg viewBox="0 0 18 18" width="17" height="17"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.17-1.84H9v3.49h4.84a4.14 4.14 0 0 1-1.79 2.72v2.26h2.9c1.7-1.57 2.69-3.88 2.69-6.63z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.9-2.26c-.81.54-1.84.86-3.06.86-2.35 0-4.34-1.59-5.05-3.72H.96v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.95 10.7a5.4 5.4 0 0 1 0-3.42V4.95H.96a9 9 0 0 0 0 8.08l2.99-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.59C13.46.9 11.43 0 9 0A9 9 0 0 0 .96 4.95l2.99 2.33C4.66 5.16 6.65 3.58 9 3.58z"/></svg></span> Continue with Google</button>
+            <button type="button" class="soc-btn" data-soc="apple"><span class="soc-ic"><svg viewBox="0 0 24 24" width="17" height="17" fill="#000"><path d="M16.36 12.6c.02 2.6 2.27 3.47 2.3 3.48-.02.06-.36 1.23-1.18 2.44-.71 1.04-1.45 2.08-2.61 2.1-1.14.02-1.51-.67-2.81-.67s-1.71.65-2.79.69c-1.12.04-1.97-1.12-2.69-2.16-1.47-2.12-2.59-6-1.08-8.63.75-1.3 2.09-2.12 3.54-2.14 1.1-.02 2.14.74 2.81.74.67 0 1.93-.91 3.26-.78.55.02 2.11.22 3.11 1.67-.08.05-1.86 1.09-1.84 3.25M14.2 4.3c.59-.72 1-1.71.89-2.71-.86.04-1.9.58-2.51 1.3-.55.63-1.03 1.63-.9 2.6.96.08 1.93-.48 2.52-1.19"/></svg></span> Continue with Apple</button>
+            <button type="button" class="soc-btn shop" data-soc="shop"><span class="soc-ic"><svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor"><path d="M6 6V5a4 4 0 1 1 8 0v1h2.2l.9 11.5H2.9L3.8 6H6zm2 0h4V5a2 2 0 1 0-4 0v1z"/></svg></span> Continue with Shop</button>
+          </div>
+          <div class="auth-foot">Already a member? <a data-goto="signin">Sign in</a></div>
+          <a class="btn-ghost" href="/apps/vip/rewards">{{ icDiamond }} Explore the VIP program {{ icArrow }}</a>
+          <p class="auth-fine">By continuing you agree to Syruvia's <a href="/policies/terms-of-service">Terms</a> &amp; <a href="/policies/privacy-policy">Privacy Policy</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var root=document.querySelector('[data-sauth]'); if(!root) return;
+  var views=[].slice.call(root.querySelectorAll('.auth-view'));
+  function show(v){ views.forEach(function(el){ el.classList.toggle('show', el.getAttribute('data-v')===v); }); root.setAttribute('data-view',v); try{ history.replaceState(null,'', v==='create'?'{{ routes.account_register_url }}':'{{ routes.account_login_url }}'); }catch(e){} }
+  // if server has recover errors/success or login errors, force the right view
+  var initial=root.getAttribute('data-view');
+  if(root.querySelector('[data-v="reset"] .auth-err, [data-v="reset"] .auth-ok')) initial='reset';
+  else if(root.querySelector('[data-v="create"] .auth-err')) initial='create';
+  else if(root.querySelector('[data-v="signin"] .auth-err')) initial='signin';
+  if(location.hash==='#recover') initial='reset';
+  show(initial);
+  root.addEventListener('click',function(e){ var b=e.target.closest('[data-goto]'); if(b){ e.preventDefault(); show(b.getAttribute('data-goto')); return; } var sb=e.target.closest('[data-soc]'); if(sb){ e.preventDefault(); var p=sb.getAttribute('data-soc'); var v=sb.closest('.auth-view'); var sc=v?v.querySelector('.social-login-container'):document.querySelector('.social-login-container'); if(sc){ var ab=sc.querySelector('.btn-'+p)||sc.querySelector('.btn-'+p+'-plus')||sc.querySelector('[class*="'+p+'"]'); if(ab){ ab.click(); } } } });
+  // password eye
+  var eyeS='<svg viewBox="0 0 20 14" width="18" height="14" fill="none"><path d="M1 7s3.2-5.5 9-5.5S19 7 19 7s-3.2 5.5-9 5.5S1 7 1 7z" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="7" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>';
+  [].slice.call(root.querySelectorAll('[data-eye]')).forEach(function(btn){ btn.innerHTML=eyeS; btn.addEventListener('click',function(){ var inp=btn.parentElement.querySelector('[data-pw]'); if(inp){ inp.type=inp.type==='password'?'text':'password'; } }); });
+})();
+</script>
+
+{% schema %}
+{ "name": "Auth (Custom)", "settings": [ { "type": "collection", "id": "bottles_collection", "label": "Marketing bottle images from" } ], "presets": [{ "name": "Auth (Custom)" }] }
+{% endschema %}

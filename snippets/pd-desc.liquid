@@ -1,0 +1,52 @@
+{%- comment -%} Generate a clean marketing description without using the recipe metafield. Uses proper-case product name. {%- endcomment -%}
+{%- assign t = product.title | downcase -%}
+{%- assign clean = product.title | replace: ' Syrup', '' | replace: ' Pack', '' -%}
+{%- if t contains 'pack' or t contains 'bundle' -%}
+  A hand-picked trio of our most loved small-batch syrups. Mix flavors, save more, and never run out of your favorite pour.
+{%- elsif t contains 'sugar-free' or t contains 'sugar free' -%}
+  Zero sugar, full flavor. The same café-shop pour as our classic line — just without the calories. One pump, perfect every time.
+{%- elsif t contains 'vanilla' -%}
+  Smooth, balanced {{ clean }} crafted from pure cane sugar and real vanilla. The everyday pour that goes anywhere — lattes, cold brew, oat milk, sparkling water.
+{%- elsif t contains 'caramel' -%}
+  Buttery, slow-cooked {{ clean }} with rich molasses depth. Built to layer into coffee, drizzle over ice cream, or stir into a quick cocktail.
+{%- elsif t contains 'hazelnut' -%}
+  Roasted-nut warmth with a clean cane-sugar finish. The {{ clean }} that turns a basic latte into a coffee-shop signature pour.
+{%- elsif t contains 'matcha' or t contains 'green tea' -%}
+  Made to play nicely with matcha and green tea. A clean, lightly-sweet {{ clean }} pour that lets the tea do the talking.
+{%- elsif t contains 'mango' -%}
+  Bright, ripe mango with a tropical edge. Perfect for iced teas, sparkling sodas, and summer cocktails. One pump, instant getaway.
+{%- elsif t contains 'raspberry' -%}
+  Bold, tart-sweet raspberry from real berry flavor. Stirs into lattes, lemonades, and bubbly water without faking it.
+{%- elsif t contains 'apple' -%}
+  Crisp, orchard-fresh green apple. Plays beautifully in sparkling soda, iced tea, and an apple-spice latte.
+{%- elsif t contains 'lavender' -%}
+  Soft, floral lavender from a clean botanical extract. A few pumps make a London Fog, an iced honey latte, or a lavender lemonade.
+{%- elsif t contains 'pumpkin' -%}
+  Warm, spiced {{ clean }} with real cane sugar. Cinnamon, nutmeg, and clove built for fall lattes and cozy oat-milk pours.
+{%- elsif t contains 'peppermint' or t contains 'mint' -%}
+  Cool, crisp {{ clean }} with a clean sugar base. Built for mochas, hot chocolate, and a sharper-than-expected mojito.
+{%- elsif t contains 'cinnamon' -%}
+  Warm, baking-spice cinnamon with a pure cane sugar core. Stirs into coffee, oatmeal, French toast, and a fall-weather chai.
+{%- elsif t contains 'coconut' -%}
+  Toasted, tropical coconut from real coconut flavor. Built for iced coffees, piña coladas, and anything that wants a beach pour.
+{%- elsif t contains 'strawberry' -%}
+  Sweet, ripe strawberry from real berry flavor. Made for cream sodas, lemonades, and the strawberry refresher you order at the café.
+{%- elsif t contains 'blueberry' -%}
+  Wild blueberry depth with a balanced cane sugar finish. Pours into pancakes, lemonades, and the kind of latte you make for guests.
+{%- elsif t contains 'lemon' -%}
+  Bright, citrus-forward {{ clean }} with real fruit zing. The drink-builder that makes iced teas, sparkling water, and homemade lemonade pop.
+{%- elsif t contains 'orange' -%}
+  Sun-ripe orange essence with a clean sugar base. Made for sparkling water, sangria, and the brunch mimosa upgrade.
+{%- elsif t contains 'cherry' -%}
+  Dark, sweet-tart cherry from real fruit flavor. Plays in colas, cocktails, and over a scoop of vanilla ice cream.
+{%- elsif t contains 'chocolate' -%}
+  Rich, deep cocoa with real cane sugar warmth. The shortcut to a café-grade mocha, hot chocolate, or chocolate-milk upgrade.
+{%- elsif t contains 'banana' -%}
+  Sweet, ripe banana with a clean sugar core. Drops into smoothies, milkshakes, and a banana-bread latte that hits.
+{%- elsif t contains 'honey' -%}
+  Soft floral honey notes with a balanced cane sugar finish. Designed for honey lattes, tea sweeteners, and warm-spice cocktails.
+{%- elsif t contains 'almond' or t contains 'amaretto' -%}
+  Toasted-almond warmth with a clean cane sugar base. A few pumps build amaretto sours, almond lattes, and croissant-pour cold brews.
+{%- else -%}
+  Café-quality {{ clean }} crafted in small batches from pure cane sugar and real flavor. One pump delivers a perfect pour, every single time.
+{%- endif -%}

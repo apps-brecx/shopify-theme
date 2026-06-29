@@ -1,0 +1,190 @@
+{% comment %}
+  Renders gift card recipient form.
+{% endcomment %}
+
+<div class="customer">
+  {%- assign gift_card_recipient_control_flag = 'properties[__shopify_send_gift_card_to_recipient]' -%}
+  <script src="{{ 'recipient-form.js' | asset_url }}" defer="defer"></script>
+
+  <recipient-form
+    class="recipient-form"
+    data-section-id="{{ section.id }}"
+    data-product-variant-id="{{ product.selected_or_first_available_variant.id }}"
+  >
+
+    <!-- ✅ FIXED: Checkbox is now properly aligned with no double rendering -->
+    <div class="recipient-checkbox-wrapper">
+      <input
+        id="Recipient-checkbox-{{ section.id }}"
+        type="checkbox"
+        name="{{ gift_card_recipient_control_flag }}"
+        class="recipient-checkbox-input"
+      >
+      <label for="Recipient-checkbox-{{ section.id }}" class="recipient-checkbox-label">
+        I want to send this as a gift
+      </label>
+    </div>
+
+    <!-- ✅ Recipient Fields (Hidden Initially) -->
+    <div class="recipient-fields" style="display: none;">
+      <hr>
+      <div class="recipient-fields__field">
+        <div class="field">
+          <input
+            class="field__input"
+            id="Recipient-email-{{ section.id }}"
+            type="email"
+            placeholder="Recipient email"
+            name="properties[Recipient email]"
+          >
+          <label class="field__label" for="Recipient-email-{{ section.id }}">
+            Recipient email
+          </label>
+        </div>
+      </div>
+
+      <div class="recipient-fields__field">
+        <div class="field">
+          <input
+            class="field__input"
+            type="text"
+            id="Recipient-name-{{ section.id }}"
+            name="properties[Recipient name]"
+            placeholder="Recipient name (optional)"
+          >
+          <label class="field__label" for="Recipient-name-{{ section.id }}">
+            Recipient name (optional)
+          </label>
+        </div>
+      </div>
+
+      <div class="recipient-fields__field">
+        <div class="field">
+          <textarea
+            id="Recipient-message-{{ section.id }}"
+            class="text-area field__input"
+            name="properties[Message]"
+            maxlength="200"
+            placeholder="Message (optional)"
+          ></textarea>
+          <label class="form__label field__label" for="Recipient-message-{{ section.id }}">
+            Message (optional)
+          </label>
+        </div>
+      </div>
+
+      <div class="recipient-fields__field">
+        <div class="field">
+          <input
+            class="field__input text-body"
+            type="date"
+            id="Recipient-send-on-{{ section.id }}"
+            name="properties[Send on]"
+          >
+          <label class="form__label field__label" for="Recipient-send-on-{{ section.id }}">
+            Send on (optional)
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden Inputs for Shopify -->
+    <input type="hidden" name="{{ gift_card_recipient_control_flag }}" value="if_present">
+    <input type="hidden" name="properties[__shopify_offset]" value="">
+  </recipient-form>
+</div>
+
+<!-- ✅ FIXED JavaScript -->
+<script>
+  // document.addEventListener("DOMContentLoaded", function () {
+  //     const recipientCheckbox = document.getElementById("Recipient-checkbox-{{ section.id }}");
+  //     const recipientFields = document.querySelector(".recipient-fields");
+
+  //     if (recipientCheckbox && recipientFields) {
+  //         // ✅ Ensure form is hidden on page load
+  //         recipientFields.style.display = "none";
+
+  //         recipientCheckbox.addEventListener("change", function () {
+  //             recipientFields.style.display = this.checked ? "block" : "none";
+  //         });
+  //     }
+
+  //     console.log("Recipient Form Script Loaded ✅");
+  // });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const recipientCheckbox = document.querySelector("#Recipient-checkbox-{{ section.id }}");
+    const recipientFields = document.querySelector(".recipient-fields");
+
+    if (recipientCheckbox && recipientFields) {
+        // ✅ Hide form initially on page load
+        recipientFields.style.display = "none";
+
+        recipientCheckbox.addEventListener("change", function () {
+            if (this.checked) {
+                recipientFields.style.display = "block";  // ✅ Show when checked
+            } else if(!this.checked) {
+                recipientFields.style.display = "none";   // ✅ Hide when unchecked
+            }
+        });
+    } else {
+        console.error("Recipient checkbox or fields not found! Check HTML structure.");
+    }
+});
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const recipientFields = document.querySelector(".recipient-fields");
+    const parentWrap = document.querySelector(".cst-custom-child-wrap");
+
+    if (recipientFields && parentWrap) {
+        const observer = new MutationObserver(() => {
+            const isVisible = window.getComputedStyle(recipientFields).display !== "none";
+            parentWrap.style.padding = isVisible ? "10px 10px 461px" : "10px 10px 102px";
+        });
+
+        // Observe changes in the 'style' attribute
+        observer.observe(recipientFields, { attributes: true, attributeFilter: ["style"] });
+
+        // Run once on load to set the correct padding
+        const isVisible = window.getComputedStyle(recipientFields).display !== "none";
+        parentWrap.style.padding = isVisible ? "10px 10px 461px" : "10px 10px 102px";
+    } else {
+        console.error("❌ .recipient-fields or .cst-custom-child-wrap not found!");
+    }
+});
+
+
+
+</script>
+
+<!-- ✅ FIXED CSS -->
+<style>
+  /* Make sure checkbox is properly aligned */
+  
+  .recipient-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .recipient-checkbox-input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+
+  .recipient-checkbox-label {
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .recipient-fields {
+    display: none; /* ✅ FIXED: Hide by default */
+    margin-top: 15px;
+  }
+
+  .recipient-fields__field {
+    margin-bottom: 10px;
+  }
+</style>

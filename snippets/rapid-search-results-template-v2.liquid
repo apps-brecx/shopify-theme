@@ -1,0 +1,166 @@
+{% assign rps_metafields = shop.metafields['rapid-search'] %}
+{% assign rps_settings = rps_metafields.rpsSettings %}
+
+{% capture theme_id %}{{ theme.id }}{% endcapture %}
+{% assign rps_theme_settings = rps_settings.shopify_public_settings.theme_settings[theme_id] %}
+
+{% if collection and rps_theme_settings.collection_page_enabled == true %}
+  {% assign collection_page_enabled = true %}
+{% endif %}
+
+{% if search and rps_theme_settings.search_results_page_enabled == true and rps_theme_settings.product_card_design == 'original' %}
+  {% assign search_results_page_enabled = true %}
+{% endif %}
+
+{% if collection_page_enabled or search_results_page_enabled %}
+  {% assign rps_results_enabled = true %}
+{% endif %}
+
+{% if rps_theme_settings.product_card_design != 'original' %}
+  {% assign is_non_original_snapshot = true %}
+{% endif %}
+
+{% if rps_theme_settings.product_card_design == 'original' and rps_theme_settings.assets_updated != null %}
+  {% assign is_original_snapshot_with_updated_assets = true %}
+{% endif %}
+
+{% if is_non_original_snapshot or is_original_snapshot_with_updated_assets %}
+  {% assign should_load_snapshot = true %}
+{% endif %}
+
+{% if content_for_header contains rps_metafields.storeFrontScriptDomain %}
+  {% assign rps_installed = true %}
+{% endif %}
+
+{% if rps_installed %}
+  <script type="application/json" id="rpsSectionSettingsScript">
+    {{ section.settings | json }}
+  </script>
+{% endif %}
+
+{% if rps_installed
+  and rps_settings.enabled == true
+  and rps_settings.limit_exceeded == false
+  and rps_settings.last_import != false
+  and rps_settings.last_import != null
+  and rps_results_enabled == true
+  and should_load_snapshot == true
+%}
+  {% if search %}
+    {% liquid
+      assign search_title = 'templates.search.title' | t
+      
+      if search_title == blank or search_title contains 'missing'
+        assign search_title = 'search.general.title' | t
+      endif
+      
+      if search_title == blank or search_title contains 'missing'
+        assign search_title = 'content.search_results' | t
+      endif
+      
+      if search_title == blank or search_title contains 'missing'
+        assign search_title = 'general.search.title' | t
+      endif
+      
+      if search_title == blank or search_title contains 'missing'
+        assign search_title = 'search.heading' | t
+      endif
+      
+      if search_title == blank or search_title contains 'missing'
+        assign search_title = 'general.search.title_results' | t
+      endif
+      
+      if search_title == blank or search_title contains 'missing'
+        assign search_title = 'names.search_results' | t
+      endif
+
+      if search_title == blank or search_title contains 'missing'
+        assign search_title = 'Search Results'
+      endif
+    %}
+
+    <h1 class="rps-results-page-title">{{ search_title }}</h1>
+  {% endif %}
+
+  <script type="application/json" id="rpsCartInfo">
+    {{ cart | json }}
+  </script>
+
+  {% if collection %}
+  <script type="application/json" id="rpsCollectionInfo">
+    {
+      "id": {{ collection.id | json }},
+      "handle": {{ collection.handle | json }},
+      "title": {{ collection.title | json }},
+      "default_sort_by": {{ collection.default_sort_by | json }}
+    }
+  </script>
+  {% endif %}
+
+  <style id="rps-theme-section-style-{{ section.id }}">
+    {% if rps_theme_settings.theme_version == 2 %}
+      #shopify-section-template{{ section.id }}__search.shopify-section .search-page__header {
+        display: none !important;
+      }
+
+      #shopify-section-{{ section.id }} > *:not(.rps-results):not(.rps-results-page-title) {
+        display: none !important;
+      }
+    {% endif %}
+
+    .rps-results-page-title {
+      text-align: center;
+      font-size: 32px;
+      margin-top: 20px;
+      margin-bottom: 25px;
+      padding: 0 10px;
+    }
+
+    {{ rps_theme_settings.css }}
+  </style>
+
+  {% render 'rapid-search-results-skeleton' %}
+
+  {% if rps_theme_settings.theme_version == 1 %}
+    <script id="rps-theme-section-script-{{ section.id }}">
+      function rpsHideSiblingsExceptTarget(targetElement) {
+        if (!targetElement) return;
+
+        const container = targetElement.parentElement;
+
+        if (!container) return;
+
+        const children = Array.from(container.children);
+
+        children
+          .filter(child => !child.classList.contains('rps-results'))
+          .forEach(sibling => (sibling.style.display = 'none'));
+      }
+
+      function rpsObserveParent(targetElement) {
+        if (!targetElement) return;
+
+        const parentElement = targetElement.parentElement;
+        if (!parentElement) return;
+
+        const observer = new MutationObserver(() => {
+          rpsHideSiblingsExceptTarget(targetElement)
+        });
+
+        observer.observe(parentElement, {
+          attributes: true,
+          childList: true,
+          subtree: false
+        });
+      }
+
+      const rpsResultsTemplateContainer = document.querySelector('.rps-results');
+
+      if (rpsResultsTemplateContainer) {
+        rpsHideSiblingsExceptTarget(rpsResultsTemplateContainer);
+
+        rpsObserveParent(rpsResultsTemplateContainer);
+      }
+    </script>
+  {% endif %}
+{% endif %}

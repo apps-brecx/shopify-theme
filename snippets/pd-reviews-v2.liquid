@@ -1,0 +1,78 @@
+{%- comment -%} Reviews v2 — unified: always renders the styled Judge.me fallback. {%- endcomment -%}
+{% render 'pd-rvw-fill-fix' %}
+
+{%- assign rating_count = product.metafields.reviews.rating_count.value | default: 0 -%}
+{%- assign jdgm_html    = product.metafields.judgeme.widget -%}
+
+{%- assign rating_num = '5.0' -%}
+{%- if product.metafields.reviews.rating.value.rating -%}
+  {%- assign rating_num = product.metafields.reviews.rating.value.rating -%}
+{%- endif -%}
+
+{%- assign has_anything = false -%}
+{%- if jdgm_html != blank or rating_count != 0 -%}{%- assign has_anything = true -%}{%- endif -%}
+
+{%- if has_anything -%}
+
+{%- assign rating_int = rating_num | times: 1 | round -%}
+
+<section class="pd-reviews-v2"
+         id="reviews"
+         data-product-id="{{ product.id }}"
+         data-product-handle="{{ product.handle }}"
+         data-total-reviews="{{ rating_count }}"
+         data-source="jdgm">
+
+  <div class="pd-wrap pd-rvw-head">
+    <span class="pd-eyebrow">Customer reviews</span>
+    <h2 class="pd-h2">Read the <em>love</em>.</h2>
+    <p class="pd-rvw-lede">{{ rating_count }} verified reviews from real {{ product.title | downcase | replace: ' syrup', '' | strip }} lovers.</p>
+  </div>
+
+  <div class="pd-wrap">
+    <div class="pd-rvw-hero">
+      <div class="pd-rvw-hero-num">{{ rating_num }}</div>
+      <div class="pd-rvw-hero-stars" aria-label="{{ rating_num }} out of 5">
+        {% for i in (1..5) %}
+          {% if i <= rating_int %}
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="#FF6B5C" stroke="#FF6B5C" stroke-width="1" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
+          {% else %}
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linejoin="round" opacity=".25" aria-hidden="true"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="pd-rvw-hero-text">Based on {{ rating_count }} verified reviews</div>
+      <a href="#jdgm-write-rev" class="pd-rvw-hero-cta">
+        Write a review
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5 v14 M5 12 h14"/></svg>
+      </a>
+    </div>
+
+    <div class="pd-rvw-trust">
+      <span class="pd-rvw-trust-item">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg>
+        Verified buyers
+      </span>
+      <span class="pd-rvw-trust-item">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L14.5 8 L21 9 L16.5 13.5 L17.5 20 L12 16.5 L6.5 20 L7.5 13.5 L3 9 L9.5 8 Z"/></svg>
+        Real reviews
+      </span>
+    </div>
+  </div>
+
+  {%- if jdgm_html != blank -%}
+    {% render 'pd-rvw-jdgm-visible' %}
+    <div class="pd-wrap pd-rvw-all">
+      <div class="pd-rvw-all-heading">
+        <span class="pd-rvw-all-tag">All reviews</span>
+        <p class="pd-rvw-filter-hint">Tap a star row to filter</p>
+      </div>
+      <div class="pd-rvw-jdgm-content" id="pdRvwJdgmContent">
+        {{ jdgm_html }}
+      </div>
+    </div>
+  {%- endif -%}
+
+</section>
+
+{%- endif -%}

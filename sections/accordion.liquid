@@ -1,0 +1,131 @@
+<div class="faq-section">
+  <div class="faq-section__wrapper page-width">
+
+    {% if section.settings.title != blank %}
+      <h2 class="faq-title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    <div class="faq-wrapper">
+
+      {% for block in section.blocks %}
+        <div class="faq-item" {{ block.shopify_attributes }}>
+          
+          <button class="faq-question">
+            {{ block.settings.question }}
+            <span class="icon">+</span>
+          </button>
+
+          <div class="faq-answer">
+            {{ block.settings.answer }}
+          </div>
+
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+<style>
+    .faq-section__wrapper{
+        max-width: 1300px;
+        margin: 0 auto;
+    }
+.faq-section {
+  padding: 40px 0;
+  background: #fff6ee;
+}
+
+.faq-title {
+  margin-bottom: 20px;
+}
+
+.faq-item {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.faq-question {
+  width: 100%;
+  color: #000;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 15px 0;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.faq-question .icon{
+  font-size: 26px;
+}
+.faq-answer {
+  display: none;
+  padding: 0 0 15px 0;
+  color: #555;
+}
+
+.faq-item.active .faq-answer {
+  display: block;
+}
+
+.faq-item.active .icon {
+  transform: rotate(45deg);
+}
+
+.icon {
+  transition: 0.3s;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".faq-question").forEach(btn => {
+    btn.addEventListener("click", function () {
+      const item = this.parentElement;
+
+      item.classList.toggle("active");
+    });
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Accordion",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Frequently Asked Questions"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Accordion",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

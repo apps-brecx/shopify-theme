@@ -1,0 +1,692 @@
+{% comment %}
+    Renders a header drawer menu for mobile and desktop.
+
+    Usage:
+    {% render 'header-drawer' %}
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+{% endcomment %}
+<style>
+    #menu-drawer .container{
+      width: 700px;
+      margin: 0 auto;
+  }
+  .tabs{
+      margin: 0px;
+      padding: 0px;
+      list-style: none;
+  }
+  .tabs li{
+      display: inline-block;
+      margin:0;
+      padding: 10px 20px 5px 20px;
+      cursor: pointer;
+      font-size:1.2em;
+      line-height:2em;
+  }
+
+
+  .tab-content{
+      display: none;
+      padding: 15px;
+      line-height:1.4;
+  }
+  .tab-content.current{
+      display: inherit;
+  }
+
+
+
+</style>
+<header-drawer data-breakpoint="{% if section.settings.menu_type_desktop == 'drawer' %}desktop{% else %}tablet{% endif %}">
+  <details id="Details-menu-drawer-container" class="menu-drawer-container">
+    <summary
+      class="header__icon header__icon--menu header__icon--summary link focus-inset"
+      aria-label="{{ 'sections.header.menu' | t }}"
+    >
+      <span>
+        {% render 'icon-hamburger' %}
+        {% render 'icon-close' %}
+      </span>
+    </summary>
+    <div id="menu-drawer" class="gradient menu-drawer motion-reduce color-{{ section.settings.menu_color_scheme }}">
+      <div class="menu-drawer__inner-container">
+        <div class="menu-drawer__navigation-container">
+          <nav class="menu-drawer__navigation">
+            <div class="container">
+              <div class="main-menu-heading">
+                <div class="parent-menu">
+                  <ul class="parent-menu-list">
+                    {%- for link in section.settings.menu.links -%}
+                      <li
+                        {% if link.links != blank %}
+                        {% else %}
+                          disabled
+                        {% endif %}
+                      >
+                      
+                        {% comment %} <a
+
+                          href="{% if link.links == blank %}/pages/recipe{% else %}#{% endif %}"
+                          class="{% if link.links == blank %}no-tabs{% endif %} parent-menu-link"
+                          data-tab="tab-{{ forloop.index }}"
+                        >
+                          {{- link.title | escape -}}
+
+                          <span class="menu-drawer-svg-only">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="24px"
+                              viewBox="0 -960 960 960"
+                              width="24px"
+                              fill="#341c02"
+                            >
+                              <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+                            </svg>
+                          </span>
+                        </a> {% endcomment %}
+
+                        <a
+                      href="{% if link.links == blank %}{{ link.url }}{% else %}#{% endif %}"
+                      class="{% if link.links == blank %}no-tabs{% endif %} parent-menu-link"
+                      data-tab="tab-{{ forloop.index }}"
+                    >
+                      {{- link.title | escape -}}
+
+                      {%- if link.links != blank -%}
+                        <span class="menu-drawer-svg-only">
+                          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="#341c02">
+                            <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+                          </svg>
+                        </span>
+                      {%- endif -%}
+                    </a>
+
+                        <div class="tabs_scrolbar">
+                          <ul class="tabs" style="display: none;">
+                            {%- for childlink in link.links -%}
+                              <li
+                                class="tab {% if forloop.index == 1 %}current{% endif %}"
+                                {% if childlink.title != blank %}
+                                  link-menu="{{ childlink.title | handleize }}"
+                                {% endif %}
+                                data-tab="tab-{{ forloop.index }}-{{ forloop.index }}"
+                              >
+                                <a href="#" class="tab-link">{{ childlink.title | escape }}</a>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                        <div class="submenu">
+                          <ul class="grandchild-submenu">
+                            {%- for link in section.settings.menu.links -%}
+                              {%- for childlink in link.links -%}
+                                {%- for grandchildlink in childlink.links -%}
+                                  {% if childlink.handle == 'recipes' %}
+                                    {% assign grandchild_title_downcase = grandchildlink.title
+                                      | downcase
+                                      | replace: ' ', ''
+                                    %}
+                                    {% assign normalized_recipe_title_1 = recipe_title_1
+                                      | downcase
+                                      | replace: ' ', ''
+                                    %}
+                                    {% assign normalized_recipe_title_2 = recipe_title_2
+                                      | downcase
+                                      | replace: ' ', ''
+                                    %}
+                                    {% assign normalized_recipe_title_3 = recipe_title_3
+                                      | downcase
+                                      | replace: ' ', ''
+                                    %}
+                                    {% assign normalized_recipe_title_4 = recipe_title_4
+                                      | downcase
+                                      | replace: ' ', ''
+                                    %}
+                                    {% assign normalized_recipe_title_5 = recipe_title_5
+                                      | downcase
+                                      | replace: ' ', ''
+                                    %}
+                                    {% assign normalized_recipe_title_6 = recipe_title_6
+                                      | downcase
+                                      | replace: ' ', ''
+                                    %}
+
+                                    {% if grandchild_title_downcase == normalized_recipe_title_1 %}
+                                      <li
+                                        class="{{ childlink.handle | handleize }}"
+                                        title="{{ grandchild_title_downcase }}"
+                                      >
+                                        <a href="{{ grandchildlink.url | escape }}" class="link">
+                                          <img src="{{ recipe_image_1 | img_url:'master' }}" loading="lazy">
+                                          {{ recipe_title_1 }}
+                                        </a>
+                                      </li>
+                                    {% elsif grandchild_title_downcase == normalized_recipe_title_2 %}
+                                      <li
+                                        class="{{ childlink.handle | handleize }}"
+                                        title="{{ grandchild_title_downcase }}"
+                                      >
+                                        <a href="{{ grandchildlink.url | escape }}" class="link">
+                                          <img src="{{ recipe_image_2 | img_url:'master' }}" loading="lazy">
+                                          {{ recipe_title_2 }}
+                                        </a>
+                                      </li>
+                                    {% elsif grandchild_title_downcase == normalized_recipe_title_3 %}
+                                      <li
+                                        class="{{ childlink.handle | handleize }}"
+                                        title="{{ grandchild_title_downcase }}"
+                                      >
+                                        <a href="{{ grandchildlink.url | escape }}" class="link">
+                                          <img src="{{ recipe_image_3 | img_url:'master' }}" loading="lazy">
+                                          {{ recipe_title_3 }}
+                                        </a>
+                                      </li>
+                                    {% elsif grandchild_title_downcase == normalized_recipe_title_4 %}
+                                      <li
+                                        class="{{ childlink.handle | handleize }}"
+                                        title="{{ grandchild_title_downcase }}"
+                                      >
+                                        <a href="{{ grandchildlink.url | escape }}" class="link">
+                                          <img src="{{ recipe_image_4 | img_url:'master' }}" loading="lazy">
+                                          {{ recipe_title_4 }}
+                                        </a>
+                                      </li>
+                                    {% elsif grandchild_title_downcase == normalized_recipe_title_5 %}
+                                      <li
+                                        class="{{ childlink.handle | handleize }}"
+                                        title="{{ grandchild_title_downcase }}"
+                                      >
+                                        <a href="{{ grandchildlink.url | escape }}" class="link">
+                                          <img src="{{ recipe_image_5 | img_url:'master' }}" loading="lazy">
+                                          {{ recipe_title_5 }}
+                                        </a>
+                                      </li>
+                                    {% elsif grandchild_title_downcase == normalized_recipe_title_6 %}
+                                      <li
+                                        class="{{ childlink.handle | handleize }}"
+                                        title="{{ grandchild_title_downcase }}"
+                                      >
+                                        <a href="{{ grandchildlink.url | escape }}" class="link">
+                                          <img src="{{ recipe_image_6 | img_url:'master' }}" loading="lazy">
+                                          {{ recipe_title_6 }}
+                                        </a>
+                                      </li>
+                                    {% else %}
+                                      <li
+                                        class="{{ childlink.handle | handleize }}"
+                                        title="{{ grandchild_title_downcase }}"
+                                      >
+                                        <a href="{{ grandchildlink.url | escape }}" class="link">
+                                          <img
+                                            src="//8giloyhhdanxbcdu-86111060252.shopifypreview.com/cdn/shopifycloud/shopify/assets/no-image-2048-5e88c1b20e087fb7bbe9a3771824e743c244f437e4f8ba93bbf7b11b53f7824c.gif"
+                                                                                        loading="lazy"
+                                          >
+                                          No Found
+                                        </a>
+                                      </li>
+                                    {% endif %}
+                                  {% else %}
+                                    <!--  -->
+                                    <li class="{{ childlink.handle | handleize }}">
+                                      <a href="{{ grandchildlink.url | escape }}" class="link">
+                                        {% comment %} Extract the handle from the URL {% endcomment %}
+                                        {% assign url_parts = grandchildlink.url | split: '/' %}
+                                        {% assign last_part = url_parts.last %}
+
+                                        <!-- Check if the link is a collection -->
+                                        {% assign collection = collections[last_part] %}
+                                        {% if collection %}
+                                          {% if collection.metafields.custom.promotion_video_or_image != blank %}
+                                            <!-- Collection Metafield Image -->
+                                            <img
+                                              src="{{ collection.metafields.custom.promotion_video_or_image | img_url: 'master' }} "
+                                              alt="{{ collection.title | escape }}"
+                                              loading="lazy"
+                                            >
+                                          {% elsif collection.products.size > 0 %}
+                                            {% assign first_product = collection.products.first %}
+                                            {% if first_product.images.size > 0 %}
+                                              <!-- First Image from the First Product in the Collection -->
+                                              <img
+                                                src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/New_Arrival_f57ecfea-3700-4d6c-a614-762737a20db8.png?v=1775842818"
+                                                loading="lazy"
+                                                alt="{{ first_product.title | escape }}"
+                                              >
+                                            {% else %}
+                                              <!-- Fallback Image if collection has no images -->
+                                              <img
+                                                src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Shop_All.png?v=1732197355"
+                                                loading="lazy"
+                                                alt="No Image Available"
+                                              >
+                                            {% endif %}
+                                          {% else %}
+                                            <!-- Fallback Image if collection has no products or images -->
+                                            <img
+                                              src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Untitled-5.png?v=1729167448"
+                                              loading="lazy"
+                                              alt="No Image Available"
+                                            >
+                                          {% endif %}
+                                        {% else %}
+                                          <!-- If not a collection, check if it's a product -->
+                                          {% assign product = all_products[last_part] %}
+                                          {% if product %}
+                                            {% if product.images.size > 0 %}
+                                              <!-- First Product Image -->
+                                              <img
+                                                src="{{ product.images.first | img_url: 'master' }}"
+                                                alt="{{ product.title | escape }}"
+                                              >
+                                            {% else %}
+                                              <!-- Fallback Image if no product image -->
+                                              <img
+                                                src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Untitled-5.png?v=1729167448"
+                                                loading="lazy"
+                                                alt="No Image Available"
+                                              >
+                                            {% endif %}
+                                          {% else %}
+                                            <!-- Fallback Image if no valid collection or product -->
+                                            <img
+                                              src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Shop_All.png?v=1732197355"
+                                              loading="lazy"
+                                              alt="No Image Available"
+                                            >
+                                          {% endif %}
+                                        {% endif %}
+
+                                        {{- grandchildlink.title | escape -}}
+                                        <!-- Display the link title -->
+                                      </a>
+                                    </li>
+                                  {% endif %}
+                                {% endfor %}
+                              {% endfor %}
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </nav>
+
+          <script>
+                             // JavaScript to handle tab and submenu display
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const parentMenuLinks = document.querySelectorAll(".parent-menu-link");
+
+                            // Attach click event to parent menu links
+                            parentMenuLinks.forEach((link) => {
+                                link.addEventListener("click", function (event) {
+                                    event.preventDefault(); // Prevent default link behavior
+
+                                    // Hide all tabs and submenus initially
+                                    const allTabs = document.querySelectorAll(".tabs");
+                                    allTabs.forEach((tab) => {
+                                        tab.style.display = "none";
+                                    });
+
+                                    const allSubmenus = document.querySelectorAll(".submenu");
+                                    allSubmenus.forEach((submenu) => {
+                                        submenu.style.display = "block";
+                                    });
+
+                                    // Show the corresponding tab and its submenu
+                                    const tabsScrollbar = this.nextElementSibling; // Select <div class="tabs_scrolbar">
+                                    if (tabsScrollbar && tabsScrollbar.classList.contains("tabs_scrolbar")) {
+                                        const tabToShow = tabsScrollbar.querySelector(".tabs"); // Find the .tabs within the scrollbar div
+                                        if (tabToShow) {
+                                            tabToShow.style.display = "block"; // Show the tabs
+                                        }
+                                    }
+                                });
+                            });
+
+                            // Handle tab link clicks to display specific submenus
+                            const tabLinks = document.querySelectorAll(".tab-link");
+
+                            tabLinks.forEach((tabLink) => {
+                                tabLink.addEventListener("click", function (event) {
+                                    event.preventDefault(); // Prevent default link behavior
+
+                                    // Hide all submenus in this parent menu
+                                    const allSubmenus = this.closest(".parent-menu").querySelectorAll(".submenu");
+                                    allSubmenus.forEach((submenu) => {
+                                        submenu.style.display = "none"; // Hide all submenus
+                                    });
+
+                                    // Show the corresponding submenu related to the clicked tab
+                                    const currentTab = this.closest(".tab");
+                                    if (currentTab) {
+                                        const submenuToShow = this.closest(".tabs_scrolbar").nextElementSibling; // Get the submenu after the tabs_scrolbar div
+                                        if (submenuToShow) {
+                                            submenuToShow.style.display = "block"; // Show submenu
+                                        }
+                                    }
+                                });
+                            });
+                            $("ul.tabs li").click(function () {
+                                var test = $(this).attr("link-menu");
+                                console.log(test);
+                                setTimeout(function () {
+                                    $(".grandchild-submenu li").hide();
+                                    $(".grandchild-submenu li." + test).show();
+                                    //console.log(".grandchild-submenu li." + test);
+                                }, 0);
+                            });
+                            $(".no-tabs").click(function () {
+                                $(this).siblings().hide();
+                            });
+
+
+                            $("ul.parent-menu-list li").click(function () {
+                // Check if the clicked item does not have the 'active' class
+                if (!$(this).hasClass("active")) {
+                    // Remove 'active' class from all and hide siblings
+                    $("ul.parent-menu-list li").removeClass("active");
+                    $("ul.parent-menu-list li").siblings().hide();
+                }
+
+                // Toggle the 'active' class for the clicked item
+                $(this).toggleClass("active");
+
+                // Handle links based on the presence of the 'no-tabs' class
+                var linkElement = $(this).find(".parent-menu-link");
+                if (linkElement.hasClass("no-tabs")) {
+                    // window.location.href = "/pages/recipe"; 
+
+                      window.location.href = linkElement.attr("href");
+                }
+
+                // Show siblings
+                $("ul.parent-menu-list li").siblings().show();
+
+                // Handle grandchild menu visibility
+                var clicktarget = $(this).find(".current").attr("link-menu");
+                $(".grandchild-submenu li").hide();
+                $(".grandchild-submenu li." + clicktarget).show();
+            });
+
+
+                        });
+          </script>
+
+          <div class="cst-custom-drawer-menu">
+            <div class="cst-custom-signup-drawer">
+              {% if customer %}
+                <!-- If the user is logged in, display the message and logout button -->
+
+                <div class="cst-custom-logn-drawer">
+                  <span>You are already logged in</span>
+                </div>
+                <a href="{{ routes.account_logout_url }}" class="logout-button">
+                  <span>
+                    <!--
+                      <img
+                        src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/UI_Web_Logout_Exit_Close_Session-512.webp?v=1734090956"
+                        loading="lazy"
+                      >
+                    -->
+                  </span>
+                  Sign Out
+                </a>
+              {% else %}
+                <!-- If the user is NOT logged in, display the "Sign Up" button -->
+                <div class="cst-custom-logn-drawer already">
+                  <span>Already have account?</span>
+                  <a href="/account/login" class="menu-drawer__account link focus-inset h5 medium-hide large-up-hide">
+                    Log in</a
+                  >
+                </div>
+                <a href="{{ routes.account_login_url }}">
+                  <span>
+                    <img
+                      src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/add-user.png?v=1728901147"
+                      loading="lazy"
+                    >
+                  </span>
+                  Sign Up
+                </a>
+              {% endif %}
+            </div>
+
+            {%- if shop.customer_accounts_enabled -%}
+              <!--
+                <div class="cst-custom-logn-drawer">
+                  <span>Already have account?</span>
+                  <a
+                    href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+                    class="menu-drawer__account link focus-inset h5 medium-hide large-up-hide"
+                  >
+                    {% comment %} {% render 'icon-account' %}{% endcomment %}
+                    {%- liquid
+                      if customer
+                        echo 'customer.account_fallback' | t
+                      else
+                        echo 'customer.log_in' | t
+                      endif
+                    -%}
+                  </a>
+                </div>
+              -->
+            {%- endif -%}
+          </div>
+          <div class="menu-drawer__utility-links">
+            {%- if localization.available_countries or localization.available_languages -%}
+              <div class="menu-drawer__localization header-localization">
+                {%- if localization.available_countries and localization.available_countries.size > 1 -%}
+                  <noscript>
+                    {%- form 'localization', id: 'HeaderCountryMobileFormNoScriptDrawer', class: 'localization-form' -%}
+                      <div class="localization-form__select">
+                        <h2 class="visually-hidden" id="HeaderCountryMobileLabelNoScriptDrawer">
+                          {{ 'localization.country_label' | t }}
+                        </h2>
+                        <select
+                          class="localization-selector link"
+                          name="country_code"
+                          aria-labelledby="HeaderCountryMobileLabelNoScriptDrawer"
+                        >
+                          {%- for country in localization.available_countries -%}
+                            <option
+                              value="{{ country.iso_code }}"
+                              {%- if country.iso_code == localization.country.iso_code %}
+                                selected
+                              {% endif %}
+                            >
+                              {{ country.name }} ({{ country.currency.iso_code }}
+                              {{ country.currency.symbol }})
+                            </option>
+                          {%- endfor -%}
+                        </select>
+                        {% render 'icon-caret' %}
+                      </div>
+                      <button class="button button--tertiary">{{ 'localization.update_country' | t }}</button>
+                    {%- endform -%}
+                  </noscript>
+
+                  <localization-form class="no-js-hidden">
+                    {%- form 'localization', id: 'HeaderCountryMobileForm', class: 'localization-form' -%}
+                      <div>
+                        <h2 class="visually-hidden" id="HeaderCountryMobileLabel">
+                          {{ 'localization.country_label' | t }}
+                        </h2>
+                        {%- render 'country-localization', localPosition: 'HeaderCountryMobile' -%}
+                      </div>
+                    {%- endform -%}
+                  </localization-form>
+                {% endif %}
+
+                {%- if localization.available_languages and localization.available_languages.size > 1 -%}
+                  <noscript>
+                    {%- form 'localization',
+                      id: 'HeaderLanguageMobileFormNoScriptDrawer',
+                      class: 'localization-form'
+                    -%}
+                      <div class="localization-form__select">
+                        <h2 class="visually-hidden" id="HeaderLanguageMobileLabelNoScriptDrawer">
+                          {{ 'localization.language_label' | t }}
+                        </h2>
+                        <select
+                          class="localization-selector link"
+                          name="locale_code"
+                          aria-labelledby="HeaderLanguageMobileLabelNoScriptDrawer"
+                        >
+                          {%- for language in localization.available_languages -%}
+                            <option
+                              value="{{ language.iso_code }}"
+                              lang="{{ language.iso_code }}"
+                              {%- if language.iso_code == localization.language.iso_code %}
+                                selected
+                              {% endif %}
+                            >
+                              {{ language.endonym_name | capitalize }}
+                            </option>
+                          {%- endfor -%}
+                        </select>
+                        {% render 'icon-caret' %}
+                      </div>
+                      <button class="button button--tertiary">{{ 'localization.update_language' | t }}</button>
+                    {%- endform -%}
+                  </noscript>
+
+                  <localization-form class="no-js-hidden">
+                    {%- form 'localization', id: 'HeaderLanguageMobileForm', class: 'localization-form' -%}
+                      <div>
+                        <h2 class="visually-hidden" id="HeaderLanguageMobileLabel">
+                          {{ 'localization.language_label' | t }}
+                        </h2>
+                        {%- render 'language-localization', localPosition: 'HeaderLanguageMobile' -%}
+                      </div>
+                    {%- endform -%}
+                  </localization-form>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+            <ul class="list list-social list-unstyled" role="list">
+              {%- if settings.social_twitter_link != blank -%}
+                <li class="list-social__item">
+                  <a href="{{ settings.social_twitter_link }}" class="list-social__link link">
+                    {%- render 'icon-twitter' -%}
+                    <span class="visually-hidden">{{ 'general.social.links.twitter' | t }}</span>
+                  </a>
+                </li>
+              {%- endif -%}
+              {%- if settings.social_facebook_link != blank -%}
+                <li class="list-social__item">
+                  <a href="{{ settings.social_facebook_link }}" class="list-social__link link">
+                    {%- render 'icon-facebook' -%}
+                    <span class="visually-hidden">{{ 'general.social.links.facebook' | t }}</span>
+                  </a>
+                </li>
+              {%- endif -%}
+              {%- if settings.social_pinterest_link != blank -%}
+                <li class="list-social__item">
+                  <a href="{{ settings.social_pinterest_link }}" class="list-social__link link">
+                    {%- render 'icon-pinterest' -%}
+                    <span class="visually-hidden">{{ 'general.social.links.pinterest' | t }}</span>
+                  </a>
+                </li>
+              {%- endif -%}
+              {%- if settings.social_instagram_link != blank -%}
+                <li class="list-social__item">
+                  <a href="{{ settings.social_instagram_link }}" class="list-social__link link">
+                    {%- render 'icon-instagram' -%}
+                    <span class="visually-hidden">{{ 'general.social.links.instagram' | t }}</span>
+                  </a>
+                </li>
+              {%- endif -%}
+              {%- if settings.social_tiktok_link != blank -%}
+                <li class="list-social__item">
+                  <a href="{{ settings.social_tiktok_link }}" class="list-social__link link">
+                    {%- render 'icon-tiktok' -%}
+                    <span class="visually-hidden">{{ 'general.social.links.tiktok' | t }}</span>
+                  </a>
+                </li>
+              {%- endif -%}
+              {%- if settings.social_tumblr_link != blank -%}
+                <li class="list-social__item">
+                  <a href="{{ settings.social_tumblr_link }}" class="list-social__link link">
+                    {%- render 'icon-tumblr' -%}
+                    <span class="visually-hidden">{{ 'general.social.links.tumblr' | t }}</span>
+                  </a>
+                </li>
+              {%- endif -%}
+              {%- if settings.social_snapchat_link != blank -%}
+                <li class="list-social__item">
+                  <a href="{{ settings.social_snapchat_link }}" class="list-social__link link">
+                    {%- render 'icon-snapchat' -%}
+                    <span class="visually-hidden">{{ 'general.social.links.snapchat' | t }}</span>
+                  </a>
+                </li>
+              {%- endif -%}
+              {%- if settings.social_youtube_link != blank -%}
+                <li class="list-social__item">
+                  <a href="{{ settings.social_youtube_link }}" class="list-social__link link">
+                    {%- render 'icon-youtube' -%}
+                    <span class="visually-hidden">{{ 'general.social.links.youtube' | t }}</span>
+                  </a>
+                </li>
+              {%- endif -%}
+              {%- if settings.social_vimeo_link != blank -%}
+                <li class="list-social__item">
+                  <a href="{{ settings.social_vimeo_link }}" class="list-social__link link">
+                    {%- render 'icon-vimeo' -%}
+                    <span class="visually-hidden">{{ 'general.social.links.vimeo' | t }}</span>
+                  </a>
+                </li>
+              {%- endif -%}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </details>
+</header-drawer>
+{% comment %} <script>
+    $(document).ready(function(){
+    $('ul.tabs li').on('click', function(){
+      var tab_id = $(this).attr('data-tab');
+      $('ul.tabs li').removeClass('current');
+      $('.tab-content').removeClass('current');
+      $(this).addClass('current');
+      $('#'+tab_id).addClass('current');
+
+    });
+
+  });
+</script> {% endcomment %}
+
+<script>
+  // Ensure leaf items (no children) go straight to their URL on mobile
+  // without opening the submenu for a moment.
+  (function () {
+    function handleLeafClick(e) {
+      // Kill any other handlers that would open tabs/submenus
+      e.stopImmediatePropagation();
+      e.preventDefault();              // cancel whatever they did
+      window.location.href = this.href; // and navigate to the real URL
+    }
+
+    // Native listener in the *capture* phase so it runs before others
+    document.querySelectorAll('a.parent-menu-link.no-tabs').forEach(function (a) {
+      a.addEventListener('click', handleLeafClick, true);
+    });
+
+    // Also guard via jQuery (in case other jQuery handlers are bound)
+    if (window.jQuery) {
+      $(document).on('click', 'a.parent-menu-link.no-tabs', function (e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        window.location.href = this.href;
+        return false;
+      });
+    }
+  })();
+</script>
+
+

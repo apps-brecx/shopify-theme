@@ -1,0 +1,128 @@
+<style>
+    .try-pack__inner{
+        padding: 40px 0;
+        background: #fef8f1;
+    }
+    .try-pack__wrapper{
+        position: relative;
+
+    }
+    .try-pack__image{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 55%;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+        overflow: hidden;
+    }
+     .try-pack__image img{
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+
+    }
+    .try-pack__content{
+        max-width: 40%;
+        padding: 100px 0;
+    }
+
+    .try-pack__content h2{
+          font-family: "Epilogue", sans-serif !important;
+        font-weight: 700;
+        font-size: 36px;        
+    }
+    .try-pack__content h2 em{
+        font-family: "Epilogue", sans-serif !important;
+        font-style: normal;
+        color:  {{ section.settings.background_color }};
+    }
+      .try-pack__content p{
+         font-family: "Manrope", sans-serif !important;
+    
+    }
+
+    @media(max-width: 768px){
+         .try-pack__content h2{
+          margin:0;
+          text-align: center;
+        }
+        .try-pack__content p{
+          text-align: center;
+        }
+        .try-pack__image{
+            position: unset;
+            width: 100%;
+        }
+        .try-pack__content{
+             padding: 20px 0 0;
+            max-width: 100%;
+        
+        }
+    
+    }
+
+</style>
+{% assign product_summary = product.metafields.custom.product_summary %}
+
+<div class="try-pack__inner">
+  <div class="try-pack__wrapper">
+
+    <div class="try-pack__image">
+
+      {% if product.media.size > 2 %}
+        <img
+          src="{{ product.media[2] | image_url: width: 1200 }}"
+          alt="{{ product.title | escape }}"
+          width="{{ product.media[2].width }}"
+          height="{{ product.media[2].height }}"
+          loading="lazy"
+        >
+      {% elsif product.featured_image %}
+        <img
+          src="{{ product.featured_image | image_url: width: 1200 }}"
+          alt="{{ product.title | escape }}"
+          loading="lazy"
+        >
+      {% endif %}
+
+    </div>
+
+    <div class="try-pack__content-wrapper">
+      <div class="page-width">
+
+        <div class="try-pack__content">
+          {% if product_summary != blank %}
+            {{ product_summary | metafield_tag }}
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Try Pack Section",
+  "tag": "section",
+  "class": "section try-pack-section",
+  "settings": [
+    
+    {
+  "type": "color",
+  "id": "background_color",
+  "label": "Background Color",
+  "default": "#61155b"
+}
+  ],
+  "presets": [
+    {
+      "name": "Try Pack Section"
+    }
+  ]
+}
+{% endschema %}

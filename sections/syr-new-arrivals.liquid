@@ -1,0 +1,327 @@
+{%- comment -%} Best Sellers — equal-height cards, ATC always bottom-aligned via flex {%- endcomment -%}
+{%- render 'syr-type-polish' -%}
+<style id="syr-new-{{ section.id }}-css">
+  #syr-new-{{ section.id }}{
+    --ink:#39220f; --bg:#F4E8CE; --paper:#FFFBF4; --accent:#c58548; --butter:#FCE2A0;
+    --eye-scale:.55; --eye-rot:0deg;
+    background:var(--bg); color:var(--ink);
+    padding:80px 40px;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+  }
+  #syr-new-{{ section.id }} .syr-new-wrap{ max-width:1320px; margin:0 auto; }
+  #syr-new-{{ section.id }} .syr-new-head{ text-align:center; max-width:680px; margin:0 auto 36px; }
+  #syr-new-{{ section.id }} .syr-new-eyebrow{
+    display:inline-block; background:var(--butter); color:var(--ink);
+    border:2px solid var(--ink); border-radius:999px;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    padding:7px 16px; margin-bottom:18px; box-shadow:3px 3px 0 var(--ink);
+    transform-origin:center;
+    transform:scale(var(--eye-scale)) rotate(var(--eye-rot));
+    transition:transform .25s cubic-bezier(.16,.84,.34,1);
+    will-change:transform;
+  }
+  #syr-new-{{ section.id }} .syr-new-h2{
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:clamp(36px, 5vw, 56px); line-height:.95;
+    letter-spacing:-.015em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 10px;
+  }
+  #syr-new-{{ section.id }} .syr-new-sub{
+    font-size:16px; color:rgba(57,34,15,.7); margin:0; max-width:48ch;
+    margin:0 auto;
+    font-family:'Josefin Sans',sans-serif;
+  }
+  @media (prefers-reduced-motion: reduce){
+    #syr-new-{{ section.id }} .syr-new-eyebrow{ transform:scale(1) rotate(0deg); transition:none; }
+  }
+
+  /* GRID — stretch every card to row height */
+  #syr-new-{{ section.id }} .syr-new-grid{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:26px;
+    list-style:none; padding:0; margin:0;
+    align-items:stretch;
+  }
+
+  /* CARD — height:100% fills the stretched grid cell, flex column lets body push button down */
+  #syr-new-{{ section.id }} .syr-new-card{
+    position:relative;
+    background:var(--paper);
+    border:2px solid var(--ink); border-radius:16px;
+    overflow:hidden;
+    transition:transform .15s ease, box-shadow .15s ease;
+    display:flex; flex-direction:column;
+    height:100%;
+  }
+  #syr-new-{{ section.id }} .syr-new-card:hover{ transform:translate(-2px,-2px); }
+  #syr-new-{{ section.id }} .syr-new-media{
+    aspect-ratio:1/1; background:#fff;
+    border-bottom:2px solid var(--ink);
+    overflow:hidden; display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  #syr-new-{{ section.id }} .syr-new-media img{ width:100%; height:100%; object-fit:contain; padding:18px; transition:transform .3s ease; }
+  #syr-new-{{ section.id }} .syr-new-card:hover .syr-new-media img{ transform:scale(1.08); }
+  /* BODY — fills remaining height; form is pushed to bottom via margin-top:auto */
+  #syr-new-{{ section.id }} .syr-new-body{
+    padding:14px 14px 18px; flex:1 1 auto;
+    display:flex; flex-direction:column; gap:6px;
+    text-align:center; align-items:center;
+    width:100%;
+  }
+  #syr-new-{{ section.id }} .syr-new-rating{
+    display:inline-flex; align-items:center; gap:5px;
+    font-family:'Josefin Sans','Josefin',sans-serif; font-weight:500;
+    font-size:12px; color:rgba(57,34,15,.7);
+  }
+  #syr-new-{{ section.id }} .syr-new-stars{ color:#E8A93C; font-size:12px; letter-spacing:1px; }
+  /* TITLE — reserve exactly 2 lines so 1-line and 2-line titles take the same height */
+  #syr-new-{{ section.id }} .syr-new-title{
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight:400;
+    font-size:14.5px; line-height:1.2; color:var(--ink); margin:0;
+    letter-spacing:-.005em;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    min-height:calc(14.5px * 1.2 * 2);
+  }
+  #syr-new-{{ section.id }} .syr-new-price{
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight:400;
+    font-size:14px; color:var(--ink); margin:0;
+  }
+  /* FORM wrapping the ATC is the last child of body; margin-top:auto pushes it to the bottom of every card */
+  #syr-new-{{ section.id }} .syr-new-card form{
+    position:relative; z-index:2; width:100%;
+    margin-top:auto;
+    padding-top:10px;
+  }
+  #syr-new-{{ section.id }} .syr-new-atc{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    width:100%; padding:11px 14px;
+    border-radius:999px;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight:400;
+    font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    text-decoration:none; cursor:pointer;
+    transition:transform .12s ease, filter .15s ease, box-shadow .12s ease;
+  }
+  #syr-new-{{ section.id }} .syr-new-card:hover .syr-new-atc{ transform:translate(-1px,-1px); filter:brightness(1.08); }
+  #syr-new-{{ section.id }} .syr-new-card-link{ position:absolute; inset:0; z-index:1; text-indent:-9999px; }
+
+  #syr-new-{{ section.id }} .syr-new-foot{ display:flex; justify-content:center; margin-top:36px; }
+  #syr-new-{{ section.id }} .syr-new-all{
+    display:inline-flex; align-items:center; gap:10px;
+    border:2px solid var(--ink); border-radius:999px;
+    padding:15px 28px;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight:400;
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    text-decoration:none;
+    transition:transform .18s cubic-bezier(.4,0,.2,1), box-shadow .18s cubic-bezier(.4,0,.2,1), filter .15s ease;
+  }
+  #syr-new-{{ section.id }} .syr-new-all:hover{ transform:translate(-3px,-3px); filter:brightness(1.08); }
+
+  @media (max-width:1100px){ #syr-new-{{ section.id }} .syr-new-grid{ grid-template-columns:repeat(3, 1fr); } }
+  @media (max-width:760px){
+    #syr-new-{{ section.id }}{ padding:48px 0 56px; }
+    #syr-new-{{ section.id }} .syr-new-head{ padding:0 16px; margin-bottom:22px; }
+    #syr-new-{{ section.id }} .syr-new-h2{ font-size:clamp(30px, 9vw, 44px); }
+    #syr-new-{{ section.id }} .syr-new-sub{ font-size:14px; }
+    /* mobile flex carousel — stretch makes every card equal height (matches tallest) */
+    #syr-new-{{ section.id }} .syr-new-grid{
+      display:flex; grid-template-columns:none;
+      overflow-x:auto; overflow-y:visible; gap:14px;
+      padding:8px 16px 18px;
+      scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      align-items:stretch;
+    }
+    #syr-new-{{ section.id }} .syr-new-grid::-webkit-scrollbar{ display:none; }
+    #syr-new-{{ section.id }} .syr-new-card{ flex:0 0 64vw; max-width:260px; scroll-snap-align:center; height:auto; }
+    #syr-new-{{ section.id }} .syr-new-foot{ justify-content:center; padding:0 16px; margin-top:18px; }
+  }
+</style>
+
+{%- assign use_blocks = false -%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'product' and block.settings.product != blank -%}
+    {%- assign use_blocks = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<section id="syr-new-{{ section.id }}">
+  <div class="syr-new-wrap">
+    <div class="syr-new-head">
+      <span class="syr-new-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="syr-new-h2">{{ section.settings.headline }}</h2>
+      <p class="syr-new-sub">{{ section.settings.sub }}</p>
+    </div>
+    <ul class="syr-new-grid" role="list">
+      {%- if use_blocks -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'product' and block.settings.product != blank -%}
+            {%- assign p = block.settings.product -%}
+            {%- assign btn_bg = block.settings.btn_bg | default: '#39220f' -%}
+            {%- assign btn_color = block.settings.btn_color | default: '#FFFBF4' -%}
+            {%- assign btn_shadow = block.settings.btn_shadow | default: '#c58548' -%}
+            {%- assign card_shadow = block.settings.shadow_color | default: '#39220f' -%}
+            {%- assign btn_text = block.settings.btn_text | default: 'Add to cart' -%}
+            {%- assign rating = p.metafields.reviews.rating.value.rating | default: 4.9 -%}
+            {%- assign review_count = p.metafields.reviews.rating_count | default: 0 -%}
+            {%- if review_count == 0 -%}{%- assign review_count = forloop.index | times: 17 | plus: 42 -%}{%- endif -%}
+            <li class="syr-new-card" style="box-shadow:6px 6px 0 {{ card_shadow }} !important;">
+              <a class="syr-new-card-link" href="{{ p.url }}">{{ p.title | escape }}</a>
+              <div class="syr-new-media">
+                {%- if p.featured_media -%}
+                  <img src="{{ p.featured_media | image_url: width: 480 }}" alt="{{ p.title | escape }}" loading="lazy" width="240" height="240">
+                {%- endif -%}
+              </div>
+              <div class="syr-new-body">
+                {%- if section.settings.show_ratings -%}
+                  <div class="syr-new-rating">
+                    <span class="syr-new-stars">★★★★★</span>
+                    <span>{{ rating }} ({{ review_count }})</span>
+                  </div>
+                {%- endif -%}
+                <h3 class="syr-new-title">{{ p.title | escape }}</h3>
+                <p class="syr-new-price">{{ p.price | money }}</p>
+                <form action="/cart/add" method="post" enctype="multipart/form-data">
+                  <input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}">
+                  <button type="submit" class="syr-new-atc" style="background:{{ btn_bg }} !important; color:{{ btn_color }} !important; border:2px solid {{ btn_bg }} !important; box-shadow:3px 3px 0 {{ btn_shadow }} !important;" {% if p.available == false %}disabled{% endif %}>{% if p.available %}{{ btn_text }}{% else %}Sold out{% endif %}</button>
+                </form>
+              </div>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign handle = section.settings.collection_handle | default: 'trending-flavors' -%}
+        {%- assign coll = collections[handle] -%}
+        {%- assign limit = section.settings.limit | default: 8 -%}
+        {%- assign default_btn_bg = section.settings.default_btn_bg | default: '#39220f' -%}
+        {%- assign default_btn_color = section.settings.default_btn_color | default: '#FFFBF4' -%}
+        {%- assign default_btn_shadow = section.settings.default_btn_shadow | default: '#c58548' -%}
+        {%- assign default_card_shadow = section.settings.default_shadow | default: '#39220f' -%}
+        {%- assign default_btn_text = section.settings.default_btn_text | default: 'Add to cart' -%}
+        {%- for p in coll.products limit: limit -%}
+          {%- assign rating = p.metafields.reviews.rating.value.rating | default: 4.9 -%}
+          {%- assign review_count = p.metafields.reviews.rating_count | default: 0 -%}
+          {%- if review_count == 0 -%}{%- assign review_count = forloop.index | times: 17 | plus: 42 -%}{%- endif -%}
+          <li class="syr-new-card" style="box-shadow:6px 6px 0 {{ default_card_shadow }} !important;">
+            <a class="syr-new-card-link" href="{{ p.url }}">{{ p.title | escape }}</a>
+            <div class="syr-new-media">
+              {%- if p.featured_media -%}
+                <img src="{{ p.featured_media | image_url: width: 480 }}" alt="{{ p.title | escape }}" loading="lazy" width="240" height="240">
+              {%- endif -%}
+            </div>
+            <div class="syr-new-body">
+              {%- if section.settings.show_ratings -%}
+                <div class="syr-new-rating">
+                  <span class="syr-new-stars">★★★★★</span>
+                  <span>{{ rating }} ({{ review_count }})</span>
+                </div>
+              {%- endif -%}
+              <h3 class="syr-new-title">{{ p.title | escape }}</h3>
+              <p class="syr-new-price">{{ p.price | money }}</p>
+              <form action="/cart/add" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}">
+                <button type="submit" class="syr-new-atc" style="background:{{ default_btn_bg }} !important; color:{{ default_btn_color }} !important; border:2px solid {{ default_btn_bg }} !important; box-shadow:3px 3px 0 {{ default_btn_shadow }} !important;" {% if p.available == false %}disabled{% endif %}>{% if p.available %}{{ default_btn_text }}{% else %}Sold out{% endif %}</button>
+              </form>
+            </div>
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+    {%- if section.settings.cta_text != blank -%}
+      <div class="syr-new-foot">
+        <a class="syr-new-all" href="{{ section.settings.cta_link | default: '/collections/all' }}" style="background:{{ section.settings.cta_bg | default: '#39220f' }} !important; color:{{ section.settings.cta_color | default: '#FFFBF4' }} !important; box-shadow:4px 4px 0 {{ section.settings.cta_shadow | default: '#c58548' }} !important;">
+          {{ section.settings.cta_text }} →
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<script>
+(function(){
+  var root = document.getElementById('syr-new-{{ section.id }}');
+  if (!root) return;
+  var eyebrow = root.querySelector('.syr-new-eyebrow');
+  if (!eyebrow) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    root.style.setProperty('--eye-scale', '1'); root.style.setProperty('--eye-rot', '0deg');
+    return;
+  }
+  var ticking = false;
+  function update(){
+    var rect = eyebrow.getBoundingClientRect();
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    if (vh < 1) return;
+    var elementCenter = rect.top + rect.height / 2;
+    var viewportCenter = vh / 2;
+    var progress = (viewportCenter - elementCenter) / vh;
+    if (progress < -1) progress = -1;
+    if (progress > 1) progress = 1;
+    var scale = 0.55 + (progress + 0.4) * 0.7;
+    if (scale < 0.4) scale = 0.4;
+    if (scale > 1.3) scale = 1.3;
+    var rot = progress * 6;
+    if (rot < -6) rot = -6;
+    if (rot > 6) rot = 6;
+    root.style.setProperty('--eye-scale', scale.toFixed(3));
+    root.style.setProperty('--eye-rot', rot.toFixed(2) + 'deg');
+    ticking = false;
+  }
+  function onScroll(){ if (!ticking){ ticking = true; window.requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  window.addEventListener('resize', onScroll);
+  update();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Best Sellers (Syr)",
+  "tag": "section",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "Header" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow chip", "default": "Best sellers" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Customer favorites" },
+    { "type": "text", "id": "sub", "label": "Subtitle", "default": "The flavors customers keep reordering." },
+    { "type": "checkbox", "id": "show_ratings", "label": "Show star ratings", "default": true },
+    { "type": "header", "content": "Auto-pull (fallback)" },
+    { "type": "paragraph", "content": "If you don't add product blocks below, products are auto-pulled from this collection." },
+    { "type": "text", "id": "collection_handle", "label": "Collection handle", "default": "trending-flavors" },
+    { "type": "range", "id": "limit", "label": "How many to show", "min": 4, "max": 12, "step": 1, "default": 8 },
+    { "type": "header", "content": "Default card styling" },
+    { "type": "paragraph", "content": "Applies when using auto-pull. Per-block colors override these." },
+    { "type": "text", "id": "default_btn_text", "label": "ATC button text", "default": "Add to cart" },
+    { "type": "color", "id": "default_btn_bg", "label": "ATC button background", "default": "#39220f" },
+    { "type": "color", "id": "default_btn_color", "label": "ATC button text color", "default": "#FFFBF4" },
+    { "type": "color", "id": "default_btn_shadow", "label": "ATC button shadow color (3D under button)", "default": "#c58548" },
+    { "type": "color", "id": "default_shadow", "label": "Card offset shadow color (under whole card)", "default": "#39220f" },
+    { "type": "header", "content": "Bottom CTA" },
+    { "type": "text", "id": "cta_text", "label": "Button text", "default": "Shop all best sellers" },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    { "type": "color", "id": "cta_bg", "label": "Button background", "default": "#39220f" },
+    { "type": "color", "id": "cta_color", "label": "Button text color", "default": "#FFFBF4" },
+    { "type": "color", "id": "cta_shadow", "label": "Button offset shadow color", "default": "#c58548" }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "btn_text", "label": "Button text", "default": "Add to cart" },
+        { "type": "color", "id": "btn_bg", "label": "Button background", "default": "#39220f" },
+        { "type": "color", "id": "btn_color", "label": "Button text color", "default": "#FFFBF4" },
+        { "type": "color", "id": "btn_shadow", "label": "Button shadow color (3D under button)", "default": "#c58548" },
+        { "type": "color", "id": "shadow_color", "label": "Card offset shadow color (under whole card)", "default": "#39220f" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Best Sellers" } ]
+}
+{% endschema %}

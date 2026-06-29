@@ -1,0 +1,232 @@
+{{ 'quick-add.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+<style>
+  .coffee-drink-hero__inner{
+    background-color: #fafafa;
+    padding: 30px 0 60px;
+  }
+  .coffee-drink-hero__wrapper{
+      position: relative;
+  }
+  .coffee-drink-hero__image{
+    width: 55%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    overflow: hidden;
+  }
+  .coffee-drink-hero__image img{
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+  .coffee-drink-hero__content{
+    width: 40%;
+    padding: 100px 0;
+  }
+  .coffee-drink-hero__title{
+    margin-bottom: 20px;
+  }
+  .coffee-drink-hero__description p{
+      font-family: "Manrope", sans-serif !important;
+    font-size: 18px;
+    line-height: 30px;
+    color: #66645f;
+
+  }
+
+  .coffee-drink-hero__title h2 strong{
+     font-family: "Epilogue", sans-serif !important;
+    font-size: 55px;
+    line-height: 50px;
+    color: #393833;
+    margin: 0;
+  }
+  .coffee-drink-hero__title h2 em strong{
+    color: #bb2a56;
+    font-style: normal;
+  }
+  .coffee-drink-hero__buttons{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+   .coffee-drink-hero__button{
+    flex: 1 0 45%;
+    max-width: 50%;
+   }
+   .coffee-drink-hero__button a{
+         font-family: "Manrope", sans-serif !important;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    padding: 10px;
+    border-radius: 9999px;
+  }
+.coffee-drink-hero__button_first a {
+  position: relative;
+  color: #fff;
+  overflow: hidden;
+  z-index: 1;
+}
+
+
+.coffee-drink-hero__button_first a::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #bb2a56, #ff7292);
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+
+.coffee-drink-hero__button_first a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #ff7292, #bb2a56);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+
+.coffee-drink-hero__button_first a:hover::after {
+  opacity: 1;
+}
+.coffee-drink-hero__button_second a{
+  color: #393833;
+  background: #f1ede5;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;    
+}
+.coffee-drink-hero__button_second a:hover{
+  border: 2px solid #000000;
+}
+
+@media(max-width: 1024px){
+  .coffee-drink-hero__button{
+    flex: 1 0 100%;
+    max-width: 70%;
+    margin: 0 auto;
+  }
+  .coffee-drink-hero__description p{
+    line-height: normal;  
+  }
+}
+@media(max-width: 768px){
+    .coffee-drink-hero__inner{
+    padding: 106px 0 20px;
+  }
+  .coffee-drink-hero__title h2 strong{ 
+    font-weight: 700;    
+    font-size: 46px;
+  }
+    .coffee-drink-hero__content{
+    width: 100%;
+    padding: 40px 0;
+    text-align: center;
+  }
+    .coffee-drink-hero__image{
+    width: 100%;
+    position: unset;    
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;    
+  }
+}
+</style>
+<div class="coffee-drink-hero__inner  scroll-trigger animate--slide-in">
+  <div class="coffee-drink-hero__wrapper">
+    <div class="coffee-drink-hero__image">
+      {% if section.settings.image != blank %}
+        {{ section.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', alt: section.settings.title }}
+      {% endif %}
+    </div>
+
+    <div class="page-width">
+      <div class="coffee-drink-hero__content">
+        <div class="coffee-drink-hero__title">
+          {{ section.settings.title }}
+        </div>
+
+        <div class="coffee-drink-hero__description">
+          {{ section.settings.description }}
+        </div>
+
+        <div class="coffee-drink-hero__buttons">
+          {% if section.settings.button_1_text != blank %}
+            <div class="coffee-drink-hero__button coffee-drink-hero__button_first">
+              <a href="{{ section.settings.button_1_link }}">
+                {{ section.settings.button_1_text }}
+              </a>
+            </div>
+          {% endif %}
+          {% if section.settings.button_2_text != blank %}
+            <div class="coffee-drink-hero__button coffee-drink-hero__button_second">
+              <a href="{{ section.settings.button_2_link }}">
+                {{ section.settings.button_2_text }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Coffee Drink Hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero Image"
+    },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "button_1_text",
+      "label": "First Button Text"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "First Button Link"
+    },
+    {
+      "type": "text",
+      "id": "button_2_text",
+      "label": "Second Button Text"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Second Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Coffee Drink Hero"
+    }
+  ]
+}
+{% endschema %}

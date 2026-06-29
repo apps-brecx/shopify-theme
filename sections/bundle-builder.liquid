@@ -1,0 +1,857 @@
+{% comment %}
+Bundle Builder (One-time) — 2-column layout
+- Top center: size selector (2,3,4,5,6,8,10,12)
+- Left: product grid with search
+- Right: “Your Current Case” summary with items, remaining count, subtotal/discount, Add to Cart → Checkout
+- Only show in-stock products (variant.available == true)
+{% endcomment %}
+
+{{ 'bundle-builder.css' | asset_url | stylesheet_tag }}
+
+<section id="bundle-builder-{{ section.id }}" class="bb-container"> 
+<section id="bundle-builder-{{ section.id }}" class="bb-wrap">
+  {%- assign sizes = section.settings.bundle_sizes | split: ',' -%}
+
+  <!-- TOP: Size selector (currently commented out by you) -->
+  {% comment %} 
+  <div class="bb-size-toggle" data-bb-sizes>
+    {% for s in sizes %}
+      {% assign n = s | strip | plus: 0 %}
+      <button type="button" class="bb-pill {% if forloop.first %}is-active{% endif %}" data-size="{{ n }}">
+        {{ n }} items
+      </button>
+    {% endfor %}
+  </div>
+  {% endcomment %}
+
+  <div class="bundle-builder-information">
+    {% comment %} <h3 class="bundle-builder-heading">Discounts</h3> {% endcomment %}
+    <div class="bundle-builder-information-parent" >
+    
+  <h3 class="bundle-builder-heading">Discounts</h3>
+ <div class="bundle-builder-information-children">
+      
+
+          <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Syrup_Without_X_T.webp?v=1760017789"  width="" height=""  alt="4-bottle-syrup-image">
+          <div>
+            <h3>41%</h3>
+             <h4 >2</h4>
+          </div>
+    </div>
+      <div class="bundle-builder-information-children">
+      
+      
+          <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Syrup_Without_X_T.webp?v=1760017789"  width="" height=""  alt="4-bottle-syrup-image">
+          <div>
+            <h3>3%</h3>
+             <h4 >3</h4>
+          </div>
+    </div>
+
+      <div class="bundle-builder-information-children">
+      
+      
+          <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Syrup_Without_X_T.webp?v=1760017789"  width="" height=""  alt="4-bottle-syrup-image">
+          <div>
+            <h3>4%</h3>
+             <h4 >4</h4>
+          </div>
+    </div>
+
+
+      <div class="bundle-builder-information-children">
+      
+      
+          <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Syrup_Without_X_T.webp?v=1760017789"  width="" height=""  alt="4-bottle-syrup-image">
+          <div>
+            <h3>5%</h3>
+             <h4 >5</h4>
+          </div>
+    </div>
+
+      <div class="bundle-builder-information-children">
+      
+      
+          <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Syrup_Without_X_T.webp?v=1760017789"  width="" height=""  alt="4-bottle-syrup-image">
+          <div>
+            <h3>6%</h3>
+             <h4 >6</h4>
+          </div>
+    </div>
+
+
+      <div class="bundle-builder-information-children">
+      
+      
+          <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Syrup_Without_X_T.webp?v=1760017789"  width="" height=""  alt="4-bottle-syrup-image">
+          <div>
+            <h3>8%</h3>
+             <h4 >8</h4>
+          </div>
+    </div>
+
+     <div class="bundle-builder-information-children">
+      
+      
+          <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Syrup_Without_X_T.webp?v=1760017789"  width="" height=""  alt="4-bottle-syrup-image">
+          <div>
+            <h3>10%</h3>
+             <h4 >10</h4>
+          </div>
+    </div>
+
+    
+     <div class="bundle-builder-information-children">
+      
+      
+          <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Syrup_Without_X_T.webp?v=1760017789"  width="" height=""  alt="4-bottle-syrup-image">
+          <div>
+            <h3>12%</h3>
+             <h4 >12</h4>
+          </div>
+    </div>
+    </div>
+   
+  
+  </div>
+
+  <!-- MAIN: two columns -->
+  <div class="bb-main">
+    <!-- LEFT: catalog -->
+    <div class="bb-left">
+
+    <div class="bb-input-tabs-container">
+
+   
+      <div class="bb-toolbar">
+        <input type="search" class="bb-search" placeholder="Search items…" aria-label="Search items" data-search>
+      </div>
+
+      
+      <!-- Syrup filters: single row, 3 buttons -->
+        <div class="bundle-builder-collections" data-bb-collections>
+          <div class="bb-tabs" role="tablist" aria-label="Syrup filters">
+            <button class="bb-tab is-active" data-sub="all-syrup" role="tab" aria-selected="true">All Syrups</button>
+            <button class="bb-tab" data-sub="regular"   role="tab" aria-selected="false">Regular Syrups</button>
+            <button class="bb-tab" data-sub="sugarfree" role="tab" aria-selected="false">Sugar Free Syrups</button>
+          </div>
+        </div>
+
+       </div>
+
+
+
+
+      <div class="bb-grid" data-grid>
+        {%- assign rendered = 0 -%}
+
+        {%- for b in section.blocks -%}
+        {%- assign coll = collections[b.settings.collection] -%}
+        {%- if coll -%}
+          <div class="bb-collection-group" 
+              data-collection="{{ coll.handle }}" 
+             {% if forloop.first %}style="display:grid"{% else %}style="display:none"{% endif %}>
+            {% paginate coll.products by 250 %}
+              {% for p in coll.products %}
+                {% assign av = nil %}
+                {% for vv in p.variants %}
+                  {% if vv.available %}
+                    {% assign av = vv %}
+                    {% break %}
+                  {% endif %}
+                {% endfor %}
+                {% if av %}
+{%- assign meta_path_raw = p.metafields.custom.path | default: '' -%}
+{%- assign meta_path = meta_path_raw | strip -%}
+{%- assign dest = p.url | within: coll -%}
+
+{%- if meta_path != blank -%}
+  {%- if meta_path contains '://' -%}
+    {%- assign dest = meta_path -%}  {# absolute URL #}
+  {%- else -%}
+    {%- assign first_char = meta_path | slice: 0, 1 -%}
+    {%- if first_char == '/' -%}
+      {%- assign dest = meta_path -%} 
+    {%- else -%}
+      {%- assign dest = '/' | append: meta_path -%}  
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+{%- assign raw = p.metafields.custom.path -%}
+{%- assign path = '' -%}
+{%- if raw -%}
+  {%- if raw.value -%}
+    {%- assign path = raw.value | strip -%}    
+  {%- else -%}
+    {%- assign path = raw | strip -%}         
+  {%- endif -%}
+{%- endif -%}
+
+{%- if path == '' -%}
+  {%- assign path = p.handle -%}               
+{%- endif -%}
+
+{%- assign path = path | remove_first: '/' -%}  
+{%- assign dest = '/products/' | append: path -%}
+
+
+            <article
+ class="bb-card"
+  data-variant="{{ av.id }}"
+  data-title="{{ p.title | escape }}"
+  data-price="{{ av.price }}"
+  data-img="{{ p.featured_image | img_url: '200x' }}"
+  data-product-url="{{ dest }}"
+>
+                    {% comment %} <div class="bb-card-img">
+                      <img loading="lazy" src="{{ p.featured_image | img_url: '360x' }}" alt="{{ p.title | escape }}">
+                    </div> {% endcomment %}
+                    <div class="bb-card-img">
+                  <a href="{{ dest }}" class="bb-card-link">
+                    <img loading="lazy" src="{{ p.featured_image | img_url: '360x' }}" alt="{{ p.title | escape }}">
+                  </a>
+                </div>
+                    <div class="bb-card-info">
+                  
+                      {% comment %} <h4 class="bb-card-title">{{ p.title }}</h4> {% endcomment %}
+                        <h4 class="bb-card-title">
+                        <a href="{{ dest }}" class="bb-card-title-link">{{ p.title }}</a>
+                      </h4>
+                      <div class="bb-card-price">{{ av.price | money }}</div>
+                      <div class="bb-qty">
+                        <button type="button" class="bb-qty-btn" data-decr>−</button>
+                        <input type="number" class="bb-qty-input" value="0" readonly>
+                        <button type="button" class="bb-qty-btn" data-incr>+</button>
+                      </div>
+                    </div>
+                  </article>
+                {% endif %}
+              {% endfor %}
+            {% endpaginate %}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+
+        {% comment %} {% if rendered == 0 %}
+          <p>No products found. Add one or more “Include collection” blocks in the section settings.</p>
+        {% endif %} {% endcomment %}
+      </div>
+    </div>
+
+    <!-- RIGHT: current case -->
+    <aside class="bb-right">
+
+      {% comment %} <h3 class="bb-right-title">Your Current Bundlee <span class="bb-discount-badge" data-discount-badge hidden>0%</span></h3> {% endcomment %}
+
+      <div class="bb-right-head">
+        <h3 class="bb-right-title">Your Current Bundle</h3>
+        <div class="bb-discount-parent">
+          <span class="bb-discount-text">Discount-</span>
+          <span class="bb-discount-badge" data-discount-badge hidden>0%</span>
+        </div>
+  </div>
+
+
+      <div class="bb-case-meta">
+        <div>Quantity – <strong><span data-filled>0</span></strong></div>
+      </div>
+
+      <div class="bb-case-list" data-case-list></div>
+
+      <div class="bb-summary">
+        <div class="bb-summary-row">
+          <span>Subtotal</span>
+          <span data-subtotal>$0.00</span>
+        </div>
+        <div class="bb-summary-row" data-discount-row style="display:none">
+          <span>Discount (<span data-discount-pct>0</span>%)</span>
+          <span>− <span data-discount-amount>$0.00</span></span>
+        </div>
+        <div class="bb-summary-row bb-total-row">
+          <span>Total</span>
+          <span class="bb-total" data-total>$0.00</span>
+        </div>
+      </div>
+
+      <div class="bb-actions">
+        <button type="button" class="bb-reset" data-reset>Reset</button>
+        <button type="button" class="bb-add button" data-add disabled>Add to checkout</button>
+      </div>
+    </aside>
+
+    <!-- Mobile mini summary -->
+    <div class="bb-mobile-summary" data-mobile-summary hidden>
+      <div class="bb-ms-row">
+        <span>Subtotal</span>
+        <span data-subtotal>$0.00</span>
+      </div>
+      <div class="bb-ms-row" data-discount-row style="display:none">
+        <span>Discount (<span data-discount-pct>0</span>%)</span>
+        <span>− <span data-discount-amount>$0.00</span></span>
+      </div>
+      <div class="bb-ms-row bb-ms-total">
+        <span>Total</span>
+        <span data-total>$0.00</span>
+      </div>
+    </div>
+
+    <!-- Mobile sticky button -->
+    <button class="bb-mobile-bar" data-mobile-bar type="button" hidden aria-live="polite">
+      <span class="bb-mobile-label" data-mobile-label>YOUR CASE IS EMPTY</span>
+    </button>
+
+    <!-- Right-side modal -->
+    <div id="bb-modal-overlay" class="bb-modal-overlay" hidden></div>
+    <div id="bb-modal" class="bb-modal" hidden aria-hidden="true">
+      <div class="bb-sheet" role="dialog" aria-modal="true" aria-labelledby="bb-sheet-title">
+        <header class="bb-sheet-header">
+          {% comment %} <h3 id="bb-sheet-title">Your Current Bundle <span class="bb-discount-badge" data-discount-badge hidden>0%</span></h3> {% endcomment %}
+
+            <div class="bb-right-head">
+        <h3 class="bb-right-title">Your Current Bundlee</h3>
+        <div class="bb-discount-parent">
+          <span class="bb-discount-text">Discount-</span>
+          <span class="bb-discount-badge" data-discount-badge hidden>0%</span>
+        </div>
+  </div>
+          <button class="bb-close" id="bb-modal-close" aria-label="Close">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6"  x2="6"  y2="18"></line>
+              <line x1="6"  y1="6"  x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </header>
+
+        <div class="bb-sheet-content">
+          <aside class="bb-right bb-right-modal">
+            <div class="bb-case-meta">
+              <div>Quantity – <strong><span data-filled>0</span></strong></div>
+            </div>
+
+            <div class="bb-case-list" data-case-list></div>
+
+            <div class="bb-summary">
+              <div class="bb-summary-row">
+                <span>Subtotal</span>
+                <span data-subtotal>$0.00</span>
+              </div>
+              <div class="bb-summary-row" data-discount-row style="display:none">
+                <span>Discount (<span data-discount-pct>0</span>%)</span>
+                <span>− <span data-discount-amount>$0.00</span></span>
+              </div>
+              <div class="bb-summary-row bb-total-row">
+                <span>Total</span>
+                <span class="bb-total" data-total>$0.00</span>
+              </div>
+            </div>
+
+            <div class="bb-actions">
+              <button type="button" class="bb-reset" data-reset>Reset</button>
+              <button type="button" class="bb-add button" data-add disabled>Add to checkout</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const root = document.getElementById('bundle-builder-{{ section.id }}');
+  if (!root) return;
+
+  // ----------- CONFIG ------------
+  const LOCALE   = '{{ request.locale.iso_code | default: shop.locale }}';
+  const CURRENCY = '{{ cart.currency.iso_code | default: shop.currency }}';
+
+  const DISCOUNTS = {
+    2:  {{ section.settings.discount_2  | default: 0 }},
+    3:  {{ section.settings.discount_3  | default: 0 }},
+    4:  {{ section.settings.discount_4  | default: 0 }},
+    5:  {{ section.settings.discount_5  | default: 0 }},
+    6:  {{ section.settings.discount_6  | default: 0 }},
+    8:  {{ section.settings.discount_8  | default: 0 }},
+    10: {{ section.settings.discount_10 | default: 0 }},
+    12: {{ section.settings.discount_12 | default: 0 }}
+  };
+
+  const DISCOUNT_CODES = {
+    2:  "{{ section.settings.code_2  | escape }}",
+    3:  "{{ section.settings.code_3  | escape }}",
+    4:  "{{ section.settings.code_4  | escape }}",
+    5:  "{{ section.settings.code_5  | escape }}",
+    6:  "{{ section.settings.code_6  | escape }}",
+    8:  "{{ section.settings.code_8  | escape }}",
+    10: "{{ section.settings.code_10 | escape }}",
+    12: "{{ section.settings.code_12 | escape }}"
+  };
+
+  // ---------- STATE --------------
+  const state = { items: new Map() };
+
+  // ---------- PERSISTENCE (localStorage) ----------
+  const STORE_NS   = 'bb:v1'; // bump if schema changes
+  const STORE_SHOP = '{{ shop.myshopify_domain | default: shop.permanent_domain }}';
+  const STORE_SEC  = '{{ section.id }}';
+  const STORAGE_KEY = `${STORE_NS}:${STORE_SHOP}:${STORE_SEC}`;
+
+  function serializeState() {
+    const items = [];
+    state.items.forEach((v, id) => {
+      items.push({
+        id: String(id),
+        qty: Number(v.qty) || 0,
+        price: Number(v.price) || 0,
+        title: v.title || '',
+        img: v.img || ''
+      });
+    });
+    return { items };
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(serializeState()));
+    } catch (_) { /* ignore quota/private mode */ }
+  }
+
+  function clearState() {
+    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      if (!parsed || !Array.isArray(parsed.items)) return;
+
+      state.items.clear();
+      for (const it of parsed.items) {
+        const id = String(it.id || '');
+        const qty = Math.max(0, parseInt(it.qty || 0, 10));
+        if (!id || qty <= 0) continue;
+
+        // Prefer fresh data from the DOM card if available
+        const card  = root.querySelector(`.bb-card[data-variant="${CSS.escape(id)}"]`);
+        const price = parseInt(card?.dataset.price || it.price || '0', 10);
+        const title = card?.dataset.title || it.title || '';
+        const img   = card?.dataset.img   || it.img   || '';
+
+        state.items.set(id, { qty, price, title, img });
+      }
+    } catch (_) { /* ignore */ }
+  }
+
+  // Keep multiple tabs/windows in sync
+  window.addEventListener('storage', (e) => {
+    if (e.key !== STORAGE_KEY) return;
+    loadState();
+    syncCardInputs();
+    renderSummary();
+  });
+
+  // ---------- HELPERS ------------
+  const fmt = (cents) => {
+    try { return new Intl.NumberFormat(LOCALE, { style: 'currency', currency: CURRENCY }).format(cents / 100); }
+    catch (e) { return '$' + (cents / 100).toFixed(2); }
+  };
+  const totalQty = () => { let t = 0; state.items.forEach(v => t += v.qty); return t; };
+  const subtotal = () => { let s = 0; state.items.forEach(v => s += v.qty * v.price); return s; };
+
+  function bestTier(qty){
+    const tiers = Object.keys(DISCOUNTS).map(Number).filter(Boolean).sort((a,b)=>a-b);
+    let chosen = 0;
+    for (const t of tiers) if (qty >= t) chosen = t;
+    return chosen;
+  }
+  const chosenCode = () => {
+    const tier = bestTier(totalQty());
+    return (DISCOUNT_CODES[tier] || '').trim();
+  };
+
+  // ---------- DOM REFS -----------
+  const gridCards   = root.querySelectorAll('.bb-card');
+  const searchBox   = root.querySelector('[data-search]');
+
+  // Select BOTH desktop aside and modal instances
+  const caseLists   = root.querySelectorAll('[data-case-list]');
+  const elsFilled   = root.querySelectorAll('[data-filled]');
+  const elsSub      = root.querySelectorAll('[data-subtotal]');
+  const elsDiscRow  = root.querySelectorAll('[data-discount-row]');
+  const elsDiscPct  = root.querySelectorAll('[data-discount-pct]');
+  const elsDiscAmt  = root.querySelectorAll('[data-discount-amount]');
+  const elsTotal    = root.querySelectorAll('[data-total]');
+  const btnResets   = root.querySelectorAll('[data-reset]');
+  const btnAdds     = root.querySelectorAll('[data-add]');
+  const discountBadges = root.querySelectorAll('[data-discount-badge]');
+
+  // Mobile bar & modal
+  const mobileBar   = root.querySelector('[data-mobile-bar]');
+  const mobileLabel = root.querySelector('[data-mobile-label]');
+  const asideDesktop= root.querySelector('.bb-right'); // sticky aside on desktop
+  const isMobileBP  = () => window.matchMedia('(max-width: 990px)').matches;
+
+  const modal       = document.getElementById('bb-modal');
+  const overlay     = document.getElementById('bb-modal-overlay');
+  const closeBtn    = document.getElementById('bb-modal-close');
+
+  const setTextAll = (nodes, text) => nodes.forEach(n => n.textContent = text);
+  const showAll    = (nodes, show) => nodes.forEach(n => { n.style.display = show ? '' : 'none'; });
+
+  // =======================================
+//  SYRUP FILTER TABS (UI ONLY)  ✅
+//  - One row with 3 tabs: All / Regular / Sugar Free
+//  - Only toggles active styling (no filtering logic here)
+//  - Safe: does not touch any other bundle logic
+// =======================================
+const filtersRoot = root.querySelector('[data-bb-collections]');
+const filterTabs  = filtersRoot ? filtersRoot.querySelectorAll('.bb-tab') : [];
+
+// function initTabsUI() {
+//   if (!filtersRoot) return;
+
+//   filterTabs.forEach(btn => {
+//     btn.addEventListener('click', () => {
+//       // visual active state
+//       filterTabs.forEach(b => { b.classList.remove('is-active'); b.setAttribute('aria-selected','false'); });
+//       btn.classList.add('is-active'); btn.setAttribute('aria-selected','true');
+
+//     });
+//   });
+// }
+
+function initTabsUI() {
+  if (!filtersRoot) return;
+
+  const allGroups = root.querySelectorAll('.bb-collection-group');
+
+  filterTabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Update tab active state
+      filterTabs.forEach(b => {
+        b.classList.remove('is-active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-selected', 'true');
+
+      // Determine which tab was clicked
+      const type = btn.dataset.sub; // "all-syrup", "regular", "sugarfree"
+
+      // Hide all, then show the selected one
+      allGroups.forEach(group => group.style.display = 'none');
+
+     let selector = '';
+        if (type === 'regular') {
+          selector = '[data-collection="regual-syruvia-bundle"]';
+        } else if (type === 'sugarfree') {
+          selector = '[data-collection="sugar-free-syruvia-bundle"]';
+        } else {
+          selector = '[data-collection="syruvia-bundle"]';
+        }
+
+
+      const activeGroup = root.querySelector(selector);
+      if (activeGroup) activeGroup.style.display = 'grid';
+    });
+  });
+}
+
+// =======================================
+
+
+
+
+  // ---------- CORE LOGIC ---------
+  function setQty(variantId, requestedQty) {
+    const id = String(variantId);                         // **STRING ID**
+    const qty = Math.max(0, parseInt(requestedQty || 0, 10));
+    if (qty <= 0) {
+      state.items.delete(id);
+    } else {
+      const card  = root.querySelector(`.bb-card[data-variant="${CSS.escape(id)}"]`);
+      const price = parseInt(card?.dataset.price || '0', 10);
+      const title = card?.dataset.title || '';
+      const img   = card?.dataset.img || '';
+      state.items.set(id, { qty, price, title, img });
+    }
+    syncCardInputs();
+    renderSummary();
+    saveState(); // persist after every change
+  }
+
+  // ---------- RENDER -------------
+  function renderSummary() {
+    const q   = totalQty();
+    const s   = subtotal();
+    const tier= bestTier(q);
+    const pct = DISCOUNTS[tier] || 0;
+    const disc= Math.round(s * pct / 100);
+    const tot = s - disc;
+
+    if (discountBadges.length) {
+      if (pct > 0) {
+        discountBadges.forEach(b => { b.hidden = false; b.textContent = pct + '%'; });
+      } else {
+        discountBadges.forEach(b => { b.hidden = true; });
+      }
+    }
+
+    setTextAll(elsFilled, String(q));
+    setTextAll(elsSub,    fmt(s));
+    setTextAll(elsTotal,  fmt(tot));
+
+    if (pct > 0 && disc > 0) {
+      showAll(elsDiscRow, true);
+      setTextAll(elsDiscPct, String(pct));
+      setTextAll(elsDiscAmt, fmt(disc));
+    } else {
+      showAll(elsDiscRow, false);
+    }
+
+    btnAdds.forEach(b => b.disabled = (q === 0));
+
+    caseLists.forEach(list => {
+      list.innerHTML = '';
+      state.items.forEach((v, id) => {
+        if (!v.qty) return;
+        const row = document.createElement('div');
+        row.className = 'bb-row';
+        row.innerHTML = `
+          <div class="bb-row-left">
+            <img src="${v.img}" alt="">
+            <div class="bb-row-title">${v.title}</div>
+          </div>
+          <div class="bb-row-ctrls">
+            <button type="button" class="bb-mini" data-dec aria-label="Decrease">−</button>
+            <span class="bb-chip">${v.qty}</span>
+            <button type="button" class="bb-mini" data-inc aria-label="Increase">+</button>
+            <span class="bb-row-price">${fmt(v.price)}</span>
+            <button type="button" class="bb-mini" data-remove aria-label="Remove">
+              <svg class="bb-trash" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 6h18v2H3V6zm2 3h14l-1.5 12.5c-.1.8-.8 1.5-1.6 1.5H8.1c-.8 0-1.5-.7-1.6-1.5L5 9zm5 2v9h2v-9H10zm4 0v9h2v-9h-2zM9 4V2h6v2h5v2H4V4h5z"/>
+              </svg>
+            </button>
+          </div>
+        `;
+        row.querySelector('[data-inc]').addEventListener('click', () => setQty(id, (state.items.get(id)?.qty || 0) + 1));
+        row.querySelector('[data-dec]').addEventListener('click', () => setQty(id, (state.items.get(id)?.qty || 0) - 1));
+        row.querySelector('[data-remove]').addEventListener('click', () => setQty(id, 0));
+        list.appendChild(row);
+      });
+    });
+
+    updateMobileBar();
+  }
+
+  function syncCardInputs() {
+    gridCards.forEach(card => {
+      const id = card.dataset.variant;                    // **STRING ID**
+      const input = card.querySelector('.bb-qty-input');
+      if (input) input.value = state.items.get(id)?.qty || 0;
+    });
+  }
+
+  // ---------- MOBILE BAR ----------
+  function updateMobileBar(){
+    if(!mobileBar) return;
+    mobileBar.hidden = !isMobileBP();
+    if (mobileBar.hidden) return;
+
+    const q = totalQty();
+    if (q > 0){
+      mobileBar.disabled = false;
+      mobileLabel.textContent = `YOUR CURRENT BUNDLES (${q})`;
+    } else {
+      mobileBar.disabled = true;
+      mobileLabel.textContent = 'YOUR BUNDLE IS EMPTY';
+    }
+  }
+
+  // ----------- MODAL --------------
+  function openModal(){
+    if (!modal || !overlay) return;
+    modal.hidden = false;
+    overlay.hidden = false;
+    requestAnimationFrame(() => {
+      modal.classList.add('show');
+      overlay.classList.add('show');
+      document.body.classList.add('bb-lock');
+    });
+  }
+  function closeModal(){
+    if (!modal || !overlay) return;
+    modal.classList.remove('show');
+    overlay.classList.remove('show');
+    setTimeout(() => {
+      modal.hidden = true;
+      overlay.hidden = true;
+      document.body.classList.remove('bb-lock');
+    }, 300);
+  }
+
+  mobileBar?.addEventListener('click', () => {
+    if (mobileBar.disabled) return;
+    if (isMobileBP()) openModal();
+    else asideDesktop?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  closeBtn?.addEventListener('click', closeModal);
+  overlay?.addEventListener('click', closeModal);
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  window.addEventListener('resize', () => {
+    updateMobileBar();
+    if (!isMobileBP()) closeModal();
+  });
+
+  // ---------- EVENTS -------------
+  gridCards.forEach(card => {
+    const id = card.dataset.variant;                      // **STRING ID**
+    const inc = card.querySelector('[data-incr]');
+    const dec = card.querySelector('[data-decr]');
+    const currentQty = () => (state.items.get(id)?.qty || 0);
+    inc?.addEventListener('click', () => setQty(id, currentQty() + 1));
+    dec?.addEventListener('click', () => setQty(id, currentQty() - 1));
+  });
+
+  const searchCards = () => {
+    const q = (searchBox?.value || '').trim().toLowerCase();
+    gridCards.forEach(card => {
+      const t = (card.dataset.title || '').toLowerCase();
+      card.style.display = t.includes(q) ? '' : 'none';
+    });
+  };
+  searchBox?.addEventListener('input', searchCards);
+
+  btnResets.forEach(btn => btn.addEventListener('click', () => {
+    state.items.clear();
+    discountBadges.forEach(b => { b.hidden = true; b.textContent = '0%'; });
+    syncCardInputs();
+    renderSummary();
+    clearState(); // <-- clear saved bundle
+  }));
+
+  btnAdds.forEach(btn => btn.addEventListener('click', async () => {
+    const q = totalQty();
+    if (q === 0) return;
+
+    const bundleId = 'BB-' + Date.now();
+    const items = [];
+    state.items.forEach((v, id) => {
+      if (!v.qty) return;
+      items.push({ id, quantity: v.qty, properties: { _bundle_id: bundleId } });
+    });
+
+    await fetch('/cart/clear.js', { method: 'POST', credentials: 'same-origin' });
+
+    const res = await fetch('/cart/add.js', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items, attributes: { _bundle: bundleId, bundle_label: 'Custom Bundle', bundle_type: 'one-time' } })
+    });
+    if (!res.ok) { alert('Could not add bundle to cart.'); return; }
+
+    clearState(); // <-- clear after successful add
+
+    if (location.search.includes('discount=')) {
+  const u = new URL(location.href);
+  u.searchParams.delete('discount');
+  history.replaceState({}, '', u.toString());
+}
+    const code = chosenCode();
+    if (code) {
+      window.location.href = '/discount/' + encodeURIComponent(code) + '?redirect=' + encodeURIComponent('/checkout');
+    } else {
+      window.location.href = '/checkout';
+    }
+
+    
+  }));
+
+  // ---------- FIXED MOBILE BARS (iOS/Android) ----------
+  (function fixMobileFixedBars(){
+    const bar = root.querySelector('.bb-mobile-bar');
+    if (!bar) return;
+
+    const setBarH = () => {
+      document.documentElement.style.setProperty('--bar-h', bar.offsetHeight + 'px');
+    };
+
+    const syncVV = () => {
+      let offset = 0;
+      const vv = window.visualViewport;
+      if (vv) {
+        offset = Math.max(0, (window.innerHeight - vv.height - vv.offsetTop));
+      }
+      document.documentElement.style.setProperty('--vvb', offset + 'px');
+    };
+
+    setBarH();
+    syncVV();
+
+    window.addEventListener('resize', setBarH);
+    window.addEventListener('orientationchange', () => { setBarH(); syncVV(); });
+
+    if (window.visualViewport){
+      visualViewport.addEventListener('resize', syncVV, { passive: true });
+      visualViewport.addEventListener('scroll',  syncVV, { passive: true });
+    }
+
+    const mo = new MutationObserver(setBarH);
+    mo.observe(bar, { childList: true, subtree: true, characterData: true });
+  })();
+
+  // ---------- INIT ---------------
+  loadState();        // <-- hydrate from localStorage if present
+  syncCardInputs();
+  renderSummary();
+  updateMobileBar();
+  searchCards();
+
+  // Initialize the tab UI (ADDED)
+  initTabsUI();
+})();
+</script>
+
+
+
+
+{% schema %}
+{
+  "name": "Bundle Builder (One-time)",
+  "settings": [
+    { "type": "text", "id": "bundle_sizes", "label": "Bundle sizes (comma separated)", "default": "2,3,4,5,6,8,10,12" },
+
+    { "type": "range", "id": "discount_2",  "label": "Discount % for 2 items",  "min": 0, "max": 50, "step": 1, "default": 0 },
+    { "type": "range", "id": "discount_3",  "label": "Discount % for 3 items",  "min": 0, "max": 50, "step": 1, "default": 0 },
+    { "type": "range", "id": "discount_4",  "label": "Discount % for 4 items",  "min": 0, "max": 50, "step": 1, "default": 0 },
+    { "type": "range", "id": "discount_5",  "label": "Discount % for 5 items",  "min": 0, "max": 50, "step": 1, "default": 0 },
+    { "type": "range", "id": "discount_6",  "label": "Discount % for 6 items",  "min": 0, "max": 50, "step": 1, "default": 0 },
+    { "type": "range", "id": "discount_8",  "label": "Discount % for 8 items",  "min": 0, "max": 50, "step": 1, "default": 0 },
+    { "type": "range", "id": "discount_10", "label": "Discount % for 10 items", "min": 0, "max": 50, "step": 1, "default": 0 },
+    { "type": "range", "id": "discount_12", "label": "Discount % for 12 items", "min": 0, "max": 60, "step": 1, "default": 0 },
+
+    { "type": "text", "id": "code_2", "label": "Discount code for 2 items", "default": "BUNDLE2" },
+    { "type": "text", "id": "code_3", "label": "Discount code for 3 items", "default": "BUNDLE3" },
+    { "type": "text", "id": "code_4", "label": "Discount code for 4 items", "default": "BUNDLE4" },
+    { "type": "text", "id": "code_5", "label": "Discount code for 5 items", "default": "BUNDLE5" },
+    { "type": "text", "id": "code_6", "label": "Discount code for 6 items", "default": "BUNDLE6" },
+    { "type": "text", "id": "code_8", "label": "Discount code for 8 items", "default": "BUNDLE8"},
+    { "type": "text", "id": "code_10", "label": "Discount code for 10 items", "default": "BUNDLE10"},
+    { "type": "text", "id": "code_12", "label": "Discount code for 12 items", "default": "BUNDLE12" }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Include collection",
+      "settings": [{ "type": "collection", "id": "collection", "label": "Collection" }]
+    }
+  ],
+  "presets": [{ "name": "Bundle Builder (One-time)" }]
+}
+{% endschema %}
+</section>
+</section>

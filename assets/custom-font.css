@@ -1,0 +1,87 @@
+@font-face{font-family:'Inter';src:url(//syruvia.com/cdn/shop/files/Inter-Regular.eot?v=12217603178632727124);src:url(//syruvia.com/cdn/shop/files/Inter-Regular.eot?%23iefix&v=50602) format('embedded-opentype'),url(//syruvia.com/cdn/shop/files/Inter-Regular.woff2?v=3024791335358025838) format('woff2'),url(//syruvia.com/cdn/shop/files/Inter-Regular.woff?v=9956475014060729159) format('woff'),url(//syruvia.com/cdn/shop/files/Inter-Regular.ttf?v=14964744229606976689) format('truetype');font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:'Channe';src:url(//syruvia.com/cdn/shop/files/Channe-Regular.eot?v=10436487047988563957);src:url(//syruvia.com/cdn/shop/files/Channe-Regular.eot?%23iefix&v=50602) format('embedded-opentype'),url(//syruvia.com/cdn/shop/files/Channe-Regular.woff2?v=11806644795261586301) format('woff2'),url(//syruvia.com/cdn/shop/files/Channe-Regular.woff?v=16417746641939704255) format('woff'),url(//syruvia.com/cdn/shop/files/Channe-Regular.ttf?v=706772099099904426) format('truetype');font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:'Redrains';src:url(//syruvia.com/cdn/shop/files/Redrains-Bold.eot?v=2450923681636443920);src:url(//syruvia.com/cdn/shop/files/Redrains-Bold.eot?%23iefix&v=50602) format('embedded-opentype'),url(//syruvia.com/cdn/shop/files/Redrains-Bold.woff2?v=7681980625137451222) format('woff2'),url(//syruvia.com/cdn/shop/files/Redrains-Bold.woff?v=552291608104964154) format('woff'),url(//syruvia.com/cdn/shop/files/Redrains-Bold.ttf?v=4174804306499787722) format('truetype');font-weight:700;font-style:normal;font-display:swap}@font-face{font-family:'Redrains';src:url(//syruvia.com/cdn/shop/files/Redrains-Regular.eot?v=12397845136901326885);src:url(//syruvia.com/cdn/shop/files/Redrains-Regular.eot?%23iefix&v=50602) format('embedded-opentype'),url(//syruvia.com/cdn/shop/files/Redrains-Regular.woff2?v=6167800327500816191) format('woff2'),url(//syruvia.com/cdn/shop/files/Redrains-Regular.woff?v=10098924672329337482) format('woff'),url(//syruvia.com/cdn/shop/files/Redrains-Regular.ttf?v=9607698688792649048) format('truetype');font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:'Redrains';src:url(//syruvia.com/cdn/shop/files/Redrains-Light.eot?v=9138425094829508150);src:url(//syruvia.com/cdn/shop/files/Redrains-Light.eot?%23iefix&v=50602) format('embedded-opentype'),url(//syruvia.com/cdn/shop/files/Redrains-Light.woff2?v=15450222138877987282) format('woff2'),url(//syruvia.com/cdn/shop/files/Redrains-Light.woff?v=18360148554695522252) format('woff'),url(//syruvia.com/cdn/shop/files/Redrains-Light.ttf?v=13647976615152588974) format('truetype');font-weight:300;font-style:normal;font-display:swap}@font-face {
+  font-family: "Lucy Said Ok";
+  src: url("//syruvia.com/cdn/shop/files/Lucy-Said-Ok.ttf?v=17469040746909742518") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Ballock Script";
+  src: url("//syruvia.com/cdn/shop/files/Ballock_Script.ttf?v=14243372784760611808") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Replica ProTT";
+  src: url("//syruvia.com/cdn/shop/files/FontsFree-Net-Replica-ProTT-Heavy.ttf?v=2012693460863668713") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Obviously";
+  src: url("//syruvia.com/cdn/shop/files/fonnts.com-Obviously_Semi.otf?v=8370441361425726874") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('//syruvia.com/cdn/shop/files/MONTSERRAT-REGULAR.TTF?v=7723200018961062251') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('//syruvia.com/cdn/shop/files/MONTSERRAT-SEMIBOLD.TTF?v=4631929491244753406') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('//syruvia.com/cdn/shop/files/MONTSERRAT-EXTRABOLD.TTF?v=3591447160469535468') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Impact';
+  src: url('//syruvia.com/cdn/shop/files/IMPACT.ttf?v=50602') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Myriad Pro';
+  src: url('//syruvia.com/cdn/shop/files/Myriad-pro-regular.otf?v=50602') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Big Caslon';
+  src: url('//syruvia.com/cdn/shop/files/BIG-CASLON-MEDIUM.ttf?v=50602') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Baskerville Bold';
+  src: url('//syruvia.com/cdn/shop/files/Baskerville-bold.ttf?v=50602') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+

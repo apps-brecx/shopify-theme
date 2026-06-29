@@ -1,0 +1,322 @@
+{%- comment -%}
+  Live search suggestions + history for the mobile search bar.
+  - Injects #syrnav-suggest dropdown into .syrnav-msearch via JS (no section edit needed).
+  - When empty + focused: shows recent searches stored in localStorage.
+  - When typing: debounced fetch to Shopify's /search/suggest.json, renders products.
+  - Submits + click on a product save the term to history (last 6).
+  - Keyboard nav: ↑/↓ to move, Esc to close.
+{%- endcomment -%}
+<style id="pd-search-suggest-css">
+@media (max-width:980px){
+  /* Make .syrnav-msearch the positioning context for the dropdown */
+  html body #syrnav .syrnav-msearch{ position:relative !important; }
+
+  /* Dropdown shell */
+  html body #syrnav .syrnav-suggest{
+    display:none;
+    position:absolute !important;
+    left:16px !important; right:16px !important;
+    top:calc(100% - 6px) !important;
+    background:#FFFBF4 !important;
+    border:1.5px solid #39220f !important;
+    border-radius:14px !important;
+    box-shadow:3px 3px 0 #39220f, 0 10px 24px rgba(57,34,15,.12) !important;
+    overflow:hidden !important;
+    z-index:999 !important;
+    max-height:60vh !important;
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior:contain !important;
+  }
+  html body #syrnav .syrnav-suggest.has-results{ display:block !important; }
+
+  /* Section header (Recent searches / Products) */
+  html body #syrnav .syrnav-suggest-history{
+    padding:12px 16px 6px !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:10.5px !important; letter-spacing:.14em !important; text-transform:uppercase !important;
+    color:rgba(57,34,15,.55) !important;
+  }
+  html body #syrnav .syrnav-suggest-history-row{
+    display:flex !important; align-items:center !important; justify-content:space-between !important;
+    padding:0 !important;
+  }
+  html body #syrnav .syrnav-suggest-history-clear{
+    background:transparent !important; border:0 !important; padding:12px 16px 6px !important;
+    cursor:pointer !important; -webkit-tap-highlight-color:transparent !important;
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    font-size:11px !important; font-weight:600 !important;
+    color:#c58548 !important; text-decoration:underline !important; text-underline-offset:2px !important;
+  }
+  html body #syrnav .syrnav-suggest-history-clear:hover{ color:#39220f !important; }
+
+  /* Result row — history term or product */
+  html body #syrnav .syrnav-suggest-item{
+    display:flex !important; align-items:center !important; gap:12px !important;
+    padding:10px 16px !important;
+    cursor:pointer !important; text-decoration:none !important;
+    color:#39220f !important;
+    border-top:1px solid rgba(57,34,15,.08) !important;
+    transition:background .15s ease !important;
+    -webkit-tap-highlight-color:transparent !important;
+  }
+  html body #syrnav .syrnav-suggest-item:first-of-type{ border-top:0 !important; }
+  html body #syrnav .syrnav-suggest-item:hover,
+  html body #syrnav .syrnav-suggest-item:focus{
+    background:rgba(252,226,160,.4) !important; outline:none !important;
+  }
+  html body #syrnav .syrnav-suggest-item:active{ background:#FCE2A0 !important; }
+  html body #syrnav .syrnav-suggest-item img{
+    width:44px !important; height:44px !important;
+    object-fit:cover !important;
+    border-radius:8px !important;
+    border:1.5px solid #39220f !important;
+    background:#FFFFFF !important;
+    flex:0 0 auto !important;
+  }
+  html body #syrnav .syrnav-suggest-item-info{ flex:1 1 auto !important; min-width:0 !important; }
+  html body #syrnav .syrnav-suggest-item-title{
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    font-size:14px !important; font-weight:600 !important;
+    color:#39220f !important;
+    white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
+    line-height:1.2 !important;
+  }
+  html body #syrnav .syrnav-suggest-item-price{
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:12.5px !important; color:#c58548 !important;
+    margin-top:3px !important; letter-spacing:.01em !important;
+  }
+  html body #syrnav .syrnav-suggest-item-clock{
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    font-size:14px !important; color:#39220f !important;
+    flex:1 1 auto !important;
+  }
+  html body #syrnav .syrnav-suggest-item-clock-ic{
+    flex:0 0 auto !important; color:rgba(57,34,15,.45) !important;
+    width:18px !important; height:18px !important;
+  }
+
+  /* "See all results" row */
+  html body #syrnav .syrnav-suggest-all{
+    display:block !important;
+    padding:13px 16px !important;
+    border-top:1.5px solid #39220f !important;
+    text-align:center !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:12px !important; letter-spacing:.06em !important; text-transform:uppercase !important;
+    color:#39220f !important; text-decoration:none !important;
+    background:rgba(252,226,160,.4) !important;
+    transition:background .15s ease, color .15s ease !important;
+    -webkit-tap-highlight-color:transparent !important;
+  }
+  html body #syrnav .syrnav-suggest-all:hover,
+  html body #syrnav .syrnav-suggest-all:focus{ background:#FCE2A0 !important; color:#c58548 !important; outline:none !important; }
+
+  /* Empty state */
+  html body #syrnav .syrnav-suggest-empty{
+    padding:18px 16px !important;
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    font-size:14px !important; color:rgba(57,34,15,.6) !important;
+    text-align:center !important;
+  }
+  html body #syrnav .syrnav-suggest-empty strong{ color:#39220f !important; font-weight:700 !important; }
+}
+</style>
+
+<script id="pd-search-suggest-js">
+(function(){
+  if (window.__pdSearchSuggestInit) return; window.__pdSearchSuggestInit = true;
+
+  var HISTORY_KEY = 'syr_search_history';
+  var MAX_HISTORY = 6;
+  var DEBOUNCE_MS = 220;
+
+  var CLOCK_SVG = '<svg class="syrnav-suggest-item-clock-ic" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="5.5" stroke="currentColor" stroke-width="1.6"/><path d="M9 6v3.5l2 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M14 14l3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+
+  function getHistory(){
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }
+    catch(e){ return []; }
+  }
+  function addHistory(term){
+    if (!term || term.length < 2) return;
+    var h = getHistory().filter(function(x){ return x.toLowerCase() !== term.toLowerCase(); });
+    h.unshift(term);
+    h = h.slice(0, MAX_HISTORY);
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); } catch(e){}
+  }
+  function clearHistory(){
+    try { localStorage.removeItem(HISTORY_KEY); } catch(e){}
+  }
+
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>\"']/g, function(c){ return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]; }); }
+
+  function injectDropdown(){
+    var msearch = document.querySelector('#syrnav .syrnav-msearch');
+    if (!msearch) return null;
+    var existing = msearch.querySelector('#syrnav-suggest');
+    if (existing) return existing;
+    var d = document.createElement('div');
+    d.id = 'syrnav-suggest';
+    d.className = 'syrnav-suggest';
+    d.setAttribute('role','listbox');
+    d.setAttribute('aria-label','Search suggestions');
+    msearch.appendChild(d);
+    return d;
+  }
+
+  function renderHistory(suggest){
+    var h = getHistory();
+    if (!h.length){ suggest.classList.remove('has-results'); suggest.innerHTML = ''; return; }
+    var html = '<div class="syrnav-suggest-history-row">' +
+      '<span class="syrnav-suggest-history">Recent searches</span>' +
+      '<button class="syrnav-suggest-history-clear" id="syr-clear-history" type="button">Clear</button>' +
+    '</div>';
+    h.forEach(function(term){
+      html += '<a class="syrnav-suggest-item" href="/search?q=' + encodeURIComponent(term) + '">' +
+        CLOCK_SVG +
+        '<span class="syrnav-suggest-item-clock">' + esc(term) + '</span>' +
+      '</a>';
+    });
+    suggest.innerHTML = html;
+    suggest.classList.add('has-results');
+    var clearBtn = suggest.querySelector('#syr-clear-history');
+    if (clearBtn){
+      clearBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        clearHistory();
+        suggest.classList.remove('has-results');
+        suggest.innerHTML = '';
+      });
+    }
+  }
+
+  function moneyStr(p){
+    var n = parseFloat(p);
+    if (isNaN(n)) return '';
+    return '$' + n.toFixed(2);
+  }
+
+  function renderProducts(suggest, products, query){
+    if (!products || !products.length){
+      suggest.innerHTML = '<div class="syrnav-suggest-empty">No results for <strong>"' + esc(query) + '"</strong></div>';
+      suggest.classList.add('has-results');
+      return;
+    }
+    var html = '<div class="syrnav-suggest-history">Products</div>';
+    products.forEach(function(p){
+      var img = p.image || (p.featured_image && p.featured_image.url) || '';
+      var url = p.url || '/products/' + (p.handle || '');
+      var title = p.title || '';
+      var price = p.price;
+      if (price && typeof price === 'object') price = price.amount || price.cents || price.value;
+      var imgUrl = img ? (img.indexOf('?') >= 0 ? (img + '&width=88') : (img + '?width=88')) : '';
+      html += '<a class="syrnav-suggest-item" href="' + esc(url) + '">' +
+        (imgUrl ? '<img src="' + esc(imgUrl) + '" alt="' + esc(title) + '" loading="lazy">' : '<div style="width:44px;height:44px;flex:0 0 auto;"></div>') +
+        '<div class="syrnav-suggest-item-info">' +
+          '<div class="syrnav-suggest-item-title">' + esc(title) + '</div>' +
+          (price ? '<div class="syrnav-suggest-item-price">' + esc(moneyStr(price)) + '</div>' : '') +
+        '</div>' +
+      '</a>';
+    });
+    html += '<a class="syrnav-suggest-all" href="/search?q=' + encodeURIComponent(query) + '">See all results for "' + esc(query) + '" →</a>';
+    suggest.innerHTML = html;
+    suggest.classList.add('has-results');
+  }
+
+  var debounceTimer = null;
+  var lastQuery = '';
+
+  function fetchSuggestions(input, suggest, q){
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(function(){
+      if (q === lastQuery) return;
+      lastQuery = q;
+      fetch('/search/suggest.json?q=' + encodeURIComponent(q) + '&resources[type]=product&resources[limit]=5')
+        .then(function(r){ return r.json(); })
+        .then(function(data){
+          if (input.value.trim() !== q) return; /* stale */
+          var products = (data && data.resources && data.resources.results && data.resources.results.products) || [];
+          renderProducts(suggest, products, q);
+        })
+        .catch(function(){});
+    }, DEBOUNCE_MS);
+  }
+
+  function wire(input, suggest){
+    if (input.dataset.pdSuggestBound === '1') return;
+    input.dataset.pdSuggestBound = '1';
+
+    input.addEventListener('input', function(){
+      var q = input.value.trim();
+      if (!q){ renderHistory(suggest); return; }
+      if (q.length >= 1) fetchSuggestions(input, suggest, q);
+    });
+    input.addEventListener('focus', function(){
+      var q = input.value.trim();
+      if (!q) renderHistory(suggest);
+      else fetchSuggestions(input, suggest, q);
+    });
+
+    /* Save history on form submit */
+    var form = input.closest('form');
+    if (form && !form.dataset.pdSuggestBound){
+      form.dataset.pdSuggestBound = '1';
+      form.addEventListener('submit', function(){
+        var q = input.value.trim();
+        if (q) addHistory(q);
+      });
+    }
+
+    /* Save history when a product result is clicked */
+    suggest.addEventListener('click', function(e){
+      var item = e.target.closest('.syrnav-suggest-item, .syrnav-suggest-all');
+      if (item){
+        var q = input.value.trim();
+        if (q && q.length >= 2) addHistory(q);
+      }
+    });
+
+    /* Hide when clicking outside the search area */
+    document.addEventListener('click', function(e){
+      if (!e.target.closest('.syrnav-msearch')){
+        suggest.classList.remove('has-results');
+        lastQuery = '';
+      }
+    });
+
+    /* Keyboard nav */
+    input.addEventListener('keydown', function(e){
+      var items = Array.prototype.slice.call(suggest.querySelectorAll('.syrnav-suggest-item, .syrnav-suggest-all'));
+      var focused = suggest.querySelector('.syrnav-suggest-item:focus, .syrnav-suggest-all:focus');
+      var idx = items.indexOf(focused);
+      if (e.key === 'ArrowDown'){
+        e.preventDefault();
+        var next = items[idx + 1] || items[0];
+        if (next) next.focus();
+      } else if (e.key === 'ArrowUp'){
+        e.preventDefault();
+        if (idx <= 0){ input.focus(); }
+        else { var prev = items[idx - 1]; if (prev) prev.focus(); }
+      } else if (e.key === 'Escape'){
+        suggest.classList.remove('has-results');
+        input.blur();
+      }
+    });
+  }
+
+  function init(){
+    var input = document.querySelector('#syrnav .syrnav-msearch input[name="q"], #syrnav .syrnav-msearch input[type="search"]');
+    if (!input) return;
+    var suggest = injectDropdown();
+    if (!suggest) return;
+    wire(input, suggest);
+  }
+  init();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  setTimeout(init, 200); setTimeout(init, 1000);
+  if ('MutationObserver' in window){
+    new MutationObserver(init).observe(document.body, {childList:true, subtree:true});
+  }
+})();
+</script>

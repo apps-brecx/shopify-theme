@@ -1,0 +1,485 @@
+{%- comment -%}
+  Syruvia — Build Your Bundle (v6 mobile dock + search)
+{%- endcomment -%}
+
+{%- liquid
+  assign coll = collections[section.settings.collection]
+  assign tiers = section.blocks | where: "type", "tier"
+-%}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+  #byb-{{ section.id }}{
+    --acc: {{ section.settings.accent_color }};
+    --acc-d: {{ section.settings.accent_dark }};
+    --bg: {{ section.settings.bg_color }};
+    --card: {{ section.settings.card_color }};
+    --tx: {{ section.settings.text_color }};
+    --muted: color-mix(in srgb, {{ section.settings.text_color }} 52%, transparent);
+    --line: color-mix(in srgb, {{ section.settings.text_color }} 12%, transparent);
+    --r: {{ section.settings.corner_radius }}px;
+    background:var(--bg); color:var(--tx);
+    padding:32px 16px 120px; -webkit-font-smoothing:antialiased;
+  }
+  #byb-{{ section.id }} *{ box-sizing:border-box; }
+
+  #byb-{{ section.id }} .byb-wrap{ max-width:1240px; margin:0 auto; }
+
+  #byb-{{ section.id }} .byb-head{ text-align:center; margin-bottom:22px; }
+  #byb-{{ section.id }} .byb-eyebrow{ display:inline-block; font-weight:700; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--acc-d); background:color-mix(in srgb,var(--acc) 22%,transparent);
+    padding:6px 14px; border-radius:999px; margin-bottom:14px; }
+  #byb-{{ section.id }} .byb-title{ line-height:1.04; }
+  #byb-{{ section.id }} .byb-sub{ color:var(--muted); max-width:560px; margin:10px auto 0; }
+
+  #byb-{{ section.id }} .byb-tiers{ position:sticky; top:78px; z-index:30; margin:22px 0 0; padding:12px 8px 14px; background:var(--bg); box-shadow:0 10px 16px -12px rgba(0,0,0,.35); }
+  #byb-{{ section.id }} .byb-bar{ position:relative; height:8px; border-radius:999px; background:var(--line); max-width:840px; margin:0 auto; }
+  #byb-{{ section.id }} .byb-bar-fill{ position:absolute; left:0; top:0; bottom:0; width:0%; border-radius:999px;
+    background:linear-gradient(90deg,var(--acc),var(--acc-d)); transition:width .4s cubic-bezier(.4,0,.2,1); }
+  #byb-{{ section.id }} .byb-ticks{ display:flex; justify-content:space-between; margin:12px auto 0; gap:4px; max-width:840px; }
+  @media(max-width:999px){ #byb-{{ section.id }} .byb-tiers{ top:56px; } }
+  #byb-{{ section.id }} .byb-tick{ flex:1; text-align:center; }
+  #byb-{{ section.id }} .byb-tick b{ display:block; font-weight:700; color:var(--muted); transition:.2s; }
+  #byb-{{ section.id }} .byb-tick span{ color:var(--muted); }
+  #byb-{{ section.id }} .byb-tick.on b{ color:var(--acc-d); }
+  #byb-{{ section.id }} .byb-tick.on b::after{ content:" ✓"; }
+
+  #byb-{{ section.id }} .byb-layout{ display:grid; grid-template-columns:1fr; gap:24px; margin-top:30px; }
+  @media(min-width:1000px){ #byb-{{ section.id }} .byb-layout{ grid-template-columns:1fr 360px; align-items:start; } }
+  #byb-{{ section.id }} .byb-main{ min-width:0; }
+
+  #byb-{{ section.id }} .byb-search{ position:relative; margin-bottom:18px; }
+  #byb-{{ section.id }} .byb-search svg{ position:absolute; left:15px; top:50%; transform:translateY(-50%); width:18px; height:18px; stroke:var(--muted); pointer-events:none; }
+  #byb-{{ section.id }} .byb-search input{ width:100%; padding:13px 40px 13px 44px; border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--tx); outline:none; transition:border-color .15s; -webkit-appearance:none; }
+  #byb-{{ section.id }} .byb-search input:focus{ border-color:var(--acc-d); box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 30%,transparent); }
+  #byb-{{ section.id }} .byb-search input::placeholder{ color:var(--muted); }
+  #byb-{{ section.id }} .byb-clear{ position:absolute; right:10px; top:50%; transform:translateY(-50%); border:none; background:none; cursor:pointer; color:var(--muted); width:26px; height:26px; display:none; font-size:18px; line-height:1; }
+  #byb-{{ section.id }} .byb-search.has .byb-clear{ display:block; }
+  #byb-{{ section.id }} .byb-noresults{ display:none; text-align:center; color:var(--muted); padding:34px 0; }
+
+  #byb-{{ section.id }} .byb-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  @media(min-width:560px){ #byb-{{ section.id }} .byb-grid{ grid-template-columns:repeat(3,1fr); } }
+  @media(min-width:1000px){ #byb-{{ section.id }} .byb-grid{ grid-template-columns:repeat({{ section.settings.cols_desktop }},1fr); gap:16px; } }
+
+  #byb-{{ section.id }} .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--r);
+    overflow:hidden; display:flex; flex-direction:column; transition:.18s; position:relative; }
+  #byb-{{ section.id }} .card:hover{ transform:translateY(-3px); box-shadow:0 12px 28px rgba(0,0,0,.10); }
+  #byb-{{ section.id }} .card.on{ border-color:var(--acc-d); box-shadow:0 0 0 2px color-mix(in srgb,var(--acc-d) 28%,transparent); }
+  #byb-{{ section.id }} .card .img{ aspect-ratio:1/1; background:#fff; position:relative; }
+  #byb-{{ section.id }} .card .img img{ width:100%; height:100%; object-fit:contain; padding:10px; }
+  #byb-{{ section.id }} .card .badge{ position:absolute; top:8px; left:8px; font-weight:700; text-transform:uppercase;
+    letter-spacing:.05em; padding:4px 9px; border-radius:999px; background:var(--acc-d); color:#fff; }
+  #byb-{{ section.id }} .card .pill{ position:absolute; top:8px; right:8px; min-width:26px; height:26px; padding:0 7px; display:none;
+    align-items:center; justify-content:center; border-radius:999px; background:var(--acc-d); color:#fff; font-weight:700; }
+  #byb-{{ section.id }} .card.on .pill{ display:flex; }
+  #byb-{{ section.id }} .card .b{ padding:11px 11px 13px; display:flex; flex-direction:column; gap:7px; flex:1; }
+  #byb-{{ section.id }} .card .nm{ font-weight:600; line-height:1.25; }
+  #byb-{{ section.id }} .card .pr{ color:var(--muted); font-weight:600; }
+  #byb-{{ section.id }} .card .act{ margin-top:auto; }
+  #byb-{{ section.id }} .add{ width:100%; border:none; border-radius:11px; padding:11px 10px; font-weight:700;
+    cursor:pointer; background:var(--acc); color:var(--acc-d); transition:.15s; }
+  #byb-{{ section.id }} .add:hover{ filter:brightness(.96); }
+  #byb-{{ section.id }} .step{ display:none; align-items:center; justify-content:space-between; border:1.5px solid var(--acc-d); border-radius:11px; }
+  #byb-{{ section.id }} .card.on .step{ display:flex; }
+  #byb-{{ section.id }} .card.on .add{ display:none; }
+  #byb-{{ section.id }} .step button{ background:none; border:none; width:42px; height:42px; font-weight:700;
+    color:var(--acc-d); cursor:pointer; line-height:1; }
+  #byb-{{ section.id }} .step .q{ font-weight:700; }
+  #byb-{{ section.id }} .sold{ position:absolute; inset:0; background:rgba(255,255,255,.72); display:flex; align-items:center;
+    justify-content:center; font-weight:700; text-transform:uppercase; color:var(--muted); }
+
+  #byb-{{ section.id }} .rail{ background:var(--card); border:1px solid var(--line); border-radius:var(--r); overflow:hidden; }
+  @media(min-width:1000px){ #byb-{{ section.id }} .rail{ position:sticky; top:78px; box-shadow:0 8px 30px rgba(0,0,0,.06); } }
+  @media(max-width:999px){
+    #byb-{{ section.id }} .rail{ position:fixed; left:0; right:0; bottom:0; z-index:60; border-radius:18px 18px 0 0;
+      box-shadow:0 -10px 30px rgba(0,0,0,.16); border-bottom:none; }
+  }
+  #byb-{{ section.id }} .rail-top{ display:flex; align-items:center; gap:10px; padding:16px 18px; border-bottom:1px solid var(--line); cursor:default; }
+  @media(max-width:999px){ #byb-{{ section.id }} .rail-top{ cursor:pointer; padding:13px 16px; } }
+  #byb-{{ section.id }} .rail-top h3{ font-weight:700; flex:1; }
+  #byb-{{ section.id }} .rail-mtotal{ display:none; font-weight:800; }
+  #byb-{{ section.id }} .cart{ position:relative; width:38px; height:38px; border-radius:50%; background:color-mix(in srgb,var(--acc) 24%,transparent);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  #byb-{{ section.id }} .cart svg{ width:19px; height:19px; stroke:var(--acc-d); }
+  #byb-{{ section.id }} .cart.bump{ animation:byb-bump .4s ease; }
+  @keyframes byb-bump{ 0%,100%{transform:scale(1);} 40%{transform:scale(1.28);} }
+  #byb-{{ section.id }} .cart .cnt{ position:absolute; top:-5px; right:-5px; min-width:19px; height:19px; padding:0 5px; border-radius:999px;
+    background:var(--acc-d); color:#fff; font-weight:700; display:none; align-items:center; justify-content:center; }
+  #byb-{{ section.id }} .cart .cnt.show{ display:flex; }
+  #byb-{{ section.id }} .chev{ display:none; transition:.2s; color:var(--muted); flex-shrink:0; }
+  @media(max-width:999px){ #byb-{{ section.id }} .chev{ display:block; } }
+  #byb-{{ section.id }} .rail.open .chev{ transform:rotate(180deg); }
+
+  #byb-{{ section.id }} .rail-list{ max-height:340px; overflow-y:auto; padding:6px 0; }
+  @media(max-width:999px){
+    #byb-{{ section.id }} .rail-list{ max-height:0; overflow:hidden; padding:0; transition:max-height .3s ease; }
+    #byb-{{ section.id }} .rail.open .rail-list{ max-height:42vh; overflow-y:auto; padding:6px 0; }
+  }
+  #byb-{{ section.id }} .empty{ text-align:center; color:var(--muted); padding:26px 18px; }
+  #byb-{{ section.id }} .li{ display:flex; align-items:center; gap:11px; padding:9px 18px; }
+  #byb-{{ section.id }} .li img{ width:46px; height:46px; object-fit:contain; background:#fff; border-radius:9px; border:1px solid var(--line); flex-shrink:0; }
+  #byb-{{ section.id }} .li-info{ flex:1; min-width:0; }
+  #byb-{{ section.id }} .li-nm{ font-weight:600; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #byb-{{ section.id }} .li-calc{ color:var(--muted); margin-top:2px; }
+  #byb-{{ section.id }} .li-r{ text-align:right; flex-shrink:0; }
+  #byb-{{ section.id }} .li-tot{ font-weight:700; }
+  #byb-{{ section.id }} .li-step{ display:inline-flex; align-items:center; gap:8px; margin-top:4px; }
+  #byb-{{ section.id }} .li-step button{ width:24px; height:24px; border:1px solid var(--line); background:var(--bg); border-radius:6px;
+    cursor:pointer; font-weight:700; color:var(--acc-d); line-height:1; }
+  #byb-{{ section.id }} .li-step .q{ font-weight:700; min-width:1ch; text-align:center; }
+
+  #byb-{{ section.id }} .rail-foot{ padding:14px 18px calc(16px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); }
+  #byb-{{ section.id }} .nudge{ text-align:center; font-weight:600; color:var(--acc-d); min-height:1.2em; margin-bottom:10px; }
+  #byb-{{ section.id }} .row{ display:flex; justify-content:space-between; padding:3px 0; color:var(--muted); }
+  #byb-{{ section.id }} .row.save{ color:var(--acc-d); font-weight:700; }
+  #byb-{{ section.id }} .row.total{ color:var(--tx); font-weight:800; padding-top:7px;
+    margin-top:5px; border-top:1px solid var(--line); }
+  #byb-{{ section.id }} .row .was{ text-decoration:line-through; color:var(--muted); font-weight:400; margin-right:6px; }
+  #byb-{{ section.id }} .cta{ width:100%; margin-top:12px; border:none; border-radius:13px; padding:15px;
+    font-weight:700; cursor:pointer; background:var(--acc-d); color:#fff; transition:.15s; }
+  #byb-{{ section.id }} .cta:hover{ filter:brightness(1.08); }
+  #byb-{{ section.id }} .cta:disabled{ opacity:.45; cursor:not-allowed; }
+  #byb-{{ section.id }} .cta .ld{ display:none; } #byb-{{ section.id }} .cta.loading .ld{ display:inline; }
+  #byb-{{ section.id }} .cta.loading .tx{ display:none; }
+
+  /* mobile: collapse dock to a slim bar */
+  @media(max-width:999px){
+    #byb-{{ section.id }} .rail-top h3{ flex:0 0 auto; }
+    #byb-{{ section.id }} .rail-mtotal{ display:block; margin-left:auto; }
+    #byb-{{ section.id }} .rail-foot{ padding-top:12px; }
+    #byb-{{ section.id }} .rail-foot .nudge{ display:none; }
+    #byb-{{ section.id }} .rail-foot .rows{ display:none; }
+    #byb-{{ section.id }} .rail.open .rail-foot .nudge{ display:block; }
+    #byb-{{ section.id }} .rail.open .rail-foot .rows{ display:block; }
+    #byb-{{ section.id }} .cta{ margin-top:0; }
+    #byb-{{ section.id }} .rail.open .cta{ margin-top:12px; }
+  }
+
+  #byb-{{ section.id }} .empty-pad{ display:none; }
+  @media(max-width:999px){ #byb-{{ section.id }} .empty-pad{ display:block; height:150px; } }
+
+  #byb-{{ section.id }}{ font-size:16px !important; font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif !important; }
+  #byb-{{ section.id }} h1,#byb-{{ section.id }} h2,#byb-{{ section.id }} h3,
+  #byb-{{ section.id }} .byb-title{ font-family:'Poppins','Inter',sans-serif !important; }
+  #byb-{{ section.id }} .byb-title{ font-size:clamp(30px,5vw,52px) !important; font-weight:800 !important; letter-spacing:-.02em; margin:0; }
+  #byb-{{ section.id }} .byb-sub{ font-size:17px !important; line-height:1.5; }
+  #byb-{{ section.id }} .byb-eyebrow{ font-size:12px !important; }
+  #byb-{{ section.id }} .byb-search input{ font-size:15px !important; }
+  #byb-{{ section.id }} .byb-tick b{ font-size:15px !important; }
+  #byb-{{ section.id }} .byb-tick span{ font-size:12.5px !important; }
+  #byb-{{ section.id }} .card .nm{ font-size:15px !important; }
+  #byb-{{ section.id }} .card .pr{ font-size:14px !important; }
+  #byb-{{ section.id }} .add{ font-size:15px !important; }
+  #byb-{{ section.id }} .step button{ font-size:20px !important; }
+  #byb-{{ section.id }} .step .q{ font-size:16px !important; }
+  #byb-{{ section.id }} .cart .cnt{ font-size:11px !important; }
+  #byb-{{ section.id }} .rail-top h3{ font-size:17px !important; }
+  #byb-{{ section.id }} .rail-mtotal{ font-size:17px !important; }
+  #byb-{{ section.id }} .empty{ font-size:15px !important; }
+  #byb-{{ section.id }} .li-nm{ font-size:14px !important; }
+  #byb-{{ section.id }} .li-calc{ font-size:13px !important; }
+  #byb-{{ section.id }} .li-tot{ font-size:14px !important; }
+  #byb-{{ section.id }} .li-step .q{ font-size:13px !important; }
+  #byb-{{ section.id }} .li-step button{ font-size:15px !important; }
+  #byb-{{ section.id }} .nudge{ font-size:14px !important; }
+  #byb-{{ section.id }} .row{ font-size:15px !important; }
+  #byb-{{ section.id }} .row.total{ font-size:21px !important; }
+  #byb-{{ section.id }} .row .was{ font-size:13px !important; }
+  #byb-{{ section.id }} .cta{ font-size:17px !important; }
+  #byb-{{ section.id }} .badge{ font-size:11px !important; }
+  #byb-{{ section.id }} .card .pill{ font-size:14px !important; }
+  #byb-{{ section.id }} .byb-noresults{ font-size:15px !important; }
+  @media(max-width:560px){
+    #byb-{{ section.id }}{ padding-top:22px !important; }
+    #byb-{{ section.id }} .byb-title{ font-size:27px !important; }
+    #byb-{{ section.id }} .byb-head{ margin-bottom:14px; }
+    #byb-{{ section.id }} .byb-sub{ font-size:15px !important; }
+  }
+</style>
+
+<div id="byb-{{ section.id }}" data-byb>
+ <div class="byb-wrap">
+
+  <div class="byb-head">
+    {%- if section.settings.eyebrow != blank -%}<span class="byb-eyebrow">{{ section.settings.eyebrow }}</span>{%- endif -%}
+    <h1 class="byb-title">{{ section.settings.heading }}</h1>
+    {%- if section.settings.subheading != blank -%}<p class="byb-sub">{{ section.settings.subheading }}</p>{%- endif -%}
+  </div>
+
+  {%- if tiers.size > 0 -%}
+  <div class="byb-tiers">
+    <div class="byb-bar"><span class="byb-bar-fill" data-fill></span></div>
+    <div class="byb-ticks">
+      {%- for b in tiers -%}
+        <div class="byb-tick" data-tick data-qty="{{ b.settings.min_qty }}" data-pct="{{ b.settings.discount_pct }}" {{ b.shopify_attributes }}>
+          <b>{{ b.settings.discount_pct }}% off</b><span>{{ b.settings.min_qty }}+ items</span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if coll == blank or coll.products_count == 0 -%}
+    <p class="empty" style="margin-top:30px">Choose a collection in the theme editor to populate this bundle builder.</p>
+  {%- else -%}
+  <div class="byb-layout">
+   <div class="byb-main">
+    <div class="byb-search" data-searchwrap>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="search" data-search placeholder="Search flavours…" aria-label="Search flavours">
+      <button type="button" class="byb-clear" data-clear aria-label="Clear search">×</button>
+    </div>
+    <div class="byb-grid" data-grid>
+      {%- for product in coll.products -%}
+        {%- assign v = product.selected_or_first_available_variant -%}
+        {%- assign nm = product.title | replace: ' Syrup', '' | replace: ' Coffee', '' -%}
+        <div class="card" data-card
+             data-id="{{ v.id }}" data-price="{{ v.price }}"
+             data-title="{{ nm | escape }}"
+             data-search-key="{{ product.title | escape }} {{ product.tags | join: ' ' | escape }}"
+             data-img="{{ product.featured_image | image_url: width: 120 }}">
+          <div class="img">
+            {%- if product.featured_image -%}
+              <img src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title | escape }}" loading="lazy" width="400" height="400" data-thumb>
+            {%- endif -%}
+            {%- if product.tags contains 'Best Seller' -%}<span class="badge">Best Seller</span>{%- endif -%}
+            <span class="pill" data-pill>0</span>
+            {%- unless product.available -%}<div class="sold">Sold out</div>{%- endunless -%}
+          </div>
+          <div class="b">
+            <div class="nm">{{ nm }}</div>
+            <div class="pr">{{ product.price | money }}</div>
+            <div class="act">
+              {%- if product.available -%}
+                <button type="button" class="add" data-add>Add to bundle</button>
+                <div class="step">
+                  <button type="button" data-dec aria-label="Remove one">−</button>
+                  <span class="q" data-q>1</span>
+                  <button type="button" data-inc aria-label="Add one">+</button>
+                </div>
+              {%- else -%}
+                <button type="button" class="add" disabled style="opacity:.5;cursor:not-allowed">Sold out</button>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+    <p class="byb-noresults" data-noresults>No flavours match your search.</p>
+   </div>
+
+    <aside class="rail" data-rail>
+      <div class="rail-top" data-railtop>
+        <div class="cart" data-cart>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          <span class="cnt" data-cnt>0</span>
+        </div>
+        <h3>Your bundle</h3>
+        <span class="rail-mtotal" data-mtotal>{{ 0 | money }}</span>
+        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+      </div>
+
+      <div class="rail-list" data-list>
+        <p class="empty" data-empty>Your bundle is empty.<br>Tap a flavour to start saving 🍯</p>
+      </div>
+
+      <div class="rail-foot">
+        <p class="nudge" data-nudge></p>
+        <div class="rows">
+          <div class="row"><span>Items</span><span data-rcount>0</span></div>
+          <div class="row save" data-rsave hidden><span>Bundle discount</span><span data-rsaveval></span></div>
+          <div class="row total"><span>Total</span><span><span class="was" data-was hidden></span><span data-now>{{ 0 | money }}</span></span></div>
+        </div>
+        <button type="button" class="cta" data-cta disabled>
+          <span class="tx">Add bundle to cart</span><span class="ld">Adding…</span>
+        </button>
+      </div>
+    </aside>
+  </div>
+  <div class="empty-pad"></div>
+  {%- endif -%}
+
+ </div>
+</div>
+
+<script>
+(function(){
+  var root=document.getElementById("byb-{{ section.id }}");
+  if(!root) return;
+  function money(c){return "$"+(c/100).toFixed(2);}
+
+  var tickEls=[].slice.call(root.querySelectorAll("[data-tick]"));
+  var tiers=tickEls.map(function(e){return {qty:+e.dataset.qty||0,pct:+e.dataset.pct||0,el:e};}).sort(function(a,b){return a.qty-b.qty;});
+  function pctFor(q){var p=0;tiers.forEach(function(t){if(q>=t.qty)p=t.pct;});return p;}
+  function nextFor(q){for(var i=0;i<tiers.length;i++){if(q<tiers[i].qty)return tiers[i];}return null;}
+
+  var fill=root.querySelector("[data-fill]"),
+      list=root.querySelector("[data-list]"),
+      emptyEl=root.querySelector("[data-empty]"),
+      nudge=root.querySelector("[data-nudge]"),
+      cart=root.querySelector("[data-cart]"),
+      cnt=root.querySelector("[data-cnt]"),
+      rcount=root.querySelector("[data-rcount]"),
+      rsave=root.querySelector("[data-rsave]"), rsaveval=root.querySelector("[data-rsaveval]"),
+      wasEl=root.querySelector("[data-was]"), nowEl=root.querySelector("[data-now]"),
+      mtotal=root.querySelector("[data-mtotal]"),
+      cta=root.querySelector("[data-cta]"),
+      rail=root.querySelector("[data-rail]");
+
+  var B={};
+
+  function flyTo(srcImg){
+    if(!srcImg||!cart) return;
+    var s=srcImg.getBoundingClientRect(), t=cart.getBoundingClientRect();
+    var c=srcImg.cloneNode(true);
+    c.style.cssText="position:fixed;z-index:9999;pointer-events:none;border-radius:10px;object-fit:contain;background:#fff;"+
+      "left:"+s.left+"px;top:"+s.top+"px;width:"+s.width+"px;height:"+s.height+"px;"+
+      "transition:transform .65s cubic-bezier(.5,-.2,.3,1),opacity .65s ease;opacity:.95;";
+    document.body.appendChild(c);
+    var dx=(t.left+t.width/2)-(s.left+s.width/2), dy=(t.top+t.height/2)-(s.top+s.height/2);
+    requestAnimationFrame(function(){ c.style.transform="translate("+dx+"px,"+dy+"px) scale(.12)"; c.style.opacity=".3"; });
+    setTimeout(function(){ c.remove(); cart.classList.remove("bump"); void cart.offsetWidth; cart.classList.add("bump"); },650);
+  }
+
+  function syncCard(card,id){
+    var e=B[id]; card.classList.toggle("on",!!e);
+    var q=card.querySelector("[data-q]"), pill=card.querySelector("[data-pill]");
+    if(e){ if(q)q.textContent=e.qty; if(pill)pill.textContent=e.qty; }
+  }
+
+  function renderList(){
+    var ids=Object.keys(B);
+    if(!ids.length){ emptyEl.style.display="block";
+      [].slice.call(list.querySelectorAll(".li")).forEach(function(n){n.remove();}); return; }
+    emptyEl.style.display="none";
+    [].slice.call(list.querySelectorAll(".li")).forEach(function(n){n.remove();});
+    ids.forEach(function(id){
+      var e=B[id], row=document.createElement("div"); row.className="li";
+      row.innerHTML='<img src="'+e.img+'" alt="">'+
+        '<div class="li-info"><div class="li-nm">'+e.title+'</div>'+
+        '<div class="li-calc">'+e.qty+' × '+money(e.price)+'</div>'+
+        '<div class="li-step"><button data-ldec>−</button><span class="q">'+e.qty+'</span><button data-linc>+</button></div></div>'+
+        '<div class="li-r"><div class="li-tot">'+money(e.qty*e.price)+'</div></div>';
+      row.querySelector("[data-ldec]").onclick=function(){ change(id,-1); };
+      row.querySelector("[data-linc]").onclick=function(){ change(id,1); };
+      list.appendChild(row);
+    });
+  }
+
+  function render(){
+    var q=0,sub=0; Object.keys(B).forEach(function(id){q+=B[id].qty; sub+=B[id].qty*B[id].price;});
+    var pct=pctFor(q), now=Math.round(sub*(1-pct/100)), saved=sub-now;
+
+    cnt.textContent=q; cnt.classList.toggle("show",q>0);
+    rcount.textContent=q;
+    nowEl.textContent=money(now);
+    if(mtotal) mtotal.textContent=money(now);
+    if(saved>0){ wasEl.hidden=false; wasEl.textContent=money(sub);
+      rsave.hidden=false; rsaveval.textContent="−"+money(saved)+" ("+pct+"%)"; }
+    else { wasEl.hidden=true; rsave.hidden=true; }
+    cta.disabled=q===0;
+
+    if(tiers.length){
+      var max=tiers[tiers.length-1].qty;
+      fill.style.width=Math.min(100,q/max*100)+"%";
+      tiers.forEach(function(t){t.el.classList.toggle("on",q>=t.qty);});
+      var nt=nextFor(q);
+      nudge.textContent = nt ? ("Add "+(nt.qty-q)+" more to unlock "+nt.pct+"% off") : (q>0?("Best price unlocked — "+pct+"% off! 🎉"):"");
+    }
+    renderList();
+  }
+
+  function change(id,d){
+    if(!B[id]) return; B[id].qty+=d;
+    var card=B[id].card;
+    if(B[id].qty<=0){ delete B[id]; if(card) card.classList.remove("on"); }
+    else if(card) syncCard(card,id);
+    render();
+  }
+
+  [].slice.call(root.querySelectorAll("[data-card]")).forEach(function(card){
+    var add=card.querySelector("[data-add]"); if(!add) return;
+    var id=card.dataset.id, price=+card.dataset.price, title=card.dataset.title, img=card.dataset.img;
+    var thumb=card.querySelector("[data-thumb]");
+    add.onclick=function(){ B[id]={qty:1,price:price,title:title,img:img,card:card}; syncCard(card,id); flyTo(thumb); render(); };
+    card.querySelector("[data-inc]").onclick=function(){ if(B[id]){B[id].qty++; syncCard(card,id); flyTo(thumb); render();} };
+    card.querySelector("[data-dec]").onclick=function(){ change(id,-1); };
+  });
+
+  // search filter
+  var search=root.querySelector("[data-search]");
+  var searchWrap=root.querySelector("[data-searchwrap]");
+  var clearBtn=root.querySelector("[data-clear]");
+  var noRes=root.querySelector("[data-noresults]");
+  var allCards=[].slice.call(root.querySelectorAll("[data-card]"));
+  function applySearch(){
+    var qy=(search.value||"").trim().toLowerCase(); var shown=0;
+    allCards.forEach(function(card){
+      var key=(card.getAttribute("data-search-key")||card.dataset.title||"").toLowerCase();
+      var ok=!qy || key.indexOf(qy)>-1;
+      card.style.display=ok?"":"none"; if(ok)shown++;
+    });
+    if(noRes) noRes.style.display=shown?"none":"block";
+    if(searchWrap) searchWrap.classList.toggle("has", qy.length>0);
+  }
+  if(search){ search.addEventListener("input",applySearch); }
+  if(clearBtn){ clearBtn.addEventListener("click",function(){ search.value=""; applySearch(); search.focus(); }); }
+
+  var top=root.querySelector("[data-railtop]");
+  if(top){ top.addEventListener("click",function(){ if(window.matchMedia("(max-width:999px)").matches) rail.classList.toggle("open"); }); }
+
+  cta.onclick=function(ev){
+    ev.stopPropagation();
+    var items=Object.keys(B).map(function(id){return {id:parseInt(id,10),quantity:B[id].qty};});
+    if(!items.length) return;
+    cta.classList.add("loading"); cta.disabled=true;
+    fetch("/cart/add.js",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({items:items})})
+      .then(function(r){return r.json();}).then(function(){ window.location.href="/cart"; })
+      .catch(function(){ cta.classList.remove("loading"); cta.disabled=false; alert("Something went wrong adding your bundle. Please try again."); });
+  };
+
+  render();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Build Your Bundle",
+  "tag": "section",
+  "class": "byb-section",
+  "settings": [
+    { "type": "header", "content": "Content source" },
+    { "type": "collection", "id": "collection", "label": "Products collection", "info": "Flavours customers can add to their bundle." },
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow label", "default": "Bundle & Save" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Build Your Bundle" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Mix and match your favourite flavours — the more you add, the more you save." },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "cols_desktop", "label": "Products per row (desktop)", "min": 2, "max": 5, "step": 1, "default": 3 },
+    { "type": "range", "id": "corner_radius", "label": "Corner radius", "min": 0, "max": 28, "step": 2, "default": 16, "unit": "px" },
+    { "type": "header", "content": "Free shipping (display only)" },
+    { "type": "number", "id": "free_shipping_threshold", "label": "Free shipping threshold ($)", "default": 35 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#FBF6EF" },
+    { "type": "color", "id": "card_color", "label": "Card background", "default": "#FFFFFF" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#2B1B12" },
+    { "type": "color", "id": "accent_color", "label": "Accent (light)", "default": "#E7B98A" },
+    { "type": "color", "id": "accent_dark", "label": "Accent (dark)", "default": "#A65B2A" }
+  ],
+  "blocks": [
+    { "type": "tier", "name": "Discount tier", "settings": [
+      { "type": "number", "id": "min_qty", "label": "Minimum items", "default": 3 },
+      { "type": "number", "id": "discount_pct", "label": "Discount %", "default": 10 }
+    ]}
+  ],
+  "max_blocks": 6,
+  "presets": [
+    { "name": "Build Your Bundle", "blocks": [
+      { "type": "tier", "settings": { "min_qty": 3, "discount_pct": 10 } },
+      { "type": "tier", "settings": { "min_qty": 6, "discount_pct": 20 } },
+      { "type": "tier", "settings": { "min_qty": 10, "discount_pct": 30 } }
+    ]}
+  ]
+}
+{% endschema %}

@@ -1,0 +1,57 @@
+{%- comment -%} Sold Out button: sad emoji + gentle wobble animation. Scoped strictly to [disabled] ATC buttons. {%- endcomment -%}
+<style id="pd-sad-soldout-css">
+/* Hide the cart icon when the button is disabled — it doesn't apply when sold out */
+html body .pd .pd-atc[disabled] .pd-atc-icon,
+html body .pd .pd-atc--full[disabled] .pd-atc-icon{display:none!important}
+
+/* Main ATC button: emoji injected before the Sold Out label */
+html body .pd .pd-atc--full[disabled] .pd-atc-text::before{
+  content:"😢";
+  display:inline-block;
+  font-size:1.35em;
+  margin-right:12px;
+  line-height:1;
+  vertical-align:middle;
+  transform-origin:50% 100%;
+  animation:pdSadWobble 2.6s ease-in-out infinite;
+  filter:drop-shadow(1px 1px 0 rgba(0,0,0,.15));
+}
+
+/* Sticky bar Sold Out: text is direct child, use ::before on the button itself */
+html body .pd .pd-stickybar .pd-atc[disabled]{
+  position:relative!important;
+}
+html body .pd .pd-stickybar .pd-atc[disabled]::before{
+  content:"😢";
+  display:inline-block;
+  font-size:1.2em;
+  margin-right:8px;
+  line-height:1;
+  vertical-align:middle;
+  transform-origin:50% 100%;
+  animation:pdSadWobble 2.6s ease-in-out infinite;
+}
+
+/* Disabled-state polish — a touch warmer than pure gray, so the emoji reads */
+html body .pd .pd-atc[disabled],
+html body .pd .pd-atc--full[disabled]{
+  background:#4a3a2f!important;
+  letter-spacing:.08em!important;
+}
+
+@keyframes pdSadWobble{
+  0%   {transform:rotate(0deg)   translateY(0)}
+  15%  {transform:rotate(-9deg)  translateY(-2px)}
+  30%  {transform:rotate(7deg)   translateY(0)}
+  45%  {transform:rotate(-5deg)  translateY(0)}
+  60%  {transform:rotate(3deg)   translateY(0)}
+  75%  {transform:rotate(-1deg)  translateY(0)}
+  100% {transform:rotate(0deg)   translateY(0)}
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  html body .pd .pd-atc--full[disabled] .pd-atc-text::before,
+  html body .pd .pd-stickybar .pd-atc[disabled]::before{animation:none!important}
+}
+</style>

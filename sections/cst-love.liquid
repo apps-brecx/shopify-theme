@@ -1,0 +1,89 @@
+<div class="{{ section.settings.cst_class }}custom-product-grid" style="display: grid; grid-template-columns: repeat({{ section.settings.cards_per_row }}, 1fr); gap: 16px;">
+  {% for product in section.blocks %}
+    <div class="product-card" style='display:flex'>
+   <div class="cst-love-product-content" style='display:block'>
+        <img src="{{ product.settings.product.featured_image | img_url: 'medium' }}" alt="{{ product.settings.product.title }}">
+        <h2>{{ product.settings.product.title }}</h2>
+        
+            <div
+                class="areviews_product_item areviews_stars{{ product.settings.product.id }}"
+                data-product-id="{{ product.settings.product.id }}"
+              ></div>
+   <p>{{ product.settings.product.price | money }}</p>
+          <a class="button" href="{{ product.settings.product.url }}" class="add-to-cart-btn">Shop Now</a>
+   </div>
+      {% if product.settings.video_url %}
+       <div class="cst-love-product-video" style='display:block'>
+        <video controls>
+          <source src="{{ product.settings.video_url.sources[1].url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+          <a class="button" href="{{ product.url }}" class="add-to-cart-btn">Shop Now</a>
+       </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Cst Love",
+  "settings": [
+    {
+      "type": "text",
+      "id": "cst_class",
+      "label": "Custom Class"
+    },
+     {
+      "type": "number",
+      "id": "cards_per_row",
+      "label": "Cards per Row",
+     
+    }
+  ],
+  "blocks": [
+    {
+      "type": "love",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        },
+        {
+          "type": "video",
+          "id": "video_url",
+          "label": "Upload Video"
+        }
+      ]
+    }
+     
+  ],
+  "presets": [
+    {
+      "name": "Cst-love",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+.custom-product-grid {
+  display: grid;
+  gap: 16px; /* Adjust gap between cards */
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.product-card img {
+  max-width: 100%;
+  height: auto;
+}
+</style>

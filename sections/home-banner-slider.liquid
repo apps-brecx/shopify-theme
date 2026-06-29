@@ -1,0 +1,397 @@
+{{ 'home-banner-slider.css' | asset_url | stylesheet_tag }}
+<style>
+  .new-banner__wrapper img{
+       width: 100%;
+       height: 100%;
+   }
+   .new-banner__wrapper{
+     height: 100%;
+   }
+   .new-banner__button-wrapper{
+       position: relative;
+       width: 50%;
+   }
+   .new-banner__button{
+       position: absolute;
+       bottom: 100px;
+       left: 50%;
+       transform: translateX(-50%);
+
+   }
+    .new-banner__button a{
+       text-decoration: none;
+       font-size: 24px;
+       color: #fff;
+       font-family: "Ibarra Real Nova", serif !important;
+       text-transform: uppercase;
+       padding: 5px 40px;
+       border-radius: 10px;
+       overflow: hidden;
+              transition: all 0.3s ease;
+       border: 2px solid #fff;
+       display: block;
+   }
+   .new-banner__button a:hover{
+       box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+   }
+       @media(max-width: 1440px){
+       .new-banner__button {
+          bottom: 65px;
+       }
+     }
+       @media(max-width: 991px){
+       .new-banner__button a{
+           font-size: 20px;
+           padding: 5px 35px;
+       }
+     }
+
+   @media(max-width: 768px){
+       .new-banner__button a{
+           font-size: 30px;
+           padding: 5px 30px;
+       }
+     
+      .new-banner__button-wrapper{
+          width: 100%;
+        }
+        .new-banner__inner{
+            margin-top: 106px;
+        }
+           .new-banner__button {
+          bottom: 50px;
+       }
+
+   }
+    @media(max-width: 550px){
+       .new-banner__button a{
+           font-size: 18px;
+       }
+    }
+</style>
+<!-- <script src="{{ 'home-banner-slider-javascript.js' | asset_url }}" defer></script> -->
+<div class="home-new-slider">
+  {% for block in section.blocks %}
+    {% case block.type %}
+        {%- comment -%} ================= SLIDER ================= {%- endcomment -%}
+      {% when 'slider_item' %}
+        <div>
+          {% if block.settings.full_width_hero %}
+            <div
+              class="new-items new-items--full"
+              style="
+                {% if block.settings.slider_image != blank %}
+                  --hero-bg-desktop: url('{{ block.settings.slider_image | image_url: width: 2000 }}');
+                {% endif %}
+                {% if block.settings.slider_mobile_image != blank %}
+                  --hero-bg-mobile: url('{{ block.settings.slider_mobile_image | image_url: width: 1000 }}');
+                {% endif %}
+              "
+            >
+              <div class="new-items-contents new-items-contents--overlay">
+                {% if block.settings.top_image %}
+                  <div class="top-image">
+                    <img src="{{ block.settings.top_image | image_url: width: 500 }}" loading="lazy">
+                  </div>
+                {% endif %}
+
+                <h2>{{ block.settings.slider_title }}</h2>
+
+                {% if block.settings.slider_description != blank %}
+                  <p>{{ block.settings.slider_description }}</p>
+                {% endif %}
+
+                {% if block.settings.slider_button_link %}
+                  <a href="{{ block.settings.slider_button_link }}" class="button-link button">
+                    {{ block.settings.slider_button_text }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+
+          {% else %}
+            <div class="new-items">
+              <div
+                class="new-items-contents"
+                {% if block.settings.slider_bg_image != blank %}
+                  style="background-image:url('{{ block.settings.slider_bg_image | image_url: width: 1200 }}');"
+                {% endif %}
+              >
+                <h2>{{ block.settings.slider_title }}</h2>
+                <p>{{ block.settings.slider_description }}</p>
+
+                {% if block.settings.slider_button_link %}
+                  <a href="{{ block.settings.slider_button_link }}" class="button-link button">
+                    {{ block.settings.slider_button_text }}
+                  </a>
+                {% endif %}
+              </div>
+
+              <div class="new-items-img">
+                {% if block.settings.use_video_on_right and block.settings.video_url != blank %}
+                  <video autoplay muted loop playsinline>
+                    <source src="{{ block.settings.video_url }}">
+                  </video>
+
+                {% else %}
+                  <picture>
+                    <img src="{{ block.settings.slider_image | image_url: width: 1200 }}" loading="lazy">
+                  </picture>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        {%- comment -%} ================= NEW BANNER ================= {%- endcomment -%}
+      {% when 'new_banner' %}
+        <div class="new-banner__inner">
+          <div class="new-banner__wrapper">
+            <picture>
+              {% if block.settings.mobile_image != blank %}
+                <source
+                  media="(max-width: 768px)"
+                  srcset="{{ block.settings.mobile_image | image_url: width: 750 }}"
+                >
+              {% endif %}
+
+              {% if block.settings.desktop_image != blank %}
+                <img
+                  src="{{ block.settings.desktop_image | image_url: original }}"
+                  loading="lazy"
+                >
+              {% endif %}
+            </picture>
+
+            {% if block.settings.button_text != blank %}
+              <div class="new-banner__button-wrapper">
+                {% if block.settings.button_text != blank %}
+                  <div class="new-banner__button">
+                    <a
+                      href="{{ block.settings.button_url }}"
+                      style="background-color: {{ block.settings.button_bg_color }};"
+                    >
+                      {{ block.settings.button_text }}
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+    {% endcase %}
+  {% endfor %}
+</div>
+<script>
+  $('.home-new-slider').slick({
+    slidesToShow: 1,
+    infinite: true,
+    arrows: false,
+    dots: true,
+    speed: 500,
+    fade: true,
+    cssEase: 'linear',
+    autoplay: true,
+    autoplaySpeed: 8000,
+    adaptiveHeight: true,
+  });
+
+  $(document).ready(function () {
+    function toggleSliderClass() {
+      const slider = $('.home-new-slider');
+      const firstDot = $('.slick-dots li:first-child'); // Select the first dot
+      const secondDot = $('.slick-dots li:nth-child(2)'); // Select the second dot
+      const thirdDot = $('.slick-dots li:nth-child(3)'); // Select the third dot
+      const fourthDot = $('.slick-dots li:nth-child(4)'); // Select the fourth dot
+      const fivthDot = $('.slick-dots li:nth-child(5)'); // Select the fivth dot
+      const sixthDot = $('.slick-dots li:nth-child(6)'); // Select the sixth dot
+
+      // Check if the first dot is active
+      if (firstDot.hasClass('slick-active')) {
+        slider.addClass('first-active new-winter-slider');
+      } else {
+        slider.removeClass('first-active new-winter-slider');
+      }
+
+      // Check if the second dot is active
+      if (secondDot.hasClass('slick-active')) {
+        slider.addClass('second-active');
+      } else {
+        slider.removeClass('second-active');
+      }
+
+      // Check if the third dot is active
+      if (thirdDot.hasClass('slick-active')) {
+        slider.addClass('third-active');
+      } else {
+        slider.removeClass('third-active');
+      }
+      // Check if the fourth dot is active
+      if (fourthDot.hasClass('slick-active')) {
+        slider.addClass('fourth-active');
+      } else {
+        slider.removeClass('fourth-active');
+      }
+      // Check if the fivth dot is active
+      if (fivthDot.hasClass('slick-active')) {
+        slider.addClass('fivth-active');
+      } else {
+        slider.removeClass('fivth-active');
+      }
+      // Check if the sixth dot is active
+      if (sixthDot.hasClass('slick-active')) {
+        slider.addClass('sixth-active');
+      } else {
+        slider.removeClass('sixth-active');
+      }
+    }
+
+    // Run on page load
+    toggleSliderClass();
+
+    // Attach an event listener to detect changes
+    $('.slick-dots').on('click', 'li', function () {
+      toggleSliderClass();
+    });
+
+    // Optional: Run when slick slider changes via swipe or other interactions
+    $('.home-new-slider').on('afterChange', function () {
+      toggleSliderClass();
+    });
+  });
+</script>
+{% schema %}
+{
+  "name": "Home Banner Slider",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "slider_item",
+      "name": "Slider Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "top_image",
+          "label": "Top Image"
+        },
+        {
+          "type": "html",
+          "id": "slider_title",
+          "label": "Slider Title",
+          "default": "Warm Up with Seasonal Flavors"
+        },
+        {
+          "type": "textarea",
+          "id": "slider_description",
+          "label": "Slider Description",
+          "default": "Perfect for a warm, inviting drink experience"
+        },
+        {
+          "type": "image_picker",
+          "id": "slider_bg_image",
+          "label": "BG Image of text"
+        },
+        {
+          "type": "text",
+          "id": "slider_button_text",
+          "label": "Button Text",
+          "default": "Learn More"
+        },
+        {
+          "type": "url",
+          "id": "slider_button_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "slider_image",
+          "label": "Slider Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "slider_image_mobile_two_col",
+          "label": "Two-column mobile slider image"
+        },
+        {
+          "type": "image_picker",
+          "id": "slider_mobile_image",
+          "label": "Mobile image (for full-width hero, < 767px)"
+        },
+        {
+          "type": "checkbox",
+          "id": "full_width_hero",
+          "label": "Use full-width hero (single banner with centered content)",
+          "default": false
+        },
+        {
+          "type": "textarea",
+          "id": "slider_sub_text",
+          "label": "Slider sub Text"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_mobile_button_text",
+          "label": "Use different button text on mobile?",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "use_video_on_right",
+          "label": "Use video on right side instead of image?",
+          "default": false
+        },
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Video URL (MP4 file or Shopify-hosted video URL)",
+          "info": "Upload a video in Settings › Files and paste the URL here."
+        },
+        {
+          "type": "text",
+          "id": "slider_button_text_mobile",
+          "label": "Mobile Button Text",
+          "default": "Learn more"
+        }
+      ]
+    },
+    {
+      "type": "new_banner",
+      "name": "New Banner",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Desktop Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile Image"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button Link"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color",
+          "label": "Button Background",
+          "default": "#000000"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Home Banner Slider",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}

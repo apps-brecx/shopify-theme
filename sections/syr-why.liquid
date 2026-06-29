@@ -1,0 +1,167 @@
+{%- comment -%} Section — Why Syruvia (4 brand pillars, PDP style) {%- endcomment -%}
+<style id="syr-why-{{ section.id }}-css">
+  #syr-why-{{ section.id }}{
+    --ink:#39220f; --paper:#FFFBF4; --bg:#F4E8CE; --accent:#c58548; --butter:#FCE2A0;
+    background:var(--paper);
+    padding:90px 40px;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    color:var(--ink);
+  }
+  #syr-why-{{ section.id }} .syr-why-wrap{ max-width:1320px; margin:0 auto; }
+  #syr-why-{{ section.id }} .syr-why-head{ text-align:center; max-width:680px; margin:0 auto 44px; }
+  #syr-why-{{ section.id }} .syr-why-eyebrow{
+    display:inline-block; background:var(--butter); color:var(--ink);
+    border:2px solid var(--ink); border-radius:999px;
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    padding:7px 16px; margin-bottom:16px; box-shadow:3px 3px 0 var(--ink);
+  }
+  #syr-why-{{ section.id }} h2{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:clamp(38px, 5.4vw, 64px); line-height:.95;
+    letter-spacing:-.02em; text-transform:uppercase;
+    margin:0 0 12px;
+  }
+  #syr-why-{{ section.id }} .syr-why-sub{ font-size:16px; color:rgba(57,34,15,.7); margin:0; max-width:48ch; margin:0 auto; }
+
+  #syr-why-{{ section.id }} .syr-why-grid{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:18px;
+  }
+  #syr-why-{{ section.id }} .syr-why-card{
+    position:relative;
+    background:var(--bg);
+    border:2px solid var(--ink); border-radius:22px;
+    box-shadow:5px 5px 0 var(--ink);
+    padding:30px 22px;
+    text-align:center;
+    transition:transform .2s cubic-bezier(.4,0,.2,1), box-shadow .2s cubic-bezier(.4,0,.2,1);
+  }
+  #syr-why-{{ section.id }} .syr-why-card:hover{ transform:translate(-3px,-3px); box-shadow:8px 8px 0 var(--ink); }
+  #syr-why-{{ section.id }} .syr-why-ic{
+    width:56px; height:56px; border-radius:50%;
+    background:var(--butter); color:var(--ink);
+    border:2px solid var(--ink); box-shadow:3px 3px 0 var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 18px;
+    font-size:24px;
+  }
+  #syr-why-{{ section.id }} .syr-why-num{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:clamp(36px, 4.4vw, 52px); line-height:1;
+    letter-spacing:-.01em; color:var(--ink);
+    margin:0 0 6px;
+  }
+  #syr-why-{{ section.id }} .syr-why-num em{ color:var(--accent); font-style:normal; }
+  #syr-why-{{ section.id }} .syr-why-lbl{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 8px;
+  }
+  #syr-why-{{ section.id }} .syr-why-desc{
+    font-size:13.5px; line-height:1.45; color:rgba(57,34,15,.65); margin:0;
+  }
+
+  @media (max-width:900px){
+    #syr-why-{{ section.id }}{ padding:60px 16px 70px; }
+    #syr-why-{{ section.id }} .syr-why-head{ margin-bottom:28px; }
+    #syr-why-{{ section.id }} h2{ font-size:clamp(30px, 9vw, 42px); }
+    #syr-why-{{ section.id }} .syr-why-sub{ font-size:14px; }
+    #syr-why-{{ section.id }} .syr-why-grid{ grid-template-columns:repeat(2, 1fr); gap:12px; }
+    #syr-why-{{ section.id }} .syr-why-card{ padding:22px 14px; box-shadow:4px 4px 0 var(--ink); border-radius:18px; }
+    #syr-why-{{ section.id }} .syr-why-ic{ width:46px; height:46px; font-size:20px; margin-bottom:14px; }
+    #syr-why-{{ section.id }} .syr-why-num{ font-size:clamp(28px, 8vw, 38px); }
+    #syr-why-{{ section.id }} .syr-why-lbl{ font-size:10px; }
+    #syr-why-{{ section.id }} .syr-why-desc{ font-size:12px; }
+  }
+</style>
+
+<section id="syr-why-{{ section.id }}">
+  <div class="syr-why-wrap">
+    <div class="syr-why-head">
+      <span class="syr-why-eyebrow" data-reveal="up">Why Syruvia</span>
+      <h2 data-reveal="up" data-reveal-delay="80">{{ section.settings.headline }}</h2>
+      <p class="syr-why-sub" data-reveal="up" data-reveal-delay="160">{{ section.settings.sub }}</p>
+    </div>
+    <div class="syr-why-grid">
+      {%- assign keys = 'p1,p2,p3,p4' | split: ',' -%}
+      {%- for k in keys -%}
+        {%- assign ic_k = k | append: '_icon' -%}
+        {%- assign num_k = k | append: '_num' -%}
+        {%- assign suf_k = k | append: '_suffix' -%}
+        {%- assign lbl_k = k | append: '_label' -%}
+        {%- assign desc_k = k | append: '_desc' -%}
+        <div class="syr-why-card" data-reveal="up" data-reveal-delay="{{ forloop.index0 | times: 100 }}">
+          <div class="syr-why-ic">{{ section.settings[ic_k] }}</div>
+          <p class="syr-why-num" data-target="{{ section.settings[num_k] }}" data-suffix="{{ section.settings[suf_k] }}">0{{ section.settings[suf_k] }}</p>
+          <p class="syr-why-lbl">{{ section.settings[lbl_k] }}</p>
+          <p class="syr-why-desc">{{ section.settings[desc_k] }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var root = document.getElementById('syr-why-{{ section.id }}');
+  if (!root) return;
+  var nums = root.querySelectorAll('.syr-why-num');
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+  function animateNum(el){
+    if (el.dataset.done === '1') return; el.dataset.done = '1';
+    var raw = (el.getAttribute('data-target') || '0').toString();
+    var suffix = el.getAttribute('data-suffix') || '';
+    var target = parseFloat(raw.replace(/[^0-9.]/g, '')) || 0;
+    var isFloat = raw.indexOf('.') >= 0;
+    var dur = 1500, start = performance.now();
+    function tick(now){
+      var t = Math.min((now - start) / dur, 1);
+      var v = target * easeOutCubic(t);
+      el.textContent = (isFloat ? v.toFixed(1) : Math.round(v).toString()) + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = (isFloat ? target.toFixed(1) : Math.round(target).toString()) + suffix;
+    }
+    requestAnimationFrame(tick);
+  }
+  if ('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ animateNum(e.target); obs.unobserve(e.target); } }); }, { threshold:.4 });
+    nums.forEach(function(n){ obs.observe(n); });
+  } else { nums.forEach(animateNum); }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Why Syruvia",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Made to obsess over." },
+    { "type": "textarea", "id": "sub", "label": "Subtext", "default": "Crafted in small batches. Loved by millions. Shipped fast." },
+    { "type": "header", "content": "Pillar 1" },
+    { "type": "text", "id": "p1_icon", "label": "Icon (emoji)", "default": "✨" },
+    { "type": "text", "id": "p1_num", "label": "Number", "default": "250" },
+    { "type": "text", "id": "p1_suffix", "label": "Suffix", "default": "+" },
+    { "type": "text", "id": "p1_label", "label": "Label", "default": "Flavors" },
+    { "type": "text", "id": "p1_desc", "label": "Description", "default": "Every flavor you can dream of." },
+    { "type": "header", "content": "Pillar 2" },
+    { "type": "text", "id": "p2_icon", "label": "Icon", "default": "❤" },
+    { "type": "text", "id": "p2_num", "label": "Number", "default": "5" },
+    { "type": "text", "id": "p2_suffix", "label": "Suffix", "default": "M+" },
+    { "type": "text", "id": "p2_label", "label": "Label", "default": "Happy Customers" },
+    { "type": "text", "id": "p2_desc", "label": "Description", "default": "Loved by sippers everywhere." },
+    { "type": "header", "content": "Pillar 3" },
+    { "type": "text", "id": "p3_icon", "label": "Icon", "default": "★" },
+    { "type": "text", "id": "p3_num", "label": "Number", "default": "4.9" },
+    { "type": "text", "id": "p3_suffix", "label": "Suffix", "default": "★" },
+    { "type": "text", "id": "p3_label", "label": "Label", "default": "Average Rating" },
+    { "type": "text", "id": "p3_desc", "label": "Description", "default": "5M+ verified reviews." },
+    { "type": "header", "content": "Pillar 4" },
+    { "type": "text", "id": "p4_icon", "label": "Icon", "default": "→" },
+    { "type": "text", "id": "p4_num", "label": "Number", "default": "35" },
+    { "type": "text", "id": "p4_suffix", "label": "Suffix", "default": "$" },
+    { "type": "text", "id": "p4_label", "label": "Label", "default": "Free Shipping" },
+    { "type": "text", "id": "p4_desc", "label": "Description", "default": "On every order over $35." }
+  ],
+  "presets": [ { "name": "Why Syruvia" } ]
+}
+{% endschema %}

@@ -1,0 +1,219 @@
+<style>
+    .makeit-your-way__inner{
+        padding-bottom: 70px;
+    }
+    .makeit-your-way__wrapper{
+        display: flex;
+        gap: 60px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .makeit-your-way__image{
+        border-radius: 20px;
+        overflow: hidden;
+        flex: 1 0 40%;
+        max-width: 40%;
+    }
+    .makeit-your-way__content{
+        flex: 1 0 60%;
+        max-width: 50%;
+    }
+    .makeit-your-way__image img{
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    .makeit-your-way__item{
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .makeit-your-way__item-image{
+        max-width: 30px;
+        flex: 1 0 30%;
+        height: 30px;
+    }
+    .makeit-your-way__item-image img{
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    .makeit-your-way__title{
+        margin-bottom: 30px;
+    }
+    .makeit-your-way__title h2{
+               font-family: "Epilogue", sans-serif !important;
+        font-size: 46px;
+        color: #393833;
+        line-height: 50px;
+        font-weight: 700;
+        margin: 0;
+
+    }
+    .makeit-your-way__item-content-title{
+                font-family: "Manrope", sans-serif !important;
+        color: #393833;
+        font-size: 24px;
+        line-height: normal;
+        font-weight: 600;
+    }
+    .makeit-your-way__item-content-description{
+                font-family: "Manrope", sans-serif !important;
+        font-size: 20px;
+        color: #66645f;
+        line-height: 30px;        
+    }
+  .makeit-your-way__title_mobile{
+    display: none;
+  }
+    @media(max-width: 991px){
+      .makeit-your-way__inner{
+        padding-bottom: 40px;
+      }
+      .makeit-your-way__wrapper{
+        justify-content: center;
+        gap: 10px;
+      }
+      .makeit-your-way__title{
+        margin-bottom: 0;
+      
+      }
+      .makeit-your-way__items{
+        margin-top: 20px;
+      }
+      .makeit-your-way__title h2{
+          font-weight: 600;
+      }
+    .makeit-your-way__title_mobile{
+      display: block;
+    }
+    .makeit-your-way__title_desktop{
+      display: none;
+    }
+    .makeit-your-way__image{
+        flex: 1 0 100%;
+        max-width: 100%;
+    }
+    .makeit-your-way__content{
+        flex: 1 0 100%;
+        max-width: 100%;
+    }
+        .makeit-your-way__title h2{
+            font-size: 38px;            
+        }
+           .makeit-your-way__item-content-description{
+        font-size: 16px;
+        line-height: normal;
+     
+    }
+    .makeit-your-way__item-content-title{
+      margin-bottom: 10px;
+    }
+    }
+</style>
+<div class="makeit-your-way__inner  scroll-trigger animate--slide-in">
+  <div class="page-width">
+    <div class="makeit-your-way__wrapper">
+    <div class="makeit-your-way__title makeit-your-way__title_mobile">
+          {{ section.settings.title }}
+        </div>
+      <div class="makeit-your-way__image">
+        {% if section.settings.image != blank %}
+          {{
+            section.settings.image
+            | image_url: width: 900
+            | image_tag: loading: 'lazy', alt: section.settings.title
+          }}
+        {% endif %}
+      </div>
+
+      <div class="makeit-your-way__content">
+        
+        <div class="makeit-your-way__title makeit-your-way__title_desktop">
+          {{ section.settings.title }}
+        </div>
+
+        <div class="makeit-your-way__items">
+          {% for block in section.blocks %}
+            <div class="makeit-your-way__item" {{ block.shopify_attributes }}>
+
+              <div class="makeit-your-way__item-image">
+                {% if block.settings.image != blank %}
+                  {{
+                    block.settings.image
+                    | image_url: width: 300
+                    | image_tag: loading: 'lazy', alt: block.settings.title
+                  }}
+                {% endif %}
+              </div>
+
+              <div class="makeit-your-way__item-content">
+                <div class="makeit-your-way__item-content-title">
+                  {{ block.settings.title }}
+                </div>
+                <div class="makeit-your-way__item-content-description">
+                  {{ block.settings.description }}
+                </div>
+              </div>
+
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Make It Your Way",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Section Image"
+    },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Section Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Item Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Item Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Item Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Make It Your Way",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,31 @@
+{%- comment -%} Syruvia — Reset password (set new password) landing. Scoped .sauth {%- endcomment -%}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700;800&family=Josefin+Sans:ital,wght@0,300..700;1,300..600&display=swap');
+  .sauth{ --bg:#FFFBF4; --surface:#FFFFFF; --ink:#39220f; --ink-2:#5a4632; --muted:#8a7a68; --accent:#c58548; --mint:#C5E4D4; --sf-ink:#1f6b4f; --vip:#C53156; --vip-soft:#FBE0E5; --vip-ink:#8e1e3c;
+    --rule:2px solid var(--ink); --rule-1:1.5px solid var(--ink); --shadow:4px 4px 0 var(--ink); --shadow-sm:3px 3px 0 var(--ink); background:var(--bg); }
+  .sauth *{ box-sizing:border-box; }
+  .sauth .reset-wrap{ min-height:480px; display:grid; place-items:center; padding:48px 20px; }
+  .sauth .auth-card{ background:var(--surface); border:var(--rule); border-radius:22px; box-shadow:var(--shadow); padding:30px 32px 28px; width:100%; max-width:440px; }
+  .sauth h1{ font-family:'Archivo Black',sans-serif; font-size:30px; text-transform:uppercase; letter-spacing:-.02em; line-height:.98; margin:0; }
+  .sauth h1 em{ font-style:normal; color:var(--accent); }
+  .sauth .lead{ font-family:'Josefin Sans',sans-serif; color:var(--ink-2); font-size:14.5px; margin:9px 0 18px; }
+  .sauth label{ display:block; font-family:'Archivo',sans-serif; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .sauth input{ width:100%; height:52px; border:var(--rule); border-radius:13px; background:var(--surface); padding:0 16px; font-family:'Josefin Sans',sans-serif; font-size:16px; color:var(--ink); outline:none; margin-bottom:13px; }
+  .sauth input:focus{ box-shadow:var(--shadow-sm); }
+  .sauth .btn{ width:100%; height:56px; border:var(--rule); border-radius:999px; background:var(--ink); color:var(--bg); font-family:'Archivo Black',sans-serif; font-size:13px; letter-spacing:.07em; text-transform:uppercase; box-shadow:var(--shadow-sm); margin-top:4px; cursor:pointer; transition:transform .14s,box-shadow .14s,background .2s,color .2s; }
+  .sauth .btn:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--accent); background:var(--accent); color:var(--ink); }
+  .sauth .err{ background:var(--vip-soft); border:var(--rule-1); border-color:var(--vip); border-radius:12px; padding:10px 14px; font-family:'Josefin Sans',sans-serif; font-size:13px; color:var(--vip-ink); margin-bottom:14px; }
+</style>
+<div class="sauth"><div class="reset-wrap"><div class="auth-card">
+  <h1>Set a new <em>password</em></h1>
+  <p class="lead">Choose a new password for your Syruvia account.</p>
+  {%- form 'reset_customer_password' -%}
+    {%- if form.errors -%}<div class="err">{{ form.errors | default_errors }}</div>{%- endif -%}
+    <label>New password</label>
+    <input type="password" name="customer[password]" autocomplete="new-password" placeholder="New password" required>
+    <label>Confirm password</label>
+    <input type="password" name="customer[password_confirmation]" autocomplete="new-password" placeholder="Confirm password" required>
+    <button class="btn" type="submit">Reset password</button>
+  {%- endform -%}
+</div></div></div>
+{% schema %}{ "name": "Auth Reset", "settings": [], "presets": [{ "name": "Auth Reset" }] }{% endschema %}

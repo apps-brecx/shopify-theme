@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-fancyfood",
+      "settings": {
+        "wholesale_url": "/pages/wholesale",
+        "faire_url": "https://syruvia.faire.com"
+      }
+    }
+  },
+  "order": ["main"]
+}

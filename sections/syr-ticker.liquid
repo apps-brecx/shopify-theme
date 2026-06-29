@@ -1,0 +1,116 @@
+{%- comment -%} Flavor ticker — colorful pills with bg + text + link per flavor, infinite loop {%- endcomment -%}
+{%- render 'syr-home-polish' -%}
+<style id="syr-ticker-{{ section.id }}-css">
+  #syr-ticker-{{ section.id }}{
+    background:{{ section.settings.bg_color | default: '#39220f' }};
+    overflow:hidden;
+    border-top:2px solid #39220f; border-bottom:2px solid #39220f;
+    position:relative;
+    display:flex; align-items:center;
+    padding:{{ section.settings.padding | default: 8 }}px 0;
+  }
+  #syr-ticker-{{ section.id }} .syr-ticker-track{
+    display:flex; align-items:center; gap:10px;
+    white-space:nowrap; flex-shrink:0;
+    animation:syrTickerScroll {{ section.settings.speed | default: 38 }}s linear infinite;
+    animation-play-state:running !important;
+    will-change:transform;
+    padding:0 5px;
+  }
+  @keyframes syrTickerScroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce){ #syr-ticker-{{ section.id }} .syr-ticker-track{ animation:none; } }
+  #syr-ticker-{{ section.id }} .syr-ticker-pill{
+    display:inline-flex; align-items:center; justify-content:center;
+    flex:0 0 auto;
+    padding:8px 18px;
+    border-radius:999px;
+    border:1.5px solid #39220f;
+    box-shadow:2.5px 2.5px 0 rgba(57,34,15,.35);
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:13.5px; letter-spacing:.08em; text-transform:uppercase;
+    line-height:1; text-decoration:none;
+  }
+  #syr-ticker-{{ section.id }} a.syr-ticker-pill{
+    cursor:pointer;
+    transition:transform .15s cubic-bezier(.4,0,.2,1), box-shadow .15s cubic-bezier(.4,0,.2,1), filter .15s ease;
+  }
+  #syr-ticker-{{ section.id }} a.syr-ticker-pill:hover{
+    transform:translate(-1px,-1px); box-shadow:3.5px 3.5px 0 rgba(57,34,15,.45);
+    filter:brightness(1.05);
+  }
+  #syr-ticker-{{ section.id }} a.syr-ticker-pill:active{
+    transform:scale(.96); box-shadow:1.5px 1.5px 0 rgba(57,34,15,.35);
+  }
+  @media (max-width:760px){
+    #syr-ticker-{{ section.id }}{ padding:6px 0; }
+    #syr-ticker-{{ section.id }} .syr-ticker-track{ gap:8px; animation-duration:{{ section.settings.speed_mobile | default: 32 }}s; }
+    #syr-ticker-{{ section.id }} .syr-ticker-pill{ font-size:11.5px; padding:7px 14px; box-shadow:2px 2px 0 rgba(57,34,15,.35); }
+  }
+</style>
+
+<section id="syr-ticker-{{ section.id }}" aria-label="Flavor ticker">
+  <div class="syr-ticker-track">
+    {%- for round in (1..2) -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'flavor' -%}
+          {%- assign bg = block.settings.bg | default: '#FCE2A0' -%}
+          {%- assign txt = block.settings.txt | default: '#39220f' -%}
+          {%- assign url = block.settings.link -%}
+          {%- if url != blank -%}
+            <a class="syr-ticker-pill" href="{{ url }}" style="background:{{ bg }};color:{{ txt }};" aria-hidden="{% if round == 2 %}true{% else %}false{% endif %}" {% if round == 2 %}tabindex="-1"{% endif %}>{{ block.settings.name }}</a>
+          {%- else -%}
+            <span class="syr-ticker-pill" style="background:{{ bg }};color:{{ txt }};" aria-hidden="true">{{ block.settings.name }}</span>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Ticker (Syr)",
+  "tag": "section",
+  "max_blocks": 30,
+  "settings": [
+    { "type": "color", "id": "bg_color", "label": "Ticker background color", "default": "#39220f" },
+    { "type": "range", "id": "speed", "label": "Scroll speed desktop (seconds)", "min": 15, "max": 80, "step": 1, "default": 38 },
+    { "type": "range", "id": "speed_mobile", "label": "Scroll speed mobile (seconds)", "min": 15, "max": 80, "step": 1, "default": 32 },
+    { "type": "range", "id": "padding", "label": "Top/bottom padding (px)", "min": 4, "max": 24, "step": 2, "default": 8 }
+  ],
+  "blocks": [
+    {
+      "type": "flavor",
+      "name": "Flavor",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Flavor name", "default": "Vanilla" },
+        { "type": "url", "id": "link", "label": "Link (collection / product / page)" },
+        { "type": "color", "id": "bg", "label": "Background color", "default": "#FCE2A0" },
+        { "type": "color", "id": "txt", "label": "Text color", "default": "#39220f" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flavor Ticker",
+      "blocks": [
+        { "type": "flavor", "settings": { "name": "Vanilla", "bg": "#FFFBF4", "txt": "#39220f", "link": "/collections/vanilla" } },
+        { "type": "flavor", "settings": { "name": "Salted Caramel", "bg": "#c58548", "txt": "#FFFBF4", "link": "/collections/caramel" } },
+        { "type": "flavor", "settings": { "name": "Cotton Candy", "bg": "#FFB6D9", "txt": "#39220f", "link": "/search?q=cotton+candy&type=product" } },
+        { "type": "flavor", "settings": { "name": "Banana Nut", "bg": "#FCE2A0", "txt": "#39220f", "link": "/search?q=banana+nut&type=product" } },
+        { "type": "flavor", "settings": { "name": "Cookie Butter", "bg": "#8B5A2B", "txt": "#FFFBF4", "link": "/search?q=cookie+butter&type=product" } },
+        { "type": "flavor", "settings": { "name": "Ube", "bg": "#9B7BC7", "txt": "#FFFBF4", "link": "/search?q=ube&type=product" } },
+        { "type": "flavor", "settings": { "name": "Blackberry", "bg": "#4B2E5C", "txt": "#FFFBF4", "link": "/collections/blackberry" } },
+        { "type": "flavor", "settings": { "name": "Mango", "bg": "#FFB347", "txt": "#39220f", "link": "/search?q=mango&type=product" } },
+        { "type": "flavor", "settings": { "name": "Peach", "bg": "#FFD4B8", "txt": "#39220f", "link": "/search?q=peach&type=product" } },
+        { "type": "flavor", "settings": { "name": "Apple Crisp", "bg": "#C5E4D4", "txt": "#39220f", "link": "/search?q=apple+crisp&type=product" } },
+        { "type": "flavor", "settings": { "name": "Blueberry", "bg": "#5BA3D0", "txt": "#FFFBF4", "link": "/collections/blueberry" } },
+        { "type": "flavor", "settings": { "name": "Strawberry", "bg": "#E85541", "txt": "#FFFBF4", "link": "/search?q=strawberry&type=product" } },
+        { "type": "flavor", "settings": { "name": "Chocolate", "bg": "#5C3317", "txt": "#FFFBF4", "link": "/search?q=chocolate&type=product" } },
+        { "type": "flavor", "settings": { "name": "Hazelnut", "bg": "#D2A679", "txt": "#39220f", "link": "/search?q=hazelnut&type=product" } },
+        { "type": "flavor", "settings": { "name": "Sugar-Free", "bg": "#39220f", "txt": "#FCE2A0", "link": "/collections/sugar-free" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

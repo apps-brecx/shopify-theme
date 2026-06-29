@@ -1,0 +1,190 @@
+<!--
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+-->
+
+<div class="{{ section.settings.custom_class }} cst-custom-home-loyal-customer cst-custom-tabs">
+  <!-- Tab controls -->
+  <input type="radio" id="loyaltab1" name="loyaltab-control" checked>
+  <input type="radio" id="loyaltab2" name="loyaltab-control">
+  <input type="radio" id="loyaltab3" name="loyaltab-control">
+  <input type="radio" id="loyaltab4" name="loyaltab-control">
+  <input type="radio" id="loyaltab5" name="loyaltab-control">
+  <div class="cst-custom-section-heading">
+    <span
+      ><img
+        class="ony-svg-img-leaf"
+        src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Logo_Survyia-01_copy_1.png?v=1729078847"
+      >
+      <img
+        class="ony-svg-img-star"
+        src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object_3.png?v=1729078845"
+      >
+    </span>
+
+    <h2>Over 5 Million Loyal Customer</h2>
+  </div>
+  <div class="cst-custom-content-wrap">
+    <ul class="cst-collection-titles">
+      {% assign collections = section.settings.collection_list %}
+      {% if collections != blank %}
+        {% for collection in collections %}
+          <li title="loyalTab {{ forloop.index }}" class="{% if forloop.index == 1 %}active{% endif %}">
+            <label for="loyaltab{{ forloop.index }}" role="button">
+              <span>{{ collection.title }}</span>
+            </label>
+          </li>
+        {% endfor %}
+      {% endif %}
+    </ul>
+  </div>
+
+  <!-- Content section for each tab -->
+  <div class="content">
+    {% assign tab_counter = 1 %}
+    {% for collection in collections %}
+      <section id="loyaltab-content{{ tab_counter }}">
+        <div class="product-grid-section-2">
+          {% if collection.products.size > 0 %}
+            {% for product in collection.products limit: 8 %}
+              <div class="product-card {% assign colorIndex = forloop.index0 | modulo: 4 %}{% if colorIndex == 0 %}colorone{% elsif colorIndex == 1 %}colortwo{% elsif colorIndex == 2 %}colorthree{% elsif colorIndex == 3 %}colorfour{% endif %}">
+                <div class="cst-custom-product-featured-image">
+                  <a href="{{ product.url }}">
+                    <img src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product.title }}">
+                  </a>
+                </div>
+                <div class="cst-custom-product-content">
+                  <div
+                    class="areviews_product_item areviews_stars{{ product.id }}"
+                    data-product-id="{{ product.id }}"
+                  ></div>
+                  <h3>{{ product.title }}</h3>
+                  <p>{{ product.price | money }}</p>
+                  <a class="button" href="{{ product.url }}" class="add-to-cart-btn">Add to Cart</a>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p>No products available in this collection.</p>
+          {% endif %}
+        </div>
+      </section>
+      {% assign tab_counter = tab_counter | plus: 1 %}
+    {% endfor %}
+  </div>
+  <div class="cst-btn">
+    <a href="/collections" class="button">
+      View All Reviews
+      <span class="cst-custom-arrow"
+        ><img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/arroww.png?v=1728394015"
+      ></span>
+    </a>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+  $('.cst-custom-home-loyal-customer .cst-collection-titles li').click(function(){
+      // Add active class to clicked tab and remove from others
+      $('.cst-custom-home-loyal-customer .cst-collection-titles li').removeClass('active');
+      $(this).addClass('active');
+
+      // Get the index of the clicked tab
+      var tabIndex = $(this).index() + 1;
+
+      // Hide all sections
+      $('.cst-custom-home-loyal-customer .content section').hide();
+
+      // Show the section corresponding to the clicked tab
+      $('.cst-custom-home-loyal-customer #loyaltab-content' + tabIndex).show();
+
+      // Trigger slick to resize and adjust width correctly on tab switch
+      $('.cst-custom-home-loyal-customer .product-grid-section-2').slick('setPosition');
+
+    });
+    $('.cst-custom-home-loyal-customer .content section').hide();
+    $('#loyaltab-content1').show();
+
+    // Initialize slick carousel with arrows
+    var $carousel = $('.cst-custom-home-loyal-customer .product-grid-section-2');
+    var settings = {
+      dots: false,
+      arrows: true, // Enable arrows
+      slide: '.cst-custom-home-loyal-customer .product-grid-section-2 .product-card',
+      slidesToShow: 3.9, // Shows 4 full slides and one half-visible
+      responsive: [
+        {
+          breakpoint: 1200,
+          settings: {
+            slidesToShow: 3.3,
+            centerPadding: '50px'
+          }
+        },
+        {
+          breakpoint: 991,
+          settings: {
+            slidesToShow: 2.5,
+            centerPadding: '50px'
+          }
+        },
+        {
+          breakpoint: 767,
+          settings: {
+            slidesToShow: 2.5,
+            centerPadding: '30px'
+          }
+        },
+        {
+          breakpoint: 575,
+          settings: {
+          centerMode: true,
+          centerPadding: '40px',
+          slidesToShow: 1.2
+          }
+        }
+      ]
+    };
+
+    function setSlideVisibility() {
+      var visibleSlides = $carousel.find('.cst-custom-home-loyal-customer .product-grid-section-2 .product-card[aria-hidden="false"]');
+      $(visibleSlides).each(function() {
+        $(this).css('opacity', 1);
+      });
+    }
+
+    // Initialize slick and set slide visibility
+    $carousel.slick(settings);
+    $carousel.slick('slickGoTo', 1);
+    setSlideVisibility();
+
+    $carousel.on('afterChange', function() {
+      setSlideVisibility();
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Loyal Customer Section",
+  "settings": [
+      {
+        "type": "text",
+        "id": "custom_class",
+        "label": "Custom class"
+      },
+      {
+        "type": "collection_list",
+        "id": "collection_list",
+        "label": "Collections",
+        "limit": 8
+      }
+  ],
+  "presets": [
+    {
+      "name": "Loyal Customer Section"
+    }
+  ]
+}
+{% endschema %}

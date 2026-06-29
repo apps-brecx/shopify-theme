@@ -1,0 +1,240 @@
+<style>
+      .countdown-section{
+          padding-top: 20px;
+      }
+      .countdown-wrapper {
+          border-radius: 20px;
+          overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    max-width: 1300px;
+      margin: 0 auto;
+      background: #3D80A6;
+      padding: 10px 40px;
+  }
+
+  .countdown-timer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .time-box {
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .time-box span {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: normal;
+  }
+
+  .separator {
+    font-size: 20px;
+    color: #fff;
+  }
+.countdown-left svg {
+  color: #fff;
+  max-width: 40px;
+  height: 40px;
+  animation: alarmJump 1.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes alarmJump {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+
+  10% {
+    transform: translateY(-6px) rotate(-10deg);
+  }
+
+  20% {
+    transform: translateY(-6px) rotate(10deg);
+  }
+
+  30% {
+    transform: translateY(-4px) rotate(-8deg);
+  }
+
+  40% {
+    transform: translateY(-4px) rotate(8deg);
+  }
+
+  50% {
+    transform: translateY(0) rotate(0);
+  }
+
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+}
+.countdown-left{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.countdown-left p, .countdown-right p{
+    color: #fff;
+    text-align: start;
+    line-height: normal;
+    margin: 0;
+}
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .countdown-wrapper {
+      grid-template-columns: 1r;
+      gap: 10px;
+    }
+.countdown-right p br {
+  display: none;
+}
+    .countdown-timer {
+      justify-content: center;
+    }
+    .countdown-right p{
+        color: #000;
+    }
+    .countdown-timer{
+            grid-column: span 2;
+    }
+    .countdown-right{
+        background: #fff6ee;
+        border-radius: 20px;
+        padding: 5px;
+        grid-column: span 3;
+        display: flex;
+        gap: 2px;
+        justify-content: center;
+    }
+  }
+  @media (max-width: 450px) {
+    .countdown-left, .time-box, .countdown-timer {
+        grid-column: span 3;
+    }
+    .countdown-left{
+        justify-content: center;
+    }
+     .countdown-right p{
+        font-size: 12px;
+    }
+  }
+</style>
+
+<div class="countdown-section page-width">
+  <div class="countdown-wrapper">
+    <!-- LEFT CONTENT -->
+    <div class="countdown-left">
+        <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 24 24" fill="none">
+        <path d="M3 5.5L5 3.5M21 5.5L19 3.5M9 12.5L11 14.5L15 10.5M20 12.5C20 16.9183 16.4183 20.5 12 20.5C7.58172 20.5 4 16.9183 4 12.5C4 8.08172 7.58172 4.5 12 4.5C16.4183 4.5 20 8.08172 20 12.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      {{ section.settings.left_text }}
+    </div>
+
+    <!-- CENTER TIMER -->
+    <div class="countdown-timer" data-date="{{ section.settings.end_date }}">
+            <div class="separator">|</div>
+      <div class="time-box">
+    
+        <span class="days">00</span>
+        <small>Days</small>
+      </div>
+      <div class="separator">|</div>
+
+      <div class="time-box">
+        <span class="hours">00</span>
+        <small>Hrs</small>
+      </div>
+      <div class="separator">|</div>
+
+      <div class="time-box">
+        <span class="minutes">00</span>
+        <small>Mins</small>
+      </div>
+      <div class="separator">|</div>
+
+      <div class="time-box">
+        <span class="seconds">00</span>
+        <small>Secs</small>
+      </div>
+      <div class="separator">|</div>
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div class="countdown-right">
+      {{ section.settings.right_text }}
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const timer = document.querySelector('.countdown-timer');
+
+    if (!timer) return;
+
+    const endDate = new Date(timer.dataset.date).getTime();
+
+    function updateTimer() {
+      const now = new Date().getTime();
+      const distance = endDate - now;
+
+      if (distance <= 0) {
+        timer.innerHTML = 'Expired';
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((distance / (1000 * 60)) % 60);
+      const seconds = Math.floor((distance / 1000) % 60);
+
+      timer.querySelector('.days').innerText = days.toString().padStart(2, '0');
+      timer.querySelector('.hours').innerText = hours.toString().padStart(2, '0');
+      timer.querySelector('.minutes').innerText = minutes.toString().padStart(2, '0');
+      timer.querySelector('.seconds').innerText = seconds.toString().padStart(2, '0');
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  });
+  document.querySelectorAll('.countdown-right br').forEach(br => br.remove());
+</script>
+{% schema %}
+{
+  "name": "Countdown Banner",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "left_text",
+      "label": "Left Content",
+      "default": "<p>Limited Time Offer</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "right_text",
+      "label": "Right Content",
+      "default": "<p>Don't Miss Out!</p>"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "End Date (YYYY-MM-DD HH:MM:SS)",
+      "default": "2026-12-31 23:59:59"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Countdown Banner"
+    }
+  ]
+}
+{% endschema %}

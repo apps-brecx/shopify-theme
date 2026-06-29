@@ -1,0 +1,150 @@
+{%- comment -%} Syruvia Reels: CSS-only marquee, ID-scoped to beat any pre-existing class rules. {%- endcomment -%}
+
+{%- assign reels_data = "https://cdn.shopify.com/videos/c/vp/7041831860854984a8bfb821baba4be7/7041831860854984a8bfb821baba4be7.HD-720p-4.5Mbps-34341271.mp4||https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/7041831860854984a8bfb821baba4be7.thumbnail.0000000000.jpg;;https://cdn.shopify.com/videos/c/vp/e8c5698a0a38444e9204597f21abf5c8/e8c5698a0a38444e9204597f21abf5c8.HD-720p-1.6Mbps-37353311.mp4||https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/e8c5698a0a38444e9204597f21abf5c8.thumbnail.0000000000.jpg;;https://cdn.shopify.com/videos/c/vp/922242a0a616441b8823e7ec8ad9d8c5/922242a0a616441b8823e7ec8ad9d8c5.HD-720p-1.6Mbps-37353314.mp4||https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/922242a0a616441b8823e7ec8ad9d8c5.thumbnail.0000000000.jpg;;https://cdn.shopify.com/videos/c/vp/97d5785f2f1e4eb885d2519f5e845679/97d5785f2f1e4eb885d2519f5e845679.HD-720p-1.6Mbps-37353317.mp4||https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/97d5785f2f1e4eb885d2519f5e845679.thumbnail.0000000000.jpg;;https://cdn.shopify.com/videos/c/vp/da6127b78f30417ea44e22505d70e0c4/da6127b78f30417ea44e22505d70e0c4.HD-720p-1.6Mbps-37353320.mp4||https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/da6127b78f30417ea44e22505d70e0c4.thumbnail.0000000000.jpg;;https://cdn.shopify.com/videos/c/vp/6b236213f0564257a7eaca77b52ae285/6b236213f0564257a7eaca77b52ae285.HD-720p-1.6Mbps-37353321.mp4||https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/6b236213f0564257a7eaca77b52ae285.thumbnail.0000000000.jpg;;https://cdn.shopify.com/videos/c/vp/440b593a1e454d0dbcc238f2f1eebb15/440b593a1e454d0dbcc238f2f1eebb15.HD-720p-1.6Mbps-37354101.mp4||https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/440b593a1e454d0dbcc238f2f1eebb15.thumbnail.0000000000.jpg;;https://cdn.shopify.com/videos/c/vp/80bf19b8c43e46c4b0041358dd951f66/80bf19b8c43e46c4b0041358dd951f66.HD-720p-1.6Mbps-37354127.mp4||https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/80bf19b8c43e46c4b0041358dd951f66.thumbnail.0000000000.jpg" -%}
+
+{%- assign reels_entries = reels_data | split: ';;' -%}
+{%- assign insta_url = 'https://www.instagram.com/syruvia_official/' -%}
+
+<style id="pd-reels-css">
+/* === ID-SCOPED RULES beat any class-based marquee rule (higher CSS specificity, no !important war) === */
+#pdReelsMarquee{
+  position:relative;
+  width:100%;
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+          mask-image:linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  touch-action:pan-y;
+  cursor:default;
+}
+/* Defeat any old drag/scrub overrides */
+#pdReelsMarquee.is-dragging{cursor:default}
+#pdReelsMarquee.is-dragging *{pointer-events:auto;user-select:auto}
+#pdReelsTrack{
+  display:flex;
+  flex-wrap:nowrap;
+  gap:18px;
+  width:max-content;
+  padding:8px 16px;
+  will-change:transform;
+  animation: pdReelsScroll 55s linear infinite;
+  animation-play-state:running;
+}
+#pdReelsMarquee.is-paused #pdReelsTrack{
+  animation-play-state:paused;
+}
+@keyframes pdReelsScroll{
+  from{ transform: translateX(0) }
+  to  { transform: translateX(-50%) }
+}
+@media (prefers-reduced-motion: reduce){
+  #pdReelsTrack{ animation:none; transform:none; }
+}
+/* Cards + video must NOT capture touch — page scroll wins every time. */
+#pdReelsTrack .pd-reels-card{
+  flex:0 0 280px;
+  width:280px;
+  touch-action:pan-y;
+  -webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent;
+}
+#pdReelsTrack .pd-reels-video{
+  pointer-events:none;
+  touch-action:pan-y;
+  -webkit-user-select:none;
+          user-select:none;
+}
+#pdReelsTrack .pd-reels-grad,
+#pdReelsTrack .pd-reels-handle{
+  pointer-events:none;
+  touch-action:pan-y;
+}
+@media (max-width:760px){
+  #pdReelsTrack{ gap:12px; padding:8px 12px; }
+  #pdReelsTrack .pd-reels-card{ flex:0 0 200px; width:200px; }
+  /* Slow the loop slightly on mobile so it feels relaxed at narrower viewport */
+  #pdReelsTrack{ animation-duration:45s; }
+}
+</style>
+
+<section class="pd-reels" id="pdReels">
+  <div class="pd-wrap pd-reels-head">
+    <span class="pd-eyebrow">On Instagram</span>
+    <h2 class="pd-h2 pd-reels-h2">Watch us <em>pour</em>.</h2>
+    <p class="pd-reels-lede">Recipes, pours, and the occasional behind-the-scenes from our feed.</p>
+  </div>
+
+  <div class="pd-reels-marquee" id="pdReelsMarquee">
+    <div class="pd-reels-track" id="pdReelsTrack">
+      {%- for pass in (1..2) -%}
+        {%- for entry in reels_entries -%}
+          {%- assign parts = entry | split: '||' -%}
+          {%- assign vid_url = parts[0] -%}
+          {%- assign poster_url = parts[1] -%}
+          {%- if vid_url == blank -%}{%- continue -%}{%- endif -%}
+          <a class="pd-reels-card" href="{{ insta_url }}" target="_blank" rel="noopener" aria-label="Watch on Instagram"{% if pass == 2 %} aria-hidden="true" tabindex="-1"{% endif %} draggable="false">
+            <video class="pd-reels-video" src="{{ vid_url }}" poster="{{ poster_url }}" muted loop playsinline preload="metadata" data-reel-video disablepictureinpicture></video>
+            <span class="pd-reels-grad" aria-hidden="true"></span>
+            <span class="pd-reels-handle">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+              @syruvia_official
+            </span>
+          </a>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="pd-wrap pd-reels-foot">
+    <a href="{{ insta_url }}" target="_blank" rel="noopener" class="pd-reels-cta">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+      Follow @syruvia_official
+    </a>
+  </div>
+</section>
+
+<script>
+(function(){
+  function init(){
+    var section = document.getElementById('pdReels');
+    var marquee = document.getElementById('pdReelsMarquee');
+    var track   = document.getElementById('pdReelsTrack');
+    if (!section || !marquee || !track) return;
+
+    var videos = track.querySelectorAll('[data-reel-video]');
+
+    function playAll(){
+      videos.forEach(function(v){
+        if (v.paused){
+          var p = v.play();
+          if (p && typeof p.catch === 'function') p.catch(function(){});
+        }
+      });
+    }
+    playAll();
+    setInterval(playAll, 2000);
+
+    document.addEventListener('visibilitychange', function(){
+      if (!document.hidden) playAll();
+    });
+
+    /* Desktop hover pause only — no touch handlers so phone scroll is never blocked. */
+    marquee.addEventListener('mouseenter', function(){ marquee.classList.add('is-paused'); });
+    marquee.addEventListener('mouseleave', function(){ marquee.classList.remove('is-paused'); });
+
+    if ('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) playAll();
+        });
+      }, { threshold: 0.05 });
+      io.observe(section);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>

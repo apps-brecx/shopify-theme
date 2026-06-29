@@ -1,0 +1,127 @@
+{%- comment -%} Syruvia recipes index — brand style. {%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign rb = s.blog_handle | default: 'recipe-blogs' -%}
+<style id="sr-{{ section.id }}-css">
+  #sr-{{ section.id }}{--ink:#39220f;--ink-2:#5a4632;--paper:#FFFBF4;--white:#fff;--butter:#FCE2A0;--copper:#c58548;--peach:#ffd4b8;--mint:#c5e4d4;--sky:#b8dceb;--fh:'Archivo Black','Arial Black',sans-serif;--fb:'Josefin Sans','Josefin',sans-serif;background:var(--paper);color:var(--ink);font-family:var(--fb);}
+  #sr-{{ section.id }} *{box-sizing:border-box;}
+  #sr-{{ section.id }} .sr-wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  #sr-{{ section.id }} .sr-rev{opacity:0;transform:translateY(18px) scale(.94);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.3,1.25);}
+  #sr-{{ section.id }} .sr-rev.in{opacity:1;transform:none;}
+  #sr-{{ section.id }} .sr-hero{text-align:center;padding:64px 0 12px;position:relative;}
+  #sr-{{ section.id }} .sr-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(circle, rgba(57,34,15,.05) 1.4px, transparent 1.6px);background-size:26px 26px;opacity:.5;pointer-events:none;}
+  #sr-{{ section.id }} .sr-eyebrow{position:relative;display:inline-flex;align-items:center;gap:7px;background:var(--mint);color:var(--ink);border:2px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-family:var(--fh);font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:8px 18px;line-height:1;}
+  #sr-{{ section.id }} .sr-hero h1{position:relative;font-family:var(--fh);font-weight:400;font-size:clamp(40px,7.4vw,84px);line-height:.9;letter-spacing:-.02em;text-transform:uppercase;margin:20px 0 0;}
+  #sr-{{ section.id }} .sr-hero h1 em{font-family:var(--fb);font-style:italic;font-weight:300;color:var(--copper);text-transform:none;}
+  #sr-{{ section.id }} .sr-hero p{position:relative;font-size:clamp(15px,2vw,18px);color:var(--ink-2);font-weight:500;margin:16px auto 0;max-width:50ch;line-height:1.6;}
+  #sr-{{ section.id }} .sr-controls{display:flex;flex-direction:column;align-items:center;gap:16px;padding:28px 0 8px;position:relative;}
+  #sr-{{ section.id }} .sr-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
+  #sr-{{ section.id }} .sr-chip{background:var(--white);border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-family:var(--fh);font-weight:400;font-size:12px;letter-spacing:.04em;text-transform:uppercase;padding:9px 16px;color:var(--ink);cursor:pointer;transition:transform .15s ease,box-shadow .15s ease,background .15s ease;}
+  #sr-{{ section.id }} .sr-chip:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);}
+  #sr-{{ section.id }} .sr-chip.act{background:var(--butter);transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);}
+  #sr-{{ section.id }} .sr-search{display:flex;align-items:center;gap:8px;background:var(--white);border:2.5px solid var(--ink);border-radius:14px;box-shadow:3px 3px 0 var(--ink);padding:0 14px;max-width:420px;width:100%;}
+  #sr-{{ section.id }} .sr-search input{flex:1;border:none;outline:none;background:transparent;height:48px;font-family:var(--fb);font-size:15px;color:var(--ink);}
+  #sr-{{ section.id }} .sr-search .ic{font-family:var(--fh);font-size:14px;color:var(--copper);}
+  #sr-{{ section.id }} .sr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;padding:30px 0 24px;}
+  #sr-{{ section.id }} .sr-card{display:flex;flex-direction:column;background:var(--white);border:2.5px solid var(--ink);border-radius:20px;box-shadow:6px 6px 0 var(--ink);overflow:hidden;text-decoration:none;color:var(--ink);transition:transform .2s ease,box-shadow .2s ease,opacity .35s ease;}
+  #sr-{{ section.id }} .sr-card:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink);}
+  #sr-{{ section.id }} .sr-img{aspect-ratio:1/1;border-bottom:2.5px solid var(--ink);overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  #sr-{{ section.id }} .sr-grid .sr-card:nth-child(4n+1) .sr-img{background:var(--peach);}
+  #sr-{{ section.id }} .sr-grid .sr-card:nth-child(4n+2) .sr-img{background:var(--mint);}
+  #sr-{{ section.id }} .sr-grid .sr-card:nth-child(4n+3) .sr-img{background:var(--sky);}
+  #sr-{{ section.id }} .sr-grid .sr-card:nth-child(4n+4) .sr-img{background:var(--butter);}
+  #sr-{{ section.id }} .sr-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+  #sr-{{ section.id }} .sr-card:hover .sr-img img{transform:scale(1.07);}
+  #sr-{{ section.id }} .sr-b{padding:18px 18px 20px;display:flex;flex-direction:column;gap:8px;flex:1;text-align:center;}
+  #sr-{{ section.id }} .sr-t{font-family:var(--fh);font-weight:400;font-size:17px;line-height:1.15;text-transform:uppercase;}
+  #sr-{{ section.id }} .sr-link{margin-top:auto;font-family:var(--fh);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--copper);}
+  #sr-{{ section.id }} .sr-empty{display:none;text-align:center;padding:50px 0 70px;color:var(--ink-2);font-weight:500;}
+  #sr-{{ section.id }} .sr-pad{padding-bottom:64px;}
+  @media (max-width:860px){#sr-{{ section.id }} .sr-grid{grid-template-columns:repeat(2,1fr);gap:14px;} #sr-{{ section.id }} .sr-hero{padding:42px 0 6px;}}
+  @media (max-width:520px){#sr-{{ section.id }} .sr-grid{grid-template-columns:1fr;}}
+  @media (prefers-reduced-motion: reduce){#sr-{{ section.id }} .sr-rev{opacity:1;transform:none;}}
+</style>
+
+<section id="sr-{{ section.id }}">
+  <div class="sr-hero">
+    <div class="sr-wrap">
+      <span class="sr-eyebrow sr-rev">{{ s.eyebrow }}</span>
+      <h1 class="sr-rev">{{ s.title }}</h1>
+      <p class="sr-rev">{{ s.sub }}</p>
+    </div>
+  </div>
+
+  <div class="sr-wrap">
+    <div class="sr-controls sr-rev">
+      <div class="sr-chips">
+        <button type="button" class="sr-chip act" data-tag="all">All</button>
+        <button type="button" class="sr-chip" data-tag="recipe_coffee">Coffee</button>
+        <button type="button" class="sr-chip" data-tag="recipe_cocktail">Cocktails</button>
+        <button type="button" class="sr-chip" data-tag="recipe_shaved-iced">Shaved Ice</button>
+        <button type="button" class="sr-chip" data-tag="recipe_topping">Toppings</button>
+        <button type="button" class="sr-chip" data-tag="recipe_bursting-balls">Bursting Balls</button>
+        <button type="button" class="sr-chip" data-tag="dietary_sugar-free">Sugar Free</button>
+      </div>
+      <label class="sr-search"><span class="ic">⌕</span><input type="text" id="sr-q-{{ section.id }}" placeholder="Search recipes..."></label>
+    </div>
+
+    {%- paginate blogs[rb].articles by 250 -%}
+      <div class="sr-grid" id="sr-grid-{{ section.id }}">
+        {%- for article in blogs[rb].articles -%}
+          <a class="sr-card sr-rev" href="{{ article.url }}" data-title="{{ article.title | downcase | escape }}" data-tags="{% for tag in article.tags %}{{ tag | downcase | strip }}{% unless forloop.last %},{% endunless %}{% endfor %}">
+            <div class="sr-img">{%- if article.image -%}<img src="{{ article.image | image_url: width: 700 }}" alt="{{ article.title | escape }}" loading="lazy">{%- endif -%}</div>
+            <div class="sr-b">
+              <h3 class="sr-t">{{ article.title }}</h3>
+              <span class="sr-link">View recipe →</span>
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+    {%- endpaginate -%}
+    <div class="sr-empty" id="sr-empty-{{ section.id }}">No recipes match — try another filter.</div>
+    <div class="sr-pad"></div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('sr-{{ section.id }}');
+  if(!root) return;
+  var cards=[].slice.call(root.querySelectorAll('.sr-card'));
+  var chips=[].slice.call(root.querySelectorAll('.sr-chip'));
+  var q=document.getElementById('sr-q-{{ section.id }}');
+  var empty=document.getElementById('sr-empty-{{ section.id }}');
+  var active='all';
+  function run(){
+    var term=(q&&q.value||'').toLowerCase().trim();var n=0;
+    cards.forEach(function(c){
+      var tags=(c.getAttribute('data-tags')||'').split(',');
+      var title=c.getAttribute('data-title')||'';
+      var okCat=(active==='all')||tags.indexOf(active)!==-1;
+      var okQ=(term==='')||title.indexOf(term)!==-1;
+      if(okCat&&okQ){c.style.display='';n++;}else{c.style.display='none';}
+    });
+    if(empty) empty.style.display=n?'none':'block';
+  }
+  chips.forEach(function(ch){ch.addEventListener('click',function(){chips.forEach(function(x){x.classList.remove('act');});ch.classList.add('act');active=ch.getAttribute('data-tag');run();});});
+  if(q) q.addEventListener('input',run);
+  if('IntersectionObserver' in window && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.08});
+    root.querySelectorAll('.sr-rev').forEach(function(el){io.observe(el);});
+    setTimeout(function(){root.querySelectorAll('.sr-rev:not(.in)').forEach(function(el){el.classList.add('in');});},2600);
+  } else { root.querySelectorAll('.sr-rev').forEach(function(el){el.classList.add('in');}); }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Recipe index",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "blog_handle", "label": "Recipe blog handle", "default": "recipe-blogs" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Syruvia Sips" },
+    { "type": "text", "id": "title", "label": "Title (use <em> for accent)", "default": "Make it <em>at home</em>." },
+    { "type": "textarea", "id": "sub", "label": "Subtitle", "default": "Easy, delicious recipes for coffee, cocktails, shaved ice and more — powered by Syruvia syrups." }
+  ],
+  "presets": [ { "name": "Recipe index" } ]
+}
+{% endschema %}

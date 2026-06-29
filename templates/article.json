@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "syr-article",
+      "settings": {
+        "show_author": false,
+        "shop_collection": "best-sellers",
+        "shop_heading": "Shop the flavors",
+        "shop_sub": "Recreate it at home — grab the syrups behind the recipe."
+      }
+    }
+  },
+  "order": ["main"]
+}

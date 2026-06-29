@@ -1,0 +1,111 @@
+{%- comment -%} Section 7 — Stats (light butter bg, fun colors) {%- endcomment -%}
+<style id="syr-stats-{{ section.id }}-css">
+  #syr-stats-{{ section.id }}{
+    --ink:#39220f; --paper:#FFFBF4; --butter:#FCE2A0; --peach:#FFD4B8; --accent:#c58548; --mint:#C5E4D4;
+    background:linear-gradient(180deg, var(--butter) 0%, var(--peach) 100%);
+    color:var(--ink);
+    padding:64px 24px;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    border-top:2px solid var(--ink); border-bottom:2px solid var(--ink);
+  }
+  #syr-stats-{{ section.id }} .syr-stats-row{
+    max-width:1320px; margin:0 auto;
+    display:grid; grid-template-columns:repeat(4, 1fr);
+    align-items:center; gap:18px;
+  }
+  #syr-stats-{{ section.id }} .syr-stat{
+    text-align:center; padding:18px 14px;
+    background:var(--paper);
+    border:2px solid var(--ink); border-radius:18px;
+    box-shadow:4px 4px 0 var(--ink);
+    transition:transform .2s cubic-bezier(.4,0,.2,1), box-shadow .2s cubic-bezier(.4,0,.2,1);
+  }
+  #syr-stats-{{ section.id }} .syr-stat:hover{ transform:translate(-3px,-3px); box-shadow:7px 7px 0 var(--ink); }
+  #syr-stats-{{ section.id }} .syr-stat-num{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:clamp(32px, 4vw, 52px); line-height:1;
+    color:var(--ink); margin:0 0 6px;
+    letter-spacing:-.01em;
+  }
+  #syr-stats-{{ section.id }} .syr-stat-num em{ color:var(--accent); font-style:normal; }
+  #syr-stats-{{ section.id }} .syr-stat-lbl{
+    font-family:'Josefin Sans','Josefin',sans-serif; font-weight:600;
+    font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+    color:rgba(57,34,15,.7);
+  }
+  @media (max-width:760px){
+    #syr-stats-{{ section.id }}{ padding:38px 14px; }
+    #syr-stats-{{ section.id }} .syr-stats-row{ grid-template-columns:repeat(2, 1fr); gap:12px; }
+    #syr-stats-{{ section.id }} .syr-stat{ padding:14px 10px; box-shadow:3px 3px 0 var(--ink); }
+    #syr-stats-{{ section.id }} .syr-stat-num{ font-size:clamp(26px, 8vw, 38px); }
+    #syr-stats-{{ section.id }} .syr-stat-lbl{ font-size:10.5px; letter-spacing:.06em; }
+  }
+</style>
+
+<section id="syr-stats-{{ section.id }}">
+  <div class="syr-stats-row">
+    {%- assign stats = 's1,s2,s3,s4' | split: ',' -%}
+    {%- for s in stats -%}
+      {%- assign num_k = s | append: '_num' -%}
+      {%- assign suf_k = s | append: '_suffix' -%}
+      {%- assign lbl_k = s | append: '_label' -%}
+      <div class="syr-stat" data-reveal="up" data-reveal-delay="{{ forloop.index0 | times: 100 }}">
+        <p class="syr-stat-num" data-target="{{ section.settings[num_k] }}" data-suffix="{{ section.settings[suf_k] }}">0{{ section.settings[suf_k] }}</p>
+        <p class="syr-stat-lbl">{{ section.settings[lbl_k] }}</p>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+<script>
+(function(){
+  var root = document.getElementById('syr-stats-{{ section.id }}');
+  if (!root) return;
+  var nums = root.querySelectorAll('.syr-stat-num');
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+  function animateNum(el){
+    if (el.dataset.done === '1') return;
+    el.dataset.done = '1';
+    var raw = (el.getAttribute('data-target') || '0').toString();
+    var suffix = el.getAttribute('data-suffix') || '';
+    var target = parseFloat(raw.replace(/[^0-9.]/g, '')) || 0;
+    var isFloat = raw.indexOf('.') >= 0;
+    var dur = 1500;
+    var start = performance.now();
+    function tick(now){
+      var t = Math.min((now - start) / dur, 1);
+      var v = target * easeOutCubic(t);
+      el.textContent = (isFloat ? v.toFixed(1) : Math.round(v).toString()) + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = (isFloat ? target.toFixed(1) : Math.round(target).toString()) + suffix;
+    }
+    requestAnimationFrame(tick);
+  }
+  if ('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ animateNum(e.target); obs.unobserve(e.target); } }); }, { threshold:.4 });
+    nums.forEach(function(n){ obs.observe(n); });
+  } else { nums.forEach(animateNum); }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Stats (Syr)",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "s1_num", "label": "Stat 1 number", "default": "250" },
+    { "type": "text", "id": "s1_suffix", "label": "Stat 1 suffix", "default": "+" },
+    { "type": "text", "id": "s1_label", "label": "Stat 1 label", "default": "Flavors" },
+    { "type": "text", "id": "s2_num", "label": "Stat 2 number", "default": "5" },
+    { "type": "text", "id": "s2_suffix", "label": "Stat 2 suffix", "default": "M+" },
+    { "type": "text", "id": "s2_label", "label": "Stat 2 label", "default": "Happy Customers" },
+    { "type": "text", "id": "s3_num", "label": "Stat 3 number", "default": "4.9" },
+    { "type": "text", "id": "s3_suffix", "label": "Stat 3 suffix", "default": "★" },
+    { "type": "text", "id": "s3_label", "label": "Stat 3 label", "default": "Average Rating" },
+    { "type": "text", "id": "s4_num", "label": "Stat 4 number", "default": "35" },
+    { "type": "text", "id": "s4_suffix", "label": "Stat 4 suffix", "default": "$" },
+    { "type": "text", "id": "s4_label", "label": "Stat 4 label", "default": "Free Shipping Threshold" }
+  ],
+  "presets": [ { "name": "Stats Bar" } ]
+}
+{% endschema %}

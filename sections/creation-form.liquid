@@ -1,0 +1,176 @@
+<div class="distribution-contact-form">
+  <div class="contact page-width">
+{%- form 'contact', id: 'ContactForm', class: 'custom-form ' -%}
+  {%- if form.posted_successfully? -%}
+    <p class="success-message">Thank you for your message! We will get back to you soon.</p>
+  {%- elsif form.errors -%}
+    <p class="error-message">There was an issue with your submission. Please correct the errors and try again.</p>
+  {%- endif -%}
+  
+  <div class="cstm-fields">
+    <!-- Name Field -->
+    <div class="form-group">
+      <input
+        class="form-control"
+        type="text"
+        id="contact-name"
+        name="contact[name]"
+        placeholder="Name*"
+        required
+      />
+    </div>
+
+    <!-- Email Field -->
+    <div class="form-group">
+      <input
+        class="form-control"
+        type="email"
+        id="contact-email"
+        name="contact[email]"
+        placeholder="Email*"
+        required
+      />
+    </div>
+  </div>
+  <div class="cstm-fields">
+    <!-- Instagram Field -->
+    <div class="form-group">
+      <input
+        class="form-control"
+        type="text"
+        id="contact-instagram"
+        name="contact[instagram]"
+        placeholder="Instagram"
+      />
+    </div>
+
+    <!-- TikTok Field -->
+    <div class="form-group">
+      <input
+        class="form-control"
+        type="text"
+        id="contact-tiktok"
+        name="contact[tiktok]"
+        placeholder="TikTok"
+      />
+    </div>
+  </div>
+  <!-- Portfolio Field -->
+    <div class="form-group">
+      <input
+        class="form-control"
+        type="url"
+        id="contact-portfolio"
+        name="contact[portfolio]"
+        placeholder="Portfolio URL"
+      />
+    </div>
+  <!-- Submit Button -->
+  <div class="form-group">
+    <button type="submit" class="button">Start Creating Now</button>
+  </div>
+{%- endform -%}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "creation Form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Form Heading",
+      "default": "Contact Us"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom CSS Class"
+    },
+    {
+      "type": "image_picker",
+      "id": "top_image",
+      "label": "Top Image"
+    },
+    {
+      "type": "text",
+      "id": "top_image_alt",
+      "label": "Top Image Alt Text",
+      "default": "Form Top Image"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "light", "label": "Light" },
+        { "value": "dark", "label": "Dark" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "instagram_placeholder",
+      "label": "Instagram",
+      "default": "Instagram"
+    },
+    {
+      "type": "text",
+      "id": "tiktok_placeholder",
+      "label": "TikTok",
+      "default": "TikTok"
+    },
+    {
+      "type": "text",
+      "id": "portfolio_placeholder",
+      "label": "Portfolio",
+      "default": "Portfolio URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Block",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text Content"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Alt Text"
+        }
+      ]
+    },
+    {
+      "type": "html",
+      "name": "Custom HTML Block",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "custom_html",
+          "label": "Custom HTML"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "creation Form"
+    }
+  ]
+}
+{% endschema %}

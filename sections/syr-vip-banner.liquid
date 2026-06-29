@@ -1,0 +1,485 @@
+{%- comment -%} VIP banner v8 — adds Sign In button + \"Already a member?\" link. {%- endcomment -%}
+{%- assign drop = section.settings.eyebrow_drop | default: 40 -%}
+{%- assign drop_mobile = drop | times: 0.78 | round -%}
+{%- assign card_bg = section.settings.card_bg | default: '#2F7BB0' -%}
+{%- assign card_bg2 = section.settings.card_bg2 | default: '#1F5A85' -%}
+{%- assign hi = section.settings.hi_color | default: '#FCE2A0' -%}
+{%- assign hi2 = section.settings.hi_color2 | default: '#FFFBF4' -%}
+
+{%- assign mc_raw = shop.metafields.vip.member_count.value -%}
+{%- if mc_raw == nil or mc_raw == blank or mc_raw == 0 -%}
+  {%- assign trust_count_display = section.settings.trust_count | default: '12,847' -%}
+{%- else -%}
+  {%- assign mc_str = mc_raw | append: '' -%}
+  {%- assign mc_chars = mc_str | split: '' -%}
+  {%- assign mc_out = '' -%}
+  {%- assign mc_i = 0 -%}
+  {%- for ch in mc_chars reversed -%}
+    {%- assign mc_out = ch | append: mc_out -%}
+    {%- assign mc_i = mc_i | plus: 1 -%}
+    {%- if mc_i == 3 and forloop.last == false -%}
+      {%- assign mc_out = ',' | append: mc_out -%}
+      {%- assign mc_i = 0 -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- assign trust_count_display = mc_out -%}
+{%- endif -%}
+
+<style id="syr-vip-{{ section.id }}-css">
+  #syr-vip-{{ section.id }}{
+    --ink:#39220f; --paper:#FFFBF4; --butter:#FCE2A0; --copper:#c58548;
+    --card-bg:{{ card_bg }}; --card-bg-2:{{ card_bg2 }};
+    --hi:{{ hi }}; --hi-2:{{ hi2 }};
+    --eye-scale:.55; --eye-rot:0deg;
+    --num-scale:.9; --num-y:30px;
+    background:var(--paper);
+    padding:80px 24px 76px;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    color:var(--ink);
+    position:relative; overflow:hidden;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-head{ text-align:center; margin:0 auto -{{ drop }}px; max-width:1240px; position:relative; z-index:5; }
+  #syr-vip-{{ section.id }} .syr-vip-eyebrow{
+    display:inline-block;
+    background:{{ section.settings.eyebrow_bg | default: '#FCE2A0' }};
+    color:{{ section.settings.eyebrow_color | default: '#39220f' }};
+    border:2px solid {{ section.settings.eyebrow_border | default: '#39220f' }};
+    border-radius:999px;
+    box-shadow:3px 3px 0 {{ section.settings.eyebrow_shadow | default: '#39220f' }};
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight:400; font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    padding:8px 18px;
+    transform-origin:center;
+    transform:scale(var(--eye-scale)) rotate(var(--eye-rot));
+    transition:transform .25s cubic-bezier(.16,.84,.34,1);
+  }
+  @media (prefers-reduced-motion: reduce){ #syr-vip-{{ section.id }} .syr-vip-eyebrow{ transform:scale(1) rotate(0deg); transition:none; } }
+  #syr-vip-{{ section.id }} .syr-vip-card{
+    position:relative;
+    max-width:1240px; margin:0 auto;
+    background:linear-gradient(140deg, var(--card-bg) 0%, var(--card-bg-2) 100%);
+    color:var(--paper);
+    border:3px solid var(--ink); border-radius:32px;
+    box-shadow:8px 8px 0 var(--ink);
+    padding:60px 64px 56px;
+    z-index:1; overflow:hidden;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-card::before{
+    content:''; position:absolute; inset:0;
+    background:
+      radial-gradient(60% 80% at 0% 0%, rgba(255,251,244,.10) 0%, transparent 55%),
+      radial-gradient(circle, rgba(255,251,244,.07) 1.4px, transparent 1.6px);
+    background-size:auto, 28px 28px;
+    pointer-events:none; z-index:0;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-grid{
+    position:relative; z-index:2;
+    display:grid; grid-template-columns:1.45fr 1fr; gap:56px; align-items:center;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-big{
+    display:flex; align-items:baseline; gap:14px; margin-bottom:6px;
+    line-height:1; font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-pct{
+    font-size:clamp(74px, 11vw, 138px); line-height:.85; letter-spacing:-.04em;
+    background:linear-gradient(180deg, var(--hi-2) 0%, var(--hi) 100%);
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent; color:transparent;
+    display:inline-block;
+    transform-origin:left center;
+    transform:scale(var(--num-scale)) translateY(var(--num-y));
+    opacity:calc(1.4 - (var(--num-y) / 30px) * 0.4);
+    transition:transform .8s cubic-bezier(.16,.84,.34,1), opacity .8s ease;
+    will-change:transform; text-shadow:0 2px 0 rgba(57,34,15,.15);
+  }
+  #syr-vip-{{ section.id }} .syr-vip-off{
+    font-size:clamp(16px, 1.6vw, 20px); letter-spacing:.14em; text-transform:uppercase;
+    color:var(--paper); opacity:.9;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+  }
+  #syr-vip-{{ section.id }} h2{
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:clamp(26px, 3.2vw, 38px); line-height:1.02;
+    letter-spacing:-.01em; text-transform:uppercase;
+    color:var(--paper); margin:0 0 24px; max-width:20ch;
+  }
+  #syr-vip-{{ section.id }} h2 em{
+    font-family:'Josefin Sans',sans-serif; font-style:italic; font-weight:300;
+    color:var(--hi); text-transform:none; letter-spacing:0;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-perks{ display:grid; grid-template-columns:1fr; gap:11px; list-style:none; padding:0; margin:0; }
+  #syr-vip-{{ section.id }} .syr-vip-perks li{
+    display:flex; align-items:center; gap:13px;
+    font-size:15.5px; color:var(--paper); opacity:.95;
+    font-weight:500; line-height:1.3;
+    opacity:0; transform:translateY(14px);
+    transition:opacity .55s ease, transform .55s cubic-bezier(.16,.84,.34,1);
+  }
+  #syr-vip-{{ section.id }} .syr-vip-perks li:nth-child(1){ transition-delay:.1s; }
+  #syr-vip-{{ section.id }} .syr-vip-perks li:nth-child(2){ transition-delay:.22s; }
+  #syr-vip-{{ section.id }} .syr-vip-perks li:nth-child(3){ transition-delay:.34s; }
+  #syr-vip-{{ section.id }}.is-in-view .syr-vip-perks li{ opacity:.96; transform:translateY(0); }
+  #syr-vip-{{ section.id }} .syr-vip-perks li svg{
+    width:22px; height:22px; flex:0 0 22px;
+    background:var(--hi); border-radius:50%; padding:5px;
+    color:var(--ink); display:inline-block;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-cta-col{ display:flex; flex-direction:column; align-items:stretch; gap:14px; }
+  #syr-vip-{{ section.id }} .syr-vip-save{
+    background:rgba(255,251,244,.1);
+    border:1.5px solid rgba(255,251,244,.22);
+    border-radius:22px; padding:22px 24px; text-align:center;
+    transform:translateY(20px); opacity:0;
+    transition:transform .7s cubic-bezier(.16,.84,.34,1) .15s, opacity .7s ease .15s;
+  }
+  #syr-vip-{{ section.id }}.is-in-view .syr-vip-save{ transform:translateY(0); opacity:1; }
+  #syr-vip-{{ section.id }} .syr-vip-save-num{
+    font-family:'Archivo Black',sans-serif !important;
+    font-size:48px; line-height:1; letter-spacing:-.02em;
+    background:linear-gradient(180deg, var(--hi-2) 0%, var(--hi) 100%);
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent; color:transparent;
+    display:inline-block;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-save-lbl{ font-family:'Josefin Sans',sans-serif; font-size:13.5px; color:var(--paper); opacity:.9; margin-top:8px; display:block; line-height:1.35; }
+  #syr-vip-{{ section.id }} .syr-vip-save-lbl strong{ display:block; font-family:'Archivo Black',sans-serif !important; font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--hi); margin-bottom:2px; }
+  #syr-vip-{{ section.id }} .syr-vip-free-chip{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    align-self:center;
+    background:var(--hi); color:var(--ink);
+    border:2px solid var(--ink); border-radius:999px;
+    box-shadow:3px 3px 0 var(--ink); padding:7px 14px;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight:400; font-size:11.5px; letter-spacing:.18em; text-transform:uppercase;
+    margin-bottom:2px;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-free-chip-dot{
+    width:7px; height:7px; border-radius:50%; background:#2BB673; box-shadow:0 0 0 2px rgba(43,182,115,.25);
+    animation:syrVipPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes syrVipPulse{ 0%,100%{ transform:scale(.85); opacity:.7; } 50%{ transform:scale(1.15); opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ #syr-vip-{{ section.id }} .syr-vip-free-chip-dot{ animation:none; } }
+
+  /* Two-button row: primary + secondary */
+  #syr-vip-{{ section.id }} .syr-vip-cta-row{
+    display:flex; gap:12px; align-items:stretch; justify-content:center;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    border-radius:999px;
+    padding:20px 28px;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:13.5px; letter-spacing:.14em; text-transform:uppercase;
+    text-decoration:none;
+    transition:transform .18s cubic-bezier(.4,0,.2,1), box-shadow .18s cubic-bezier(.4,0,.2,1), background .15s ease, color .15s ease;
+    white-space:nowrap;
+  }
+  /* Primary: dark brown filled, butter shadow */
+  #syr-vip-{{ section.id }} .syr-vip-btn--primary{
+    flex:1;
+    background:var(--ink); color:var(--paper);
+    border:2.5px solid var(--ink);
+    box-shadow:5px 5px 0 var(--hi);
+  }
+  #syr-vip-{{ section.id }} .syr-vip-btn--primary:hover{ transform:translate(-3px,-3px); box-shadow:8px 8px 0 var(--hi); background:var(--ink); color:var(--paper); }
+  #syr-vip-{{ section.id }} .syr-vip-btn--primary:active{ transform:scale(.97); box-shadow:3px 3px 0 var(--hi); transition-duration:.08s; }
+  /* Secondary: cream filled, dark shadow */
+  #syr-vip-{{ section.id }} .syr-vip-btn--secondary{
+    background:var(--paper); color:var(--ink);
+    border:2.5px solid var(--ink);
+    box-shadow:5px 5px 0 var(--ink);
+  }
+  #syr-vip-{{ section.id }} .syr-vip-btn--secondary:hover{ transform:translate(-3px,-3px); box-shadow:8px 8px 0 var(--ink); background:var(--hi); color:var(--ink); }
+  #syr-vip-{{ section.id }} .syr-vip-btn--secondary:active{ transform:scale(.97); box-shadow:3px 3px 0 var(--ink); transition-duration:.08s; }
+  #syr-vip-{{ section.id }} .syr-vip-btn-arrow{ display:inline-block; transition:transform .25s cubic-bezier(.4,0,.2,1); }
+  #syr-vip-{{ section.id }} .syr-vip-btn:hover .syr-vip-btn-arrow{ transform:translateX(5px); }
+
+  #syr-vip-{{ section.id }} .syr-vip-cta-sub{
+    text-align:center; font-size:12.5px; color:var(--paper); opacity:.82;
+    letter-spacing:.04em; line-height:1.4; font-family:'Josefin Sans',sans-serif;
+  }
+
+  /* \"Already a member?\" text link */
+  #syr-vip-{{ section.id }} .syr-vip-already{
+    text-align:center;
+    font-family:'Josefin Sans',sans-serif;
+    font-size:13px; color:var(--paper); opacity:.85;
+    line-height:1.45;
+    margin-top:2px;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-already a{
+    color:var(--hi); text-decoration:underline; text-underline-offset:3px;
+    font-weight:600;
+    transition:color .15s ease, opacity .15s ease;
+  }
+  #syr-vip-{{ section.id }} .syr-vip-already a:hover{ color:var(--paper); opacity:1; }
+
+  #syr-vip-{{ section.id }} .syr-vip-trust{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-size:13px; color:var(--paper); opacity:.88;
+    line-height:1.3;
+    transform:translateY(10px); opacity:0;
+    transition:transform .6s ease .35s, opacity .6s ease .35s;
+  }
+  #syr-vip-{{ section.id }}.is-in-view .syr-vip-trust{ transform:translateY(0); opacity:.88; }
+  #syr-vip-{{ section.id }} .syr-vip-stars{ display:inline-flex; gap:2px; color:var(--hi); font-size:14px; letter-spacing:1px; }
+  #syr-vip-{{ section.id }} .syr-vip-trust strong{ font-family:'Archivo Black',sans-serif !important; font-weight:400; color:var(--paper); letter-spacing:.04em; }
+
+  @media (max-width:760px){
+    #syr-vip-{{ section.id }}{ padding:54px 14px 56px; }
+    #syr-vip-{{ section.id }} .syr-vip-head{ margin-bottom:-{{ drop_mobile }}px; }
+    #syr-vip-{{ section.id }} .syr-vip-eyebrow{ font-size:11px; padding:7px 16px; }
+    #syr-vip-{{ section.id }} .syr-vip-card{ padding:42px 24px 38px; box-shadow:6px 6px 0 var(--ink); border-radius:26px; border-width:2.5px; text-align:center; }
+    #syr-vip-{{ section.id }} .syr-vip-grid{ grid-template-columns:1fr; gap:28px; }
+    #syr-vip-{{ section.id }} .syr-vip-big{ justify-content:center; gap:10px; flex-direction:column; align-items:center; }
+    #syr-vip-{{ section.id }} .syr-vip-pct{ font-size:clamp(64px, 22vw, 100px); transform-origin:center; }
+    #syr-vip-{{ section.id }} .syr-vip-off{ font-size:14px; text-align:center; letter-spacing:.18em; }
+    #syr-vip-{{ section.id }} h2{ margin:0 auto 18px; max-width:22ch; text-align:center; }
+    #syr-vip-{{ section.id }} .syr-vip-perks{ max-width:280px; margin:0 auto; gap:12px; }
+    #syr-vip-{{ section.id }} .syr-vip-perks li{ font-size:14px; justify-content:flex-start; text-align:left; }
+    #syr-vip-{{ section.id }} .syr-vip-cta-col{ align-items:center; gap:12px; }
+    #syr-vip-{{ section.id }} .syr-vip-save{ width:100%; max-width:300px; padding:18px 20px; }
+    #syr-vip-{{ section.id }} .syr-vip-save-num{ font-size:38px; }
+    #syr-vip-{{ section.id }} .syr-vip-cta-row{ flex-direction:column; width:100%; max-width:300px; gap:10px; }
+    #syr-vip-{{ section.id }} .syr-vip-btn{ width:100%; padding:17px 24px; font-size:12.5px; }
+    #syr-vip-{{ section.id }} .syr-vip-free-chip{ font-size:10.5px; padding:6px 12px; }
+    #syr-vip-{{ section.id }} .syr-vip-cta-sub{ font-size:12px; max-width:280px; margin:0 auto; }
+    #syr-vip-{{ section.id }} .syr-vip-already{ font-size:12.5px; max-width:280px; margin:2px auto 0; }
+    #syr-vip-{{ section.id }} .syr-vip-trust{ flex-direction:column; gap:4px; font-size:12.5px; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    #syr-vip-{{ section.id }} .syr-vip-pct,
+    #syr-vip-{{ section.id }} .syr-vip-perks li,
+    #syr-vip-{{ section.id }} .syr-vip-save,
+    #syr-vip-{{ section.id }} .syr-vip-trust{ transform:none !important; opacity:1 !important; transition:none !important; }
+  }
+</style>
+
+<section id="syr-vip-{{ section.id }}">
+  <div class="syr-vip-head">
+    <span class="syr-vip-eyebrow">{{ section.settings.eyebrow_text | default: 'Syruvia VIP' }}</span>
+  </div>
+
+  <div class="syr-vip-card">
+    <div class="syr-vip-grid">
+      <div>
+        <div class="syr-vip-big">
+          <span class="syr-vip-pct" data-target="{{ section.settings.discount_pct | default: '5%' }}">0%</span>
+          <span class="syr-vip-off">{{ section.settings.discount_label | default: 'off, every order' }}</span>
+        </div>
+        <h2>{{ section.settings.headline | default: 'The smart way to sip.' }}</h2>
+        <ul class="syr-vip-perks">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg>{{ section.settings.perk_1 | default: 'Discount auto-applied. No codes.' }}</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg>{{ section.settings.perk_2 | default: 'First dibs on new flavors' }}</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg>{{ section.settings.perk_3 | default: 'Free shipping on $25+' }}</li>
+        </ul>
+      </div>
+
+      <div class="syr-vip-cta-col">
+        {%- if section.settings.show_savings -%}
+        <div class="syr-vip-save">
+          <div class="syr-vip-save-num" data-target="{{ section.settings.savings_amount | default: '$5' }}">$0</div>
+          <span class="syr-vip-save-lbl">{%- if section.settings.savings_eyebrow != blank -%}<strong>{{ section.settings.savings_eyebrow }}</strong>{%- endif -%}{{ section.settings.savings_sub | default: 'on every syrup bottle' }}</span>
+        </div>
+        {%- endif -%}
+
+        {%- if section.settings.free_chip_text != blank -%}
+        <div class="syr-vip-free-chip"><span class="syr-vip-free-chip-dot"></span>{{ section.settings.free_chip_text }}</div>
+        {%- endif -%}
+
+        <div class="syr-vip-cta-row">
+          <a class="syr-vip-btn syr-vip-btn--primary" href="{{ section.settings.cta_link | default: '/account/register' }}">
+            {{ section.settings.cta_text | default: 'Create free account' }} <span class="syr-vip-btn-arrow">→</span>
+          </a>
+          {%- if section.settings.signin_text != blank -%}
+          <a class="syr-vip-btn syr-vip-btn--secondary" href="{{ section.settings.signin_link | default: '/account/login' }}">
+            {{ section.settings.signin_text }}
+          </a>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.cta_sub_text != blank -%}
+        <div class="syr-vip-cta-sub">{{ section.settings.cta_sub_text }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.already_member_text != blank -%}
+        <div class="syr-vip-already">{{ section.settings.already_member_text }} <a href="{{ section.settings.signin_link | default: '/account/login' }}">{{ section.settings.already_member_link | default: 'Sign in to activate VIP pricing.' }}</a></div>
+        {%- endif -%}
+
+        {%- if section.settings.show_trust -%}
+        <div class="syr-vip-trust">
+          <span class="syr-vip-stars">★★★★★</span>
+          <span><strong>{{ trust_count_display }}</strong> {{ section.settings.trust_text | default: 'members already saving' }}</span>
+        </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var root = document.getElementById('syr-vip-{{ section.id }}');
+  if (!root) return;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var eyebrow = root.querySelector('.syr-vip-eyebrow');
+  var bigNum  = root.querySelector('.syr-vip-pct');
+  var card    = root.querySelector('.syr-vip-card');
+  if (reduced){
+    root.style.setProperty('--eye-scale', '1');
+    root.style.setProperty('--num-scale', '1');
+    root.style.setProperty('--num-y', '0px');
+    root.classList.add('is-in-view');
+  }
+  var ticking = false;
+  function update(){
+    if (reduced) return;
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    if (vh < 1) return;
+    if (eyebrow){
+      var er = eyebrow.getBoundingClientRect();
+      var p = (vh/2 - (er.top + er.height/2)) / vh;
+      if (p < -1) p = -1; if (p > 1) p = 1;
+      var s = 0.55 + (p + 0.4) * 0.7;
+      if (s < 0.4) s = 0.4; if (s > 1.3) s = 1.3;
+      var r = p * 6;
+      if (r < -6) r = -6; if (r > 6) r = 6;
+      root.style.setProperty('--eye-scale', s.toFixed(3));
+      root.style.setProperty('--eye-rot', r.toFixed(2) + 'deg');
+    }
+    if (bigNum && card){
+      var cr = card.getBoundingClientRect();
+      var prog = 1 - (cr.top / (vh * 0.85));
+      if (prog < 0) prog = 0; if (prog > 1) prog = 1;
+      var ns = 0.9 + prog * 0.1;
+      var ny = 30 - prog * 30;
+      root.style.setProperty('--num-scale', ns.toFixed(3));
+      root.style.setProperty('--num-y', ny.toFixed(1) + 'px');
+    }
+    ticking = false;
+  }
+  function onScroll(){ if (!ticking){ ticking = true; window.requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  window.addEventListener('resize', onScroll);
+  update();
+  function parseTarget(s){ if (!s) return { prefix:'', num:0, suffix:'' }; var m = String(s).match(/^([^\d-]*)([\d,]+(?:\.\d+)?)(.*)$/); if (!m) return { prefix:'', num:0, suffix:String(s) }; return { prefix:m[1]||'', num:parseFloat(m[2].replace(/,/g,'')), suffix:m[3]||'' }; }
+  function formatNum(n, hasComma){ var rounded = Math.round(n); if (hasComma) return rounded.toLocaleString('en-US'); return String(rounded); }
+  function animateCount(el, duration){
+    if (!el) return;
+    var raw = el.getAttribute('data-target') || el.textContent;
+    var parsed = parseTarget(raw);
+    var hasComma = /,/.test(raw);
+    if (!parsed.num){ el.textContent = raw; return; }
+    var start = performance.now();
+    function step(now){
+      var t = Math.min(1, (now - start) / duration);
+      var e = 1 - Math.pow(1 - t, 3);
+      el.textContent = parsed.prefix + formatNum(parsed.num * e, hasComma) + parsed.suffix;
+      if (t < 1) requestAnimationFrame(step);
+      else el.textContent = raw;
+    }
+    requestAnimationFrame(step);
+  }
+  function animatePrice(el, duration){
+    if (!el) return;
+    var raw = el.getAttribute('data-target') || el.textContent;
+    var m = String(raw).match(/^([^\d-]*)(\d+)(\.\d+)?(.*)$/);
+    if (!m || !parseInt(m[2],10)){ el.textContent = raw; return; }
+    var prefix = m[1] || '';
+    var intTarget = parseInt(m[2],10);
+    var frac = m[3] || '';
+    var suffix = m[4] || '';
+    var start = performance.now();
+    function step(now){
+      var t = Math.min(1, (now - start) / duration);
+      var e = 1 - Math.pow(1 - t, 3);
+      var cur = Math.floor(intTarget * e);
+      if (cur < 1) cur = 1;
+      if (cur > intTarget) cur = intTarget;
+      el.textContent = prefix + cur + frac + suffix;
+      if (t < 1) requestAnimationFrame(step);
+      else el.textContent = raw;
+    }
+    requestAnimationFrame(step);
+  }
+  if (!reduced && 'IntersectionObserver' in window){
+    var triggered = false;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting && !triggered){
+          triggered = true;
+          root.classList.add('is-in-view');
+          animatePrice(root.querySelector('.syr-vip-pct'), 1400);
+          animateCount(root.querySelector('.syr-vip-save-num'), 1800);
+          io.disconnect();
+        }
+      });
+    }, { threshold: 0.25 });
+    io.observe(card);
+  } else {
+    root.classList.add('is-in-view');
+    var p = root.querySelector('.syr-vip-pct'); if (p) p.textContent = p.getAttribute('data-target') || p.textContent;
+    var sn = root.querySelector('.syr-vip-save-num'); if (sn) sn.textContent = sn.getAttribute('data-target') || sn.textContent;
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "VIP Banner",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Eyebrow" },
+    { "type": "text", "id": "eyebrow_text", "label": "Eyebrow text", "default": "Syruvia VIP" },
+    { "type": "range", "id": "eyebrow_drop", "label": "Eyebrow drop onto card", "min": 0, "max": 80, "step": 2, "default": 40, "unit": "px" },
+    { "type": "color", "id": "eyebrow_bg", "label": "Eyebrow background", "default": "#FCE2A0" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow text", "default": "#39220f" },
+    { "type": "color", "id": "eyebrow_border", "label": "Eyebrow border", "default": "#39220f" },
+    { "type": "color", "id": "eyebrow_shadow", "label": "Eyebrow shadow", "default": "#39220f" },
+
+    { "type": "header", "content": "Big number + headline" },
+    { "type": "text", "id": "discount_pct", "label": "Big number", "default": "$7.99" },
+    { "type": "text", "id": "discount_label", "label": "Beside big number", "default": "flat member price" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Every syrup. Every time." },
+
+    { "type": "header", "content": "Perks" },
+    { "type": "text", "id": "perk_1", "label": "Perk 1", "default": "Flat $7.99 on all 250+ syrups" },
+    { "type": "text", "id": "perk_2", "label": "Perk 2", "default": "Special VIP rates on boba & toppings" },
+    { "type": "text", "id": "perk_3", "label": "Perk 3", "default": "Auto-applied at checkout · no codes" },
+
+    { "type": "header", "content": "Savings callout" },
+    { "type": "checkbox", "id": "show_savings", "label": "Show savings callout", "default": true },
+    { "type": "text", "id": "savings_amount", "label": "Savings amount", "default": "$5" },
+    { "type": "text", "id": "savings_eyebrow", "label": "Eyebrow above amount", "default": "You save" },
+    { "type": "text", "id": "savings_sub", "label": "Sub-text", "default": "on every syrup bottle" },
+
+    { "type": "header", "content": "FREE chip (above CTAs)" },
+    { "type": "text", "id": "free_chip_text", "label": "FREE chip text", "default": "100% Free · No card needed" },
+
+    { "type": "header", "content": "Primary CTA (Create account)" },
+    { "type": "text", "id": "cta_text", "label": "Primary button text", "default": "Create free account" },
+    { "type": "url", "id": "cta_link", "label": "Primary button link", "info": "Defaults to /account/register" },
+    { "type": "text", "id": "cta_sub_text", "label": "Fine print under buttons", "default": "Just sign up · Price drops instantly when you log in" },
+
+    { "type": "header", "content": "Secondary CTA (Sign in)", "info": "Leave Sign in text blank to hide the secondary button." },
+    { "type": "text", "id": "signin_text", "label": "Sign in button text", "default": "Sign in" },
+    { "type": "url", "id": "signin_link", "label": "Sign in link", "info": "Defaults to /account/login" },
+
+    { "type": "header", "content": "Already a member? text link", "info": "Shown below the buttons. Leave blank to hide." },
+    { "type": "text", "id": "already_member_text", "label": "Lead text", "default": "Already a member?" },
+    { "type": "text", "id": "already_member_link", "label": "Link text", "default": "Sign in to activate VIP pricing." },
+
+    { "type": "header", "content": "Trust line (stars + count)", "info": "Member count reads from Shop metafield vip.member_count (seeded at 12,847). Falls back to the value below." },
+    { "type": "checkbox", "id": "show_trust", "label": "Show trust line", "default": true },
+    { "type": "text", "id": "trust_count", "label": "Fallback member count", "default": "12,847" },
+    { "type": "text", "id": "trust_text", "label": "Trust text", "default": "members already saving" },
+
+    { "type": "header", "content": "Card colors" },
+    { "type": "color", "id": "card_bg", "label": "Card background top", "default": "#2F7BB0" },
+    { "type": "color", "id": "card_bg2", "label": "Card background bottom", "default": "#1F5A85" },
+    { "type": "color", "id": "hi_color", "label": "Accent", "default": "#FCE2A0" },
+    { "type": "color", "id": "hi_color2", "label": "Accent 2", "default": "#FFFBF4" }
+  ],
+  "presets": [ { "name": "VIP Banner" } ]
+}
+{% endschema %}

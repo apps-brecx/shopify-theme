@@ -1,0 +1,335 @@
+{%- comment -%} Syruvia Collection Promo Cards — admin-controllable cards injected into the product grid. v2: correct grid selector (.pgrid) {%- endcomment -%}
+
+{%- if request.page_type == 'collection' or template contains 'collection' -%}
+
+<style id="syr-promo-cards-css-{{ section.id }}">
+  .syr-promo-card{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    text-align:center !important;
+    padding:24px 18px !important;
+    border-radius:18px !important;
+    border:1.5px solid var(--syr-promo-border, #f0e3c8) !important;
+    box-shadow: var(--syr-promo-shadow, 4px 4px 0 #39220f) !important;
+    min-height:300px !important;
+    overflow:hidden !important;
+    position:relative !important;
+    cursor:pointer !important;
+    transition:transform .18s ease, box-shadow .18s ease !important;
+    height:100% !important;
+  }
+  .syr-promo-card:hover{
+    transform:translate(-2px,-2px) !important;
+    box-shadow:6px 6px 0 var(--syr-promo-border-color, #39220f) !important;
+  }
+  .syr-promo-card a{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:10px !important;
+    text-decoration:none !important;
+    color:inherit !important;
+    width:100% !important;
+    height:100% !important;
+  }
+  .syr-promo-card .syr-promo-icon{
+    font-size:42px !important;
+    line-height:1 !important;
+    margin-bottom:6px !important;
+  }
+  .syr-promo-card .syr-promo-icon svg{
+    width:48px !important;
+    height:48px !important;
+  }
+  .syr-promo-card .syr-promo-title{
+    font-family:'Archivo Black','Archivo',sans-serif;
+    font-size:18px;
+    font-weight:900;
+    line-height:1.2;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+    margin:0;
+  }
+  .syr-promo-card .syr-promo-sub{
+    font-family:'Josefin Sans',sans-serif;
+    font-size:13px;
+    line-height:1.45;
+    margin:0;
+    font-weight:500;
+  }
+  .syr-promo-card .syr-promo-cta{
+    font-family:'Archivo Black','Archivo',sans-serif;
+    font-size:13px;
+    font-weight:900;
+    text-decoration:underline;
+    text-underline-offset:3px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    margin-top:4px;
+  }
+  @media (max-width:760px){
+    .syr-promo-card{ min-height:240px !important; padding:18px 14px !important; }
+    .syr-promo-card .syr-promo-icon{ font-size:36px !important; }
+    .syr-promo-card .syr-promo-icon svg{ width:42px !important; height:42px !important; }
+    .syr-promo-card .syr-promo-title{ font-size:15px !important; }
+    .syr-promo-card .syr-promo-sub{ font-size:12px !important; }
+    .syr-promo-card .syr-promo-cta{ font-size:11.5px !important; }
+  }
+</style>
+
+<script type="application/json" id="syr-promo-cards-config-{{ section.id }}">
+[
+  {%- for block in section.blocks -%}
+    {
+      "position": {{ block.settings.position | default: 5 }},
+      "position_mobile": {{ block.settings.position_mobile | default: block.settings.position | default: 5 }},
+      "icon": {{ block.settings.icon | default: '✨' | json }},
+      "icon_svg": {{ block.settings.icon_svg | default: '' | json }},
+      "title": {{ block.settings.title | default: '' | json }},
+      "subtitle": {{ block.settings.subtitle | default: '' | json }},
+      "cta_text": {{ block.settings.cta_text | default: '' | json }},
+      "cta_link": {{ block.settings.cta_link | default: '#' | json }},
+      "bg_color": {{ block.settings.bg_color | default: '#C5E4D4' | json }},
+      "text_color": {{ block.settings.text_color | default: '#39220f' | json }},
+      "border_color": {{ block.settings.border_color | default: '#39220f' | json }},
+      "shadow_color": {{ block.settings.shadow_color | default: '#39220f' | json }},
+      "title_font": {{ block.settings.title_font | default: 'archivo' | json }},
+      "body_font": {{ block.settings.body_font | default: 'josefin' | json }},
+      "show_desktop": {{ block.settings.show_desktop }},
+      "show_mobile": {{ block.settings.show_mobile }},
+      "target_collection": {{ block.settings.target_collection | default: 'all' | json }}
+    }{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+]
+</script>
+
+<script>
+(function(){
+  var SECTION_ID = '{{ section.id }}';
+  var CURRENT_COLLECTION = '{{ collection.handle | default: "" }}';
+
+  function findGrid(){
+    /* Syruvia collection grid is .pgrid inside main.grid-wrap */
+    return document.querySelector('.scol .pgrid')
+        || document.querySelector('.scol main.grid-wrap .pgrid')
+        || document.querySelector('.pgrid')
+        || document.querySelector('.scol main.grid-wrap > div:first-child')
+        || document.querySelector('.scol .product-grid')
+        || document.querySelector('main .grid');
+  }
+
+  function init(){
+    var cfgEl = document.getElementById('syr-promo-cards-config-' + SECTION_ID);
+    if (!cfgEl) return;
+    var cfg;
+    try { cfg = JSON.parse(cfgEl.textContent); } catch(e){ return; }
+    if (!cfg || !cfg.length) return;
+
+    var grid = findGrid();
+    if (!grid){
+      /* Grid may not be in DOM yet — retry shortly */
+      setTimeout(init, 200);
+      return;
+    }
+
+    /* Pick a real product card to clone class shape so promo cards inherit grid layout */
+    var firstItem = null;
+    for (var k = 0; k < grid.children.length; k++){
+      if (!grid.children[k].hasAttribute('data-syr-promo-from')){
+        firstItem = grid.children[k];
+        break;
+      }
+    }
+    if (!firstItem) return;
+    var itemTag = firstItem.tagName;
+    var itemCls = firstItem.className || '';
+
+    var isMobile = window.innerWidth <= 760;
+
+    /* Clean up any previously injected promo cards from this section */
+    grid.querySelectorAll('[data-syr-promo-from="' + SECTION_ID + '"]').forEach(function(n){ n.remove(); });
+
+    /* Sort blocks by position so earlier inserts don't shift later ones */
+    var sorted = cfg.slice().sort(function(a, b){
+      var ap = isMobile ? a.position_mobile : a.position;
+      var bp = isMobile ? b.position_mobile : b.position;
+      return ap - bp;
+    });
+
+    sorted.forEach(function(card){
+      /* Visibility check */
+      if (isMobile && !card.show_mobile) return;
+      if (!isMobile && !card.show_desktop) return;
+
+      /* Collection scope */
+      var target = (card.target_collection || 'all').toLowerCase().trim();
+      if (target !== 'all' && target !== '' && target !== CURRENT_COLLECTION.toLowerCase()) return;
+
+      var slot = document.createElement(itemTag);
+      slot.className = itemCls + ' syr-promo-slot';
+      slot.setAttribute('data-syr-promo-from', SECTION_ID);
+
+      /* Choose fonts */
+      var titleFont = card.title_font === 'serif' ? "'Bricolage Grotesque',serif" :
+                      card.title_font === 'josefin' ? "'Josefin Sans',sans-serif" :
+                      "'Archivo Black','Archivo',sans-serif";
+      var bodyFont = card.body_font === 'archivo' ? "'Archivo','Archivo Black',sans-serif" :
+                     card.body_font === 'serif' ? "'Bricolage Grotesque',serif" :
+                     "'Josefin Sans',sans-serif";
+
+      var inner = document.createElement('div');
+      inner.className = 'syr-promo-card';
+      inner.style.background = card.bg_color;
+      inner.style.color = card.text_color;
+      inner.style.setProperty('--syr-promo-border', card.border_color);
+      inner.style.setProperty('--syr-promo-shadow', '4px 4px 0 ' + card.shadow_color);
+      inner.style.borderColor = card.border_color;
+
+      var iconHtml = card.icon_svg && card.icon_svg.trim() ? card.icon_svg : (card.icon || '');
+      var html = '<a href="' + (card.cta_link || '#') + '">';
+      if (iconHtml) html += '<div class="syr-promo-icon">' + iconHtml + '</div>';
+      if (card.title) html += '<div class="syr-promo-title" style="font-family:' + titleFont + '">' + card.title + '</div>';
+      if (card.subtitle) html += '<div class="syr-promo-sub" style="font-family:' + bodyFont + '">' + card.subtitle + '</div>';
+      if (card.cta_text) html += '<div class="syr-promo-cta" style="font-family:' + titleFont + '">' + card.cta_text + '</div>';
+      html += '</a>';
+      inner.innerHTML = html;
+      slot.appendChild(inner);
+
+      /* Insert at the desired position (1-indexed), counting only non-promo siblings */
+      var targetPos = isMobile ? card.position_mobile : card.position;
+      var children = grid.children;
+      var visiblePos = 1;
+      var inserted = false;
+      for (var j = 0; j < children.length; j++){
+        if (children[j].getAttribute('data-syr-promo-from') === SECTION_ID) continue;
+        if (visiblePos === targetPos){
+          grid.insertBefore(slot, children[j]);
+          inserted = true;
+          break;
+        }
+        visiblePos++;
+      }
+      if (!inserted) grid.appendChild(slot);
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+  /* Re-run after AJAX filter/sort updates if the theme triggers an event */
+  document.addEventListener('shopify:section:load', init);
+  document.addEventListener('shopify:section:reorder', init);
+  document.addEventListener('shopify:block:select', init);
+  window.addEventListener('resize', function(){
+    var nowMobile = window.innerWidth <= 760;
+    if (nowMobile !== window.__syrPromoWasMobile){
+      window.__syrPromoWasMobile = nowMobile;
+      init();
+    }
+  });
+  window.__syrPromoWasMobile = window.innerWidth <= 760;
+})();
+</script>
+
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Promo Cards (Collection)",
+  "tag": "section",
+  "class": "syr-promo-cards-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Promo cards appear inside the collection product grid. Add a block for each card and control everything: text, icon, link, colors, position, and which devices see it."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "promo",
+      "name": "Promo Card",
+      "limit": 12,
+      "settings": [
+        { "type": "header", "content": "Position in grid" },
+        { "type": "range", "id": "position", "label": "Desktop position", "info": "Show after this many product cards (1 = first card).", "min": 1, "max": 60, "step": 1, "default": 5 },
+        { "type": "range", "id": "position_mobile", "label": "Mobile position", "info": "Mobile usually has fewer columns, you may want this lower.", "min": 1, "max": 60, "step": 1, "default": 3 },
+
+        { "type": "header", "content": "Content" },
+        { "type": "text", "id": "icon", "label": "Emoji or text icon", "info": "Quick emoji like 🚚, 🏷️, ✨, 🚀", "default": "✨" },
+        { "type": "textarea", "id": "icon_svg", "label": "Or paste SVG / HTML", "info": "If filled, this overrides the emoji above. Use for custom icons." },
+        { "type": "text", "id": "title", "label": "Title", "default": "FREE SHIPPING OVER $35" },
+        { "type": "text", "id": "subtitle", "label": "Subtitle (optional)" },
+        { "type": "text", "id": "cta_text", "label": "CTA text", "default": "SHOP NOW →" },
+        { "type": "url", "id": "cta_link", "label": "CTA link" },
+
+        { "type": "header", "content": "Colors" },
+        { "type": "color", "id": "bg_color", "label": "Background", "default": "#C5E4D4" },
+        { "type": "color", "id": "text_color", "label": "Text color", "default": "#39220f" },
+        { "type": "color", "id": "border_color", "label": "Border color", "default": "#39220f" },
+        { "type": "color", "id": "shadow_color", "label": "Shadow color", "default": "#39220f" },
+
+        { "type": "header", "content": "Fonts" },
+        { "type": "select", "id": "title_font", "label": "Title font", "default": "archivo",
+          "options": [
+            { "value": "archivo", "label": "Archivo Black (heavy)" },
+            { "value": "josefin", "label": "Josefin Sans" },
+            { "value": "serif", "label": "Bricolage Grotesque" }
+          ]
+        },
+        { "type": "select", "id": "body_font", "label": "Subtitle / body font", "default": "josefin",
+          "options": [
+            { "value": "josefin", "label": "Josefin Sans" },
+            { "value": "archivo", "label": "Archivo" },
+            { "value": "serif", "label": "Bricolage Grotesque" }
+          ]
+        },
+
+        { "type": "header", "content": "Visibility" },
+        { "type": "checkbox", "id": "show_desktop", "label": "Show on desktop", "default": true },
+        { "type": "checkbox", "id": "show_mobile", "label": "Show on mobile", "default": true },
+        { "type": "text", "id": "target_collection", "label": "Only on collection handle", "info": "Leave blank or type 'all' to show on every collection. Type a handle like 'coffee' or 'sugar-free' to limit it to one collection.", "default": "all" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo Cards (Collection)",
+      "blocks": [
+        {
+          "type": "promo",
+          "settings": {
+            "position": 5, "position_mobile": 3,
+            "icon": "🚚",
+            "title": "FREE SHIPPING OVER $35",
+            "cta_text": "SHOP NOW →", "cta_link": "/collections/all",
+            "bg_color": "#C5E4D4", "text_color": "#39220f", "border_color": "#39220f", "shadow_color": "#39220f"
+          }
+        },
+        {
+          "type": "promo",
+          "settings": {
+            "position": 11, "position_mobile": 7,
+            "icon": "🧪",
+            "title": "BUILD YOUR OWN BUNDLE & SAVE",
+            "cta_text": "SHOP NOW →", "cta_link": "/pages/build-your-bundle",
+            "bg_color": "#FFD4B8", "text_color": "#39220f", "border_color": "#39220f", "shadow_color": "#39220f"
+          }
+        },
+        {
+          "type": "promo",
+          "settings": {
+            "position": 17, "position_mobile": 11,
+            "icon": "🏷️",
+            "title": "40% OFF SITEWIDE",
+            "subtitle": "CODE MONDAY40",
+            "cta_text": "SHOP NOW →", "cta_link": "/collections/all",
+            "bg_color": "#FCE2A0", "text_color": "#39220f", "border_color": "#39220f", "shadow_color": "#39220f"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

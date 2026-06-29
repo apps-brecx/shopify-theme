@@ -1,0 +1,111 @@
+<style>
+/* ===== Quick sips: scroll affordances (nav buttons + dots + peek) ===== */
+html body .pd .pd-rv2-scroll{position:relative!important;width:100%!important}
+
+/* Right-side padding so next card peeks past the mask (desktop) */
+html body .pd .pd-rv2-track{padding-right:max(80px, calc((100vw - 1240px)/2))!important}
+
+/* Swipe hint — removed per request */
+html body .pd .pd-rv2-swipe-hint{display:none!important}
+@media (max-width:980px){html body .pd .pd-rv2-swipe-hint{display:none!important}}
+
+/* Tighten gap between "Quick sips" heading and the carousel */
+html body .pd .pd-rv2-sub{margin-bottom:20px!important}
+@media (max-width:760px){html body .pd .pd-rv2-sub{margin-bottom:14px!important}}
+
+/* Nav buttons (desktop only) */
+html body .pd .pd-rv2-nav{position:absolute!important;top:50%!important;transform:translateY(-50%)!important;width:52px!important;height:52px!important;border-radius:50%!important;background:#FFFBF4!important;border:2px solid #1a1a1a!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#1a1a1a!important;cursor:pointer!important;z-index:5!important;box-shadow:4px 4px 0 #1a1a1a!important;transition:transform .15s ease, background .15s ease, box-shadow .15s ease!important;padding:0!important}
+html body .pd .pd-rv2-nav:hover{background:#FCE2A0!important;transform:translateY(-50%) scale(1.06)!important;box-shadow:5px 5px 0 #1a1a1a!important}
+html body .pd .pd-rv2-nav:active{transform:translateY(-50%) scale(.97)!important;box-shadow:2px 2px 0 #1a1a1a!important}
+html body .pd .pd-rv2-nav--prev{left:max(12px, calc((100vw - 1240px)/2 - 28px))!important}
+html body .pd .pd-rv2-nav--next{right:max(12px, calc((100vw - 1240px)/2 - 28px))!important}
+@media (max-width:980px){html body .pd .pd-rv2-nav{display:none!important}}
+
+/* Dots indicator */
+html body .pd .pd-rv2-dots{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;margin-top:18px!important}
+html body .pd .pd-rv2-dot{width:8px!important;height:8px!important;border-radius:50%!important;background:#FFFBF4!important;border:1.5px solid #1a1a1a!important;cursor:pointer!important;padding:0!important;transition:width .2s ease, background .2s ease!important;flex-shrink:0!important}
+html body .pd .pd-rv2-dot.is-active{width:24px!important;border-radius:999px!important;background:#FF6B5C!important}
+
+/* =============================================================== */
+/* ===  Page-wide horizontal overflow guard for mobile/tablet  === */
+/* =============================================================== */
+@media (max-width:980px){
+  html,body{overflow-x:hidden!important;max-width:100vw!important}
+  html body .pd{overflow-x:hidden!important;max-width:100vw!important;width:100%!important}
+}
+
+/* =============================================================== */
+/* ===  WHY SYRUVIA — strict containment for tablet + mobile  === */
+/* =============================================================== */
+@media (max-width:980px){
+  html body .pd .pd-why{overflow-x:hidden!important;width:100%!important;max-width:100vw!important;box-sizing:border-box!important}
+  html body .pd .pd-why .pd-wrap,
+  html body .pd .pd-why .pd-why-wrap{
+    width:100%!important;
+    max-width:100%!important;
+    box-sizing:border-box!important;
+    padding-left:20px!important;
+    padding-right:20px!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+  html body .pd .pd-why-grid,
+  html body .pd .pd-why-grid--spaced{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:14px!important;
+    width:100%!important;
+    max-width:520px!important;
+    margin:32px auto 0!important;
+    box-sizing:border-box!important;
+  }
+  html body .pd .pd-why-card{
+    min-width:0!important;
+    max-width:100%!important;
+    width:auto!important;
+    box-sizing:border-box!important;
+    padding:20px 14px!important;
+  }
+  html body .pd .pd-why-title{font-size:14px!important;line-height:1.15!important}
+  html body .pd .pd-why-body{font-size:12.5px!important;line-height:1.45!important}
+}
+@media (max-width:480px){
+  html body .pd .pd-why .pd-wrap,
+  html body .pd .pd-why .pd-why-wrap{padding-left:16px!important;padding-right:16px!important}
+  html body .pd .pd-why-grid,
+  html body .pd .pd-why-grid--spaced{gap:12px!important;max-width:380px!important}
+  html body .pd .pd-why-card{padding:16px 12px!important}
+}
+
+/* =============================================================== */
+/* ===  QUICK SIPS — inset left edge using scroll-padding  ====== */
+/* =============================================================== */
+@media (max-width:980px){
+  html body .pd .pd-rv2-marquee{
+    scroll-padding-left:32px!important;
+    scroll-padding-inline-start:32px!important;
+    -webkit-mask-image:linear-gradient(to right, #000 0%, #000 92%, transparent 100%)!important;
+    mask-image:linear-gradient(to right, #000 0%, #000 92%, transparent 100%)!important;
+  }
+  html body .pd .pd-rv2-track{
+    padding-left:32px!important;
+    padding-right:80px!important;
+    gap:14px!important;
+  }
+  html body .pd .pd-rv2-card{
+    flex:0 0 calc(100vw - 120px)!important;
+    width:calc(100vw - 120px)!important;
+    max-width:320px!important;
+  }
+}
+@media (max-width:480px){
+  html body .pd .pd-rv2-marquee{scroll-padding-left:28px!important;scroll-padding-inline-start:28px!important}
+  html body .pd .pd-rv2-track{padding-left:28px!important;padding-right:60px!important}
+  html body .pd .pd-rv2-card{flex:0 0 calc(100vw - 96px)!important;width:calc(100vw - 96px)!important;max-width:300px!important}
+}
+
+/* =============================================================== */
+/* ===  UGC section — hidden (user removed)  ==================== */
+/* =============================================================== */
+html body .pd .pd-ugc{display:none!important}
+</style>

@@ -1,0 +1,58 @@
+{%- comment -%} Global reveal: works above the fold too (immediate reveal on init), threshold low for mobile. {%- endcomment -%}
+<style id="syr-reveal-css">
+  [data-reveal]{ opacity:0; transition:opacity .55s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1); will-change:opacity, transform; }
+  [data-reveal="up"]{ transform:translateY(30px); }
+  [data-reveal="left"]{ transform:translateX(-30px); }
+  [data-reveal="right"]{ transform:translateX(30px); }
+  [data-reveal="fade"]{ transform:none; }
+  [data-reveal].is-in{ opacity:1 !important; transform:none !important; }
+  @media (prefers-reduced-motion: reduce){
+    [data-reveal]{ transition:none !important; opacity:1 !important; transform:none !important; }
+  }
+</style>
+<script id="syr-reveal-js">
+(function(){
+  if (window.__syrRevealInit) return; window.__syrRevealInit = true;
+  function inViewport(el){
+    var r = el.getBoundingClientRect();
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    return r.top < vh && r.bottom > 0;
+  }
+  function setup(){
+    var els = document.querySelectorAll('[data-reveal]:not(.is-in)');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window)){
+      els.forEach(function(el){ el.classList.add('is-in'); });
+      return;
+    }
+    if (!window.__syrRevealObs){
+      window.__syrRevealObs = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting){
+            var delay = parseInt(e.target.getAttribute('data-reveal-delay') || '0', 10);
+            setTimeout(function(){ e.target.classList.add('is-in'); }, delay);
+            window.__syrRevealObs.unobserve(e.target);
+          }
+        });
+      }, { threshold:.08, rootMargin:'0px 0px -5% 0px' });
+    }
+    els.forEach(function(el){
+      /* Above-the-fold? Reveal immediately with delay */
+      if (inViewport(el)){
+        var delay = parseInt(el.getAttribute('data-reveal-delay') || '0', 10);
+        setTimeout(function(){ el.classList.add('is-in'); }, delay);
+      } else {
+        window.__syrRevealObs.observe(el);
+      }
+    });
+  }
+  setup();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
+  window.addEventListener('load', setup);
+  if ('MutationObserver' in window){ new MutationObserver(setup).observe(document.body, {childList:true, subtree:true}); }
+  /* Safety net: anything not revealed after 3s gets revealed */
+  setTimeout(function(){
+    document.querySelectorAll('[data-reveal]:not(.is-in)').forEach(function(el){ el.classList.add('is-in'); });
+  }, 3000);
+})();
+</script>

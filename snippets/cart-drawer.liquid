@@ -1,0 +1,478 @@
+{%- comment -%}
+  Syruvia — custom add-to-cart DRAWER (mini cart).
+  Desktop = 432px right-side slide-in panel; mobile (<=560px) = bottom sheet with drag handle.
+  Wired to the live cart object + Cart AJAX API. Re-renders via section rendering (?sections=cart-drawer).
+  Add-to-cart anywhere (incl. product pages) opens this drawer instead of going to /cart.
+{%- endcomment -%}
+
+{%- liquid
+  assign FREE_SHIP = 3500
+  assign SHIP_COST = 495
+  assign is_vip = false
+  if customer and customer.tags contains 'VIP'
+    assign is_vip = true
+  endif
+
+  assign vip_savings = 0
+  for item in cart.items
+    assign vipunit = 799
+    if item.product.tags contains 'Sugar-Free' or item.product.tags contains 'sugar-free' or item.product.tags contains 'Sugar Free' or item.product.tags contains 'sugarfree'
+      assign vipunit = 699
+    endif
+    assign vipline = vipunit | times: item.quantity
+    if item.final_line_price > vipline
+      assign diff = item.final_line_price | minus: vipline
+      assign vip_savings = vip_savings | plus: diff
+    endif
+  endfor
+
+  assign member_saved = cart.original_total_price | minus: cart.total_price
+  assign payable = cart.total_price
+  assign remain = FREE_SHIP | minus: payable
+  if remain < 0
+    assign remain = 0
+  endif
+  assign pct = 0
+  if payable > 0
+    assign pct = payable | times: 100 | divided_by: FREE_SHIP
+  endif
+  if pct > 100
+    assign pct = 100
+  endif
+  assign checkout_total = payable
+  if remain > 0
+    assign checkout_total = payable | plus: SHIP_COST
+  endif
+-%}
+
+<style>
+  #SyrCD{ --bg:#FFFBF4; --bg-2:#FFF8EE; --shell:#FBEFE0; --surface:#FFFFFF; --ink:#39220f; --ink-2:#5a4632; --muted:#8a7a68;
+    --hair:color-mix(in srgb, var(--ink) 16%, transparent); --accent:#c58548; --mint:#C5E4D4; --sf-ink:#1f6b4f;
+    --butter:#FCE2A0; --vip:#C53156; --vip-soft:#FBE0E5; --vip-ink:#8e1e3c;
+    --rule:2px solid var(--ink); --rule-1:1.5px solid var(--ink); --shadow:4px 4px 0 var(--ink); --shadow-sm:3px 3px 0 var(--ink); --radius:18px;
+    --fh:'Archivo Black',sans-serif; --fb:'Josefin Sans',sans-serif; }
+  #SyrCD, #SyrCD *{ box-sizing:border-box; }
+  #SyrCD{ position:fixed; inset:0; z-index:2147483000; pointer-events:none; overflow:hidden; font-family:var(--fb); color:var(--ink); }
+  #SyrCD .scd-bd{ position:absolute; display:block !important; top:0; left:0; width:100%; height:100%; background:rgba(40,24,10,.46); opacity:0; transition:opacity .3s ease; }
+  /* theme hides empty divs via :empty{display:none}; force-show our decorative/overlay empties */
+  #SyrCD .d-ship-fill, #SyrCD .d-vip .grain{ display:block !important; }
+  #SyrCD.open{ pointer-events:auto; }
+  #SyrCD.open .scd-bd{ opacity:1; }
+  #SyrCD .scd-panel{ position:absolute; top:0; right:0; left:auto; height:100%; width:432px; max-width:100%; background:var(--bg); border-left:var(--rule);
+    box-shadow:-8px 0 0 rgba(57,34,15,.08); display:flex; flex-direction:column; transform:translateX(105%);
+    transition:transform .4s cubic-bezier(.4,1,.25,1); }
+  #SyrCD.open .scd-panel{ transform:none; }
+  #SyrCD #SyrCD-content{ display:flex; flex-direction:column; flex:1 1 auto; min-height:0; max-height:100%; width:100%; overflow:hidden; }
+  #SyrCD h2,#SyrCD h3{ font-family:var(--fh); margin:0; font-weight:400; letter-spacing:-.01em; }
+  #SyrCD button{ font-family:inherit; cursor:pointer; }
+  #SyrCD .scd-grip{ display:none; }
+  #SyrCD .scd-head{ flex:0 0 auto; display:flex; align-items:center; gap:12px; padding:16px 18px; border-bottom:var(--rule); background:var(--surface); }
+  #SyrCD .dh-ic{ width:40px; height:40px; flex:0 0 auto; border-radius:50%; border:var(--rule-1); background:var(--mint); color:var(--sf-ink); display:grid; place-items:center; }
+  #SyrCD .dh-txt{ flex:1; min-width:0; }
+  #SyrCD .dh-title{ font-family:var(--fh); font-size:16px; text-transform:uppercase; letter-spacing:-.01em; line-height:1; }
+  #SyrCD .dh-sub{ font-size:12.5px; color:var(--muted); margin-top:3px; }
+  #SyrCD .scd-close{ width:38px; height:38px; flex:0 0 auto; border-radius:50%; border:var(--rule-1); background:var(--surface); color:var(--ink); display:grid; place-items:center; transition:transform .16s; }
+  #SyrCD .scd-close:hover{ transform:rotate(90deg); }
+  #SyrCD .scd-body{ flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; padding:16px 18px 8px; display:flex; flex-direction:column; gap:14px; -webkit-overflow-scrolling:touch; }
+  #SyrCD .scd-body > *{ flex:0 0 auto; }
+  #SyrCD .added{ display:flex; align-items:center; gap:13px; border:var(--rule); border-radius:16px; background:radial-gradient(120% 140% at 0% 0%, var(--mint), transparent 62%), var(--surface); box-shadow:var(--shadow-sm); padding:12px 14px; animation:syrAddedIn .42s cubic-bezier(.3,1.3,.5,1); }
+  @keyframes syrAddedIn{ from{ transform:translateY(-8px) scale(.98); } to{ transform:none; } }
+  #SyrCD .added-media{ position:relative; width:60px; height:60px; flex:0 0 auto; border:var(--rule-1); border-radius:12px; background:radial-gradient(120% 95% at 50% 8%, #fff, var(--bg-2)); display:grid; place-items:center; padding:7px; }
+  #SyrCD .added-media img{ width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; }
+  #SyrCD .added-check{ position:absolute; top:-7px; right:-7px; width:24px; height:24px; border-radius:50%; background:var(--sf-ink); color:#fff; border:2px solid var(--bg); display:grid; place-items:center; }
+  #SyrCD .added-txt{ flex:1; min-width:0; }
+  #SyrCD .added-txt .lbl{ font-family:'Archivo',sans-serif; font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--sf-ink); display:inline-flex; align-items:center; gap:5px; }
+  #SyrCD .added-txt .nm{ font-family:var(--fh); font-size:15px; line-height:1.1; margin-top:2px; }
+  #SyrCD .added-txt .mt{ font-size:12.5px; color:var(--muted); margin-top:2px; }
+  #SyrCD .d-ship{ background:var(--surface); border:var(--rule-1); border-radius:14px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; }
+  #SyrCD .d-ship-top{ display:flex; align-items:center; flex-wrap:wrap; gap:4px 8px; font-size:13.5px; line-height:1.3; color:var(--ink-2); }
+  #SyrCD .d-ship-top svg{ color:var(--sf-ink); flex:0 0 auto; }
+  #SyrCD .d-ship-top b{ color:var(--ink); font-family:var(--fh); font-weight:400; }
+  #SyrCD .d-ship-top .done{ display:inline-flex; align-items:center; gap:6px; color:var(--sf-ink); font-weight:700; }
+  #SyrCD .d-ship-track{ height:9px; border-radius:999px; background:var(--bg-2); border:var(--rule-1); overflow:hidden; }
+  #SyrCD .d-ship-fill{ height:100%; background:repeating-linear-gradient(45deg, var(--mint), var(--mint) 7px, #b6dcc8 7px, #b6dcc8 14px); transition:width .5s cubic-bezier(.3,1,.5,1); }
+  #SyrCD .d-vip{ position:relative; overflow:hidden; border:var(--rule); border-radius:16px; box-shadow:var(--shadow-sm); padding:14px 16px; color:#fff; text-align:left; width:100%;
+    background:radial-gradient(130% 130% at 100% 0%, color-mix(in srgb, var(--vip) 80%, #000 5%), var(--vip) 58%, var(--vip-ink)); }
+  #SyrCD .d-vip .grain{ position:absolute; inset:0; opacity:.4; mix-blend-mode:soft-light; background-image:radial-gradient(rgba(255,255,255,.5) 1px, transparent 1.4px); background-size:11px 11px; pointer-events:none; }
+  #SyrCD .d-vip-row{ position:relative; display:flex; align-items:center; gap:12px; }
+  #SyrCD .d-vip .seal{ width:38px; height:38px; flex:0 0 auto; border-radius:50%; background:rgba(255,255,255,.16); border:1.5px solid rgba(255,255,255,.6); display:grid; place-items:center; }
+  #SyrCD .d-vip-copy{ flex:1; min-width:0; }
+  #SyrCD .d-vip-copy .h{ font-family:var(--fh); font-size:14px; line-height:1.1; text-transform:uppercase; letter-spacing:-.01em; }
+  #SyrCD .d-vip-copy .h .amt{ color:var(--butter); }
+  #SyrCD .d-vip-copy .s{ font-size:12.5px; color:rgba(255,255,255,.86); margin-top:3px; line-height:1.35; }
+  #SyrCD .d-vip-cta{ position:relative; margin-top:12px; width:100%; height:44px; border:2px solid #fff; border-radius:999px; background:#fff; color:var(--vip-ink); font-family:var(--fh); font-size:12px; letter-spacing:.05em; text-transform:uppercase; display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:transform .14s; text-decoration:none; }
+  #SyrCD .d-vip-cta:hover{ transform:translateY(-1px); }
+  #SyrCD .d-vip-cta svg{ color:var(--vip); }
+  #SyrCD .d-vip.active{ background:radial-gradient(130% 130% at 100% 0%, var(--mint), transparent 60%), var(--surface); color:var(--ink); }
+  #SyrCD .d-vip.active .d-vip-copy .s{ color:var(--ink-2); }
+  #SyrCD .d-vip.active .seal{ background:var(--mint); border-color:var(--ink); color:var(--sf-ink); }
+  #SyrCD .d-vip.active .d-vip-copy .h .amt{ color:var(--sf-ink); }
+  #SyrCD .d-lines{ display:flex; flex-direction:column; gap:0; border:var(--rule-1); border-radius:16px; background:var(--surface); overflow:hidden; }
+  #SyrCD .d-line{ display:grid; grid-template-columns:56px minmax(0,1fr) auto; gap:12px; align-items:center; padding:12px 14px; border-top:var(--rule-1); }
+  #SyrCD .d-line:first-child{ border-top:0; }
+  #SyrCD .d-line-media{ width:56px; height:56px; border:var(--rule-1); border-radius:11px; background:radial-gradient(120% 95% at 50% 8%, #fff, var(--bg-2)); display:grid; place-items:center; padding:6px; }
+  #SyrCD .d-line-media img{ width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; }
+  #SyrCD .d-line-body{ min-width:0; display:flex; flex-direction:column; gap:5px; }
+  #SyrCD .d-line-name{ font-family:var(--fh); font-size:14px; line-height:1.05; }
+  #SyrCD .d-line-sub{ font-size:11.5px; color:var(--muted); }
+  #SyrCD .d-line-ctrls{ display:flex; align-items:center; gap:10px; margin-top:1px; }
+  #SyrCD .d-qty{ display:inline-flex; align-items:center; border:var(--rule-1); border-radius:999px; padding:2px; }
+  #SyrCD .d-qty button{ width:26px; height:26px; border:0; background:transparent; color:var(--ink); font-size:15px; font-weight:700; border-radius:50%; display:grid; place-items:center; transition:background .14s; }
+  #SyrCD .d-qty button:hover{ background:var(--bg-2); }
+  #SyrCD .d-qty button:disabled{ opacity:.3; cursor:not-allowed; }
+  #SyrCD .d-qty span{ min-width:22px; text-align:center; font-family:var(--fh); font-size:13px; }
+  #SyrCD .d-line-rm{ background:transparent; border:0; color:var(--muted); display:grid; place-items:center; padding:4px; border-radius:7px; transition:color .14s; }
+  #SyrCD .d-line-rm:hover{ color:var(--vip); }
+  #SyrCD .d-line-right{ display:flex; flex-direction:column; align-items:flex-end; gap:3px; text-align:right; }
+  #SyrCD .d-line-price{ font-family:var(--fh); font-size:14px; }
+  #SyrCD .d-line-price .was{ display:block; font-size:10.5px; color:var(--muted); text-decoration:line-through; font-family:'Archivo',sans-serif; font-weight:700; }
+  #SyrCD .d-upsell-h{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:2px 2px -2px; }
+  #SyrCD .d-upsell-h .t{ font-family:var(--fh); font-size:12px; text-transform:uppercase; letter-spacing:.03em; }
+  #SyrCD .d-upsell-h .s{ font-size:11.5px; color:var(--muted); }
+  #SyrCD .d-upsell{ display:flex; gap:10px; overflow-x:auto; padding:2px 2px 6px; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; }
+  #SyrCD .up{ flex:0 0 132px; scroll-snap-align:start; border:var(--rule-1); border-radius:13px; background:var(--surface); overflow:hidden; display:flex; flex-direction:column; }
+  #SyrCD .up-media{ aspect-ratio:1 / .82; background:radial-gradient(120% 95% at 50% 8%, #fff, var(--bg-2)); display:flex; align-items:center; justify-content:center; padding:10px; border-bottom:var(--rule-1); }
+  #SyrCD .up-media img{ display:block; max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; mix-blend-mode:multiply; margin:0 auto; }
+  #SyrCD .up-body{ padding:9px 10px 10px; display:flex; flex-direction:column; gap:5px; flex:1; }
+  #SyrCD .up-name{ font-family:var(--fh); font-size:12px; line-height:1.05; }
+  #SyrCD .up-foot{ margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:6px; }
+  #SyrCD .up-price{ font-family:var(--fh); font-size:12.5px; }
+  #SyrCD .up-add{ width:30px; height:30px; border:var(--rule-1); border-radius:8px; background:var(--accent); color:var(--ink); display:grid; place-items:center; box-shadow:1.5px 1.5px 0 var(--ink); transition:transform .14s; }
+  #SyrCD .up-add:hover{ transform:translate(-1px,-1px); }
+  #SyrCD .scd-foot{ flex:0 0 auto; border-top:var(--rule); background:var(--surface); padding:14px 18px calc(14px + env(safe-area-inset-bottom)); display:flex; flex-direction:column; gap:10px; }
+  #SyrCD .d-sub{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; }
+  #SyrCD .d-sub .l{ font-family:'Archivo',sans-serif; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); }
+  #SyrCD .d-sub .v{ font-family:var(--fh); font-size:24px; letter-spacing:-.01em; }
+  #SyrCD .d-vsave{ display:flex; align-items:center; justify-content:space-between; gap:10px; font-family:'Archivo',sans-serif; font-size:12px; font-weight:700; letter-spacing:.02em; text-transform:uppercase; padding:9px 12px; border-radius:11px; border:var(--rule-1); }
+  #SyrCD .d-vsave.applied{ background:var(--mint); color:var(--sf-ink); }
+  #SyrCD .d-vsave.applied svg{ color:var(--sf-ink); }
+  #SyrCD .d-vsave.tease{ background:var(--vip-soft); color:var(--vip-ink); cursor:pointer; text-decoration:none; }
+  #SyrCD .d-vsave.tease svg{ color:var(--vip); }
+  #SyrCD .d-vsave .lft{ display:inline-flex; align-items:center; gap:7px; }
+  #SyrCD .scd-checkout{ height:56px; border:var(--rule); border-radius:999px; background:var(--ink); color:var(--bg); font-family:var(--fh); font-size:14px; letter-spacing:.07em; text-transform:uppercase; box-shadow:var(--shadow-sm); display:flex; align-items:center; justify-content:center; gap:9px; transition:transform .14s, box-shadow .14s, background .2s, color .2s; width:100%; }
+  #SyrCD .scd-checkout:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--accent); background:var(--accent); color:var(--ink); }
+  #SyrCD .scd-viewcart{ text-align:center; font-family:'Archivo',sans-serif; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-2); text-decoration:underline; padding:2px; display:block; }
+  #SyrCD .scd-viewcart:hover{ color:var(--ink); }
+  #SyrCD .scd-continue{ width:100%; height:46px; border:var(--rule-1); border-radius:999px; background:var(--surface); color:var(--ink); font-family:var(--fh); font-size:12px; letter-spacing:.05em; text-transform:uppercase; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; transition:background .16s, transform .14s; }
+  #SyrCD .scd-continue:hover{ background:var(--bg-2); transform:translateY(-1px); }
+  #SyrCD .scd-continue svg{ transform:scaleX(-1); }
+  #SyrCD .d-empty{ text-align:center; padding:40px 20px; margin:auto 0; }
+  #SyrCD .d-empty .g{ width:76px; height:76px; margin:0 auto 16px; border-radius:50%; border:var(--rule); background:var(--bg-2); display:grid; place-items:center; box-shadow:var(--shadow-sm); }
+  #SyrCD .d-empty h3{ font-family:var(--fh); font-size:20px; text-transform:uppercase; }
+  #SyrCD .d-empty p{ color:var(--ink-2); font-size:14px; margin:7px 0 18px; }
+  #SyrCD .d-empty .cta{ display:inline-flex; align-items:center; gap:8px; height:48px; padding:0 22px; border:var(--rule); border-radius:999px; background:var(--accent); color:var(--ink); font-family:var(--fh); font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; box-shadow:var(--shadow-sm); text-decoration:none; }
+  .syr-toast{ position:fixed; left:50%; bottom:30px; transform:translateX(-50%); z-index:1100; background:#39220f; color:#FFFBF4; font-family:'Archivo Black',sans-serif; font-size:13px; letter-spacing:.03em; text-transform:uppercase; padding:13px 20px; border:2px solid #39220f; border-radius:999px; box-shadow:4px 4px 0 #39220f; animation:syrToastIn .3s cubic-bezier(.4,1.4,.5,1); }
+  @keyframes syrToastIn{ from{ opacity:0; transform:translate(-50%,14px); } to{ opacity:1; transform:translate(-50%,0); } }
+  @media (max-width:560px){
+    #SyrCD .scd-panel{ top:auto; bottom:0; right:0; left:0; width:100%; height:auto; max-height:92vh; border-left:0; border-top:var(--rule);
+      border-top-left-radius:22px; border-top-right-radius:22px; box-shadow:0 -6px 0 rgba(57,34,15,.08);
+      transform:translateY(102%); transition:transform .42s cubic-bezier(.32,1.2,.4,1); }
+    #SyrCD.open .scd-panel{ transform:none; }
+    #SyrCD .scd-grip{ display:block; position:relative; width:100%; padding:9px 0 4px; flex:0 0 auto; background:var(--surface); border-top-left-radius:22px; border-top-right-radius:22px; touch-action:none; cursor:grab; }
+    #SyrCD .scd-grip::before{ content:""; display:block; width:44px; height:5px; border-radius:999px; background:var(--hair); margin:0 auto; }
+    #SyrCD .scd-head{ padding:8px 16px 14px; }
+    #SyrCD .scd-body{ padding:14px 16px 6px; gap:12px; }
+    #SyrCD .scd-foot{ padding:13px 16px calc(16px + env(safe-area-inset-bottom)); }
+    #SyrCD .d-sub .v{ font-size:22px; }
+    #SyrCD .scd-checkout{ height:54px; }
+  }
+  @media (prefers-reduced-motion:reduce){ #SyrCD *{ animation-duration:.001ms !important; transition-duration:.001ms !important; } }
+</style>
+
+{%- capture icon_check -%}<svg viewBox="0 0 16 16" width="14" height="14" fill="none"><path d="M3 8.5l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icon_bag -%}<svg viewBox="0 0 20 22" width="18" height="20" fill="none"><path d="M4 7h12l-1 13H5L4 7z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M7.5 8.5V6a2.5 2.5 0 015 0v2.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>{%- endcapture -%}
+{%- capture icon_truck -%}<svg viewBox="0 0 22 16" width="16" height="14" fill="none"><path d="M1 2.5h12v8H1zM13 5.5h4l3 3v2h-7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="5" cy="12.5" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="16.5" cy="12.5" r="2" stroke="currentColor" stroke-width="1.6"/></svg>{%- endcapture -%}
+{%- capture icon_diamond -%}<svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor"><path d="M8 1.6l5.6 4.4L8 14.4 2.4 6 8 1.6z"/></svg>{%- endcapture -%}
+{%- capture icon_diamondlg -%}<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2.5l8.5 6.6L12 21.5 3.5 9.1 12 2.5z"/></svg>{%- endcapture -%}
+{%- capture icon_lock -%}<svg viewBox="0 0 16 18" width="14" height="15" fill="none"><rect x="2.5" y="7.5" width="11" height="8" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M5 7.5V5a3 3 0 016 0v2.5" stroke="currentColor" stroke-width="1.6"/></svg>{%- endcapture -%}
+{%- capture icon_arrow -%}<svg viewBox="0 0 16 14" width="15" height="13" fill="none"><path d="M2 7h11M9 3l4 4-4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icon_plus -%}<svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>{%- endcapture -%}
+{%- capture icon_trash -%}<svg viewBox="0 0 16 16" width="14" height="14" fill="none"><path d="M3 4.5h10M6.5 4V2.8h3V4M4.5 4.5l.6 9a1 1 0 001 .9h3.8a1 1 0 001-.9l.6-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icon_close -%}<svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>{%- endcapture -%}
+
+<div id="SyrCD" aria-hidden="true">
+  <div class="scd-bd" data-syr-close></div>
+  <aside class="scd-panel" role="dialog" aria-modal="true" aria-label="Your cart">
+    <div id="SyrCD-content">
+      <div class="scd-grip" data-syr-grip></div>
+      <div class="scd-head">
+        <span class="dh-ic">{% if cart == empty %}{{ icon_bag }}{% else %}{{ icon_check }}{% endif %}</span>
+        <div class="dh-txt">
+          <div class="dh-title">{% if cart == empty %}Your cart{% else %}Added to cart{% endif %}</div>
+          <div class="dh-sub">{{ cart.item_count }} item{% unless cart.item_count == 1 %}s{% endunless %} · {{ payable | money }}</div>
+        </div>
+        <button class="scd-close" data-syr-close aria-label="Close">{{ icon_close }}</button>
+      </div>
+
+      {%- if cart == empty -%}
+        <div class="scd-body">
+          <div class="d-empty">
+            <div class="g">{{ icon_bag }}</div>
+            <h3>Your cart is empty</h3>
+            <p>Add a flavor — your VIP price is waiting.</p>
+            <a class="cta" href="{{ routes.all_products_collection_url }}" data-syr-close>Keep shopping {{ icon_arrow }}</a>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="scd-body">
+          {%- comment -%} free-ship progress {%- endcomment -%}
+          <div class="d-ship">
+            <div class="d-ship-top">
+              {{ icon_truck }}
+              {%- if remain > 0 -%}
+                <span>You're <b>{{ remain | money }}</b> from <b>free shipping</b></span>
+              {%- else -%}
+                <span class="done">{{ icon_check }} You've unlocked free shipping</span>
+              {%- endif -%}
+            </div>
+            <div class="d-ship-track"><div class="d-ship-fill" style="width:{{ pct }}%"></div></div>
+          </div>
+
+          {%- comment -%} VIP teaser / active {%- endcomment -%}
+          {%- if is_vip -%}
+            <div class="d-vip active">
+              <div class="d-vip-row">
+                <span class="seal">{{ icon_check }}</span>
+                <div class="d-vip-copy">
+                  <div class="h">VIP pricing is <span class="amt">active</span></div>
+                  <div class="s">Your member discount is applied{% if member_saved > 0 %} — you're saving {{ member_saved | money }} on this cart{% endif %}.</div>
+                </div>
+              </div>
+            </div>
+          {%- elsif vip_savings > 0 -%}
+            <div class="d-vip">
+              <span class="grain"></span>
+              <div class="d-vip-row">
+                <span class="seal">{{ icon_diamondlg }}</span>
+                <div class="d-vip-copy">
+                  <div class="h">Save <span class="amt">{{ vip_savings | money }}</span> with VIP</div>
+                  <div class="s">Members pay less on every bottle — free to join, applied to this cart instantly.</div>
+                </div>
+              </div>
+              <a class="d-vip-cta" href="{{ routes.account_register_url }}">{{ icon_diamond }} Unlock VIP price — it's free</a>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} line items {%- endcomment -%}
+          <div class="d-lines">
+            {%- for item in cart.items -%}
+              <div class="d-line" data-line="{{ forloop.index }}">
+                <div class="d-line-media">
+                  {%- if item.image -%}<img src="{{ item.image | image_url: width: 160 }}" alt="{{ item.product.title | escape }}" loading="lazy">{%- endif -%}
+                </div>
+                <div class="d-line-body">
+                  <a class="d-line-name" href="{{ item.url }}" style="text-decoration:none;color:inherit">{{ item.product.title | escape }}</a>
+                  <div class="d-line-sub">
+                    {%- if item.variant.title and item.variant.title != 'Default Title' -%}{{ item.variant.title | escape }}{%- else -%}{{ item.product.type | default: 'Syrup' }}{%- endif -%}
+                  </div>
+                  <div class="d-line-ctrls">
+                    <div class="d-qty">
+                      <button data-syr-qtm aria-label="Decrease"{% if item.quantity <= 1 %} disabled{% endif %}>−</button>
+                      <span data-syr-q>{{ item.quantity }}</span>
+                      <button data-syr-qtp aria-label="Increase">+</button>
+                    </div>
+                    <button class="d-line-rm" data-syr-remove aria-label="Remove">{{ icon_trash }}</button>
+                  </div>
+                </div>
+                <div class="d-line-right">
+                  <div class="d-line-price">
+                    {%- if item.original_line_price > item.final_line_price -%}
+                      <span class="was">{{ item.original_line_price | money }}</span>
+                    {%- endif -%}
+                    {{ item.final_line_price | money }}
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+
+          {%- comment -%} upsell from the cart-drawer collection setting {%- endcomment -%}
+          {%- assign upcol_obj = collections[settings.cart_drawer_collection] -%}
+          {%- if upcol_obj == empty or upcol_obj.products.size < 8 -%}{%- assign upcol_obj = collections['best-sellers'] -%}{%- endif -%}
+          {%- if upcol_obj == empty or upcol_obj.products.size < 8 -%}{%- assign upcol_obj = collections['trending-flavors'] -%}{%- endif -%}
+          {%- if upcol_obj == empty or upcol_obj.products.size < 8 -%}{%- assign upcol_obj = collections.all -%}{%- endif -%}
+          {%- if upcol_obj.products.size > 0 -%}
+            {%- assign cart_pids = '' -%}
+            {%- for li in cart.items -%}{%- assign cart_pids = cart_pids | append: ',' | append: li.product_id | append: ',' -%}{%- endfor -%}
+            {%- assign upcount = 0 -%}
+            {%- capture upsell_html -%}
+              {%- comment -%} Syrup pump always shown first {%- endcomment -%}
+              {%- assign pumpp = all_products['syrup-pump'] -%}
+              {%- if pumpp != empty and pumpp.available -%}{%- assign pneedle = ',' | append: pumpp.id | append: ',' -%}{%- unless cart_pids contains pneedle -%}{%- assign upcount = upcount | plus: 1 -%}<div class="up"><div class="up-media">{%- if pumpp.featured_image -%}<img src="{{ pumpp.featured_image | image_url: width: 200 }}" alt="{{ pumpp.title | escape }}" loading="lazy">{%- endif -%}</div><div class="up-body"><div class="up-name">{{ pumpp.title | escape | truncate: 28 }}</div><div class="up-foot"><span class="up-price">{{ pumpp.price | money }}</span><button class="up-add" data-syr-add="{{ pumpp.selected_or_first_available_variant.id }}" aria-label="Add {{ pumpp.title | escape }}">{{ icon_plus }}</button></div></div></div>{%- endunless -%}{%- endif -%}
+              {%- for product in upcol_obj.products limit: 40 -%}
+                {%- assign needle = ',' | append: product.id | append: ',' -%}
+                {%- unless cart_pids contains needle -%}
+                  {%- if product.available and upcount < 10 and product.handle != 'syrup-pump' -%}
+                    {%- assign upcount = upcount | plus: 1 -%}
+                    <div class="up">
+                      <div class="up-media">{%- if product.featured_image -%}<img src="{{ product.featured_image | image_url: width: 200 }}" alt="{{ product.title | escape }}" loading="lazy">{%- endif -%}</div>
+                      <div class="up-body">
+                        <div class="up-name">{{ product.title | escape | truncate: 28 }}</div>
+                        <div class="up-foot">
+                          <span class="up-price">{{ product.price | money }}</span>
+                          <button class="up-add" data-syr-add="{{ product.selected_or_first_available_variant.id }}" aria-label="Add {{ product.title | escape }}">{{ icon_plus }}</button>
+                        </div>
+                      </div>
+                    </div>
+                  {%- endif -%}
+                {%- endunless -%}
+              {%- endfor -%}
+            {%- endcapture -%}
+            {%- if upcount > 0 -%}
+              <div class="d-upsell-h">
+                <span class="t">Add a little more</span>
+                <span class="s">{% if remain > 0 %}{{ remain | money }} to free ship{% else %}Pairs great{% endif %}</span>
+              </div>
+              <div class="d-upsell">{{ upsell_html }}</div>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} sticky footer {%- endcomment -%}
+        <div class="scd-foot">
+          {%- if is_vip -%}
+            {%- if member_saved > 0 -%}
+              <div class="d-vsave applied"><span class="lft">{{ icon_check }} VIP saved</span><span>{{ member_saved | money }}</span></div>
+            {%- endif -%}
+          {%- elsif vip_savings > 0 -%}
+            <a class="d-vsave tease" href="{{ routes.account_register_url }}"><span class="lft">{{ icon_diamond }} Join free &amp; save</span><span>−{{ vip_savings | money }}</span></a>
+          {%- endif -%}
+          <div class="d-sub">
+            <span class="l">Subtotal{% if is_vip %} · VIP{% endif %}</span>
+            <span class="v">{{ payable | money }}</span>
+          </div>
+          <button class="scd-checkout" data-syr-checkout>{{ icon_lock }} Checkout · {{ checkout_total | money }}</button>
+          <button type="button" class="scd-continue" data-syr-close>{{ icon_arrow }} Continue shopping</button>
+          <a class="scd-viewcart" href="{{ routes.cart_url }}">View full cart</a>
+        </div>
+      {%- endif -%}
+    </div>
+  </aside>
+</div>
+
+<script>
+(function(){
+  if (window.__syrCDInit) return; window.__syrCDInit = true;
+  var origFetch = window.fetch ? window.fetch.bind(window) : null;
+  var lastAdded = null;       // {title, image, quantity, final_line_price}
+  function root(){ return document.getElementById('SyrCD'); }
+  function content(){ return document.getElementById('SyrCD-content'); }
+  function money(c){ try{ return (window.Shopify&&Shopify.currency? '': '') + '$' + (c/100).toFixed(2); }catch(e){ return '$'+(c/100).toFixed(2); } }
+
+  function fitViewport(r){ try{ if(window.matchMedia('(max-width:560px)').matches){ var vw=(window.visualViewport&&window.visualViewport.width)||document.documentElement.clientWidth||window.innerWidth; r.style.width=Math.round(vw)+'px'; r.style.left='0'; r.style.right='auto'; } else { r.style.width=''; r.style.left=''; r.style.right=''; } }catch(e){} }
+  function open(){ var r=root(); if(!r) return; r.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; fitViewport(r); r.classList.add('open'); }
+  function close(){ var r=root(); if(!r) return; r.classList.remove('open'); r.setAttribute('aria-hidden','true'); document.body.style.overflow=''; lastAdded=null; }
+
+  function bumpBubble(){ var b=document.getElementById('cart-icon-bubble'); if(b){ b.style.transition='transform .2s'; b.style.transform='scale(1.25)'; setTimeout(function(){ b.style.transform=''; },220); } }
+
+  function injectHero(){
+    if(!lastAdded) return;
+    var body = root() && root().querySelector('.scd-body'); if(!body) return;
+    if(body.querySelector('.added')) return;
+    var img = lastAdded.image ? '<div class="added-media"><span class="added-check"><svg viewBox="0 0 16 16" width="14" height="14" fill="none"><path d="M3 8.5l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><img src="'+lastAdded.image+'" alt=""></div>' : '';
+    var html = '<div class="added">'+img+'<div class="added-txt"><div class="lbl"><svg viewBox="0 0 16 16" width="12" height="12" fill="none"><path d="M3 8.5l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Just added</div><div class="nm">'+(lastAdded.title||'')+'</div><div class="mt">Qty '+(lastAdded.quantity||1)+' · '+money(lastAdded.final_line_price||lastAdded.line_price||0)+'</div></div></div>';
+    body.insertAdjacentHTML('afterbegin', html);
+  }
+
+  function refresh(){
+    if(!origFetch) return Promise.resolve();
+    return origFetch(window.Shopify && Shopify.routes && Shopify.routes.root ? Shopify.routes.root+'?sections=cart-drawer,cart-icon-bubble' : '/?sections=cart-drawer,cart-icon-bubble')
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(j['cart-drawer']){
+          var doc=new DOMParser().parseFromString(j['cart-drawer'],'text/html');
+          var nc=doc.getElementById('SyrCD-content'); var cur=content();
+          if(nc && cur){ cur.innerHTML = nc.innerHTML; }
+        }
+        if(j['cart-icon-bubble']){
+          var b=document.getElementById('cart-icon-bubble');
+          var nb=new DOMParser().parseFromString(j['cart-icon-bubble'],'text/html').getElementById('cart-icon-bubble');
+          if(b && nb) b.innerHTML = nb.innerHTML;
+        }
+      }).catch(function(){});
+  }
+
+  function addVariant(id, qty){
+    if(!origFetch) return Promise.reject();
+    return origFetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:[{id:id,quantity:qty||1}]})})
+      .then(function(r){ return r.json(); });
+  }
+  function changeLine(line, qty){
+    if(!origFetch) return Promise.reject();
+    return origFetch('/cart/change.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({line:line,quantity:qty})})
+      .then(function(r){ return r.json(); });
+  }
+
+  function afterAdd(item){
+    var it = (item && item.items && item.items.length) ? item.items[item.items.length-1] : item;
+    if(it && (it.title || it.product_title)){
+      lastAdded = { title:(it.product_title||it.title), image:it.image||it.featured_image||(it.featured_image&&it.featured_image.url), quantity:it.quantity, final_line_price:it.final_line_price, line_price:it.line_price };
+    }
+    return refresh().then(function(){ injectHero(); open(); bumpBubble(); });
+  }
+
+  /* ---- delegated clicks ---- */
+  document.addEventListener('click', function(e){
+    var r = root();
+    // open from header cart icon
+    var icon = e.target.closest('#cart-icon-bubble');
+    var iconLink = e.target.closest('.header__icon--cart, a#cart-icon-bubble');
+    if(icon || iconLink){
+      var insideDrawer = r && r.contains(e.target);
+      if(!insideDrawer){ e.preventDefault(); lastAdded=null; refresh().then(open); return; }
+    }
+    if(!r) return;
+    if(e.target.closest('[data-syr-close]')){ e.preventDefault(); close(); return; }
+    if(e.target.closest('[data-syr-checkout]')){ e.preventDefault(); window.location.href='/checkout'; return; }
+    var addBtn = e.target.closest('[data-syr-add]');
+    if(addBtn){ e.preventDefault(); var vid=addBtn.getAttribute('data-syr-add'); addBtn.disabled=true; addVariant(vid,1).then(function(it){ lastAdded=null; return refresh(); }).then(open).then(function(){ bumpBubble(); }).catch(function(){ addBtn.disabled=false; }); return; }
+    var line = e.target.closest('.d-line');
+    if(line){
+      var idx = parseInt(line.getAttribute('data-line'),10);
+      var qEl = line.querySelector('[data-syr-q]'); var q = qEl?parseInt(qEl.textContent,10):1;
+      if(e.target.closest('[data-syr-qtp]')){ e.preventDefault(); changeLine(idx, q+1).then(function(){ lastAdded=null; return refresh(); }); return; }
+      if(e.target.closest('[data-syr-qtm]')){ e.preventDefault(); if(q>1){ changeLine(idx, q-1).then(function(){ lastAdded=null; return refresh(); }); } return; }
+      if(e.target.closest('[data-syr-remove]')){ e.preventDefault(); line.style.opacity='.4'; changeLine(idx, 0).then(function(){ lastAdded=null; return refresh(); }); return; }
+    }
+  }, false);
+
+  /* ---- esc to close ---- */
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ var r=root(); if(r&&r.classList.contains('open')) close(); } });
+
+  /* ---- drag to dismiss (mobile bottom sheet) ---- */
+  var drag={y:0,dy:0,active:false};
+  function sheet(){ return root() && root().querySelector('.scd-panel'); }
+  document.addEventListener('touchstart', function(e){ var g=e.target.closest('[data-syr-grip]'); if(!g) return; drag={y:e.touches[0].clientY,dy:0,active:true}; var s=sheet(); if(s) s.style.transition='none'; }, {passive:true});
+  document.addEventListener('touchmove', function(e){ if(!drag.active) return; var dy=Math.max(0,e.touches[0].clientY-drag.y); drag.dy=dy; var s=sheet(); if(s) s.style.transform='translateY('+dy+'px)'; }, {passive:true});
+  document.addEventListener('touchend', function(){ if(!drag.active) return; var s=sheet(); var dy=drag.dy; drag.active=false; if(s){ s.style.transition=''; s.style.transform=''; } if(dy>110) close(); });
+
+  /* ---- intercept ADD-TO-CART form submits (e.g. product pages) so they open the drawer instead of navigating ---- */
+  document.addEventListener('submit', function(e){
+    var form=e.target;
+    if(!form || !form.action || !/\/cart\/add(\.js)?(\?|#|$)/.test(form.action)) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    var fd=new FormData(form);
+    var btn=form.querySelector('[type=submit], button[name=add]'); if(btn){ btn.setAttribute('aria-busy','true'); btn.classList.add('loading'); }
+    origFetch('/cart/add.js',{method:'POST',headers:{'Accept':'application/json'},body:fd})
+      .then(function(r){ if(!r.ok) throw new Error('add failed'); return r.json(); })
+      .then(function(item){ return afterAdd(item); })
+      .catch(function(){ form.submit(); })
+      .then(function(){ if(btn){ btn.removeAttribute('aria-busy'); btn.classList.remove('loading'); } });
+  }, true);
+
+  /* ---- intercept JS-based adds (other scripts calling fetch('/cart/add')) ---- */
+  if(window.fetch){
+    var wrapped = window.fetch;
+    window.fetch = function(){
+      var args=arguments;
+      var url = (args[0] && args[0].url) ? args[0].url : args[0];
+      var isAdd = (typeof url==='string') && /\/cart\/add(\.js)?(\?|#|$)/.test(url);
+      var p = wrapped.apply(this, args);
+      if(isAdd){
+        p.then(function(res){ try{ res.clone().json().then(function(item){ afterAdd(item); }); }catch(e){ refresh().then(open); } }).catch(function(){});
+      }
+      return p;
+    };
+  }
+})();
+</script>

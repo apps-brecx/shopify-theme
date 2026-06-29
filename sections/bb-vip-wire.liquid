@@ -1,0 +1,174 @@
+{%- comment -%} Build-a-bundle companion: VIP $7.99 base in summary + case rows, tier code at checkout, and case persistence across reloads. Logged-in shows real VIP prices. Test codes only.
+  v2 (sold-out guard): marks out-of-stock flavors as "Sold out" (not addable) and makes "Add case to cart" fail gracefully — a sold-out item can never wipe the case or the cart. {%- endcomment -%}
+
+{%- comment -%} Availability map for the bundle collection: { variantId: productAvailable }. Keyed by the same variant id the builder cards expose as data-id. {%- endcomment -%}
+{%- assign bb_coll = collections['syruvia-bundle'] -%}
+<script type="application/json" data-bb-avail>
+{
+{%- if bb_coll != blank -%}
+  {%- paginate bb_coll.products by 250 -%}
+    {%- assign bb_first = true -%}
+    {%- for product in bb_coll.products -%}
+      {%- assign bb_v = product.selected_or_first_available_variant -%}
+      {%- if bb_v -%}{%- unless bb_first -%},{%- endunless -%}"{{ bb_v.id }}":{{ product.available }}{%- assign bb_first = false -%}{%- endif -%}
+    {%- endfor -%}
+  {%- endpaginate -%}
+{%- endif -%}
+}
+</script>
+
+<style>
+  .sbwrap .card.is-soldout{ opacity:.58 !important; }
+  .sbwrap .card.is-soldout:hover{ transform:none !important; box-shadow:4px 4px 0 #39220f !important; }
+  .sbwrap .card.is-soldout .thumb img{ filter:grayscale(.6); }
+  .sbwrap .ribbon.bb-ribbon-soldout{ background:#8B7355 !important; color:#FFFBF4 !important; }
+  .sbwrap .bb-soldout-label{ font-family:'Archivo Black','Arial Black',sans-serif !important; font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:#8B7355 !important; padding:8px 4px; }
+</style>
+
+<script>
+(function(){
+  var root=document.querySelector('.sbwrap'); if(!root) return;
+  var LOGGED_IN = {% if customer %}true{% else %}false{% endif %};
+  var VIPBASE=799;
+  var KEY='syr_bundle_case_v1';
+  var CODES={2:'BUNDLE2TEST',3:'BUNDLE3TEST',4:'BUNDLE4TEST',5:'BUNDLE5TEST',6:'BUNDLE6TEST',8:'BUNDLE8TEST',10:'BUNDLE10TEST',12:'BUNDLE12TEST'};
+
+  /* ---- sold-out availability ---- */
+  var BBAVAIL={};
+  try{ var _ae=document.querySelector('[data-bb-avail]'); if(_ae){ BBAVAIL=JSON.parse(_ae.textContent||'{}'); } }catch(e){ BBAVAIL={}; }
+  function bbToast(m){ var t=root.querySelector('[data-toast]'); if(!t){ return; } t.textContent=m; t.classList.add('show'); clearTimeout(t._bb); t._bb=setTimeout(function(){ t.classList.remove('show'); },2800); }
+  function markSoldOutCard(card){
+    if(!card || card.classList.contains('is-soldout')) return;
+    card.classList.add('is-soldout'); card.classList.remove('is-selected'); card.dataset.avail='false';
+    var foot=card.querySelector('.card-foot');
+    if(foot){
+      var ab=foot.querySelector('.add-btn,[data-add]'), st=foot.querySelector('.stepper');
+      if(ab) ab.remove(); if(st) st.remove();
+      if(!foot.querySelector('.bb-soldout-label')){ var s=document.createElement('span'); s.className='bb-soldout-label'; s.textContent='Sold out'; foot.appendChild(s); }
+    }
+    if(!card.querySelector('.bb-ribbon-soldout')){ var r=document.createElement('span'); r.className='ribbon bb-ribbon-soldout'; r.textContent='Sold out'; card.insertBefore(r, card.firstChild); }
+  }
+  function markSoldOutById(id){ if(id==null) return; BBAVAIL[id]=false; markSoldOutCard(root.querySelector('.card[data-id="'+id+'"]')); }
+  function applySoldOut(){ cards().forEach(function(c){ var id=c.dataset.id; if(id && BBAVAIL[id]===false) markSoldOutCard(c); }); }
+
+  function money(c){return '$'+(c/100).toFixed(2);}
+  function vipUnit(reg){return Math.min(VIPBASE, reg||VIPBASE);}
+  function setText(e,v){if(e&&e.textContent!==v)e.textContent=v;}
+  function setDisp(e,v){if(e&&e.style.display!==v)e.style.display=v;}
+  function tiers(){return [].slice.call(root.querySelectorAll('.tb-node')).map(function(n){var q=n.querySelector('.tb-q'),d=n.querySelector('.tb-d');return {q:q?parseInt(q.textContent,10):0,d:d?parseFloat(d.textContent):0};});}
+  function cards(){return [].slice.call(root.querySelectorAll('.card'));}
+  function cardQ(c){var qe=c.querySelector('[data-q]');return qe?parseInt(qe.textContent,10)||0:0;}
+  function qty(){var n=0;cards().forEach(function(c){n+=cardQ(c);});return n;}
+  function baseCents(){var b=0;cards().forEach(function(c){b+=vipUnit(parseInt(c.dataset.price,10))*cardQ(c);});return b;}
+  function bestD(n){var d=0;tiers().forEach(function(t){if(n>=t.q)d=t.d;});return d;}
+  function bestCode(n){var c='';tiers().forEach(function(t){if(n>=t.q&&CODES[t.q])c=CODES[t.q];});return c;}
+
+  function patchSummary(){
+    if(!LOGGED_IN) return;
+    var n=qty(); if(n<1) return;
+    var base=baseCents(), d=bestD(n), total=Math.round(base*(1-d/100)), sav=base-total, ready=n>=2;
+    root.querySelectorAll('[data-sumnow],[data-sheetnow]').forEach(function(e){setText(e,money(ready?total:base));});
+    root.querySelectorAll('[data-sumwas],[data-sheetwas]').forEach(function(e){setText(e,money(base));setDisp(e,ready?'':'none');});
+    root.querySelectorAll('[data-savepill],[data-sheetsave]').forEach(function(e){setText(e,'Save '+money(sav));setDisp(e,ready?'':'none');});
+  }
+  function patchSheet(){
+    if(!LOGGED_IN) return;
+    root.querySelectorAll('.sheet-price').forEach(function(sp){
+      var m=(sp.textContent||'').match(/\$[\d.]+/g); if(!m||!m.length) return;
+      var unit=Math.round(parseFloat(m[0].slice(1))*100);
+      var line=m[1]?Math.round(parseFloat(m[1].slice(1))*100):unit;
+      var q=unit?Math.max(1,Math.round(line/unit)):1;
+      var v=vipUnit(unit);
+      var html=money(v)+' <em>each &middot; '+money(v*q)+'</em>';
+      if(sp.innerHTML.replace(/\s+/g,' ').trim()!==html) sp.innerHTML=html;
+    });
+  }
+  function patchAll(){patchSummary();patchSheet();}
+
+  function saveState(){
+    try{var arr=[];cards().forEach(function(c){var q=cardQ(c);if(q>0)arr.push({id:c.dataset.id,q:q});});localStorage.setItem(KEY,JSON.stringify(arr));}catch(e){}
+  }
+  var restoring=false;
+  function restoreState(){
+    var arr;try{arr=JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){arr=[];}
+    if(!arr||!arr.length) return;
+    restoring=true;
+    arr.forEach(function(it){
+      if(BBAVAIL[it.id]===false) return;
+      var card=root.querySelector('.card[data-id="'+it.id+'"]'); if(!card) return;
+      var add=card.querySelector('.add-btn,[data-add]'); if(!add) return;
+      var have=cardQ(card);
+      for(var k=have;k<it.q;k++){ add.click(); }
+    });
+    restoring=false;
+    setTimeout(patchAll,60);
+  }
+
+  root.addEventListener('click', function(){ setTimeout(function(){patchAll();if(!restoring)saveState();},0); }, false);
+  if('MutationObserver' in window){
+    var mo=new MutationObserver(function(){ if(window.__bbRAF)return; window.__bbRAF=requestAnimationFrame(function(){window.__bbRAF=0;patchAll();}); });
+    mo.observe(root,{childList:true,subtree:true,characterData:true});
+  }
+
+  /* ---- graceful "Add case to cart" ---- */
+  function recover(payload, btn){
+    var addedQty=0, failed=0, i=0;
+    (function seq(){
+      if(i>=payload.length){
+        if(addedQty>0){
+          try{localStorage.removeItem(KEY);}catch(e){}
+          var code=bestCode(addedQty);
+          window.location.href=code?('/discount/'+encodeURIComponent(code)+'?redirect=/cart'):'/cart';
+        } else {
+          btn.disabled=false; btn.textContent='Add case to cart';
+          bbToast('Those flavors just sold out \u2014 your case is saved');
+        }
+        return;
+      }
+      var it=payload[i++];
+      fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:[{id:it.id,quantity:it.quantity}]})})
+        .then(function(r){ if(r.ok){ addedQty+=it.quantity; } else { failed++; markSoldOutById(it.id); } })
+        .catch(function(){ failed++; markSoldOutById(it.id); })
+        .then(seq);
+    })();
+  }
+
+  root.addEventListener('click', function(e){
+    var btn=e.target.closest('[data-checkout]'); if(!btn) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    var payload=[];
+    cards().forEach(function(card){
+      var q=cardQ(card);
+      if(q>0 && card.dataset.avail!=='false' && BBAVAIL[card.dataset.id]!==false && !card.classList.contains('is-soldout')){
+        payload.push({id:parseInt(card.dataset.id,10),quantity:q});
+      }
+    });
+    if(!payload.length){ bbToast('Your case is empty'); return; }
+    var n=0; payload.forEach(function(p){ n+=p.quantity; });
+    btn.disabled=true; btn.textContent='Adding\u2026';
+    fetch('/cart/clear.js',{method:'POST',headers:{'Content-Type':'application/json'}})
+      .then(function(){return fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:payload})});})
+      .then(function(r){
+        if(r.ok){
+          try{localStorage.removeItem(KEY);}catch(e){}
+          var code=bestCode(n);
+          window.location.href=code?('/discount/'+encodeURIComponent(code)+'?redirect=/cart'):'/cart';
+          return;
+        }
+        /* A flavor went out of stock since load. Cart was cleared; re-add the in-stock
+           flavors one by one, flag the sold-out one(s), and never lose the selection. */
+        recover(payload, btn);
+      })
+      .catch(function(){ btn.disabled=false; btn.textContent='Add case to cart'; bbToast('Network hiccup \u2014 your case is saved, try again'); });
+  }, true);
+
+  var tries=0;
+  function init(){ if(!cards().length && tries<25){tries++;return setTimeout(init,150);} applySoldOut(); restoreState(); setTimeout(patchAll,120); setTimeout(patchAll,600); }
+  /* mark sold-out as early as possible so a fast click can't add one */
+  if(document.readyState!=='loading'){ applySoldOut(); setTimeout(init,200); }
+  else document.addEventListener('DOMContentLoaded', function(){ applySoldOut(); setTimeout(init,200); });
+})();
+</script>
+{% schema %}
+{ "name": "BB VIP Wire", "settings": [] }
+{% endschema %}

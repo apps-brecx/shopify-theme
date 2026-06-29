@@ -1,0 +1,523 @@
+{%- comment -%} Addresses page brand polish v5 — nuke .field::before and .field::after pseudo-elements that create the boxy doubled outline + underline below inputs. {%- endcomment -%}
+<style id="addresses-brand-polish-css">
+  /* PAGE WRAP */
+  html body .customer.addresses{
+    max-width: 880px !important;
+    margin: 0 auto !important;
+    padding: 28px 20px 80px !important;
+    background: #FFFBF4 !important;
+    color: #39220f !important;
+    font-family: 'Josefin Sans','Josefin',system-ui,sans-serif !important;
+  }
+  html body .customer.addresses *,
+  html body .customer.addresses p,
+  html body .customer.addresses span,
+  html body .customer.addresses a,
+  html body .customer.addresses li,
+  html body .customer.addresses input,
+  html body .customer.addresses select,
+  html body .customer.addresses label{
+    font-family: 'Josefin Sans','Josefin',system-ui,sans-serif !important;
+  }
+  html body .customer.addresses h1,
+  html body .customer.addresses h2,
+  html body .customer.addresses button{
+    font-family: 'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight: 400 !important;
+  }
+
+  html body .customer.addresses > h1{ display: none !important; }
+
+  /* === NUKE FIELD PSEUDO-ELEMENTS (the source of the boxy doubled look + underline) === */
+  html body .customer.addresses .field::before,
+  html body .customer.addresses .field::after,
+  html body .customer.addresses .select::before,
+  html body .customer.addresses .select::after,
+  html body .customer.addresses form .field::before,
+  html body .customer.addresses form .field::after,
+  html body .customer.addresses [id^="EditAddress_"] .field::before,
+  html body .customer.addresses [id^="EditAddress_"] .field::after,
+  html body .customer.addresses #AddAddress .field::before,
+  html body .customer.addresses #AddAddress .field::after{
+    content: none !important;
+    display: none !important;
+    background: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    border-bottom: 0 !important;
+    border-top: 0 !important;
+    border-radius: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: static !important;
+    box-shadow: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    inset: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+  }
+  /* Reset .field itself so it doesn't carry any theme styling */
+  html body .customer.addresses .field{
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    position: relative !important;
+    margin-bottom: 14px !important;
+  }
+
+  /* RETURN-TO-ACCOUNT LINK */
+  html body .customer.addresses > a{
+    display: block !important;
+    width: fit-content !important;
+    margin: 0 auto 28px !important;
+    font-size: 13px !important;
+    color: #c58548 !important;
+    text-decoration: none !important;
+    border-bottom: 1.5px solid #c58548 !important;
+    padding-bottom: 2px !important;
+    letter-spacing: .02em !important;
+  }
+  html body .customer.addresses > a:hover{ color: #39220f !important; border-color: #39220f !important; }
+
+  html body .customer.addresses h2{
+    font-size: 20px !important;
+    text-transform: uppercase !important;
+    color: #39220f !important;
+    margin: 0 0 18px !important;
+    letter-spacing: -.01em !important;
+    text-align: center !important;
+  }
+
+  /* INJECTED HERO */
+  .addr-hero{ text-align: center; margin: 0 auto 8px; max-width: 720px; }
+  .addr-hero .eyebrow{
+    display: inline-block; background: #FCE2A0; color: #39220f;
+    border: 2px solid #39220f; border-radius: 999px;
+    box-shadow: 3px 3px 0 #39220f;
+    font-family: 'Archivo Black',sans-serif; font-weight: 400;
+    font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+    padding: 6px 14px; margin-bottom: 14px;
+  }
+  .addr-hero h1{
+    font-family: 'Archivo Black',sans-serif !important; font-weight: 400 !important;
+    font-size: clamp(30px, 4.4vw, 46px) !important;
+    text-transform: uppercase !important; color: #39220f !important;
+    margin: 0 0 8px !important; letter-spacing: -.01em !important; line-height: 1 !important;
+  }
+  .addr-hero h1 em{
+    font-family: 'Josefin Sans',sans-serif !important;
+    font-style: italic !important; font-weight: 300 !important;
+    color: #c58548 !important; text-transform: none !important;
+  }
+  .addr-hero p{ color: #5d4933; font-size: 15px; line-height: 1.5; margin: 6px auto 0; max-width: 46ch; }
+
+  .addr-section-head{ text-align: center; margin: 32px auto 18px; }
+  .addr-section-head h2{ text-align: center !important; display: inline-block !important; margin: 0 !important; }
+
+  /* TOGGLE BUTTON */
+  .addr-toggle-wrap{ display: flex !important; justify-content: center !important; margin: 0 auto 22px !important; }
+  .addr-add-toggle{
+    display: inline-flex !important;
+    align-items: center !important; justify-content: center !important; gap: 10px !important;
+    background: #39220f !important; color: #FFFBF4 !important;
+    border: 2px solid #39220f !important; border-radius: 999px !important;
+    box-shadow: 4px 4px 0 #c58548 !important;
+    font-family: 'Archivo Black',sans-serif !important; font-weight: 400 !important;
+    font-size: 13px !important; letter-spacing: .12em !important; text-transform: uppercase !important;
+    height: 48px !important; padding: 0 26px !important;
+    cursor: pointer !important;
+    transition: transform .15s, box-shadow .15s, background .15s !important;
+  }
+  .addr-add-toggle:hover{ background: #c58548 !important; transform: translate(-2px,-2px) !important; box-shadow: 6px 6px 0 #39220f !important; }
+
+  /* ADD ADDRESS FORM CARD */
+  html body .customer.addresses #AddAddress{
+    display: none;
+    background: #FFFFFF !important;
+    border: 2px solid #39220f !important;
+    border-radius: 22px !important;
+    box-shadow: 5px 5px 0 #39220f !important;
+    padding: 28px !important;
+    margin: 0 auto 28px !important;
+    max-width: 600px !important;
+  }
+  html body .customer.addresses #AddAddress.is-open{ display: block; }
+  html body .customer.addresses [id^="EditAddress_"]{
+    background: #FFFBF4 !important;
+    border: 2px dashed #39220f !important;
+    border-radius: 18px !important;
+    padding: 22px !important;
+    margin-top: 16px !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* FIELDS */
+  html body .customer.addresses #AddAddress > div,
+  html body .customer.addresses [id^="EditAddress_"] > div,
+  html body .customer.addresses form > div{ margin-bottom: 14px !important; }
+
+  html body .customer.addresses .field input,
+  html body .customer.addresses select,
+  html body .customer.addresses input[type="text"],
+  html body .customer.addresses input[type="tel"],
+  html body .customer.addresses input[type="email"],
+  html body .customer.addresses input[type="number"]{
+    width: 100% !important;
+    height: 50px !important;
+    background: #FFFBF4 !important;
+    border: 1.5px solid #39220f !important;
+    border-radius: 12px !important;
+    padding: 0 16px !important;
+    font-family: 'Josefin Sans',sans-serif !important;
+    font-size: 15px !important;
+    color: #39220f !important;
+    outline: 0 !important;
+    outline-offset: 0 !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    transition: border-color .15s !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+  /* FOCUS: only border-color change, NO shadow, NO outline, NO pseudos */
+  html body .customer.addresses .field input:focus,
+  html body .customer.addresses .field input:focus-visible,
+  html body .customer.addresses .field input:focus-within,
+  html body .customer.addresses select:focus,
+  html body .customer.addresses select:focus-visible,
+  html body .customer.addresses input:focus,
+  html body .customer.addresses input:focus-visible,
+  html body .customer.addresses input:focus-within{
+    outline: 0 !important;
+    outline-color: transparent !important;
+    outline-style: none !important;
+    outline-width: 0 !important;
+    outline-offset: 0 !important;
+    border-color: #c58548 !important;
+    box-shadow: none !important;
+  }
+  /* Kill pseudo on focused field too (some themes only inject the underline on focus) */
+  html body .customer.addresses .field input:focus + *::before,
+  html body .customer.addresses .field input:focus + *::after,
+  html body .customer.addresses .field:focus-within::before,
+  html body .customer.addresses .field:focus-within::after{
+    content: none !important;
+    display: none !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+  html body .customer.addresses .field input::placeholder,
+  html body .customer.addresses input::placeholder{ color: #a89684 !important; }
+
+  /* Labels */
+  html body .customer.addresses label{
+    display: block !important;
+    font-family: 'Josefin Sans',sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: .08em !important;
+    text-transform: uppercase !important;
+    color: #8B7355 !important;
+    margin: 0 0 8px !important;
+    padding-left: 4px !important;
+    text-align: left !important;
+  }
+  html body .customer.addresses .field label{
+    position: absolute !important;
+    left: -10000px !important; width: 1px !important; height: 1px !important; overflow: hidden !important;
+  }
+
+  /* Country / Province */
+  html body .customer.addresses .select{ position: relative; }
+  html body .customer.addresses .select select{
+    -webkit-appearance: none !important; appearance: none !important;
+    padding-right: 40px !important; cursor: pointer !important;
+    background: #FFFBF4 !important; height: 50px !important;
+  }
+  html body .customer.addresses .select svg{
+    position: absolute !important;
+    right: 16px !important; top: 50% !important; transform: translateY(-50%) !important;
+    width: 12px !important; height: 8px !important;
+    color: #39220f !important; pointer-events: none !important;
+  }
+
+  /* PRIMARY BUTTONS */
+  html body .customer.addresses button:not([type="reset"]){
+    display: inline-flex !important;
+    align-items: center !important; justify-content: center !important; gap: 8px !important;
+    height: 48px !important; padding: 0 24px !important;
+    background: #39220f !important; color: #FFFBF4 !important;
+    border: 2px solid #39220f !important; border-radius: 999px !important;
+    font-size: 13px !important; letter-spacing: .12em !important; text-transform: uppercase !important;
+    box-shadow: 4px 4px 0 #c58548 !important;
+    cursor: pointer !important;
+    transition: transform .15s, box-shadow .15s, background .15s !important;
+    outline: 0 !important;
+  }
+  html body .customer.addresses button:not([type="reset"]):hover{
+    background: #c58548 !important; transform: translate(-2px,-2px) !important; box-shadow: 6px 6px 0 #39220f !important;
+  }
+  html body .customer.addresses button[type="reset"]{
+    display: inline-flex !important;
+    align-items: center !important; justify-content: center !important;
+    height: 48px !important; padding: 0 22px !important;
+    background: #FFFFFF !important; color: #39220f !important;
+    border: 1.5px solid #39220f !important; border-radius: 999px !important;
+    font-family: 'Archivo Black',sans-serif !important; font-weight: 400 !important;
+    font-size: 13px !important; letter-spacing: .12em !important; text-transform: uppercase !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    outline: 0 !important;
+    transition: transform .15s, box-shadow .15s, background .15s !important;
+  }
+  html body .customer.addresses button[type="reset"]:hover{
+    background: #FCE2A0 !important; box-shadow: 3px 3px 0 #39220f !important; transform: translate(-1px,-1px) !important;
+  }
+  /* Kill any button pseudo-elements adding orange fills */
+  html body .customer.addresses button::before,
+  html body .customer.addresses button::after{
+    content: none !important;
+    display: none !important;
+    background: transparent !important;
+  }
+
+  /* CENTER BUTTON ROWS */
+  html body .customer.addresses #AddAddress form > div:last-of-type,
+  html body .customer.addresses #AddAddress > form > div:last-of-type,
+  html body .customer.addresses #AddAddress > div:last-of-type,
+  html body .customer.addresses [id^="EditAddress_"] form > div:last-of-type,
+  html body .customer.addresses [id^="EditAddress_"] > form > div:last-of-type,
+  html body .customer.addresses [id^="EditAddress_"] > div:last-of-type{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 14px !important;
+    flex-wrap: wrap !important;
+    margin-top: 22px !important;
+    padding-top: 18px !important;
+    border-top: 1.5px solid #f0e3c8 !important;
+    text-align: center !important;
+  }
+  html body .customer.addresses form > div:has(> button){
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 14px !important;
+    flex-wrap: wrap !important;
+  }
+  .addr-btn-row{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 14px !important;
+    flex-wrap: wrap !important;
+    margin-top: 22px !important;
+    padding-top: 18px !important;
+    border-top: 1.5px solid #f0e3c8 !important;
+  }
+
+  /* CHECKBOX */
+  html body .customer.addresses input[type="checkbox"]{
+    width: 18px !important; height: 18px !important;
+    accent-color: #c58548 !important; margin-right: 8px !important; cursor: pointer !important;
+    vertical-align: middle !important;
+    outline: 0 !important;
+  }
+  html body .customer.addresses #AddAddress > div:has(> input[type="checkbox"]),
+  html body .customer.addresses [id^="EditAddress_"] > div:has(> input[type="checkbox"]),
+  html body .customer.addresses form > div:has(> input[type="checkbox"]){
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: #FFFBF4 !important;
+    border: 1.5px dashed #c58548 !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    margin-top: 14px !important;
+  }
+  html body .customer.addresses input[type="checkbox"] + label{
+    display: inline !important;
+    position: static !important;
+    width: auto !important; height: auto !important; overflow: visible !important;
+    margin: 0 !important; padding: 0 !important;
+    font-size: 13.5px !important; color: #39220f !important;
+    text-transform: none !important; letter-spacing: 0 !important;
+    font-weight: 600 !important; cursor: pointer !important;
+  }
+
+  /* SAVED ADDRESS CARDS */
+  html body .customer.addresses ul[role="list"]{
+    list-style: none !important; padding: 0 !important; margin: 0 !important;
+    display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 18px !important;
+  }
+  @media (max-width: 720px){
+    html body .customer.addresses ul[role="list"]{ grid-template-columns: 1fr !important; gap: 14px !important; }
+  }
+  html body .customer.addresses li[data-address]{
+    background: #FFFFFF !important;
+    border: 2px solid #39220f !important;
+    border-radius: 18px !important;
+    box-shadow: 4px 4px 0 #39220f !important;
+    padding: 22px !important;
+    font-size: 15px !important; line-height: 1.5 !important; color: #39220f !important;
+    list-style: none !important;
+    text-align: center !important;
+    display: flex !important; flex-direction: column !important;
+  }
+  html body .customer.addresses li[data-address] > h2{
+    display: inline-block !important;
+    background: #C5E4D4 !important; color: #2b6b53 !important;
+    border: 1.5px solid #2b6b53 !important; border-radius: 999px !important;
+    padding: 5px 12px !important;
+    font-size: 10px !important; letter-spacing: .14em !important;
+    margin: 0 auto 14px !important; text-transform: uppercase !important;
+    align-self: center !important;
+  }
+  html body .customer.addresses li[data-address] p{ margin: 0 0 12px !important; color: #39220f !important; }
+
+  /* EDIT + DELETE BUTTONS */
+  html body .customer.addresses li[data-address] > button{
+    height: 42px !important;
+    padding: 0 20px !important;
+    font-size: 11.5px !important;
+    letter-spacing: .1em !important;
+    margin: 12px 0 0 0 !important;
+    display: block !important;
+    width: auto !important;
+  }
+  html body .customer.addresses li[data-address] > button + button{
+    margin-top: 12px !important;
+  }
+  html body .customer.addresses li[data-address] > button[aria-label*="delete" i]{
+    background: #FFFFFF !important; color: #c53156 !important;
+    border: 1.5px solid #c53156 !important; box-shadow: none !important;
+  }
+  html body .customer.addresses li[data-address] > button[aria-label*="delete" i]:hover{
+    background: #FBE0E5 !important; color: #8e1e3c !important;
+    box-shadow: 3px 3px 0 #c53156 !important;
+  }
+
+  /* PAGINATION */
+  html body .customer.addresses .pagination{ margin-top: 32px !important; display: flex !important; justify-content: center !important; }
+  html body .customer.addresses .pagination ul{ display: flex !important; gap: 6px !important; list-style: none !important; padding: 0 !important; margin: 0 !important; }
+  html body .customer.addresses .pagination a,
+  html body .customer.addresses .pagination span{
+    display: inline-flex !important;
+    align-items: center !important; justify-content: center !important;
+    min-width: 40px !important; height: 40px !important; padding: 0 12px !important;
+    background: #FFFFFF !important; border: 1.5px solid #39220f !important; border-radius: 12px !important;
+    font-family: 'Archivo Black',sans-serif !important; font-size: 13px !important; color: #39220f !important;
+    text-decoration: none !important;
+  }
+  html body .customer.addresses .pagination a:hover{ background: #FCE2A0 !important; box-shadow: 3px 3px 0 #39220f !important; }
+  html body .customer.addresses .pagination [aria-current="page"]{ background: #39220f !important; color: #FFFBF4 !important; border-color: #39220f !important; }
+
+  html body .customer.addresses #AddAddress h2,
+  html body .customer.addresses [id^="EditAddress_"] h2{
+    text-align: center !important; margin: 0 auto 22px !important;
+  }
+
+  @media (max-width: 720px){
+    html body .customer.addresses{ padding: 22px 14px 60px !important; }
+    html body .customer.addresses #AddAddress{ padding: 22px 18px !important; }
+    .addr-hero h1{ font-size: 28px !important; }
+    html body .customer.addresses li[data-address] > button{ width: 100% !important; }
+    html body .customer.addresses li[data-address] > button + button{ margin-top: 12px !important; }
+  }
+</style>
+
+<script>
+(function(){
+  function init(){
+    var root = document.querySelector('.customer.addresses');
+    if (!root) return;
+
+    if (!root.querySelector('.addr-hero')){
+      var hero = document.createElement('div');
+      hero.className = 'addr-hero';
+      hero.innerHTML = '<span class="eyebrow">Shipping</span>' +
+                       '<h1>Your <em>addresses</em></h1>' +
+                       '<p>Save the spots we ship your syrups to — home, office, summer house. Pick a default and we’ll auto-fill it at checkout.</p>';
+      root.insertBefore(hero, root.firstChild);
+    }
+
+    var add = root.querySelector('#AddAddress');
+    if (add && !root.querySelector('.addr-add-toggle')){
+      var wrap = document.createElement('div');
+      wrap.className = 'addr-toggle-wrap';
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'addr-add-toggle';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-controls', 'AddAddress');
+      btn.innerHTML = '<span aria-hidden="true" style="font-size:18px;line-height:1;">+</span> Add new address';
+      wrap.appendChild(btn);
+      add.parentNode.insertBefore(wrap, add);
+      btn.addEventListener('click', function(){
+        var open = add.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        btn.innerHTML = open
+          ? '<span aria-hidden="true" style="font-size:18px;line-height:1;">×</span> Hide form'
+          : '<span aria-hidden="true" style="font-size:18px;line-height:1;">+</span> Add new address';
+        if (open){
+          var first = add.querySelector('input,select');
+          if (first) setTimeout(function(){ first.focus(); }, 100);
+        }
+      });
+      var resetBtn = add.querySelector('button[type="reset"]');
+      if (resetBtn){
+        resetBtn.addEventListener('click', function(){
+          add.classList.remove('is-open');
+          btn.setAttribute('aria-expanded', 'false');
+          btn.innerHTML = '<span aria-hidden="true" style="font-size:18px;line-height:1;">+</span> Add new address';
+        });
+      }
+    }
+
+    var ul = root.querySelector('ul[role="list"]');
+    if (ul && !root.querySelector('.addr-section-head')){
+      var head = document.createElement('div');
+      head.className = 'addr-section-head';
+      head.innerHTML = '<h2>Saved addresses</h2>';
+      ul.parentNode.insertBefore(head, ul);
+    }
+
+    var forms = root.querySelectorAll('form');
+    forms.forEach(function(form){
+      var btns = form.querySelectorAll('button');
+      if (btns.length < 2) return;
+      var submitBtn = null, resetBtn = null;
+      btns.forEach(function(b){
+        if (b.type === 'reset') resetBtn = b;
+        else if (!submitBtn) submitBtn = b;
+      });
+      if (submitBtn && resetBtn){
+        var parent = submitBtn.parentElement;
+        if (parent && parent.contains(resetBtn)){
+          parent.classList.add('addr-btn-row');
+        } else {
+          var sParent = submitBtn.parentElement;
+          var rParent = resetBtn.parentElement;
+          if (sParent && rParent && sParent.parentElement === rParent.parentElement){
+            sParent.classList.add('addr-btn-row');
+            rParent.classList.add('addr-btn-row');
+          }
+        }
+      }
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+{% schema %}
+{ "name": "Addresses Brand Polish", "settings": [] }
+{% endschema %}

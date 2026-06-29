@@ -1,0 +1,46 @@
+{%- comment -%}
+  Syruvia VIP-aware card price (server-rendered).
+  Usage: {% render 'syr-vip-price', product: product %}
+  Eligibility mirrors the collection pages: every full-size item over $7.99 is a syrup
+  EXCEPT known non-syrups (variety packs, boba/bursting balls, toppings, pumps, bundles, merch).
+  - Non-VIP visitor: real price + "Unlock VIP $7.99".
+  - Signed-in VIP: $7.99 (with original struck through) + "VIP price".
+  Style .syrvip / .syrvip-now / .syrvip-was / .syrvip-tag in the host section.
+{%- endcomment -%}
+{%- liquid
+  assign tl = product.title | downcase
+  assign tu = product.url | downcase
+  assign ty = product.type | downcase
+  assign blob = tl | append: ' ' | append: ty
+  assign is_nonsyrup = false
+  if blob contains 'variety' or blob contains 'pack' or blob contains 'boba' or blob contains 'bursting' or blob contains 'topping' or blob contains 'bundle' or blob contains 'gift' or blob contains 'sample' or blob contains 'sticker' or blob contains 'merch' or blob contains 'tote' or blob contains 'apparel'
+    assign is_nonsyrup = true
+  endif
+  if tl contains 'syrup pump' or tu contains 'syrup-pump'
+    assign is_nonsyrup = true
+  endif
+  assign tagstr = ''
+  if customer
+    assign tagstr = customer.tags | join: ',' | downcase
+  endif
+  assign vip_cust = false
+  if tagstr contains 'vip'
+    assign vip_cust = true
+  endif
+  assign eligible = false
+  if is_nonsyrup == false and product.price > 799
+    assign eligible = true
+  endif
+-%}
+<span class="syrvip">
+{%- if eligible and vip_cust -%}
+  <span class="syrvip-now">{{ 799 | money }}</span>
+  <span class="syrvip-was">{{ product.price | money }}</span>
+  <span class="syrvip-tag is-vip"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.6 1.3 6.7L12 17.8 5.9 20.4 7.2 13.7l-5-4.6 6.8-.8z"></path></svg>VIP price</span>
+{%- elsif eligible -%}
+  <span class="syrvip-now">{{ product.price | money }}</span>
+  <span class="syrvip-tag"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.6 1.3 6.7L12 17.8 5.9 20.4 7.2 13.7l-5-4.6 6.8-.8z"></path></svg>Unlock VIP $7.99</span>
+{%- else -%}
+  <span class="syrvip-now">{{ product.price | money }}</span>
+{%- endif -%}
+</span>

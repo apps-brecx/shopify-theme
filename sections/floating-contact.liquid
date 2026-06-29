@@ -1,0 +1,425 @@
+{% comment %}
+  Floating Contact Button + Modal
+  - Position: bottom-right (fixed)
+  - Sends to: Shopify contact email (default) OR a custom webhook URL
+  - No page reload on submit
+{% endcomment %}
+
+{% liquid
+  assign bb_icon_url = ''
+  if section.settings.button_icon != blank
+    assign bb_icon_url = section.settings.button_icon | image_url: width: 120
+  else
+    assign bb_icon_url = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Contact_us.png?v=1758809684'
+  endif
+%}
+
+{%- render 'pd-collection-polish' -%}
+
+<section id="bb-floating-contact"
+  class="bb-floating-contact"
+  data-send-mode="{{ section.settings.send_mode }}"
+  data-webhook-url="{{ section.settings.webhook_url | escape }}"
+  data-success-text="{{ section.settings.success_text | escape }}"
+  data-error-text="{{ section.settings.error_text | escape }}"
+>
+  <!-- Floating button -->
+  <button class="bb-float-btn"
+          id="bb-float-btn"
+          aria-haspopup="dialog"
+          aria-controls="bb-contact-modal"
+          aria-label="{{ section.settings.button_label }}">
+    <img id="bb-float-icon"
+         src="{{ bb_icon_url }}"
+         alt="{{ section.settings.button_label | escape }}"
+         width="60" height="60" loading="lazy">
+  </button>
+
+  <!-- Backdrop -->
+  <div class="bb-modal-overlay" id="bb-modal-overlay" hidden></div>
+
+  <!-- Modal container (centers the card) -->
+  <div class="bb-modal" id="bb-contact-modal" role="dialog" aria-modal="true" aria-labelledby="bb-modal-title" hidden>
+    <!-- Card -->
+    <div class="bb-modal-card" role="document">
+          <button class="bb-modal-close" id="bb-modal-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18"
+            fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+      <h3 class="bb-modal-title" id="bb-modal-title">{{ section.settings.modal_title }}</h3>
+      <p class="bb-modal-sub">{{ section.settings.modal_subtext }}</p>
+
+      {% if section.settings.send_mode == 'shopify' %}
+        {%- form 'contact', id: 'FloatingContactForm', class: 'bb-form' -%}
+          <input type="hidden" name="form_type" value="contact">
+          {% if section.settings.subject_prefix != blank %}
+            <input type="hidden" name="contact[tags]" value="{{ section.settings.subject_prefix }}">
+          {% endif %}
+
+          <label class="bb-field">
+            <span>Name*</span>
+            <input type="text" name="contact[name]" required autocomplete="name">
+          </label>
+
+          <label class="bb-field">
+            <span>Email*</span>
+            <input type="email" name="contact[email]" required autocomplete="email">
+          </label>
+
+          <label class="bb-field">
+            <span>Phone</span>
+            <input type="tel" name="contact[phone]" autocomplete="tel">
+          </label>
+
+          <label class="bb-field">
+            <span>Message*</span>
+            <textarea name="contact[body]" rows="5" required></textarea>
+          </label>
+
+          <button type="submit" class="bb-submit" id="bb-submit">{{ section.settings.submit_label }}</button>
+          <div class="bb-status" id="bb-status" aria-live="polite"></div>
+        {%- endform -%}
+      {% else %}
+        <!-- Custom webhook JSON POST -->
+        <form id="FloatingContactWebhookForm" class="bb-form" novalidate>
+          <label class="bb-field">
+            <span>Name*</span>
+            <input type="text" name="name" required autocomplete="name">
+          </label>
+
+          <label class="bb-field">
+            <span>Email*</span>
+            <input type="email" name="email" required autocomplete="email">
+          </label>
+
+          <label class="bb-field">
+            <span>Phone</span>
+            <input type="tel" name="phone" autocomplete="tel">
+          </label>
+
+          <label class="bb-field">
+            <span>Message*</span>
+            <textarea name="message" rows="5" required></textarea>
+          </label>
+
+          <button type="submit" class="bb-submit" id="bb-submit">{{ section.settings.submit_label }}</button>
+          <div class="bb-status" id="bb-status" aria-live="polite"></div>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <style>
+    /* Floating Button */
+    .bb-float-btn {
+      position: fixed;
+      bottom: 4%;
+      right: 1%;
+      z-index: 10002; 
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      padding: 0;
+      border-radius: 50%;
+      border: 0;
+      background: {{ section.settings.button_bg }};
+      color: {{ section.settings.button_text }};
+      box-shadow: 0 8px 20px rgba(0,0,0,.18);
+      cursor: pointer;
+    }
+    .bb-float-btn img {
+      width: 60px; height: 60px; border-radius: 50%; display: block;
+    }
+
+    /* Backdrop */
+    .bb-modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 10000;
+    }
+
+      .bb-modal{
+      position: fixed;
+      inset: auto;                                    
+      right: {{ section.settings.offset_right | default: 24 }}px;
+      bottom: calc(24px + 72px);                       
+      z-index: 10001;                                 
+      width: min(92vw, 520px);
+      pointer-events: none;                          
+    }
+
+    .bb-modal-card{
+        position: relative;
+        pointer-events: auto;                          
+        width: 100%;
+        max-width: 520px;
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 20px 50px rgba(0,0,0,.25);
+        animation: bb-slide-up .18s ease-out;
+        font-family: "Helvetica" !important;
+    }
+
+ 
+
+     .bb-modal-close{
+  position:absolute; top:10px; right:12px;
+  display:inline-flex; align-items:center; justify-content:center;
+  width:32px; height:32px; border:0; border-radius:8px;
+  background:transparent; color:#111;
+  cursor:pointer; line-height:1;
+}
+
+.bb-modal-close svg{ width:20px; height:20px; display:block; }
+
+
+
+    /* Form */
+    .bb-field { display: grid; gap: 6px; margin-bottom: 12px;  }
+    .bb-field input, .bb-field textarea {
+      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #ddd; font: inherit;
+    }
+    .bb-submit {
+      width: 100%; padding: 12px 14px; border-radius: 10px; border: 0; cursor: pointer;
+      font-weight: 700; background: #3C2005; color: {{ section.settings.submit_text }};
+    }
+    .bb-modal-title { margin: 0 0 6px; font-size: 20px; font-family: Helvetica !important ;}
+    .bb-modal-sub   { margin: 0 0 16px; color: #555; font-size: 14px; font-family: Helvetica !important ; }
+    .bb-status      { margin-top: 10px; min-height: 18px; font-size: 14px; }
+
+    /* Hide when closed */
+    .bb-modal[hidden], .bb-modal-overlay[hidden] { display: none !important; }
+
+    @keyframes bb-zoom-in {
+      from { transform: scale(.96); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    @keyframes bb-slide-up{
+  from{ transform: translateY(8px); opacity: 0; }
+  to  { transform: translateY(0);    opacity: 1; }
+}
+
+
+    @media (max-width: 480px){
+  .bb-modal{
+    right: 12px;
+    bottom: calc(12px + 72px);
+    width: calc(100vw - 24px);
+  }
+  .bb-modal-card::after{ right: 24px; }
+}
+
+    @media (max-width: 768px){
+    .bb-float-btn{
+      bottom: 15%;
+      right: 1%;
+    }
+}
+
+  </style>
+
+  <script>
+    (function () {
+      const root = document.getElementById('bb-floating-contact');
+      if (!root) return;
+
+      // Icons
+      const DEFAULT_ICON_URL = "{{ bb_icon_url }}";
+      const OPEN_ICON_URL    = "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Dropdown_4.png?v=1758809684";
+      const pre = new Image(); pre.src = OPEN_ICON_URL;
+
+      // Config
+      const sendMode    = root.dataset.sendMode; // 'shopify' | 'webhook'
+      const webhookUrl  = root.dataset.webhookUrl;
+      const successText = root.dataset.successText || 'Thanks! We received your message.';
+      const errorText   ='Thanks! We received your message';
+
+      // Elements
+      const btn      = document.getElementById('bb-float-btn');
+      const btnIcon  = document.getElementById('bb-float-icon');
+      const modal    = document.getElementById('bb-contact-modal');
+      const overlay  = document.getElementById('bb-modal-overlay');
+      const closeBtn = document.getElementById('bb-modal-close');
+      const statusBox = document.getElementById('bb-status');
+      const submitBtn = document.getElementById('bb-submit');
+      const shopifyForm = document.getElementById('FloatingContactForm');
+      const webhookForm = document.getElementById('FloatingContactWebhookForm');
+
+      function setButtonIcon(isOpen) {
+        if (btnIcon) btnIcon.src = isOpen ? OPEN_ICON_URL : DEFAULT_ICON_URL;
+      }
+
+      function openModal() {
+        overlay.hidden = false;
+        modal.hidden = false;
+        setButtonIcon(true);
+        const first = modal.querySelector('input, textarea, button');
+        if (first) first.focus();
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        overlay.hidden = true;
+        modal.hidden = true;
+        setButtonIcon(false);
+        document.body.style.overflow = '';
+        if (btn) btn.focus();
+      }
+
+      // Toggle open/close
+      btn.addEventListener('click', () => (modal.hidden ? openModal() : closeModal()));
+      overlay.addEventListener('click', closeModal);
+      closeBtn.addEventListener('click', closeModal);
+      document.addEventListener('keydown', (e) => { if (!modal.hidden && e.key === 'Escape') closeModal(); });
+
+      // Helpers
+      const validEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      const validPhone = (v) => v.trim() === '' || /^[\d+\-\s()]{6,}$/.test(v);
+
+      function setLoading(on) {
+        if (!submitBtn) return;
+        submitBtn.disabled = on;
+        submitBtn.textContent = on ? 'Sending…' : '{{ section.settings.submit_label }}';
+      }
+
+      // Shopify AJAX submit
+      async function handleShopifySubmit(ev) {
+        ev.preventDefault();
+        const fd = new FormData(shopifyForm);
+
+        const name  = fd.get('contact[name]')  || '';
+        const email = fd.get('contact[email]') || '';
+        const phone = fd.get('contact[phone]') || '';
+        const body  = fd.get('contact[body]')  || '';
+
+        if (!name.trim() || !validEmail(email) || !body.trim() || !validPhone(phone)) {
+          statusBox.textContent = 'Please fill required fields correctly.';
+          return;
+        }
+
+        try {
+          setLoading(true);
+          const resp = await fetch('/contact', {
+            method: 'POST',
+            headers: { 'Accept': 'text/html' },
+            body: fd
+          });
+
+          if (resp.ok) {
+            statusBox.textContent = successText;
+            shopifyForm.reset();
+            setTimeout(closeModal, 1200);
+          } else {
+            statusBox.textContent = errorText;
+          }
+        } catch (e) {
+          statusBox.textContent = errorText;
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      // Webhook submit
+      async function handleWebhookSubmit(ev) {
+        ev.preventDefault();
+        const fd = new FormData(webhookForm);
+
+        const name    = (fd.get('name')    || '').trim();
+        const email   = (fd.get('email')   || '').trim();
+        const phone   = (fd.get('phone')   || '').trim();
+        const message = (fd.get('message') || '').trim();
+
+        if (!name || !validEmail(email) || !message || !validPhone(phone)) {
+          statusBox.textContent = 'Please fill required fields correctly.';
+          return;
+        }
+        if (!webhookUrl) {
+          statusBox.textContent = 'Missing webhook URL in section settings.';
+          return;
+        }
+
+        try {
+          setLoading(true);
+          const resp = await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name, email, phone, message,
+              page: window.location.href,
+              source: 'floating-contact'
+            })
+          });
+
+          if (resp.ok) {
+            statusBox.textContent = successText;
+            webhookForm.reset();
+            setTimeout(closeModal, 1200);
+          } else {
+            statusBox.textContent = errorText;
+          }
+        } catch (e) {
+          statusBox.textContent = errorText;
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      if (shopifyForm) shopifyForm.addEventListener('submit', handleShopifySubmit);
+      if (webhookForm) webhookForm.addEventListener('submit', handleWebhookSubmit);
+
+      setButtonIcon(false);
+    })();
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Floating contact button",
+  "settings": [
+    {
+      "type": "select",
+      "id": "send_mode",
+      "label": "Send to",
+      "default": "shopify",
+      "options": [
+        { "value": "shopify", "label": "Shopify Contact (emails store owner)" },
+        { "value": "webhook", "label": "Custom Webhook (POST JSON)" }
+      ]
+    },
+    { "type": "url", "id": "webhook_url", "label": "Webhook URL (when 'webhook' is selected)" },
+
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Contact us" },
+    { "type": "image_picker", "id": "button_icon", "label": "Custom button icon (optional)" },
+
+    { "type": "text", "id": "modal_title", "label": "Modal title", "default": "Send us a message" },
+    { "type": "text", "id": "modal_subtext", "label": "Subtitle", "default": "We typically reply within a business day." },
+    { "type": "text", "id": "subject_prefix", "label": "Subject/Tag hint (optional)", "default": "Floating Contact" },
+
+    { "type": "color", "id": "button_bg", "label": "Button background", "default": "#111827" },
+    { "type": "color", "id": "button_text", "label": "Button text color", "default": "#ffffff" },
+
+    { "type": "color", "id": "submit_bg", "label": "Submit button background", "default": "#111827" },
+    { "type": "color", "id": "submit_text", "label": "Submit button text", "default": "#ffffff" },
+
+    {
+      "type": "range",
+      "id": "offset_right",
+      "label": "Right offset (px)",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "default": 24
+    },
+
+    { "type": "text", "id": "submit_label", "label": "Submit label", "default": "Send Message" },
+    { "type": "text", "id": "success_text", "label": "Success text", "default": "Thanks! We received your message." },
+    { "type": "text", "id": "error_text", "label": "Error text", "default": "Something went wrong. Please try again." }
+  ],
+  "presets": [{ "name": "Floating contact button" }]
+}
+{% endschema %}

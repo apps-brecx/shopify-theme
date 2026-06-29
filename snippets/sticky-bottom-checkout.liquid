@@ -1,0 +1,171 @@
+{%- comment -%} Sticky Bottom Checkout v2 — floating brand pill, butter glow accents, chunky shadow. Hide-until-scroll. {%- endcomment -%}
+{%- comment -%}
+  Sticky Bottom Checkout v3 — global. Self-contained form,
+  posts to /cart with name="checkout" which Shopify redirects
+  to /checkout while preserving the session cart.
+{%- endcomment -%}
+
+<form action="/cart" method="post" class="sticky-bottom-checkout" id="sticky-bottom-checkout">
+  <div class="sbc-inner">
+    <div class="sbc-total">
+      <span class="sbc-label">{{ 'sections.cart.estimated_total' | t }}</span>
+      <span class="sbc-value" data-sbc-total>{{ cart.total_price | money }}</span>
+    </div>
+    <button
+      type="submit"
+      name="checkout"
+      class="sbc-cta checkout-button"
+      {% if cart == empty %}disabled aria-disabled="true"{% endif %}
+    >
+      Checkout
+      <svg class="sbc-arrow" viewBox="0 0 16 14" width="15" height="13" fill="none" aria-hidden="true">
+        <path d="M2 7h11M9 3l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+  {%- if additional_checkout_buttons -%}
+    <div class="sbc-accelerated">{{ content_for_additional_checkout_buttons }}</div>
+  {%- endif -%}
+</form>
+<div class="sticky-bottom-checkout-spacer" aria-hidden="true"></div>
+
+<style>
+html body .sticky-bottom-checkout{
+  position:fixed; left:0; right:0; bottom:0; z-index:30;
+  padding:0 12px 12px;
+  padding-bottom:calc(12px + env(safe-area-inset-bottom, 0px));
+  pointer-events:none;
+  font-family:'Josefin Sans','Josefin',sans-serif !important;
+  transform:translateY(140%); opacity:0;
+  transition:transform .45s cubic-bezier(.25,.46,.45,.94), opacity .25s ease;
+  will-change:transform;
+}
+html body .sticky-bottom-checkout.is-revealed{ transform:translateY(0); opacity:1; }
+
+html body .sticky-bottom-checkout .sbc-inner{
+  pointer-events:auto;
+  background:#FFFBF4 !important;
+  border:2px solid #39220f !important;
+  border-radius:22px !important;
+  padding:12px 12px 12px 16px !important;
+  display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center;
+  box-shadow:4px 4px 0 #39220f, 0 10px 24px rgba(57,34,15,.12) !important;
+  position:relative;
+}
+html body .sticky-bottom-checkout .sbc-inner::before{
+  content:""; position:absolute; inset:3px;
+  border-radius:18px; border:1px solid rgba(57,34,15,.06);
+  pointer-events:none;
+}
+
+html body .sticky-bottom-checkout .sbc-total{ display:flex; flex-direction:column; gap:2px; }
+html body .sticky-bottom-checkout .sbc-total .sbc-label{
+  font-family:'Archivo Black','Archivo',sans-serif !important;
+  font-weight:400 !important; font-size:9.5px !important; letter-spacing:.16em !important;
+  text-transform:uppercase !important; color:rgba(57,34,15,.55) !important;
+}
+html body .sticky-bottom-checkout .sbc-total .sbc-value{
+  font-family:'Archivo Black','Archivo',sans-serif !important;
+  font-weight:400 !important; font-size:22px !important;
+  color:#39220f !important; letter-spacing:.005em !important; line-height:1.05 !important;
+}
+
+html body .sticky-bottom-checkout .sbc-cta,
+html body .sticky-bottom-checkout button.checkout-button{
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  gap:8px !important;
+  text-align:center !important;
+  background:#39220f !important; background-image:none !important;
+  color:#FFFBF4 !important;
+  font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+  letter-spacing:.12em !important; text-transform:uppercase !important; font-size:13px !important;
+  padding:13px 22px !important; border-radius:999px !important;
+  border:1.5px solid #39220f !important; cursor:pointer !important;
+  box-shadow:3px 3px 0 #c58548 !important;
+  transition:transform .12s ease, box-shadow .12s ease !important;
+  -webkit-tap-highlight-color:transparent !important;
+  white-space:nowrap !important;
+}
+html body .sticky-bottom-checkout .sbc-cta .sbc-arrow{ color:#FFFBF4 !important; flex:0 0 auto; }
+html body .sticky-bottom-checkout .sbc-cta:hover,
+html body .sticky-bottom-checkout button.checkout-button:hover{
+  transform:translate(-1px,-1px) !important; box-shadow:4px 4px 0 #c58548 !important;
+  color:#FFFBF4 !important; background:#39220f !important;
+}
+html body .sticky-bottom-checkout .sbc-cta:active{
+  transform:translate(1px,1px) !important; box-shadow:1px 1px 0 #c58548 !important;
+}
+html body .sticky-bottom-checkout .sbc-cta::before,
+html body .sticky-bottom-checkout button.checkout-button::before{ display:none !important; content:none !important; }
+html body .sticky-bottom-checkout .sbc-cta[disabled],
+html body .sticky-bottom-checkout .sbc-cta[aria-disabled="true"]{ opacity:.55 !important; cursor:not-allowed !important; }
+html body .sticky-bottom-checkout .sbc-accelerated{ margin-top:10px; }
+html body .sticky-bottom-checkout-spacer{ height:96px; }
+
+@media (max-width:380px){
+  html body .sticky-bottom-checkout{ padding:0 10px 10px; padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px)); }
+  html body .sticky-bottom-checkout .sbc-inner{ padding:10px 10px 10px 14px !important; gap:8px; }
+  html body .sticky-bottom-checkout .sbc-total .sbc-value{ font-size:19px !important; }
+  html body .sticky-bottom-checkout .sbc-cta{ font-size:12px !important; letter-spacing:.08em !important; padding:11px 16px !important; }
+}
+@media (min-width:768px){
+  html body .sticky-bottom-checkout{ display:none !important; }
+  html body .sticky-bottom-checkout-spacer{ display:none !important; }
+}
+</style>
+
+<script>
+(function(){
+  var wrap = document.getElementById('sticky-bottom-checkout');
+  if(!wrap) return;
+  function readCanonicalTotal(){
+    var el = document.querySelector('#main-cart-footer .totals__total-value');
+    return el ? el.textContent.trim() : null;
+  }
+  function syncTotal(){
+    var v = readCanonicalTotal();
+    var tgt = wrap.querySelector('[data-sbc-total]');
+    if(tgt && v) tgt.textContent = v;
+  }
+  syncTotal();
+  document.addEventListener('shopify:section:load', syncTotal);
+  document.addEventListener('cart:updated', syncTotal);
+  document.addEventListener('ajaxCart:updated', syncTotal);
+  var footer = document.getElementById('main-cart-footer');
+  if (window.MutationObserver && footer){
+    new MutationObserver(syncTotal).observe(footer, {childList:true, subtree:true, characterData:true});
+  }
+})();
+
+(function(){
+  window.__bottomSafePadAggregator = true;
+  var bar = document.getElementById('sticky-bottom-checkout');
+  if (!bar) return;
+  var mq = window.matchMedia('(min-width: 768px)');
+  var revealed = false; var THRESHOLD = 60;
+  function check(){
+    if (revealed || mq.matches) return;
+    var y = window.scrollY || window.pageYOffset || 0;
+    if (y > THRESHOLD){
+      bar.classList.add('is-revealed');
+      revealed = true; applySafePad();
+      window.removeEventListener('scroll', check);
+    }
+  }
+  window.addEventListener('scroll', check, {passive:true});
+  check();
+
+  function applySafePad(){
+    if (mq.matches) { document.body.style.paddingBottom = '0px'; return; }
+    var h = bar.classList.contains('is-revealed') ? Math.round(bar.getBoundingClientRect().height || 0) : 0;
+    var v = h ? h + 'px' : '';
+    document.body.style.paddingBottom = v;
+    var spacer = document.querySelector('.sticky-bottom-checkout-spacer');
+    if (spacer) spacer.style.height = v || '0px';
+  }
+  window.addEventListener('load', applySafePad, { once:true });
+  window.addEventListener('resize', applySafePad);
+  if (mq.addEventListener) mq.addEventListener('change', applySafePad); else mq.addListener(applySafePad);
+  if ('ResizeObserver' in window){ new ResizeObserver(applySafePad).observe(bar); }
+})();
+</script>

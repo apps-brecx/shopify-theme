@@ -1,0 +1,201 @@
+{%- comment -%} Account polish v6: kill boxy focus shadow on input fields. {%- endcomment -%}
+<style id="account-brand-polish-css">
+  html body .sdash{
+    --vip: #2F7BB0 !important;
+    --vip-soft: #B8DCEB !important;
+    --vip-ink: #1F5A85 !important;
+    --shadow-vip: 4px 4px 0 #2F7BB0 !important;
+    --bg: #FFFBF4 !important;
+    --surface: #FFFFFF !important;
+    --ink: #39220f !important;
+    --accent: #c58548 !important;
+    --butter: #FCE2A0 !important;
+  }
+  html body .sdash *, html body .sdash p, html body .sdash span, html body .sdash a, html body .sdash li, html body .sdash input, html body .sdash button, html body .sdash label, html body .sdash .crumbs, html body .sdash .order-meta .k, html body .sdash .order-meta .v, html body .sdash .dash-hello .eyebrow, html body .sdash .ov-tile .lbl, html body .sdash .pill-status, html body .sdash .badge-n, html body .sdash .dnav-item, html body .sdash .btn-ink, html body .sdash .btn-vip, html body .sdash .btn-ghost, html body .sdash .toast{ font-family: 'Josefin Sans','Josefin',system-ui,sans-serif !important; }
+  html body .sdash h1, html body .sdash h2, html body .sdash h3, html body .sdash h4, html body .sdash .dnav-user .nm, html body .sdash .dnav-user .av, html body .sdash .ov-tile .big, html body .sdash .order-foot .totals .tt, html body .sdash .oline-name, html body .sdash .oline-price, html body .sdash .order-meta .v, html body .sdash .pill-status, html body .sdash .dnav-item, html body .sdash .btn-ink, html body .sdash .btn-vip, html body .sdash .btn-ghost, html body .sdash .dash-vipcard .vc-saved, html body .sdash .dash-vipcard .vc-top, html body .sdash .vip-hero h2, html body .sdash .vip-hero .tier, html body .sdash .vip-hero .savings .big, html body .sdash .addr-label, html body .sdash .addr-name, html body .sdash .addr-default-pill, html body .sdash .fav-name, html body .sdash .fav-price, html body .sdash .toggle-line .nm, html body .sdash .empty-state h3, html body .sdash .addr-add, html body .sdash .toast{ font-family: 'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight: 400 !important; }
+  html body .sdash .crumbs, html body .sdash .order-meta .k, html body .sdash .ov-tile .lbl, html body .sdash .empty-state p, html body .sdash .desc, html body .sdash .sect-head p, html body .sdash .dash-hello p, html body .sdash .dash-vipcard .vc-lbl, html body .sdash .vip-hero .savings .lbl, html body .sdash .addr-lines, html body .sdash .addr-phone, html body .sdash .oline-sub, html body .sdash .toggle-line .ds, html body .sdash .badge-n, html body .sdash .field label{ font-family: 'Josefin Sans','Josefin',system-ui,sans-serif !important; }
+
+  html body .sdash .dash-hero{ background:#FFFFFF !important; border:2px solid #39220f !important; box-shadow:5px 5px 0 #39220f !important; }
+  html body .sdash .dash-hello h1 em{ color:#c58548 !important; font-style:italic !important; font-family:'Josefin Sans',sans-serif !important; font-weight:300 !important; }
+  html body .sdash .dash-vipcard{ background:#FFFFFF !important; color:#39220f !important; border:2px solid #39220f !important; box-shadow:4px 4px 0 #39220f !important; }
+  html body .sdash .dash-vipcard .vc-top{ color:#1F5A85 !important; }
+  html body .sdash .dash-vipcard .vc-top .seal{ background:#B8DCEB !important; border:1.5px solid #39220f !important; color:#1F5A85 !important; }
+  html body .sdash .dash-vipcard .vc-saved{ color:#1F5A85 !important; }
+  html body .sdash .dash-vipcard .vc-lbl{ color:#5d4933 !important; opacity:1 !important; }
+
+  html body .sdash .card, html body .sdash .ov-tile, html body .sdash .order, html body .sdash .fav, html body .sdash .addr, html body .sdash .vperk{ background:#FFFFFF !important; border:2px solid #39220f !important; box-shadow:4px 4px 0 #39220f !important; }
+  html body .sdash .ov-tile.vip{ background:#FFFFFF !important; }
+  html body .sdash .ov-tile.vip .ic{ background:#B8DCEB !important; color:#1F5A85 !important; border-color:#39220f !important; }
+  html body .sdash .ov-tile.vip .big{ color:#1F5A85 !important; }
+
+  html body .sdash .vip-hero{ background:#2F7BB0 !important; border:2px solid #39220f !important; box-shadow:5px 5px 0 #39220f !important; color:#FFFBF4 !important; }
+  html body .sdash .vip-hero .grain{ display:none !important; }
+  html body .sdash .vip-hero h2{ color:#FFFBF4 !important; }
+  html body .sdash .vip-hero .tier{ background:#FCE2A0 !important; color:#39220f !important; border:2px solid #39220f !important; }
+  html body .sdash .vip-hero .savings .big{ color:#FCE2A0 !important; }
+  html body .sdash .vip-tier-track .track-fill{ background:#FCE2A0 !important; }
+
+  html body .sdash .btn-ink{ background:#39220f !important; color:#FFFBF4 !important; border:2px solid #39220f !important; box-shadow:4px 4px 0 #c58548 !important; }
+  html body .sdash .btn-ink:hover{ background:#c58548 !important; box-shadow:5px 5px 0 #39220f !important; }
+  html body .sdash .btn-vip{ background:#2F7BB0 !important; color:#FFFBF4 !important; border:2px solid #39220f !important; box-shadow:4px 4px 0 #39220f !important; }
+  html body .sdash .btn-vip:hover{ box-shadow:5px 5px 0 #c58548 !important; }
+  html body .sdash .btn-ghost{ background:#FFFFFF !important; color:#39220f !important; border:1.5px solid #39220f !important; }
+  html body .sdash .btn-ghost:hover{ background:#FCE2A0 !important; box-shadow:3px 3px 0 #39220f !important; }
+
+  html body .sdash .dash-nav{ background:#FFFFFF !important; border:2px solid #39220f !important; box-shadow:4px 4px 0 #39220f !important; }
+  html body .sdash .dnav-item{ font-family:'Archivo Black',sans-serif !important; font-weight:400 !important; }
+  html body .sdash .dnav-item.on{ background:#39220f !important; color:#FFFBF4 !important; border-color:#39220f !important; }
+  html body .sdash .dnav-item.vip.on{ background:#2F7BB0 !important; border-color:#39220f !important; color:#FFFBF4 !important; }
+  html body .sdash .dnav-item:hover{ background:#FCE2A0 !important; color:#39220f !important; }
+  html body .sdash .dnav-item.signout:hover{ background:#FCE2A0 !important; color:#39220f !important; }
+  html body .sdash .dnav-user .av{ background:#FCE2A0 !important; color:#39220f !important; border:1.5px solid #39220f !important; }
+
+  html body .sdash .pill-status.delivered{ background:#C5E4D4 !important; color:#2b6b53 !important; border:1.5px solid #2b6b53 !important; }
+  html body .sdash .pill-status.transit{ background:#FCE2A0 !important; color:#39220f !important; border:1.5px solid #39220f !important; }
+  html body .sdash .pill-status.processing{ background:#B8DCEB !important; color:#1F5A85 !important; border:1.5px solid #1F5A85 !important; }
+
+  /* === KILL BOXY FOCUS SHADOW ON SETTINGS INPUTS === */
+  html body .sdash .field input,
+  html body .sdash .field input:focus,
+  html body .sdash .field input:focus-visible,
+  html body .sdash .field input:focus-within{
+    box-shadow: none !important;
+    outline: 0 !important;
+    outline-color: transparent !important;
+    outline-style: none !important;
+    outline-width: 0 !important;
+  }
+  html body .sdash .field input:focus,
+  html body .sdash .field input:focus-visible{
+    border-color: #c58548 !important;
+  }
+
+  html body .sdash .sect-head h2{ display:inline-block !important; transform-origin:left center; transform:scale(var(--gr, 1)); transition:transform .35s cubic-bezier(.16,.84,.34,1); will-change:transform; }
+  html body .sdash .dash-hello h1{ transform-origin:left center; transform:scale(var(--gr-hello, .94)); transition:transform .5s cubic-bezier(.16,.84,.34,1); will-change:transform; }
+
+  html body .sdash .card, html body .sdash .ov-tile, html body .sdash .order, html body .sdash .fav, html body .sdash .addr, html body .sdash .vperk, html body .sdash .vip-hero{ opacity:0; transform:translateY(14px); transition:opacity .55s ease, transform .55s cubic-bezier(.16,.84,.34,1); }
+  html body .sdash.is-ready .card, html body .sdash.is-ready .ov-tile, html body .sdash.is-ready .order, html body .sdash.is-ready .fav, html body .sdash.is-ready .addr, html body .sdash.is-ready .vperk, html body .sdash.is-ready .vip-hero{ opacity:1; transform:translateY(0); }
+  html body .sdash.is-ready .ov-tile:nth-child(1){ transition-delay:.05s; }
+  html body .sdash.is-ready .ov-tile:nth-child(2){ transition-delay:.15s; }
+  html body .sdash.is-ready .ov-tile:nth-child(3){ transition-delay:.25s; }
+  html body .sdash.is-ready .vperk:nth-child(1){ transition-delay:.05s; }
+  html body .sdash.is-ready .vperk:nth-child(2){ transition-delay:.12s; }
+  html body .sdash.is-ready .vperk:nth-child(3){ transition-delay:.19s; }
+  html body .sdash.is-ready .vperk:nth-child(4){ transition-delay:.26s; }
+
+  html body .sdash .ov-sticky-wrap{ display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 16px !important; }
+  html body .sdash .ov-sticky-wrap > .card.card-pad{ grid-column: 1 / -1 !important; }
+
+  @media (max-width: 1000px){
+    html body .sdash .dash-grid{ grid-template-columns: 1fr !important; }
+    html body .sdash .dash-nav{ display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important; padding: 14px !important; flex-direction: initial !important; flex-wrap: initial !important; }
+    html body .sdash .dnav-user{ grid-column: 1 / -1 !important; justify-content: flex-start !important; width: 100% !important; padding-bottom: 14px !important; margin-bottom: 4px !important; border-bottom: 1.5px solid #39220f !important; }
+    html body .sdash .dnav-item{ width: 100% !important; justify-content: flex-start !important; padding: 12px 10px !important; font-size: 12px !important; }
+    html body .sdash .dnav-sep{ display: none !important; }
+  }
+  @media (max-width: 920px){
+    html body .sdash .dash-wrap{ padding: 20px 16px 60px !important; }
+    html body .sdash .crumbs{ justify-content: center !important; }
+    html body .sdash .dash-hero{ flex-direction: column !important; text-align: center !important; align-items: center !important; padding: 24px 20px !important; }
+    html body .sdash .dash-hello{ width: 100% !important; }
+    html body .sdash .dash-hello h1{ text-align: center !important; margin-left: auto !important; margin-right: auto !important; transform-origin: center center !important; }
+    html body .sdash .dash-vipcard{ width: 100% !important; align-items: center !important; text-align: center !important; }
+    html body .sdash .dash-vipcard .vc-top{ justify-content: center !important; }
+    html body .sdash .sect-head{ flex-direction: column !important; align-items: center !important; text-align: center !important; }
+    html body .sdash .sect-head > div{ text-align: center !important; }
+    html body .sdash .sect-head h2{ text-align: center !important; transform-origin: center center !important; }
+    html body .sdash .ov-tile{ align-items: center !important; text-align: center !important; }
+    html body .sdash .ov-tile .ic{ margin-left: auto !important; margin-right: auto !important; }
+    html body .sdash .empty-state{ text-align: center !important; }
+    html body .sdash .ov-sticky-wrap{ grid-template-columns: 1fr !important; gap: 14px !important; }
+    html body .sdash .ov-sticky-wrap > .ov-tile, html body .sdash .ov-sticky-wrap > .card.card-pad{ position: sticky !important; margin: 0 !important; }
+    html body .sdash .ov-sticky-wrap > .ov-tile:nth-child(1){ top: 90px !important; z-index: 1 !important; }
+    html body .sdash .ov-sticky-wrap > .ov-tile:nth-child(2){ top: 110px !important; z-index: 2 !important; }
+    html body .sdash .ov-sticky-wrap > .ov-tile:nth-child(3){ top: 130px !important; z-index: 3 !important; }
+    html body .sdash .ov-sticky-wrap > .card.card-pad{ top: 150px !important; z-index: 4 !important; }
+  }
+  @media (max-width: 540px){ html body .sdash .dash-nav{ grid-template-columns: 1fr 1fr !important; } }
+
+  @media (prefers-reduced-motion: reduce){
+    html body .sdash .card, html body .sdash .ov-tile, html body .sdash .order, html body .sdash .fav, html body .sdash .addr, html body .sdash .vperk, html body .sdash .vip-hero, html body .sdash .sect-head h2, html body .sdash .dash-hello h1{ transform: none !important; opacity: 1 !important; transition: none !important; }
+    html body .sdash .ov-sticky-wrap > .ov-tile, html body .sdash .ov-sticky-wrap > .card.card-pad{ position: static !important; }
+  }
+</style>
+
+<script>
+(function(){
+  function init(){
+    var root = document.querySelector('.sdash');
+    if (!root) return;
+    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function dedupeTier(){
+      var nodes = root.querySelectorAll('.vip-track-top, .tt-top');
+      nodes.forEach(function(n){
+        var html = n.innerHTML;
+        var fixed = html.replace(/(<b>[^<]*tier)<\/b>(\s+)tier\b/gi, '$1</b>');
+        fixed = fixed.replace(/(\bnext\s+tier)\s+tier\b/gi, '$1');
+        if (html !== fixed) n.innerHTML = fixed;
+      });
+    }
+    dedupeTier();
+
+    var ovPanel = root.querySelector('.dpanel[data-panel="overview"]');
+    if (ovPanel && !ovPanel.querySelector('.ov-sticky-wrap')){
+      var ovTiles = ovPanel.querySelector('.ov-tiles');
+      var vipCard = null;
+      var children = ovPanel.children;
+      for (var i = 0; i < children.length; i++){
+        if (children[i].classList && children[i].classList.contains('card') && children[i].classList.contains('card-pad')){
+          vipCard = children[i]; break;
+        }
+      }
+      if (ovTiles){
+        var wrap = document.createElement('div');
+        wrap.className = 'ov-sticky-wrap';
+        ovTiles.parentNode.insertBefore(wrap, ovTiles);
+        [].slice.call(ovTiles.querySelectorAll('.ov-tile')).forEach(function(t){ wrap.appendChild(t); });
+        ovTiles.remove();
+        if (vipCard) wrap.appendChild(vipCard);
+      }
+    }
+
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ root.classList.add('is-ready'); }); });
+    if (reduced) return;
+
+    var hello = root.querySelector('.dash-hello h1');
+    var heads = [].slice.call(root.querySelectorAll('.sect-head h2'));
+    var ticking = false;
+    function update(){
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (vh < 1) { ticking = false; return; }
+      if (hello){
+        var r = hello.getBoundingClientRect();
+        var p = (vh - r.top) / vh; if (p < 0) p = 0; if (p > 1) p = 1;
+        var s = 0.94 + p * 0.06;
+        hello.style.setProperty('--gr-hello', s.toFixed(3));
+      }
+      heads.forEach(function(h){
+        var r = h.getBoundingClientRect();
+        if (r.top > vh + 80 || r.bottom < -80){ return; }
+        var center = r.top + r.height/2;
+        var dist = Math.abs(center - vh*0.55) / (vh*0.5);
+        if (dist > 1) dist = 1;
+        var gr = 1 + (1 - dist) * 0.08;
+        h.style.setProperty('--gr', gr.toFixed(3));
+      });
+      ticking = false;
+    }
+    function onScroll(){ if (!ticking){ ticking = true; window.requestAnimationFrame(update); } }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+{% schema %}
+{ "name": "Account Brand Polish", "settings": [] }
+{% endschema %}

@@ -1,0 +1,530 @@
+{%- comment -%} Summer Fancy Food Show landing — grid hero, marquee, scroll-pop cards, JS-pinned scaling bottles, video-background product bands, wholesale band, count-up stats. {%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign hbest = s.col_best | default: 'best-sellers' -%}
+{%- assign hnew = s.col_new | default: 'new-arrivals' -%}
+{%- assign hboba = s.col_boba | default: 'bursting-balls' -%}
+{%- assign bs = collections[hbest] -%}
+{%- assign na = collections[hnew] -%}
+{%- assign bb = collections[hboba] -%}
+{%- assign ws_url = s.wholesale_url | default: '/pages/wholesale' -%}
+{%- assign faire_url = s.faire_url | default: 'https://syruvia.faire.com' -%}
+{%- assign hero_src = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Purple..png?v=1782485700&width=1400' -%}
+{%- if s.hero_image != blank -%}{%- assign hero_src = s.hero_image | image_url: width: 1400 -%}{%- endif -%}
+{%- assign b1 = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/SF_Salted_Cookie_Butter.png?v=1781715206&width=700' -%}{%- if s.bottle_image != blank -%}{%- assign b1 = s.bottle_image | image_url: width: 700 -%}{%- endif -%}
+{%- assign b2 = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Pink_Splash.png?v=1781715206&width=700' -%}{%- if s.bottle_2 != blank -%}{%- assign b2 = s.bottle_2 | image_url: width: 700 -%}{%- endif -%}
+{%- assign b3 = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/SF_Vanilla.png?v=1781714241&width=700' -%}{%- if s.bottle_3 != blank -%}{%- assign b3 = s.bottle_3 | image_url: width: 700 -%}{%- endif -%}
+{%- assign mp4_1 = s.mp4_1 | default: 'https://cdn.shopify.com/videos/c/o/v/12648bf585c448189a0b5bfae75b9a0e.mp4' -%}
+{%- assign mp4_2 = s.mp4_2 | default: 'https://cdn.shopify.com/videos/c/o/v/96deff36c43447e0be1d592c6b0d2239.mp4' -%}
+{%- assign g1 = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Reg_Coffee_Woman.png?v=1782411674&width=900' -%}{%- if s.gallery_1 != blank -%}{%- assign g1 = s.gallery_1 | image_url: width: 900 -%}{%- endif -%}
+{%- assign g2 = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/SF_Woman.png?v=1782411676&width=900' -%}{%- if s.gallery_2 != blank -%}{%- assign g2 = s.gallery_2 | image_url: width: 900 -%}{%- endif -%}
+{%- assign g3 = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Fruit_Syrups_Women.png?v=1782411676&width=900' -%}{%- if s.gallery_3 != blank -%}{%- assign g3 = s.gallery_3 | image_url: width: 900 -%}{%- endif -%}
+{%- assign g4 = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Untitled_design_-_2026-06-25T142153.386.png?v=1782411792&width=900' -%}{%- if s.gallery_4 != blank -%}{%- assign g4 = s.gallery_4 | image_url: width: 900 -%}{%- endif -%}
+{%- assign g5 = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Fruit_Syrups.jpg?v=1782411820&width=900' -%}{%- if s.gallery_5 != blank -%}{%- assign g5 = s.gallery_5 | image_url: width: 900 -%}{%- endif -%}
+{%- assign g6 = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Regular_Coffee.jpg?v=1782411823&width=900' -%}{%- if s.gallery_6 != blank -%}{%- assign g6 = s.gallery_6 | image_url: width: 900 -%}{%- endif -%}
+<style id="ff-{{ section.id }}-css">
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+  #ff-{{ section.id }}{
+    --ink:#382313;--ink-2:#6b4a30;--paper:#fff6ef;--white:#fff;
+    --yellow:#ffcc4e;--bg:#ffcc4e;--syellow:#ffe293;--pink:#f05a94;--lpink:#fad5e5;--magenta:#e93a95;
+    --blue:#216eb7;--sky:#c7eafb;--peach:#ffe6cb;--blush:#f9c0c7;
+    --fh:'Fredoka','Baloo 2','Arial Black',sans-serif;--fb:'Source Sans 3','Myriad Pro',system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);font-family:var(--fb);position:relative;overflow:visible;
+  }
+  #ff-{{ section.id }} *{box-sizing:border-box;}
+  #ff-{{ section.id }} .ff-wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  #ff-{{ section.id }} .ff-eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--white);color:var(--ink);border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-family:var(--fh);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:8px 18px;line-height:1;}
+  #ff-{{ section.id }} .ff-h2{font-family:var(--fh);font-weight:700;font-size:clamp(30px,6vw,52px);line-height:1.0;letter-spacing:-.01em;margin:14px 0 0;color:var(--ink);}
+  #ff-{{ section.id }} .ff-h2 em{font-style:normal;color:var(--pink);}
+  #ff-{{ section.id }} .ff-rev{opacity:0;transform:translateY(28px) scale(.9);transition:opacity .55s ease, transform .75s cubic-bezier(.2,.8,.2,1.4);}
+  #ff-{{ section.id }} .ff-rev.in{opacity:1;transform:none;}
+  #ff-{{ section.id }} .ff-pop{opacity:0;will-change:transform,opacity;}
+  #ff-{{ section.id }} .ff-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;font-family:var(--fh);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;padding:16px 26px;border:2.5px solid var(--ink);cursor:pointer;transition:transform .16s ease, box-shadow .16s ease;}
+  #ff-{{ section.id }} .ff-btn--pink{background:var(--pink);color:#fff;box-shadow:4px 4px 0 var(--ink);}
+  #ff-{{ section.id }} .ff-btn--pink:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
+  #ff-{{ section.id }} .ff-btn--yellow{background:var(--syellow);color:var(--ink);box-shadow:4px 4px 0 var(--ink);}
+  #ff-{{ section.id }} .ff-btn--yellow:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
+  #ff-{{ section.id }} .ff-btn--ghost{background:var(--white);color:var(--ink);box-shadow:4px 4px 0 var(--ink);}
+  #ff-{{ section.id }} .ff-btn--ghost:hover{background:var(--lpink);transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
+  #ff-{{ section.id }} .ff-btnrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+  #ff-{{ section.id }} .ff-dots{position:absolute;inset:0;background-image:radial-gradient(#ffffff 8px, transparent 9px),radial-gradient(var(--lpink) 7px, transparent 8px),radial-gradient(var(--sky) 9px, transparent 10px);background-size:220px 220px,300px 300px,260px 260px;background-position:0 0,120px 80px,60px 180px;opacity:.5;pointer-events:none;z-index:0;}
+  #ff-{{ section.id }} .ff-hero{padding:54px 0 44px;position:relative;z-index:2;}
+  #ff-{{ section.id }} .ff-hero .ff-wrap{position:relative;display:grid;grid-template-columns:minmax(0,1fr) min(560px,46%);grid-template-areas:"copy fig" "cta fig";align-items:center;column-gap:clamp(24px,4vw,54px);row-gap:24px;}
+  #ff-{{ section.id }} .ff-hero-copy{grid-area:copy;max-width:560px;text-align:left;position:relative;z-index:3;}
+  #ff-{{ section.id }} .ff-logo{display:block;max-width:230px;width:100%;height:auto;margin:0 0 22px;background:#fff;border:2.5px solid var(--ink);border-radius:18px;box-shadow:5px 5px 0 var(--ink);padding:14px 18px;}
+  #ff-{{ section.id }} .ff-hero h1{font-family:var(--fh);font-weight:700;font-size:clamp(46px,10vw,80px);line-height:.9;letter-spacing:-.025em;margin:16px 0 0;color:var(--ink);}
+  #ff-{{ section.id }} .ff-hero h1 em{font-style:normal;color:var(--pink);}
+  #ff-{{ section.id }} .ff-hero .ff-sub{font-size:clamp(17px,2.1vw,21px);color:var(--ink);font-weight:600;margin:18px 0 0;max-width:44ch;line-height:1.55;}
+  #ff-{{ section.id }} .ff-hero-cta{grid-area:cta;}
+  #ff-{{ section.id }} .ff-hero-cta .ff-btnrow{justify-content:flex-start;}
+  #ff-{{ section.id }} .ff-hero-cta .ff-btnrow .ff-btn{flex:1 1 0;min-width:0;}
+  #ff-{{ section.id }} .ff-hero-fig{grid-area:fig;width:100%;}
+  #ff-{{ section.id }} .ff-hero-fig img{display:block;width:100%;height:auto;border:3px solid var(--ink);border-radius:24px;box-shadow:9px 9px 0 var(--ink);}
+  @media (max-width:860px){
+    #ff-{{ section.id }} .ff-hero .ff-wrap{grid-template-columns:1fr;grid-template-areas:"copy" "fig" "cta";justify-items:center;}
+    #ff-{{ section.id }} .ff-hero-copy{max-width:none;text-align:center;}
+    #ff-{{ section.id }} .ff-logo{margin:0 auto 22px;}
+    #ff-{{ section.id }} .ff-hero .ff-sub{margin:18px auto 0;}
+    #ff-{{ section.id }} .ff-hero-fig{width:100%;max-width:520px;}
+    #ff-{{ section.id }} .ff-hero-cta{width:100%;}
+    #ff-{{ section.id }} .ff-hero-cta .ff-btnrow{justify-content:center;}
+  }
+  #ff-{{ section.id }} .ff-marquee{position:relative;z-index:3;border-top:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);background:var(--pink);overflow:hidden;}
+  #ff-{{ section.id }} .ff-marquee-track{display:flex;width:max-content;white-space:nowrap;animation:ffmarq{{ section.id }} 24s linear infinite;}
+  #ff-{{ section.id }} .ff-marquee:hover .ff-marquee-track{animation-play-state:paused;}
+  #ff-{{ section.id }} .ff-marquee-track span{display:inline-flex;align-items:center;font-family:var(--fh);font-weight:700;font-size:clamp(15px,2.6vw,24px);text-transform:uppercase;letter-spacing:.05em;color:#fff;padding:13px 0;}
+  #ff-{{ section.id }} .ff-marquee-track span::after{content:'\2726';margin:0 20px;color:var(--yellow);font-size:.8em;}
+  @keyframes ffmarq{{ section.id }}{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  #ff-{{ section.id }} .ff-value{padding:34px 0 30px;position:relative;z-index:2;}
+  #ff-{{ section.id }} .ff-value-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  #ff-{{ section.id }} .ff-vcard{border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);padding:24px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;}
+  #ff-{{ section.id }} .ff-value-grid .ff-vcard:nth-child(1){background:var(--white);}
+  #ff-{{ section.id }} .ff-value-grid .ff-vcard:nth-child(2){background:var(--lpink);}
+  #ff-{{ section.id }} .ff-value-grid .ff-vcard:nth-child(3){background:var(--sky);}
+  #ff-{{ section.id }} .ff-value-grid .ff-vcard:nth-child(4){background:var(--peach);}
+  #ff-{{ section.id }} .ff-vcard .n{font-family:var(--fh);font-weight:700;font-size:clamp(30px,4vw,38px);line-height:1;color:var(--ink);}
+  #ff-{{ section.id }} .ff-vcard .l{font-family:var(--fh);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.02em;}
+  #ff-{{ section.id }} .ff-vcard .d{font-size:13px;color:var(--ink-2);line-height:1.4;font-weight:500;}
+  #ff-{{ section.id }} .ff-trio{position:relative;z-index:2;height:340vh;}
+  #ff-{{ section.id }} .ff-trio-sticky{position:absolute;top:0;left:0;width:100%;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  #ff-{{ section.id }} .ff-trio-head{position:absolute;top:clamp(54px,8vh,120px);left:0;right:0;text-align:center;z-index:5;padding:0 20px;pointer-events:none;}
+  #ff-{{ section.id }} .ff-trio-head .ff-h2{font-size:clamp(36px,7.4vw,68px);max-width:14ch;margin-left:auto;margin-right:auto;}
+  #ff-{{ section.id }} .ff-trio-stage{position:absolute;inset:0;}
+  #ff-{{ section.id }} .ff-trio-item{position:absolute;left:50%;top:62%;opacity:0;will-change:transform,opacity;transform:translate(-50%,-50%) scale(.5);}
+  #ff-{{ section.id }} .ff-trio-item img{display:block;height:clamp(250px,62vh,650px);width:auto;filter:drop-shadow(8px 12px 0 rgba(57,34,15,.2));}
+  #ff-{{ section.id }} .ff-trio-dots{position:absolute;left:50%;bottom:clamp(32px,6vh,72px);transform:translateX(-50%);display:flex;gap:10px;z-index:5;}
+  #ff-{{ section.id }} .ff-trio-dots span{width:11px;height:11px;border-radius:50%;background:#fff;border:2.5px solid var(--ink);transition:background .25s ease, transform .25s ease;}
+  #ff-{{ section.id }} .ff-trio-dots span.on{background:var(--pink);transform:scale(1.3);}
+  #ff-{{ section.id }} .ff-shelf{padding:42px 0;position:relative;z-index:2;}
+  #ff-{{ section.id }} .ff-shelf--video{position:relative;overflow:hidden;padding:62px 0;}
+  #ff-{{ section.id }} .ff-shelf-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;}
+  #ff-{{ section.id }} .ff-shelf--video .ff-wrap{position:relative;z-index:2;}
+  #ff-{{ section.id }} .ff-shelf--video .ff-shelf-head .ff-h2{color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.5);}
+  #ff-{{ section.id }} .ff-shelf--video .ff-shelf-head .ff-h2 em{color:var(--yellow);}
+  #ff-{{ section.id }} .ff-shelf--video .ff-shelf-head .ff-link{color:#fff;border-color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.55);}
+  #ff-{{ section.id }} .ff-shelf-head{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
+  #ff-{{ section.id }} .ff-shelf-head .ff-link{font-family:var(--fh);font-weight:600;font-size:13px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);text-decoration:none;border-bottom:2.5px solid var(--ink);padding-bottom:1px;}
+  #ff-{{ section.id }} .ff-pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px;}
+  #ff-{{ section.id }} .ff-pcard{display:flex;flex-direction:column;background:var(--white);border:2.5px solid var(--ink);border-radius:20px;box-shadow:6px 6px 0 var(--ink);overflow:hidden;text-decoration:none;color:var(--ink);transition:transform .2s ease, box-shadow .2s ease, opacity .6s ease;}
+  #ff-{{ section.id }} .ff-pcard:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink);}
+  #ff-{{ section.id }} .ff-pcard-img{position:relative;aspect-ratio:1/1;border-bottom:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;padding:14px;}
+  #ff-{{ section.id }} .ff-pgrid .ff-pcard:nth-child(4n+1) .ff-pcard-img{background:var(--syellow);}
+  #ff-{{ section.id }} .ff-pgrid .ff-pcard:nth-child(4n+2) .ff-pcard-img{background:var(--lpink);}
+  #ff-{{ section.id }} .ff-pgrid .ff-pcard:nth-child(4n+3) .ff-pcard-img{background:var(--sky);}
+  #ff-{{ section.id }} .ff-pgrid .ff-pcard:nth-child(4n+4) .ff-pcard-img{background:var(--peach);}
+  #ff-{{ section.id }} .ff-pcard-img img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;}
+  #ff-{{ section.id }} .ff-sale{position:absolute;top:10px;left:10px;background:var(--pink);color:#fff;border:2px solid var(--ink);border-radius:8px;font-family:var(--fh);font-weight:600;font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:4px 8px;box-shadow:2px 2px 0 var(--ink);}
+  #ff-{{ section.id }} .ff-pcard-b{padding:16px 15px 18px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;flex:1;}
+  #ff-{{ section.id }} .ff-pcard-t{font-family:var(--fh);font-weight:600;font-size:14px;line-height:1.15;}
+  #ff-{{ section.id }} .ff-pcard-p{margin-top:auto;display:flex;align-items:baseline;justify-content:center;gap:8px;}
+  #ff-{{ section.id }} .ff-pcard-p .now{font-family:var(--fh);font-weight:600;font-size:17px;color:var(--ink);}
+  #ff-{{ section.id }} .ff-pcard-p .was{font-family:var(--fb);font-weight:700;font-size:13px;color:#b89; text-decoration:line-through;}
+  #ff-{{ section.id }} .syrvip{display:flex;flex-direction:column;align-items:center;gap:5px;}
+  #ff-{{ section.id }} .syrvip-now{font-family:var(--fh);font-weight:600;font-size:17px;color:var(--ink);}
+  #ff-{{ section.id }} .syrvip-was{font-family:var(--fb);font-weight:700;font-size:12.5px;color:#b89;text-decoration:line-through;margin-top:-2px;}
+  #ff-{{ section.id }} .syrvip-tag{display:inline-flex;align-items:center;gap:5px;background:var(--sky);color:var(--blue);border:1.5px solid var(--blue);border-radius:999px;font-family:var(--fh);font-weight:600;font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:5px 11px;line-height:1;}
+  #ff-{{ section.id }} .syrvip-tag svg{width:11px;height:11px;color:var(--blue);}
+  #ff-{{ section.id }} .syrvip-tag.is-vip{background:var(--lpink);color:var(--magenta);border-color:var(--magenta);}
+  #ff-{{ section.id }} .syrvip-tag.is-vip svg{color:var(--magenta);}
+  #ff-{{ section.id }} .ff-gal{padding:30px 0 42px;position:relative;z-index:2;}
+  #ff-{{ section.id }} .ff-gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px;}
+  #ff-{{ section.id }} .ff-gal-card{border:3px solid var(--ink);border-radius:22px;box-shadow:8px 8px 0 var(--ink);overflow:hidden;aspect-ratio:4/5;background:var(--peach);}
+  #ff-{{ section.id }} .ff-gal-card img{display:block;width:100%;height:100%;object-fit:cover;}
+  #ff-{{ section.id }} .ff-quality{padding:42px 0;position:relative;z-index:2;}
+  #ff-{{ section.id }} .ff-q-card{position:relative;overflow:hidden;background:var(--white);border:3px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--ink);padding:48px clamp(26px,5vw,60px);text-align:center;}
+  #ff-{{ section.id }} .ff-q-card p{font-size:16px;color:var(--ink-2);font-weight:500;line-height:1.65;max-width:62ch;margin:16px auto 0;}
+  #ff-{{ section.id }} .ff-q-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px;}
+  #ff-{{ section.id }} .ff-q-mini{background:var(--paper);border:2.5px solid var(--ink);border-radius:16px;box-shadow:3px 3px 0 var(--ink);padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:9px;}
+  #ff-{{ section.id }} .ff-q-mini .ic{width:44px;height:44px;border-radius:50%;background:var(--lpink);border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:2px 2px 0 var(--ink);}
+  #ff-{{ section.id }} .ff-q-mini .ic svg{width:22px;height:22px;color:var(--ink);}
+  #ff-{{ section.id }} .ff-q-mini .qt{font-family:var(--fh);font-weight:600;font-size:12.5px;text-transform:uppercase;line-height:1.15;}
+  #ff-{{ section.id }} .ff-reels{padding:44px 0;text-align:center;position:relative;z-index:2;}
+  #ff-{{ section.id }} .ff-social{max-width:560px;margin:30px auto 0;}
+  #ff-{{ section.id }} .ff-social a{position:sticky;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:14px;border:2.5px solid var(--ink);border-radius:20px;box-shadow:6px 6px 0 var(--ink);padding:24px 22px;margin-bottom:22px;text-decoration:none;color:var(--ink);}
+  #ff-{{ section.id }} .ff-social a:nth-child(1){background:var(--lpink);top:96px;}
+  #ff-{{ section.id }} .ff-social a:nth-child(2){background:var(--sky);top:120px;}
+  #ff-{{ section.id }} .ff-social a:nth-child(3){background:var(--white);top:144px;margin-bottom:0;}
+  #ff-{{ section.id }} .ff-social .ic{width:50px;height:50px;flex:0 0 auto;border-radius:50%;background:#fff;border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 var(--ink);}
+  #ff-{{ section.id }} .ff-social .ic svg{width:26px;height:26px;color:var(--ink);}
+  #ff-{{ section.id }} .ff-social .t{font-family:var(--fh);font-weight:600;font-size:16px;text-transform:uppercase;}
+  #ff-{{ section.id }} .ff-wholesale{padding:30px 0;position:relative;z-index:2;}
+  #ff-{{ section.id }} .ff-ws-card{position:relative;overflow:hidden;background:var(--pink);color:#fff;border:3px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--ink);padding:50px clamp(26px,5vw,60px);text-align:center;}
+  #ff-{{ section.id }} .ff-ws-card .ff-eyebrow{background:var(--yellow);position:relative;}
+  #ff-{{ section.id }} .ff-ws-card .ff-h2{color:#fff;position:relative;}
+  #ff-{{ section.id }} .ff-ws-card .ff-h2 em{color:var(--yellow);}
+  #ff-{{ section.id }} .ff-ws-card p{position:relative;color:rgba(255,255,255,.95);font-size:15.5px;line-height:1.6;font-weight:500;max-width:54ch;margin:15px auto 0;}
+  #ff-{{ section.id }} .ff-ws-card .ff-btnrow{position:relative;margin-top:24px;}
+  #ff-{{ section.id }} .ff-feedback{padding:30px 0 16px;position:relative;z-index:2;}
+  #ff-{{ section.id }} .ff-fb-card{position:relative;overflow:hidden;background:var(--white);border:3px solid var(--ink);border-radius:28px;box-shadow:8px 8px 0 var(--ink);padding:46px clamp(26px,5vw,60px);text-align:center;}
+  #ff-{{ section.id }} .ff-fb-card .ff-eyebrow{background:var(--lpink);}
+  #ff-{{ section.id }} .ff-fb-card p{font-size:15.5px;color:var(--ink-2);font-weight:500;max-width:48ch;margin:14px auto 0;line-height:1.55;}
+  #ff-{{ section.id }} .ff-fb-card .ff-btnrow{margin-top:24px;}
+  #ff-{{ section.id }} .ff-vip{padding:24px 0 64px;position:relative;z-index:2;}
+  #ff-{{ section.id }} .ff-vip-card{position:relative;overflow:hidden;background:var(--blue);color:#fff;border:3px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--ink);padding:52px clamp(26px,5vw,64px);text-align:center;}
+  #ff-{{ section.id }} .ff-vip-card .ff-eyebrow{background:var(--yellow);position:relative;}
+  #ff-{{ section.id }} .ff-vip-card .ff-h2{color:#fff;position:relative;}
+  #ff-{{ section.id }} .ff-vip-card .ff-h2 em{color:var(--yellow);}
+  #ff-{{ section.id }} .ff-vip-card p{position:relative;color:rgba(255,255,255,.95);font-size:16px;line-height:1.65;font-weight:500;max-width:54ch;margin:16px auto 0;}
+  #ff-{{ section.id }} .ff-vip-card .ff-btnrow{position:relative;margin-top:26px;}
+  @media (max-width:860px){
+    #ff-{{ section.id }} .ff-value-grid{grid-template-columns:repeat(2,1fr);}
+    #ff-{{ section.id }} .ff-pgrid{grid-template-columns:repeat(2,1fr);}
+    #ff-{{ section.id }} .ff-gal-grid{grid-template-columns:repeat(2,1fr);}
+    #ff-{{ section.id }} .ff-q-grid{grid-template-columns:1fr;}
+    #ff-{{ section.id }} .ff-pgrid .ff-pcard:nth-child(2n+1) .ff-pcard-img{background:var(--syellow);}
+    #ff-{{ section.id }} .ff-pgrid .ff-pcard:nth-child(2n+2) .ff-pcard-img{background:var(--sky);}
+  }
+  @media (max-width:767px){
+    #ff-{{ section.id }} .ff-trio-head{top:clamp(34px,4.5vh,72px);}
+    #ff-{{ section.id }} .ff-trio-item{top:53%;}
+    #ff-{{ section.id }} .ff-trio-item img{height:clamp(230px,54vh,520px);}
+  }
+  @media (max-width:680px){
+    #ff-{{ section.id }} .ff-btnrow{flex-direction:column;align-items:stretch;width:100%;}
+    #ff-{{ section.id }} .ff-btnrow .ff-btn{width:100%;}
+    #ff-{{ section.id }} .ff-value{padding:24px 0 22px;}
+  }
+  @media (max-width:540px){
+    #ff-{{ section.id }} .ff-gal-grid{grid-template-columns:1fr;}
+    #ff-{{ section.id }} .ff-value-grid{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    #ff-{{ section.id }} .ff-rev{opacity:1;transform:none;}
+    #ff-{{ section.id }} .ff-pop{opacity:1 !important;transform:none !important;}
+    #ff-{{ section.id }} .ff-marquee-track{animation:none;}
+    #ff-{{ section.id }} .ff-trio{height:auto !important;}
+    #ff-{{ section.id }} .ff-trio-sticky{position:static !important;height:auto !important;display:block !important;padding:44px 0 60px;}
+    #ff-{{ section.id }} .ff-trio-head{position:static !important;}
+    #ff-{{ section.id }} .ff-trio-stage{position:static !important;display:flex;align-items:flex-end;justify-content:center;gap:clamp(8px,3vw,40px);margin-top:26px;}
+    #ff-{{ section.id }} .ff-trio-item{position:static !important;transform:none !important;opacity:1 !important;}
+    #ff-{{ section.id }} .ff-trio-item img{height:auto !important;width:clamp(92px,25vw,240px);}
+    #ff-{{ section.id }} .ff-trio-dots{display:none !important;}
+  }
+</style>
+
+<section id="ff-{{ section.id }}">
+  <span class="ff-dots" aria-hidden="true"></span>
+
+  <div class="ff-hero">
+    <div class="ff-wrap">
+      <div class="ff-hero-copy">
+        {%- if s.show_logo != blank -%}<img class="ff-logo ff-rev" src="{{ s.show_logo | image_url: width: 460 }}" alt="Summer Fancy Food Show" width="230">{%- endif -%}
+        <span class="ff-eyebrow ff-rev">{{ s.hero_eyebrow | default: 'Summer Fancy Food Show · 2026' }}</span>
+        <h1 class="ff-rev">{{ s.hero_title | default: 'Thanks for the <em>scan</em>.' }}</h1>
+        <p class="ff-sub ff-rev">{{ s.hero_sub | default: 'We are Syruvia — café-quality flavored syrups made in the USA. 250+ flavors, a full sugar-free range, popping boba and shakeable toppings.' }}</p>
+      </div>
+      <div class="ff-hero-fig ff-rev"><img src="{{ hero_src }}" alt="Syruvia summer drinks"></div>
+      <div class="ff-hero-cta ff-rev">
+        <div class="ff-btnrow">
+          <a class="ff-btn ff-btn--pink" href="/collections/all">Shop all flavors</a>
+          <a class="ff-btn ff-btn--ghost" href="#ff-vip">Join VIP · $7.99</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ff-marquee" aria-hidden="true">
+    <div class="ff-marquee-track">
+      <span>Sugar-Free</span><span>250+ Flavors</span><span>Made in the USA</span><span>Popping Boba</span><span>Kosher &amp; Gluten-Free</span><span>Wholesale Ready</span>
+      <span>Sugar-Free</span><span>250+ Flavors</span><span>Made in the USA</span><span>Popping Boba</span><span>Kosher &amp; Gluten-Free</span><span>Wholesale Ready</span>
+    </div>
+  </div>
+
+  <div class="ff-value">
+    <div class="ff-wrap">
+      <div class="ff-value-grid">
+        <div class="ff-vcard ff-pop"><span class="n ff-count" data-count="250" data-suffix="+">250+</span><span class="l">Flavors</span><span class="d">Coffee, fruit, seasonal &amp; more</span></div>
+        <div class="ff-vcard ff-pop"><span class="n" style="font-size:clamp(20px,2.6vw,26px);">Sugar-Free</span><span class="d">Zero sugar, zero calories</span></div>
+        <div class="ff-vcard ff-pop"><span class="n">USA</span><span class="l">Made &amp; bottled</span><span class="d">Kosher &amp; gluten-free</span></div>
+        <div class="ff-vcard ff-pop"><span class="n ff-count" data-count="50" data-suffix="+">50+</span><span class="l">Servings</span><span class="d">Per 750 ml bottle</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ff-trio">
+    <div class="ff-trio-sticky">
+      <div class="ff-trio-head">
+        <span class="ff-eyebrow" style="background:var(--sky);">Summer lineup</span>
+        <h2 class="ff-h2">{{ s.trio_title | default: 'Flavor You&rsquo;ll <em>Crave Again</em>.' }}</h2>
+      </div>
+      <div class="ff-trio-stage">
+        <div class="ff-trio-item"><img src="{{ b1 }}" alt="Syruvia Salted Cookie Butter syrup"></div>
+        <div class="ff-trio-item"><img src="{{ b2 }}" alt="Syruvia Pink Splash syrup"></div>
+        <div class="ff-trio-item"><img src="{{ b3 }}" alt="Syruvia Vanilla syrup"></div>
+      </div>
+      <div class="ff-trio-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+
+  <div class="ff-gal">
+    <div class="ff-wrap">
+      <div class="ff-shelf-head">
+        <span class="ff-eyebrow ff-rev">{{ s.gallery_eyebrow | default: 'Sip the summer' }}</span>
+        <h2 class="ff-h2 ff-rev">{{ s.gallery_title | default: 'Made to be <em>enjoyed</em>.' }}</h2>
+      </div>
+      <div class="ff-gal-grid">
+        <div class="ff-gal-card ff-pop"><img src="{{ g1 }}" alt="Syruvia lifestyle" loading="lazy"></div>
+        <div class="ff-gal-card ff-pop"><img src="{{ g2 }}" alt="Syruvia lifestyle" loading="lazy"></div>
+        <div class="ff-gal-card ff-pop"><img src="{{ g3 }}" alt="Syruvia lifestyle" loading="lazy"></div>
+        <div class="ff-gal-card ff-pop"><img src="{{ g4 }}" alt="Syruvia lifestyle" loading="lazy"></div>
+        <div class="ff-gal-card ff-pop"><img src="{{ g5 }}" alt="Syruvia lifestyle" loading="lazy"></div>
+        <div class="ff-gal-card ff-pop"><img src="{{ g6 }}" alt="Syruvia lifestyle" loading="lazy"></div>
+      </div>
+    </div>
+  </div>
+
+  {%- if bs != blank and bs.products.size > 0 -%}
+  <div class="ff-shelf ff-shelf--video is-best">
+    {%- if mp4_1 != blank -%}<video class="ff-shelf-bg" src="{{ mp4_1 }}" autoplay muted loop playsinline preload="auto"></video>{%- endif -%}
+    <div class="ff-wrap">
+      <div class="ff-shelf-head">
+        <span class="ff-eyebrow ff-rev" style="background:var(--lpink);">Fan favorites</span>
+        <h2 class="ff-h2 ff-rev">Best <em>sellers</em>.</h2>
+        <a class="ff-link ff-rev" href="{{ bs.url }}">Shop best sellers →</a>
+      </div>
+      <div class="ff-pgrid">
+        {%- for pr in bs.products limit: 4 -%}
+          <a class="ff-pcard ff-rev" href="{{ pr.url }}">
+            <div class="ff-pcard-img">{%- if pr.compare_at_price > pr.price -%}<span class="ff-sale">Sale</span>{%- endif -%}{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 500 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- endif -%}</div>
+            <div class="ff-pcard-b"><h3 class="ff-pcard-t">{{ pr.title | replace: '(USA)', '' | strip }}</h3><div class="ff-pcard-p">{% render 'syr-vip-price', product: pr %}</div></div>
+          </a>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if na != blank and na.products.size > 0 -%}
+  <div class="ff-shelf">
+    <div class="ff-wrap">
+      <div class="ff-shelf-head">
+        <span class="ff-eyebrow ff-rev" style="background:var(--sky);">Just dropped</span>
+        <h2 class="ff-h2 ff-rev">New <em>arrivals</em>.</h2>
+        <a class="ff-link ff-rev" href="{{ na.url }}">Shop new →</a>
+      </div>
+      <div class="ff-pgrid">
+        {%- for pr in na.products limit: 4 -%}
+          <a class="ff-pcard ff-rev" href="{{ pr.url }}">
+            <div class="ff-pcard-img">{%- if pr.compare_at_price > pr.price -%}<span class="ff-sale">Sale</span>{%- endif -%}{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 500 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- endif -%}</div>
+            <div class="ff-pcard-b"><h3 class="ff-pcard-t">{{ pr.title | replace: '(USA)', '' | strip }}</h3><div class="ff-pcard-p">{% render 'syr-vip-price', product: pr %}</div></div>
+          </a>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if bb != blank and bb.products.size > 0 -%}
+  <div class="ff-shelf ff-shelf--video is-boba">
+    {%- if mp4_2 != blank -%}<video class="ff-shelf-bg" src="{{ mp4_2 }}" autoplay muted loop playsinline preload="auto"></video>{%- endif -%}
+    <div class="ff-wrap">
+      <div class="ff-shelf-head">
+        <span class="ff-eyebrow ff-rev" style="background:var(--peach);">Fun &amp; fizzy</span>
+        <h2 class="ff-h2 ff-rev">Popping <em>boba</em>.</h2>
+        <a class="ff-link ff-rev" href="{{ bb.url }}">Shop boba →</a>
+      </div>
+      <div class="ff-pgrid">
+        {%- for pr in bb.products limit: 4 -%}
+          <a class="ff-pcard ff-rev" href="{{ pr.url }}">
+            <div class="ff-pcard-img">{%- if pr.compare_at_price > pr.price -%}<span class="ff-sale">Sale</span>{%- endif -%}{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 500 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- endif -%}</div>
+            <div class="ff-pcard-b"><h3 class="ff-pcard-t">{{ pr.title | replace: '(USA)', '' | strip }}</h3><div class="ff-pcard-p"><span class="now">{{ pr.price | money }}</span>{%- if pr.compare_at_price > pr.price -%}<span class="was">{{ pr.compare_at_price | money }}</span>{%- endif -%}</div></div>
+          </a>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  <div class="ff-wholesale">
+    <div class="ff-wrap">
+      <div class="ff-ws-card ff-rev">
+        <span class="ff-eyebrow">{{ s.ws_eyebrow | default: 'For buyers &amp; retailers' }}</span>
+        <h2 class="ff-h2">{{ s.ws_title | default: 'Wholesale at the <em>show</em>.' }}</h2>
+        <p>{{ s.ws_sub | default: 'Visiting from the Summer Fancy Food Show? Syruvia is available at wholesale for cafés, shops and distributors — the same 250+ flavors in retail-ready cases, with case pricing. See the full wholesale range and order online, or find us on Faire.' }}</p>
+        <div class="ff-btnrow">
+          <a class="ff-btn ff-btn--yellow" href="{{ ws_url }}">See wholesale</a>
+          <a class="ff-btn ff-btn--ghost" href="{{ faire_url }}" target="_blank" rel="noopener">Order on Faire</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ff-quality">
+    <div class="ff-wrap">
+      <div class="ff-q-card ff-rev">
+        <span class="ff-eyebrow">{{ s.q_eyebrow | default: 'Made better' }}</span>
+        <h2 class="ff-h2">{{ s.q_title | default: 'Real flavor, real <em>color</em>.' }}</h2>
+        <p>{{ s.q_sub | default: 'Café-quality taste with cleaner labels. Most of our syrups are naturally colored — no artificial dyes — and we are actively moving our whole range toward naturally flavored. Always made in the USA, kosher and gluten-free.' }}</p>
+        <div class="ff-q-grid">
+          <div class="ff-q-mini"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4 C 12 4, 5 11, 5 18 C 5 19.2, 5.8 20, 7 20 C 14 20, 21 13, 21 5 C 21 4.4, 20.6 4, 20 4 Z"/><path d="M5 20 L11 14"/></svg></span><span class="qt">Naturally colored</span></div>
+          <div class="ff-q-mini"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6 L18.4 18.4"/></svg></span><span class="qt">No artificial dyes</span></div>
+          <div class="ff-q-mini"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21 C 5 18, 3 11, 7 6 C 10 3, 14 3, 17 6 C 21 11, 19 18, 12 21 Z"/><path d="M9 12 a3 3 0 0 0 6 0"/></svg></span><span class="qt">Heading to naturally flavored</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ff-reels">
+    <div class="ff-wrap">
+      <span class="ff-eyebrow ff-rev" style="background:var(--lpink);">Come say hi</span>
+      <h2 class="ff-h2 ff-rev">Follow the <em>sip</em>.</h2>
+      <div class="ff-social">
+        <a href="https://www.instagram.com/syruvia_official" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span><span class="t">Instagram</span></a>
+        <a href="https://www.tiktok.com/@syruviaofficial" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 3c.3 2.2 1.7 3.9 3.9 4.2v3c-1.5 0-2.9-.5-3.9-1.3V15a6 6 0 1 1-6-6c.3 0 .7 0 1 .1v3.1a3 3 0 1 0 2 2.8V3z"/></svg></span><span class="t">TikTok</span></a>
+        <a href="https://www.youtube.com/@Syruvia" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg></span><span class="t">YouTube</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ff-feedback">
+    <div class="ff-wrap">
+      <div class="ff-fb-card ff-rev">
+        <span class="ff-eyebrow">{{ s.fb_eyebrow | default: 'We loved meeting you' }}</span>
+        <h2 class="ff-h2">{{ s.fb_title | default: 'How did you enjoy our <em>booth</em>?' }}</h2>
+        <p>{{ s.fb_sub | default: 'Tell us what you tasted, what you loved, and what you would like to see next. Your feedback shapes what we pour.' }}</p>
+        <div class="ff-btnrow">
+          <a class="ff-btn ff-btn--pink" href="{{ s.fb_url | default: '/pages/contact-us' }}">{{ s.fb_label | default: 'Share your feedback' }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ff-vip" id="ff-vip">
+    <div class="ff-wrap">
+      <div class="ff-vip-card ff-rev">
+        <span class="ff-eyebrow">{{ s.vip_eyebrow | default: 'Syruvia VIP' }}</span>
+        <h2 class="ff-h2">{{ s.vip_title | default: 'Every bottle, <em>$7.99</em>.' }}</h2>
+        <p>{{ s.vip_sub | default: 'Join VIP free and pay a flat $7.99 on every full-size syrup — automatically, every time you are signed in. No fees, no catch, just our best price.' }}</p>
+        <div class="ff-btnrow">
+          <a class="ff-btn ff-btn--yellow" href="/account/login">Join VIP — it's free</a>
+          <a class="ff-btn ff-btn--ghost" href="/collections/all">Browse flavors</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('ff-{{ section.id }}');
+  if(!root) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function countUp(el){
+    if(el.__c) return; el.__c=1;
+    var target=parseInt(el.getAttribute('data-count'),10)||0, suf=el.getAttribute('data-suffix')||'';
+    var start=null, dur=1100;
+    function step(ts){ if(!start) start=ts; var p=Math.min((ts-start)/dur,1); var e=1-Math.pow(1-p,3); el.textContent=Math.round(e*target)+suf; if(p<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); var c=e.target.querySelector('.ff-count'); if(c) countUp(c); if(e.target.classList.contains('ff-count')) countUp(e.target); io.unobserve(e.target); } });},{threshold:.12});
+    root.querySelectorAll('.ff-rev').forEach(function(el){io.observe(el);});
+    root.querySelectorAll('.ff-count').forEach(function(el){io.observe(el);});
+    setTimeout(function(){root.querySelectorAll('.ff-rev:not(.in)').forEach(function(el){el.classList.add('in');});},3000);
+  } else {
+    root.querySelectorAll('.ff-rev').forEach(function(el){el.classList.add('in');});
+    root.querySelectorAll('.ff-count').forEach(function(el){ el.textContent=el.getAttribute('data-count')+(el.getAttribute('data-suffix')||''); });
+  }
+  var pops=[].slice.call(root.querySelectorAll('.ff-pop'));
+  var track=root.querySelector('.ff-trio');
+  var stage=root.querySelector('.ff-trio-sticky');
+  var items=[].slice.call(root.querySelectorAll('.ff-trio-item'));
+  var dots=[].slice.call(root.querySelectorAll('.ff-trio-dots span'));
+  if(reduce){ pops.forEach(function(el){el.style.opacity='1';}); items.forEach(function(el){el.style.opacity='1';}); return; }
+  var ticking=false;
+  function update(){
+    ticking=false;
+    var vh=window.innerHeight||document.documentElement.clientHeight, vc=vh/2;
+    for(var i=0;i<pops.length;i++){
+      var el=pops[i], r=el.getBoundingClientRect();
+      if(r.bottom<-160||r.top>vh+160){ continue; }
+      var c=r.top+r.height/2, d=(c-vc)/vc, ad=Math.abs(d); if(ad>1) ad=1;
+      var scale=1.05-ad*0.17, op=1-ad*0.55; if(op<0.2) op=0.2;
+      el.style.opacity=op.toFixed(2); el.style.transform='scale('+scale.toFixed(3)+')';
+    }
+    if(track && stage && items.length){
+      var trk=track.getBoundingClientRect();
+      var span=track.offsetHeight-vh; if(span<1) span=1;
+      if(trk.top>=0){ stage.style.position='absolute'; stage.style.top='0'; stage.style.bottom='auto'; }
+      else if(trk.bottom<=vh){ stage.style.position='absolute'; stage.style.top='auto'; stage.style.bottom='0'; }
+      else { stage.style.position='fixed'; stage.style.top='0'; stage.style.bottom='auto'; }
+      var p=(-trk.top)/span; if(p<0) p=0; if(p>1) p=1;
+      var n=items.length, active=Math.floor(p*n); if(active>n-1) active=n-1; if(active<0) active=0;
+      for(var k=0;k<n;k++){
+        var center=(k+0.5)/n;
+        var dd=Math.abs(p-center)*n; var pres=1-dd; if(pres<0) pres=0;
+        var ease=pres*pres*(3-2*pres);
+        var sc=0.55+ease*0.5;
+        var ty=(p-center)*-120;
+        var it=items[k];
+        it.style.opacity=ease.toFixed(3);
+        it.style.transform='translate(-50%,calc(-50% + '+ty.toFixed(1)+'px)) scale('+sc.toFixed(3)+')';
+        it.style.zIndex=(pres>0.5?'4':'2');
+      }
+      for(var j=0;j<dots.length;j++){ if(j===active){ dots[j].classList.add('on'); } else { dots[j].classList.remove('on'); } }
+    }
+  }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  window.addEventListener('load', update);
+  update();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Fancy Food Show",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Collections" },
+    { "type": "text", "id": "col_best", "label": "Best sellers collection handle", "default": "best-sellers" },
+    { "type": "text", "id": "col_new", "label": "New arrivals collection handle", "default": "new-arrivals" },
+    { "type": "text", "id": "col_boba", "label": "Boba collection handle", "default": "bursting-balls" },
+    { "type": "header", "content": "Hero" },
+    { "type": "image_picker", "id": "show_logo", "label": "Show logo (optional)" },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero banner image (overrides default)" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "Summer Fancy Food Show · 2026" },
+    { "type": "text", "id": "hero_title", "label": "Title", "default": "Thanks for the <em>scan</em>." },
+    { "type": "textarea", "id": "hero_sub", "label": "Subtitle", "default": "We are Syruvia — café-quality flavored syrups made in the USA." },
+    { "type": "header", "content": "Three bottles (pinned scale-up)" },
+    { "type": "text", "id": "trio_title", "label": "Three-bottle heading", "default": "Flavor You&rsquo;ll <em>Crave Again</em>." },
+    { "type": "image_picker", "id": "bottle_image", "label": "Bottle 1 (transparent PNG)" },
+    { "type": "image_picker", "id": "bottle_2", "label": "Bottle 2 (transparent PNG)" },
+    { "type": "image_picker", "id": "bottle_3", "label": "Bottle 3 (transparent PNG)" },
+    { "type": "header", "content": "Background videos (behind products)" },
+    { "type": "text", "id": "mp4_1", "label": "Video behind Best Sellers", "default": "https://cdn.shopify.com/videos/c/o/v/12648bf585c448189a0b5bfae75b9a0e.mp4" },
+    { "type": "text", "id": "mp4_2", "label": "Video behind Boba", "default": "https://cdn.shopify.com/videos/c/o/v/96deff36c43447e0be1d592c6b0d2239.mp4" },
+    { "type": "header", "content": "Lifestyle gallery (6 photos)" },
+    { "type": "text", "id": "gallery_eyebrow", "label": "Eyebrow", "default": "Sip the summer" },
+    { "type": "text", "id": "gallery_title", "label": "Heading", "default": "Made to be <em>enjoyed</em>." },
+    { "type": "image_picker", "id": "gallery_1", "label": "Photo 1 (override)" },
+    { "type": "image_picker", "id": "gallery_2", "label": "Photo 2 (override)" },
+    { "type": "image_picker", "id": "gallery_3", "label": "Photo 3 (override)" },
+    { "type": "image_picker", "id": "gallery_4", "label": "Photo 4 (override)" },
+    { "type": "image_picker", "id": "gallery_5", "label": "Photo 5 (override)" },
+    { "type": "image_picker", "id": "gallery_6", "label": "Photo 6 (override)" },
+    { "type": "header", "content": "Wholesale" },
+    { "type": "text", "id": "ws_eyebrow", "label": "Eyebrow", "default": "For buyers & retailers" },
+    { "type": "text", "id": "ws_title", "label": "Heading", "default": "Wholesale at the <em>show</em>." },
+    { "type": "textarea", "id": "ws_sub", "label": "Text", "default": "Visiting from the show? Syruvia is available at wholesale for cafés, shops and distributors." },
+    { "type": "text", "id": "wholesale_url", "label": "Wholesale page URL", "default": "/pages/wholesale" },
+    { "type": "text", "id": "faire_url", "label": "Faire URL", "default": "https://syruvia.faire.com" },
+    { "type": "header", "content": "Quality" },
+    { "type": "text", "id": "q_eyebrow", "label": "Eyebrow", "default": "Made better" },
+    { "type": "text", "id": "q_title", "label": "Heading", "default": "Real flavor, real <em>color</em>." },
+    { "type": "textarea", "id": "q_sub", "label": "Text", "default": "Most of our syrups are naturally colored — and we are moving toward naturally flavored." },
+    { "type": "header", "content": "Booth feedback" },
+    { "type": "text", "id": "fb_eyebrow", "label": "Eyebrow", "default": "We loved meeting you" },
+    { "type": "text", "id": "fb_title", "label": "Heading", "default": "How did you enjoy our <em>booth</em>?" },
+    { "type": "textarea", "id": "fb_sub", "label": "Sub-text", "default": "Tell us what you tasted and what you would love to see next." },
+    { "type": "text", "id": "fb_label", "label": "Button label", "default": "Share your feedback" },
+    { "type": "url", "id": "fb_url", "label": "Button link" },
+    { "type": "header", "content": "VIP" },
+    { "type": "text", "id": "vip_eyebrow", "label": "Eyebrow", "default": "Syruvia VIP" },
+    { "type": "text", "id": "vip_title", "label": "Heading", "default": "Every bottle, <em>$7.99</em>." },
+    { "type": "textarea", "id": "vip_sub", "label": "Sub-text", "default": "Join VIP free and pay a flat $7.99 on every full-size syrup." }
+  ],
+  "presets": [ { "name": "Fancy Food Show" } ]
+}
+{% endschema %}

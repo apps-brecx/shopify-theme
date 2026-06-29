@@ -1,0 +1,232 @@
+<section class="wholesale-benefits-clean-section" style="background: {{ section.settings.section_bg }};">
+  <div class="wholesale-benefits-clean-container">
+    <div class="wholesale-benefits-clean-grid">
+      
+      {% for block in section.blocks %}
+        <div class="wholesale-benefits-clean-card" {{ block.shopify_attributes }}>
+
+          {% if block.settings.image != blank %}
+            <div class="wholesale-benefits-clean-image">
+              <img
+                src="{{ block.settings.image | image_url: width: 120 }}"
+                alt="{{ block.settings.heading | escape }}"
+                loading="lazy"
+              >
+            </div>
+          {% endif %}
+
+          {% if block.settings.heading != blank %}
+            <h3>{{ block.settings.heading }}</h3>
+          {% endif %}
+
+          {% if block.settings.description != blank %}
+            <p>{{ block.settings.description }}</p>
+          {% endif %}
+
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .wholesale-benefits-clean-section{
+    padding: 0 0 150px;
+    margin-top: -40px;
+    background: transparent !important;
+  }
+
+  .wholesale-benefits-clean-container{
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .wholesale-benefits-clean-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  /* CARD */
+  .wholesale-benefits-clean-card{
+    background: linear-gradient(
+      to bottom,
+      #e6d1c2 0%,
+      #c79a78 100%
+    ) !important;
+
+    border: 2px solid #4C2E1F !important;
+    border-radius: 8px;
+    text-align: center;
+    padding: 32px 30px 34px;
+    min-height: 240px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    transition: all 0.25s ease;
+  }
+
+  .wholesale-benefits-clean-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  }
+
+  /* IMAGE CIRCLE */
+  .wholesale-benefits-clean-image {
+    margin-bottom: 16px;
+    width: 110px;
+    height: 110px;
+    border: 3px solid #4C2E1F;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: background-color 0.3s, border-color 0.3s;
+    background-color: #fff;
+  }
+
+  .wholesale-benefits-clean-image img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    transition: filter 0.3s;
+  }
+
+  /* HOVER EFFECT */
+  .wholesale-benefits-clean-image:hover {
+    background-color: #4C2E1F;
+  }
+
+  .wholesale-benefits-clean-image:hover img {
+    filter: brightness(0) invert(1);
+  }
+
+  /* TEXT */
+  .wholesale-benefits-clean-card h3{
+    margin: 0 0 10px;
+    color: #5B3A24 !important;
+    font-family: 'Bricolage Grotesque' !important;
+    font-size: 27px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .wholesale-benefits-clean-card p{
+    margin: 0;
+    color: #6A4A35 !important;
+    font-family: 'DM Sans' !important;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  /* MOBILE - keep 3 cards in one row */
+@media screen and (max-width: 989px){
+  .wholesale-benefits-clean-section{
+    padding: 20px 0 20px; 
+  }
+
+  .wholesale-benefits-clean-grid{
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .wholesale-benefits-clean-card{
+    padding: 15px 12px;
+  }
+
+  .wholesale-benefits-clean-image{
+    width: 80px;
+    height: 80px;
+  }
+
+  .wholesale-benefits-clean-card h3{
+    font-size: 17px;
+  }
+
+  .wholesale-benefits-clean-card p{
+    font-size: 14px;
+  }
+}
+
+
+</style>
+
+{% schema %}
+{
+  "name": "Wholesale Benefits Clean",
+  "settings": [
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background",
+      "default": "#ead9cd"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background",
+      "default": "#dfc6b6"
+    },
+    {
+      "type": "color",
+      "id": "card_border",
+      "label": "Card Border",
+      "default": "#a67756"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#5b3a24"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#5b3a24"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Benefit Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Free Shipping on First Order"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Start your first order with zero shipping cost."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wholesale Benefits Clean",
+      "blocks": [
+        { "type": "card" },
+        { "type": "card" },
+        { "type": "card" }
+      ]
+    }
+  ]
+}
+{% endschema %}

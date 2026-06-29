@@ -1,0 +1,13 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": { "type": "cart-custom", "settings": {} },
+    "cart-vip-split": { "type": "cart-vip-split", "settings": {} },
+    "sbc-total-fix": { "type": "sbc-total-fix", "settings": {} }
+  },
+  "order": ["main", "cart-vip-split", "sbc-total-fix"]
+}

@@ -1,0 +1,75 @@
+{%- comment -%} Drawer offset fix — pushes mobile drawer below announcement bar + header so it never gets clipped {%- endcomment -%}
+<style id="syr-drawer-offset-css">
+  /* Reset any conflicting drawer top to use our JS value */
+  html body .syrnav-drawer{
+    top: var(--syr-drawer-top, 0px) !important;
+    height: calc(100vh - var(--syr-drawer-top, 0px)) !important;
+    max-height: calc(100vh - var(--syr-drawer-top, 0px)) !important;
+    box-sizing: border-box !important;
+  }
+  /* Ensure inner content scrolls properly inside the cropped drawer */
+  html body .syrnav-drawer .syrnav-drawer-inner,
+  html body .syrnav-drawer > *:not(.syrnav-drawer-overlay){
+    max-height: 100% !important;
+    -webkit-overflow-scrolling: touch;
+  }
+</style>
+<script id="syr-drawer-offset-js">
+(function(){
+  function measureTopOffset(){
+    var total = 0;
+    // Announcement bar (any common selector)
+    var ann = document.querySelector(
+      '#shopify-section-announcement-bar, ' +
+      '[id*="announcement" i], ' +
+      '.syr-ann-section, ' +
+      '.announcement-bar, ' +
+      '.announcement, ' +
+      '[class*="announcement" i]'
+    );
+    if (ann){
+      var h = ann.getBoundingClientRect().height;
+      // Sanity bound
+      if (h > 0 && h < 200) total += h;
+    }
+    // Main nav
+    var nav = document.getElementById('syrnav');
+    if (nav){
+      var nh = nav.getBoundingClientRect().height;
+      if (nh > 0 && nh < 300) total += nh;
+    }
+    return Math.round(total);
+  }
+  function applyOffset(){
+    var top = measureTopOffset();
+    if (top > 0){
+      document.documentElement.style.setProperty('--syr-drawer-top', top + 'px');
+    }
+  }
+  function init(){
+    applyOffset();
+    // Recompute on resize
+    window.addEventListener('resize', applyOffset);
+    window.addEventListener('orientationchange', applyOffset);
+    // Recompute whenever drawer is about to open
+    document.addEventListener('click', function(e){
+      if (e.target.closest('.syrnav-hamb, [data-open-drawer], [data-syrnav-hamb]')){
+        applyOffset();
+        setTimeout(applyOffset, 50);
+        setTimeout(applyOffset, 200);
+      }
+    }, true);
+    // Watch drawer class changes (open/close)
+    var drawer = document.querySelector('.syrnav-drawer');
+    if (drawer && 'MutationObserver' in window){
+      new MutationObserver(applyOffset).observe(drawer, { attributes:true, attributeFilter:['class'] });
+    }
+    // Belt: poll a few times after load
+    setTimeout(applyOffset, 300);
+    setTimeout(applyOffset, 800);
+    setTimeout(applyOffset, 1500);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>

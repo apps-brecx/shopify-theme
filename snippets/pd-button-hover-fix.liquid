@@ -1,0 +1,180 @@
+{%- comment -%} Global fixes: kill orange ::before slide-fill + kill .field::after orange line + apply brand offset-shadow design to all primary buttons site-wide. {%- endcomment -%}
+<style id="pd-button-hover-fix-css">
+/* ============================================================
+   FIX 1: .button::before / .btn::before slide-in orange fill
+   ============================================================ */
+html body .button::before,
+html body .btn::before,
+html body .soc-btn::before,
+html body button.button::before,
+html body button.btn::before,
+html body button.soc-btn::before,
+html body a.button::before,
+html body a.btn::before,
+html body a.soc-btn::before{
+  background-color:#FCE2A0 !important;
+}
+
+@media (hover: none){
+  html body .button:hover::before,
+  html body .btn:hover::before,
+  html body .soc-btn:hover::before,
+  html body button:hover::before,
+  html body a:hover::before{
+    width:0% !important; transform:scaleX(0) !important; opacity:0 !important;
+  }
+}
+
+html body .button:focus::before,
+html body .button:focus-visible::before,
+html body .button:active::before,
+html body .btn:focus::before,
+html body .btn:focus-visible::before,
+html body .btn:active::before,
+html body .soc-btn:focus::before,
+html body .soc-btn:focus-visible::before,
+html body .soc-btn:active::before,
+html body button:focus::before,
+html body button:focus-visible::before,
+html body button:active::before,
+html body a:focus::before,
+html body a:focus-visible::before,
+html body a:active::before{
+  width:0% !important; transform:scaleX(0) !important; opacity:0 !important;
+}
+
+/* ============================================================
+   FIX 2: .field::after / .field::before — orange underline inside
+   input wrapper (Dawn theme leftover). Kill it on login + cart pages.
+   ============================================================ */
+html body .sauth .field::after,
+html body .sauth .field::before,
+html body .sauth [class*="field-wrap"]::after,
+html body .sauth [class*="field-wrap"]::before,
+html body .sauth .auth-card .field::after,
+html body .sauth .auth-card .field::before,
+html body .scart .field::after,
+html body .scart .field::before,
+html body .scd-bd .field::after,
+html body .scd-bd .field::before{
+  display:none !important;
+  content:none !important;
+  border:0 !important;
+  border-bottom:0 !important;
+  background:none !important;
+  box-shadow:none !important;
+}
+
+/* ============================================================
+   FIX 3: BRAND BUTTON SYSTEM — every primary button on the site
+   gets the PDP-style chunky offset shadow + pill + ink border.
+   Targets: .btn, .button, .btn-ink, button[type="submit"], .soc-btn
+   ============================================================ */
+html body .btn,
+html body .button,
+html body button.btn,
+html body button.button,
+html body a.btn,
+html body a.button,
+html body button[type="submit"]:not(.scd-close):not([class*="close"]):not([class*="toggle"]):not(.bb-modal-close),
+html body .btn-ink,
+html body .auth-submit,
+html body .sauth .soc-btn,
+html body .sauth button.soc-btn{
+  border-radius:999px !important;
+  border:1.5px solid #39220f !important;
+  font-family:'Archivo Black','Archivo',sans-serif !important;
+  font-weight:400 !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase !important;
+  -webkit-tap-highlight-color:transparent !important;
+  outline:none !important;
+  cursor:pointer !important;
+  transition:transform .12s ease, box-shadow .12s ease, background .15s ease !important;
+}
+
+/* PRIMARY ink-solid variant (Sign in submit, CTAs) — with copper offset shadow */
+html body button[type="submit"]:not(.scd-close):not([class*="close"]):not([class*="toggle"]):not(.bb-modal-close):not(.soc-btn),
+html body .btn-ink,
+html body .auth-submit{
+  background:#39220f !important;
+  background-image:none !important;
+  color:#FFFBF4 !important;
+  box-shadow:3px 3px 0 #c58548 !important;
+}
+html body button[type="submit"]:not(.scd-close):not([class*="close"]):not([class*="toggle"]):not(.bb-modal-close):not(.soc-btn):hover,
+html body .btn-ink:hover,
+html body .auth-submit:hover{
+  transform:translate(-1px,-1px) !important;
+  box-shadow:4px 4px 0 #c58548 !important;
+  background:#39220f !important;
+  color:#FFFBF4 !important;
+}
+html body button[type="submit"]:not(.scd-close):not([class*="close"]):not([class*="toggle"]):not(.bb-modal-close):not(.soc-btn):active,
+html body .btn-ink:active,
+html body .auth-submit:active{
+  transform:translate(1px,1px) !important;
+  box-shadow:1px 1px 0 #c58548 !important;
+}
+
+/* SECONDARY paper-outline variant (social buttons, continue, secondary CTAs) */
+html body .sauth .soc-btn,
+html body .sauth button.soc-btn{
+  background:#FFFBF4 !important;
+  background-image:none !important;
+  color:#39220f !important;
+  box-shadow:3px 3px 0 #39220f !important;
+}
+html body .sauth .soc-btn:hover,
+html body .sauth button.soc-btn:hover{
+  background:#FCE2A0 !important;
+  background-image:none !important;
+  color:#39220f !important;
+  transform:translate(-1px,-1px) !important;
+  box-shadow:4px 4px 0 #39220f !important;
+}
+html body .sauth .soc-btn:active,
+html body .sauth button.soc-btn:active{
+  transform:translate(1px,1px) !important;
+  box-shadow:1px 1px 0 #39220f !important;
+  background:#FCE2A0 !important;
+}
+html body .sauth .soc-btn:focus,
+html body .sauth .soc-btn:focus-visible{
+  outline:none !important;
+  box-shadow:3px 3px 0 #39220f !important;
+  background:#FFFBF4 !important;
+}
+</style>
+
+<script>
+(function(){
+  function trySuppress(){
+    document.querySelectorAll('button, a').forEach(function(btn){
+      try{
+        var before = window.getComputedStyle(btn, '::before');
+        var bg = before.getPropertyValue('background-color');
+        var w = parseFloat(before.getPropertyValue('width'));
+        var isOrangey = /rgb\(\s*25[0-5]\s*,\s*(1[5-9]\d|2\d\d)\s*,\s*(1[5-9]\d|2\d\d)/.test(bg)
+                     || bg.indexOf('255, 220, 189') !== -1
+                     || bg.indexOf('255, 212, 184') !== -1;
+        if (isOrangey && w > 5){
+          btn.classList.add('pd-no-fill-before');
+        }
+      } catch(e){}
+    });
+  }
+  var s = document.createElement('style');
+  s.textContent = 'html body .pd-no-fill-before::before{width:0!important;opacity:0!important;transform:scaleX(0)!important}';
+  document.head.appendChild(s);
+  function init(){
+    trySuppress();
+    [200, 800, 2000].forEach(function(ms){ setTimeout(trySuppress, ms); });
+    ['click','focusin','focusout','touchend','mouseup'].forEach(function(ev){
+      document.addEventListener(ev, function(){ setTimeout(trySuppress, 50); setTimeout(trySuppress, 300); }, true);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>

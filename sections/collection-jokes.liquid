@@ -1,0 +1,94 @@
+{%- comment -%} Syruvia — Collection jokes interleaved into the product grid (a joke tile after every N products). Reusable per collection: each collection template sets its own jokes. Robust against the section's filter/sort/infinite-scroll re-renders (re-places via a guarded MutationObserver). {%- endcomment -%}
+{%- assign hasjoke = false -%}
+{%- for i in (1..12) -%}{%- assign k = 'joke' | append: i -%}{%- if section.settings[k] != blank -%}{%- assign hasjoke = true -%}{%- endif -%}{%- endfor -%}
+{%- if hasjoke -%}
+<div class="scjoke-data" hidden data-scjoke-data data-every="{{ section.settings.every | default: 5 }}" data-label="{{ section.settings.label | default: 'Sugar-free joke' | escape }}" data-emoji="{{ section.settings.emoji | default: '🍯' | escape }}">
+  <ul>
+    {%- for i in (1..12) -%}{%- assign k = 'joke' | append: i -%}{%- assign j = section.settings[k] -%}{%- if j != blank -%}<li>{{ j | escape }}</li>{%- endif -%}{%- endfor -%}
+  </ul>
+</div>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:ital,wght@0,600;0,700;1,600;1,700&display=swap');
+  .scol .pgrid > .scjoke-tile{ position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:9px; min-height:200px; padding:22px 18px; background:#FBE0E5; border:2px solid #39220f; border-radius:18px; box-shadow:4px 4px 0 #39220f; }
+  .scol .pgrid > .scjoke-tile::before{ content:''; position:absolute; inset:5px; border:1.5px dashed #e7a9b8; border-radius:13px; pointer-events:none; }
+  .scol .pgrid > .scjoke-tile .jk-emoji{ font-size:32px; line-height:1; position:relative; z-index:1; }
+  .scol .pgrid > .scjoke-tile .jk-label{ font-family:'Archivo Black',sans-serif; font-size:10px; letter-spacing:.09em; text-transform:uppercase; color:#C53156; position:relative; z-index:1; }
+  .scol .pgrid > .scjoke-tile .jk-text{ font-family:'Josefin Sans',sans-serif; font-style:italic; font-weight:700; font-size:clamp(15px,1.4vw,18px); line-height:1.26; color:#39220f; position:relative; z-index:1; margin:0; }
+  .scol.view-list .pgrid > .scjoke-tile{ min-height:0; flex-direction:row; gap:14px; justify-content:flex-start; text-align:left; padding:18px 22px; }
+  @media (max-width:600px){ .scol .pgrid > .scjoke-tile{ min-height:0; padding:18px 14px; } }
+</style>
+<script>
+(function(){
+  var data = document.querySelector('[data-scjoke-data]'); if(!data) return;
+  var jokes = Array.prototype.slice.call(data.querySelectorAll('li')).map(function(li){ return li.textContent; });
+  if(!jokes.length) return;
+  var EVERY = parseInt(data.getAttribute('data-every'), 10) || 5; if(EVERY < 2) EVERY = 2;
+  var LABEL = data.getAttribute('data-label') || '';
+  var EMOJI = data.getAttribute('data-emoji') || '🍯';
+  // shuffle once for variety
+  for(var s = jokes.length - 1; s > 0; s--){ var r = Math.floor(Math.random() * (s + 1)); var tmp = jokes[s]; jokes[s] = jokes[r]; jokes[r] = tmp; }
+  function makeTile(text){
+    var el = document.createElement('div'); el.className = 'scjoke-tile';
+    var e = document.createElement('span'); e.className = 'jk-emoji'; e.textContent = EMOJI; el.appendChild(e);
+    if(LABEL){ var l = document.createElement('span'); l.className = 'jk-label'; l.textContent = LABEL; el.appendChild(l); }
+    var p = document.createElement('p'); p.className = 'jk-text'; p.textContent = text; el.appendChild(p);
+    return el;
+  }
+  var mo = null, timer = 0;
+  function place(){
+    var grid = document.querySelector('.scol .pgrid'); if(!grid) return;
+    if(mo) mo.disconnect();
+    Array.prototype.forEach.call(grid.querySelectorAll('.scjoke-tile'), function(n){ n.remove(); });
+    var cards = Array.prototype.filter.call(grid.querySelectorAll('.pcard'), function(c){ return c.style.display !== 'none'; });
+    var ji = 0;
+    for(var k = EVERY - 1; k < cards.length; k += EVERY){
+      if(ji >= jokes.length) break;   /* each joke used at most once — no repeats */
+      var tile = makeTile(jokes[ji]); ji++;
+      var anchor = cards[k];
+      if(anchor && anchor.nextSibling){ grid.insertBefore(tile, anchor.nextSibling); } else { grid.appendChild(tile); }
+    }
+    if(mo){ var sc = grid.closest('.scol'); if(sc) mo.observe(sc, { childList:true, subtree:true }); }
+  }
+  function schedule(){ if(timer) return; timer = setTimeout(function(){ timer = 0; place(); }, 170); }
+  function init(){
+    var grid = document.querySelector('.scol .pgrid'); if(!grid){ setTimeout(init, 300); return; }
+    place();
+    mo = new MutationObserver(function(recs){
+      var relevant = recs.some(function(r){
+        return Array.prototype.some.call(r.addedNodes, function(n){ return n.nodeType === 1 && !n.classList.contains('scjoke-tile'); })
+            || Array.prototype.some.call(r.removedNodes, function(n){ return n.nodeType === 1 && !n.classList.contains('scjoke-tile'); });
+      });
+      if(relevant) schedule();
+    });
+    var sc = grid.closest('.scol'); if(sc) mo.observe(sc, { childList:true, subtree:true });
+  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
+})();
+</script>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Collection Jokes",
+  "tag": "section",
+  "class": "syr-collection-jokes",
+  "settings": [
+    { "type": "paragraph", "content": "Drops a joke tile into the product grid after every N products. Set 5 jokes below." },
+    { "type": "text", "id": "label", "label": "Tile label", "default": "Sugar-free joke" },
+    { "type": "text", "id": "emoji", "label": "Emoji", "default": "🍯" },
+    { "type": "range", "id": "every", "min": 3, "max": 10, "step": 1, "label": "Show a joke after every N products", "default": 5 },
+    { "type": "textarea", "id": "joke1", "label": "Joke 1", "default": "Why did the latte go sugar-free? It was done with the crash-and-burn relationships." },
+    { "type": "textarea", "id": "joke2", "label": "Joke 2", "default": "My sweet tooth and my sugar-free syrup have finally made peace." },
+    { "type": "textarea", "id": "joke3", "label": "Joke 3", "default": "What’s sweet, smooth, and has a rock-solid alibi? Zero-sugar syrup — no crash on record." },
+    { "type": "textarea", "id": "joke4", "label": "Joke 4", "default": "I told my coffee I’m quitting sugar. It said, “You’re still my type — extra sweet, zero regret.”" },
+    { "type": "textarea", "id": "joke5", "label": "Joke 5", "default": "Sugar-free: because your 3 p.m. self deserves a flavor, not a faceplant." },
+    { "type": "textarea", "id": "joke6", "label": "Joke 6", "default": "Why don’t sugar-free syrups spill secrets? They keep it sweet and never spill the sugar." },
+    { "type": "textarea", "id": "joke7", "label": "Joke 7", "default": "My nutritionist looked at my coffee and said, “Finally, a sweet decision.”" },
+    { "type": "textarea", "id": "joke8", "label": "Joke 8", "default": "Sugar-free syrup: proof you can have your sweet and drink it too." },
+    { "type": "textarea", "id": "joke9", "label": "Joke 9", "default": "What did the espresso say to the sugar-free vanilla? “You complete me — minus the crash.”" },
+    { "type": "textarea", "id": "joke10", "label": "Joke 10", "default": "I asked for sweet with zero regrets. The barista just handed me sugar-free." },
+    { "type": "textarea", "id": "joke11", "label": "Joke 11", "default": "Sugar-free flavor walked in and the whole cup straightened up — no crash, no chaos." },
+    { "type": "textarea", "id": "joke12", "label": "Joke 12", "default": "Diet starts Monday? Mine starts every cup — sugar-free, still delicious." }
+  ],
+  "presets": [{ "name": "Collection Jokes" }]
+}
+{% endschema %}

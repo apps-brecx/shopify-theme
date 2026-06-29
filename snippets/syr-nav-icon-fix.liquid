@@ -1,0 +1,240 @@
+{%- comment -%} Global polish v5: collection FOUC prevent (early head injection) + drawer children flow + collection polish on ALL viewports. {%- endcomment -%}
+
+{%- comment -%} === CRITICAL FOUC PREVENT — inject CSS into <head> immediately so the new collection design is set up before the section paints {%- endcomment -%}
+<script>
+(function(){
+  if (document.getElementById('syr-fouc-prevent')) return;
+  var s = document.createElement('style');
+  s.id = 'syr-fouc-prevent';
+  s.textContent = '\n'+
+    'html body .scol .floater,html body .scol .hero-stage,html body .scol .hero-stage > *,html body .scol [class*="floater"],html body .floater,html body .hero-stage{display:none!important;visibility:hidden!important;opacity:0!important;width:0!important;height:0!important;pointer-events:none!important}'+
+    'html body .scol .read-more,html body .scol .lede-clip,html body .scol [data-readmore],html body .scol .hero .read-more,html body .scol .hero a.read-more{display:none!important}'+
+    'html body .scol .hero,html body .scol section.hero,html body .scol section.hero.hero-float,html body .scol .hero.hero-float,html body section.hero.hero-float,html body .hero.hero-float{background-image:none!important;background:rgb(255,251,244)!important}'+
+    'html body .scol .lede,html body .scol .hero .lede,html body .scol .hero p{-webkit-line-clamp:none!important;max-height:none!important;display:block!important;overflow:visible!important}';
+  (document.head || document.documentElement).appendChild(s);
+})();
+</script>
+
+<style id="syr-fouc-prevent-inline">
+  html body .scol .floater,
+  html body .scol .hero-stage,
+  html body .scol .hero-stage > *,
+  html body .scol [class*="floater"],
+  html body .floater,
+  html body .hero-stage{ display:none !important; visibility:hidden !important; opacity:0 !important; width:0 !important; height:0 !important; pointer-events:none !important; }
+  html body .scol .read-more,
+  html body .scol .lede-clip,
+  html body .scol [data-readmore],
+  html body .scol .hero .read-more,
+  html body .scol .hero a.read-more{ display:none !important; }
+  html body .scol .hero,
+  html body .scol section.hero,
+  html body .scol section.hero.hero-float,
+  html body .scol .hero.hero-float,
+  html body section.hero.hero-float,
+  html body .hero.hero-float{ background-image:none !important; background:rgb(255, 251, 244) !important; }
+  html body .scol .lede,
+  html body .scol .hero .lede,
+  html body .scol .hero p{ -webkit-line-clamp:none !important; max-height:none !important; display:block !important; overflow:visible !important; }
+</style>
+
+<style id="syr-nav-icon-fix-css">
+  [id^="syrn-"] .syrn-ic{ color: var(--icon, #39220f) !important; width: var(--icon-btn-size, 42px) !important; height: var(--icon-btn-size, 42px) !important; }
+  [id^="syrn-"] .syrn-ic svg{ color: var(--icon, #39220f) !important; stroke: var(--icon, #39220f) !important; fill: none !important; width: var(--icon-size, 21px) !important; height: var(--icon-size, 21px) !important; stroke-width: var(--icon-stroke, 1.9) !important; }
+  [id^="syrn-"] .syrn-ic svg *{ stroke: var(--icon, #39220f) !important; }
+  [id^="syrn-"] .syrn-ic svg [fill]:not([fill="none"]){ fill: var(--icon, #39220f) !important; }
+  [id^="syrn-"] .syrn-ic:hover{ color: var(--icon-hover, #c58548) !important; }
+  [id^="syrn-"] .syrn-ic:hover svg, [id^="syrn-"] .syrn-ic:hover svg *{ color: var(--icon-hover, #c58548) !important; stroke: var(--icon-hover, #c58548) !important; }
+  [id^="syrn-"] .syrn-hamb{ color: var(--icon, #39220f) !important; }
+  [id^="syrn-"] .syrn-hamb svg, [id^="syrn-"] .syrn-hamb svg *{ color: var(--icon, #39220f) !important; stroke: var(--icon, #39220f) !important; stroke-width: var(--icon-stroke, 2) !important; }
+  [id^="syrn-"] .syrn-badge{ background: var(--accent, #c58548) !important; color: var(--bg, #FFFBF4) !important; }
+  [id^="syrn-"] .syrn-menu{ margin-left: var(--menu-left-offset, 0px) !important; padding-left: 0 !important; }
+
+  html body .syrnav-drawer .syrnav-dwr-head,
+  html body .syrnav-dwr-head,
+  html body [class~="syrnav-dwr-head"],
+  html body [class*="syrnav-dwr-head"]{ display:none !important; visibility:hidden !important; height:0 !important; max-height:0 !important; min-height:0 !important; padding:0 !important; margin:0 !important; border:0 !important; overflow:hidden !important; opacity:0 !important; pointer-events:none !important; }
+
+  html body .syrnav-hamb{ position: relative !important; overflow: visible !important; }
+
+  @media (max-width: 900px){
+    html body .syrnav-drawer{ z-index: 9998 !important; }
+    html body .syrnav-drawer.open{
+      position: fixed !important;
+      top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+      width: 100vw !important; max-width: 100vw !important;
+      height: 100vh !important; height: 100dvh !important;
+      max-height: 100vh !important; max-height: 100dvh !important;
+      padding-top: 64px !important;
+      padding-bottom: 24px !important;
+      transform: none !important;
+      background: #FFFBF4 !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      display: block !important;
+    }
+    html body .syrnav-scrim{ display: none !important; }
+
+    html body .syr-drawer-close{
+      position: fixed !important;
+      top: 14px !important;
+      right: 14px !important;
+      width: 44px !important;
+      height: 44px !important;
+      padding: 0 !important;
+      border: 0 !important;
+      background: transparent !important;
+      cursor: pointer !important;
+      z-index: 10000 !important;
+      display: none;
+      align-items: center !important;
+      justify-content: center !important;
+      border-radius: 50% !important;
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .15s ease !important;
+    }
+    html body .syr-drawer-close.is-visible{ display: flex !important; }
+    html body .syr-drawer-close:hover{ background: rgba(57,34,15,.08) !important; transform: scale(1.05) !important; }
+    html body .syr-drawer-close:active{ transform: scale(.95) !important; }
+    html body .syr-drawer-close svg{ width: 32px !important; height: 32px !important; color: #39220f !important; stroke: #39220f !important; }
+
+    html body .syrnav-drawer .syrnav-dwr-links,
+    html body .syrnav-drawer .syrnav-dwr-sub,
+    html body .syrnav-drawer .syrnav-dwr-promo,
+    html body .syrnav-drawer .syrnav-dwr-bottom,
+    html body .syrnav-drawer > div,
+    html body .syrnav-drawer > nav,
+    html body .syrnav-drawer > section{
+      position: static !important;
+      transform: none !important;
+      top: auto !important;
+      bottom: auto !important;
+      left: auto !important;
+      right: auto !important;
+      inset: auto !important;
+      flex: 0 0 auto !important;
+      flex-grow: 0 !important;
+      min-height: 0 !important;
+      max-height: none !important;
+    }
+    html body .syrnav-drawer .syrnav-dwr-sub{ margin-top: 6px !important; padding-top: 12px !important; }
+    html body .syrnav-drawer .syrnav-dwr-promo{ margin-top: 14px !important; margin-bottom: 20px !important; }
+
+    html body.open-drawer [id^="syr-bot-"],
+    html body.open-drawer [id*="__syr_bo"],
+    html body.open-drawer .pd-snav-v4,
+    html body.open-drawer [class*="snav-v"],
+    html body.open-drawer .syr-bottomnav,
+    html body.pd-menu-open [id^="syr-bot-"],
+    html body.pd-menu-open [id*="__syr_bo"],
+    html body.pd-menu-open .pd-snav-v4,
+    html body.pd-menu-open [class*="snav-v"],
+    html body.pd-menu-open .syr-bottomnav{
+      display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;
+    }
+  }
+
+  @media (min-width: 901px) {
+    html body .scol .pcard-imgwrap, html body .pcard-imgwrap{ aspect-ratio: auto !important; min-height: 320px !important; height: 320px !important; }
+    html body .scol .pcard-media, html body .pcard-media{ height: 320px !important; min-height: 320px !important; }
+    html body .scol .pcard-img, html body .pcard-img{ width:100% !important; height:100% !important; object-fit: contain !important; object-position: center center !important; padding:12px !important; box-sizing: border-box !important; }
+  }
+
+  html body [id^="syr-vip-"] .syr-vip-grid{ grid-template-columns: 1fr 1fr !important; align-items: center !important; }
+  html body [id^="syr-vip-"] .syr-vip-big{ justify-content: center !important; text-align: center !important; align-items: baseline !important; gap: 16px !important; margin-bottom: 14px !important; }
+  html body [id^="syr-vip-"] .syr-vip-pct{
+    background: none !important;
+    -webkit-background-clip: initial !important; background-clip: initial !important;
+    -webkit-text-fill-color: #FCE2A0 !important;
+    color: #FCE2A0 !important;
+    text-shadow: 0 4px 0 rgba(57,34,15,.28), 0 0 24px rgba(252,226,160,.35) !important;
+    transform-origin: center center !important;
+  }
+  html body [id^="syr-vip-"] .syr-vip-off{ color: #FFFBF4 !important; opacity: 1 !important; text-align: left !important; max-width: 7ch !important; line-height: 1.05 !important; }
+  html body [id^="syr-vip-"] h2{ text-align: center !important; margin-left: auto !important; margin-right: auto !important; }
+  html body [id^="syr-vip-"] .syr-vip-perks{ max-width: 360px !important; margin-left: auto !important; margin-right: auto !important; }
+  html body [id^="syr-vip-"] .syr-vip-save-num{
+    background: none !important;
+    -webkit-background-clip: initial !important; background-clip: initial !important;
+    -webkit-text-fill-color: #FCE2A0 !important;
+    color: #FCE2A0 !important;
+    text-shadow: 0 2px 0 rgba(57,34,15,.2) !important;
+  }
+  @media (max-width:760px){
+    html body [id^="syr-vip-"] .syr-vip-grid{ grid-template-columns: 1fr !important; }
+    html body [id^="syr-vip-"] .syr-vip-big{ flex-direction: column !important; align-items: center !important; gap: 6px !important; margin-bottom: 16px !important; }
+    html body [id^="syr-vip-"] .syr-vip-off{ text-align: center !important; max-width: none !important; width: auto !important; letter-spacing: .18em !important; }
+  }
+</style>
+
+<script>
+(function(){
+  var CLOSE_SVG = '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="16" cy="16" r="13.5"/><path d="M11 11l10 10M21 11l-10 10"/></svg>';
+
+  function init(){
+    var drawer = document.querySelector('.syrnav-drawer');
+    var hambs  = document.querySelectorAll('.syrnav-hamb');
+    if (!drawer || !hambs.length) return;
+
+    drawer.querySelectorAll('.syrnav-dwr-head').forEach(function(n){ n.remove(); });
+
+    var closeBtn = document.querySelector('.syr-drawer-close');
+    if (!closeBtn){
+      closeBtn = document.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.className = 'syr-drawer-close';
+      closeBtn.setAttribute('aria-label', 'Close menu');
+      closeBtn.innerHTML = CLOSE_SVG;
+      document.body.appendChild(closeBtn);
+      closeBtn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); closeDrawer(); });
+    }
+
+    function closeDrawer(){
+      drawer.classList.remove('open');
+      document.body.classList.remove('open-drawer');
+      document.body.classList.remove('pd-menu-open');
+      var scrim = document.querySelector('.syrnav-scrim');
+      if (scrim) scrim.classList.remove('open');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      sync();
+    }
+
+    function sync(){
+      var isOpen = drawer.classList.contains('open');
+      hambs.forEach(function(h){ if (isOpen) h.classList.add('is-open'); else h.classList.remove('is-open'); });
+      if (isOpen) document.body.classList.add('open-drawer');
+      else document.body.classList.remove('open-drawer');
+      if (closeBtn){
+        if (isOpen) closeBtn.classList.add('is-visible');
+        else closeBtn.classList.remove('is-visible');
+      }
+    }
+
+    try {
+      var mo = new MutationObserver(function(){
+        drawer.querySelectorAll('.syrnav-dwr-head').forEach(function(n){ n.remove(); });
+        sync();
+      });
+      mo.observe(drawer, { attributes:true, attributeFilter:['class'], childList:true, subtree:true });
+    } catch(e){}
+    sync();
+
+    hambs.forEach(function(h){
+      h.addEventListener('click', function(e){
+        if (drawer.classList.contains('open')){
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          closeDrawer();
+        }
+      }, true);
+    });
+
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer(); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+{%- comment -%} Render VIP rewards page polish (only takes effect when .vipp exists in DOM) {%- endcomment -%}
+{% render 'syr-vip-rewards-polish' %}

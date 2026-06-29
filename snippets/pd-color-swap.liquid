@@ -1,0 +1,112 @@
+{%- comment -%}
+  Color swap + page overrides + sticky stack loader.
+{%- endcomment -%}
+
+<style>:root{--pd-ink:#39220f!important;--pd-coral:#c58548!important}</style>
+
+{% render 'pd-page-overrides' %}
+{% render 'pd-why-stack' %}
+
+<script>
+(function(){
+  var HEX_INK    = /#1a1a1a/gi;
+  var HEX_CORAL  = /#FF6B5C/gi;
+  var RGB_INK    = /rgba?\(\s*26\s*,\s*26\s*,\s*26\s*(,[^)]*)?\)/gi;
+  var RGB_CORAL  = /rgba?\(\s*255\s*,\s*107\s*,\s*92\s*(,[^)]*)?\)/gi;
+  var NEW_INK    = '#39220f';
+  var NEW_CORAL  = '#c58548';
+
+  function rewrite(text){
+    if (!text) return text;
+    return text
+      .replace(HEX_INK, NEW_INK)
+      .replace(HEX_CORAL, NEW_CORAL)
+      .replace(RGB_INK, function(_, a){ return a ? 'rgba(57,34,15' + a + ')' : 'rgb(57,34,15)'; })
+      .replace(RGB_CORAL, function(_, a){ return a ? 'rgba(197,133,72' + a + ')' : 'rgb(197,133,72)'; });
+  }
+
+  function needsRewrite(text){
+    if (!text) return false;
+    return HEX_INK.test(text) || HEX_CORAL.test(text) || RGB_INK.test(text) || RGB_CORAL.test(text);
+  }
+  function resetRegexes(){
+    HEX_INK.lastIndex = 0;
+    HEX_CORAL.lastIndex = 0;
+    RGB_INK.lastIndex = 0;
+    RGB_CORAL.lastIndex = 0;
+  }
+
+  function processSheet(sheet){
+    var rules;
+    try { rules = sheet.cssRules || sheet.rules; } catch(e){ return; }
+    if (!rules) return;
+    for (var j = rules.length - 1; j >= 0; j--){
+      var rule = rules[j];
+      try {
+        if (rule.cssRules) processSheet(rule);
+        if (!rule.cssText) continue;
+        var oldText = rule.cssText;
+        resetRegexes();
+        if (!needsRewrite(oldText)) continue;
+        var newText = rewrite(oldText);
+        if (newText !== oldText){
+          sheet.deleteRule(j);
+          sheet.insertRule(newText, j);
+        }
+      } catch(e){}
+    }
+  }
+
+  function swap(){
+    var sheets = document.styleSheets;
+    for (var i = 0; i < sheets.length; i++){
+      try { processSheet(sheets[i]); } catch(e){}
+    }
+
+    var inlineEls = document.querySelectorAll('[style]');
+    for (var i = 0; i < inlineEls.length; i++){
+      var el = inlineEls[i];
+      var s = el.getAttribute('style');
+      if (!s) continue;
+      var lower = s.toLowerCase();
+      if (lower.indexOf('1a1a1a') < 0 &&
+          lower.indexOf('ff6b5c') < 0 &&
+          !/rgba?\(\s*26\s*,\s*26\s*,\s*26/.test(s) &&
+          !/rgba?\(\s*255\s*,\s*107\s*,\s*92/.test(s)) continue;
+      el.setAttribute('style', rewrite(s));
+    }
+
+    var svgEls = document.querySelectorAll('[fill],[stroke]');
+    for (var k = 0; k < svgEls.length; k++){
+      var sel = svgEls[k];
+      ['fill','stroke'].forEach(function(attr){
+        var v = sel.getAttribute(attr);
+        if (!v) return;
+        var lower = v.toLowerCase();
+        if (lower === '#1a1a1a') sel.setAttribute(attr, NEW_INK);
+        else if (lower === '#ff6b5c') sel.setAttribute(attr, NEW_CORAL);
+      });
+    }
+  }
+
+  swap();
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', swap);
+  }
+  window.addEventListener('load', swap);
+  setTimeout(swap, 300);
+  setTimeout(swap, 1200);
+  setTimeout(swap, 3000);
+
+  if (window.MutationObserver){
+    var obs = new MutationObserver(function(muts){
+      for (var i = 0; i < muts.length; i++){
+        if (muts[i].addedNodes.length){ swap(); return; }
+      }
+    });
+    if (document.body) obs.observe(document.body, {childList:true, subtree:true});
+    else document.addEventListener('DOMContentLoaded', function(){ obs.observe(document.body, {childList:true, subtree:true}); });
+  }
+})();
+</script>

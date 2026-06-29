@@ -1,0 +1,203 @@
+{% layout 'theme' %}
+
+<style>
+  .mission-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+
+  .mission-hero {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .mission-hero h1 {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 700;
+    color: #39220f;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .mission-hero p {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  .mission-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    margin-bottom: 80px;
+  }
+
+  .mission-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f0e8e0;
+    text-align: center;
+  }
+
+  .mission-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .mission-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #39220f;
+    margin-bottom: 15px;
+  }
+
+  .mission-card p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  .mission-statement {
+    background: #faf8f5;
+    padding: 60px 40px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .mission-statement h2 {
+    font-size: 2rem;
+    color: #39220f;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+
+  .mission-statement p {
+    font-size: 1.1rem;
+    color: #555;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  .mission-cta {
+    text-align: center;
+    padding: 60px 20px;
+    background: #39220f;
+    color: white;
+    border-radius: 8px;
+  }
+
+  .mission-cta h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+
+  .mission-cta p {
+    font-size: 1rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+
+  .mission-cta-button {
+    display: inline-block;
+    background: #c58548;
+    color: #39220f;
+    padding: 15px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .mission-cta-button:hover {
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    .mission-page {
+      padding: 40px 20px;
+    }
+
+    .mission-hero {
+      margin-bottom: 50px;
+    }
+
+    .mission-grid {
+      gap: 25px;
+      margin-bottom: 50px;
+    }
+
+    .mission-card {
+      padding: 30px;
+    }
+
+    .mission-statement {
+      padding: 40px 20px;
+      margin-bottom: 50px;
+    }
+
+    .mission-cta {
+      padding: 40px 20px;
+    }
+  }
+</style>
+
+<div class="mission-page">
+  <!-- Hero -->
+  <section class="mission-hero">
+    <h1>Our Mission</h1>
+    <p>To bring craft-quality syrups to everyone, making exceptional flavor accessible and affordable.</p>
+  </section>
+
+  <!-- Mission Pillars -->
+  <section class="mission-grid">
+    <div class="mission-card">
+      <span class="mission-icon">🎯</span>
+      <h3>Flavor First</h3>
+      <p>Every syrup is crafted for taste. No shortcuts. No artificial flavors. Just real, delicious flavor.</p>
+    </div>
+
+    <div class="mission-card">
+      <span class="mission-icon">👥</span>
+      <h3>For Everyone</h3>
+      <p>Over 250 flavors, including sugar-free options. Whether you're into coffee or fruit, we've got you.</p>
+    </div>
+
+    <div class="mission-card">
+      <span class="mission-icon">💪</span>
+      <h3>Built to Last</h3>
+      <p>Family-owned and proudly American-made. We've been doing this since 1974, and we're just getting started.</p>
+    </div>
+
+    <div class="mission-card">
+      <span class="mission-icon">🌍</span>
+      <h3>Community Matters</h3>
+      <p>5 million flavor lovers trust us. We're grateful for every sip, every review, every recommendation.</p>
+    </div>
+  </section>
+
+  <!-- Statement -->
+  <section class="mission-statement">
+    <h2>Why We Do What We Do</h2>
+    <p>In a world of mass production, Syruvia stands for quality, creativity, and real flavor. Every bottle represents our commitment to craft and our dedication to the people who love what we make.</p>
+  </section>
+
+  <!-- CTA -->
+  <section class="mission-cta">
+    <h2>Ready to Join the Flavor Movement?</h2>
+    <p>Explore our full collection of craft syrups and discover your next favorite flavor.</p>
+    <a href="/collections/all" class="mission-cta-button">Shop Now</a>
+  </section>
+</div>

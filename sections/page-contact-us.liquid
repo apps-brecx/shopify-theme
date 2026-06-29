@@ -1,0 +1,277 @@
+{%- comment -%} Contact Us — Syruvia brand design + real Shopify contact form. {%- endcomment -%}
+{%- assign s = section.settings -%}
+<style id="syr-ct-{{ section.id }}-css">
+  #syr-ct-{{ section.id }}{
+    --ink:#39220f;--paper:#FFFBF4;--butter:#FCE2A0;--copper:#c58548;--blue:#2f7bb0;--blue2:#1f5a85;
+    --peach:#ffd4b8;--mint:#c5e4d4;--sky:#b8dceb;--eye-scale:.62;
+    background:var(--paper);color:var(--ink);font-family:'Josefin Sans','Josefin',sans-serif;position:relative;overflow:hidden;
+  }
+  #syr-ct-{{ section.id }} *{box-sizing:border-box;}
+  #syr-ct-{{ section.id }} .syr-ct-wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:2;}
+  #syr-ct-{{ section.id }} .syr-ct-eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--butter);color:var(--ink);border:2px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif;font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:8px 18px;line-height:1;}
+  #syr-ct-{{ section.id }} .syr-ct-h2{font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif;font-weight:400;font-size:clamp(28px,4vw,44px);line-height:1.05;letter-spacing:-.01em;text-transform:uppercase;margin:16px 0 0;}
+  #syr-ct-{{ section.id }} .syr-ct-h2 em,#syr-ct-{{ section.id }} .syr-ct-hero h1 em{font-family:'Josefin Sans',sans-serif;font-style:italic;font-weight:300;color:var(--copper);text-transform:none;letter-spacing:0;}
+  #syr-ct-{{ section.id }} .syr-ct-sub{font-size:16px;line-height:1.7;color:#5a4632;font-weight:500;}
+  #syr-ct-{{ section.id }} .syr-rev{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s cubic-bezier(.16,.84,.34,1);}
+  #syr-ct-{{ section.id }} .syr-rev.in{opacity:1;transform:none;}
+
+  /* HERO */
+  #syr-ct-{{ section.id }} .syr-ct-hero{text-align:center;padding:84px 0 56px;position:relative;}
+  #syr-ct-{{ section.id }} .syr-ct-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(circle, rgba(57,34,15,.05) 1.4px, transparent 1.6px);background-size:26px 26px;opacity:.5;pointer-events:none;z-index:0;}
+  #syr-ct-{{ section.id }} .syr-ct-hero .syr-ct-eyebrow{transform-origin:center;transform:scale(var(--eye-scale));transition:transform .25s cubic-bezier(.16,.84,.34,1);font-size:12px;}
+  #syr-ct-{{ section.id }} .syr-ct-hero h1{font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif;font-weight:400;font-size:clamp(48px,9vw,104px);line-height:.9;letter-spacing:-.03em;text-transform:uppercase;margin:22px 0 0;}
+  #syr-ct-{{ section.id }} .syr-ct-hero .syr-ct-sub{margin:18px auto 0;max-width:40ch;}
+
+  /* CARDS */
+  #syr-ct-{{ section.id }} .syr-ct-reach{padding:24px 0 80px;text-align:center;}
+  #syr-ct-{{ section.id }} .syr-ct-reach .syr-ct-h2{max-width:18ch;margin:14px auto 0;}
+  #syr-ct-{{ section.id }} .syr-ct-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:46px;}
+  #syr-ct-{{ section.id }} .syr-ct-card{background:var(--cardbg,#ffd4b8);border:2.5px solid var(--ink);border-radius:24px;box-shadow:6px 6px 0 var(--ink);padding:38px 28px;text-align:center;transition:transform .25s ease,box-shadow .25s ease;}
+  #syr-ct-{{ section.id }} .syr-ct-card:hover{transform:translate(-2px,-2px);box-shadow:9px 9px 0 var(--ink);}
+  #syr-ct-{{ section.id }} .syr-ct-card .ic{width:56px;height:56px;margin:0 auto 18px;border-radius:50%;background:var(--paper);border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 var(--ink);}
+  #syr-ct-{{ section.id }} .syr-ct-card .ic svg{width:28px;height:28px;color:var(--ink);}
+  #syr-ct-{{ section.id }} .syr-ct-card .lbl{font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:10px;letter-spacing:.18em;text-transform:uppercase;opacity:.7;}
+  #syr-ct-{{ section.id }} .syr-ct-card .val{font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:21px;letter-spacing:-.01em;margin:8px 0 6px;line-height:1.1;text-transform:uppercase;}
+  #syr-ct-{{ section.id }} .syr-ct-card .txt{font-size:14px;line-height:1.55;color:#39220f;font-weight:500;margin:0;}
+  #syr-ct-{{ section.id }} .syr-ct-card a{color:inherit;text-decoration:none;border-bottom:2px solid currentColor;font-weight:600;}
+
+  /* FORM */
+  #syr-ct-{{ section.id }} .syr-ct-form-sec{padding:0 0 84px;}
+  #syr-ct-{{ section.id }} .syr-ct-form-head{text-align:center;max-width:640px;margin:0 auto 36px;}
+  #syr-ct-{{ section.id }} .syr-ct-form-card{max-width:680px;margin:0 auto;background:#fff;border:2.5px solid var(--ink);border-radius:28px;box-shadow:8px 8px 0 var(--ink);padding:clamp(28px,4vw,48px);}
+  #syr-ct-{{ section.id }} .syr-ct-field{margin-bottom:20px;text-align:left;}
+  #syr-ct-{{ section.id }} .syr-ct-field label{display:block;font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin-bottom:8px;}
+  #syr-ct-{{ section.id }} .syr-ct-field input,#syr-ct-{{ section.id }} .syr-ct-field textarea{width:100%;padding:14px 16px;border:2px solid var(--ink);border-radius:14px;font-size:15px;font-family:'Josefin Sans',sans-serif;color:var(--ink);background:var(--paper);transition:box-shadow .15s ease,border-color .15s ease;}
+  #syr-ct-{{ section.id }} .syr-ct-field input:focus,#syr-ct-{{ section.id }} .syr-ct-field textarea:focus{outline:none;border-color:var(--copper);box-shadow:3px 3px 0 var(--copper);}
+  #syr-ct-{{ section.id }} .syr-ct-field textarea{resize:vertical;min-height:130px;}
+  #syr-ct-{{ section.id }} .syr-ct-submit{width:100%;margin-top:6px;background:var(--ink);color:var(--paper);border:2.5px solid var(--ink);border-radius:999px;box-shadow:5px 5px 0 var(--copper);padding:18px 24px;font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:13.5px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease;}
+  #syr-ct-{{ section.id }} .syr-ct-submit:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--copper);}
+  #syr-ct-{{ section.id }} .syr-ct-success{background:var(--mint);border:2.5px solid var(--ink);border-radius:18px;box-shadow:4px 4px 0 var(--ink);padding:18px 22px;font-weight:600;color:var(--ink);margin-bottom:24px;text-align:center;}
+  #syr-ct-{{ section.id }} .syr-ct-errors{background:#ffe0db;border:2px solid #c0392b;border-radius:14px;padding:14px 18px;color:#8c2a1f;font-weight:500;margin-bottom:20px;}
+  #syr-ct-{{ section.id }} .syr-ct-errors ul{margin:0;padding-left:18px;}
+
+  /* FAQ */
+  #syr-ct-{{ section.id }} .syr-ct-faq{padding:0 0 84px;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-head{text-align:center;margin:0 auto 36px;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-item{background:#fff;border:2.5px solid var(--ink);border-radius:18px;box-shadow:4px 4px 0 var(--ink);overflow:hidden;transition:box-shadow .25s ease,transform .25s ease;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-item.open{box-shadow:5px 5px 0 var(--copper);transform:translate(-1px,-1px);}
+  #syr-ct-{{ section.id }} .syr-ct-faq-q{display:grid;grid-template-columns:1fr 34px;align-items:center;gap:16px;padding:20px 22px;cursor:pointer;background:none;border:0;width:100%;text-align:left;font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:15px;color:var(--ink);line-height:1.3;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-ic{width:34px;height:34px;border-radius:50%;background:var(--butter);border:2px solid var(--ink);position:relative;flex:0 0 34px;box-shadow:2px 2px 0 var(--ink);transition:background .25s ease,transform .3s ease;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-ic::before,#syr-ct-{{ section.id }} .syr-ct-faq-ic::after{content:'';position:absolute;top:50%;left:50%;background:var(--ink);border-radius:2px;transform:translate(-50%,-50%);transition:transform .3s ease;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-ic::before{width:13px;height:2.4px;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-ic::after{width:2.4px;height:13px;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-item.open .syr-ct-faq-ic{background:var(--copper);transform:rotate(180deg);}
+  #syr-ct-{{ section.id }} .syr-ct-faq-item.open .syr-ct-faq-ic::after{transform:translate(-50%,-50%) rotate(90deg);opacity:0;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;padding:0 22px;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-item.open .syr-ct-faq-a{max-height:400px;padding:0 22px 22px;}
+  #syr-ct-{{ section.id }} .syr-ct-faq-a p{margin:0;font-size:15px;line-height:1.65;color:#39220f;font-weight:500;padding-top:14px;border-top:1.5px dashed rgba(57,34,15,.18);}
+
+  /* CTA */
+  #syr-ct-{{ section.id }} .syr-ct-cta{padding:0 0 96px;text-align:center;}
+  #syr-ct-{{ section.id }} .syr-ct-cta-card{background:var(--ink);color:var(--paper);border:3px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--copper);padding:60px clamp(28px,5vw,64px);}
+  #syr-ct-{{ section.id }} .syr-ct-cta-card .syr-ct-h2{color:var(--paper);margin:0 auto;max-width:20ch;}
+  #syr-ct-{{ section.id }} .syr-ct-cta-card .syr-ct-h2 em{color:var(--butter);}
+  #syr-ct-{{ section.id }} .syr-ct-cta-card p{color:var(--paper);opacity:.85;font-size:15px;margin:16px auto 0;max-width:48ch;line-height:1.5;}
+  #syr-ct-{{ section.id }} .syr-ct-btn{display:inline-flex;align-items:center;gap:10px;margin-top:26px;background:var(--butter);color:var(--ink);border:2.5px solid var(--ink);border-radius:999px;box-shadow:5px 5px 0 var(--copper);padding:18px 30px;font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:13.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease;}
+  #syr-ct-{{ section.id }} .syr-ct-btn:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--copper);}
+  #syr-ct-{{ section.id }} .syr-ct-btn .ar{transition:transform .2s ease;}
+  #syr-ct-{{ section.id }} .syr-ct-btn:hover .ar{transform:translateX(5px);}
+
+  @media (max-width:860px){
+    #syr-ct-{{ section.id }} .syr-ct-cards{grid-template-columns:1fr;gap:18px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    #syr-ct-{{ section.id }} .syr-rev{opacity:1;transform:none;}
+    #syr-ct-{{ section.id }} .syr-ct-hero .syr-ct-eyebrow{transform:none;}
+  }
+</style>
+
+<section id="syr-ct-{{ section.id }}">
+
+  <div class="syr-ct-hero">
+    <div class="syr-ct-wrap">
+      <span class="syr-ct-eyebrow">{{ s.hero_eyebrow | default: 'We would love to hear from you' }}</span>
+      <h1>{{ s.hero_title | default: 'Get in <em>touch</em>.' }}</h1>
+      <p class="syr-ct-sub">{{ s.hero_sub | default: 'Questions? We are here to help — our team loves talking flavor. Reach out anytime.' }}</p>
+    </div>
+  </div>
+
+  <div class="syr-ct-reach">
+    <div class="syr-ct-wrap">
+      <span class="syr-ct-eyebrow syr-rev">{{ s.reach_eyebrow | default: 'Reach us' }}</span>
+      <h2 class="syr-ct-h2 syr-rev">{{ s.reach_title | default: 'Pick your <em>favorite</em> way.' }}</h2>
+      <div class="syr-ct-cards">
+        <div class="syr-ct-card syr-rev" style="--cardbg:#ffd4b8;">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7 l9 6 9 -6"/></svg></div>
+          <div class="lbl">{{ s.card1_label | default: 'Email' }}</div>
+          <div class="val">{{ s.card1_value | default: 'Drop a line' }}</div>
+          <p class="txt"><a href="mailto:{{ s.card1_email | default: 'hello@syruvia.com' }}">{{ s.card1_email | default: 'hello@syruvia.com' }}</a></p>
+        </div>
+        <div class="syr-ct-card syr-rev" style="--cardbg:#fce2a0;">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4 h4 l2 5 -2.5 1.5 a11 11 0 0 0 5 5 L20 13 l1 4 v2 a2 2 0 0 1 -2 2 A16 16 0 0 1 3 7 a2 2 0 0 1 2 -3 Z"/></svg></div>
+          <div class="lbl">{{ s.card2_label | default: 'Phone' }}</div>
+          <div class="val">{{ s.card2_value | default: '(800) 555-1234' }}</div>
+          <p class="txt">{{ s.card2_text | default: 'Mon–Fri · 9am–5pm EST' }}</p>
+        </div>
+        <div class="syr-ct-card syr-rev" style="--cardbg:#c5e4d4;">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21 C 7 16, 4 12, 4 8 a8 8 0 0 1 16 0 C 20 12, 17 16, 12 21 Z"/><circle cx="12" cy="8" r="2.5"/></svg></div>
+          <div class="lbl">{{ s.card3_label | default: 'Location' }}</div>
+          <div class="val">{{ s.card3_value | default: 'New Jersey, USA' }}</div>
+          <p class="txt">{{ s.card3_text | default: 'Syruvia HQ · shipping worldwide' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="syr-ct-form-sec">
+    <div class="syr-ct-wrap">
+      <div class="syr-ct-form-head syr-rev">
+        <span class="syr-ct-eyebrow">{{ s.form_eyebrow | default: 'Send a message' }}</span>
+        <h2 class="syr-ct-h2">{{ s.form_title | default: 'Drop us a <em>line</em>.' }}</h2>
+        <p class="syr-ct-sub" style="margin-top:12px;">{{ s.form_sub | default: 'We reply within 24 hours.' }}</p>
+      </div>
+      <div class="syr-ct-form-card syr-rev">
+        {%- form 'contact', id: 'syr-contact-form' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="syr-ct-success">{{ s.success_text | default: 'Thanks! Your message is on its way — we will reply within 24 hours.' }}</p>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <div class="syr-ct-errors">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+          <div class="syr-ct-field">
+            <label for="syr-ct-name">Your name</label>
+            <input type="text" id="syr-ct-name" name="contact[name]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" required>
+          </div>
+          <div class="syr-ct-field">
+            <label for="syr-ct-email">Email address</label>
+            <input type="email" id="syr-ct-email" name="contact[email]" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required>
+          </div>
+          <div class="syr-ct-field">
+            <label for="syr-ct-subject">Subject</label>
+            <input type="text" id="syr-ct-subject" name="contact[Subject]">
+          </div>
+          <div class="syr-ct-field">
+            <label for="syr-ct-body">Your message</label>
+            <textarea id="syr-ct-body" name="contact[body]" required>{% if form.body %}{{ form.body }}{% endif %}</textarea>
+          </div>
+          <button type="submit" class="syr-ct-submit">{{ s.form_button | default: 'Send message' }} →</button>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+
+  <div class="syr-ct-faq">
+    <div class="syr-ct-wrap">
+      <div class="syr-ct-faq-head syr-rev">
+        <span class="syr-ct-eyebrow">{{ s.faq_eyebrow | default: 'Quick answers' }}</span>
+        <h2 class="syr-ct-h2">{{ s.faq_title | default: 'Common <em>questions</em>.' }}</h2>
+      </div>
+      <div class="syr-ct-faq-list">
+        {%- assign qs = 'q1,q2,q3,q4' | split: ',' -%}
+        <div class="syr-ct-faq-item syr-rev">
+          <button type="button" class="syr-ct-faq-q">{{ s.q1 | default: 'What is your shipping timeline?' }}<span class="syr-ct-faq-ic" aria-hidden="true"></span></button>
+          <div class="syr-ct-faq-a"><p>{{ s.a1 | default: 'Orders ship within 1–2 business days from our New Jersey warehouse. Flat-rate $4.95 shipping, free over $36. Most U.S. orders arrive in 3–5 business days.' }}</p></div>
+        </div>
+        <div class="syr-ct-faq-item syr-rev">
+          <button type="button" class="syr-ct-faq-q">{{ s.q2 | default: 'Do you offer wholesale or bulk orders?' }}<span class="syr-ct-faq-ic" aria-hidden="true"></span></button>
+          <div class="syr-ct-faq-a"><p>{{ s.a2 | default: 'Yes! We work with cafés, restaurants, and retailers. Reach out via the form above for bulk pricing and custom orders.' }}</p></div>
+        </div>
+        <div class="syr-ct-faq-item syr-rev">
+          <button type="button" class="syr-ct-faq-q">{{ s.q3 | default: 'Can I return or exchange a product?' }}<span class="syr-ct-faq-ic" aria-hidden="true"></span></button>
+          <div class="syr-ct-faq-a"><p>{{ s.a3 | default: 'We stand behind everything we make. If you are not satisfied, reach out within 30 days and we will make it right — full refund or replacement.' }}</p></div>
+        </div>
+        <div class="syr-ct-faq-item syr-rev">
+          <button type="button" class="syr-ct-faq-q">{{ s.q4 | default: 'How long do syrups stay fresh?' }}<span class="syr-ct-faq-ic" aria-hidden="true"></span></button>
+          <div class="syr-ct-faq-a"><p>{{ s.a4 | default: 'Unopened bottles last up to 18 months stored in a cool, dry place. Once opened, refrigerate and enjoy within 6 weeks for peak flavor.' }}</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="syr-ct-cta">
+    <div class="syr-ct-wrap">
+      <div class="syr-ct-cta-card syr-rev">
+        <h2 class="syr-ct-h2">{{ s.cta_title | default: 'Let us make great flavor <em>together</em>.' }}</h2>
+        <p>{{ s.cta_sub | default: 'Home mixologist, café owner, or flavor enthusiast — we are ready to help you pour something great.' }}</p>
+        <a class="syr-ct-btn" href="{{ s.cta_link | default: '/collections/all' }}">{{ s.cta_text | default: 'Explore our flavors' }} <span class="ar">→</span></a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('syr-ct-{{ section.id }}');
+  if(!root) return;
+  var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* FAQ accordion */
+  root.querySelectorAll('.syr-ct-faq-q').forEach(function(btn){ btn.addEventListener('click',function(){ btn.parentElement.classList.toggle('open'); }); });
+  /* reveal */
+  function revealAll(){ root.querySelectorAll('.syr-rev').forEach(function(el){ el.classList.add('in'); }); }
+  if(reduced){ revealAll(); return; }
+  if('IntersectionObserver' in window){
+    var ro=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); ro.unobserve(e.target); } }); },{threshold:.12});
+    root.querySelectorAll('.syr-rev').forEach(function(el){ ro.observe(el); });
+    setTimeout(function(){ root.querySelectorAll('.syr-rev:not(.in)').forEach(function(el){ el.classList.add('in'); }); },2800);
+  } else { revealAll(); }
+  /* eyebrow scroll-grow */
+  var eye=root.querySelector('.syr-ct-hero .syr-ct-eyebrow');
+  var raf=null;
+  function upd(){ raf=null; if(!eye) return; var vh=window.innerHeight||800; var r=eye.getBoundingClientRect(); var p=(vh/2-(r.top+r.height/2))/vh; if(p<-1)p=-1; if(p>1)p=1; var sc=.7+(p+.4)*.62; if(sc<.5)sc=.5; if(sc>1.25)sc=1.25; root.style.setProperty('--eye-scale',sc.toFixed(3)); }
+  window.addEventListener('scroll',function(){ if(!raf) raf=requestAnimationFrame(upd); },{passive:true});
+  window.addEventListener('resize',function(){ if(!raf) raf=requestAnimationFrame(upd); });
+  upd();
+  /* keep FAQ open + scroll to form after a successful submit */
+  if(/contact_posted=true/.test(location.search)){ var f=root.querySelector('.syr-ct-form-card'); if(f) f.scrollIntoView({behavior:'smooth',block:'center'}); }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Contact Us",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "We would love to hear from you" },
+    { "type": "text", "id": "hero_title", "label": "Title (use <em>…</em>)", "default": "Get in <em>touch</em>." },
+    { "type": "textarea", "id": "hero_sub", "label": "Subtitle", "default": "Questions? We are here to help — our team loves talking flavor. Reach out anytime." },
+    { "type": "header", "content": "Reach us cards" },
+    { "type": "text", "id": "reach_eyebrow", "label": "Eyebrow", "default": "Reach us" },
+    { "type": "text", "id": "reach_title", "label": "Heading", "default": "Pick your <em>favorite</em> way." },
+    { "type": "text", "id": "card1_label", "label": "Card 1 label", "default": "Email" },
+    { "type": "text", "id": "card1_value", "label": "Card 1 headline", "default": "Drop a line" },
+    { "type": "text", "id": "card1_email", "label": "Card 1 email address", "default": "hello@syruvia.com" },
+    { "type": "text", "id": "card2_label", "label": "Card 2 label", "default": "Phone" },
+    { "type": "text", "id": "card2_value", "label": "Card 2 number", "default": "(800) 555-1234" },
+    { "type": "text", "id": "card2_text", "label": "Card 2 sub-text", "default": "Mon–Fri · 9am–5pm EST" },
+    { "type": "text", "id": "card3_label", "label": "Card 3 label", "default": "Location" },
+    { "type": "text", "id": "card3_value", "label": "Card 3 headline", "default": "New Jersey, USA" },
+    { "type": "text", "id": "card3_text", "label": "Card 3 sub-text", "default": "Syruvia HQ · shipping worldwide" },
+    { "type": "header", "content": "Contact form" },
+    { "type": "text", "id": "form_eyebrow", "label": "Eyebrow", "default": "Send a message" },
+    { "type": "text", "id": "form_title", "label": "Heading", "default": "Drop us a <em>line</em>." },
+    { "type": "text", "id": "form_sub", "label": "Sub-text", "default": "We reply within 24 hours." },
+    { "type": "text", "id": "form_button", "label": "Button text", "default": "Send message" },
+    { "type": "textarea", "id": "success_text", "label": "Success message", "default": "Thanks! Your message is on its way — we will reply within 24 hours." },
+    { "type": "header", "content": "FAQ" },
+    { "type": "text", "id": "faq_eyebrow", "label": "Eyebrow", "default": "Quick answers" },
+    { "type": "text", "id": "faq_title", "label": "Heading", "default": "Common <em>questions</em>." },
+    { "type": "text", "id": "q1", "label": "Q1", "default": "What is your shipping timeline?" },
+    { "type": "textarea", "id": "a1", "label": "A1", "default": "Orders ship within 1–2 business days from our New Jersey warehouse. Flat-rate $4.95 shipping, free over $36. Most U.S. orders arrive in 3–5 business days." },
+    { "type": "text", "id": "q2", "label": "Q2", "default": "Do you offer wholesale or bulk orders?" },
+    { "type": "textarea", "id": "a2", "label": "A2", "default": "Yes! We work with cafés, restaurants, and retailers. Reach out via the form above for bulk pricing and custom orders." },
+    { "type": "text", "id": "q3", "label": "Q3", "default": "Can I return or exchange a product?" },
+    { "type": "textarea", "id": "a3", "label": "A3", "default": "We stand behind everything we make. If you are not satisfied, reach out within 30 days and we will make it right — full refund or replacement." },
+    { "type": "text", "id": "q4", "label": "Q4", "default": "How long do syrups stay fresh?" },
+    { "type": "textarea", "id": "a4", "label": "A4", "default": "Unopened bottles last up to 18 months stored in a cool, dry place. Once opened, refrigerate and enjoy within 6 weeks for peak flavor." },
+    { "type": "header", "content": "Call to action" },
+    { "type": "text", "id": "cta_title", "label": "Heading", "default": "Let us make great flavor <em>together</em>." },
+    { "type": "textarea", "id": "cta_sub", "label": "Sub-text", "default": "Home mixologist, café owner, or flavor enthusiast — we are ready to help you pour something great." },
+    { "type": "text", "id": "cta_text", "label": "Button text", "default": "Explore our flavors" },
+    { "type": "url", "id": "cta_link", "label": "Button link", "default": "/collections/all" }
+  ],
+  "presets": [ { "name": "Contact Us" } ]
+}
+{% endschema %}

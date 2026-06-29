@@ -1,0 +1,98 @@
+<section class="responsive-text-section" style="background: {{ section.settings.section_bg }};">
+  <div class="responsive-text-container">
+    {% if section.settings.heading != blank %}
+      <h2 class="responsive-heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if section.settings.description_desktop != blank %}
+      <p class="description-desktop">{{ section.settings.description_desktop }}</p>
+    {% endif %}
+
+    {% if section.settings.description_mobile != blank %}
+      <p class="description-mobile">{{ section.settings.description_mobile }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .responsive-text-section{
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .responsive-heading{
+    font-size: 50px !important;
+    font-family: "Bricolage Grotesque" !important;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #B8784E;
+  }
+
+  .description-desktop{
+    font-size: 22px;
+    color: #4a3827;
+    font-family: "DM Sans" !important;
+  }
+
+  .description-mobile{
+    font-size: 19px;
+    color: #4a3827;
+    line-height: 30px !important;
+    font-family: "DM Sans" !important;
+    display: none; /* hidden on desktop */
+  }
+
+  /* MOBILE VIEW */
+  @media screen and (max-width: 989px){
+    .responsive-heading{
+      font-size: 24px !important; /* heading size for mobile */
+      margin-top: 100px;
+    }
+
+    .description-desktop{
+      display: none; /* hide desktop description on mobile */
+    }
+
+    .description-mobile{
+      line-height: 30px !important;
+      display: block; /* show mobile description */
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Responsive Text Section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "This is the Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "description_desktop",
+      "label": "Desktop Description",
+      "default": "This description will appear only on desktop screens."
+    },
+    {
+      "type": "textarea",
+      "id": "description_mobile",
+      "label": "Mobile Description",
+      "default": "This description will appear only on mobile screens."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Responsive Text Section"
+    }
+  ]
+}
+{% endschema %}

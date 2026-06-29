@@ -1,0 +1,246 @@
+<style>
+    .easy-steps__inner{
+        padding: 60px 0 60px;
+    }
+    .easy-steps__heading{
+        display: flex;
+        align-items: center;  
+        gap: 20px;
+    }
+    .easy-steps__title{
+        margin-bottom: 20px;
+    }
+    .easy-steps__title h2{
+             font-family: "Epilogue", sans-serif !important;
+        margin: 0;
+        font-weight: 700;
+        font-size: 45px;
+        line-height: 50px;
+     }
+     .easy-steps__title h2 em{
+             font-family: "Epilogue", sans-serif !important;
+        color: #bb2a56;
+        font-style: normal;
+     }
+     .easy-steps__description p{
+                 font-family: "Manrope", sans-serif !important;
+        margin: 0;
+        color: #66645f;
+        font-size: 24px;
+            line-height: 30px;
+     }
+     .easy-steps__button a{
+        background: #bb2a56;
+        border-radius: 99999px;
+        padding: 15px 25px;
+        color: #fff;
+        text-decoration: none;
+     }
+     .easy-steps__heading{
+        margin-bottom: 40px;
+     }
+     .easy-steps__items{
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+     }
+     .easy-steps__item{
+        position: relative;
+        flex: 1  0 30%;
+        max-width: calc(100% / 3 - 20px);
+     }
+    .easy-steps__item-image{
+        border-radius: 20px;
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+    .easy-steps__item-step{
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+         background: linear-gradient(to right, #bb2a56, #ff7292);         
+    }
+    .easy-steps__item-step span{
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: #ffffff;
+        font-size: 20px;
+                  font-family: "Manrope", sans-serif !important;
+    }
+     .easy-steps__item-image img{
+        width: 100%;
+        display: block;
+        height: 100%;
+     }
+     .easy-steps__item-title{
+      font-weight: 600;
+        font-size: 30px;
+        margin-bottom: 10px;
+        color: #393833;
+        line-height: normal;
+                  font-family: "Manrope", sans-serif !important;
+     }
+     .easy-steps__item-description{
+        font-size: 18px;
+        line-height: normal;
+        color: #66645f;
+                  font-family: "Manrope", sans-serif !important;
+     }
+     @media(max-width: 768px){
+      .easy-steps__inner{
+        padding: 50px 0;
+      }
+      .easy-steps__items{
+        gap: 40px 30px;
+      }
+        .easy-steps__heading{
+          justify-content: center;
+        }
+      .easy-steps__title{
+        margin-bottom: 0;
+      }
+      .easy-steps__item-title {
+        margin-bottom: 5px;
+      }
+      .easy-steps__title h2{
+        text-align: center;
+      }
+      .easy-steps__description p{
+        font-size: 18px;
+        text-align: center;
+        line-height: normal;
+      }
+        .easy-steps__item{        
+                flex: 1  0 40%;
+                max-width: 100%;
+            }
+            .easy-steps__item-image{
+                margin-bottom: 10px;
+            }
+            .easy-steps__item-step{
+              display: none;
+            }
+            .easy-steps__item-title{
+              font-size: 18px;
+            }
+                .easy-steps__item-description{
+                  font-size: 14px;
+                }
+            
+
+     }
+</style>
+<div class="easy-steps__inner  scroll-trigger animate--slide-in">
+  <div class="page-width">
+
+    <div class="easy-steps__heading">
+      <div class="easy-steps__texts">
+        <div class="easy-steps__title">
+          {{ section.settings.title }}
+        </div>
+        <div class="easy-steps__description">
+          {{ section.settings.description }}
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="easy-steps__items">
+      {% for block in section.blocks %}
+        <div class="easy-steps__item" {{ block.shopify_attributes }}>
+          
+          <div class="easy-steps__item-step">
+           <span> {{ forloop.index }}</span>
+          </div>
+
+          <div class="easy-steps__item-image">
+            {% if block.settings.image != blank %}
+              {{
+                block.settings.image
+                | image_url: width: 400
+                | image_tag: loading: 'lazy', alt: block.settings.title
+              }}
+            {% endif %}
+          </div>
+
+          <div class="easy-steps__item-title">
+            {{ block.settings.title }}
+          </div>
+
+          <div class="easy-steps__item-description">
+            {{ block.settings.description }}
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Easy Steps",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Section Title"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Section Description"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Step Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Step Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Easy Steps",
+      "blocks": [
+        { "type": "step" },
+        { "type": "step" },
+        { "type": "step" }
+      ]
+    }
+  ]
+}
+{% endschema %}

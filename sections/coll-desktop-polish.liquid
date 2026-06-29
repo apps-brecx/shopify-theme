@@ -1,0 +1,47 @@
+{%- comment -%} Desktop-only collection page polish. Found actual classes via DOM inspect. {%- endcomment -%}
+<style id="coll-desktop-polish-css">
+@media (min-width: 901px) {
+  html body .scol .floater,
+  html body .scol .hero-stage,
+  html body .scol .hero-stage > *,
+  html body .scol [class*="floater"]{
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+    pointer-events: none !important;
+  }
+  html body .scol section.hero,
+  html body .scol section.hero.hero-float,
+  html body .scol .hero,
+  html body .scol .hero.hero-float{
+    background-image: none !important;
+    background: rgb(255, 251, 244) !important;
+  }
+  html body .scol .pcard-imgwrap{
+    aspect-ratio: auto !important;
+    min-height: 320px !important;
+    height: 320px !important;
+  }
+  html body .scol .pcard-media{
+    height: 320px !important;
+    min-height: 320px !important;
+  }
+  html body .scol .pcard-img{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Coll Desktop Polish",
+  "settings": []
+}
+{% endschema %}

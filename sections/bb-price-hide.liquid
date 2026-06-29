@@ -1,0 +1,25 @@
+{%- comment -%} Build-a-bundle page tweaks: hide per-product price (summary untouched) + hide the fixed mobile bottom nav so it doesn't overlay the sticky summary. The bottom nav is pinned by an id+!important rule, so it must be hidden with an inline !important via JS. {%- endcomment -%}
+<style>
+  .sbwrap .card .price{ display:none !important; }
+  .sbwrap .card-foot{ justify-content:flex-end !important; }
+  nav[id$="syr_bottom_nav"]{ display:none !important; }
+</style>
+<script>
+(function(){
+  function hideAll(){
+    var navs=document.querySelectorAll('nav[id$="syr_bottom_nav"]');
+    for(var i=0;i<navs.length;i++){ if(navs[i].style.display!=='none') navs[i].style.setProperty('display','none','important'); }
+  }
+  hideAll();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', hideAll);
+  setTimeout(hideAll,300); setTimeout(hideAll,1200);
+  if(window.MutationObserver){
+    document.querySelectorAll('nav[id$="syr_bottom_nav"]').forEach(function(n){
+      new MutationObserver(function(){ if(n.style.display!=='none') n.style.setProperty('display','none','important'); }).observe(n,{attributes:true,attributeFilter:['style','class']});
+    });
+  }
+})();
+</script>
+{% schema %}
+{ "name": "BB Price Hide", "settings": [] }
+{% endschema %}

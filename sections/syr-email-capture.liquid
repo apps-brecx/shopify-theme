@@ -1,0 +1,198 @@
+{%- comment -%} Email Capture — scroll-grow eyebrow, killed input white-box, opts in to email list {%- endcomment -%}
+<style id="syr-mail-{{ section.id }}-css">
+  #syr-mail-{{ section.id }}{
+    --ink:#39220f; --paper:#FFFBF4; --bg:#F4E8CE; --accent:#c58548; --butter:#FCE2A0;
+    --eye-scale:.55; --eye-rot:0deg;
+    background:var(--paper);
+    padding:80px 24px 90px;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    text-align:center;
+    color:var(--ink);
+    position:relative;
+  }
+  #syr-mail-{{ section.id }} .syr-mail-wrap{
+    max-width:680px; margin:0 auto;
+    background:var(--bg);
+    border:2px solid var(--ink); border-radius:24px;
+    box-shadow:6px 6px 0 var(--ink);
+    padding:42px 30px 38px;
+    position:relative;
+  }
+  #syr-mail-{{ section.id }} .syr-mail-eyebrow{
+    display:inline-block;
+    background:{{ section.settings.eyebrow_bg | default: '#FCE2A0' }};
+    color:{{ section.settings.eyebrow_color | default: '#39220f' }};
+    border:2px solid var(--ink); border-radius:999px;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    padding:7px 16px; margin-bottom:20px;
+    box-shadow:3px 3px 0 var(--ink);
+    transform-origin:center;
+    transform:scale(var(--eye-scale)) rotate(var(--eye-rot));
+    transition:transform .25s cubic-bezier(.16,.84,.34,1);
+    will-change:transform;
+  }
+  @media (prefers-reduced-motion: reduce){
+    #syr-mail-{{ section.id }} .syr-mail-eyebrow{ transform:scale(1) rotate(0deg); transition:none; }
+  }
+  #syr-mail-{{ section.id }} h2{
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:clamp(34px, 5vw, 52px); line-height:.95;
+    letter-spacing:-.015em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 12px;
+  }
+  #syr-mail-{{ section.id }} .syr-mail-sub{
+    font-size:16px; color:rgba(57,34,15,.7);
+    margin:0 auto 28px; max-width:42ch;
+  }
+  #syr-mail-{{ section.id }} .syr-mail-form{ max-width:480px; margin:0 auto; }
+  #syr-mail-{{ section.id }} .syr-mail-pill{
+    display:flex; align-items:center;
+    background:var(--paper); border:2px solid var(--ink);
+    border-radius:999px;
+    padding:5px 5px 5px 22px;
+    height:56px;
+    box-shadow:4px 4px 0 var(--ink);
+    transition:box-shadow .15s ease;
+    overflow:hidden;
+  }
+  #syr-mail-{{ section.id }} .syr-mail-pill:focus-within{ box-shadow:5px 5px 0 var(--accent); }
+
+  /* KILL the inner white box on the email input — force transparent + override autofill */
+  #syr-mail-{{ section.id }} .syr-mail-input,
+  #syr-mail-{{ section.id }} .syr-mail-input:focus,
+  #syr-mail-{{ section.id }} .syr-mail-input:active,
+  #syr-mail-{{ section.id }} .syr-mail-input:hover{
+    flex:1 1 auto; min-width:0;
+    background:transparent !important;
+    background-color:transparent !important;
+    background-image:none !important;
+    border:0 !important; outline:0 !important;
+    box-shadow:none !important;
+    -webkit-appearance:none !important; appearance:none !important;
+    color:var(--ink) !important;
+    -webkit-text-fill-color:var(--ink) !important;
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    font-size:15px !important;
+    padding:0 !important;
+    height:auto !important;
+  }
+  #syr-mail-{{ section.id }} .syr-mail-input::placeholder{ color:rgba(57,34,15,.4); }
+  #syr-mail-{{ section.id }} .syr-mail-input:-webkit-autofill,
+  #syr-mail-{{ section.id }} .syr-mail-input:-webkit-autofill:hover,
+  #syr-mail-{{ section.id }} .syr-mail-input:-webkit-autofill:focus,
+  #syr-mail-{{ section.id }} .syr-mail-input:-webkit-autofill:active{
+    -webkit-box-shadow:0 0 0 1000px var(--paper) inset !important;
+    box-shadow:0 0 0 1000px var(--paper) inset !important;
+    -webkit-text-fill-color:var(--ink) !important;
+    caret-color:var(--ink) !important;
+    transition:background-color 99999s ease-out 0s !important;
+  }
+
+  #syr-mail-{{ section.id }} .syr-mail-btn{
+    flex:0 0 auto;
+    background:var(--ink); color:var(--paper);
+    border:1.5px solid var(--ink); border-radius:999px;
+    padding:0 22px; height:44px;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    cursor:pointer;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:background .15s ease, color .15s ease, transform .12s ease;
+  }
+  #syr-mail-{{ section.id }} .syr-mail-btn:hover{ background:var(--accent); transform:translate(-1px,-1px); }
+  #syr-mail-{{ section.id }} .syr-mail-fine{
+    margin-top:14px; font-size:12px; color:rgba(57,34,15,.55);
+  }
+  #syr-mail-{{ section.id }} .syr-mail-success{
+    display:none;
+    background:var(--ink); color:var(--butter);
+    border:2px solid var(--ink); border-radius:18px;
+    box-shadow:4px 4px 0 var(--accent);
+    padding:24px 26px;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:18px; letter-spacing:-.005em;
+    max-width:480px; margin:0 auto;
+  }
+  #syr-mail-{{ section.id }}.is-success .syr-mail-form{ display:none; }
+  #syr-mail-{{ section.id }}.is-success .syr-mail-success{ display:block; }
+  @media (max-width:760px){
+    #syr-mail-{{ section.id }}{ padding:50px 14px 64px; }
+    #syr-mail-{{ section.id }} .syr-mail-wrap{ padding:32px 18px 30px; border-radius:20px; box-shadow:4px 4px 0 var(--ink); }
+    #syr-mail-{{ section.id }} h2{ font-size:clamp(28px, 9vw, 38px); }
+    #syr-mail-{{ section.id }} .syr-mail-sub{ font-size:14px; }
+    #syr-mail-{{ section.id }} .syr-mail-pill{ height:50px; padding-left:18px; }
+    #syr-mail-{{ section.id }} .syr-mail-btn{ height:40px; padding:0 16px; font-size:11px; }
+  }
+</style>
+
+<section id="syr-mail-{{ section.id }}">
+  <div class="syr-mail-wrap">
+    <span class="syr-mail-eyebrow">{{ section.settings.eyebrow_text | default: 'Newsletter' }}</span>
+    <h2>{{ section.settings.headline }}</h2>
+    <p class="syr-mail-sub">{{ section.settings.sub }}</p>
+    <div class="syr-mail-form">
+      {% form 'customer' %}
+        <input type="hidden" name="contact[tags]" value="newsletter, homepage">
+        <input type="hidden" name="contact[accepts_marketing]" value="true">
+        <input type="hidden" name="contact[email_marketing_consent]" value="subscribed">
+        <div class="syr-mail-pill">
+          <input class="syr-mail-input" type="email" name="contact[email]" placeholder="Your email" autocomplete="email" required aria-label="Email">
+          <button class="syr-mail-btn" type="submit">Join →</button>
+        </div>
+        <p class="syr-mail-fine">{{ section.settings.fine }}</p>
+      {% endform %}
+    </div>
+    <div class="syr-mail-success">{{ section.settings.success_text }} ✦</div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var root = document.getElementById('syr-mail-{{ section.id }}');
+  if (!root) return;
+  if (window.location.search.indexOf('customer_posted=true') !== -1){ root.classList.add('is-success'); }
+
+  /* Scroll-grow eyebrow */
+  var eyebrow = root.querySelector('.syr-mail-eyebrow');
+  if (eyebrow && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    var ticking = false;
+    function updateEye(){
+      var rect = eyebrow.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (vh < 1) return;
+      var elementCenter = rect.top + rect.height / 2;
+      var viewportCenter = vh / 2;
+      var progress = (viewportCenter - elementCenter) / vh;
+      if (progress < -1) progress = -1; if (progress > 1) progress = 1;
+      var scale = 0.55 + (progress + 0.4) * 0.7;
+      if (scale < 0.4) scale = 0.4; if (scale > 1.3) scale = 1.3;
+      var rot = progress * 6;
+      if (rot < -6) rot = -6; if (rot > 6) rot = 6;
+      root.style.setProperty('--eye-scale', scale.toFixed(3));
+      root.style.setProperty('--eye-rot', rot.toFixed(2) + 'deg');
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){ if (!ticking){ ticking = true; window.requestAnimationFrame(updateEye); } }, { passive:true });
+    window.addEventListener('resize', updateEye);
+    updateEye();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Email Capture (Syr)",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow_text", "label": "Eyebrow", "default": "Newsletter" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Be the first to know" },
+    { "type": "text", "id": "sub", "label": "Subtext", "default": "New flavors. Exclusive drops. Member-only deals." },
+    { "type": "text", "id": "fine", "label": "Fine print", "default": "Join 5M+ flavor lovers. Unsubscribe anytime." },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "You are in!" },
+    { "type": "color", "id": "eyebrow_bg", "label": "Eyebrow background", "default": "#FCE2A0" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow text color", "default": "#39220f" }
+  ],
+  "presets": [ { "name": "Email Capture" } ]
+}
+{% endschema %}

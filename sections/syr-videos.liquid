@@ -1,0 +1,393 @@
+{%- comment -%} Videos — native horizontal scroll + JS auto-marquee, per-video link, follow CTA {%- endcomment -%}
+{%- render 'syr-type-polish' -%}
+<style id="syr-vid-{{ section.id }}-css">
+  #syr-vid-{{ section.id }}{
+    --ink:#39220f; --paper:#FFFBF4; --bg:#F4E8CE; --accent:#c58548; --butter:#FCE2A0;
+    --eye-scale:.55; --eye-rot:0deg;
+    background:{{ section.settings.bg_color | default: '#FFFBF4' }};
+    padding:70px 0 80px;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    color:var(--ink);
+    overflow:hidden;
+    touch-action:pan-x pan-y;
+  }
+  #syr-vid-{{ section.id }} .syr-vid-head{
+    text-align:center; max-width:820px; margin:0 auto 36px; padding:0 24px;
+  }
+  #syr-vid-{{ section.id }} .syr-vid-eyebrow{
+    display:inline-block;
+    background:{{ section.settings.eyebrow_bg | default: '#FCE2A0' }};
+    color:{{ section.settings.eyebrow_color | default: '#39220f' }};
+    border:2px solid var(--ink); border-radius:999px;
+    box-shadow:3px 3px 0 var(--ink);
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight:400;
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    padding:7px 16px; margin-bottom:18px;
+    transform-origin:center;
+    transform:scale(var(--eye-scale)) rotate(var(--eye-rot));
+    transition:transform .25s cubic-bezier(.16,.84,.34,1);
+    will-change:transform;
+  }
+  @media (prefers-reduced-motion: reduce){
+    #syr-vid-{{ section.id }} .syr-vid-eyebrow{ transform:scale(1) rotate(0deg); transition:none; }
+  }
+  #syr-vid-{{ section.id }} h2{
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight:400;
+    font-size:clamp(34px, 5vw, 56px); line-height:.95;
+    letter-spacing:-.015em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 8px;
+  }
+  #syr-vid-{{ section.id }} .syr-vid-sub{ font-size:16px; color:rgba(57,34,15,.65); margin:0; }
+
+  /* MARQUEE — native horizontal scroll + JS auto-increment */
+  #syr-vid-{{ section.id }} .syr-vid-marquee{
+    position:relative;
+    overflow-x:auto;
+    overflow-y:hidden;
+    /* Both directions allowed: vertical for page scroll, horizontal for marquee swipe */
+    touch-action:pan-x pan-y;
+    -webkit-mask-image:linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%);
+            mask-image:linear-gradient(to right, transparent 0, #000 5%, #000 95%, transparent 100%);
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  #syr-vid-{{ section.id }} .syr-vid-marquee::-webkit-scrollbar{ display:none; }
+  #syr-vid-{{ section.id }} .syr-vid-track{
+    display:flex; align-items:stretch;
+    gap:20px; padding:8px 20px;
+    width:max-content;
+    touch-action:pan-x pan-y;
+  }
+
+  #syr-vid-{{ section.id }} .syr-vid-card{
+    position:relative; flex:0 0 auto;
+    width:260px; aspect-ratio:9/16;
+    border:3px solid var(--ink); border-radius:24px;
+    box-shadow:6px 6px 0 var(--ink);
+    overflow:hidden; background:#0c0907;
+    transition:transform .2s ease, box-shadow .2s ease;
+    touch-action:pan-x pan-y;
+    text-decoration:none; color:inherit;
+    display:block;
+  }
+  #syr-vid-{{ section.id }} a.syr-vid-card{ cursor:pointer; }
+  #syr-vid-{{ section.id }} a.syr-vid-card:hover{ transform:translate(-2px,-2px); box-shadow:8px 8px 0 var(--ink); }
+  #syr-vid-{{ section.id }} .syr-vid-card video{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; pointer-events:none; display:block;
+  }
+  #syr-vid-{{ section.id }} .syr-vid-card::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 60%, rgba(0,0,0,.5) 100%);
+    pointer-events:none;
+  }
+  #syr-vid-{{ section.id }} .syr-vid-tag{
+    position:absolute; bottom:14px; left:14px; right:14px;
+    border:1.5px solid var(--ink); border-radius:999px;
+    box-shadow:2px 2px 0 var(--ink);
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:10.5px; letter-spacing:.08em; text-transform:uppercase;
+    padding:6px 12px; z-index:3;
+    display:inline-block; max-width:fit-content;
+    pointer-events:none;
+  }
+
+  /* FOLLOW button under videos */
+  #syr-vid-{{ section.id }} .syr-vid-foot{ text-align:center; margin-top:36px; padding:0 24px; }
+  #syr-vid-{{ section.id }} .syr-vid-follow{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:15px 28px;
+    background:{{ section.settings.follow_bg | default: '#39220f' }};
+    color:{{ section.settings.follow_color | default: '#FFFBF4' }};
+    border:2px solid var(--ink); border-radius:999px;
+    box-shadow:4px 4px 0 {{ section.settings.follow_shadow | default: '#c58548' }};
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight:400;
+    font-size:13px; letter-spacing:.14em; text-transform:uppercase;
+    text-decoration:none;
+    transition:transform .2s cubic-bezier(.4,0,.2,1), box-shadow .2s cubic-bezier(.4,0,.2,1), filter .15s ease;
+  }
+  #syr-vid-{{ section.id }} .syr-vid-follow:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:6px 6px 0 {{ section.settings.follow_shadow | default: '#c58548' }};
+    filter:brightness(1.08);
+  }
+  #syr-vid-{{ section.id }} .syr-vid-follow svg{ width:16px; height:16px; flex:0 0 auto; }
+
+  @media (max-width:760px){
+    #syr-vid-{{ section.id }}{ padding:48px 0 60px; }
+    #syr-vid-{{ section.id }} .syr-vid-head{ margin-bottom:24px; }
+    #syr-vid-{{ section.id }} h2{ font-size:clamp(28px, 9vw, 44px); }
+    #syr-vid-{{ section.id }} .syr-vid-sub{ font-size:14px; }
+    #syr-vid-{{ section.id }} .syr-vid-track{ gap:14px; padding:6px 14px; }
+    #syr-vid-{{ section.id }} .syr-vid-card{ width:210px; box-shadow:5px 5px 0 var(--ink); border-radius:20px; border-width:2px; }
+    #syr-vid-{{ section.id }} .syr-vid-tag{ font-size:9.5px; padding:5px 10px; }
+    #syr-vid-{{ section.id }} .syr-vid-foot{ margin-top:26px; }
+    #syr-vid-{{ section.id }} .syr-vid-follow{ padding:13px 22px; font-size:12px; box-shadow:3px 3px 0 {{ section.settings.follow_shadow | default: '#c58548' }}; }
+  }
+</style>
+
+{%- assign show_master = section.settings.show_all_tags -%}
+
+<section id="syr-vid-{{ section.id }}">
+  <div class="syr-vid-head">
+    <span class="syr-vid-eyebrow">{{ section.settings.eyebrow_text | default: 'Real sips' }}</span>
+    <h2>{{ section.settings.headline }}</h2>
+    <p class="syr-vid-sub">{{ section.settings.sub }}</p>
+  </div>
+  <div class="syr-vid-marquee" data-vid-marquee>
+    <div class="syr-vid-track" data-vid-track>
+      {%- for round in (1..2) -%}
+        {%- for block in section.blocks -%}
+          {%- assign vid = block.settings.video -%}
+          {%- assign video_url = block.settings.video_url -%}
+          {%- assign poster_url = block.settings.video_poster -%}
+          {%- assign tag_text = block.settings.tag_text -%}
+          {%- assign show_tag = block.settings.show_tag -%}
+          {%- assign tag_bg = block.settings.tag_bg | default: '#FCE2A0' -%}
+          {%- assign tag_color = block.settings.tag_color | default: '#39220f' -%}
+          {%- assign tag_border = block.settings.tag_border | default: '#39220f' -%}
+          {%- assign link = block.settings.video_link -%}
+          {%- if link != blank -%}
+            <a class="syr-vid-card" href="{{ link }}" {{ block.shopify_attributes }} data-vid-card>
+          {%- else -%}
+            <div class="syr-vid-card" {{ block.shopify_attributes }} data-vid-card>
+          {%- endif -%}
+              {%- if vid != blank and vid.sources.size > 0 -%}
+                <video autoplay muted loop playsinline preload="metadata" {% if vid.preview_image %}poster="{{ vid.preview_image | image_url: width: 540 }}"{% elsif poster_url != blank %}poster="{{ poster_url }}"{% endif %}>
+                  {%- for src in vid.sources -%}
+                    <source src="{{ src.url }}" type="{{ src.mime_type }}">
+                  {%- endfor -%}
+                </video>
+              {%- elsif video_url != blank -%}
+                <video autoplay muted loop playsinline preload="metadata" {% if poster_url != blank %}poster="{{ poster_url }}"{% endif %}>
+                  <source src="{{ video_url }}" type="video/mp4">
+                </video>
+              {%- endif -%}
+              {%- if show_master and show_tag and tag_text != blank -%}
+                <span class="syr-vid-tag" style="background:{{ tag_bg }}; color:{{ tag_color }}; border-color:{{ tag_border }};">{{ tag_text }}</span>
+              {%- endif -%}
+          {%- if link != blank -%}
+            </a>
+          {%- else -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- if section.settings.show_follow_button -%}
+    <div class="syr-vid-foot">
+      <a class="syr-vid-follow" href="{{ section.settings.follow_link | default: 'https://www.instagram.com/syruvia_official' }}" target="_blank" rel="noopener">
+        {%- case section.settings.follow_icon -%}
+          {%- when 'instagram' -%}
+            <svg viewBox="0 0 22 22" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="11" cy="11" r="4" stroke="currentColor" stroke-width="2"/><circle cx="16.3" cy="5.8" r="1.2" fill="currentColor"/></svg>
+          {%- when 'tiktok' -%}
+            <svg viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M13 3v10.5a3 3 0 11-2.4-2.94" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 3c.4 2.2 1.8 3.7 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          {%- when 'youtube' -%}
+            <svg viewBox="0 0 22 22" fill="none" aria-hidden="true"><rect x="2" y="5" width="18" height="12" rx="3" stroke="currentColor" stroke-width="2"/><path d="M9.4 8.4l4.4 2.6-4.4 2.6V8.4z" fill="currentColor"/></svg>
+          {%- when 'heart' -%}
+            <svg viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M11 19s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0118 9c0 5.5-7 10-7 10z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          {%- when 'star' -%}
+            <svg viewBox="0 0 22 22" fill="currentColor" aria-hidden="true"><path d="M11 2l2.5 6 6.5.5-5 4.5 1.5 6.5-5.5-3.5-5.5 3.5 1.5-6.5-5-4.5 6.5-.5z"/></svg>
+        {%- endcase -%}
+        {{ section.settings.follow_text }}
+      </a>
+    </div>
+  {%- endif -%}
+</section>
+
+<script>
+(function(){
+  var root = document.getElementById('syr-vid-{{ section.id }}');
+  if (!root) return;
+
+  /* Scroll-grow eyebrow */
+  var eyebrow = root.querySelector('.syr-vid-eyebrow');
+  if (eyebrow && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    var ticking = false;
+    function updateEye(){
+      var rect = eyebrow.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (vh < 1) return;
+      var elementCenter = rect.top + rect.height / 2;
+      var viewportCenter = vh / 2;
+      var progress = (viewportCenter - elementCenter) / vh;
+      if (progress < -1) progress = -1; if (progress > 1) progress = 1;
+      var scale = 0.55 + (progress + 0.4) * 0.7;
+      if (scale < 0.4) scale = 0.4; if (scale > 1.3) scale = 1.3;
+      var rot = progress * 6;
+      if (rot < -6) rot = -6; if (rot > 6) rot = 6;
+      root.style.setProperty('--eye-scale', scale.toFixed(3));
+      root.style.setProperty('--eye-rot', rot.toFixed(2) + 'deg');
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){ if (!ticking){ ticking = true; window.requestAnimationFrame(updateEye); } }, { passive:true });
+    window.addEventListener('resize', updateEye);
+    updateEye();
+  }
+
+  /* Lazy-start videos */
+  var videos = root.querySelectorAll('video');
+  if ('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){
+          videos.forEach(function(v){ try { v.play().catch(function(){}); } catch(err){} });
+          obs.unobserve(root);
+        }
+      });
+    }, { threshold:.1 });
+    obs.observe(root);
+  } else {
+    videos.forEach(function(v){ try { v.play().catch(function(){}); } catch(err){} });
+  }
+
+  /* JS-driven horizontal marquee — increments scrollLeft each frame.
+     Native horizontal swipe works because marquee uses overflow-x:auto + touch-action:pan-x pan-y.
+     User interaction pauses for 1.5s. */
+  var marquee = root.querySelector('[data-vid-marquee]');
+  var track = root.querySelector('[data-vid-track]');
+  if (marquee && track){
+    var speedSeconds = {{ section.settings.scroll_speed | default: 70 }};
+    var isPaused = false;
+    var resumeTimer = null;
+    var lastTime = 0;
+    var halfWidth = 0;
+
+    function measureWidth(){
+      /* track contains 2 rounds of blocks; half = one round */
+      halfWidth = track.scrollWidth / 2;
+    }
+    measureWidth();
+    window.addEventListener('resize', measureWidth);
+    /* re-measure after first frame in case fonts/images loaded */
+    setTimeout(measureWidth, 200);
+    setTimeout(measureWidth, 800);
+
+    function pause(){
+      isPaused = true;
+      if (resumeTimer){ clearTimeout(resumeTimer); resumeTimer = null; }
+    }
+    function scheduleResume(){
+      if (resumeTimer) clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(function(){ isPaused = false; }, 1500);
+    }
+
+    /* Pause on user interaction (pointer + touch) */
+    marquee.addEventListener('pointerdown', pause);
+    marquee.addEventListener('pointerup', scheduleResume);
+    marquee.addEventListener('pointercancel', scheduleResume);
+    marquee.addEventListener('pointerleave', scheduleResume);
+    marquee.addEventListener('mouseenter', pause);
+    marquee.addEventListener('mouseleave', scheduleResume);
+    marquee.addEventListener('touchstart', pause, { passive:true });
+    marquee.addEventListener('touchend', scheduleResume, { passive:true });
+    marquee.addEventListener('touchcancel', scheduleResume, { passive:true });
+
+    /* Also pause on user-initiated horizontal scroll (wheel/keyboard) */
+    var scrollIdle = null;
+    marquee.addEventListener('scroll', function(){
+      if (scrollIdle) clearTimeout(scrollIdle);
+      scrollIdle = setTimeout(function(){
+        /* nothing — just let auto-scroll wrap when needed */
+      }, 150);
+    }, { passive:true });
+
+    function tick(time){
+      if (!lastTime){ lastTime = time; requestAnimationFrame(tick); return; }
+      var dt = (time - lastTime) / 1000;
+      lastTime = time;
+      if (!isPaused && halfWidth > 0){
+        var pxPerSec = halfWidth / speedSeconds;
+        marquee.scrollLeft += pxPerSec * dt;
+      }
+      /* Wrap: once we've scrolled past one full round, jump back */
+      if (marquee.scrollLeft >= halfWidth){
+        marquee.scrollLeft -= halfWidth;
+      } else if (marquee.scrollLeft < 0){
+        marquee.scrollLeft += halfWidth;
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    /* Prevent card click navigation if the user dragged (movement > threshold) */
+    var cards = track.querySelectorAll('a.syr-vid-card');
+    cards.forEach(function(card){
+      var startX = 0, startY = 0, moved = false;
+      card.addEventListener('pointerdown', function(e){
+        startX = e.clientX; startY = e.clientY; moved = false;
+      });
+      card.addEventListener('pointermove', function(e){
+        if (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8){
+          moved = true;
+        }
+      });
+      card.addEventListener('click', function(e){
+        if (moved){ e.preventDefault(); e.stopPropagation(); }
+      });
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Videos",
+  "tag": "section",
+  "max_blocks": 30,
+  "settings": [
+    { "type": "header", "content": "Header" },
+    { "type": "text", "id": "eyebrow_text", "label": "Eyebrow text", "default": "Real sips" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "See it in action" },
+    { "type": "textarea", "id": "sub", "label": "Subtext", "default": "Real recipes. Real sips. Loved by 5M+." },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#FFFBF4" },
+    { "type": "color", "id": "eyebrow_bg", "label": "Eyebrow background", "default": "#FCE2A0" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow text color", "default": "#39220f" },
+    { "type": "range", "id": "scroll_speed", "label": "Marquee speed (seconds per loop)", "min": 20, "max": 120, "step": 5, "default": 70, "unit": "s" },
+
+    { "type": "header", "content": "Tag display" },
+    { "type": "paragraph", "content": "Master toggle for ALL video tags. When off, no tags show. When on, each video's individual Show tag setting decides." },
+    { "type": "checkbox", "id": "show_all_tags", "label": "Show video tags (master)", "default": true },
+
+    { "type": "header", "content": "Follow button (under videos)" },
+    { "type": "checkbox", "id": "show_follow_button", "label": "Show follow button", "default": true },
+    { "type": "text", "id": "follow_text", "label": "Button text", "default": "Follow @syruvia_official" },
+    { "type": "url", "id": "follow_link", "label": "Button link" },
+    { "type": "select", "id": "follow_icon", "label": "Icon", "default": "instagram", "options": [
+      { "value": "instagram", "label": "Instagram" },
+      { "value": "tiktok", "label": "TikTok" },
+      { "value": "youtube", "label": "YouTube" },
+      { "value": "heart", "label": "Heart" },
+      { "value": "star", "label": "Star" },
+      { "value": "none", "label": "None" }
+    ] },
+    { "type": "color", "id": "follow_bg", "label": "Button background", "default": "#39220f" },
+    { "type": "color", "id": "follow_color", "label": "Button text color", "default": "#FFFBF4" },
+    { "type": "color", "id": "follow_shadow", "label": "Button offset shadow", "default": "#c58548" }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        { "type": "video", "id": "video", "label": "Video file (Shopify Files)", "info": "Pick a video uploaded to Shopify Files. If empty, the URL below is used." },
+        { "type": "url", "id": "video_url", "label": "Video URL (fallback)" },
+        { "type": "url", "id": "video_poster", "label": "Poster image URL (optional)" },
+        { "type": "url", "id": "video_link", "label": "Tap-to-go link (optional)", "info": "When set, tapping the video navigates here. Leave blank for no link." },
+        { "type": "checkbox", "id": "show_tag", "label": "Show tag on this video", "default": true },
+        { "type": "text", "id": "tag_text", "label": "Tag text", "default": "Flavor" },
+        { "type": "color", "id": "tag_bg", "label": "Tag background", "default": "#FCE2A0" },
+        { "type": "color", "id": "tag_color", "label": "Tag text color", "default": "#39220f" },
+        { "type": "color", "id": "tag_border", "label": "Tag border color", "default": "#39220f" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Videos" } ]
+}
+{% endschema %}

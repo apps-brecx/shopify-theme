@@ -1,0 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": { "type": "main-addresses", "settings": { "padding_top": 36, "padding_bottom": 36 } },
+    "polish": { "type": "addresses-brand-polish", "settings": {} }
+  },
+  "order": ["main", "polish"]
+}

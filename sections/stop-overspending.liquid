@@ -1,0 +1,292 @@
+<style>
+    .stop-overspending__inner{
+        background: #f7f3eb;
+        padding: 40px 0;
+    }
+    .stop-overspending__item-image{
+        max-width: 60px;
+        margin: 0 auto 15px;
+    }
+    .stop-overspending__item-image img{
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    .stop-overspending__title h2 {
+       font-family: "Epilogue", sans-serif !important;
+        margin: 0;
+        font-size: 55px;
+        font-weight: 700;
+        line-height: 50px;
+        text-align: center;
+        font-weight: 700;    
+    }
+     .stop-overspending__title{
+        margin-bottom: 20px;
+    }
+    .stop-overspending__description p{
+           font-family: "Manrope", sans-serif !important;
+      margin: 0 0 40px 0;
+        text-align: center;
+        font-size: 22px;
+        line-height: 30px;        
+    }
+    .stop-overspending__items{
+        display: flex;
+        gap: 40px;      
+        flex-wrap: wrap;
+    }
+    .stop-overspending__item{
+        position: relative;
+        padding: 30px;        
+        background: #ffffff;
+        flex: 1 0 30%;
+        max-width: calc(100% / 3 - 26.66px);
+        border-radius: 30px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .stop-overspending__item:hover{
+      transform: scale(1.1);
+    }
+    .stop-overspending__item:first-child{
+        background-color: #fdf9f1;
+    }
+    .stop-overspending__item:last-child{
+        background-color: #fee5c9;
+        min-height: 370px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .stop-overspending__item-title{
+        margin-bottom: 20px; 
+    }
+    .stop-overspending__item-title h2{
+        font-family: "Epilogue", sans-serif !important;
+        font-weight: 700;
+        margin: 0;
+        font-size: 36px;
+        text-align: center;
+        line-height: 50px;
+    }
+    .stop-overspending__item-price p{
+           font-family: "Manrope", sans-serif !important;
+           font-weight: 700;
+        margin: 0 0 20px;
+        text-align: center;
+        font-size: 45px;
+        line-height: 50px;
+    }
+    .stop-overspending__item-price p em{
+        font-size: 18px;
+        font-style: normal;
+        color: #66645f;
+    }
+    .stop-overspending__item-description{
+           font-family: "Manrope", sans-serif !important;
+        text-align: center;
+    }
+    .stop-overspending__item.show-badge  .stop-overspending__item-price p{
+        color: #bb2a56;
+    }
+     .stop-overspending__item.show-badge  .stop-overspending__item-price p strong{
+        color: #bb2a56;
+        font-size: 45px;
+        position: relative;
+        top: 8px;
+        font-weight: 400;
+
+    }
+    .stop-overspending__item:last-child .stop-overspending__item-price p{
+        color: #693d00;
+    
+    }
+  
+    .stop-overspending__item-badge{
+          position: absolute;
+          right: -8px;
+          top: 34px;
+          padding: 5px 20px;
+          background: #bb2a56;
+          border-radius: 9999px;
+          color: #ffffff;
+          transform: rotate(30deg);    
+    }
+
+    @media(max-width: 991px){
+          .stop-overspending__title h2{        
+        font-size: 45px;          
+    }
+        .stop-overspending__item{
+          flex: 1 0 100%;
+          max-width: 100%;
+        }
+    }
+    
+    @media(max-width: 750px){
+         .stop-overspending__item:hover{
+      transform: scale(1);
+    }
+      .stop-overspending__item:last-child{ 
+        min-height: auto;
+      }
+      .stop-overspending__item{
+        padding: 15px;
+      }
+      .stop-overspending__item-title h2{
+        font-size: 32px;
+      }
+      .stop-overspending__title{
+        margin-bottom: 10px;
+      }
+      .stop-overspending__item-title{
+        margin-bottom: 0;
+      }
+      .stop-overspending__item-price p{
+        margin: 0;
+      }
+            .stop-overspending__title h2{        
+        font-size: 34px;          
+        line-height: normal;
+    }
+    .stop-overspending__description p{
+      font-size: 20px;
+      line-height: normal;
+      margin-bottom: 20px;
+    }
+    .stop-overspending__items{
+      gap: 20px;
+    }
+    .stop-overspending__item-price p{
+      font-size: 36px;
+    }
+    .stop-overspending__item-price p em{
+      font-size: 16px;
+    }
+    .stop-overspending__item-badge{
+      line-height: normal;
+      font-size: 12px;
+    }
+    }
+</style>
+<div class="stop-overspending__inner  scroll-trigger animate--slide-in">
+  <div class="page-width">
+    <div class="stop-overspending__wrapper">
+
+      <div class="stop-overspending__heading">
+        <div class="stop-overspending__title">
+          {{ section.settings.title }}
+        </div>
+        <div class="stop-overspending__description">
+          {{ section.settings.description }}
+        </div>
+      </div>
+
+      <div class="stop-overspending__items">
+        {% for block in section.blocks %}
+          <div class="stop-overspending__item {% if block.settings.show_badge %}show-badge{% endif %}" {{ block.shopify_attributes }}>
+            <div class="stop-overspending__item-content">
+                {% if block.settings.show_badge %}
+                <div class="stop-overspending__item-badge">
+                    {{ block.settings.badge_text }}
+                </div>
+                {% endif %}
+               
+                {% if block.settings.image != blank %}
+              <div class="stop-overspending__item-image">
+                  {{
+                    block.settings.image
+                    | image_url: width: 500
+                    | image_tag: loading: 'lazy', alt: block.settings.title
+                  }}
+                </div>
+              {% endif %}
+
+              <div class="stop-overspending__item-title">
+                {{ block.settings.title }}
+              </div>
+
+              <div class="stop-overspending__item-price">
+                {{ block.settings.price }}
+              </div>
+
+              <div class="stop-overspending__item-description">
+                {{ block.settings.description }}
+              </div>
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Stop Overspending",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Section Title"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Section Description"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+            "type": "checkbox",
+            "id": "show_badge",
+            "label": "Show Badge"
+        },
+        {
+            "type": "text",
+            "id": "badge_text",
+            "label": "Badge Text",
+            "default": "SMART CHOICE"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Item Image"
+        },
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "Item Title"
+        },
+        {
+          "type": "richtext",
+          "id": "price",
+          "label": "Item Price"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Item Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stop Overspending",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

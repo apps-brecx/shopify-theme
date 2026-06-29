@@ -1,0 +1,342 @@
+{%- comment -%} Syruvia Footer — brand-aligned, fully customizable, block-based {%- endcomment -%}
+<style id="syr-foot-{{ section.id }}-css">
+  #syr-foot-{{ section.id }}{
+    --ink:{{ section.settings.text_color | default: '#39220f' }};
+    --paper:{{ section.settings.bg_color | default: '#FFFBF4' }};
+    --accent:{{ section.settings.accent_color | default: '#c58548' }};
+    --butter:{{ section.settings.butter_color | default: '#FCE2A0' }};
+    --muted:rgba(57,34,15,.6);
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    padding:80px 24px 0;
+    border-top:2px solid var(--ink);
+  }
+  #syr-foot-{{ section.id }} .syr-foot-wrap{ max-width:1280px; margin:0 auto; }
+
+  #syr-foot-{{ section.id }} .syr-foot-top{
+    display:grid; grid-template-columns:1.2fr 1fr; gap:60px;
+    align-items:start;
+    padding-bottom:48px;
+    border-bottom:1.5px solid rgba(57,34,15,.12);
+    margin-bottom:48px;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-brand img{
+    height:42px; width:auto; max-width:200px; display:block;
+    margin-bottom:18px;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-brand-desc{
+    font-size:15px; line-height:1.6;
+    color:rgba(57,34,15,.7);
+    max-width:42ch;
+    margin:0 0 22px;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-social{
+    display:flex; gap:10px; align-items:center;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-social a{
+    width:38px; height:38px; border-radius:50%;
+    border:2px solid var(--ink);
+    display:inline-flex; align-items:center; justify-content:center;
+    color:var(--ink); text-decoration:none;
+    box-shadow:2px 2px 0 var(--ink);
+    transition:transform .15s cubic-bezier(.4,0,.2,1), background .15s ease, box-shadow .15s ease;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-social a:hover{
+    background:var(--butter); transform:translate(-1px,-1px);
+    box-shadow:3px 3px 0 var(--ink);
+  }
+  #syr-foot-{{ section.id }} .syr-foot-social svg{ width:18px; height:18px; }
+
+  #syr-foot-{{ section.id }} .syr-foot-news h3{
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:22px; letter-spacing:-.01em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 8px;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-news p{
+    font-size:14.5px; line-height:1.5; color:rgba(57,34,15,.7);
+    margin:0 0 16px; max-width:38ch;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-news-pill{
+    display:flex; align-items:center;
+    background:var(--paper); border:2px solid var(--ink);
+    border-radius:999px; padding:4px 4px 4px 18px; height:52px;
+    box-shadow:3px 3px 0 var(--ink);
+    max-width:420px;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-news-pill input{
+    flex:1; min-width:0;
+    background:transparent !important; background-color:transparent !important;
+    border:0 !important; outline:0; box-shadow:none !important;
+    -webkit-appearance:none !important; appearance:none !important;
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    font-size:14px; color:var(--ink) !important;
+    -webkit-text-fill-color:var(--ink) !important;
+    padding:0;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-news-pill input::placeholder{ color:rgba(57,34,15,.4); }
+  #syr-foot-{{ section.id }} .syr-foot-news-pill input:-webkit-autofill,
+  #syr-foot-{{ section.id }} .syr-foot-news-pill input:-webkit-autofill:hover,
+  #syr-foot-{{ section.id }} .syr-foot-news-pill input:-webkit-autofill:focus{
+    -webkit-box-shadow:0 0 0 1000px var(--paper) inset !important;
+    -webkit-text-fill-color:var(--ink) !important;
+    transition:background-color 99999s ease-out 0s !important;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-news-btn{
+    flex:0 0 auto; background:var(--ink); color:var(--paper);
+    border:1.5px solid var(--ink); border-radius:999px;
+    height:42px; padding:0 22px;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    cursor:pointer;
+    transition:background .15s ease, transform .12s ease;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-news-btn:hover{ background:var(--accent); transform:translate(-1px,-1px); }
+
+  #syr-foot-{{ section.id }} .syr-foot-cols{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+    gap:36px 28px;
+    padding-bottom:48px;
+    border-bottom:1.5px solid rgba(57,34,15,.12);
+    margin-bottom:32px;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-col{ min-width:0; }
+  #syr-foot-{{ section.id }} .syr-foot-col h4{
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 16px;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-col ul{ list-style:none; padding:0; margin:0; }
+  #syr-foot-{{ section.id }} .syr-foot-col li{ margin-bottom:10px; }
+  #syr-foot-{{ section.id }} .syr-foot-col a{
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    font-size:14.5px; color:var(--ink); opacity:.72;
+    text-decoration:none;
+    transition:opacity .15s ease, color .15s ease;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-col a:hover{ opacity:1; color:var(--accent); }
+
+  #syr-foot-{{ section.id }} .syr-foot-bottom{
+    display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
+    gap:18px;
+    padding:24px 0 28px;
+    font-size:12.5px; color:rgba(57,34,15,.6);
+  }
+  #syr-foot-{{ section.id }} .syr-foot-policy{
+    display:flex; flex-wrap:wrap; gap:0 18px;
+    list-style:none; padding:0; margin:0;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-policy a{
+    color:rgba(57,34,15,.6); text-decoration:none;
+    transition:color .15s ease;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-policy a:hover{ color:var(--ink); }
+  #syr-foot-{{ section.id }} .syr-foot-pay{
+    display:flex; gap:6px; align-items:center;
+  }
+  #syr-foot-{{ section.id }} .syr-foot-pay img,
+  #syr-foot-{{ section.id }} .syr-foot-pay svg{ height:22px; width:auto; }
+
+  /* MOBILE — center everything */
+  @media (max-width:760px){
+    #syr-foot-{{ section.id }}{ padding:48px 16px 0; text-align:center; }
+    #syr-foot-{{ section.id }} .syr-foot-top{
+      grid-template-columns:1fr; gap:30px;
+      padding-bottom:32px; margin-bottom:32px;
+      text-align:center;
+    }
+    #syr-foot-{{ section.id }} .syr-foot-brand{
+      display:flex; flex-direction:column; align-items:center;
+    }
+    #syr-foot-{{ section.id }} .syr-foot-brand img{ margin:0 auto 18px; }
+    #syr-foot-{{ section.id }} .syr-foot-brand-desc{
+      text-align:center; margin:0 auto 22px;
+    }
+    #syr-foot-{{ section.id }} .syr-foot-social{ justify-content:center; }
+    #syr-foot-{{ section.id }} .syr-foot-news{
+      display:flex; flex-direction:column; align-items:center;
+    }
+    #syr-foot-{{ section.id }} .syr-foot-news p{
+      max-width:none; margin:0 auto 16px; text-align:center;
+    }
+    #syr-foot-{{ section.id }} .syr-foot-news-pill{ margin:0 auto; width:100%; }
+    #syr-foot-{{ section.id }} .syr-foot-cols{
+      grid-template-columns:1fr 1fr; gap:28px 20px;
+      padding-bottom:32px; margin-bottom:24px;
+      text-align:center;
+    }
+    #syr-foot-{{ section.id }} .syr-foot-col{ text-align:center; }
+    #syr-foot-{{ section.id }} .syr-foot-col h4{ font-size:11px; margin-bottom:12px; text-align:center; }
+    #syr-foot-{{ section.id }} .syr-foot-col ul{ text-align:center; }
+    #syr-foot-{{ section.id }} .syr-foot-col li{ text-align:center; }
+    #syr-foot-{{ section.id }} .syr-foot-col a{ font-size:13.5px; }
+    #syr-foot-{{ section.id }} .syr-foot-bottom{
+      flex-direction:column; align-items:center; justify-content:center; text-align:center;
+      gap:14px; padding:20px 0 24px;
+    }
+    #syr-foot-{{ section.id }} .syr-foot-policy{ justify-content:center; }
+    #syr-foot-{{ section.id }} .syr-foot-pay{ justify-content:center; }
+    #syr-foot-{{ section.id }} .syr-foot-news-pill{ height:48px; }
+    #syr-foot-{{ section.id }} .syr-foot-news-btn{ height:38px; padding:0 16px; font-size:11px; }
+  }
+</style>
+
+<footer id="syr-foot-{{ section.id }}" class="syr-foot">
+  <div class="syr-foot-wrap">
+
+    {%- if section.settings.show_top -%}
+      <div class="syr-foot-top">
+        <div class="syr-foot-brand">
+          {%- if section.settings.brand_logo != blank -%}
+            <img src="{{ section.settings.brand_logo | image_url: width: 400 }}" alt="{{ shop.name | escape }}" loading="lazy">
+          {%- elsif settings.logo != blank -%}
+            <img src="{{ settings.logo | image_url: width: 400 }}" alt="{{ shop.name | escape }}" loading="lazy">
+          {%- endif -%}
+          {%- if section.settings.brand_description != blank -%}
+            <p class="syr-foot-brand-desc">{{ section.settings.brand_description }}</p>
+          {%- endif -%}
+          {%- if section.settings.show_social -%}
+            <div class="syr-foot-social">
+              {%- if section.settings.instagram_url != blank -%}<a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 22 22" fill="none"><rect x="2.5" y="2.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="11" cy="11" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="16.2" cy="5.8" r="1.1" fill="currentColor"/></svg></a>{%- endif -%}
+              {%- if section.settings.tiktok_url != blank -%}<a href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 22 22" fill="none"><path d="M13 3v10.5a3 3 0 11-2.4-2.94" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 3c.4 2.2 1.8 3.7 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>{%- endif -%}
+              {%- if section.settings.youtube_url != blank -%}<a href="{{ section.settings.youtube_url }}" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 22 22" fill="none"><rect x="2" y="5" width="18" height="12" rx="3.4" stroke="currentColor" stroke-width="1.8"/><path d="M9.4 8.4l4.4 2.6-4.4 2.6V8.4z" fill="currentColor"/></svg></a>{%- endif -%}
+              {%- if section.settings.facebook_url != blank -%}<a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 22 22" fill="currentColor"><path d="M13 6.5h2.5V3h-2.5C10.5 3 9 4.5 9 7v2H7v3.5h2V19h3v-6.5h2.5L15 9h-3V7c0-.3.2-.5.5-.5z"/></svg></a>{%- endif -%}
+              {%- if section.settings.pinterest_url != blank -%}<a href="{{ section.settings.pinterest_url }}" target="_blank" rel="noopener" aria-label="Pinterest"><svg viewBox="0 0 22 22" fill="currentColor"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M11 6c1.5 0 2.5 1 2.5 2.5 0 2-1 4-2.5 4-.5 0-1-.2-1-.7l.5-2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg></a>{%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.show_newsletter -%}
+          <div class="syr-foot-news">
+            <h3>{{ section.settings.newsletter_heading | default: 'Sip, save, and smile!' }}</h3>
+            <p>{{ section.settings.newsletter_sub | default: 'Sign up for exclusive syrup deals and news.' }}</p>
+            {%- form 'customer', class: 'syr-foot-news-form' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter, footer">
+              <input type="hidden" name="contact[accepts_marketing]" value="true">
+              <input type="hidden" name="contact[email_marketing_consent]" value="subscribed">
+              <div class="syr-foot-news-pill">
+                <input type="email" name="contact[email]" placeholder="Your email" autocomplete="email" required aria-label="Email">
+                <button class="syr-foot-news-btn" type="submit">{{ section.settings.newsletter_btn | default: 'Subscribe' }}</button>
+              </div>
+            {%- endform -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="syr-foot-cols">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'link_column' -%}
+            <div class="syr-foot-col" {{ block.shopify_attributes }}>
+              {%- if block.settings.heading != blank -%}<h4>{{ block.settings.heading }}</h4>{%- endif -%}
+              {%- if block.settings.menu != blank -%}
+                <ul>
+                  {%- for link in block.settings.menu.links -%}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                <ul>
+                  {%- if block.settings.l1_text != blank -%}<li><a href="{{ block.settings.l1_url | default: '#' }}">{{ block.settings.l1_text }}</a></li>{%- endif -%}
+                  {%- if block.settings.l2_text != blank -%}<li><a href="{{ block.settings.l2_url | default: '#' }}">{{ block.settings.l2_text }}</a></li>{%- endif -%}
+                  {%- if block.settings.l3_text != blank -%}<li><a href="{{ block.settings.l3_url | default: '#' }}">{{ block.settings.l3_text }}</a></li>{%- endif -%}
+                  {%- if block.settings.l4_text != blank -%}<li><a href="{{ block.settings.l4_url | default: '#' }}">{{ block.settings.l4_text }}</a></li>{%- endif -%}
+                  {%- if block.settings.l5_text != blank -%}<li><a href="{{ block.settings.l5_url | default: '#' }}">{{ block.settings.l5_text }}</a></li>{%- endif -%}
+                  {%- if block.settings.l6_text != blank -%}<li><a href="{{ block.settings.l6_url | default: '#' }}">{{ block.settings.l6_text }}</a></li>{%- endif -%}
+                  {%- if block.settings.l7_text != blank -%}<li><a href="{{ block.settings.l7_url | default: '#' }}">{{ block.settings.l7_text }}</a></li>{%- endif -%}
+                  {%- if block.settings.l8_text != blank -%}<li><a href="{{ block.settings.l8_url | default: '#' }}">{{ block.settings.l8_text }}</a></li>{%- endif -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.show_bottom -%}
+      <div class="syr-foot-bottom">
+        <div>© {{ 'now' | date: '%Y' }} {{ section.settings.copyright_text | default: shop.name }}</div>
+        {%- if section.settings.policy_menu != blank -%}
+          <ul class="syr-foot-policy">
+            {%- for link in linklists[section.settings.policy_menu].links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+        {%- if section.settings.show_payment_icons -%}
+          <div class="syr-foot-pay">
+            {%- for type in shop.enabled_payment_types -%}
+              {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Syruvia Footer",
+  "class": "section-footer syr-foot-section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#FFFBF4" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#39220f" },
+    { "type": "color", "id": "accent_color", "label": "Hover accent", "default": "#c58548" },
+    { "type": "color", "id": "butter_color", "label": "Hover background", "default": "#FCE2A0" },
+
+    { "type": "header", "content": "Top: brand + newsletter" },
+    { "type": "checkbox", "id": "show_top", "label": "Show top section", "default": true },
+    { "type": "image_picker", "id": "brand_logo", "label": "Brand logo (leave blank to use site logo)" },
+    { "type": "textarea", "id": "brand_description", "label": "Brand description", "default": "Real flavor. Crafted small-batch. Loved by 5M+. Pour something better today." },
+    { "type": "checkbox", "id": "show_newsletter", "label": "Show newsletter signup", "default": true },
+    { "type": "text", "id": "newsletter_heading", "label": "Newsletter heading", "default": "Sip, save, and smile!" },
+    { "type": "text", "id": "newsletter_sub", "label": "Newsletter subtext", "default": "Sign up for exclusive syrup deals and news." },
+    { "type": "text", "id": "newsletter_btn", "label": "Subscribe button label", "default": "Subscribe" },
+
+    { "type": "header", "content": "Social" },
+    { "type": "checkbox", "id": "show_social", "label": "Show social icons", "default": true },
+    { "type": "url", "id": "instagram_url", "label": "Instagram URL" },
+    { "type": "url", "id": "tiktok_url", "label": "TikTok URL" },
+    { "type": "url", "id": "youtube_url", "label": "YouTube URL" },
+    { "type": "url", "id": "facebook_url", "label": "Facebook URL" },
+    { "type": "url", "id": "pinterest_url", "label": "Pinterest URL" },
+
+    { "type": "header", "content": "Bottom strip" },
+    { "type": "checkbox", "id": "show_bottom", "label": "Show bottom strip", "default": true },
+    { "type": "text", "id": "copyright_text", "label": "Copyright text", "default": "Syruvia" },
+    { "type": "link_list", "id": "policy_menu", "label": "Policy menu (e.g. Privacy, Terms, Shipping)" },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "link_column",
+      "name": "Link column",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Column heading", "default": "Shop" },
+        { "type": "link_list", "id": "menu", "label": "Menu (recommended)", "info": "Pick a navigation menu, or use the manual links below." },
+        { "type": "header", "content": "Manual links (used if no menu picked)" },
+        { "type": "text", "id": "l1_text", "label": "Link 1 text" },
+        { "type": "url", "id": "l1_url", "label": "Link 1 URL" },
+        { "type": "text", "id": "l2_text", "label": "Link 2 text" },
+        { "type": "url", "id": "l2_url", "label": "Link 2 URL" },
+        { "type": "text", "id": "l3_text", "label": "Link 3 text" },
+        { "type": "url", "id": "l3_url", "label": "Link 3 URL" },
+        { "type": "text", "id": "l4_text", "label": "Link 4 text" },
+        { "type": "url", "id": "l4_url", "label": "Link 4 URL" },
+        { "type": "text", "id": "l5_text", "label": "Link 5 text" },
+        { "type": "url", "id": "l5_url", "label": "Link 5 URL" },
+        { "type": "text", "id": "l6_text", "label": "Link 6 text" },
+        { "type": "url", "id": "l6_url", "label": "Link 6 URL" },
+        { "type": "text", "id": "l7_text", "label": "Link 7 text" },
+        { "type": "url", "id": "l7_url", "label": "Link 7 URL" },
+        { "type": "text", "id": "l8_text", "label": "Link 8 text" },
+        { "type": "url", "id": "l8_url", "label": "Link 8 URL" }
+      ]
+    }
+  ]
+}
+{% endschema %}

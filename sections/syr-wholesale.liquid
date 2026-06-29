@@ -1,0 +1,207 @@
+{%- comment -%} Syruvia Wholesale — brand style. {%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign portal = s.portal_url | default: 'https://syruvia-wholesale.com/' -%}
+{%- assign faire = s.faire_url | default: 'https://syruvia.faire.com' -%}
+{%- assign airgoods = s.airgoods_url | default: 'https://www.airgoods.com/u/syruvia' -%}
+{%- assign contact = s.contact_url | default: '/pages/contact-us' -%}
+<style id="sw-{{ section.id }}-css">
+  #sw-{{ section.id }}{--ink:#39220f;--ink-2:#5a4632;--paper:#FFFBF4;--white:#fff;--butter:#FCE2A0;--copper:#c58548;--peach:#ffd4b8;--mint:#c5e4d4;--sky:#b8dceb;--blue:#2f7bb0;--blue2:#1f5a85;--fh:'Archivo Black','Arial Black',sans-serif;--fb:'Josefin Sans','Josefin',sans-serif;background:var(--paper);color:var(--ink);font-family:var(--fb);position:relative;}
+  #sw-{{ section.id }} *{box-sizing:border-box;}
+  #sw-{{ section.id }} .sw-wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  #sw-{{ section.id }} .sw-rev{opacity:0;transform:translateY(18px) scale(.95);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.3,1.25);}
+  #sw-{{ section.id }} .sw-rev.in{opacity:1;transform:none;}
+  #sw-{{ section.id }} .sw-eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--butter);color:var(--ink);border:2px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-family:var(--fh);font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:8px 18px;line-height:1;}
+  #sw-{{ section.id }} .sw-h2{font-family:var(--fh);font-weight:400;font-size:clamp(26px,3.8vw,42px);line-height:1.04;letter-spacing:-.01em;text-transform:uppercase;margin:14px 0 0;}
+  #sw-{{ section.id }} .sw-h2 em{font-family:var(--fb);font-style:italic;font-weight:300;color:var(--copper);text-transform:none;}
+  #sw-{{ section.id }} .sw-btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;font-family:var(--fh);font-weight:400;font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;text-decoration:none;padding:15px 26px;border:2.5px solid var(--ink);cursor:pointer;transition:transform .16s ease, box-shadow .16s ease;}
+  #sw-{{ section.id }} .sw-btn--copper{background:var(--copper);color:#fff;box-shadow:4px 4px 0 var(--ink);}
+  #sw-{{ section.id }} .sw-btn--copper:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
+  #sw-{{ section.id }} .sw-btn--butter{background:var(--butter);color:var(--ink);box-shadow:4px 4px 0 var(--copper);}
+  #sw-{{ section.id }} .sw-btn--butter:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--copper);}
+  #sw-{{ section.id }} .sw-btn--ghost{background:transparent;color:var(--ink);}
+  #sw-{{ section.id }} .sw-btn--ghost:hover{background:var(--butter);}
+  #sw-{{ section.id }} .sw-btnrow{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+  /* hero */
+  #sw-{{ section.id }} .sw-hero{text-align:center;padding:70px 0 44px;position:relative;}
+  #sw-{{ section.id }} .sw-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(circle, rgba(57,34,15,.05) 1.4px, transparent 1.6px);background-size:26px 26px;opacity:.5;pointer-events:none;}
+  #sw-{{ section.id }} .sw-hero .sw-wrap{position:relative;z-index:2;}
+  #sw-{{ section.id }} .sw-hero h1{font-family:var(--fh);font-weight:400;font-size:clamp(40px,6.6vw,76px);line-height:.92;letter-spacing:-.02em;text-transform:uppercase;margin:20px 0 0;}
+  #sw-{{ section.id }} .sw-hero h1 em{font-family:var(--fb);font-style:italic;font-weight:300;color:var(--copper);text-transform:none;}
+  #sw-{{ section.id }} .sw-hero .sub{font-size:clamp(15px,2vw,18px);color:var(--ink-2);font-weight:500;margin:18px auto 0;max-width:58ch;line-height:1.6;}
+  #sw-{{ section.id }} .sw-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:22px auto 0;max-width:760px;}
+  #sw-{{ section.id }} .sw-chip{background:var(--white);border:2px solid var(--ink);border-radius:999px;box-shadow:2px 2px 0 var(--ink);font-family:'Archivo',sans-serif;font-weight:700;font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:7px 14px;}
+  #sw-{{ section.id }} .sw-hero .sw-btnrow{margin-top:26px;}
+  /* offers */
+  #sw-{{ section.id }} .sw-offers{padding:14px 0 30px;}
+  #sw-{{ section.id }} .sw-ogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  #sw-{{ section.id }} .sw-ocard{border:2.5px solid var(--ink);border-radius:22px;box-shadow:6px 6px 0 var(--ink);padding:30px 24px;text-align:center;}
+  #sw-{{ section.id }} .sw-ogrid .sw-ocard:nth-child(1){background:var(--peach);}
+  #sw-{{ section.id }} .sw-ogrid .sw-ocard:nth-child(2){background:var(--butter);}
+  #sw-{{ section.id }} .sw-ogrid .sw-ocard:nth-child(3){background:var(--mint);}
+  #sw-{{ section.id }} .sw-ocard .em{font-size:30px;line-height:1;display:block;margin-bottom:12px;}
+  #sw-{{ section.id }} .sw-ocard .t{font-family:var(--fh);font-weight:400;font-size:18px;text-transform:uppercase;line-height:1.1;}
+  #sw-{{ section.id }} .sw-ocard .d{font-size:14px;color:var(--ink-2);font-weight:500;line-height:1.5;margin-top:8px;}
+  /* why */
+  #sw-{{ section.id }} .sw-why{padding:46px 0;}
+  #sw-{{ section.id }} .sw-head{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:34px;}
+  #sw-{{ section.id }} .sw-head .sub{font-size:15.5px;color:var(--ink-2);font-weight:500;max-width:54ch;margin:8px auto 0;line-height:1.6;}
+  #sw-{{ section.id }} .sw-bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  #sw-{{ section.id }} .sw-bcard{background:var(--white);border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);padding:26px 22px;text-align:center;transition:transform .2s ease,box-shadow .2s ease;}
+  #sw-{{ section.id }} .sw-bcard:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--ink);}
+  #sw-{{ section.id }} .sw-bcard .ic{width:52px;height:52px;margin:0 auto 14px;border-radius:50%;border:2.5px solid var(--ink);box-shadow:3px 3px 0 var(--ink);display:flex;align-items:center;justify-content:center;font-size:24px;}
+  #sw-{{ section.id }} .sw-bgrid .sw-bcard:nth-child(3n+1) .ic{background:var(--peach);}
+  #sw-{{ section.id }} .sw-bgrid .sw-bcard:nth-child(3n+2) .ic{background:var(--mint);}
+  #sw-{{ section.id }} .sw-bgrid .sw-bcard:nth-child(3n+3) .ic{background:var(--sky);}
+  #sw-{{ section.id }} .sw-bcard .t{font-family:var(--fh);font-weight:400;font-size:15px;text-transform:uppercase;line-height:1.15;}
+  #sw-{{ section.id }} .sw-bcard .d{font-size:13.5px;color:var(--ink-2);font-weight:500;line-height:1.5;margin-top:8px;}
+  /* platforms */
+  #sw-{{ section.id }} .sw-plat{padding:30px 0 46px;}
+  #sw-{{ section.id }} .sw-pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  #sw-{{ section.id }} .sw-pcard{background:var(--white);border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);padding:28px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;}
+  #sw-{{ section.id }} .sw-pcard .pn{font-family:var(--fh);font-weight:400;font-size:19px;text-transform:uppercase;}
+  #sw-{{ section.id }} .sw-pcard .pd{font-size:14px;color:var(--ink-2);font-weight:500;line-height:1.5;flex:1;}
+  #sw-{{ section.id }} .sw-pcard .sw-btn{margin-top:6px;}
+  /* cta */
+  #sw-{{ section.id }} .sw-cta{padding:10px 0 80px;}
+  #sw-{{ section.id }} .sw-cta-card{position:relative;overflow:hidden;background:linear-gradient(140deg,var(--copper),#8a5a2c);color:var(--paper);border:3px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--ink);padding:54px clamp(26px,5vw,64px);text-align:center;}
+  #sw-{{ section.id }} .sw-cta-card::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,251,244,.5) 1.2px, transparent 1.4px);background-size:26px 26px;opacity:.14;pointer-events:none;}
+  #sw-{{ section.id }} .sw-cta-card .sw-eyebrow{background:var(--butter);position:relative;}
+  #sw-{{ section.id }} .sw-cta-card .sw-h2{color:var(--paper);position:relative;}
+  #sw-{{ section.id }} .sw-cta-card .sw-h2 em{color:var(--butter);}
+  #sw-{{ section.id }} .sw-cta-card p{position:relative;color:rgba(255,251,244,.92);font-size:15.5px;font-weight:500;line-height:1.6;max-width:52ch;margin:14px auto 0;}
+  #sw-{{ section.id }} .sw-cta-card .sw-btnrow{position:relative;margin-top:24px;}
+  #sw-{{ section.id }} .sw-cta-card .sw-btn--ghost{color:var(--paper);border-color:var(--paper);}
+  #sw-{{ section.id }} .sw-cta-card .sw-btn--ghost:hover{background:rgba(255,255,255,.12);}
+  @media (max-width:860px){
+    #sw-{{ section.id }} .sw-bgrid{grid-template-columns:1fr;}
+    #sw-{{ section.id }} .sw-hero{padding:46px 0 30px;}
+    /* sticky-stacking effect on mobile: offers + platforms pile as you scroll */
+    #sw-{{ section.id }} .sw-ogrid,#sw-{{ section.id }} .sw-pgrid{display:block;}
+    #sw-{{ section.id }} .sw-ogrid .sw-ocard,#sw-{{ section.id }} .sw-pgrid .sw-pcard{position:sticky;margin-bottom:20px;}
+    #sw-{{ section.id }} .sw-ogrid .sw-ocard:nth-child(1){top:90px;}
+    #sw-{{ section.id }} .sw-ogrid .sw-ocard:nth-child(2){top:112px;}
+    #sw-{{ section.id }} .sw-ogrid .sw-ocard:nth-child(3){top:134px;margin-bottom:0;}
+    #sw-{{ section.id }} .sw-pgrid .sw-pcard:nth-child(1){top:90px;}
+    #sw-{{ section.id }} .sw-pgrid .sw-pcard:nth-child(2){top:112px;}
+    #sw-{{ section.id }} .sw-pgrid .sw-pcard:nth-child(3){top:134px;margin-bottom:0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    #sw-{{ section.id }} .sw-rev{opacity:1;transform:none;}
+    #sw-{{ section.id }} .sw-ogrid .sw-ocard,#sw-{{ section.id }} .sw-pgrid .sw-pcard{position:static;}
+  }
+</style>
+
+<section id="sw-{{ section.id }}">
+  <div class="sw-hero">
+    <div class="sw-wrap">
+      <span class="sw-eyebrow sw-rev">{{ s.hero_eyebrow | default: 'Syruvia Wholesale' }}</span>
+      <h1 class="sw-rev">{{ s.hero_title | default: 'Stock the flavors they <em>crave</em>.' }}</h1>
+      <p class="sub sw-rev">{{ s.hero_sub | default: 'Premium, naturally flavored syrups — sugar-free and classic — at competitive wholesale pricing. Built for cafés, tea bars, coffee trucks, dessert concepts and specialty retailers.' }}</p>
+      <div class="sw-chips sw-rev">
+        <span class="sw-chip">Cafés</span><span class="sw-chip">Coffee shops</span><span class="sw-chip">Tea bars</span><span class="sw-chip">Coffee trucks</span><span class="sw-chip">Dessert concepts</span><span class="sw-chip">Specialty retailers</span>
+      </div>
+      <div class="sw-btnrow sw-rev">
+        <a class="sw-btn sw-btn--copper" href="{{ portal }}" target="_blank" rel="noopener">Shop wholesale</a>
+        <a class="sw-btn sw-btn--ghost" href="{{ faire }}" target="_blank" rel="noopener">Order on Faire</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sw-offers">
+    <div class="sw-wrap">
+      <div class="sw-ogrid">
+        <div class="sw-ocard sw-rev"><span class="em">🚚</span><div class="t">Free shipping on your first order</div><p class="d">Get started with zero shipping cost.</p></div>
+        <div class="sw-ocard sw-rev"><span class="em">🏷️</span><div class="t">50% off your first order</div><p class="d">Extra savings to stock up with confidence.</p></div>
+        <div class="sw-ocard sw-rev"><span class="em">↩️</span><div class="t">30-day risk-free returns</div><p class="d">Return up to 4 cases — we cover the return shipping.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sw-why">
+    <div class="sw-wrap">
+      <div class="sw-head">
+        <span class="sw-eyebrow sw-rev">{{ s.why_eyebrow | default: 'Why partner with us' }}</span>
+        <h2 class="sw-h2 sw-rev">{{ s.why_title | default: 'Built for <em>your</em> business.' }}</h2>
+        <p class="sub sw-rev">{{ s.why_sub | default: 'Bold, better-for-you flavor your customers will love — backed by pricing and service that help your menu grow.' }}</p>
+      </div>
+      <div class="sw-bgrid">
+        <div class="sw-bcard sw-rev"><div class="ic">⭐</div><div class="t">Premium café-quality flavor</div><p class="d">Blends smoothly into coffee, lattes, teas, refreshers, cocktails and desserts.</p></div>
+        <div class="sw-bcard sw-rev"><div class="ic">🌿</div><div class="t">Naturally flavored &amp; sugar-free</div><p class="d">A full zero-sugar range alongside classic flavors for every customer.</p></div>
+        <div class="sw-bcard sw-rev"><div class="ic">💰</div><div class="t">Strong profit margins</div><p class="d">Competitive wholesale pricing structured to maximize profitability.</p></div>
+        <div class="sw-bcard sw-rev"><div class="ic">🧃</div><div class="t">Wide flavor variety</div><p class="d">Coffee, fruit, tea and cocktail syrups, plus trending seasonal flavors.</p></div>
+        <div class="sw-bcard sw-rev"><div class="ic">🚀</div><div class="t">Reliable supply &amp; fast fulfillment</div><p class="d">Dependable inventory and responsive support, no interruptions.</p></div>
+        <div class="sw-bcard sw-rev"><div class="ic">📦</div><div class="t">Low minimum order</div><p class="d">Mix &amp; match a custom case and start small — scale as you grow.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sw-plat">
+    <div class="sw-wrap">
+      <div class="sw-head">
+        <span class="sw-eyebrow sw-rev">{{ s.plat_eyebrow | default: 'Where to order' }}</span>
+        <h2 class="sw-h2 sw-rev">{{ s.plat_title | default: 'Order your <em>way</em>.' }}</h2>
+      </div>
+      <div class="sw-pgrid">
+        <div class="sw-pcard sw-rev"><span class="sw-eyebrow" style="background:var(--mint);">Best price</span><div class="pn">Syruvia Wholesale</div><p class="pd">Order direct through our own wholesale portal for our full catalog and best pricing.</p><a class="sw-btn sw-btn--copper" href="{{ portal }}" target="_blank" rel="noopener">Shop now</a></div>
+        <div class="sw-pcard sw-rev"><span class="sw-eyebrow" style="background:var(--peach);">For retailers</span><div class="pn">Faire</div><p class="pd">Discover Syruvia on Faire and take advantage of exclusive new-buyer wholesale terms.</p><a class="sw-btn sw-btn--butter" href="{{ faire }}" target="_blank" rel="noopener">Shop on Faire</a></div>
+        <div class="sw-pcard sw-rev"><span class="sw-eyebrow" style="background:var(--sky);">Online ordering</span><div class="pn">Airgoods</div><p class="pd">Order premium syrups with competitive pricing and rapid delivery on Airgoods.</p><a class="sw-btn sw-btn--ghost" href="{{ airgoods }}" target="_blank" rel="noopener">Shop on Airgoods</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sw-cta">
+    <div class="sw-wrap">
+      <div class="sw-cta-card sw-rev">
+        <span class="sw-eyebrow">{{ s.cta_eyebrow | default: 'Let us talk' }}</span>
+        <h2 class="sw-h2">{{ s.cta_title | default: 'Bring Syruvia to your <em>menu</em>.' }}</h2>
+        <p>{{ s.cta_sub | default: 'Tell us about your business and our team will help you build the right wholesale program — pricing, flavors and fulfillment.' }}</p>
+        <div class="sw-btnrow">
+          <a class="sw-btn sw-btn--butter" href="{{ portal }}" target="_blank" rel="noopener">Apply for wholesale</a>
+          <a class="sw-btn sw-btn--ghost" href="{{ contact }}">Contact our team</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('sw-{{ section.id }}');
+  if(!root) return;
+  if('IntersectionObserver' in window && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
+    root.querySelectorAll('.sw-rev').forEach(function(el){io.observe(el);});
+    setTimeout(function(){root.querySelectorAll('.sw-rev:not(.in)').forEach(function(el){el.classList.add('in');});},2800);
+  } else { root.querySelectorAll('.sw-rev').forEach(function(el){el.classList.add('in');}); }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wholesale",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Links" },
+    { "type": "text", "id": "portal_url", "label": "Wholesale portal URL", "default": "https://syruvia-wholesale.com/" },
+    { "type": "text", "id": "faire_url", "label": "Faire URL", "default": "https://syruvia.faire.com" },
+    { "type": "text", "id": "airgoods_url", "label": "Airgoods URL", "default": "https://www.airgoods.com/u/syruvia" },
+    { "type": "text", "id": "contact_url", "label": "Contact page URL", "default": "/pages/contact-us" },
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "Syruvia Wholesale" },
+    { "type": "text", "id": "hero_title", "label": "Title", "default": "Stock the flavors they <em>crave</em>." },
+    { "type": "textarea", "id": "hero_sub", "label": "Subtitle", "default": "Premium, naturally flavored syrups — sugar-free and classic — at competitive wholesale pricing." },
+    { "type": "header", "content": "Why partner" },
+    { "type": "text", "id": "why_eyebrow", "label": "Eyebrow", "default": "Why partner with us" },
+    { "type": "text", "id": "why_title", "label": "Heading", "default": "Built for <em>your</em> business." },
+    { "type": "textarea", "id": "why_sub", "label": "Sub-text", "default": "Bold, better-for-you flavor backed by pricing and service that help your menu grow." },
+    { "type": "header", "content": "Platforms" },
+    { "type": "text", "id": "plat_eyebrow", "label": "Eyebrow", "default": "Where to order" },
+    { "type": "text", "id": "plat_title", "label": "Heading", "default": "Order your <em>way</em>." },
+    { "type": "header", "content": "Call to action" },
+    { "type": "text", "id": "cta_eyebrow", "label": "Eyebrow", "default": "Let us talk" },
+    { "type": "text", "id": "cta_title", "label": "Heading", "default": "Bring Syruvia to your <em>menu</em>." },
+    { "type": "textarea", "id": "cta_sub", "label": "Sub-text", "default": "Tell us about your business and our team will help you build the right wholesale program." }
+  ],
+  "presets": [ { "name": "Wholesale" } ]
+}
+{% endschema %}

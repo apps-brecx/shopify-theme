@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-contact-us",
+      "settings": {
+        "card1_label": "Email",
+        "card1_value": "Email us",
+        "card1_email": "cs@syruvia.com",
+        "card2_label": "Phone",
+        "card2_value": "+1 877-201-4045",
+        "card2_text": "Call or text us — we are happy to help.",
+        "card3_label": "Address",
+        "card3_value": "Fort Lauderdale, FL",
+        "card3_text": "2950 W Cypress Creek Rd, Fort Lauderdale, FL 33309"
+      }
+    }
+  },
+  "order": ["main"]
+}

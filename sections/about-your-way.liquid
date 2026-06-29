@@ -1,0 +1,228 @@
+<style>
+   .about-your-way__inner{
+       padding: 50px 0;
+   }
+   .about-your-way__wrapper{
+       display: flex;
+       gap: 20px;
+       align-items: center;
+       justify-content: space-between;
+       padding: 60px 40px;
+       border-radius: 20px;
+       overflow: hidden;
+       flex-wrap: wrap;
+   }
+   .about-your-way__title{
+       margin-bottom: 20px;
+   }
+   .about-your-way__title  h2{
+      font-size: 45px;
+       color: #ffffff;
+       margin: 0;
+       line-height: 50px;
+  }
+  .about-your-way__description{
+       line-height: 30px;
+       color: #ffffff;
+       margin-bottom: 50px;
+   }
+   .about-your-way__image{
+       max-width: 42.53%;
+       border-radius: 20px;
+       overflow: hidden;
+          transform: rotate(2deg);
+   }
+   .about-your-way__image img{
+       width: 100%;
+       display: block;
+       object-fit: cover;
+
+   }
+   .about-your-way__content{
+       max-width: 41.55%;
+   }
+   .about-your-way__lists{
+       display: flex;
+       gap: 30px;
+       flex-wrap: wrap;
+       padding: 0;
+   }
+   .about-your-way__list{
+       font-size: 20px;
+       color: #ffffff;
+   }
+   .about-your-way__list:first-child{
+       list-style: none;
+   }
+   .about-your-way__list::marker{
+       color: black;
+   }
+   .about-your-way__lists-mobile{
+        display: none;
+    }
+
+   @media(max-width: 768px){
+     .about-your-way__wrapper{
+    
+       padding: 40px 20px;
+ 
+   }
+       .about-your-way__image, .about-your-way__content{
+           max-width: 100%;
+
+       }
+       .about-your-way__lists{
+           display: none;
+       }
+        .about-your-way__image{
+            transform: rotate(0deg);
+       }
+        .about-your-way__title  h2{
+            text-align: center;
+            font-size: 36px;
+        }
+        .about-your-way__description{
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .about-your-way__list-zero{
+          font-size: 60px;
+          font-style: italic;
+          padding-right: 20px;
+        }
+        .about-your-way__list-content{
+          padding-left: 20px;
+          border-left: 1px solid white;
+        }
+        .about-your-way__lists-mobile{
+            display: block;
+            padding: 0;
+            margin: 0;
+        }
+        .about-your-way__lists-mobile li{
+          list-style: none;
+          align-items: center;       
+          display: flex;
+        }
+        .about-your-way__lists-mobile .about-your-way__list-title{
+          font-size: 26px;
+        }
+        .about-your-way__lists-mobile .about-your-way__list-description{
+          font-size: 14px;
+          line-height: normal;
+        }
+   }
+</style>
+<div class="about-your-way__inner">
+  <div class="page-width">
+    <div
+      class="about-your-way__wrapper"
+      {% if section.settings['bg-image'] != blank %}
+        style="background-image: url('{{ section.settings.bg-image | image_url: width: 1800 }}'); background-size: cover; background-position: center;"
+      {% endif %}
+    >
+      <div class="about-your-way__content">
+        <div class="about-your-way__title">
+          {{ section.settings.title }}
+        </div>
+
+        <div class="about-your-way__description">
+          {{ section.settings.description }}
+        </div>
+
+        <ul class="about-your-way__lists">
+          {% for block in section.blocks %}
+            <li class="about-your-way__list" {{ block.shopify_attributes }}>
+              <div class="about-your-way__list-title">
+                {{ block.settings.title }}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="about-your-way__image">
+        {% if section.settings.image != blank %}
+          {{ section.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', alt: section.settings.title }}
+        {% endif %}     
+      </div>
+             <ul class="about-your-way__lists-mobile">
+          {% for block in section.blocks %}
+            <li class="about-your-way__list" {{ block.shopify_attributes }}>
+              <div class="about-your-way__list-zero">
+                0
+              </div>
+              <div class="about-your-way__list-content">
+                  <div class="about-your-way__list-title">
+                {{ block.settings.title }}
+              </div>
+                <div class="about-your-way__list-description">
+                {{ block.settings.description }}
+              </div>  
+              
+              </div>            
+            </li>
+          {% endfor %}
+        </ul>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "About Your Way",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg-image",
+      "label": "background image"
+    },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Section Title"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Section Description"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Section Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "list_item",
+      "name": "List Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "List Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "List Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Your Way",
+      "blocks": [
+        {
+          "type": "list_item"
+        },
+        {
+          "type": "list_item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,201 @@
+<style>
+    .coffee-drink-richtext__inner{
+        padding: 40px 0; 
+    }
+    .coffee-drink-richtext__title{
+        margin-bottom: 10px;
+    }
+    .coffee-drink-richtext__title h2{
+        font-size: 46px;
+        color: #bb2a56;
+        line-height: 50px;
+        text-align: center;
+            font-family: "Manrope", sans-serif !important;
+            font-weight: 700;
+    }
+        .coffee-drink-richtext__description{          
+            margin-bottom: 40px;
+        }
+    .coffee-drink-richtext__description p{
+      font-family: "Manrope", sans-serif !important;
+        margin: 0;
+        color: #66645f;
+        font-size: 20px;
+        text-align: center;
+        line-height: 30px;
+    }
+       .coffee-drink-richtext__button a{
+        font-family: "Manrope", sans-serif !important;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            padding: 10px 30px;
+            margin: 0 auto 40px;
+            border-radius: 9999px;
+            position: relative;
+            color: #fff;
+            overflow: hidden;
+            z-index: 1;
+            width: fit-content;            
+  }
+
+
+
+.coffee-drink-richtext__button a::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #bb2a56, #ff7292);
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+
+.coffee-drink-richtext__button a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, #ff7292, #bb2a56);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+
+.coffee-drink-richtext__button a:hover::after {
+  opacity: 1;
+}
+.coffee-drink-richtext__bottom{
+    display: flex;
+    text-decoration: none;
+    justify-content: center;
+    gap: 20px;
+}
+.coffee-drink-richtext__bottom-image{
+  flex: 1 0 20%;
+  max-width: 40px;        
+}
+.coffee-drink-richtext__bottom-image img{
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.coffee-drink-richtext__bottom:hover .coffee-drink-richtext__bottom-text{
+  text-decoration: underline;
+}
+.coffee-drink-richtext__bottom-text{
+  display: flex;
+  font-family: "Manrope", sans-serif !important;
+  font-weight: 700;
+    align-items: center;
+    line-height: normal;
+      color: #bb2a56;
+}
+
+@media(max-width: 768px){
+  .coffee-drink-richtext__bottom-text{
+    font-size: 12px;
+  }
+  .coffee-drink-richtext__title h2 {
+    font-size: 40px;
+    line-height: normal;
+    margin: 0;
+
+  }
+    .coffee-drink-richtext__description{
+      margin-bottom: 20px;
+    }
+  .coffee-drink-richtext__description p{
+    font-size: 15px;    
+    line-height: normal;
+  }
+}
+
+</style>
+<div class="coffee-drink-richtext__inner scroll-trigger animate--slide-in">
+  <div class="page-width">
+
+    <div class="coffee-drink-richtext__title">
+      {{ section.settings.title }}
+    </div>
+
+    <div class="coffee-drink-richtext__description">
+      {{ section.settings.description }}
+    </div>
+
+    {% if section.settings.button_text != blank and section.settings.button_url != blank %}
+      <div class="coffee-drink-richtext__button">
+        <a href="{{ section.settings.button_url }}">
+          {{ section.settings.button_text }}
+        </a>
+      </div>
+    {% endif %}
+
+    <a href="{{ section.settings.bottom_url }}" class="coffee-drink-richtext__bottom">
+      
+      <div  class="coffee-drink-richtext__bottom-image">
+        {% if section.settings.bottom_image != blank %}
+          {{
+            section.settings.bottom_image
+            | image_url: width: 600
+            | image_tag: loading: 'lazy', alt: section.settings.bottom_text
+          }}
+        {% endif %}
+      </div>
+
+      <div class="coffee-drink-richtext__bottom-text">
+        {{ section.settings.bottom_text }}
+      </div>
+
+    </a>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Coffee Drink Richtext",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "bottom_image",
+      "label": "Bottom Image"
+    },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Bottom Text"
+    },
+    {
+      "type": "url",
+      "id": "bottom_url",
+      "label": "Text Url"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Coffee Drink Richtext"
+    }
+  ]
+}
+{% endschema %}

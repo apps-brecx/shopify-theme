@@ -1,0 +1,203 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .tabs-wrapper {
+    margin: 0 auto;
+    max-width: 900px;
+  }
+
+  /* Tabs Navigation */
+  .tabs-nav {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+  }
+
+  .tabs-nav button {
+    flex: 1;
+    background: #f9f9f9;
+    border: none;
+    padding: 15px 20px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    color: #555;
+    transition: all 0.3s;
+  }
+
+  .tabs-nav button.active {
+    background-color: #fff;
+    color: #000;
+    border-bottom: 2px solid #000;
+  }
+
+  /* Tab Content */
+  .tab-content {
+    display: none;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+{%- endstyle -%}
+{% assign profile_image = customer.metafields.custom.profile_image %}
+
+<div class="customer-account-header">
+  <div class="profile-info">
+    <!-- Display Profile Image or Default Image -->
+    <img
+      src="{{ profile_image | default: 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/dummy-profile.webp?v=1734085247' }}"
+      alt="{{ customer.first_name }}'s profile image"
+      class="profile-image"
+    >
+    <div class="user-name">
+      <h4>Hello,</h4>
+      <h3>
+        {{ customer.first_name }}
+        {{ customer.last_name }}
+      </h3>
+      <!-- <div class="cst-custom-signup-drawer"> -->
+      <a href="{{ routes.account_logout_url }}" class="" style="color: #1f1919;" }>
+        <span>
+          <!--
+            <img
+              src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/UI_Web_Logout_Exit_Close_Session-512.webp?v=1734090956"
+              loading="lazy"
+            >
+          -->
+        </span>
+        Sign Out
+      </a>
+      <!-- </div> -->
+    </div>
+  </div>
+</div>
+<div class="customer account tabs-wrapper">
+  <!-- Tabs Navigation -->
+  <div class="tabs-nav">
+    <button class="tab-button active" data-target="details">Account Information</button>
+    <button class="tab-button" data-target="orders">Orders</button>
+    <button class="tab-button" data-target="addresses">Saved Addresses</button>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content active" id="details">
+    <h2>Account Information</h2>
+    <p>
+      <strong>Name:</strong> {{ customer.first_name }}
+      {{ customer.last_name }}
+    </p>
+    <p><strong>Email:</strong> {{ customer.email }}</p>
+    <!-- <a href="{{ routes.account_addresses_url }}">Manage Account Information</a> -->
+  </div>
+
+  <div class="tab-content" id="orders">
+    <h2>Order History</h2>
+    {% paginate customer.orders by 10 %}
+      {%- if customer.orders.size > 0 -%}
+        <table>
+          <thead>
+            <tr>
+              <th>Order Number</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for order in customer.orders -%}
+              <tr>
+                <td>
+                  <a href="{{ order.customer_url }}">{{ order.name }}</a>
+                </td>
+                <td>{{ order.created_at | date: '%B %d, %Y' }}</td>
+                <td>{{ order.fulfillment_status_label }}</td>
+                <td>{{ order.total_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      {%- else -%}
+        <p>No orders yet.</p>
+      {%- endif -%}
+    {% endpaginate %}
+  </div>
+
+  <div class="tab-content" id="addresses">
+    <h2>Saved Addresses</h2>
+    {%- if customer.addresses_count > 0 -%}
+      <ul>
+        {%- for address in customer.addresses -%}
+          <li>
+            {{ address | format_address }}
+            {%- if address == customer.default_address -%}
+              <span>(Default)</span>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+      <a href="{{ routes.account_addresses_url }}">Manage Addresses</a>
+    {%- else -%}
+      <p>No saved addresses found.</p>
+      <a href="{{ routes.account_addresses_url }}">Add Address</a>
+    {%- endif -%}
+  </div>
+</div>
+
+<!-- JavaScript for Tabs -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const buttons = document.querySelectorAll(".tab-button");
+    const contents = document.querySelectorAll(".tab-content");
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        // Remove active state from all
+        buttons.forEach((btn) => btn.classList.remove("active"));
+        contents.forEach((content) => content.classList.remove("active"));
+
+        // Add active state to current
+        button.classList.add("active");
+        const target = button.getAttribute("data-target");
+        document.getElementById(target).classList.add("active");
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-account.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}
+{% if content_for_header contains 'bss-b2b-customer-portal' %}{% render 'bss-b2b-customer-portal-link' %}{% endif %}

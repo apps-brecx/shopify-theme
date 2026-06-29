@@ -1,0 +1,370 @@
+{%- comment -%} Reviews — ALWAYS centered (desktop + mobile), eyebrow scales bigger on desktop {%- endcomment -%}
+<style id="syr-rev-{{ section.id }}-css">
+  #syr-rev-{{ section.id }}{
+    --ink:#39220f; --paper:#FFFBF4; --bg:#F4E8CE; --accent:#c58548; --butter:#FCE2A0;
+    --eye-scale:.55; --eye-rot:0deg;
+    background:{{ section.settings.bg_color | default: '#F4E8CE' }}; color:var(--ink);
+    padding:90px 0 96px;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    position:relative; overflow:hidden;
+    touch-action:pan-x pan-y;
+  }
+  #syr-rev-{{ section.id }} .syr-rev-head{ text-align:center; max-width:780px; margin:0 auto 44px; padding:0 24px; }
+  #syr-rev-{{ section.id }} .syr-rev-eyebrow{
+    display:inline-block;
+    background:{{ section.settings.eyebrow_bg | default: '#FCE2A0' }};
+    color:{{ section.settings.eyebrow_color | default: '#39220f' }};
+    border:2px solid var(--ink); border-radius:999px;
+    box-shadow:3px 3px 0 var(--ink);
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase;
+    padding:7px 16px; margin-bottom:18px;
+    transform-origin:center;
+    transform:scale(var(--eye-scale)) rotate(var(--eye-rot));
+    transition:transform .25s cubic-bezier(.16,.84,.34,1);
+    will-change:transform;
+  }
+  @media (prefers-reduced-motion: reduce){
+    #syr-rev-{{ section.id }} .syr-rev-eyebrow{ transform:scale(1) rotate(0deg); transition:none; }
+  }
+  #syr-rev-{{ section.id }} h2{
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:clamp(38px, 5.4vw, 64px); line-height:.95;
+    letter-spacing:-.02em; text-transform:uppercase;
+    color:var(--ink); margin:0;
+  }
+
+  #syr-rev-{{ section.id }} .syr-rev-marquee{
+    position:relative;
+    overflow-x:auto; overflow-y:hidden;
+    padding:8px 0 32px;
+    touch-action:pan-x pan-y;
+    -webkit-mask-image:linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+            mask-image:linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+    scrollbar-width:none; -ms-overflow-style:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  #syr-rev-{{ section.id }} .syr-rev-marquee::-webkit-scrollbar{ display:none; }
+  #syr-rev-{{ section.id }} .syr-rev-track{
+    display:flex; gap:22px; width:max-content;
+    touch-action:pan-x pan-y;
+  }
+
+  /* CARDS — centered at all viewport widths */
+  #syr-rev-{{ section.id }} .syr-card{
+    flex:0 0 360px; max-width:360px;
+    border:2px solid var(--ink); border-radius:20px;
+    padding:22px 22px;
+    display:flex; flex-direction:column; gap:12px;
+    align-items:center !important;
+    text-align:center !important;
+    transition:transform .2s cubic-bezier(.4,0,.2,1), filter .15s ease;
+    text-decoration:none; color:inherit;
+    touch-action:pan-x pan-y;
+  }
+  #syr-rev-{{ section.id }} a.syr-card{ cursor:pointer; }
+  #syr-rev-{{ section.id }} a.syr-card:hover{ transform:translate(-3px,-3px); filter:brightness(1.02); }
+  #syr-rev-{{ section.id }} .syr-card-product{
+    align-self:center !important;
+    display:inline-block;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:10px; letter-spacing:.14em; text-transform:uppercase;
+    padding:5px 11px;
+    border:1.5px solid var(--ink);
+    border-radius:999px;
+    max-width:100%;
+    white-space:normal;
+  }
+  #syr-rev-{{ section.id }} .syr-card-stars{ font-size:18px; letter-spacing:2px; line-height:1; text-align:center; }
+  #syr-rev-{{ section.id }} .syr-card-quote{ font-size:16px; line-height:1.5; margin:0; font-weight:500; text-align:center !important; }
+  #syr-rev-{{ section.id }} .syr-card-foot{ display:flex; align-items:center; gap:8px; margin-top:auto; padding-top:6px; flex-wrap:wrap; justify-content:center !important; }
+  #syr-rev-{{ section.id }} .syr-card-name{ font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400; font-size:13px; text-align:center; }
+  #syr-rev-{{ section.id }} .syr-card-verified{
+    display:inline-flex; align-items:center; gap:4px;
+    background:rgba(184,220,235,.4); color:#2F7BB0;
+    border:1.5px solid #2F7BB0; border-radius:999px;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
+    padding:3px 9px;
+  }
+
+  #syr-rev-{{ section.id }} .syr-rev-foot{ text-align:center; margin-top:18px; padding:0 24px; }
+  #syr-rev-{{ section.id }} .syr-rev-all{
+    display:inline-flex; align-items:center; gap:10px;
+    background:{{ section.settings.all_bg | default: '#39220f' }};
+    color:{{ section.settings.all_color | default: '#FFFBF4' }};
+    border:2px solid var(--ink); border-radius:999px;
+    padding:16px 30px;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400;
+    font-size:13px; letter-spacing:.14em; text-transform:uppercase;
+    text-decoration:none;
+    box-shadow:5px 5px 0 {{ section.settings.all_shadow | default: '#c58548' }};
+    transition:transform .18s cubic-bezier(.4,0,.2,1), box-shadow .18s cubic-bezier(.4,0,.2,1), filter .15s ease;
+  }
+  #syr-rev-{{ section.id }} .syr-rev-all:hover{ transform:translate(-3px,-3px); box-shadow:8px 8px 0 {{ section.settings.all_shadow | default: '#c58548' }}; filter:brightness(1.08); }
+
+  @media (max-width:760px){
+    #syr-rev-{{ section.id }}{ padding:60px 0 68px; }
+    #syr-rev-{{ section.id }} .syr-rev-track{ gap:16px; }
+    #syr-rev-{{ section.id }} .syr-card{
+      flex:0 0 290px; max-width:290px; padding:20px 20px;
+    }
+    #syr-rev-{{ section.id }} .syr-card-quote{ font-size:14.5px; }
+    #syr-rev-{{ section.id }} .syr-rev-all{ padding:14px 26px; font-size:12px; box-shadow:4px 4px 0 {{ section.settings.all_shadow | default: '#c58548' }}; }
+  }
+</style>
+
+<section id="syr-rev-{{ section.id }}">
+  <div class="syr-rev-head">
+    <span class="syr-rev-eyebrow">{{ section.settings.eyebrow_text | default: 'Loved by 5M+' }}</span>
+    <h2>{{ section.settings.headline }}</h2>
+  </div>
+  <div class="syr-rev-marquee" data-rev-marquee>
+    <div class="syr-rev-track" data-rev-track>
+      {%- if section.blocks.size > 0 -%}
+        {%- for round in (1..2) -%}
+          {%- for block in section.blocks -%}
+            {%- assign p = block.settings.product -%}
+            {%- assign override = block.settings.override_link -%}
+            {%- assign link = override | default: p.url -%}
+            {%- assign tag_label = p.title -%}
+            {%- unless block.settings.auto_use_product_name -%}
+              {%- if block.settings.product_tag_label != blank -%}
+                {%- assign tag_label = block.settings.product_tag_label -%}
+              {%- endif -%}
+            {%- endunless -%}
+            {%- assign show_tag = block.settings.show_product_tag -%}
+            {%- assign bg = block.settings.bg_color | default: '#FFFBF4' -%}
+            {%- assign txt = block.settings.text_color | default: '#39220f' -%}
+            {%- assign stars_color = block.settings.stars_color | default: '#E8A93C' -%}
+            {%- assign tag_bg = block.settings.tag_bg | default: '#FCE2A0' -%}
+            {%- assign tag_color = block.settings.tag_color | default: '#39220f' -%}
+            {%- assign shadow = block.settings.shadow_color | default: '#39220f' -%}
+            {%- assign final_quote = block.settings.quote -%}
+            {%- assign final_name = block.settings.name -%}
+            {%- assign final_rating = block.settings.rating | default: 5 -%}
+            {%- if block.settings.auto_pull and p != blank -%}
+              {%- assign widget = p.metafields.judgeme.widget -%}
+              {%- if widget != blank -%}
+                {%- assign idx0 = block.settings.review_index | default: 1 | minus: 1 -%}
+                {%- if idx0 < 0 -%}{%- assign idx0 = 0 -%}{%- endif -%}
+                {%- assign review_chunks = widget | split: "data-review-id=" -%}
+                {%- assign chunk_idx = idx0 | plus: 1 -%}
+                {%- if review_chunks.size > chunk_idx -%}
+                  {%- assign chunk = review_chunks[chunk_idx] -%}
+                  {%- assign author_parts = chunk | split: "jdgm-rev__author'>" -%}
+                  {%- if author_parts.size > 1 -%}
+                    {%- assign auto_name = author_parts[1] | split: "</span>" | first | strip -%}
+                    {%- if auto_name != blank -%}{%- assign final_name = auto_name -%}{%- endif -%}
+                  {%- endif -%}
+                  {%- assign rating_parts = chunk | split: "data-score='" -%}
+                  {%- if rating_parts.size > 1 -%}
+                    {%- assign auto_rating = rating_parts[1] | split: "'" | first | plus: 0 -%}
+                    {%- if auto_rating > 0 -%}{%- assign final_rating = auto_rating -%}{%- endif -%}
+                  {%- endif -%}
+                  {%- assign body_parts = chunk | split: "jdgm-rev__body'>" -%}
+                  {%- if body_parts.size > 1 -%}
+                    {%- assign auto_quote_html = body_parts[1] | split: "</div>" | first -%}
+                    {%- assign auto_quote = auto_quote_html | strip_html | strip | replace: "\n", " " | replace: "  ", " " -%}
+                    {%- if auto_quote != blank -%}{%- assign final_quote = auto_quote -%}{%- endif -%}
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endif -%}
+            {%- endif -%}
+            {%- assign card_style = 'background:' | append: bg | append: '; color:' | append: txt | append: '; border-color:' | append: shadow | append: '; box-shadow:5px 5px 0 ' | append: shadow | append: ';' -%}
+            {%- if link != blank -%}
+              <a class="syr-card" href="{{ link }}" {{ block.shopify_attributes }} style="{{ card_style }}" aria-hidden="{% if round == 2 %}true{% else %}false{% endif %}">
+            {%- else -%}
+              <article class="syr-card" {{ block.shopify_attributes }} style="{{ card_style }}" aria-hidden="{% if round == 2 %}true{% else %}false{% endif %}">
+            {%- endif -%}
+              {%- if show_tag and tag_label != blank -%}
+                <span class="syr-card-product" style="background:{{ tag_bg }}; color:{{ tag_color }}; border-color:{{ shadow }};">{{ tag_label }}</span>
+              {%- endif -%}
+              <div class="syr-card-stars" style="color:{{ stars_color }};" aria-label="{{ final_rating }} stars">
+                {%- for i in (1..5) -%}{%- if i <= final_rating -%}★{%- else -%}☆{%- endif -%}{%- endfor -%}
+              </div>
+              <p class="syr-card-quote" style="color:{{ txt }};">“{{ final_quote }}”</p>
+              <div class="syr-card-foot">
+                <span class="syr-card-name" style="color:{{ txt }};">{{ final_name }}</span>
+                {%- if block.settings.show_verified -%}<span class="syr-card-verified">✓ Verified</span>{%- endif -%}
+              </div>
+            {%- if link != blank -%}
+              </a>
+            {%- else -%}
+              </article>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign quotes = 'r1,r2,r3,r4,r5,r6' | split: ',' -%}
+        {%- for round in (1..2) -%}
+          {%- for q in quotes -%}
+            {%- assign quote_k = q | append: '_quote' -%}
+            {%- assign name_k = q | append: '_name' -%}
+            <article class="syr-card" style="background:#FFFBF4; color:#39220f; border-color:#39220f; box-shadow:5px 5px 0 #39220f;">
+              <div class="syr-card-stars" style="color:#E8A93C;" aria-label="5 stars">★★★★★</div>
+              <p class="syr-card-quote">“{{ section.settings[quote_k] }}”</p>
+              <div class="syr-card-foot">
+                <span class="syr-card-name">{{ section.settings[name_k] }}</span>
+                <span class="syr-card-verified">✓ Verified</span>
+              </div>
+            </article>
+          {%- endfor -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+  {%- if section.settings.show_all_button -%}
+    <div class="syr-rev-foot">
+      <a class="syr-rev-all" href="{{ section.settings.all_link | default: '/pages/reviews' }}">{{ section.settings.all_text | default: 'View all reviews' }} →</a>
+    </div>
+  {%- endif -%}
+</section>
+
+<script>
+(function(){
+  var root = document.getElementById('syr-rev-{{ section.id }}');
+  if (!root) return;
+  var eyebrow = root.querySelector('.syr-rev-eyebrow');
+  if (eyebrow && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    var ticking = false;
+    function updateEye(){
+      var rect = eyebrow.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (vh < 1) return;
+      var isDesktop = window.matchMedia('(min-width: 760px)').matches;
+      var maxScale = isDesktop ? 1.75 : 1.3;
+      var minScale = isDesktop ? 0.5 : 0.4;
+      var elementCenter = rect.top + rect.height / 2;
+      var viewportCenter = vh / 2;
+      var progress = (viewportCenter - elementCenter) / vh;
+      if (progress < -1) progress = -1; if (progress > 1) progress = 1;
+      var scale = minScale + (progress + 0.4) * (isDesktop ? 1.0 : 0.7);
+      if (scale < minScale) scale = minScale; if (scale > maxScale) scale = maxScale;
+      var rot = progress * 6;
+      if (rot < -6) rot = -6; if (rot > 6) rot = 6;
+      root.style.setProperty('--eye-scale', scale.toFixed(3));
+      root.style.setProperty('--eye-rot', rot.toFixed(2) + 'deg');
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){ if (!ticking){ ticking = true; window.requestAnimationFrame(updateEye); } }, { passive:true });
+    window.addEventListener('resize', updateEye);
+    updateEye();
+  }
+  var marquee = root.querySelector('[data-rev-marquee]');
+  var track = root.querySelector('[data-rev-track]');
+  if (marquee && track){
+    var speedSeconds = {{ section.settings.scroll_speed | default: 42 }};
+    var isPaused = false;
+    var resumeTimer = null;
+    var lastTime = 0;
+    var halfWidth = 0;
+    function measureWidth(){ halfWidth = track.scrollWidth / 2; }
+    measureWidth();
+    window.addEventListener('resize', measureWidth);
+    setTimeout(measureWidth, 200); setTimeout(measureWidth, 800);
+    function pause(){ isPaused = true; if (resumeTimer){ clearTimeout(resumeTimer); resumeTimer = null; } }
+    function scheduleResume(){ if (resumeTimer) clearTimeout(resumeTimer); resumeTimer = setTimeout(function(){ isPaused = false; }, 1500); }
+    marquee.addEventListener('pointerdown', pause);
+    marquee.addEventListener('pointerup', scheduleResume);
+    marquee.addEventListener('pointercancel', scheduleResume);
+    marquee.addEventListener('pointerleave', scheduleResume);
+    marquee.addEventListener('mouseenter', pause);
+    marquee.addEventListener('mouseleave', scheduleResume);
+    marquee.addEventListener('touchstart', pause, { passive:true });
+    marquee.addEventListener('touchend', scheduleResume, { passive:true });
+    marquee.addEventListener('touchcancel', scheduleResume, { passive:true });
+    function tick(time){
+      if (!lastTime){ lastTime = time; requestAnimationFrame(tick); return; }
+      var dt = (time - lastTime) / 1000;
+      lastTime = time;
+      if (!isPaused && halfWidth > 0){
+        var pxPerSec = halfWidth / speedSeconds;
+        marquee.scrollLeft += pxPerSec * dt;
+      }
+      if (marquee.scrollLeft >= halfWidth){ marquee.scrollLeft -= halfWidth; }
+      else if (marquee.scrollLeft < 0){ marquee.scrollLeft += halfWidth; }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    var cards = track.querySelectorAll('a.syr-card');
+    cards.forEach(function(card){
+      var startX = 0, startY = 0, moved = false;
+      card.addEventListener('pointerdown', function(e){ startX = e.clientX; startY = e.clientY; moved = false; });
+      card.addEventListener('pointermove', function(e){
+        if (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8) moved = true;
+      });
+      card.addEventListener('click', function(e){ if (moved){ e.preventDefault(); e.stopPropagation(); } });
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Reviews (Syr)",
+  "tag": "section",
+  "max_blocks": 30,
+  "settings": [
+    { "type": "header", "content": "Header" },
+    { "type": "text", "id": "eyebrow_text", "label": "Eyebrow text", "default": "Loved by 5M+" },
+    { "type": "text", "id": "headline", "label": "Headline", "default": "What everyone is saying" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#F4E8CE" },
+    { "type": "color", "id": "eyebrow_bg", "label": "Eyebrow background", "default": "#FCE2A0" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow text color", "default": "#39220f" },
+    { "type": "range", "id": "scroll_speed", "label": "Marquee speed (seconds per loop)", "min": 20, "max": 120, "step": 2, "default": 42, "unit": "s" },
+    { "type": "header", "content": "View all reviews button" },
+    { "type": "checkbox", "id": "show_all_button", "label": "Show button", "default": true },
+    { "type": "text", "id": "all_text", "label": "Button text", "default": "View all reviews" },
+    { "type": "url", "id": "all_link", "label": "Button link" },
+    { "type": "color", "id": "all_bg", "label": "Button background", "default": "#39220f" },
+    { "type": "color", "id": "all_color", "label": "Button text color", "default": "#FFFBF4" },
+    { "type": "color", "id": "all_shadow", "label": "Button offset shadow", "default": "#c58548" },
+    { "type": "header", "content": "Legacy fallback (only used if NO blocks added)" },
+    { "type": "textarea", "id": "r1_quote", "label": "Quote 1", "default": "I put this in everything. My iced coffee has not been the same since." },
+    { "type": "text", "id": "r1_name", "label": "Name 1", "default": "Sarah M." },
+    { "type": "textarea", "id": "r2_quote", "label": "Quote 2", "default": "Finally a sugar-free syrup that actually tastes good." },
+    { "type": "text", "id": "r2_name", "label": "Name 2", "default": "Jess R." },
+    { "type": "textarea", "id": "r3_quote", "label": "Quote 3", "default": "The Cotton Candy one is unreal. My kids are obsessed." },
+    { "type": "text", "id": "r3_name", "label": "Name 3", "default": "Amanda L." },
+    { "type": "textarea", "id": "r4_quote", "label": "Quote 4", "default": "Ordered vanilla, came back for 6 more flavors." },
+    { "type": "text", "id": "r4_name", "label": "Name 4", "default": "Mike T." },
+    { "type": "textarea", "id": "r5_quote", "label": "Quote 5", "default": "Best thing I have added to my morning routine." },
+    { "type": "text", "id": "r5_name", "label": "Name 5", "default": "Priya K." },
+    { "type": "textarea", "id": "r6_quote", "label": "Quote 6", "default": "Salted Cookie Butter in a latte = life changing." },
+    { "type": "text", "id": "r6_name", "label": "Name 6", "default": "Dana W." }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "header", "content": "Product + link" },
+        { "type": "product", "id": "product", "label": "Product (card links here, tag shows product name)" },
+        { "type": "url", "id": "override_link", "label": "Override link (optional)", "info": "If set, the card links here instead of the product." },
+        { "type": "header", "content": "Auto-fill from product's reviews" },
+        { "type": "paragraph", "content": "Turn on, then slide 'Which review' through 1, 2, 3... to find the one you want. The live preview updates instantly so you can see each review on the card." },
+        { "type": "checkbox", "id": "auto_pull", "label": "Auto-fill from product's Judge.me reviews", "default": false },
+        { "type": "range", "id": "review_index", "label": "Which review (1 = newest, slide to browse)", "min": 1, "max": 50, "step": 1, "default": 1 },
+        { "type": "header", "content": "Manual review (used when auto-fill is off)" },
+        { "type": "range", "id": "rating", "label": "Star rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "quote", "label": "Review quote", "default": "This is the best syrup I've ever tried!" },
+        { "type": "text", "id": "name", "label": "Reviewer name", "default": "Customer" },
+        { "type": "checkbox", "id": "show_verified", "label": "Show ✓ Verified badge", "default": true },
+        { "type": "header", "content": "Product tag (flavor pill on top of card)" },
+        { "type": "checkbox", "id": "show_product_tag", "label": "Show product tag on card", "default": true },
+        { "type": "checkbox", "id": "auto_use_product_name", "label": "Auto-use product name (recommended)", "info": "When on, the tag always matches the picked product's name. Uncheck to use your own custom label below.", "default": true },
+        { "type": "text", "id": "product_tag_label", "label": "Custom tag label", "info": "Only used when 'Auto-use product name' is OFF." },
+        { "type": "header", "content": "Colors" },
+        { "type": "color", "id": "bg_color", "label": "Card background", "default": "#FFFBF4" },
+        { "type": "color", "id": "text_color", "label": "Quote + name color", "default": "#39220f" },
+        { "type": "color", "id": "stars_color", "label": "Stars color", "default": "#E8A93C" },
+        { "type": "color", "id": "tag_bg", "label": "Product tag background", "default": "#FCE2A0" },
+        { "type": "color", "id": "tag_color", "label": "Product tag text color", "default": "#39220f" },
+        { "type": "color", "id": "shadow_color", "label": "Card border + offset shadow color", "default": "#39220f" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Reviews Strip" } ]
+}
+{% endschema %}

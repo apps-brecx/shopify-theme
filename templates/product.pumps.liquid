@@ -1,0 +1,421 @@
+{% layout 'theme' %}
+
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+{% render 'pd-fixes' %}
+{% render 'pd-tweaks' %}
+{% render 'pd-rv2-affordances' %}
+{% render 'pd-reviews-style' %}
+{% render 'pd-color-swap' %}
+{% render 'pd-page-polish-v2' %}
+{% render 'pd-cat-styles' %}
+{% render 'pd-cat-extras' %}
+
+<style>
+.pd-slider-mobile{display:none}.pd-slider-dots{display:none}
+@media (max-width:760px){
+  .pd-hero-frame{display:none!important}.pd-thumbs{display:none!important}
+  .pd-slider-mobile{display:block!important;position:relative;background:#FFFBF4;border:2px solid #1a1a1a;border-radius:20px;padding:0;box-shadow:4px 4px 0 #1a1a1a;overflow:hidden;max-width:340px;margin:0 auto}
+  .pd-slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%;position:relative;z-index:0}
+  .pd-slides::-webkit-scrollbar{display:none}.pd-slide{flex:0 0 100%;scroll-snap-align:start;min-width:100%}
+  .pd-slide img{width:100%;height:auto;display:block;aspect-ratio:1/1;object-fit:cover}
+  .pd-slider-dots{display:flex!important;justify-content:center;gap:5px;margin-top:10px}
+}
+html body .pd .pd-price-row{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important}
+
+/* ========= Pump accessory theming ========= */
+.pd-pmp-hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 25% 30%, #FFD4B8 0%, transparent 55%),radial-gradient(ellipse at 80% 75%, #FCE2A0 0%, transparent 60%);opacity:.55;pointer-events:none}
+
+/* "How it works" 3-step strip */
+html body .pd .pd-pmp-howto{padding:96px 0 80px!important;background:#FFFBF4!important;border-top:2px solid #39220f!important;display:block!important}
+@media (max-width:760px){html body .pd .pd-pmp-howto{padding:64px 0 56px!important}}
+html body .pd .pd-pmp-howto-head{text-align:center!important;max-width:680px!important;margin:0 auto 40px!important}
+html body .pd .pd-pmp-howto-head .pd-eyebrow{display:inline-block!important;margin:0 auto 18px!important}
+html body .pd .pd-pmp-howto-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:22px!important;max-width:980px!important;margin:0 auto!important;padding:0 18px!important}
+@media (max-width:760px){html body .pd .pd-pmp-howto-grid{grid-template-columns:1fr!important;gap:16px!important}}
+html body .pd .pd-pmp-step{background:#FFFFFF!important;border:2px solid #39220f!important;border-radius:22px!important;box-shadow:5px 5px 0 #39220f!important;padding:30px 26px 28px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:10px!important;position:relative!important;transition:transform .25s ease, box-shadow .25s ease!important}
+html body .pd .pd-pmp-step:hover{transform:translate(-2px,-2px)!important;box-shadow:7px 7px 0 #39220f!important}
+html body .pd .pd-pmp-step-num{width:46px!important;height:46px!important;background:#c58548!important;color:#FFFBF4!important;border:2px solid #39220f!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:18px!important;box-shadow:2px 2px 0 #39220f!important;line-height:1!important}
+html body .pd .pd-pmp-step-title{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:18px!important;color:#39220f!important;margin:8px 0 2px!important;text-transform:uppercase!important;letter-spacing:.01em!important;line-height:1.15!important}
+html body .pd .pd-pmp-step-body{font-family:'Josefin Sans',sans-serif!important;font-size:15px!important;line-height:1.55!important;color:#39220f!important;font-weight:500!important;margin:0!important}
+
+/* Specs strip */
+html body .pd .pd-pmp-specs{padding:80px 0!important;background:#FCE2A0!important;border-top:2px solid #39220f!important;display:block!important}
+@media (max-width:760px){html body .pd .pd-pmp-specs{padding:56px 0!important}}
+html body .pd .pd-pmp-specs-head{text-align:center!important;margin:0 auto 36px!important;max-width:680px!important}
+html body .pd .pd-pmp-specs-head .pd-eyebrow{display:inline-block!important;margin:0 auto 18px!important;background:#39220f!important;color:#FCE2A0!important}
+html body .pd .pd-pmp-specs-grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:14px!important;max-width:1080px!important;margin:0 auto!important;padding:0 18px!important}
+@media (max-width:980px){html body .pd .pd-pmp-specs-grid{grid-template-columns:repeat(2,1fr)!important}}
+@media (max-width:520px){html body .pd .pd-pmp-specs-grid{grid-template-columns:1fr!important}}
+html body .pd .pd-pmp-spec{background:#FFFBF4!important;border:2px solid #39220f!important;border-radius:18px!important;box-shadow:4px 4px 0 #39220f!important;padding:22px 22px 22px!important;text-align:left!important;display:flex!important;flex-direction:column!important;gap:6px!important}
+html body .pd .pd-pmp-spec-label{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:10.5px!important;letter-spacing:.16em!important;text-transform:uppercase!important;color:#c58548!important;margin:0!important;line-height:1!important}
+html body .pd .pd-pmp-spec-value{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:17px!important;color:#39220f!important;margin:0!important;text-transform:uppercase!important;letter-spacing:.005em!important;line-height:1.15!important}
+html body .pd .pd-pmp-spec-note{font-family:'Josefin Sans',sans-serif!important;font-size:13.5px!important;line-height:1.45!important;color:#39220f!important;font-weight:500!important;margin:2px 0 0!important;opacity:.85!important}
+
+/* Variant pack picker */
+html body .pd .pd-pmp-packs{display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:8px 0 18px!important;padding:0!important;list-style:none!important}
+html body .pd .pd-pmp-packs-label{display:block!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:11px!important;letter-spacing:.16em!important;text-transform:uppercase!important;color:#39220f!important;margin:0 0 10px!important;line-height:1!important;width:100%!important}
+html body .pd .pd-pmp-pack{display:inline-flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;flex:1 1 0!important;min-width:64px!important;padding:14px 8px 12px!important;background:#FFFFFF!important;border:2px solid #39220f!important;border-radius:14px!important;color:#39220f!important;font-family:'Archivo Black','Archivo',sans-serif!important;text-decoration:none!important;box-shadow:3px 3px 0 #39220f!important;cursor:pointer!important;transition:transform .15s ease, box-shadow .15s ease, background .15s ease!important;line-height:1!important;text-align:center!important;gap:4px!important}
+html body .pd .pd-pmp-pack-num{font-size:20px!important;font-weight:400!important;letter-spacing:0!important}
+html body .pd .pd-pmp-pack-label{font-family:'Josefin Sans',sans-serif!important;font-size:11px!important;letter-spacing:.08em!important;text-transform:uppercase!important;font-weight:600!important;opacity:.7!important}
+html body .pd .pd-pmp-pack:hover{transform:translate(-1px,-1px)!important;box-shadow:4px 4px 0 #39220f!important;background:#FFF8EE!important}
+html body .pd .pd-pmp-pack.is-active{background:#39220f!important;color:#FFFBF4!important;box-shadow:3px 3px 0 #c58548!important;cursor:default!important}
+html body .pd .pd-pmp-pack.is-active:hover{transform:none!important;box-shadow:3px 3px 0 #c58548!important;background:#39220f!important}
+@media (max-width:760px){html body .pd .pd-pmp-pack{min-width:56px!important;padding:12px 6px 10px!important}html body .pd .pd-pmp-pack-num{font-size:18px!important}}
+</style>
+
+{%- assign hero_img = product.featured_media.preview_image -%}
+{%- assign hero_src = hero_img | image_url: width: 1400 -%}
+<link rel="preload" as="image" href="{{ hero_src }}" imagesrcset="{{ hero_img | image_url: width: 600 }} 600w, {{ hero_img | image_url: width: 1000 }} 1000w, {{ hero_img | image_url: width: 1400 }} 1400w" imagesizes="(max-width: 980px) 100vw, 600px" fetchpriority="high">
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign price = current_variant.price -%}
+{%- assign display_price = price -%}
+{%- assign review_count = product.metafields.reviews.rating_count.value | default: 0 -%}
+
+<div class="pd" data-product-id="{{ product.id }}" data-base-price="{{ display_price }}">
+
+  <nav class="pd-breadcrumbs" aria-label="Breadcrumb">
+    <div class="pd-wrap">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li class="pd-bc-sep" aria-hidden="true">/</li>
+        <li><a href="/collections/accessories">Accessories</a></li>
+        <li class="pd-bc-sep" aria-hidden="true">/</li>
+        <li class="pd-bc-current">{{ product.title }}</li>
+      </ol>
+    </div>
+  </nav>
+
+  <section class="pd-hero" style="position:relative;overflow:hidden">
+    <div class="pd-pmp-hero-bg" aria-hidden="true"></div>
+    <div class="pd-wrap" style="position:relative;z-index:1">
+      <div class="pd-hero-grid">
+        <div class="pd-hero-media">
+          <div class="pd-hero-frame">
+            <img id="pdHeroImg" src="{{ hero_src }}" alt="{{ product.title | escape }}" width="1200" height="1200" fetchpriority="high">
+          </div>
+          {%- if product.images.size > 1 -%}
+            <div class="pd-thumbs">
+              {%- for img in product.images limit: 4 -%}
+                <button type="button" class="pd-thumb{% if forloop.first %} is-active{% endif %}" data-src="{{ img | image_url: width: 1400 }}" aria-label="View image {{ forloop.index }}"><img src="{{ img | image_url: width: 200 }}" alt="" width="200" height="200" loading="lazy"></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+          <div class="pd-slider-mobile">
+            <div class="pd-slides" id="pdSlides">
+              {%- for img in product.images -%}
+                <div class="pd-slide" data-idx="{{ forloop.index0 }}"><img src="{{ img | image_url: width: 1000 }}" alt="{{ product.title | escape }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}></div>
+              {%- endfor -%}
+            </div>
+          </div>
+          {%- if product.images.size > 1 -%}
+            <div class="pd-slider-dots" id="pdDots">
+              {%- for img in product.images -%}<button type="button" class="pd-dot{% if forloop.first %} is-active{% endif %}" data-idx="{{ forloop.index0 }}" aria-label="View image {{ forloop.index }}"></button>{%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="pd-hero-info">
+          <a href="#reviews" class="pd-rating-row">
+            <span class="pd-stars" aria-hidden="true">
+              {%- for i in (1..5) -%}<svg viewBox="0 0 24 24" fill="#c58548" stroke="#c58548" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>{%- endfor -%}
+            </span>
+            <span class="pd-rating-text">{{ review_count }} reviews</span>
+          </a>
+          <h1 class="pd-h1">{{ product.title | upcase }}</h1>
+
+          <div class="pd-chips">
+            <span class="pd-chip pd-chip--peach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 H15 V7 L18 10 V21 H6 V10 L9 7 Z"/><path d="M9 14 H15"/></svg>Fits Syruvia Bottles</span>
+            <span class="pd-chip pd-chip--butter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V21 M3 12 H21"/><circle cx="12" cy="12" r="9"/></svg>Even Portion</span>
+            <span class="pd-chip pd-chip--mint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg>Leak-Proof Seal</span>
+            <span class="pd-chip pd-chip--sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5 V19 H19 V5 Z M9 9 H15 M9 12 H15 M9 15 H13"/></svg>Café-Grade Build</span>
+          </div>
+
+          {%- form 'product', product, id: 'pdAtcForm', class: 'pd-form' -%}
+            <input type="hidden" name="id" id="pdSelectedVariantId" value="{{ current_variant.id }}">
+
+            {%- if product.variants.size > 1 -%}
+              <span class="pd-pmp-packs-label">Pack size</span>
+              <div class="pd-pmp-packs" role="radiogroup" aria-label="Pack size">
+                {%- for v in product.variants -%}
+                  <button type="button" class="pd-pmp-pack{% if v.id == current_variant.id %} is-active{% endif %}" data-variant-id="{{ v.id }}" data-price="{{ v.price }}" data-qty="{{ v.title }}" role="radio" aria-checked="{% if v.id == current_variant.id %}true{% else %}false{% endif %}">
+                    <span class="pd-pmp-pack-num">{{ v.title }}</span>
+                    <span class="pd-pmp-pack-label">{%- if v.title == '1' -%}Pump{%- else -%}Pack{%- endif -%}</span>
+                  </button>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+
+            <div class="pd-priceqty">
+              <div class="pd-priceblock">
+                <div class="pd-price-row">
+                  <span class="pd-price" id="pdPriceTotal">{{ display_price | money }}</span>
+                  <span class="pd-price-was" id="pdPriceWas" style="display:none"></span>
+                </div>
+                <span class="pd-save-inline" id="pdSaveTag" style="display:none"></span>
+              </div>
+              <div class="pd-qty" aria-label="Quantity">
+                <button type="button" data-qty="-1" aria-label="Decrease">−</button>
+                <input type="number" name="quantity" value="1" min="1" inputmode="numeric">
+                <button type="button" data-qty="1" aria-label="Increase">+</button>
+              </div>
+            </div>
+            <button type="submit" class="pd-atc pd-atc--full" {% unless product.available %}disabled{% endunless %}>
+              <svg class="pd-atc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 L4 6 V20 a2 2 0 0 0 2 2 H18 a2 2 0 0 0 2 -2 V6 L18 2 Z M4 6 H20 M16 10 a4 4 0 0 1 -8 0"/></svg>
+              <span class="pd-atc-text" id="pdAtcText">{%- if product.available -%}Add to cart{%- else -%}Sold Out{%- endif -%}</span>
+              {%- if product.available -%}<svg class="pd-atc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 H19 M13 6 l6 6 -6 6"/></svg>{%- endif -%}
+            </button>
+          {%- endform -%}
+
+          <div class="pd-minibundle">
+            <div class="pd-mb-head">
+              <span class="pd-mb-headline">Stock the bar</span>
+              <span class="pd-mb-sub">One pump per bottle = café setup</span>
+            </div>
+            <div class="pd-mb-grid">
+              <button type="button" class="pd-mb-cell" data-tier="2"><span class="pd-mb-num">2</span><span class="pd-mb-label">Pumps</span><span class="pd-mb-save">Save 5%</span></button>
+              <button type="button" class="pd-mb-cell" data-tier="3"><span class="pd-mb-flag">Most Popular</span><span class="pd-mb-num">3</span><span class="pd-mb-label">Pumps</span><span class="pd-mb-save">Save 10%</span></button>
+              <button type="button" class="pd-mb-cell" data-tier="4"><span class="pd-mb-num">4+</span><span class="pd-mb-label">Pumps</span><span class="pd-mb-save">Save 15%</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="pd-marquee" aria-hidden="true">
+    <div class="pd-marquee-track">
+      {%- for i in (1..2) -%}<span>Fits Syruvia Bottles</span><span>Even ¼ oz Portion</span><span>Leak-Proof</span><span>Dishwasher-Safe Parts</span><span>Café-Grade Build</span><span>Twist + Lock</span>{%- endfor -%}
+    </div>
+  </div>
+
+  <section class="pd-description">
+    <div class="pd-wrap">
+      <div class="pd-desc-head">
+        <span class="pd-eyebrow">About this pump</span>
+        <h2 class="pd-h2" style="margin-top:14px;">A café in a <em>twist</em>.</h2>
+      </div>
+      <div class="pd-desc-content">
+        {%- if product.description and product.description != blank -%}
+          {{ product.description }}
+        {%- else -%}
+          <ul>
+            <li>Custom-Fit Threading: Designed to screw onto Syruvia syrup bottles — no leaks, no rocking.</li>
+            <li>Consistent Portion: ¼ oz per push. Same dose every time, just like the cafés.</li>
+            <li>One-Handed Use: Press down, syrup flows. No twisting the bottle, no over-pouring.</li>
+            <li>Built to Last: Heavy-duty BPA-free plastic, food-grade spring, dishwasher-safe disassembly.</li>
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+  <section class="pd-pmp-howto">
+    <div class="pd-pmp-howto-head">
+      <span class="pd-eyebrow">How it works</span>
+      <h2 class="pd-h2">Three steps to <em>café-style</em>.</h2>
+    </div>
+    <div class="pd-pmp-howto-grid">
+      <div class="pd-pmp-step">
+        <div class="pd-pmp-step-num">1</div>
+        <h3 class="pd-pmp-step-title">Twist On</h3>
+        <p class="pd-pmp-step-body">Screw the pump onto any Syruvia 750mL bottle. Snug fit, no leaks.</p>
+      </div>
+      <div class="pd-pmp-step">
+        <div class="pd-pmp-step-num">2</div>
+        <h3 class="pd-pmp-step-title">Press Down</h3>
+        <p class="pd-pmp-step-body">One push = ¼ oz. Two pushes for a latte, three for a bigger drink.</p>
+      </div>
+      <div class="pd-pmp-step">
+        <div class="pd-pmp-step-num">3</div>
+        <h3 class="pd-pmp-step-title">Lock + Store</h3>
+        <p class="pd-pmp-step-body">Twist the spout closed between uses to keep it fresh and travel-safe.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pd-pmp-specs">
+    <div class="pd-pmp-specs-head">
+      <span class="pd-eyebrow">Specs</span>
+      <h2 class="pd-h2">Built for daily <em>use</em>.</h2>
+    </div>
+    <div class="pd-pmp-specs-grid">
+      <div class="pd-pmp-spec">
+        <span class="pd-pmp-spec-label">Dose</span>
+        <span class="pd-pmp-spec-value">¼ oz per push</span>
+        <span class="pd-pmp-spec-note">Roughly 1½ tsp — same as a café pump.</span>
+      </div>
+      <div class="pd-pmp-spec">
+        <span class="pd-pmp-spec-label">Fits</span>
+        <span class="pd-pmp-spec-value">All Syruvia 750mL</span>
+        <span class="pd-pmp-spec-note">Standard 28-410 thread, works with most syrup bottles.</span>
+      </div>
+      <div class="pd-pmp-spec">
+        <span class="pd-pmp-spec-label">Material</span>
+        <span class="pd-pmp-spec-value">BPA-Free Plastic</span>
+        <span class="pd-pmp-spec-note">Food-grade, heavy-duty, café-tested build.</span>
+      </div>
+      <div class="pd-pmp-spec">
+        <span class="pd-pmp-spec-label">Care</span>
+        <span class="pd-pmp-spec-value">Rinse + Lock</span>
+        <span class="pd-pmp-spec-note">Disassembles fully for deep cleaning. Top-rack safe.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="pd-why">
+    <div class="pd-wrap pd-why-wrap" style="text-align:center;">
+      <span class="pd-eyebrow">Why this pump</span>
+      <h2 class="pd-h2 pd-why-h2">Pour like the <em>pros</em>.</h2>
+      <div class="pd-why-grid pd-why-grid--spaced">
+        <div class="pd-why-card pd-why-card--peach">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 H15 V7 L18 10 V21 H6 V10 L9 7 Z"/></svg></div>
+          <h3 class="pd-why-title">Perfect Fit</h3>
+          <p class="pd-why-body">Custom-threaded for Syruvia bottles. No wobble, no leaks.</p>
+        </div>
+        <div class="pd-why-card pd-why-card--butter">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6 V12 L16 14"/></svg></div>
+          <h3 class="pd-why-title">Even Dose</h3>
+          <p class="pd-why-body">¼ oz per push. Recipe-consistent every single time.</p>
+        </div>
+        <div class="pd-why-card pd-why-card--mint">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 12 L11 14 L15 9"/></svg></div>
+          <h3 class="pd-why-title">Built Tough</h3>
+          <p class="pd-why-body">Café-grade plastic, food-safe spring. Takes daily abuse.</p>
+        </div>
+        <div class="pd-why-card pd-why-card--sky">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 M9 8 L15 16 M15 8 L9 16"/></svg></div>
+          <h3 class="pd-why-title">Easy Clean</h3>
+          <p class="pd-why-body">Unscrews fully. Dishwasher safe on the top rack.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% render 'pd-reels-section' %}
+
+  {% render 'pd-reviews-v2' %}
+  {% render 'pd-write-review' %}
+  {% render 'pd-recommended' %}
+
+  <section class="pd-faq" id="pdFaq">
+    <div class="pd-wrap pd-faq-head">
+      <span class="pd-eyebrow">FAQ</span>
+      <h2 class="pd-h2">Before you <em>pump</em>.</h2>
+      <p class="pd-faq-lede">Everything you might want to know about Syruvia syrup pumps.</p>
+    </div>
+    {%- assign faqs = 'How much syrup per push?|Each push is about ¼ oz (roughly 1½ tsp) — the same dose café pumps use. Two pumps for a small drink, three for a 16oz latte.;;Will it fit my Syruvia bottle?|Yes. Our pumps are custom-threaded for Syruvia 750mL bottles. They also fit most standard 28-410 syrup bottles.;;Can I use it on non-Syruvia syrup bottles?|If the bottle has a standard 28-410 thread it will fit. Most major syrup brands use this size, but always double-check the neck.;;How do I clean it?|Unscrew the top, pull out the dip tube, rinse with warm soapy water. All parts are top-rack dishwasher safe.;;Does the spout lock?|Yes. Twist the spout to lock it closed between uses — keeps it fresh and prevents drips if you move the bottle.;;Will it leak in transit?|No. The threaded base seals tight against the bottle and the lock spout prevents drips. Travel and pantry safe.;;How many pumps come with the pack?|Whatever pack size you pick — 1, 2, 4, 6, or 12. Most customers stock one pump per syrup bottle they keep open.;;How fast do you ship?|Orders ship in 1 business day from our New Jersey warehouse. Flat-rate $5.99 shipping, free over $34.' | split: ';;' -%}
+    <ul class="pd-faq-list">
+      {%- for faq in faqs -%}
+        {%- assign parts = faq | split: '|' -%}
+        <li class="pd-faq-item">
+          <button type="button" class="pd-faq-q" aria-expanded="false">
+            <span class="pd-faq-q-text">{{ parts[0] }}</span>
+            <span class="pd-faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="pd-faq-a"><div class="pd-faq-a-inner">{{ parts[1] }}</div></div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </section>
+
+  {% render 'pd-vip-section' %}
+
+  <div class="pd-stickybar" id="pdStickybar">
+    <span class="pd-price"><span id="pdStickyPrice">{{ display_price | money }}</span></span>
+    <button type="button" class="pd-atc" {% unless product.available %}disabled{% endunless %} onclick="document.getElementById('pdAtcForm').requestSubmit()">{%- if product.available -%}Add to cart{%- else -%}Sold Out{%- endif -%}</button>
+  </div>
+</div>
+
+{% render 'pd-mb-prices' %}
+
+<script>
+window.PD_BASE_CENTS = {{ display_price }};
+window.PD_TIERS = [1, 0.95, 0.90, 0.85];
+(function(){
+  var currentBaseCents = window.PD_BASE_CENTS;
+  const tiers = window.PD_TIERS;
+  const fmt = (c)=>{const d=c/100; return '$' + d.toFixed(2);};
+  function updatePrice(qty){
+    qty = Math.max(1, parseInt(qty)||1);
+    const tierIdx = Math.min(qty-1, tiers.length-1);
+    const discount = tiers[tierIdx];
+    const totalCents = Math.round(currentBaseCents * qty * discount);
+    const origCents = currentBaseCents * qty;
+    const priceEl = document.getElementById('pdPriceTotal');
+    const wasEl = document.getElementById('pdPriceWas');
+    const saveEl = document.getElementById('pdSaveTag');
+    const stickyPriceEl = document.getElementById('pdStickyPrice');
+    if (priceEl) priceEl.textContent = fmt(totalCents);
+    if (stickyPriceEl) stickyPriceEl.textContent = fmt(totalCents);
+    if (qty > 1){ if (wasEl){wasEl.textContent = fmt(origCents); wasEl.style.display='inline';} if (saveEl){saveEl.textContent = 'Save '+Math.round((1-discount)*100)+'%'; saveEl.style.display='inline-block';} }
+    else { if (wasEl) wasEl.style.display='none'; if (saveEl) saveEl.style.display='none'; }
+    document.querySelectorAll('.pd-mb-cell').forEach(c=>{ const t = parseInt(c.dataset.tier)||1; const match = (qty === t) || (qty >= 4 && t === 4); if (match) c.setAttribute('data-active',''); else c.removeAttribute('data-active'); });
+  }
+
+  /* Mini-bundle sync — updates "Stock the bar" prices + labels + headline when variant changes */
+  function syncMiniBundle(baseCents, variantTitle){
+    var isSingle = String(variantTitle) === '1';
+    var label = isSingle ? 'Pumps' : 'Packs';
+    document.querySelectorAll('.pd-mb-cell').forEach(c=>{
+      var tier = parseInt(c.dataset.tier)||1;
+      var tierIdx = Math.min(tier-1, tiers.length-1);
+      var discount = tiers[tierIdx];
+      var total = Math.round(baseCents * tier * discount);
+      var priceEl = c.querySelector('.pd-mb-price');
+      if (priceEl) priceEl.textContent = '$' + (total/100).toFixed(2);
+      var labelEl = c.querySelector('.pd-mb-label');
+      if (labelEl) labelEl.textContent = label;
+    });
+    var subEl = document.querySelector('.pd-mb-sub');
+    if (subEl) subEl.textContent = isSingle ? 'One pump per bottle = café setup' : 'Stock up + save more per pack';
+  }
+
+  /* Pack-size variant picker — swaps variant + base price */
+  document.querySelectorAll('.pd-pmp-pack').forEach(btn=>{
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.pd-pmp-pack').forEach(x=>{x.classList.remove('is-active'); x.setAttribute('aria-checked','false');});
+      btn.classList.add('is-active'); btn.setAttribute('aria-checked','true');
+      const vid = btn.dataset.variantId;
+      const priceCents = parseInt(btn.dataset.price);
+      const variantTitle = btn.dataset.qty || '1';
+      if (vid){
+        const hidden = document.getElementById('pdSelectedVariantId');
+        if (hidden) hidden.value = vid;
+      }
+      if (!isNaN(priceCents)){
+        currentBaseCents = priceCents;
+        window.PD_BASE_CENTS = priceCents;
+        const pdEl = document.querySelector('.pd[data-base-price]');
+        if (pdEl) pdEl.dataset.basePrice = priceCents;
+        syncMiniBundle(priceCents, variantTitle);
+        const qtyInp = document.querySelector('.pd-qty input');
+        if (qtyInp) qtyInp.value = 1;
+        updatePrice(1);
+      }
+    });
+  });
+
+  /* Initial sync — picks up the pre-selected variant on page load */
+  (function initialSync(){
+    var activeBtn = document.querySelector('.pd-pmp-pack.is-active');
+    if (activeBtn){
+      var p = parseInt(activeBtn.dataset.price);
+      var t = activeBtn.dataset.qty || '1';
+      if (!isNaN(p)) {
+        setTimeout(function(){ syncMiniBundle(p, t); }, 0);
+      }
+    }
+  })();
+
+  document.querySelectorAll('.pd-qty [data-qty]').forEach(b=>{b.addEventListener('click',()=>{const inp=b.parentElement.querySelector('input'); const v=Math.max(1,(parseInt(inp.value)||1)+parseInt(b.dataset.qty)); inp.value=v; updatePrice(v);});});
+  document.querySelectorAll('.pd-qty input').forEach(inp=>{inp.addEventListener('change',()=>updatePrice(parseInt(inp.value)||1)); inp.addEventListener('input',()=>updatePrice(parseInt(inp.value)||1));});
+  document.querySelectorAll('.pd-mb-cell').forEach(c=>{c.addEventListener('click',()=>{const tier=parseInt(c.dataset.tier)||1; const qtyInp=document.querySelector('.pd-qty input'); if(qtyInp){qtyInp.value=tier; updatePrice(tier);}});});
+  const heroImg=document.getElementById('pdHeroImg');
+  document.querySelectorAll('.pd-thumb').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.pd-thumb').forEach(x=>x.classList.remove('is-active'));t.classList.add('is-active');if(heroImg&&t.dataset.src)heroImg.src=t.dataset.src;});});
+  const slides=document.getElementById('pdSlides'); const dots=document.querySelectorAll('.pd-dot');
+  if(slides&&dots.length){let st; slides.addEventListener('scroll',()=>{clearTimeout(st);st=setTimeout(()=>{const idx=Math.round(slides.scrollLeft/slides.clientWidth);dots.forEach((d,i)=>d.classList.toggle('is-active',i===idx));},50);}); dots.forEach((d,i)=>d.addEventListener('click',()=>{slides.scrollTo({left:i*slides.clientWidth,behavior:'smooth'});}));}
+  const mainAtc=document.querySelector('.pd-atc--full'); const stickyBar=document.getElementById('pdStickybar');
+  if(mainAtc&&stickyBar&&'IntersectionObserver' in window){const io=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)stickyBar.classList.add('is-hidden');else stickyBar.classList.remove('is-hidden');});},{threshold:0.15}); io.observe(mainAtc);}
+})();
+</script>

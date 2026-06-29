@@ -1,0 +1,326 @@
+{%- comment -%} VIP Rewards polish v11 — real sticky-stack pile effect on mobile (cards literally stack at top as you scroll). {%- endcomment -%}
+<style id="syr-vip-rewards-polish-css">
+  .vipp{ --ink:#39220f; --ink-2:#5a4632; --muted:#8a7a68; --cream:#FFFBF4; --butter:#FCE2A0; --copper:#c58548; --blue:#2F7BB0; --mint:#C5E4D4; --sky:#B8DCEB; }
+  body:has(.vipp){ background:#FFFBF4 !important; }
+  .vipp, .vipp *, .vipp *::before, .vipp *::after{
+    font-family:'Josefin Sans', system-ui, sans-serif !important;
+    font-style:normal !important; text-shadow:none !important; background-image:none !important;
+  }
+  .vipp h1, .vipp h2, .vipp h3, .vipp h4, .vipp .pc-big, .vipp .pc-big *,
+  .vipp .eyebrow, .vipp .tier-badge, .vipp .quick-link .qt,
+  .vipp button, .vipp .btn, .vipp .btn *,
+  .vipp .redeem .price, .vipp .redeem .cost,
+  .vipp .sect-head h2, .vipp .sect-head h3,
+  .vipp .offer .ot, .vipp .offer-code, .vipp .offer-code *,
+  .vipp .earn-title, .vipp .earn-pts, .vipp .earn-btn, .vipp .earn-right,
+  .vipp .pc-label, .vipp .pc-track-top,
+  .vipp .share-top, .vipp .share-top *,
+  .vipp .share-acts button, .vipp .share-acts button *,
+  .vipp .refer-link button, .vipp .refer-link button *,
+  .vipp .rep-foot button, .vipp .rep-foot button *,
+  .vipp .vipp-copy, .vipp .vipp-copy *{
+    font-family:'Archivo Black', 'Archivo', sans-serif !important;
+    font-weight:900 !important; letter-spacing:.04em !important;
+  }
+  .vipp .grain{ display:none !important; }
+  .vipp em{ color:#c58548 !important; } .vipp strong{ color:#39220f !important; }
+  .vipp .bubble.me{ background:#2F7BB0 !important; color:#FFFFFF !important; border-color:#39220f !important; }
+  .vipp .bubble.me *{ color:#FFFFFF !important; }
+
+  .vipp .btn-vip, .vipp .vipp-play, .vipp button[class*="play"]{
+    background:#39220f !important; color:#FFFBF4 !important; opacity:1 !important;
+    border:0 !important; border-radius:14px !important; padding:14px 22px !important;
+    font-size:13px !important; text-transform:uppercase !important; letter-spacing:.12em !important;
+  }
+  .vipp .btn-vip *, .vipp .vipp-play *{ color:#FFFBF4 !important; }
+  .vipp .btn-vip[disabled], .vipp .btn-vip.disabled, .vipp .btn-vip.done,
+  .vipp .vipp-play[disabled], .vipp .vipp-play.disabled, .vipp .vipp-play.done,
+  .vipp button[disabled], .vipp .spin-card button[disabled],
+  .vipp .spin-card .btn-vip[disabled]{
+    background:#8a7a68 !important; color:#FFFBF4 !important; opacity:1 !important; cursor:default !important;
+  }
+  .vipp .btn-vip[disabled] *, .vipp .vipp-play[disabled] *,
+  .vipp .spin-card button[disabled] *, .vipp button[disabled] *{ color:#FFFBF4 !important; opacity:1 !important; }
+
+  .vipp svg, .vipp svg *{ color:#39220f !important; }
+  .vipp svg [fill]:not([fill="none"]){ fill:#39220f !important; }
+  .vipp svg [stroke]:not([stroke="none"]){ stroke:#39220f !important; }
+  .vipp .points-card svg, .vipp .points-card svg *{ color:#FFFFFF !important; }
+  .vipp .points-card svg [fill]:not([fill="none"]){ fill:#FCE2A0 !important; }
+  .vipp .points-card svg [stroke]:not([stroke="none"]){ stroke:#FCE2A0 !important; }
+  .vipp .btn-vip svg *, .vipp .redeem button svg *, .vipp .rep-foot button svg *,
+  .vipp .refer-link button svg *, .vipp .share-acts button svg *,
+  .vipp .offer-code svg *, .vipp .vipp-copy svg *{ color:#FFFBF4 !important; }
+  .vipp .btn-vip svg [fill]:not([fill="none"]),
+  .vipp .redeem button svg [fill]:not([fill="none"]),
+  .vipp .rep-foot button svg [fill]:not([fill="none"]),
+  .vipp .refer-link button svg [fill]:not([fill="none"]),
+  .vipp .share-acts button svg [fill]:not([fill="none"]),
+  .vipp .offer-code svg [fill]:not([fill="none"]),
+  .vipp .vipp-copy svg [fill]:not([fill="none"]){ fill:#FFFBF4 !important; }
+  .vipp .btn-vip svg [stroke]:not([stroke="none"]),
+  .vipp .redeem button svg [stroke]:not([stroke="none"]),
+  .vipp .rep-foot button svg [stroke]:not([stroke="none"]),
+  .vipp .refer-link button svg [stroke]:not([stroke="none"]),
+  .vipp .share-acts button svg [stroke]:not([stroke="none"]),
+  .vipp .offer-code svg [stroke]:not([stroke="none"]),
+  .vipp .vipp-copy svg [stroke]:not([stroke="none"]){ stroke:#FFFBF4 !important; }
+  .vipp .rdot{ background:#7ABF92 !important; border:1.5px solid #39220f !important; }
+
+  .vipp{ background:#FFFBF4 !important; color:#39220f !important; }
+  .vipp .wrap{ max-width:760px !important; margin:0 auto !important; padding:24px 18px 80px !important; }
+  @media (min-width:760px){ .vipp .wrap{ max-width:1080px !important; padding:48px 32px 100px !important; } }
+  @media (min-width:1100px){ .vipp .wrap{ max-width:1180px !important; padding:56px 40px 120px !important; } }
+  .vipp .vipp-section{ margin:0 0 56px !important; padding:0 !important; }
+  @media (min-width:760px){ .vipp .vipp-section{ margin-bottom:72px !important; } }
+
+  .vipp .vipp-hero{ display:flex !important; flex-direction:column !important; align-items:center !important; text-align:center !important; gap:18px !important; padding:36px 22px !important; margin:0 0 32px !important; background:#FFFFFF !important; border:2px solid #39220f !important; border-radius:24px !important; box-shadow:5px 5px 0 #39220f !important; }
+  .vipp .vipp-hero > div{ display:flex !important; flex-direction:column !important; align-items:center !important; gap:10px !important; }
+  .vipp .vipp-hero .eyebrow{ display:inline-block !important; font-size:11px !important; letter-spacing:.22em !important; text-transform:uppercase !important; color:#c58548 !important; background:#FCE2A0 !important; padding:8px 16px !important; border-radius:999px !important; border:1.5px solid #39220f !important; margin-bottom:4px !important; }
+  .vipp .vipp-hero h1{ font-size:clamp(28px, 5vw, 48px) !important; line-height:1.05 !important; color:#39220f !important; margin:0 !important; text-transform:uppercase !important; letter-spacing:.02em !important; }
+  .vipp .vipp-hero h1 em{ color:#c58548 !important; }
+  .vipp .vipp-hero p{ color:#5a4632 !important; font-size:15px !important; line-height:1.5 !important; margin:8px 0 0 !important; max-width:48ch !important; }
+  .vipp .tier-badge{ background:#FCE2A0 !important; color:#39220f !important; border:2px solid #39220f !important; box-shadow:3px 3px 0 #39220f !important; padding:10px 18px !important; font-size:13px !important; letter-spacing:.1em !important; text-transform:uppercase !important; display:inline-flex !important; align-items:center !important; gap:8px !important; margin-top:8px !important; }
+  .vipp .tier-badge svg, .vipp .tier-badge svg *{ color:#39220f !important; stroke:#39220f !important; }
+
+  .vipp .points-row{ display:flex !important; flex-direction:column !important; gap:24px !important; margin:0 0 40px !important; }
+  .vipp .points-card{ background:#2F7BB0 !important; color:#FFFFFF !important; border:2px solid #39220f !important; border-radius:24px !important; box-shadow:5px 5px 0 #39220f !important; padding:36px 24px !important; text-align:center !important; position:relative !important; overflow:hidden !important; }
+  .vipp .points-card *{ color:#FFFFFF !important; }
+  .vipp .points-card .pc-label{ font-size:11px !important; letter-spacing:.24em !important; text-transform:uppercase !important; opacity:.85 !important; margin-bottom:16px !important; }
+  .vipp .points-card .pc-big{ font-size:clamp(56px, 10vw, 84px) !important; line-height:1 !important; color:#FCE2A0 !important; margin:0 0 10px !important; display:flex !important; align-items:baseline !important; justify-content:center !important; gap:10px !important; flex-wrap:wrap !important; }
+  .vipp .points-card .pc-big *{ color:#FCE2A0 !important; }
+  .vipp .points-card .pc-big > span:not(:first-child){ font-size:.32em !important; font-family:'Josefin Sans', sans-serif !important; font-weight:400 !important; color:#FFFFFF !important; opacity:.92 !important; letter-spacing:0 !important; }
+  .vipp .points-card .pc-meta{ font-size:13px !important; opacity:.9 !important; margin:8px 0 24px !important; display:flex !important; flex-wrap:wrap !important; justify-content:center !important; gap:8px 18px !important; }
+  .vipp .points-card .pc-track-top{ display:flex !important; justify-content:space-between !important; font-size:10px !important; letter-spacing:.14em !important; text-transform:uppercase !important; opacity:.85 !important; margin:18px 0 8px !important; }
+  .vipp .points-card .pc-track{ background:rgba(255,255,255,.18) !important; border-radius:999px !important; height:10px !important; overflow:hidden !important; }
+  .vipp .points-card .pc-track > *{ background:#FCE2A0 !important; height:100% !important; border-radius:999px !important; }
+
+  .vipp .quick-col{ display:flex !important; flex-direction:column !important; gap:18px !important; margin:0 !important; }
+  @media (min-width:760px){ .vipp .quick-col{ display:grid !important; grid-template-columns:repeat(3, 1fr) !important; gap:22px !important; } }
+  .vipp .quick-link{
+    background:#FFFFFF !important; color:#39220f !important;
+    border:2px solid #39220f !important; border-radius:22px !important;
+    box-shadow:4px 4px 0 #39220f !important;
+    padding:22px !important; width:100% !important;
+    text-align:left !important;
+    display:flex !important; flex-direction:row !important;
+    align-items:center !important; justify-content:flex-start !important;
+    gap:16px !important; min-height:104px !important;
+    cursor:pointer !important; position:static;
+  }
+  .vipp .quick-link *{ color:#39220f !important; }
+  .vipp .quick-link .qic{ width:48px !important; height:48px !important; min-width:48px !important; flex:0 0 48px !important; aspect-ratio:1 !important; background:#FCE2A0 !important; border:1.5px solid #39220f !important; border-radius:50% !important; display:flex !important; align-items:center !important; justify-content:center !important; padding:0 !important; box-sizing:border-box !important; box-shadow:none !important; overflow:visible !important; }
+  .vipp .quick-link .qic svg{ width:22px !important; height:22px !important; background:transparent !important; border:0 !important; border-radius:0 !important; padding:0 !important; box-shadow:none !important; flex:none !important; display:block !important; color:#39220f !important; }
+  .vipp .quick-link .qbody{ flex:1 1 auto !important; min-width:0 !important; display:flex !important; flex-direction:column !important; gap:3px !important; }
+  .vipp .quick-link .qt{ font-family:'Archivo Black',sans-serif !important; font-size:14px !important; line-height:1.2 !important; color:#39220f !important; text-transform:uppercase !important; letter-spacing:.06em !important; font-weight:900 !important; }
+  .vipp .quick-link .qs{ font-family:'Josefin Sans',sans-serif !important; font-size:12.5px !important; line-height:1.4 !important; color:#5a4632 !important; text-transform:none !important; letter-spacing:0 !important; font-weight:500 !important; }
+  .vipp .quick-link .qarrow{ width:auto !important; min-width:0 !important; flex:0 0 auto !important; background:transparent !important; border:0 !important; border-radius:0 !important; padding:0 !important; margin-left:8px !important; box-shadow:none !important; display:flex !important; align-items:center !important; justify-content:center !important; opacity:.5 !important; }
+  .vipp .quick-link .qarrow svg{ width:18px !important; height:18px !important; background:transparent !important; border:0 !important; border-radius:0 !important; padding:0 !important; box-shadow:none !important; flex:none !important; display:block !important; color:#39220f !important; }
+
+  .vipp .sect-head{ text-align:center !important; margin:0 0 24px !important; display:flex !important; flex-direction:column !important; align-items:center !important; gap:8px !important; }
+  .vipp .sect-head > div{ display:flex !important; flex-direction:column !important; align-items:center !important; gap:8px !important; }
+  .vipp .sect-head .eyebrow, .vipp .sect-head span:first-child{ font-size:11px !important; letter-spacing:.24em !important; text-transform:uppercase !important; color:#c58548 !important; }
+  .vipp .sect-head h2, .vipp .sect-head h3{ font-size:clamp(24px, 4vw, 36px) !important; line-height:1.05 !important; color:#39220f !important; margin:0 !important; text-transform:uppercase !important; letter-spacing:.02em !important; }
+  .vipp .sect-head p{ color:#5a4632 !important; font-size:15px !important; line-height:1.55 !important; max-width:56ch !important; margin:8px auto 0 !important; }
+
+  .vipp .games-multi{ display:flex !important; flex-direction:column !important; gap:24px !important; }
+  @media (min-width:760px){ .vipp .games-multi{ display:grid !important; grid-template-columns:1fr 1fr !important; gap:28px !important; } }
+  .vipp .spin-card{ background:#FFFFFF !important; color:#39220f !important; border:2px solid #39220f !important; border-radius:22px !important; box-shadow:5px 5px 0 #39220f !important; padding:32px 24px !important; text-align:center !important; display:flex !important; flex-direction:column !important; align-items:center !important; gap:18px !important; }
+  .vipp .spin-card *{ color:#39220f !important; }
+  .vipp .spin-card .wheel-wrap{ margin:0 auto !important; }
+  .vipp .spin-copy{ display:flex !important; flex-direction:column !important; align-items:center !important; gap:10px !important; width:100% !important; }
+  .vipp .spin-card .eyebrow{ font-size:11px !important; letter-spacing:.24em !important; text-transform:uppercase !important; color:#c58548 !important; }
+  .vipp .spin-card h2, .vipp .spin-card h3{ font-size:clamp(20px, 3vw, 28px) !important; text-transform:uppercase !important; margin:0 !important; }
+  .vipp .spin-card p{ color:#5a4632 !important; font-size:14px !important; max-width:42ch !important; margin:4px 0 0 !important; }
+  .vipp .spin-result{ background:#C5E4D4 !important; color:#39220f !important; border:1.5px solid #39220f !important; border-radius:999px !important; padding:8px 16px !important; font-size:12px !important; text-transform:uppercase !important; letter-spacing:.1em !important; }
+  .vipp .spin-result *{ color:#39220f !important; }
+  .vipp .spin-row{ display:flex !important; flex-direction:column !important; align-items:center !important; gap:12px !important; width:100% !important; }
+  .vipp .spin-note{ font-size:13px !important; color:#5a4632 !important; }
+
+  .vipp .redeem-grid{ display:grid !important; grid-template-columns:1fr 1fr !important; gap:18px !important; }
+  @media (min-width:760px){ .vipp .redeem-grid{ grid-template-columns:repeat(4, 1fr) !important; gap:24px !important; } }
+  .vipp .redeem{ background:#FFFFFF !important; color:#39220f !important; border:2px solid #39220f !important; border-radius:20px !important; box-shadow:4px 4px 0 #39220f !important; padding:26px 18px !important; text-align:center !important; display:flex !important; flex-direction:column !important; align-items:center !important; justify-content:space-between !important; gap:14px !important; min-height:230px !important; }
+  .vipp .redeem *{ color:#39220f !important; }
+  .vipp .redeem .cost{ background:#FCE2A0 !important; color:#39220f !important; border:1.5px solid #39220f !important; border-radius:999px !important; padding:6px 12px !important; font-size:11px !important; letter-spacing:.1em !important; text-transform:uppercase !important; }
+  .vipp .redeem button, .vipp .redeem .btn{ background:#39220f !important; color:#FFFBF4 !important; border:0 !important; border-radius:12px !important; padding:12px 14px !important; font-size:11px !important; letter-spacing:.1em !important; text-transform:uppercase !important; width:100% !important; cursor:pointer !important; white-space:normal !important; }
+  .vipp .redeem button *, .vipp .redeem .btn *{ color:#FFFBF4 !important; }
+
+  .vipp .earn-list{ display:flex !important; flex-direction:column !important; gap:18px !important; background:transparent !important; border:0 !important; box-shadow:none !important; padding:0 !important; border-radius:0 !important; overflow:visible !important; }
+  @media (min-width:760px){
+    .vipp .earn-list{ background:#FFFFFF !important; border:2px solid #39220f !important; border-radius:24px !important; box-shadow:5px 5px 0 #39220f !important; padding:36px !important; gap:22px !important; }
+    .vipp .earn-list .earn-row{ background:#FFFBF4 !important; border:1.5px solid #39220f !important; box-shadow:3px 3px 0 #39220f !important; border-radius:16px !important; padding:20px 22px !important; }
+  }
+  .vipp .earn-row{ background:#FFFFFF !important; color:#39220f !important; border:2px solid #39220f !important; border-radius:20px !important; box-shadow:4px 4px 0 #39220f !important; padding:22px 24px !important; display:flex !important; flex-direction:row !important; align-items:center !important; justify-content:space-between !important; gap:18px !important; text-align:left !important; position:static; }
+  .vipp .earn-row *{ color:#39220f !important; }
+  .vipp .earn-row .earn-ic{ background:#FCE2A0 !important; border:1.5px solid #39220f !important; border-radius:14px !important; width:52px !important; height:52px !important; min-width:52px !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; font-size:24px !important; flex:0 0 52px !important; line-height:1 !important; }
+  .vipp .earn-row .earn-main{ flex:1 1 auto !important; display:flex !important; flex-direction:column !important; align-items:flex-start !important; gap:2px !important; text-align:left !important; min-width:0 !important; }
+  .vipp .earn-row .earn-title{ font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:900 !important; font-size:15px !important; line-height:1.25 !important; color:#39220f !important; text-transform:uppercase !important; letter-spacing:.04em !important; }
+  .vipp .earn-row .earn-main > *:not(.earn-title){ font-size:12px !important; color:#5a4632 !important; line-height:1.4 !important; }
+  .vipp .earn-row .earn-right{ display:flex !important; align-items:center !important; gap:10px !important; background:transparent !important; border:0 !important; padding:0 !important; flex-shrink:0 !important; }
+  .vipp .earn-row .earn-pts{ background:#FCE2A0 !important; color:#39220f !important; border:1.5px solid #39220f !important; border-radius:999px !important; padding:7px 12px !important; font-size:12px !important; letter-spacing:.06em !important; text-transform:uppercase !important; line-height:1 !important; white-space:nowrap !important; }
+  .vipp .earn-row .earn-btn{ background:#39220f !important; color:#FFFBF4 !important; border:0 !important; border-radius:10px !important; padding:10px 16px !important; font-size:11px !important; letter-spacing:.12em !important; text-transform:uppercase !important; cursor:pointer !important; line-height:1 !important; white-space:nowrap !important; }
+  .vipp .earn-row .earn-btn *{ color:#FFFBF4 !important; }
+  .vipp .earn-row .earn-btn[disabled], .vipp .earn-row .earn-btn.done{ background:#8a7a68 !important; color:#FFFBF4 !important; cursor:default !important; opacity:1 !important; }
+  .vipp .earn-row .earn-btn[disabled] *, .vipp .earn-row .earn-btn.done *{ color:#FFFBF4 !important; }
+  .vipp .earn-row form, .vipp .earn-row .earn-form{ display:flex !important; gap:8px !important; align-items:stretch !important; flex-wrap:nowrap !important; background:transparent !important; border:0 !important; padding:0 !important; flex:0 0 auto !important; }
+  .vipp .earn-row input[type="url"], .vipp .earn-row input[type="text"], .vipp .earn-row input[type="email"], .vipp .earn-row input:not([type]){ background:#FFFBF4 !important; border:2px solid #39220f !important; border-radius:10px !important; padding:9px 12px !important; color:#39220f !important; font-size:13px !important; outline:0 !important; }
+  @media (min-width:760px){ .vipp .earn-row input[type="url"], .vipp .earn-row input[type="text"], .vipp .earn-row input[type="email"], .vipp .earn-row input:not([type]){ min-width:220px !important; max-width:280px !important; } }
+  @media (max-width:759px){ .vipp .earn-row input[type="url"], .vipp .earn-row input[type="text"], .vipp .earn-row input[type="email"], .vipp .earn-row input:not([type]){ min-width:140px !important; max-width:160px !important; } }
+  .vipp .earn-row input:focus, .vipp .earn-row input:focus-visible{ outline:0 !important; border-color:#c58548 !important; box-shadow:none !important; }
+  @media (max-width:520px){ .vipp .earn-row{ flex-wrap:wrap !important; padding:18px 16px !important; } .vipp .earn-row .earn-main{ flex:1 1 calc(100% - 68px) !important; } .vipp .earn-row .earn-right{ flex:0 0 auto !important; margin-left:auto !important; } .vipp .earn-row form, .vipp .earn-row .earn-form{ flex:1 1 100% !important; order:99 !important; width:100% !important; padding-top:6px !important; gap:8px !important; } .vipp .earn-row input[type="url"], .vipp .earn-row input[type="text"]{ flex:1 1 auto !important; max-width:none !important; min-width:0 !important; } }
+
+  .vipp .offers-col{ display:flex !important; flex-direction:column !important; gap:18px !important; }
+  .vipp .offer{ background:#FFFFFF !important; border:2px solid #39220f !important; border-radius:22px !important; box-shadow:4px 4px 0 #39220f !important; padding:26px 22px !important; text-align:center !important; display:flex !important; flex-direction:column !important; align-items:center !important; gap:16px !important; }
+  .vipp .offer *{ color:#39220f !important; }
+  .vipp .offer .offer-body{ text-align:center !important; width:100% !important; }
+  .vipp .offer .ot{ font-size:20px !important; line-height:1.2 !important; text-transform:uppercase !important; margin:0 0 8px !important; letter-spacing:.02em !important; }
+  .vipp .offer .od{ font-size:14px !important; color:#5a4632 !important; line-height:1.5 !important; }
+  .vipp .offer .offer-code, .vipp .offer button{ background:#39220f !important; color:#FFFBF4 !important; border:0 !important; border-radius:12px !important; padding:12px 20px !important; font-size:13px !important; letter-spacing:.14em !important; text-transform:uppercase !important; display:inline-flex !important; align-items:center !important; gap:10px !important; cursor:pointer !important; }
+  .vipp .offer .offer-code *, .vipp .offer button *{ color:#FFFBF4 !important; }
+
+  .vipp .refer-card{ background:#FFFFFF !important; border:2px solid #39220f !important; border-radius:24px !important; box-shadow:5px 5px 0 #39220f !important; padding:36px 28px !important; text-align:center !important; }
+  .vipp .refer-card *{ color:#39220f !important; }
+  .vipp .refer-card h2{ font-size:clamp(22px, 3vw, 30px) !important; line-height:1.15 !important; margin:0 0 10px !important; text-transform:uppercase !important; }
+  .vipp .refer-card .rsub{ color:#5a4632 !important; font-size:14px !important; line-height:1.55 !important; margin:0 auto 22px !important; max-width:48ch !important; }
+  .vipp .refer-link{ display:flex !important; align-items:stretch !important; gap:10px !important; margin:0 auto 18px !important; max-width:600px !important; flex-wrap:wrap !important; }
+  .vipp .refer-link input{ flex:1 1 240px !important; background:#FFFBF4 !important; border:2px solid #39220f !important; border-radius:12px !important; padding:14px 16px !important; color:#39220f !important; font-size:14px !important; outline:0 !important; }
+  .vipp .refer-link input:focus, .vipp .refer-link input:focus-visible{ outline:0 !important; border-color:#c58548 !important; box-shadow:none !important; }
+  .vipp .refer-link button{ background:#39220f !important; color:#FFFBF4 !important; border:0 !important; border-radius:12px !important; padding:14px 22px !important; font-size:13px !important; letter-spacing:.14em !important; text-transform:uppercase !important; cursor:pointer !important; }
+  .vipp .refer-link button *{ color:#FFFBF4 !important; }
+
+  .vipp .share-grid{ display:flex !important; flex-direction:column !important; gap:22px !important; margin:24px auto 0 !important; max-width:560px !important; }
+  @media (min-width:760px){ .vipp .share-grid{ display:grid !important; grid-template-columns:1fr 1fr !important; gap:24px !important; max-width:none !important; } }
+  .vipp .share-grid > *, .vipp .share{ background:#FFFFFF !important; border:2px solid #39220f !important; border-radius:22px !important; box-shadow:4px 4px 0 #39220f !important; padding:24px 20px !important; color:#39220f !important; display:flex !important; flex-direction:column !important; align-items:center !important; justify-content:flex-start !important; gap:18px !important; width:100% !important; text-align:center !important; position:relative !important; }
+  .vipp .share *{ color:#39220f !important; }
+  .vipp .share .share-top{ display:flex !important; flex-direction:row !important; align-items:center !important; justify-content:center !important; gap:12px !important; width:100% !important; font-size:14px !important; text-transform:uppercase !important; letter-spacing:.16em !important; padding-bottom:14px !important; border-bottom:1.5px solid rgba(57,34,15,.18) !important; }
+  .vipp .share .share-top > *:first-child{ background:#FCE2A0 !important; border:1.5px solid #39220f !important; border-radius:14px !important; width:44px !important; height:44px !important; display:flex !important; align-items:center !important; justify-content:center !important; font-size:22px !important; flex-shrink:0 !important; }
+  .vipp .share .share-poster{ width:100% !important; max-width:280px !important; aspect-ratio:1/1 !important; border:2px solid #39220f !important; border-radius:18px !important; overflow:hidden !important; margin:0 auto !important; background:#FFFBF4 !important; display:flex !important; align-items:center !important; justify-content:center !important; }
+  .vipp .share .share-poster img{ width:100% !important; height:100% !important; object-fit:contain !important; display:block !important; }
+  .vipp .share .share-thumbs{ display:flex !important; flex-direction:row !important; flex-wrap:wrap !important; gap:8px !important; align-items:center !important; justify-content:center !important; width:100% !important; max-width:280px !important; margin:0 auto !important; }
+  .vipp .share .share-thumbs > *{ width:54px !important; height:54px !important; flex:0 0 54px !important; border:1.5px solid #39220f !important; border-radius:10px !important; overflow:hidden !important; cursor:pointer !important; background:#FFFBF4 !important; display:flex !important; align-items:center !important; justify-content:center !important; padding:0 !important; }
+  .vipp .share .share-thumbs > * img, .vipp .share .share-thumbs > * > *{ width:100% !important; height:100% !important; object-fit:cover !important; }
+  .vipp .share .share-caption{ width:100% !important; background:#FFFBF4 !important; border:1.5px dashed #c58548 !important; border-radius:14px !important; padding:14px 16px !important; font-size:13px !important; line-height:1.55 !important; color:#5a4632 !important; text-align:left !important; max-height:96px !important; overflow:hidden auto !important; }
+  .vipp .share .share-acts{ display:grid !important; grid-template-columns:1fr 1fr !important; gap:10px !important; width:100% !important; margin:0 !important; }
+  .vipp .share .share-acts button, .vipp .share .share-acts > *{ background:#39220f !important; color:#FFFBF4 !important; border:0 !important; border-radius:12px !important; padding:12px 12px !important; font-size:11px !important; letter-spacing:.1em !important; text-transform:uppercase !important; cursor:pointer !important; text-align:center !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:6px !important; }
+  .vipp .share .share-acts button *, .vipp .share .share-acts > * *{ color:#FFFBF4 !important; }
+  .vipp .share .share-acts > *:nth-child(2), .vipp .share .share-acts button:nth-child(2){ background:#FFFBF4 !important; color:#39220f !important; border:2px solid #39220f !important; }
+  .vipp .share .share-acts > *:nth-child(2) *, .vipp .share .share-acts button:nth-child(2) *{ color:#39220f !important; }
+  .vipp .refer-card button.vipp-copy, .vipp .refer-card [class*="copy-link"]{ background:#39220f !important; color:#FFFBF4 !important; border:0 !important; border-radius:14px !important; padding:14px 24px !important; font-size:13px !important; letter-spacing:.14em !important; text-transform:uppercase !important; cursor:pointer !important; width:100% !important; max-width:600px !important; margin:0 auto !important; }
+
+  .vipp .rep-card{ background:#FFFFFF !important; border:2px solid #39220f !important; border-radius:24px !important; box-shadow:5px 5px 0 #39220f !important; padding:0 !important; overflow:hidden !important; max-width:760px !important; margin:0 auto !important; }
+  .vipp .rep-card *{ color:#39220f !important; }
+  .vipp .rep-head{ background:#FCE2A0 !important; padding:20px 22px !important; border-bottom:2px solid #39220f !important; text-align:center !important; display:flex !important; align-items:center !important; justify-content:center !important; gap:12px !important; }
+  .vipp .rep-body{ padding:24px 22px !important; text-align:left !important; }
+  .vipp .rep-body .bubble{ background:#FFFBF4 !important; color:#39220f !important; border:1.5px solid #39220f !important; border-radius:16px !important; padding:12px 16px !important; margin:6px 0 !important; max-width:80% !important; }
+  .vipp .rep-body .bubble.me{ background:#2F7BB0 !important; color:#FFFFFF !important; border:1.5px solid #39220f !important; margin-left:auto !important; }
+  .vipp .rep-body .bubble.me *{ color:#FFFFFF !important; }
+  .vipp .rep-foot{ padding:20px 22px !important; border-top:2px solid #39220f !important; background:#FFFBF4 !important; display:flex !important; align-items:stretch !important; gap:10px !important; flex-wrap:wrap !important; justify-content:center !important; }
+  .vipp .rep-foot input, .vipp .rep-foot textarea{ flex:1 1 220px !important; background:#FFFFFF !important; border:2px solid #39220f !important; border-radius:12px !important; padding:14px 16px !important; color:#39220f !important; font-size:14px !important; outline:0 !important; }
+  .vipp .rep-foot input:focus, .vipp .rep-foot input:focus-visible, .vipp .rep-foot textarea:focus, .vipp .rep-foot textarea:focus-visible{ outline:0 !important; border-color:#c58548 !important; box-shadow:none !important; }
+  .vipp .rep-foot button{ background:#39220f !important; color:#FFFBF4 !important; border:0 !important; border-radius:12px !important; padding:14px 22px !important; font-size:13px !important; letter-spacing:.14em !important; text-transform:uppercase !important; cursor:pointer !important; }
+  .vipp .rep-foot button *{ color:#FFFBF4 !important; }
+
+  @media (max-width:759px){
+    .vipp .wrap{ padding:22px 14px 80px !important; }
+    .vipp .vipp-section{ margin-bottom:48px !important; }
+    .vipp .vipp-hero{ padding:30px 18px !important; margin-bottom:26px !important; }
+    .vipp .vipp-hero h1{ font-size:26px !important; }
+    .vipp .points-card{ padding:30px 18px !important; }
+    .vipp .points-card .pc-big{ font-size:52px !important; }
+    .vipp .sect-head h2{ font-size:22px !important; }
+    .vipp .quick-link{ padding:18px 16px !important; min-height:84px !important; gap:14px !important; }
+    .vipp .quick-link .qic{ width:42px !important; height:42px !important; min-width:42px !important; flex:0 0 42px !important; }
+    .vipp .quick-link .qic svg{ width:20px !important; height:20px !important; }
+    .vipp .quick-link .qarrow svg{ width:16px !important; height:16px !important; }
+    .vipp .redeem{ padding:18px 12px !important; min-height:200px !important; }
+    .vipp .share .share-poster{ max-width:240px !important; }
+  }
+
+  /* === MOBILE STICKY-STACK — cards literally pile up at top as you scroll === */
+  /* Pattern: each card position:sticky with staggered top values. DOM order means later cards render on top.
+     Each previous card peeks ~20-22px above next when fully stacked. The TOP edge of card shows the */
+  /* border + a sliver of the icon area, creating a visible pile of cards at the top. */
+  @media (max-width:759px){
+    /* QUICK LINKS — 3 cards stack */
+    .vipp .quick-col .quick-link{ position:sticky !important; }
+    .vipp .quick-col .quick-link:nth-child(1){ top:80px !important; }
+    .vipp .quick-col .quick-link:nth-child(2){ top:100px !important; }
+    .vipp .quick-col .quick-link:nth-child(3){ top:120px !important; }
+
+    /* EARN ROWS — 6 cards stack with tighter offset */
+    .vipp .earn-list .earn-row{ position:sticky !important; }
+    .vipp .earn-list .earn-row:nth-child(1){ top:80px !important; }
+    .vipp .earn-list .earn-row:nth-child(2){ top:96px !important; }
+    .vipp .earn-list .earn-row:nth-child(3){ top:112px !important; }
+    .vipp .earn-list .earn-row:nth-child(4){ top:128px !important; }
+    .vipp .earn-list .earn-row:nth-child(5){ top:144px !important; }
+    .vipp .earn-list .earn-row:nth-child(6){ top:160px !important; }
+    .vipp .earn-list .earn-row:nth-child(7){ top:176px !important; }
+    .vipp .earn-list .earn-row:nth-child(8){ top:192px !important; }
+
+    /* SHARE CARDS — stack */
+    .vipp .share-grid > *{ position:sticky !important; }
+    .vipp .share-grid > *:nth-child(1){ top:80px !important; }
+    .vipp .share-grid > *:nth-child(2){ top:100px !important; }
+    .vipp .share-grid > *:nth-child(3){ top:120px !important; }
+    .vipp .share-grid > *:nth-child(4){ top:140px !important; }
+
+    /* OFFERS — stack */
+    .vipp .offers-col .offer{ position:sticky !important; }
+    .vipp .offers-col .offer:nth-child(1){ top:80px !important; }
+    .vipp .offers-col .offer:nth-child(2){ top:100px !important; }
+    .vipp .offers-col .offer:nth-child(3){ top:120px !important; }
+  }
+
+  .vipp .redeem, .vipp .earn-row, .vipp .quick-link, .vipp .spin-card, .vipp .offer, .vipp .refer-card, .vipp .rep-card, .vipp .points-card, .vipp .vipp-hero, .vipp .share-grid > *, .vipp .share, .vipp .tier-badge, .vipp .offer-code, .vipp button, .vipp .btn{ transition:none; }
+</style>
+
+<script>
+(function(){
+  function init(){
+    var root = document.querySelector('.vipp');
+    if (!root) return;
+    root.querySelectorAll('[style*="gradient"]').forEach(function(el){
+      el.style.background = ''; el.style.backgroundImage = '';
+    });
+    var wheel = root.querySelector('.spin-card .wheel');
+    if (wheel){
+      var labels = wheel.querySelectorAll('.wheel-label');
+      function getWheelAngle(){
+        var m = getComputedStyle(wheel).transform;
+        if (m === 'none') return 0;
+        var match = m.match(/matrix\(([^)]+)\)/);
+        if (!match) return 0;
+        var v = match[1].split(',').map(parseFloat);
+        return Math.atan2(v[1], v[0]) * 180 / Math.PI;
+      }
+      function counterRotate(){
+        var angle = getWheelAngle();
+        labels.forEach(function(l){
+          var inner = l.querySelector('.vipp-label-text');
+          if (!inner){
+            inner = document.createElement('span');
+            inner.className = 'vipp-label-text';
+            inner.style.display = 'inline-block';
+            inner.textContent = l.textContent;
+            l.textContent = '';
+            l.appendChild(inner);
+          }
+          inner.style.transform = 'rotate(' + (-angle) + 'deg)';
+        });
+      }
+      counterRotate();
+      var ticking = false;
+      function loop(){
+        counterRotate();
+        if (ticking) requestAnimationFrame(loop);
+      }
+      wheel.addEventListener('transitionstart', function(){ ticking = true; loop(); });
+      wheel.addEventListener('transitionend', function(){ counterRotate(); ticking = false; });
+      try { var mo = new MutationObserver(function(){ counterRotate(); }); mo.observe(wheel, { attributes:true, attributeFilter:['style','class'] }); } catch(e){}
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>

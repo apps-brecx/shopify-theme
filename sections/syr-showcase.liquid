@@ -1,0 +1,279 @@
+{%- comment -%} Category showcase — sticky stack with REAL product bottles per category. Mobile WORKS. {%- endcomment -%}
+<style id="syr-sh-{{ section.id }}-css">
+  #syr-sh-{{ section.id }}{
+    --ink:#39220f; --paper:#FFFBF4; --bg:#F4E8CE; --accent:#c58548;
+    --butter:#FCE2A0; --peach:#FFD4B8; --mint:#C5E4D4; --sky:#B8DCEB;
+    position:relative; background:var(--bg);
+    font-family:'Josefin Sans','Josefin',sans-serif;
+  }
+  #syr-sh-{{ section.id }} .syr-sh-stack{ position:relative; }
+  #syr-sh-{{ section.id }} .syr-sh-panel{
+    position:sticky; top:0;
+    height:100vh; height:100svh;
+    display:flex; align-items:center;
+    padding:60px 40px;
+    overflow:hidden;
+    border-bottom:2px solid var(--ink);
+  }
+  /* Panel themes — stacking z-indices */
+  #syr-sh-{{ section.id }} .syr-sh-p1{ background:linear-gradient(160deg, var(--peach) 0%, var(--butter) 100%); z-index:11; }
+  #syr-sh-{{ section.id }} .syr-sh-p2{ background:linear-gradient(160deg, var(--mint) 0%, var(--paper) 100%); z-index:21; }
+  #syr-sh-{{ section.id }} .syr-sh-p3{ background:linear-gradient(160deg, var(--butter) 0%, var(--peach) 100%); z-index:31; }
+  #syr-sh-{{ section.id }} .syr-sh-p4{ background:linear-gradient(160deg, var(--sky) 0%, var(--mint) 100%); z-index:41; }
+
+  /* Decorative giant sparkles */
+  #syr-sh-{{ section.id }} .syr-sh-panel::before,
+  #syr-sh-{{ section.id }} .syr-sh-panel::after{
+    content:"✦"; position:absolute; color:var(--ink); opacity:.08; pointer-events:none;
+    font-family:serif; z-index:1;
+  }
+  #syr-sh-{{ section.id }} .syr-sh-panel::before{ top:8%; left:5%; font-size:120px; transform:rotate(-12deg); }
+  #syr-sh-{{ section.id }} .syr-sh-panel::after{ bottom:8%; right:5%; font-size:180px; transform:rotate(15deg); }
+
+  #syr-sh-{{ section.id }} .syr-sh-inner{
+    max-width:1320px; width:100%; margin:0 auto;
+    display:grid; grid-template-columns:1fr 1fr; gap:60px;
+    align-items:center; position:relative; z-index:2;
+    height:100%;
+  }
+
+  #syr-sh-{{ section.id }} .syr-sh-eyebrow{
+    display:inline-block;
+    background:var(--paper); color:var(--ink);
+    border:2px solid var(--ink); border-radius:999px;
+    box-shadow:3px 3px 0 var(--ink);
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    padding:7px 16px; margin-bottom:20px;
+  }
+  #syr-sh-{{ section.id }} .syr-sh-h{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:clamp(46px, 7vw, 96px); line-height:.92;
+    letter-spacing:-.02em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 16px;
+    transform-origin:left bottom;
+    transition:transform .8s cubic-bezier(.2,.6,.25,1), opacity .6s ease;
+  }
+  #syr-sh-{{ section.id }} .syr-sh-panel:not(.is-in) .syr-sh-h{ transform:scale(.85); opacity:.5; }
+  #syr-sh-{{ section.id }} .syr-sh-h em{
+    font-family:'Caveat','Brush Script MT',cursive; font-style:italic;
+    color:var(--accent); font-size:.78em; letter-spacing:0;
+    text-transform:none; display:inline-block; transform:rotate(-2deg) translateY(-4px);
+  }
+  #syr-sh-{{ section.id }} .syr-sh-desc{
+    font-size:17px; line-height:1.5; color:rgba(57,34,15,.78);
+    max-width:42ch; margin:0 0 22px;
+  }
+  #syr-sh-{{ section.id }} .syr-sh-flavors{
+    display:flex; flex-wrap:wrap; gap:8px; margin:0 0 28px;
+  }
+  #syr-sh-{{ section.id }} .syr-sh-chip{
+    background:var(--paper); color:var(--ink);
+    border:1.5px solid var(--ink); border-radius:999px;
+    font-family:'Josefin Sans','Josefin',sans-serif; font-weight:600;
+    font-size:12.5px; padding:7px 14px;
+    box-shadow:2px 2px 0 var(--ink);
+    transition:transform .12s ease, background .12s ease;
+  }
+  #syr-sh-{{ section.id }} .syr-sh-chip:hover{ background:var(--butter); transform:translate(-1px,-1px); }
+  #syr-sh-{{ section.id }} .syr-sh-btn{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--ink); color:var(--paper);
+    border:2px solid var(--ink); border-radius:999px;
+    padding:16px 30px;
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    text-decoration:none;
+    box-shadow:5px 5px 0 var(--paper);
+    transition:transform .18s cubic-bezier(.4,0,.2,1), box-shadow .18s cubic-bezier(.4,0,.2,1), background .15s ease;
+  }
+  #syr-sh-{{ section.id }} .syr-sh-btn:hover{ transform:translate(-3px,-3px); box-shadow:8px 8px 0 var(--paper); background:var(--accent); }
+  #syr-sh-{{ section.id }} .syr-sh-btn:active{ transform:scale(.97); box-shadow:3px 3px 0 var(--paper); transition-duration:.08s; }
+
+  /* Product showcase — bottles cluster */
+  #syr-sh-{{ section.id }} .syr-sh-bottles{
+    position:relative; height:520px; max-width:560px;
+    display:flex; align-items:center; justify-content:center;
+    margin-left:auto;
+  }
+  #syr-sh-{{ section.id }} .syr-sh-bot{
+    position:absolute; display:flex; align-items:center; justify-content:center;
+    width:200px; height:440px;
+    background:#fff;
+    border:2px solid var(--ink); border-radius:32px;
+    box-shadow:7px 7px 0 var(--ink);
+    overflow:hidden;
+    text-decoration:none;
+    transition:transform .4s cubic-bezier(.4,0,.2,1), box-shadow .25s ease;
+  }
+  #syr-sh-{{ section.id }} .syr-sh-bot img{ width:100%; height:100%; object-fit:contain; padding:12px; transition:transform .4s ease; }
+  #syr-sh-{{ section.id }} .syr-sh-bot:nth-child(1){ transform:rotate(-14deg) translateX(-110px); z-index:1; }
+  #syr-sh-{{ section.id }} .syr-sh-bot:nth-child(2){ transform:rotate(3deg); z-index:3; }
+  #syr-sh-{{ section.id }} .syr-sh-bot:nth-child(3){ transform:rotate(14deg) translateX(110px); z-index:2; }
+  #syr-sh-{{ section.id }} .syr-sh-bot:hover{ z-index:5; box-shadow:10px 10px 0 var(--ink); }
+  #syr-sh-{{ section.id }} .syr-sh-bottles:hover .syr-sh-bot:nth-child(1){ transform:rotate(-18deg) translateX(-135px) translateY(-6px); }
+  #syr-sh-{{ section.id }} .syr-sh-bottles:hover .syr-sh-bot:nth-child(2){ transform:rotate(0deg) translateY(-12px) scale(1.04); }
+  #syr-sh-{{ section.id }} .syr-sh-bottles:hover .syr-sh-bot:nth-child(3){ transform:rotate(18deg) translateX(135px) translateY(-6px); }
+  #syr-sh-{{ section.id }} .syr-sh-bot:hover img{ transform:scale(1.06); }
+
+  /* Reveal animations */
+  #syr-sh-{{ section.id }} .syr-sh-eyebrow,
+  #syr-sh-{{ section.id }} .syr-sh-desc,
+  #syr-sh-{{ section.id }} .syr-sh-flavors,
+  #syr-sh-{{ section.id }} .syr-sh-btn{
+    opacity:0; transform:translateY(20px);
+    transition:opacity .6s ease, transform .6s cubic-bezier(.4,0,.2,1);
+  }
+  #syr-sh-{{ section.id }} .syr-sh-panel.is-in .syr-sh-eyebrow{ opacity:1; transform:none; transition-delay:.1s; }
+  #syr-sh-{{ section.id }} .syr-sh-panel.is-in .syr-sh-desc{ opacity:1; transform:none; transition-delay:.35s; }
+  #syr-sh-{{ section.id }} .syr-sh-panel.is-in .syr-sh-flavors{ opacity:1; transform:none; transition-delay:.5s; }
+  #syr-sh-{{ section.id }} .syr-sh-panel.is-in .syr-sh-btn{ opacity:1; transform:none; transition-delay:.65s; }
+
+  #syr-sh-{{ section.id }} .syr-sh-bottles{
+    opacity:0; transform:translateX(40px);
+    transition:opacity .8s ease, transform .8s cubic-bezier(.4,0,.2,1);
+  }
+  #syr-sh-{{ section.id }} .syr-sh-panel.is-in .syr-sh-bottles{ opacity:1; transform:none; transition-delay:.2s; }
+
+  /* MOBILE — keep sticky stacking, adjust sizes */
+  @media (max-width:900px){
+    #syr-sh-{{ section.id }} .syr-sh-panel{ padding:32px 18px; }
+    #syr-sh-{{ section.id }} .syr-sh-panel::before, #syr-sh-{{ section.id }} .syr-sh-panel::after{ font-size:80px; }
+    #syr-sh-{{ section.id }} .syr-sh-panel::after{ font-size:120px; }
+    #syr-sh-{{ section.id }} .syr-sh-inner{ grid-template-columns:1fr; gap:14px; align-content:center; height:100%; }
+    #syr-sh-{{ section.id }} .syr-sh-copy{ text-align:center; order:2; }
+    #syr-sh-{{ section.id }} .syr-sh-eyebrow{ margin:0 auto 12px; box-shadow:2.5px 2.5px 0 var(--ink); padding:6px 14px; font-size:10px; }
+    #syr-sh-{{ section.id }} .syr-sh-h{ font-size:clamp(32px, 10vw, 50px); margin:0 auto 10px; text-align:center; transform-origin:center bottom; }
+    #syr-sh-{{ section.id }} .syr-sh-desc{ font-size:14.5px; margin:0 auto 14px; max-width:32ch; text-align:center; }
+    #syr-sh-{{ section.id }} .syr-sh-flavors{ justify-content:center; gap:6px; margin:0 0 16px; }
+    #syr-sh-{{ section.id }} .syr-sh-chip{ font-size:11px; padding:5px 10px; }
+    #syr-sh-{{ section.id }} .syr-sh-btn{ padding:12px 22px; font-size:11px; margin:0 auto; box-shadow:3px 3px 0 var(--paper); }
+    #syr-sh-{{ section.id }} .syr-sh-bottles{ order:1; height:46svh; max-height:300px; max-width:340px; margin:0 auto; }
+    #syr-sh-{{ section.id }} .syr-sh-bot{ width:120px; height:240px; border-radius:22px; box-shadow:4px 4px 0 var(--ink); }
+    #syr-sh-{{ section.id }} .syr-sh-bot:nth-child(1){ transform:rotate(-12deg) translateX(-55px); }
+    #syr-sh-{{ section.id }} .syr-sh-bot:nth-child(3){ transform:rotate(12deg) translateX(55px); }
+  }
+  @media (max-width:380px){
+    #syr-sh-{{ section.id }} .syr-sh-bot{ width:100px; height:200px; border-radius:18px; }
+    #syr-sh-{{ section.id }} .syr-sh-bot:nth-child(1){ transform:rotate(-12deg) translateX(-46px); }
+    #syr-sh-{{ section.id }} .syr-sh-bot:nth-child(3){ transform:rotate(12deg) translateX(46px); }
+  }
+</style>
+
+{%- assign panel_keys = 'p1,p2,p3,p4' | split: ',' -%}
+<section id="syr-sh-{{ section.id }}" aria-label="Category showcase">
+  <div class="syr-sh-stack">
+    {%- for k in panel_keys -%}
+      {%- assign eyebrow_k = k | append: '_eyebrow' -%}
+      {%- assign title_k = k | append: '_title' -%}
+      {%- assign desc_k = k | append: '_desc' -%}
+      {%- assign flavors_k = k | append: '_flavors' -%}
+      {%- assign cta_text_k = k | append: '_cta_text' -%}
+      {%- assign cta_link_k = k | append: '_cta_link' -%}
+      {%- assign coll_handle_k = k | append: '_collection' -%}
+      {%- assign coll_handle = section.settings[coll_handle_k] -%}
+      {%- if coll_handle == blank -%}
+        {%- case k -%}
+          {%- when 'p1' -%}{%- assign coll_handle = 'coffee' -%}
+          {%- when 'p2' -%}{%- assign coll_handle = 'fruit' -%}
+          {%- when 'p3' -%}{%- assign coll_handle = 'sugar-free' -%}
+          {%- when 'p4' -%}{%- assign coll_handle = 'cocktails' -%}
+        {%- endcase -%}
+      {%- endif -%}
+      {%- assign coll = collections[coll_handle] -%}
+      <div class="syr-sh-panel syr-sh-{{ k }}">
+        <div class="syr-sh-inner">
+          <div class="syr-sh-copy">
+            <span class="syr-sh-eyebrow">{{ section.settings[eyebrow_k] }}</span>
+            <h2 class="syr-sh-h">{{ section.settings[title_k] }}</h2>
+            <p class="syr-sh-desc">{{ section.settings[desc_k] }}</p>
+            {%- assign flavors = section.settings[flavors_k] | split: ',' -%}
+            {%- if flavors.size > 0 and section.settings[flavors_k] != blank -%}
+              <div class="syr-sh-flavors">
+                {%- for f in flavors -%}<span class="syr-sh-chip">{{ f | strip }}</span>{%- endfor -%}
+              </div>
+            {%- endif -%}
+            <a class="syr-sh-btn" href="{{ section.settings[cta_link_k] | default: coll.url }}">{{ section.settings[cta_text_k] }} →</a>
+          </div>
+          <div class="syr-sh-bottles">
+            {%- assign products_shown = 0 -%}
+            {%- for p in coll.products limit: 3 -%}
+              <a class="syr-sh-bot" href="{{ p.url }}" aria-label="{{ p.title | escape }}">
+                {%- if p.featured_media -%}
+                  <img src="{{ p.featured_media | image_url: width: 440 }}" alt="{{ p.title | escape }}" loading="lazy" width="200" height="440">
+                {%- endif -%}
+              </a>
+              {%- assign products_shown = products_shown | plus: 1 -%}
+            {%- endfor -%}
+            {%- if products_shown == 0 -%}
+              {%- for i in (1..3) -%}
+                <div class="syr-sh-bot">
+                  <div style="width:100%;height:100%;background:linear-gradient(160deg,#FCE2A0,#c58548);"></div>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+<script>
+(function(){
+  var root = document.getElementById('syr-sh-{{ section.id }}');
+  if (!root) return;
+  var panels = root.querySelectorAll('.syr-sh-panel');
+  if (!('IntersectionObserver' in window)){ panels.forEach(function(p){ p.classList.add('is-in'); }); return; }
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting && e.intersectionRatio >= .45){
+        e.target.classList.add('is-in');
+      }
+    });
+  }, { threshold:[.45, .7] });
+  panels.forEach(function(p){ obs.observe(p); });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Category Showcase",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Panel 1 - Coffee" },
+    { "type": "text", "id": "p1_eyebrow", "label": "Eyebrow", "default": "For your morning ritual" },
+    { "type": "text", "id": "p1_title", "label": "Title", "default": "Coffee Syrups" },
+    { "type": "textarea", "id": "p1_desc", "label": "Description", "default": "Vanilla. Caramel. Hazelnut. Mocha. The classics done better — with the kind of depth that makes your latte taste like the cafe version." },
+    { "type": "text", "id": "p1_flavors", "label": "Flavor chips (comma separated)", "default": "Vanilla, Salted Caramel, Hazelnut, Mocha, Cinnamon, Pumpkin Spice" },
+    { "type": "text", "id": "p1_collection", "label": "Collection handle", "default": "coffee" },
+    { "type": "text", "id": "p1_cta_text", "label": "CTA text", "default": "Shop Coffee Syrups" },
+    { "type": "url", "id": "p1_cta_link", "label": "CTA link" },
+    { "type": "header", "content": "Panel 2 - Fruit" },
+    { "type": "text", "id": "p2_eyebrow", "label": "Eyebrow", "default": "Real fruit. Real flavor." },
+    { "type": "text", "id": "p2_title", "label": "Title", "default": "Fruit Syrups" },
+    { "type": "textarea", "id": "p2_desc", "label": "Description", "default": "Mango, peach, blackberry, blueberry. Lemonades, refreshers, iced teas — made the way fruit should actually taste." },
+    { "type": "text", "id": "p2_flavors", "label": "Flavor chips", "default": "Mango, Peach, Blackberry, Blueberry, Strawberry, Raspberry" },
+    { "type": "text", "id": "p2_collection", "label": "Collection handle", "default": "fruit" },
+    { "type": "text", "id": "p2_cta_text", "label": "CTA text", "default": "Shop Fruit Syrups" },
+    { "type": "url", "id": "p2_cta_link", "label": "CTA link" },
+    { "type": "header", "content": "Panel 3 - Sugar-Free" },
+    { "type": "text", "id": "p3_eyebrow", "label": "Eyebrow", "default": "Zero sugar. Full flavor." },
+    { "type": "text", "id": "p3_title", "label": "Title", "default": "Sugar-Free" },
+    { "type": "textarea", "id": "p3_desc", "label": "Description", "default": "Every flavor we make comes in a sugar-free version. Same recipe. Same craft. Just no sugar. $9.99 a bottle." },
+    { "type": "text", "id": "p3_flavors", "label": "Flavor chips", "default": "100+ flavors, 0g sugar, Keto, Gluten-free" },
+    { "type": "text", "id": "p3_collection", "label": "Collection handle", "default": "sugar-free" },
+    { "type": "text", "id": "p3_cta_text", "label": "CTA text", "default": "Shop Sugar-Free" },
+    { "type": "url", "id": "p3_cta_link", "label": "CTA link" },
+    { "type": "header", "content": "Panel 4 - Cocktails" },
+    { "type": "text", "id": "p4_eyebrow", "label": "Eyebrow", "default": "Skip the bar" },
+    { "type": "text", "id": "p4_title", "label": "Title", "default": "Cocktail Syrups" },
+    { "type": "textarea", "id": "p4_desc", "label": "Description", "default": "Margaritas. Mojitos. Spritzers. Mocktails. Bar-quality flavor at home — no sugar bombs required." },
+    { "type": "text", "id": "p4_flavors", "label": "Flavor chips", "default": "Margarita, Mojito, Blue Curacao, Lime, Triple Sec" },
+    { "type": "text", "id": "p4_collection", "label": "Collection handle", "default": "cocktails" },
+    { "type": "text", "id": "p4_cta_text", "label": "CTA text", "default": "Shop Cocktail Syrups" },
+    { "type": "url", "id": "p4_cta_link", "label": "CTA link" }
+  ],
+  "presets": [ { "name": "Category Showcase" } ]
+}
+{% endschema %}

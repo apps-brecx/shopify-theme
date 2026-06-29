@@ -1,0 +1,118 @@
+{%- comment -%}
+  Social login click fix — reroutes Apple + Shop buttons through proper handlers.
+
+  Apple: uses the same One Click Social Login app as Google (socialLogin.loginButton('apple', btn))
+  with a fallback to clicking the app's rendered .btn-apple button. NOTE: full Apple sign-in still
+  requires an Apple Developer Service ID registered for syruvia.com inside the One Click app's settings.
+
+  Shop: triggers Shopify's <shop-login-button> component (or its inner button) if it exists. NOTE:
+  the component needs a non-empty client-id, which is set by enabling customer accounts properly in
+  Shopify Admin → Settings → Customer accounts.
+{%- endcomment -%}
+{%- if template contains 'customers' or request.page_type contains 'customers' or request.path contains '/account' -%}
+<script id="pd-social-login-fix">
+(function(){
+  if (window.__pdSocialFixInit) return; window.__pdSocialFixInit = true;
+
+  function findAppContainer(scope){
+    if (scope){
+      var c = scope.querySelector('.social-login-container');
+      if (c) return c;
+    }
+    return document.querySelector('.social-login-container');
+  }
+
+  /* Hunt for the rendered app button matching the provider */
+  function findRenderedAppBtn(container, provider){
+    if (!container) return null;
+    var selectors = [
+      '.btn-'+provider,
+      '.btn-'+provider+'-plus',
+      '[class*="btn-"][class*="'+provider+'"]',
+      'a[href*="'+provider+'"]',
+      '[data-provider="'+provider+'"]',
+      '[data-social="'+provider+'"]',
+      '[aria-label*="'+provider+'" i]'
+    ];
+    for (var i = 0; i < selectors.length; i++){
+      try {
+        var el = container.querySelector(selectors[i]);
+        if (el) return el;
+      } catch(e){}
+    }
+    return null;
+  }
+
+  /* Try the Shopify <shop-login-button> web component for Shop Pay */
+  function clickShopComponent(){
+    var shopBtn = document.querySelector('shop-login-button');
+    if (!shopBtn) return false;
+    try {
+      /* Inner shadow-root button on most builds */
+      if (shopBtn.shadowRoot){
+        var inner = shopBtn.shadowRoot.querySelector('button, a, [role="button"]');
+        if (inner){ inner.click(); return true; }
+      }
+      var innerLight = shopBtn.querySelector('button, a, [role="button"]');
+      if (innerLight){ innerLight.click(); return true; }
+      shopBtn.click();
+      return true;
+    } catch(e){ return false; }
+  }
+
+  /* Master click handler — runs in capture phase so it can preempt the inline theme handler */
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-soc]');
+    if (!btn) return;
+    var p = btn.getAttribute('data-soc');
+    if (!p) return;
+
+    /* Shop Pay: prefer the Shopify web component */
+    if (p === 'shop'){
+      if (clickShopComponent()){ e.preventDefault(); e.stopImmediatePropagation(); return; }
+    }
+
+    /* Apple / Google / others: prefer the One Click Social Login app's API */
+    try {
+      if (window.socialLogin && typeof window.socialLogin.loginButton === 'function'){
+        e.preventDefault(); e.stopImmediatePropagation();
+        window.socialLogin.loginButton(p, btn);
+        return;
+      }
+    } catch(err){}
+
+    /* Fallback: click the app's rendered hidden button by class match */
+    var view = btn.closest('.auth-view');
+    var container = findAppContainer(view);
+    var appBtn = findRenderedAppBtn(container, p);
+    if (appBtn){
+      e.preventDefault(); e.stopImmediatePropagation();
+      try { appBtn.click(); } catch(err){}
+      return;
+    }
+    /* If nothing worked, let the default theme handler run — we don't preventDefault here */
+  }, true);
+
+  /* Visual hint: if Shop Pay component has empty client-id, gray out the Shop button so users see it’s unavailable instead of clicking into silence */
+  function checkShopAvailability(){
+    var shopBtn = document.querySelector('shop-login-button');
+    var cid = shopBtn && shopBtn.getAttribute('client-id');
+    var shopTriggers = document.querySelectorAll('.sauth [data-soc="shop"]');
+    if (!cid || cid.trim() === ''){
+      shopTriggers.forEach(function(t){
+        t.title = 'Shop Pay isn’t configured yet — enable customer accounts in Shopify Admin';
+        t.style.opacity = '.55';
+        t.style.cursor = 'not-allowed';
+      });
+    } else {
+      shopTriggers.forEach(function(t){
+        if (t.style.opacity === '.55'){ t.style.opacity = ''; t.style.cursor = ''; t.removeAttribute('title'); }
+      });
+    }
+  }
+  checkShopAvailability();
+  setTimeout(checkShopAvailability, 1000);
+  setTimeout(checkShopAvailability, 3000);
+})();
+</script>
+{%- endif -%}

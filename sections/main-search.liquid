@@ -1,0 +1,547 @@
+{%- comment -%}
+  Syruvia branded search page. Full rebuild — owns layout + cards. Mobile = single-column list (matches collection page).
+{%- endcomment -%}
+
+{%- liquid
+  assign terms = search.terms | escape
+  assign has_results = false
+  if search.performed and search.results_count > 0
+    assign has_results = true
+  endif
+-%}
+
+<style>
+  :root{
+    --syr-paper:#FFFBF4; --syr-cream:#F4E8CE; --syr-ink:#39220f; --syr-copper:#c58548;
+    --syr-butter:#FCE2A0; --syr-peach:#FFD4B8; --syr-sky:#B8DCEB;
+  }
+  html body .syr-search{
+    background:var(--syr-cream);
+    min-height:60vh;
+    padding:28px 18px 64px;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    color:var(--syr-ink);
+  }
+  html body .syr-search *{ box-sizing:border-box; }
+  html body .syr-search .syr-wrap{ max-width:1240px; margin:0 auto; width:100%; }
+
+  /* ===== HERO ===== */
+  html body .syr-search .syr-hero{
+    background:
+      radial-gradient(70% 110% at 50% -10%, var(--syr-peach) 0%, transparent 55%),
+      var(--syr-paper);
+    border:2px solid var(--syr-ink);
+    border-radius:24px;
+    box-shadow:5px 5px 0 var(--syr-ink);
+    padding:40px 28px 32px;
+    margin:0 auto 32px;
+    max-width:880px;
+    text-align:center;
+    position:relative;
+  }
+  html body .syr-search .syr-eyebrow{
+    display:inline-block;
+    background:var(--syr-butter); color:var(--syr-ink);
+    border:1.5px solid var(--syr-ink); border-radius:999px;
+    box-shadow:2px 2px 0 var(--syr-ink);
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+    padding:6px 14px; margin:0 0 14px;
+  }
+  html body .syr-search .syr-h1{
+    font-family:'Archivo Black','Archivo',sans-serif !important;
+     font-weight:400 !important;
+    font-size:clamp(38px, 6.2vw, 64px); line-height:.96;
+    letter-spacing:-.015em; text-transform:uppercase;
+    color:var(--syr-ink); margin:0 0 18px; text-align:center;
+  }
+  html body .syr-search .syr-h1 em{
+    font-family:'Caveat','Brush Script MT',cursive; font-style:italic; font-weight:400;
+    color:var(--syr-copper); display:inline-block; font-size:.85em; letter-spacing:0;
+    text-transform:none; transform:translateY(-6px) rotate(-3deg);
+  }
+  html body .syr-search .syr-sub{
+    font-size:15px; color:rgba(57,34,15,.7);
+    max-width:520px; margin:0 auto 22px;
+  }
+
+  /* ===== SEARCH FORM — transparent pill, blends with hero ===== */
+  html body .syr-search .syr-form{ max-width:560px; margin:0 auto; }
+  html body .syr-search .syr-field{
+    display:flex; align-items:center;
+    background:transparent;
+    border:2px solid var(--syr-ink); border-radius:999px;
+    box-shadow:3px 3px 0 var(--syr-ink);
+    padding:6px 6px 6px 22px; height:58px;
+    transition:box-shadow .15s ease, background .15s ease;
+    position:relative;
+  }
+  html body .syr-search .syr-field:focus-within{ box-shadow:4px 4px 0 var(--syr-copper); }
+  html body .syr-search .syr-input{
+    flex:1 1 auto; min-width:0;
+    border:0; outline:0; background:transparent;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    font-size:16px; color:var(--syr-ink);
+    -webkit-appearance:none; appearance:none;
+  }
+  html body .syr-search .syr-input::placeholder{ color:rgba(57,34,15,.4); }
+  /* Kill the browser's native search clear X (the one INSIDE the input) */
+  html body .syr-search .syr-input::-webkit-search-cancel-button,
+  html body .syr-search .syr-input::-webkit-search-decoration,
+  html body .syr-search .syr-input::-webkit-search-results-button,
+  html body .syr-search .syr-input::-webkit-search-results-decoration{
+    -webkit-appearance:none !important; appearance:none !important;
+    display:none !important; visibility:hidden !important;
+    width:0 !important; height:0 !important;
+  }
+  html body .syr-search .syr-submit{
+    flex:0 0 auto;
+    width:44px; height:44px; border-radius:50%;
+    border:1.5px solid var(--syr-ink); background:var(--syr-ink); color:var(--syr-paper);
+    display:inline-flex; align-items:center; justify-content:center;
+    cursor:pointer; margin-left:6px; padding:0;
+    transition:background .15s ease, transform .12s ease;
+  }
+  html body .syr-search .syr-submit:hover{ background:var(--syr-copper); }
+  html body .syr-search .syr-submit svg{ width:18px; height:18px; }
+  html body .syr-search .syr-reset{
+    flex:0 0 auto;
+    width:34px; height:34px; border-radius:50%;
+    border:1.5px solid var(--syr-ink); background:transparent; color:var(--syr-ink);
+    display:inline-flex; align-items:center; justify-content:center;
+    cursor:pointer; margin-left:2px; padding:0;
+    transition:background .15s ease, transform .12s ease;
+  }
+  html body .syr-search .syr-reset:hover{ background:var(--syr-butter); transform:scale(1.05); }
+  html body .syr-search .syr-reset svg{ width:12px; height:12px; }
+  html body .syr-search .syr-reset.is-hidden{ display:none; }
+
+  html body .syr-search .syr-count{
+    margin:18px auto 0; font-size:13px; color:rgba(57,34,15,.7);
+    letter-spacing:.02em;
+  }
+  html body .syr-search .syr-count strong{
+    color:var(--syr-ink); font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+  }
+
+  /* ===== TOOLBAR ===== */
+  html body .syr-search .syr-toolbar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; flex-wrap:wrap;
+    background:var(--syr-paper);
+    border:1.5px solid var(--syr-ink); border-radius:18px;
+    box-shadow:3px 3px 0 var(--syr-ink);
+    padding:12px 16px; margin:0 0 22px;
+  }
+  html body .syr-search .syr-toolbar-left{ font-size:13px; color:rgba(57,34,15,.7); }
+  html body .syr-search .syr-toolbar-left strong{ color:var(--syr-ink); }
+  html body .syr-search .syr-sort{ display:flex; align-items:center; gap:10px; font-size:13px; color:var(--syr-ink); }
+  html body .syr-search .syr-sort label{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  }
+  html body .syr-search .syr-sort-select{
+    background:var(--syr-butter); color:var(--syr-ink);
+    border:1.5px solid var(--syr-ink); border-radius:999px;
+    font-family:'Josefin Sans','Josefin',sans-serif; font-weight:600;
+    font-size:13px; padding:8px 36px 8px 16px;
+    box-shadow:2px 2px 0 var(--syr-ink);
+    cursor:pointer; appearance:none; -webkit-appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'><path d='M1 1.5L6 6.5L11 1.5' stroke='%2339220f' stroke-width='2' stroke-linecap='round'/></svg>");
+    background-repeat:no-repeat; background-position:right 14px center;
+  }
+
+  /* ===== GRID ===== */
+  html body .syr-search .syr-grid{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;
+    list-style:none; padding:0; margin:0; width:100%;
+  }
+  @media (max-width:1100px){ html body .syr-search .syr-grid{ grid-template-columns:repeat(3, 1fr); gap:18px; } }
+
+  html body .syr-search .syr-card{
+    position:relative; background:#fff;
+    border:1.5px solid var(--syr-ink); border-radius:18px;
+    box-shadow:3px 3px 0 var(--syr-ink);
+    overflow:hidden;
+    transition:transform .15s ease, box-shadow .15s ease;
+    display:flex; flex-direction:column;
+  }
+  html body .syr-search .syr-card:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--syr-ink); }
+  html body .syr-search .syr-card-media{
+    position:relative; aspect-ratio:1/1; background:#fff;
+    border-bottom:1.5px solid var(--syr-ink);
+    overflow:hidden; display:flex; align-items:center; justify-content:center;
+  }
+  html body .syr-search .syr-card-media img{
+    width:100%; height:100%; object-fit:contain;
+    transition:transform .25s ease; padding:14px;
+  }
+  html body .syr-search .syr-card:hover .syr-card-media img{ transform:scale(1.06); }
+  html body .syr-search .syr-card-link{ position:absolute; inset:0; z-index:2; text-indent:-9999px; overflow:hidden; }
+  html body .syr-search .syr-card-body{
+    padding:14px 14px 16px; flex:1 1 auto;
+    display:flex; flex-direction:column; gap:6px;
+    text-align:center; align-items:center;
+  }
+  html body .syr-search .syr-card-title{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:14.5px; line-height:1.18; color:var(--syr-ink);
+    margin:0; letter-spacing:-.005em;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  html body .syr-search .syr-card-price{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:14px; color:var(--syr-ink);
+    display:flex; align-items:center; justify-content:center; gap:8px; margin-top:2px;
+  }
+  html body .syr-search .syr-card-price .was{
+    color:rgba(57,34,15,.45); text-decoration:line-through;
+    font-size:12px; font-family:'Josefin Sans','Josefin',sans-serif; font-weight:500;
+  }
+  html body .syr-search .syr-card-price.is-sale .now{ color:var(--syr-copper); }
+  html body .syr-search .syr-card-badge{
+    position:absolute; top:10px; left:10px; z-index:3;
+    background:var(--syr-butter); color:var(--syr-ink);
+    border:1.5px solid var(--syr-ink); border-radius:999px;
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:9px; letter-spacing:.12em; text-transform:uppercase;
+    padding:4px 9px; box-shadow:1.5px 1.5px 0 var(--syr-ink);
+  }
+  html body .syr-search .syr-card-badge.is-sold{ background:#E8D7C8; }
+  html body .syr-search .syr-card-badge.is-sale{ background:var(--syr-peach); }
+  html body .syr-search .syr-card-kind{
+    position:absolute; top:10px; right:10px; z-index:3;
+    background:var(--syr-sky); color:var(--syr-ink);
+    border:1.5px solid var(--syr-ink); border-radius:999px;
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:9px; letter-spacing:.12em; text-transform:uppercase;
+    padding:4px 9px; box-shadow:1.5px 1.5px 0 var(--syr-ink);
+  }
+  html body .syr-search .syr-card--text .syr-card-media{ display:none; }
+  html body .syr-search .syr-card--text{ background:var(--syr-paper); }
+  html body .syr-search .syr-card--text .syr-card-body{ padding:22px 18px; min-height:130px; }
+
+  /* ===== PAGINATION ===== */
+  html body .syr-search .syr-pagi{
+    display:flex; justify-content:center; align-items:center;
+    gap:8px; margin:36px 0 8px; list-style:none; padding:0;
+  }
+  html body .syr-search .syr-pagi a,
+  html body .syr-search .syr-pagi span{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:40px; height:40px; padding:0 12px;
+    background:var(--syr-paper); color:var(--syr-ink);
+    border:1.5px solid var(--syr-ink); border-radius:999px;
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:13px; text-decoration:none;
+    box-shadow:2px 2px 0 var(--syr-ink);
+    transition:transform .12s ease, background .15s ease, box-shadow .12s ease;
+  }
+  html body .syr-search .syr-pagi a:hover{ background:var(--syr-butter); transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--syr-ink); }
+  html body .syr-search .syr-pagi .is-current{ background:var(--syr-ink); color:var(--syr-paper); box-shadow:2px 2px 0 var(--syr-copper); }
+  html body .syr-search .syr-pagi .is-disabled{ opacity:.35; pointer-events:none; }
+
+  /* ===== EMPTY ===== */
+  html body .syr-search .syr-empty{
+    text-align:center; padding:40px 16px;
+    background:var(--syr-paper);
+    border:1.5px solid var(--syr-ink); border-radius:22px;
+    box-shadow:4px 4px 0 var(--syr-ink);
+    max-width:640px; margin:0 auto;
+  }
+  html body .syr-search .syr-empty-ic{
+    width:64px; height:64px; margin:0 auto 14px;
+    background:var(--syr-peach); border:1.5px solid var(--syr-ink);
+    border-radius:50%; box-shadow:3px 3px 0 var(--syr-ink);
+    display:flex; align-items:center; justify-content:center;
+  }
+  html body .syr-search .syr-empty-ic svg{ width:30px; height:30px; color:var(--syr-ink); }
+  html body .syr-search .syr-empty-title{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:22px; text-transform:uppercase; letter-spacing:-.005em;
+    color:var(--syr-ink); margin:0 0 6px;
+  }
+  html body .syr-search .syr-empty-msg{ font-size:15px; color:rgba(57,34,15,.7); margin:0 0 22px; }
+  html body .syr-search .syr-empty-msg em{ color:var(--syr-copper); font-style:normal; font-weight:700; }
+  html body .syr-search .syr-empty-cta{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--syr-ink); color:var(--syr-paper);
+    border:1.5px solid var(--syr-ink); border-radius:999px;
+    padding:12px 22px;
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    box-shadow:3px 3px 0 var(--syr-copper);
+    text-decoration:none; transition:transform .12s ease;
+  }
+  html body .syr-search .syr-empty-cta:hover{ transform:translate(-1px,-1px); }
+
+  /* ===== POPULAR ===== */
+  html body .syr-search .syr-pop{ margin-top:28px; text-align:center; }
+  html body .syr-search .syr-pop-h{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--syr-copper); margin:0 0 12px;
+  }
+  html body .syr-search .syr-pop-list{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; list-style:none; padding:0; margin:0; }
+  html body .syr-search .syr-pop-list a{
+    display:inline-block;
+    background:var(--syr-paper); color:var(--syr-ink);
+    border:1.5px solid var(--syr-ink); border-radius:999px;
+    padding:8px 16px;
+    font-family:'Josefin Sans','Josefin',sans-serif; font-weight:600;
+    font-size:13px; text-decoration:none;
+    box-shadow:2px 2px 0 var(--syr-ink);
+    transition:transform .12s ease, background .15s ease;
+  }
+  html body .syr-search .syr-pop-list a:hover{ background:var(--syr-butter); transform:translate(-1px,-1px); }
+
+  /* ===== MOBILE LIST ===== */
+  @media (max-width:760px){
+    html body .syr-search{ padding:14px 14px 48px; }
+    html body .syr-search .syr-hero{ padding:22px 16px 20px; border-radius:20px; box-shadow:4px 4px 0 var(--syr-ink); margin-bottom:16px; }
+    html body .syr-search .syr-h1{ font-size:clamp(28px, 7.5vw, 38px); margin-bottom:12px; }
+    html body .syr-search .syr-sub{ font-size:13.5px; margin-bottom:16px; }
+    html body .syr-search .syr-field{ height:52px; padding:5px 5px 5px 18px; }
+    html body .syr-search .syr-submit{ width:40px; height:40px; }
+    html body .syr-search .syr-reset{ width:30px; height:30px; }
+    html body .syr-search .syr-count{ font-size:12.5px; margin-top:14px; }
+    html body .syr-search .syr-toolbar{ padding:10px 14px; border-radius:14px; flex-wrap:nowrap; align-items:center; }
+    html body .syr-search .syr-toolbar-left{ font-size:12px; flex:1 1 auto; min-width:0; }
+    html body .syr-search .syr-sort{ flex:0 0 auto; gap:8px; }
+    html body .syr-search .syr-sort label{ font-size:10px; }
+    html body .syr-search .syr-sort-select{ font-size:12px; padding:7px 30px 7px 12px; }
+    html body .syr-search .syr-grid{ grid-template-columns:1fr !important; gap:14px; }
+    html body .syr-search .syr-card{ flex-direction:row; align-items:stretch; min-height:140px; border-radius:18px; }
+    html body .syr-search .syr-card-media{ flex:0 0 140px; width:140px; aspect-ratio:auto; height:auto; border-bottom:0; border-right:1.5px solid var(--syr-ink); }
+    html body .syr-search .syr-card-media img{ padding:10px; }
+    html body .syr-search .syr-card-body{ flex:1 1 auto; padding:14px 14px 14px 16px; justify-content:center; align-items:center; text-align:center; gap:8px; }
+    html body .syr-search .syr-card-title{ font-size:14px; -webkit-line-clamp:2; }
+    html body .syr-search .syr-card-price{ font-size:14px; margin-top:0; }
+    html body .syr-search .syr-card--text{ flex-direction:column; min-height:auto; }
+    html body .syr-search .syr-card--text .syr-card-body{ padding:18px 16px; }
+    html body .syr-search .syr-card-badge{ font-size:8.5px; padding:3px 8px; top:8px; left:8px; }
+    html body .syr-search .syr-card-kind{ font-size:8.5px; padding:3px 8px; top:8px; right:8px; }
+    html body .syr-search .syr-pagi{ gap:6px; margin-top:28px; }
+    html body .syr-search .syr-pagi a, html body .syr-search .syr-pagi span{ min-width:34px; height:34px; font-size:12px; padding:0 9px; }
+  }
+  @media (max-width:380px){
+    html body .syr-search{ padding:12px 12px 44px; }
+    html body .syr-search .syr-card-media{ flex:0 0 120px; width:120px; }
+    html body .syr-search .syr-card-body{ padding:12px; }
+    html body .syr-search .syr-card-title{ font-size:13px; }
+    html body .syr-search .syr-card-price{ font-size:13px; }
+  }
+</style>
+
+{% paginate search.results by 24 %}
+<section class="syr-search">
+  <div class="syr-wrap">
+
+    <div class="syr-hero">
+      <span class="syr-eyebrow">Search Syruvia</span>
+      <h1 class="syr-h1">
+        {%- if search.performed -%}
+          You searched <em>for</em><br>{{ search.terms }}
+        {%- else -%}
+          Find your <em>flavor</em>
+        {%- endif -%}
+      </h1>
+      {%- unless search.performed -%}
+        <p class="syr-sub">Syrups, sauces, pumps, bundles — type what you're after.</p>
+      {%- endunless -%}
+      <form action="{{ routes.search_url }}" method="get" role="search" class="syr-form" id="syr-search-form">
+        <div class="syr-field">
+          <input type="hidden" name="options[prefix]" value="last">
+          <input type="hidden" name="type" value="product">
+          <input
+            class="syr-input"
+            id="syr-search-input"
+            type="search" name="q"
+            value="{{ search.terms | escape }}"
+            placeholder="Search syrups, flavors, bundles…"
+            autocorrect="off" autocomplete="off" autocapitalize="off" spellcheck="false"
+          >
+          <button type="button" id="syr-search-clear" class="syr-reset {% if search.terms == blank %}is-hidden{% endif %}" aria-label="Clear search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+          <button type="submit" class="syr-submit" aria-label="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          </button>
+        </div>
+      </form>
+
+      {%- if search.performed -%}
+        <p class="syr-count">
+          {%- if search.results_count > 0 -%}
+            <strong>{{ search.results_count }}</strong> result{% if search.results_count != 1 %}s{% endif %} for “<strong>{{ search.terms }}</strong>”
+          {%- else -%}
+            No results for “<strong>{{ search.terms }}</strong>”
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+    </div>
+
+    {%- if has_results -%}
+      <div class="syr-toolbar">
+        <div class="syr-toolbar-left">
+          <strong>{{ search.results_count }}</strong> {% if search.results_count == 1 %}product{% else %}products{% endif %}
+        </div>
+        {%- if section.settings.enable_sorting -%}
+        <form class="syr-sort" id="syr-sort-form">
+          <label for="syr-sort-by">Sort</label>
+          <input type="hidden" name="q" value="{{ search.terms | escape }}">
+          <input type="hidden" name="options[prefix]" value="last">
+          {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
+          <select name="sort_by" id="syr-sort-by" class="syr-sort-select" onchange="this.form.submit()">
+            {%- for option in search.sort_options -%}
+              <option value="{{ option.value | escape }}" {% if option.value == sort_by %}selected{% endif %}>{{ option.name | escape }}</option>
+            {%- endfor -%}
+          </select>
+        </form>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if search.performed -%}
+      {%- if has_results -%}
+        <ul class="syr-grid" role="list">
+          {%- for item in search.results -%}
+            {%- case item.object_type -%}
+              {%- when 'product' -%}
+                {%- assign p = item -%}
+                {%- assign on_sale = false -%}{%- if p.compare_at_price > p.price and p.available -%}{%- assign on_sale = true -%}{%- endif -%}
+                <li class="syr-card">
+                  {%- if p.available == false -%}
+                    <span class="syr-card-badge is-sold">Sold out</span>
+                  {%- elsif on_sale -%}
+                    <span class="syr-card-badge is-sale">Sale</span>
+                  {%- endif -%}
+                  <div class="syr-card-media">
+                    {%- if p.featured_media -%}
+                      <img
+                        srcset="{{ p.featured_media | image_url: width: 360 }} 360w, {{ p.featured_media | image_url: width: 533 }} 533w, {{ p.featured_media | image_url: width: 720 }} 720w"
+                        sizes="(max-width:760px) 140px, (max-width:1100px) 30vw, 22vw"
+                        src="{{ p.featured_media | image_url: width: 533 }}"
+                        alt="{{ p.featured_media.alt | escape | default: p.title | escape }}"
+                        width="{{ p.featured_media.width }}" height="{{ p.featured_media.height }}"
+                        loading="lazy">
+                    {%- else -%}
+                      {{ 'product-1' | placeholder_svg_tag }}
+                    {%- endif -%}
+                  </div>
+                  <div class="syr-card-body">
+                    <h3 class="syr-card-title">{{ p.title | escape }}</h3>
+                    <div class="syr-card-price{% if on_sale %} is-sale{% endif %}">
+                      <span class="now">{{ p.price | money }}</span>
+                      {%- if on_sale -%}<span class="was">{{ p.compare_at_price | money }}</span>{%- endif -%}
+                    </div>
+                  </div>
+                  <a class="syr-card-link" href="{{ p.url }}">{{ p.title | escape }}</a>
+                </li>
+              {%- when 'article' -%}
+                <li class="syr-card syr-card--text">
+                  <span class="syr-card-kind">Article</span>
+                  <div class="syr-card-body">
+                    <h3 class="syr-card-title">{{ item.title | escape }}</h3>
+                    {%- if item.excerpt_or_content -%}
+                      <p style="font-size:13px;color:rgba(57,34,15,.7);margin:6px 0 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">{{ item.excerpt_or_content | strip_html | truncate: 120 }}</p>
+                    {%- endif -%}
+                  </div>
+                  <a class="syr-card-link" href="{{ item.url }}">{{ item.title | escape }}</a>
+                </li>
+              {%- when 'page' -%}
+                <li class="syr-card syr-card--text">
+                  <span class="syr-card-kind">Page</span>
+                  <div class="syr-card-body">
+                    <h3 class="syr-card-title">{{ item.title | escape }}</h3>
+                  </div>
+                  <a class="syr-card-link" href="{{ item.url }}">{{ item.title | escape }}</a>
+                </li>
+            {%- endcase -%}
+          {%- endfor -%}
+        </ul>
+
+        {%- if paginate.pages > 1 -%}
+          <ul class="syr-pagi" role="list">
+            {%- if paginate.previous -%}<li><a href="{{ paginate.previous.url }}" rel="prev" aria-label="Previous page">←</a></li>
+            {%- else -%}<li><span class="is-disabled">←</span></li>{%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}<li><a href="{{ part.url }}">{{ part.title }}</a></li>
+              {%- else -%}
+                {%- if part.title == paginate.current_page -%}<li><span class="is-current">{{ part.title }}</span></li>
+                {%- else -%}<li><span>{{ part.title }}</span></li>{%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}<li><a href="{{ paginate.next.url }}" rel="next" aria-label="Next page">→</a></li>
+            {%- else -%}<li><span class="is-disabled">→</span></li>{%- endif -%}
+          </ul>
+        {%- endif -%}
+
+      {%- else -%}
+        <div class="syr-empty">
+          <div class="syr-empty-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          </div>
+          <h2 class="syr-empty-title">No matches found</h2>
+          <p class="syr-empty-msg">Try a different word, or browse <em>all syrups</em>.</p>
+          <a href="/collections/all" class="syr-empty-cta">Shop all syrups →</a>
+        </div>
+      {%- endif -%}
+
+    {%- else -%}
+      <div class="syr-pop">
+        <p class="syr-pop-h">Popular searches</p>
+        <ul class="syr-pop-list" role="list">
+          <li><a href="/search?q=vanilla&type=product">Vanilla</a></li>
+          <li><a href="/search?q=caramel&type=product">Caramel</a></li>
+          <li><a href="/search?q=hazelnut&type=product">Hazelnut</a></li>
+          <li><a href="/search?q=chocolate&type=product">Chocolate</a></li>
+          <li><a href="/search?q=butterscotch&type=product">Butterscotch</a></li>
+          <li><a href="/search?q=pump&type=product">Pump</a></li>
+          <li><a href="/search?q=bundle&type=product">Bundle</a></li>
+        </ul>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+<script>
+(function(){
+  function init(){
+    var input = document.getElementById('syr-search-input');
+    var clearBtn = document.getElementById('syr-search-clear');
+    if (!input || !clearBtn) return;
+    function syncClear(){
+      if ((input.value || '').length > 0) clearBtn.classList.remove('is-hidden');
+      else clearBtn.classList.add('is-hidden');
+    }
+    clearBtn.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      input.value = '';
+      syncClear();
+      input.focus();
+      // If we're already on a search results page, go back to a blank /search
+      if (window.location.pathname.indexOf('/search') === 0 && window.location.search){
+        window.location.href = '/search';
+      }
+    });
+    input.addEventListener('input', syncClear);
+    syncClear();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+{% endpaginate %}
+
+{% schema %}
+{
+  "name": "Search",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "checkbox", "id": "enable_sorting", "default": true, "label": "Enable sorting" }
+  ]
+}
+{% endschema %}

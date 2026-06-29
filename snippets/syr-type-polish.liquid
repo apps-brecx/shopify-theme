@@ -1,0 +1,192 @@
+{%- comment -%}
+  Sitewide canonical eyebrow + headline pattern across the homepage,
+  matching the PDP pd-desc-head spec exactly.
+{%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;700;800&family=Josefin+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+
+<style id="syr-type-polish-css">
+  :root{
+    --syr-ink:#39220f; --syr-paper:#FFFBF4; --syr-bg:#F4E8CE;
+    --syr-butter:#FCE2A0; --syr-accent:#c58548;
+  }
+
+  /* ============================================================
+     CANONICAL EYEBROW PILL — matches PDP exactly
+     ============================================================ */
+  html body [id^="syr-cats-"] .syr-cats-eyebrow,
+  html body [id^="syr-new-"] .syr-new-eyebrow,
+  html body [id^="syr-pts-"] .syr-pts-eyebrow,
+  html body [id^="syr-rev-"] .syr-rev-eyebrow,
+  html body [id^="syr-vip-"] .syr-vip-eyebrow,
+  html body [id^="syr-mail-"] .syr-mail-eyebrow,
+  html body [id^="syr-vid-"] .syr-vid-eyebrow,
+  html body [id^="syr-bdl-"] .syr-bdl-eyebrow,
+  html body [id^="syr-hero-"] .syr-slide-eyebrow,
+  html body [id^="syr-hero-"] .syr-hero-eyebrow,
+  html body .syr-eyebrow{
+    display:inline-block !important;
+    background:var(--syr-butter) !important;
+    color:var(--syr-ink) !important;
+    border:2px solid var(--syr-ink) !important;
+    border-radius:999px !important;
+    padding:7px 16px !important;
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight:400 !important;
+    font-size:11px !important;
+    letter-spacing:.18em !important;
+    text-transform:uppercase !important;
+    box-shadow:3px 3px 0 var(--syr-ink) !important;
+    margin-bottom:18px !important;
+  }
+
+  /* ============================================================
+     CANONICAL HEADLINE H2 — matches PDP pd-desc-head
+     ============================================================ */
+  html body [id^="syr-cats-"] .syr-cats-head h2,
+  html body [id^="syr-new-"] .syr-new-h2,
+  html body [id^="syr-pts-"] h2,
+  html body [id^="syr-rev-"] h2,
+  html body [id^="syr-vip-"] h2,
+  html body [id^="syr-mail-"] h2,
+  html body [id^="syr-vid-"] h2,
+  html body [id^="syr-bdl-"] h2,
+  html body [id^="syr-hero-"] .syr-slide-h1,
+  html body [id^="syr-hero-"] .syr-hero-h1,
+  html body .syr-h2{
+    font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight:400 !important;
+    font-size:clamp(32px, 5vw, 56px) !important;
+    line-height:.95 !important;
+    letter-spacing:-.015em !important;
+    text-transform:uppercase !important;
+    color:var(--syr-ink) !important;
+  }
+  /* Hero gets larger size since it's the main one */
+  html body [id^="syr-hero-"] .syr-slide-h1,
+  html body [id^="syr-hero-"] .syr-hero-h1{
+    font-size:clamp(40px, 6.5vw, 88px) !important;
+  }
+
+  /* CANONICAL ITALIC ACCENT — Josefin Sans italic, copper */
+  html body [id^="syr-cats-"] .syr-cats-head h2 em,
+  html body [id^="syr-new-"] .syr-new-h2 em,
+  html body [id^="syr-pts-"] h2 em,
+  html body [id^="syr-rev-"] h2 em,
+  html body [id^="syr-vip-"] h2 em,
+  html body [id^="syr-mail-"] h2 em,
+  html body [id^="syr-vid-"] h2 em,
+  html body [id^="syr-bdl-"] h2 em,
+  html body [id^="syr-hero-"] .syr-slide-h1 em,
+  html body [id^="syr-hero-"] .syr-hero-h1 em,
+  html body .syr-h2 em{
+    font-family:'Josefin Sans','Josefin Sans Fallback','Helvetica Neue',Helvetica,Arial,sans-serif !important;
+    font-style:italic !important;
+    font-weight:500 !important;
+    color:var(--syr-accent) !important;
+    font-size:.82em !important;
+    letter-spacing:.005em !important;
+    text-transform:none !important;
+    display:inline-block !important;
+    transform:translateY(2px) !important;
+  }
+
+  /* ============================================================
+     REVEAL ANIMATION — add class="syr-reveal" to anything
+     ============================================================ */
+  .syr-reveal{
+    opacity:0;
+    transform:translateY(36px);
+    transition:opacity .65s cubic-bezier(.25,.46,.45,.94), transform .65s cubic-bezier(.25,.46,.45,.94);
+    will-change:opacity, transform;
+  }
+  .syr-reveal.is-visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce){
+    .syr-reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
+  }
+
+  /* Body / description text consistent */
+  html body [id^="syr-pts-"] .syr-pts-desc,
+  html body [id^="syr-cats-"] .syr-cats-sub,
+  html body [id^="syr-new-"] .syr-new-sub,
+  html body [id^="syr-rev-"] .syr-card-quote,
+  html body [id^="syr-vip-"] .syr-vip-perks li,
+  html body [id^="syr-mail-"] .syr-mail-sub,
+  html body [id^="syr-vid-"] .syr-vid-sub,
+  html body [id^="syr-bdl-"] .syr-bdl-sub,
+  html body [id^="syr-hero-"] .syr-slide-sub,
+  html body [id^="syr-hero-"] .syr-hero-sub{
+    font-family:'Josefin Sans','Josefin Sans Fallback','Helvetica Neue',Helvetica,Arial,sans-serif !important;
+    font-weight:400 !important;
+  }
+</style>
+
+<script id="syr-reveal-js">
+(function(){
+  if (window.__syrRevealClassInit) return; window.__syrRevealClassInit = true;
+  function setup(){
+    var els = document.querySelectorAll('.syr-reveal:not(.is-visible)');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window)){
+      els.forEach(function(el){ el.classList.add('is-visible'); });
+      return;
+    }
+    if (!window.__syrRevealObs2){
+      window.__syrRevealObs2 = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting){
+            e.target.classList.add('is-visible');
+            window.__syrRevealObs2.unobserve(e.target);
+          }
+        });
+      }, { threshold:.2 });
+    }
+    els.forEach(function(el){
+      if (el.dataset.revealBound) return;
+      el.dataset.revealBound = '1';
+      window.__syrRevealObs2.observe(el);
+    });
+  }
+  setup();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
+  window.addEventListener('load', setup);
+  if ('MutationObserver' in window){
+    new MutationObserver(setup).observe(document.body, {childList:true, subtree:true});
+  }
+  /* Safety: anything not revealed after 3s gets revealed */
+  setTimeout(function(){
+    document.querySelectorAll('.syr-reveal:not(.is-visible)').forEach(function(el){ el.classList.add('is-visible'); });
+  }, 3000);
+})();
+</script>
+
+<script id="syr-marquee-wheel-fix">
+(function(){
+  if (window.__syrMarqueeWheelFix) return; window.__syrMarqueeWheelFix = true;
+  /* Horizontal carousels (overflow-x:auto) otherwise capture vertical wheel and trap page scroll.
+     This lets vertical wheel scroll the page; horizontal swipes still move the carousel. */
+  function bind(){
+    document.querySelectorAll('.syr-vid-marquee, .syr-rev-marquee').forEach(function(m){
+      if (m.dataset.wheelFix) return;
+      m.dataset.wheelFix = '1';
+      m.addEventListener('wheel', function(e){
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)){
+          var dy = e.deltaY;
+          if (e.deltaMode === 1) dy *= 16;
+          else if (e.deltaMode === 2) dy *= (window.innerHeight || 800);
+          e.preventDefault();
+          window.scrollBy(0, dy);
+        }
+      }, { passive: false });
+    });
+  }
+  bind();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+  window.addEventListener('load', bind);
+  setTimeout(bind, 1000);
+})();
+</script>

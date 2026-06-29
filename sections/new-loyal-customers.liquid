@@ -1,0 +1,524 @@
+<script src="{{ 'loyal-customer-javascript.js' | asset_url }}" defer="defer"></script>
+<div class="{{ section.settings.custom_class }} cst-custom-home-loyal-customer cst-custom-tabs">
+  <!-- Tab controls -->
+  <input type="radio" id="loyaltab1" name="loyaltab-control" checked>
+  <input type="radio" id="loyaltab2" name="loyaltab-control">
+  <input type="radio" id="loyaltab3" name="loyaltab-control">
+  <input type="radio" id="loyaltab4" name="loyaltab-control">
+  <input type="radio" id="loyaltab5" name="loyaltab-control">
+  <input type="radio" id="loyaltab6" name="loyaltab-control">
+  <input type="radio" id="loyaltab7" name="loyaltab-control">
+
+  <div class="cst-custom-section-heading">
+    <span>
+      <img
+        class="ony-svg-img-leaf"
+        src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Logo_Survyia-01_copy_1.png?v=1729078847"
+        loading="lazy"
+      >
+      <img
+        class="ony-svg-img-star"
+        src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object_3.png?v=1729078845"
+        loading="lazy"
+      >
+    </span>
+    <h2>{{ section.settings.title }}</h2>
+  </div>
+
+  <div class="cst-custom-content-wrap">
+    <ul class="cst-collection-titles">
+      {% if section.settings.blockname1 != blank %}
+        <li title="loyalTab 1" class="active">
+          <label for="loyaltab1" role="button">
+            <span>{{ section.settings.blockname1 }}</span>
+          </label>
+        </li>
+      {% endif %}
+      {% if section.settings.blockname2 != blank %}
+        <li title="loyalTab 2" class="">
+          <label for="loyaltab2" role="button">
+            <span>{{ section.settings.blockname2 }}</span>
+          </label>
+        </li>
+      {% endif %}
+      {% if section.settings.blockname3 != blank %}
+        <li title="loyalTab 3" class="">
+          <label for="loyaltab3" role="button">
+            <span>{{ section.settings.blockname3 }}</span>
+          </label>
+        </li>
+      {% endif %}
+      {% if section.settings.blockname4 != blank %}
+        <li title="loyalTab 4" class="">
+          <label for="loyaltab4" role="button">
+            <span>{{ section.settings.blockname4 }}</span>
+          </label>
+        </li>
+      {% endif %}
+      {% if section.settings.blockname5 != blank %}
+        <li title="loyalTab 5" class="">
+          <label for="loyaltab5" role="button">
+            <span>{{ section.settings.blockname5 }}</span>
+          </label>
+        </li>
+      {% endif %}
+      {% if section.settings.blockname6 != blank %}
+        <li title="loyalTab 6" class="">
+          <label for="loyaltab6" role="button">
+            <span>{{ section.settings.blockname6 }}</span>
+          </label>
+        </li>
+      {% endif %}
+      {% if section.settings.blockname7 != blank %}
+        <li title="loyalTab 7" class="">
+          <label for="loyaltab7" role="button">
+            <span>{{ section.settings.blockname7 }}</span>
+          </label>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <div class="content">
+    {% comment %}
+      Render all 7 tab sections via a single loop using a captured tab index.
+      Keeps the existing markup structure but avoids 7x copy-paste.
+    {% endcomment %}
+    {% for i in (1..7) %}
+      {% assign tab_type = 'tab' | append: i %}
+      <section id="loyaltab-content{{ i }}" data-tab-index="{{ i }}">
+        <div class="product-grid-section-2">
+          {% for block in section.blocks %}
+            {% if block.type == tab_type %}
+              {% if block.settings.selected_product %}
+                <div class="product-card {% assign colorIndex = forloop.index0 | modulo: 4 %}{% if colorIndex == 0 %}colorone{% elsif colorIndex == 1 %}colortwo{% elsif colorIndex == 2 %}colorthree{% elsif colorIndex == 3 %}colorfour{% endif %}">
+                  <div class="cst-custom-product-featured-image">
+                    <a href="{{ block.settings.selected_product.url }}">
+                      <img
+                        src="{{ block.settings.selected_product.featured_image | img_url: 'master' }}"
+                        alt="{{ block.settings.selected_product.title }}"
+                        loading="lazy"
+                      >
+                    </a>
+                  </div>
+                  <div class="cst-custom-product-content">
+                    <div class="areviews_rating" style="margin-top: 5px;">
+                      {% if block.settings.review %}
+                        {% for star in (1..block.settings.review) %}
+                          <i style="margin-left: 2px; color:#b85423;" class="fas fa-star" aria-hidden="true"></i>
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+                    <h3>{{ block.settings.selected_product.title }}</h3>
+                    <p>{{ block.settings.product_description }}</p>
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if block.settings.media_type == 'image' %}
+                <div class="media-container product-card">
+                  <img src="{{ block.settings.media_image | img_url: 'master' }}" alt="Review Image" loading="lazy">
+                </div>
+              {% elsif block.settings.media_type == 'video' %}
+                {% comment %}
+                  Use Shopify's auto-generated preview_image as the poster — no canvas/JS needed.
+                  Video has NO src attribute initially; only data-src. Set on first interaction.
+                {% endcomment %}
+                {% assign poster_url = block.settings.media_video.preview_image | img_url: '600x' %}
+                <div class="media-container product-card">
+                  <video
+                    class="myVideo"
+                    width="100%"
+                    height="100%"
+                    loop
+                    playsinline
+                    muted
+                    preload="none"
+                    poster="{{ poster_url }}"
+                    data-src="{{ block.settings.media_video.sources[1].url }}"
+                  ></video>
+                  <div class="play-btn-loyal" id="playButton">
+                    <span>
+                      <img
+                        src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/play.png?v=1728393076"
+                        class="img-fluid"
+                        alt="Play Button"
+                        loading="lazy"
+                      >
+                    </span>
+                  </div>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    {% endfor %}
+  </div>
+
+  <div class="cst-btn">
+    <a href="/pages/customer-love" class="button">
+      View All Reviews
+      <span class="cst-custom-arrow">
+        <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/arroww.png?v=1728394015" loading="lazy">
+      </span>
+    </a>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /**
+   * Loyal-customer tabs: lazy video loading.
+   *
+   * Strategy:
+   * - On page load: NO videos load. Only Shopify-generated poster images render
+   *   (via the <video poster="..."> attribute). Cost = a few small JPEGs.
+   * - On play click: attach src to the clicked video's <source>, load, play.
+   * - On tab switch: pause all videos in the section AND release src+buffer
+   *   from videos in tabs we just left. Memory and bandwidth stay bounded.
+   */
+
+  var section = document.currentScript && document.currentScript.previousElementSibling;
+  // Fallback: find the most recent .cst-custom-tabs on the page if currentScript is unavailable
+  if (!section || !section.classList || !section.classList.contains('cst-custom-tabs')) {
+    var allSections = document.querySelectorAll('.cst-custom-tabs');
+    section = allSections[allSections.length - 1];
+  }
+  if (!section) return;
+
+  /**
+   * Attach the real video source to a <video> element if it hasn't been attached yet.
+   * Returns true if the video is now ready (or was already ready), false otherwise.
+   */
+  function attachVideoSource(video) {
+    if (!video) return false;
+    if (video.querySelector('source')) return true; // already attached
+
+    var dataSrc = video.getAttribute('data-src');
+    if (!dataSrc) return false;
+
+    var source = document.createElement('source');
+    source.src = dataSrc;
+    source.type = 'video/mp4';
+    video.appendChild(source);
+    video.load();
+    return true;
+  }
+
+  /**
+   * Release a video's source + buffer to free memory and stop background activity.
+   * Poster image stays visible because it's a separate attribute.
+   */
+  function releaseVideo(video) {
+    if (!video) return;
+    try {
+      video.pause();
+    } catch (e) {}
+    var source = video.querySelector('source');
+    if (source) {
+      source.removeAttribute('src');
+      video.removeChild(source);
+    }
+    video.removeAttribute('src');
+    try {
+      video.load(); // forces the browser to drop buffered data
+    } catch (e) {}
+    video.controls = false;
+  }
+
+  /**
+   * Pause every video in the section and hide its controls + show its play button.
+   */
+  function pauseAllVideos() {
+    var videos = section.querySelectorAll('video.myVideo');
+    videos.forEach(function (v) {
+      try { v.pause(); } catch (e) {}
+      v.controls = false;
+      var container = v.closest('.media-container');
+      if (container) {
+        var btn = container.querySelector('.play-btn-loyal');
+        if (btn) btn.style.display = '';
+      }
+    });
+  }
+
+  /**
+   * Release videos in every tab EXCEPT the one with the given index.
+   * Called when the user switches tabs — frees memory from previously-viewed tabs.
+   */
+  function releaseInactiveTabVideos(activeIndex) {
+    var allTabSections = section.querySelectorAll('section[data-tab-index]');
+    allTabSections.forEach(function (tabSection) {
+      var idx = tabSection.getAttribute('data-tab-index');
+      if (idx === String(activeIndex)) return; // skip active tab
+      var videos = tabSection.querySelectorAll('video.myVideo');
+      videos.forEach(releaseVideo);
+    });
+  }
+
+  /**
+   * Handle a click on a play button: attach src if needed, then play.
+   */
+  function handlePlayClick(playBtn) {
+    var container = playBtn.closest('.media-container');
+    if (!container) return;
+    var video = container.querySelector('video.myVideo');
+    if (!video) return;
+
+    // Pause every other video in the section first
+    pauseAllVideos();
+
+    // Attach src lazily if it hasn't been attached yet
+    attachVideoSource(video);
+
+    // Unmute when the user explicitly clicks play (autoplay-muted was for browser policy compliance)
+    video.muted = false;
+
+    var playPromise = video.play();
+    if (playPromise && typeof playPromise.then === 'function') {
+      playPromise.then(function () {
+        video.controls = true;
+        playBtn.style.display = 'none';
+      }).catch(function () {
+        // If play fails (e.g. user gesture missing), fall back to showing controls
+        video.controls = true;
+      });
+    } else {
+      video.controls = true;
+      playBtn.style.display = 'none';
+    }
+  }
+
+  /**
+   * Wire up listeners.
+   */
+  function init() {
+    // Play-button delegation (replaces the old jQuery handler)
+    section.addEventListener('click', function (e) {
+      var btn = e.target.closest('.play-btn-loyal');
+      if (btn && section.contains(btn)) {
+        handlePlayClick(btn);
+      }
+    });
+
+    // When any video ends, hide controls and re-show its play button
+    section.addEventListener('ended', function (e) {
+      if (e.target && e.target.matches && e.target.matches('video.myVideo')) {
+        var v = e.target;
+        v.controls = false;
+        var container = v.closest('.media-container');
+        if (container) {
+          var btn = container.querySelector('.play-btn-loyal');
+          if (btn) btn.style.display = '';
+        }
+      }
+    }, true); // useCapture=true because 'ended' doesn't bubble
+
+    // Tab switch: listen on the radio inputs that belong to THIS section
+    var radios = section.querySelectorAll('input[type="radio"][name="loyaltab-control"]');
+    radios.forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        if (!radio.checked) return;
+        // Extract the tab index from the radio id, e.g. "loyaltab3" -> 3
+        var match = radio.id.match(/loyaltab(\d+)/);
+        if (!match) return;
+        var activeIndex = parseInt(match[1], 10);
+
+        // Pause everything, then release videos in non-active tabs to free memory
+        pauseAllVideos();
+        releaseInactiveTabVideos(activeIndex);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Loyal Customer Tabs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Our Loyal Customers"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom Class"
+    },
+    {
+      "type": "text",
+      "id": "blockname1",
+      "label": "Tab 1 Name",
+      "default": "Tab 1"
+    },
+    {
+      "type": "text",
+      "id": "blockname2",
+      "label": "Tab 2 Name",
+      "default": "Tab 2"
+    },
+    {
+      "type": "text",
+      "id": "blockname3",
+      "label": "Tab 3 Name",
+      "default": "Tab 3"
+    },
+    {
+      "type": "text",
+      "id": "blockname4",
+      "label": "Tab 4 Name",
+      "default": "Tab 4"
+    },
+    {
+      "type": "text",
+      "id": "blockname5",
+      "label": "Tab 5 Name",
+      "default": "Tab 5"
+    },
+    {
+      "type": "text",
+      "id": "blockname6",
+      "label": "Tab 6 Name",
+      "default": "Tab 6"
+    },
+    {
+      "type": "text",
+      "id": "blockname7",
+      "label": "Tab 7 Name",
+      "default": "Tab 7"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab1",
+      "name": "Tab 1 Content",
+      "limit": 50,
+      "settings": [
+        { "type": "product", "id": "selected_product", "label": "Select Product for Tab 1" },
+        { "type": "text", "id": "product_description", "label": "product review" },
+        { "type": "range", "id": "review", "min": 1, "max": 5, "step": 1, "label": "Reviews", "default": 1 },
+        { "type": "select", "id": "media_type", "label": "Media Type", "options": [
+            { "value": "image", "label": "Image" },
+            { "value": "video", "label": "Video" }
+        ]},
+        { "type": "image_picker", "id": "media_image", "label": "Review Image" },
+        { "type": "video", "id": "media_video", "label": "Review Video URL" }
+      ]
+    },
+    {
+      "type": "tab2",
+      "name": "Tab 2 Content",
+      "limit": 50,
+      "settings": [
+        { "type": "product", "id": "selected_product", "label": "Select Product for Tab 2" },
+        { "type": "text", "id": "product_description", "label": "product review" },
+        { "type": "range", "id": "review", "min": 1, "max": 5, "step": 1, "label": "Reviews", "default": 1 },
+        { "type": "select", "id": "media_type", "label": "Media Type", "options": [
+            { "value": "image", "label": "Image" },
+            { "value": "video", "label": "Video" }
+        ]},
+        { "type": "image_picker", "id": "media_image", "label": "Review Image" },
+        { "type": "video", "id": "media_video", "label": "Review Video URL" }
+      ]
+    },
+    {
+      "type": "tab3",
+      "name": "Tab 3 Content",
+      "limit": 50,
+      "settings": [
+        { "type": "product", "id": "selected_product", "label": "Select Product for Tab 3" },
+        { "type": "text", "id": "product_description", "label": "product review" },
+        { "type": "range", "id": "review", "min": 1, "max": 5, "step": 1, "label": "Reviews", "default": 1 },
+        { "type": "select", "id": "media_type", "label": "Media Type", "options": [
+            { "value": "image", "label": "Image" },
+            { "value": "video", "label": "Video" }
+        ]},
+        { "type": "image_picker", "id": "media_image", "label": "Review Image" },
+        { "type": "video", "id": "media_video", "label": "Review Video URL" }
+      ]
+    },
+    {
+      "type": "tab4",
+      "name": "Tab 4 Content",
+      "limit": 50,
+      "settings": [
+        { "type": "product", "id": "selected_product", "label": "Select Product for Tab 4" },
+        { "type": "text", "id": "product_description", "label": "product review" },
+        { "type": "range", "id": "review", "min": 1, "max": 5, "step": 1, "label": "Reviews", "default": 1 },
+        { "type": "select", "id": "media_type", "label": "Media Type", "options": [
+            { "value": "image", "label": "Image" },
+            { "value": "video", "label": "Video" }
+        ]},
+        { "type": "image_picker", "id": "media_image", "label": "Review Image" },
+        { "type": "video", "id": "media_video", "label": "Review Video URL" }
+      ]
+    },
+    {
+      "type": "tab5",
+      "name": "Tab 5 Content",
+      "limit": 50,
+      "settings": [
+        { "type": "product", "id": "selected_product", "label": "Select Product for Tab 5" },
+        { "type": "text", "id": "product_description", "label": "product review" },
+        { "type": "range", "id": "review", "min": 1, "max": 5, "step": 1, "label": "Reviews", "default": 1 },
+        { "type": "select", "id": "media_type", "label": "Media Type", "options": [
+            { "value": "image", "label": "Image" },
+            { "value": "video", "label": "Video" }
+        ]},
+        { "type": "image_picker", "id": "media_image", "label": "Review Image" },
+        { "type": "video", "id": "media_video", "label": "Review Video URL" }
+      ]
+    },
+    {
+      "type": "tab6",
+      "name": "Tab 6 Content",
+      "limit": 50,
+      "settings": [
+        { "type": "product", "id": "selected_product", "label": "Select Product for Tab 6" },
+        { "type": "text", "id": "product_description", "label": "product review" },
+        { "type": "range", "id": "review", "min": 1, "max": 5, "step": 1, "label": "Reviews", "default": 1 },
+        { "type": "select", "id": "media_type", "label": "Media Type", "options": [
+            { "value": "image", "label": "Image" },
+            { "value": "video", "label": "Video" }
+        ]},
+        { "type": "image_picker", "id": "media_image", "label": "Review Image" },
+        { "type": "video", "id": "media_video", "label": "Review Video URL" }
+      ]
+    },
+    {
+      "type": "tab7",
+      "name": "Tab 7 Content",
+      "limit": 50,
+      "settings": [
+        { "type": "product", "id": "selected_product", "label": "Select Product for Tab 7" },
+        { "type": "text", "id": "product_description", "label": "product review" },
+        { "type": "range", "id": "review", "min": 1, "max": 5, "step": 1, "label": "Reviews", "default": 1 },
+        { "type": "select", "id": "media_type", "label": "Media Type", "options": [
+            { "value": "image", "label": "Image" },
+            { "value": "video", "label": "Video" }
+        ]},
+        { "type": "image_picker", "id": "media_image", "label": "Review Image" },
+        { "type": "video", "id": "media_video", "label": "Review Video URL" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Loyal Customer Tabs",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

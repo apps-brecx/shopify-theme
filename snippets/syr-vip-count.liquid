@@ -1,0 +1,18 @@
+{%- comment -%} Returns the dynamic VIP member count formatted with commas. Reads shop.metafields.vip.member_count, falls back to the count passed in via 'fallback'. {%- endcomment -%}
+{%- assign mc_raw = shop.metafields.vip.member_count.value -%}
+{%- if mc_raw == nil or mc_raw == blank -%}
+  {%- assign mc_raw = fallback -%}
+{%- endif -%}
+{%- assign mc_str = mc_raw | append: '' -%}
+{%- assign mc_len = mc_str.size -%}
+{%- assign mc_out = '' -%}
+{%- assign i = 0 -%}
+{%- assign chars = mc_str | split: '' -%}
+{%- for ch in chars reversed -%}
+  {%- assign mc_out = ch | append: mc_out -%}
+  {%- assign i = i | plus: 1 -%}
+  {%- if i == 3 and forloop.last == false -%}
+    {%- assign mc_out = ',' | append: mc_out -%}
+    {%- assign i = 0 -%}
+  {%- endif -%}
+{%- endfor -%}{{ mc_out }}

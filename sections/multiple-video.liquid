@@ -1,0 +1,195 @@
+<section class="{{ section.settings.custom_class }}">
+  <div class="page-width">
+    <div class="cst-custom-heading">
+      <h2>{{ section.settings.heading }}</h2>
+    </div>
+    <div class="cst-custom-multiple-video-warap">
+      <div class="cst-custom-multiple-video">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'video' %}
+              <div class="video-card boxes video">
+                <video
+                  class="myVideo"
+                  width="100%"
+                  height="100%"
+                  loop=""
+                  poster="{{ block.settings.thumbnail_url }}"
+                  loading="lazy"
+                >
+                  <source src="{{ block.settings.video_url }}" type="video/mp4">
+                </video>
+                <div class="play-btn" id="playButton">
+                  <span>
+                    <img
+                      src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/play.png?v=1728393076"
+                      class="img-fluid"
+                      alt="Play"
+                    >
+                  </span>
+                </div>
+                {% comment %} <h2>{{ block.settings.video_title }}</h2> {% endcomment %}
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% comment %} <script>
+  $(document).ready(function(){
+    $('.play-btn').click(function() {
+
+        // Reset all videos
+        $('video').each(function() {
+            this.pause();
+            this.controls = false;
+
+            const parent = $(this).closest('.video-card');
+            parent.find('.play-btn').show();
+            parent.find('h2').show(); 
+        });
+
+        // Play clicked video
+        var parent = $(this).closest('.video-card');
+        var video = parent.find('video')[0];
+
+        video.play();
+        video.controls = true;
+
+        parent.find('.play-btn').hide();
+        parent.find('h2').hide(); 
+    });
+
+    // When video ends
+    $('video').on('ended', function() {
+        this.controls = false;
+
+        const parent = $(this).closest('.video-card');
+        parent.find('.play-btn').show();
+        parent.find('h2').show();
+    });
+});
+</script> {% endcomment %}
+{% comment %} <script>
+$(document).ready(function(){
+
+    // Hover preview (muted)
+    $('.video-card').on('mouseenter', function() {
+        const video = $(this).find('video')[0];
+
+        $('video').each(function() {
+            this.pause();
+            this.currentTime = 0;
+            this.controls = false; // reset controls for all videos
+        });
+
+        if (video) {
+            video.muted = true;
+            video.controls = false; // ensure no controls in preview mode
+            video.play().catch(() => {});
+        }
+
+        $(this).find('.play-btn, h2').hide();
+    });
+
+    $('.video-card').on('mouseleave', function() {
+        const video = $(this).find('video')[0];
+
+        if (video) {
+            video.pause();
+            video.currentTime = 0;
+            video.controls = false; 
+        }
+
+        $(this).find('.play-btn, h2').show();
+    });
+
+    // Click for full control + sound
+    $('.video-card').on('click', function() {
+        const video = $(this).find('video')[0];
+
+        if (video) {
+            video.muted = false;
+            video.controls = true;
+            video.play();
+        }
+
+        $(this).find('.play-btn, h2').hide();
+    });
+
+});
+</script> {% endcomment %}
+ <script>
+  $(document).ready(function(){
+      $('.play-btn').click(function() {
+          // Pause all videos and hide their controls
+          $('video').each(function() {
+              this.pause();  // Pause the video
+              this.controls = false;  // Hide controls for all videos
+              $(this).siblings('.play-btn').show(); // Show play button for all videos
+          });
+
+          // Play the clicked video
+          var video = $(this).siblings('video')[0];
+          video.play();
+          video.controls = true;  // Show controls for the clicked video
+
+          // Hide the play button for the clicked video
+          $(this).hide();
+      });
+
+      // Pause video when it ends and show the play button again
+      $('video').on('ended', function() {
+          this.controls = false; // Hide controls
+          $(this).siblings('.play-btn').show(); // Show play button
+      });
+  });
+</script> 
+
+{% schema %}
+{
+  "name": "Multiple Video",
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom class"
+    },
+    {
+      "type": "html",
+      "id": "heading",
+      "label": "Title"
+    },
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video Block",
+      "settings": [
+        {
+  "type": "text",
+  "id": "thumbnail_url",
+  "label": "Thumbnail URL"
+},
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Video URL"
+        },
+        {
+          "type": "text",
+          "id": "video_title",
+          "label": "Video Title"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multiple Video",
+      "category": "Video"
+    }
+  ]
+}
+{% endschema %}

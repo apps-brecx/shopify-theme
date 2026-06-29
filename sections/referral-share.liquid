@@ -1,0 +1,321 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const copyBtn = document.querySelector(".copy-icon");
+    const referralText = document.querySelector(".referral-text").innerText;
+
+    copyBtn.addEventListener("click", () => {
+      // Save original HTML content to restore later
+      const originalIconHTML = copyBtn.innerHTML;
+
+      // Copy the referral message to clipboard
+      navigator.clipboard.writeText(referralText).then(() => {
+        // Change icon to copied image
+        copyBtn.innerHTML = '<img class="successfully-copied" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/copied_3.png?v=1748507991" width="50px" height="50px" alt="copied_icon" />';
+
+        // Revert back after 2 seconds
+        setTimeout(() => {
+          copyBtn.innerHTML = originalIconHTML;
+        }, 2000);
+      });
+    });
+  });
+</script>
+
+
+
+<section class="referral-message-section">
+
+
+
+
+
+  <div class="referral-steps-wrapper">
+  <h2 class="referral-steps-heading">It’s Easy to Share the Love</h2>
+  <div class="referral-steps">
+    <div class="referral-step">
+      <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/user-avatar.png?v=1748432469" alt="Invite your Friends" />
+      <h3>Invite your Friends</h3>
+      <p>Send your referral link to friends who love coffee, smoothies, or sweet treats</p>
+    </div>
+    <div class="referral-step">
+      <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/gift-box.png?v=1748432469" alt="They Get a Discount" />
+      <h3>They Get a Discount</h3>
+      <p>Your friend enjoys a special deal on their first order through your referral</p>
+    </div>
+    <div class="referral-step">
+      <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/income.png?v=1748432469" alt="You Earn $5" />
+      <h3>You Earn $5</h3>
+      <p>After they place an order, you earn a reward. It’s as simple as that</p>
+    </div>
+  </div>
+</div>
+
+  
+  <div class="referral-message-container">
+    <h2 class="referral-heading">Need a quick message to send?</h2>
+    <div class="referral-box">
+      <p class="referral-text">
+        Hey! I just ordered from Syruvia—they make amazing syrups for coffee, tea, and more!<br />
+        I think you’ll love them too. Plus, here’s a 10% discount to try it out:<br />
+        <span class="referral-link">[Your Referral Link]</span><br />
+        Every order through this link helps support a growing brand I love!
+      </p>
+      <span class="copy-icon"> <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/copy.png?v=1748507221" width="40px" height="40px" alt="copy_icon" /> </span>
+    </div>
+
+    <h3 class="referral-tagline">It’s that simple—share, earn, and enjoy!</h3>
+
+    <div class="referral-highlight-box">
+      <h2>Syruvia Is Better Shared</h2>
+      <p>
+        Whether it’s your best friend, your sister, or your smoothie-loving neighbor—spread the sweetness.
+        Share what you love and get rewarded for it. <br />
+        There are no limits—earn as many rewards as you like
+      </p>
+    </div>
+  </div>
+
+  <div class="referral-share-bg-1">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object-1.png?v=1748527167"  />
+  </div>
+
+  <div class="referral-share-bg-2">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object-2.png?v=1748527834"  />
+  </div>
+
+   <div class="referral-share-bg-6">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object-6.png?v=1748529893" />
+  </div>
+   <div class="referral-share-bg-7">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object-7.png?v=1748530204" />
+  </div>
+</section>
+
+<style>
+
+  .referral-steps-wrapper {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.referral-steps-heading {
+  font-family: Redrains !important;
+  font-size: 37px;
+  color: #39220f;
+  font-weight: 700;
+  margin-bottom: 35px;
+}
+
+.referral-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.referral-step img {
+  width: 48px;
+  height: 48px;
+}
+
+.referral-step h3 {
+  font-family: Redrains !important;
+  font-size: 26px;
+  font-weight: 700;
+  color: #3a2a20;
+  margin-bottom: 10px;
+}
+
+.referral-step p {
+  font-family: Redrains !important;
+  font-size: 20px;
+  color: #3a2a20;
+  max-width: 90%;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+  
+  .referral-message-section {
+   padding-bottom: 100px;
+    text-align: center;
+    background-color: #FFF6EF;
+    position: relative;
+  }
+
+ 
+
+  .referral-heading {
+     font-family: Redrains !important;
+    font-size: 37px;
+    color: #39220f;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+
+  .referral-box {
+    max-width: 938px; 
+    margin: 0 auto;
+    background-color: #998D7F;
+    border-radius: 6px;
+    color: white;
+    padding: 32px;
+    margin-bottom: 30px;
+    position: relative;
+  }
+
+  .referral-text {
+    font-family: Redrains !important;
+    font-size: 22px;
+    color: white;
+    line-height: 1.3;
+    max-width: 85%; 
+    margin: 0 auto; 
+  }
+  .referral-link{
+    color: #4A3726;
+     font-family: Redrains !important;
+  }
+
+  .copy-icon {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .referral-tagline {
+     font-family: Redrains !important;
+    font-size: 37px;
+    color: #39220f;
+    font-weight: 700;
+    margin-bottom: 40px;
+  }
+
+  .referral-highlight-box {
+    max-width: 1300px; 
+    margin: 0 auto;
+    background-color: #3a200d;
+    color: white;
+    padding: 70px 20px;
+    color: white;
+  }
+
+  .referral-highlight-box h2 {
+     font-family: Redrains !important;
+    font-size: 37px;
+  line-height: 1;
+    max-width: 90%; 
+    margin: 0 auto;
+    color: white !important;
+    font-weight: 700;
+  }
+
+  .referral-highlight-box p {
+      font-family: Redrains !important;
+    font-size: 21px;
+    line-height: 1.5;
+    max-width: 85%; 
+    margin: 0 auto;
+  }
+  .referral-share-bg-1 img{
+  position: absolute;
+    right: 0 ;
+    bottom: 257px;
+  }
+   .referral-share-bg-2 img{
+  position: absolute;
+    right: 0 ;
+  top: 238px;
+  }
+  .referral-share-bg-6 img{
+    position: absolute;
+    left: 0; 
+    top: 0;
+  }
+    .referral-share-bg-7 img{
+    position: absolute;
+    left: 0; 
+    top: 300px;;
+  }
+
+  @media (max-width: 450px) {
+      .referral-highlight-box h2 {
+        font-size: 30px;
+      }
+    .referral-highlight-box p {
+      font-size: 19px;
+      line-height: 1.3;
+    }
+     .referral-tagline{
+      font-size: 32px;
+    }
+    .referral-heading{
+      font-size: 32px;
+      max-width: 90%; 
+      margin: 0 auto;
+      margin-bottom: 11px;
+    }
+    .referral-text{
+      max-width: 90%; 
+      margin: 0 auto; 
+      font-size: 18px;
+    }
+    .copy-icon img{
+      width: 30px; 
+      height: 30px; 
+    }
+    .successfully-copied{
+      width: 30px; 
+      height: 30px;
+    }
+    .referral-steps-heading{
+      font-size: 32px;
+    }
+    .referral-step h3{
+      font-size: 24px;
+      margin-bottom: 3px;
+    }
+    .referral-share-bg-1 img{
+     top: 852px;
+      width: 170px;
+    }
+    .referral-share-bg-7 img{
+      top: 403px; 
+      width: 130px;
+    }
+    .referral-share-bg-2 img{
+      width: 40px;
+    }
+    .referral-share-bg-6 img{
+      width: 32px;
+    }
+    .referral-share-bg-3 img{
+      width : 21px;
+    }
+    .referral-share-bg-5 img{
+      top: 282px; 
+      width: 38px;
+    }
+    .referral-share-bg-4 img{
+      top: 268px; 
+      width: 87px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Referral Share Section",
+  "tag": "section",
+  "class": "referral-share",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Referral Share Section"
+    }
+  ]
+}
+{% endschema %}

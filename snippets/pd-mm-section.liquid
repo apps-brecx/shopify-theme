@@ -1,0 +1,77 @@
+{%- comment -%} Mix & Match bundle — editable via Theme Settings (Product · Bundle & Save). Defaults equal the current live values, so design is unchanged until edited. {%- endcomment -%}
+<section id="pd-mm-snip" class="pd-mixmatch" data-mm-section>
+  <style>
+    #pd-mm-snip.pd-mixmatch{background:{{ settings.pdmm_bg | default: '#fffbf4' }} !important;}
+    #pd-mm-snip .pd-mm-card{background:{{ settings.pdmm_card_bg | default: '#ffffff' }} !important;}
+    #pd-mm-snip .pd-mm-badge{background:{{ settings.pdmm_badge_bg | default: '#fce2a0' }} !important;color:{{ settings.pdmm_badge_color | default: '#39220f' }} !important;}
+    #pd-mm-snip .pd-h2 em{color:{{ settings.pdmm_accent | default: '#c58548' }} !important;}
+    #pd-mm-snip .pd-mm-tier:not(.pd-mm-tier--best) .pd-mm-tier-save{background:{{ settings.pdmm_save_pill_bg | default: '#c5e4d4' }} !important;}
+    #pd-mm-snip .pd-mm-tier--best{background:{{ settings.pdmm_best_bg | default: '#c58548' }} !important;}
+    #pd-mm-snip .pd-mm-tier--best .pd-mm-tier-qty,#pd-mm-snip .pd-mm-tier--best .pd-mm-tier-label{color:{{ settings.pdmm_best_text | default: '#fffbf4' }} !important;}
+    #pd-mm-snip .pd-mm-btn{background:{{ settings.pdmm_btn_bg | default: '#39220f' }} !important;color:{{ settings.pdmm_btn_color | default: '#fffbf4' }} !important;}
+  </style>
+  <div class="pd-wrap">
+    <div class="pd-mm-card">
+      <span class="pd-mm-badge" data-mm-badge aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="#1a1a1a" aria-hidden="true"><path d="M12 2 L14 9 L21 11 L14 13 L12 20 L10 13 L3 11 L10 9 Z"/></svg>
+        {{ settings.pdmm_badge_text | default: 'Save up to 14%' }}
+      </span>
+      <div class="pd-mm-content">
+        <span class="pd-eyebrow">{{ settings.pdmm_eyebrow | default: 'Bundle &amp; Save' }}</span>
+        <h2 class="pd-h2">{{ settings.pdmm_headline | default: 'Mix flavors. <em>Save bigger</em>.' }}</h2>
+        <p class="pd-mm-lead">{{ settings.pdmm_lead | default: 'Build a bundle of any flavors and any sizes. The more bottles you stack, the more you save. Up to 14% off when you go big.' }}</p>
+        <div class="pd-mm-tiers" role="list">
+          <div class="pd-mm-tier" role="listitem">
+            <span class="pd-mm-tier-qty">{{ settings.pdmm_t1_num | default: '2' }}</span>
+            <span class="pd-mm-tier-label">{{ settings.pdmm_t1_label | default: 'Bottles' }}</span>
+            <span class="pd-mm-tier-save">{{ settings.pdmm_t1_save | default: 'Save 4%' }}</span>
+          </div>
+          <div class="pd-mm-tier-arrow" aria-hidden="true">→</div>
+          <div class="pd-mm-tier" role="listitem">
+            <span class="pd-mm-tier-qty">{{ settings.pdmm_t2_num | default: '6' }}</span>
+            <span class="pd-mm-tier-label">{{ settings.pdmm_t2_label | default: 'Bottles' }}</span>
+            <span class="pd-mm-tier-save">{{ settings.pdmm_t2_save | default: 'Save 8%' }}</span>
+          </div>
+          <div class="pd-mm-tier-arrow" aria-hidden="true">→</div>
+          <div class="pd-mm-tier pd-mm-tier--best" role="listitem">
+            <span class="pd-mm-tier-flag">{{ settings.pdmm_t3_flag | default: 'Best Value' }}</span>
+            <span class="pd-mm-tier-qty">{{ settings.pdmm_t3_num | default: '12' }}</span>
+            <span class="pd-mm-tier-label">{{ settings.pdmm_t3_label | default: 'Bottles' }}</span>
+            <span class="pd-mm-tier-save">{{ settings.pdmm_t3_save | default: 'Save 14%' }}</span>
+          </div>
+        </div>
+        <a href="{{ settings.pdmm_cta_link | default: '/pages/build-your-bundle' }}" class="pd-mm-btn">
+          {{ settings.pdmm_cta_text | default: 'Build your bundle' }}
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 H19 M13 6 l6 6 -6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  function init(){
+    var section = document.querySelector('#pd-mm-snip[data-mm-section]');
+    var badge   = section && section.querySelector('[data-mm-badge]');
+    if (!section || !badge) return;
+    var minScale = 0.80, maxScale = 1.45, minRot = -6, maxRot = 2, raf = null;
+    function update(){
+      raf = null;
+      var r = section.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var start = vh, end = vh * 0.20, denom = (start - end) || 1;
+      var p = (start - r.top) / denom; if (p < 0) p = 0; if (p > 1) p = 1;
+      var ease = p * p * (3 - 2 * p);
+      badge.style.setProperty('--mm-s', (minScale + (maxScale - minScale) * ease).toFixed(3));
+      badge.style.setProperty('--mm-r', (minRot + (maxRot - minRot) * ease).toFixed(2) + 'deg');
+    }
+    function onScroll(){ if (raf) return; raf = requestAnimationFrame(update); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>

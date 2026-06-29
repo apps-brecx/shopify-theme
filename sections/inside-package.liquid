@@ -1,0 +1,423 @@
+<style>
+        .inside-package__inner{
+            padding: 30px 0;
+            background: #fff;
+        }
+        .inside-package__wrapper{
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: center;
+        }
+        .inside-package__image{
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .inside-package__image img{
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+        .inside-package__image, .inside-package__content{
+            width: 40%;
+        }
+        .inside-package__content-title{
+            margin-bottom: 20px;
+        }
+        .inside-package__content-title h2{
+            font-family: "Epilogue", sans-serif !important;
+            font-size: 36px;
+            margin: 0;
+            font-weight: 700;
+        }
+        .inside-package__content-item{
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 10px;
+        }
+        .inside-package__content-item-name-wrapper {
+          position: relative;
+          display: inline-block;
+       }
+
+    .inside-package__content-item-name {
+      cursor: pointer;
+      transition: opacity .2s ease;
+        font-family: "Manrope", sans-serif !important;
+        text-decoration: none;
+        font-size: 24px;
+        color: #66645f;
+    }
+    .inside-package__content-items{
+      margin-bottom: 20px;
+  }
+
+    .inside-package__content-item-name:hover {
+      opacity: .7;
+    }
+
+  .inside-package__modal {
+    position: absolute;
+    left: 0;
+    width: 240px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.12);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all .25s ease;
+    z-index: 50;
+  }
+
+  /* default: opens down */
+  .inside-package__content-item-name-wrapper.open-bottom .inside-package__modal {
+    top: 130%;
+    bottom: auto;
+  }
+
+  /* opens up when near bottom */
+  .inside-package__content-item-name-wrapper.open-top .inside-package__modal {
+    bottom: 130%;
+    top: auto;
+    transform: translateY(-10px);
+  }
+
+
+    .inside-package__content-item-name-wrapper:hover .inside-package__modal {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .inside-package__modal-image img {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+    }
+
+    .inside-package__modal-content {
+      margin-top: 14px;
+    }
+
+    .inside-package__modal-content h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .inside-package__modal-description {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #666;
+    }
+    .inside-package__content-item-count{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #e7e2db;
+        position: relative;
+    }
+    .inside-package__content-item-count span{
+        font-weight: 500;
+        font-size: 12px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "Manrope", sans-serif !important;
+        color: #8d4925;
+    }
+
+    @media(max-width: 991px){
+     .inside-package__inner .product-form form{
+          justify-content: start;
+      }
+      .inside-package__content-item-name{
+        font-size: 20px;
+      }
+      .inside-package__wrapper{
+            flex-direction: column;
+        }
+              .inside-package__image, .inside-package__content{
+            width: 100%;
+        }
+  }
+      @media(max-width: 500px){
+      
+        .inside-package__content-title h2{
+          text-align: center;
+        }
+        .inside-package__content-items{
+          padding-left: 50px;
+        }
+        .inside-package__content .product-form__buttons {
+        width: 100%;
+        }
+        .inside-package__content .product-form__submit{
+          width: 100%;
+        }
+      
+      }
+</style>
+
+<div class="inside-package__inner">
+  <div class="page-width">
+    {% assign package_products = product.metafields.custom.package_products.value %}
+
+    <div class="inside-package__wrapper">
+      <div class="inside-package__image">
+        {% if product.media.size > 1 %}
+          <img
+            src="{{ product.media[1] | image_url: width: 1200 }}"
+            alt="{{ product.title | escape }}"
+            width="{{ product.media[1].width }}"
+            height="{{ product.media[1].height }}"
+            loading="lazy"
+          >
+        {% elsif product.featured_image %}
+          <img
+            src="{{ product.featured_image | image_url: width: 1200 }}"
+            alt="{{ product.title | escape }}"
+            loading="lazy"
+          >
+        {% endif %}
+      </div>
+
+      <div class="inside-package__content">
+        {% if section.settings.title != blank %}
+          <div class="inside-package__content-title">
+            <h2>{{ section.settings.title }}</h2>
+          </div>
+        {% endif %}
+
+        <div class="inside-package__content-items">
+          {% if package_products != blank %}
+            {% for item in package_products %}
+              {% assign package_product = item.product.value %}
+
+              <div class="inside-package__content-item ">
+                <div class="inside-package__content-item-count">
+                  <span>{{ item.quantity }}X</span>
+                </div>
+
+                <div class="inside-package__content-item-name-wrapper">
+                  <a
+                    href="{{ package_product.url }}"
+                    class="inside-package__content-item-name js-modal-trigger"
+                    data-modal-trigger="{{ package_product.id }}"
+                  >
+                    {{ package_product.title }}
+                  </a>
+
+                  <div
+                    class="inside-package__modal"
+                    data-modal="{{ package_product.id }}"
+                  >
+                    <div class="inside-package__modal-inner">
+                      {% if package_product.featured_image %}
+                        <div class="inside-package__modal-image">
+                          <img
+                            src="{{ package_product.featured_image | image_url: width: 500 }}"
+                            alt="{{ package_product.title | escape }}"
+                            loading="lazy"
+                          >
+                        </div>
+                      {% endif %}
+
+                      <div class="inside-package__modal-content">
+                        <h3>
+                          {{ package_product.title }}
+                        </h3>
+
+                        <div class="inside-package__modal-description">
+                          {{ package_product.description | strip_html | truncate: 140 }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+
+        <div {{ block.shopify_attributes }} class="responsive">
+          {%- if product != blank -%}
+            {%- liquid
+              assign gift_card_recipient_feature_active = false
+              if block.settings.show_gift_card_recipient and product.gift_card?
+                assign gift_card_recipient_feature_active = true
+              endif
+
+              assign show_dynamic_checkout = false
+              if block.settings.show_dynamic_checkout and gift_card_recipient_feature_active == false
+                assign show_dynamic_checkout = true
+              endif
+            -%}
+
+            <product-form
+              class="product-form"
+              data-hide-errors="{{ gift_card_recipient_feature_active }}"
+              data-section-id="{{ section.id }}"
+            >
+              <div class="product-form__error-message-wrapper" role="alert" hidden>
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  class="icon icon-error"
+                  viewBox="0 0 13 13"
+                >
+                  <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                  <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+                  <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                  <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+                </svg>
+                <span class="product-form__error-message"></span>
+              </div>
+
+              {%- form 'product',
+                product,
+                id: product_form_id,
+                class: 'form',
+                novalidate: 'novalidate',
+                data-type: 'add-to-cart-form'
+              -%}
+                <input
+                  type="hidden"
+                  name="id"
+                  value="{{ product.selected_or_first_available_variant.id }}"
+                  {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+                    disabled
+                  {% endif %}
+                  class="product-variant-id"
+                >
+                {% comment %}
+                  {% for item in package_products %}
+                    {% assign p = item.product.value %}
+
+                    <input
+                      type="hidden"
+                      name="properties[Item {{ forloop.index }}]"
+                      value="{{ item.quantity }}x {{ p.title }}"
+                    >
+                  {% endfor %}
+                {% endcomment %}
+                {% for item in package_products %}
+                  {% assign p = item.product.value %}
+
+                  <input
+                    type="hidden"
+                    name="properties[Item {{ forloop.index }}]"
+                    value="{{ item.quantity }}x {{ p.title }}"
+                  >
+                {% endfor %}
+
+                {%- if gift_card_recipient_feature_active -%}
+                  {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
+                {%- endif -%}
+
+                <div class="product-form__buttons cst-atc-buttons">
+                  <div class="sealsubs-target-element"></div>
+                  {%- liquid
+                    assign check_against_inventory = true
+                    if product.selected_or_first_available_variant.inventory_management != 'shopify' or product.selected_or_first_available_variant.inventory_policy == 'continue'
+                      assign check_against_inventory = false
+                    endif
+                    if product.selected_or_first_available_variant.quantity_rule.min > product.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+                      assign quantity_rule_soldout = true
+                    endif
+                  -%}
+
+                  <button
+                    id="ProductSubmitButton-{{ section_id }}"
+                    type="submit"
+                    name="add"
+                    class="product-form__submit button button--full-width {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
+                    {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+                      disabled
+                    {% endif %}
+                  >
+                    <span style="font-weight: 500; font-family: Manrope, sans-serif !important; font-size: 16px;">
+                      {%- if product.selected_or_first_available_variant.available == false or quantity_rule_soldout -%}
+                        {{ 'products.product.sold_out' | t }}
+                      {%- else -%}
+                        Add Pack To Cart
+                        <span
+                          ><img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Group_23.png?v=1729681997"
+                        ></span>
+                      {%- endif -%}
+                    </span>
+                    {%- render 'loading-spinner' -%}
+                  </button>
+                  {%- if show_dynamic_checkout -%}
+                    {{ form | payment_button }}
+                  {%- endif -%}
+                </div>
+              {%- endform -%}
+            </product-form>
+          {%- else -%}
+            <div class="product-form">
+              <div class="product-form__buttons form">
+                <button
+                  type="submit"
+                  name="add"
+                  class="product-form__submit button button--full-width button--primary"
+                  disabled
+                >
+                  {{ 'products.product.sold_out' | t }}
+                </button>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const items = document.querySelectorAll('.inside-package__content-item-name-wrapper');
+
+    items.forEach((item) => {
+      const modal = item.querySelector('.inside-package__modal');
+
+      item.addEventListener('mouseenter', () => {
+        const rect = item.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+
+        item.classList.remove('open-top', 'open-bottom');
+
+        // If not enough space below → open upward
+        if (spaceBelow < 220 && spaceAbove > spaceBelow) {
+          item.classList.add('open-top');
+        } else {
+          item.classList.add('open-bottom');
+        }
+      });
+    });
+  });
+</script>
+{% schema %}
+{
+  "name": "Inside Package",
+  "tag": "section",
+  "class": "section inside-package-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "What's Inside"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Inside Package"
+    }
+  ]
+}
+{% endschema %}

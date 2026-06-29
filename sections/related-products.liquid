@@ -1,0 +1,494 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+{{ 'section-related-products.css' | asset_url | stylesheet_tag }}
+
+<!-- Slick Slider Styles and Scripts -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script src="https://areviewsapp.com/js_codes/collection_rating.js?11978"></script>
+<script src="{{ 'related-product-script.js' | asset_url }}"></script>
+{% if section.settings.image_shape == 'blob' %}
+  {{ 'mask-blobs.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+
+{%- style -%}
+        .section-{{ section.id }}-padding {
+          padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+          padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+        }
+
+        @media screen and (min-width: 750px) {
+          .section-{{ section.id }}-padding {
+            padding-top: {{ section.settings.padding_top }}px;
+            padding-bottom: {{ section.settings.padding_bottom }}px;
+          }
+        }
+        .product .cst-custom-section-heading h2:before {
+        display: none !important;
+      }
+      .recipe-detail-btn {
+        padding-bottom: 0!important;
+    }
+    .product .cst-custom-tabs {
+      padding-bottom: 95px !important;
+  }
+{%- endstyle -%}
+
+<div class="cst-custom-tabs">
+  <div class="rich-text__blocks center" style="margin:auto !important;">
+    {% assign related_products_json = product.metafields.custom.you_might_enjoy_products.value %}
+    {% if related_products_json %}
+      {% assign related_products = related_products_json | parse_json %}
+
+      <div class="banner__top-image">
+        <img 
+  src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Asset_1.svg?v=1762441289" 
+  width="46" 
+  height="26" 
+  alt="Top Image"
+  loading="lazy"
+/>
+      </div>
+      <div class="cst-custom-section-heading">
+        <h2>You Might Enjoy</h2>
+      </div>
+      <div class="content">
+        <div class="product-grid-section slick-slider">
+          <!-- Added slick-slider class here -->
+          {% for related_product in related_products %}
+            <div class="product-card {% assign colorIndex = forloop.index0 | modulo: 4 %} {% if colorIndex == 0 %}colorone{% elsif colorIndex == 1 %}colortwo{% elsif colorIndex == 2 %}colorthree{% elsif colorIndex == 3 %}colorfour{% endif %}">
+              <!-- Product Image -->
+              <div class="cst-custom-product-featured-image">
+                <a href="{{ related_product.url }}">
+                  <img src="{{ related_product.featured_image | img_url: 'large' }}" alt="{{ related_product.title }}">
+                </a>
+              </div>
+
+              <!-- Product Content -->
+              <div class="cst-custom-product-content">
+                <!-- Review Stars -->
+                {% comment %} <div
+                  class="areviews_product_item areviews_stars{{ related_product.id }}"
+                  data-product-id="{{ related_product.id }}"
+                ></div> {% endcomment %}
+                 <!-- Start of Judge.me Star Rating Badge under title -->
+                      <div style="display: flex; justify-content:center; margin-top: 3px" class="product-title__stars">
+                        <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}">
+                          {{ product.metafields.judgeme.badge }}
+                        </div>
+                      </div>
+    <!-- End of Judge.me Star Rating Badge -->
+
+
+                <!-- Product Title -->
+                <h3>{{ related_product.title }}</h3>
+                <p>{{ related_product.price | money }}</p>
+
+                <!-- Add to Cart Button -->
+                {% comment %} <form action="/cart/add" method="post" enctype="multipart/form-data">
+                  <input type="hidden" name="id" value="{{ related_product.variants.first.id }}">
+                  <button class="quick-add__submit button" type="submit">Add to Cart</button>
+                </form> {% endcomment %}
+                                <product-form>
+  <form
+    method="post"
+    action="{{ routes.cart_add_url }}"
+    class="quick-add__form"
+    data-type="add-to-cart-form"
+    data-ajax-atc
+  >
+    <input type="hidden" name="id" value="{{ related_product.variants.first.id }}">
+    <input type="hidden" name="quantity" value="1">
+    <button type="submit" class="quick-add__submit button">
+      {{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}
+    </button>
+  </form>
+</product-form>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div
+        class="product-recommendations"
+        data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=8&intent=related"
+      >
+        {% if recommendations.performed? and recommendations.products_count > 0 %}
+          {% if recommendations.intent == 'related' %}
+            <div class="cst-custom-tabs">
+              <div class="rich-text__blocks center" style="margin:auto !important;">
+                <div class="banner__top-image">
+                  <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Asset_1.svg?v=1762441289" alt="Promotional Banner" loading="lazy" width="46" height="26">
+                </div>
+                <div class="cst-custom-section-heading">
+                  <h2>You Might Enjoy</h2>
+                </div>
+                <div class="content">
+                  <div class="product-grid-section slick-slider">
+                    {% for product in recommendations.products limit: 8 %}
+                      <div class="product-card {% assign colorIndex = forloop.index0 | modulo: 4 %} {% if colorIndex == 0 %}colorone{% elsif colorIndex == 1 %}colortwo{% elsif colorIndex == 2 %}colorthree{% else %}colorfour{% endif %}">
+                        <div class="cst-custom-product-featured-image">
+                          <a href="{{ product.url }}">
+                            <img
+                              src="{{ product.featured_image | img_url: 'large' | default: '//syruvia.com/cdn/shop/files/default-image.png' }}"
+                              alt="{{ product.title }}"
+                            >
+                          </a>
+                        </div>
+                        <div class="cst-custom-product-content">
+                          {% comment %} <div
+                            class="areviews_product_item areviews_stars{{ product.id }}"
+                            data-product-id="{{ product.id }}"
+                          ></div> {% endcomment %}
+                           <!-- Start of Judge.me Star Rating Badge under title -->
+                      <div style="display: flex; justify-content:center; margin-top: 3px" class="product-title__stars">
+                        <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}">
+                          {{ product.metafields.judgeme.badge }}
+                        </div>
+                      </div>
+    <!-- End of Judge.me Star Rating Badge -->
+
+                          <h3>{{ product.title }}</h3>
+                          <p>{{ product.price | money }}</p>
+                          {% if product.variants.size > 0 %}
+                            <form action="/cart/add" method="post" enctype="multipart/form-data">
+                              <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                              <button class="quick-add__submit button" type="submit">Add to Cart</button>
+                            </form>
+                          {% else %}
+                            <button class="quick-add__submit button" disabled>Out of Stock</button>
+                          {% endif %}
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    {% endif %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const handleIntersection = (entries, observer) => {
+          if (!entries[0].isIntersecting) return;
+
+          observer.unobserve(productRecommendationsSection);
+
+          const url = productRecommendationsSection.dataset.url;
+
+          fetch(url)
+            .then(response => response.text())
+            .then(text => {
+              const html = document.createElement('div');
+              html.innerHTML = text;
+              const recommendations = html.querySelector('.product-recommendations');
+
+              if (recommendations && recommendations.innerHTML.trim().length) {
+                productRecommendationsSection.innerHTML = recommendations.innerHTML;
+              }
+            })
+            .catch(e => {
+              console.error(e);
+            });
+        };
+
+        const productRecommendationsSection = document.querySelector('.product-recommendations');
+        if (productRecommendationsSection) {
+          const observer = new IntersectionObserver(handleIntersection, { rootMargin: '0px 0px 200px 0px' });
+          observer.observe(productRecommendationsSection);
+        }
+      });
+    </script>
+  </div>
+</div>
+
+<!--
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const handleIntersection = (entries, observer) => {
+        if (!entries[0].isIntersecting) return;
+
+        observer.unobserve(productRecommendationsSection);
+
+        const url = productRecommendationsSection.dataset.url;
+
+        fetch(url)
+          .then(response => response.text())
+          .then(text => {
+            const html = document.createElement('div');
+            html.innerHTML = text;
+            const recommendations = html.querySelector('.product-recommendations');
+
+            if (recommendations && recommendations.innerHTML.trim().length) {
+              productRecommendationsSection.innerHTML = recommendations.innerHTML;
+            }
+          })
+          .catch(e => {
+            console.error(e);
+          });
+      };
+
+      const productRecommendationsSection = document.querySelector('.product-recommendations');
+      if (productRecommendationsSection) {
+        const observer = new IntersectionObserver(handleIntersection, { rootMargin: '0px 0px 200px 0px' });
+        observer.observe(productRecommendationsSection);
+      }
+    });
+  </script>
+-->
+<script>
+  $(document).ready(function () {
+      // Function to initialize Slick Slider
+      function initializeSlick() {
+          if ($(".slick-slider").length) {
+              $(".slick-slider").slick({
+                  infinite: true,
+                  slidesToShow: 4,
+                  slidesToScroll: 1,
+                  dots: false,
+                  arrows: true,
+                  responsive: [
+                      {
+                          breakpoint: 1024,
+                          settings: {
+                              slidesToShow: 2,
+                              slidesToScroll: 2,
+                          },
+                      },
+                      {
+                          breakpoint: 767,
+                          settings: {
+                            arrows: true,
+                           centerMode: true,
+                           centerPadding: "170px",
+                           slidesToShow:1 ,
+                          },
+                      },
+                            {
+                          breakpoint: 575,
+                          settings: {
+                            arrows: true,
+                           centerMode: true,
+                           centerPadding: "70px",
+                           slidesToShow: 1,
+                          },
+                      },
+                  ],
+              });
+              console.log("Slick Slider initialized");
+          } else {
+              console.log("Slick Slider not found");
+          }
+      }
+
+      // Function to check if product recommendations are loaded
+      function checkForRecommendations() {
+          if ($(".product-grid-section").length) {
+              initializeSlick();
+          } else {
+              console.log("Waiting for product recommendations...");
+              setTimeout(checkForRecommendations, 100); // Check every 500ms
+          }
+      }
+
+      // Start checking for recommendations
+      checkForRecommendations();
+  });
+</script>
+{% schema %}
+{
+  "name": "t:sections.related-products.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.related-products.settings.paragraph__1.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "You may also like",
+      "label": "t:sections.related-products.settings.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.related-products.settings.products_to_show.label"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "label": "t:sections.related-products.settings.columns_desktop.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "info": "t:sections.all.colors.has_cards_info",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.related-products.settings.header__2.content"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.related-products.settings.image_ratio.options__1.label"
+        },
+        {
+          "value": "portrait",
+          "label": "t:sections.related-products.settings.image_ratio.options__2.label"
+        },
+        {
+          "value": "square",
+          "label": "t:sections.related-products.settings.image_ratio.options__3.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.related-products.settings.image_ratio.label"
+    },
+    {
+      "type": "select",
+      "id": "image_shape",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.all.image_shape.options__1.label"
+        },
+        {
+          "value": "arch",
+          "label": "t:sections.all.image_shape.options__2.label"
+        },
+        {
+          "value": "blob",
+          "label": "t:sections.all.image_shape.options__3.label"
+        },
+        {
+          "value": "chevronleft",
+          "label": "t:sections.all.image_shape.options__4.label"
+        },
+        {
+          "value": "chevronright",
+          "label": "t:sections.all.image_shape.options__5.label"
+        },
+        {
+          "value": "diamond",
+          "label": "t:sections.all.image_shape.options__6.label"
+        },
+        {
+          "value": "parallelogram",
+          "label": "t:sections.all.image_shape.options__7.label"
+        },
+        {
+          "value": "round",
+          "label": "t:sections.all.image_shape.options__8.label"
+        }
+      ],
+      "default": "default",
+      "label": "t:sections.all.image_shape.label",
+      "info": "t:sections.all.image_shape.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "default": false,
+      "label": "t:sections.related-products.settings.show_secondary_image.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "default": false,
+      "label": "t:sections.related-products.settings.show_vendor.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "default": false,
+      "label": "t:sections.related-products.settings.show_rating.label",
+      "info": "t:sections.related-products.settings.show_rating.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.related-products.settings.header_mobile.content"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "default": "2",
+      "label": "t:sections.related-products.settings.columns_mobile.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "t:sections.related-products.settings.columns_mobile.options__1.label"
+        },
+        {
+          "value": "2",
+          "label": "t:sections.related-products.settings.columns_mobile.options__2.label"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}

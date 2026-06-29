@@ -1,0 +1,10 @@
+{%- comment -%}
+  Renders the Judge.me widget content directly from the product metafield
+  so reviews appear even when the Judge.me JS isn't fully loaded.
+{%- endcomment -%}
+{%- assign jdgm_html = product.metafields.judgeme.widget.value -%}
+{%- if jdgm_html != blank -%}
+  {{ jdgm_html }}
+{%- else -%}
+  <div class="jdgm-widget jdgm-rev-widg" data-id="{{ product.id }}" data-auto-install="true"></div>
+{%- endif -%}

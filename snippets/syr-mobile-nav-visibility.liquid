@@ -1,0 +1,7 @@
+{%- comment -%} Add a visibility-style toggle effect for syruvia-nav (mobile) section. Since we can't easily modify the giant section file, we use a global setting via theme settings_data. {%- endcomment -%}
+<style id="syr-mobile-nav-visibility-css">
+  /* Default: syruvia_nav shows only on mobile */
+  @media (min-width: 901px) {
+    #shopify-section-syruvia_nav { display: none; }
+  }
+</style>

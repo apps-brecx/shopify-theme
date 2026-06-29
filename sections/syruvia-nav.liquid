@@ -1,0 +1,537 @@
+{%- comment -%} Syruvia Nav — with fallback content so images show by default {%- endcomment -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700;800&family=Josefin+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+{%- if settings.cart_type == 'drawer' -%}
+  {{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
+  {{ 'component-cart.css' | asset_url | stylesheet_tag }}
+  {{ 'component-totals.css' | asset_url | stylesheet_tag }}
+  {{ 'component-price.css' | asset_url | stylesheet_tag }}
+  {{ 'component-discounts.css' | asset_url | stylesheet_tag }}
+  {{ 'component-cart-items.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+{%- assign acct_url = routes.account_url -%}
+{%- unless customer -%}{%- assign acct_url = routes.account_login_url -%}{%- endunless -%}
+
+{%- assign brand_logo_url = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/syruvia_logo.png?v=1760350871' -%}
+{%- if section.settings.brand_logo != blank -%}{%- assign brand_logo_url = section.settings.brand_logo | image_url: width: 400 -%}
+{%- elsif settings.logo != blank -%}{%- assign brand_logo_url = settings.logo | image_url: width: 400 -%}{%- endif -%}
+
+{%- comment -%} Detect if user added blocks for each category {%- endcomment -%}
+{%- assign has_shopby = false -%}{%- assign has_featured = false -%}{%- assign has_taste = false -%}{%- assign has_deals = false -%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'shop_card' and block.settings.tab == 'shop_by' -%}{%- assign has_shopby = true -%}{%- endif -%}
+  {%- if block.type == 'shop_card' and block.settings.tab == 'featured' -%}{%- assign has_featured = true -%}{%- endif -%}
+  {%- if block.type == 'shop_card' and block.settings.tab == 'taste' -%}{%- assign has_taste = true -%}{%- endif -%}
+  {%- if block.type == 'deal_link' -%}{%- assign has_deals = true -%}{%- endif -%}
+{%- endfor -%}
+
+<style>
+  #syrnav{
+    --bg:{{ section.settings.nav_bg | default: '#FAF3E9' }}; --ink:{{ section.settings.nav_text | default: '#1F1813' }}; --surface:#fff; --tile:#f1e9dc; --accent:{{ section.settings.nav_accent | default: '#c58548' }}; --muted:#9a8e80;
+    --butter:#FCE2A0; --peach:#FFD4B8; --mint:#C5E4D4; --sky:#B8DCEB; --blush:#F5C7BE;
+    --rule:2px solid var(--ink); --rule-1:1.5px solid var(--ink); --shadow-sm:3px 3px 0 var(--ink);
+    --fhead:'Archivo Black',sans-serif; --fui:'Archivo',sans-serif; --fbody:'Josefin Sans',sans-serif;
+    position:sticky; top:0; z-index:60; font-family:var(--fui);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  #syrnav.is-hidden{ transform:translateY(-100%); }
+  #syrnav *,#syrnav *::before,#syrnav *::after{box-sizing:border-box;}
+  #syrnav a{text-decoration:none;color:inherit;cursor:pointer;}
+  #syrnav button{font-family:inherit;cursor:pointer;}
+  .syrnav-promo{background:{{ section.settings.promo_bg | default: '#1F1813' }};color:{{ section.settings.promo_color | default: '#FAF3E9' }};text-align:center;font-family:var(--fui);font-weight:700;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;padding:9px 16px;}
+  .syrnav-promo b{color:{{ section.settings.promo_highlight_color | default: '#FCE2A0' }};margin-left:6px;font-weight:800;}
+  .syrnav-wrap{position:relative;}
+  .syrnav-bar{background:var(--bg);border-bottom:var(--rule);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:66px;padding:0 28px;}
+  .syrnav-left{justify-self:start;display:flex;align-items:center;gap:12px;}
+  .syrnav-hamb{display:none;background:transparent;border:0;color:var(--ink);padding:4px;}
+  .syrnav-links{display:flex;gap:20px;align-items:center;}
+  .syrnav-links a{font-family:var(--fui);color:var(--ink);font-weight:700;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.62;transition:opacity .15s,color .15s;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}
+  .syrnav-links a:hover,.syrnav-links a.mega-on{opacity:1;color:var(--accent);}
+  .syrnav-chev svg{width:12px;height:12px;transition:transform .2s ease;}
+  .syrnav-links a.mega-on .syrnav-chev svg{transform:rotate(180deg);}
+  .syrnav-brand{justify-self:center;display:inline-flex;align-items:center;height:46px;}
+  .syrnav-brand img.syrnav-brand-img{display:block;height:{{ section.settings.logo_height | default: 38 }}px;width:auto;max-height:46px;max-width:200px;object-fit:contain;}
+  .syrnav-icons{display:flex;gap:5px;justify-self:end;align-items:center;}
+  .syrnav-ic{background:transparent;border:0;padding:8px;border-radius:50%;color:var(--ink);display:grid;place-items:center;position:relative;}
+  .syrnav-ic:hover{background:color-mix(in srgb,var(--ink) 9%,transparent);}
+  .syrnav-cart-n{position:absolute;top:-2px;right:-3px;background:var(--accent);color:var(--ink);font-family:var(--fhead);font-size:9.5px;min-width:17px;height:17px;border:var(--rule-1);border-radius:999px;display:grid;place-items:center;padding:0 3px;}
+  .syrnav-mega{display:none;position:absolute;top:100%;left:0;right:0;z-index:55;background:var(--bg);border-bottom:var(--rule);box-shadow:0 20px 32px -20px rgba(31,24,19,.45);}
+  .syrnav-mega.open{display:block;}
+  .syrnav-mega-inner{max-width:1180px;margin:0 auto;padding:26px 32px 30px;}
+  .syrnav-subtabs{display:flex;gap:28px;border-bottom:1.5px solid var(--ink);margin-bottom:22px;}
+  .syrnav-subtab{background:transparent;border:0;padding:2px 0 12px;font-family:var(--fui);font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);position:relative;}
+  .syrnav-subtab.active{color:var(--ink);}
+  .syrnav-subtab.active::after{content:"";position:absolute;left:0;right:0;bottom:-1.5px;height:3px;background:var(--accent);border-radius:2px;}
+  .syrnav-grid{display:none;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .syrnav-grid.active{display:grid;}
+  .syrnav-cat{display:block;border:var(--rule);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow-sm);transition:transform .14s ease;}
+  .syrnav-cat:hover{transform:translate(-2px,-2px);}
+  .syrnav-cat-media{display:block;aspect-ratio:415/299;background:var(--tile);}
+  .syrnav-cat-media img{width:100%;height:100%;object-fit:cover;display:block;}
+  .syrnav-cat-lbl{display:block;font-family:var(--fui);font-weight:800;font-size:12px;letter-spacing:.05em;text-transform:uppercase;text-align:center;padding:11px 8px 12px;border-top:var(--rule);}
+  .syrnav-mega-inner.deals{display:grid;grid-template-columns:1fr 340px;gap:34px;align-items:start;}
+  .syrnav-deals{display:grid;grid-template-columns:1fr 1fr;gap:0 28px;}
+  .syrnav-deal{display:flex;align-items:center;gap:13px;padding:14px 6px;border-bottom:1.5px solid color-mix(in srgb,#1F1813 16%,transparent);font-family:var(--fui);font-weight:700;font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);}
+  .syrnav-deal-dot{width:13px;height:13px;border-radius:5px;border:1.5px solid var(--ink);flex:0 0 auto;}
+  .syrnav-promo-card{position:relative;display:block;border:var(--rule);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);aspect-ratio:340/210;}
+  .syrnav-promo-card img{width:100%;height:100%;object-fit:cover;display:block;}
+  .syrnav-promo-cap{position:absolute;left:0;right:0;bottom:0;padding:16px 18px;background:linear-gradient(transparent,rgba(31,24,19,.85));}
+  .syrnav-promo-cap b{display:block;font-family:var(--fhead);font-size:24px;color:#fff;}
+  .syrnav-promo-cap span{font-family:var(--fui);font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--butter);}
+  .syrnav-mega-inner.links{display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:start;}
+  .syrnav-cols{display:flex;gap:64px;flex-wrap:wrap;}
+  .syrnav-col{display:flex;flex-direction:column;min-width:150px;}
+  .syrnav-col-h{font-family:var(--fui);font-weight:800;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);margin-bottom:14px;}
+  .syrnav-col-link{font-family:var(--fui);font-weight:600;font-size:14.5px;color:var(--ink);opacity:.68;padding:8px 0;}
+  .syrnav-col-link:hover{opacity:1;color:var(--accent);}
+  .syrnav-promo2-card{display:block;border:var(--rule);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);}
+  .syrnav-promo2-card img{width:100%;display:block;}
+  .syrnav-social{display:flex;align-items:center;gap:12px;margin-top:15px;}
+  .syrnav-social a{color:var(--ink);display:grid;place-items:center;}
+  .syrnav-social-h{font-family:var(--fui);font-weight:700;font-size:12px;letter-spacing:.08em;color:var(--ink);}
+  .syrnav-msearch,.syrnav-scrim,.syrnav-drawer{display:none;}
+  @media (max-width:980px){
+    .syrnav-links{display:none;}
+    .syrnav-hamb{display:grid;}
+    .syrnav-bar{grid-template-columns:auto 1fr auto;padding:0 16px;height:62px;}
+    .syrnav-icons .syrnav-acct,.syrnav-icons .syrnav-wish{display:none;}
+    .syrnav-brand img.syrnav-brand-img{height:32px;max-width:160px;}
+    .syrnav-msearch{display:none;background:var(--bg);padding:10px 16px 12px;border-bottom:var(--rule);}
+    .syrnav-msearch-box{display:flex;align-items:center;gap:10px;height:44px;padding:0 15px;border:var(--rule);border-radius:26px;background:var(--surface);box-shadow:var(--shadow-sm);}
+    .syrnav-msearch-box input{flex:1;border:0;outline:0;background:transparent;font-family:var(--fbody);font-size:15px;color:var(--ink);}
+    .syrnav-scrim{display:block;position:fixed;inset:0;z-index:190;background:rgba(31,24,19,.42);opacity:0;pointer-events:none;transition:opacity .28s ease;}
+    .syrnav-scrim.open{opacity:1;pointer-events:auto;}
+    .syrnav-drawer{display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:200;width:84%;max-width:320px;background:var(--bg);border-right:var(--rule);box-shadow:8px 0 32px -10px rgba(31,24,19,.42);transform:translateX(-104%);transition:transform .34s cubic-bezier(.34,1.3,.5,1);overflow-y:auto;}
+    .syrnav-drawer.open{transform:translateX(0);}
+    .syrnav-dwr-head{display:flex;align-items:center;justify-content:space-between;height:62px;padding:0 10px 0 20px;border-bottom:var(--rule);}
+    .syrnav-dwr-head .syrnav-brand{height:40px;}
+    .syrnav-dwr-head .syrnav-brand img.syrnav-brand-img{height:28px;max-width:140px;}
+    .syrnav-dwr-x{display:grid;place-items:center;width:42px;height:42px;border:0;background:transparent;color:var(--ink);}
+    .syrnav-dwr-links{display:flex;flex-direction:column;padding:8px 14px 4px;}
+    .syrnav-dwr-sec{border-bottom:var(--rule-1);}
+    .syrnav-dwr-link{display:flex;align-items:center;gap:14px;padding:14px 8px;background:transparent;border:0;width:100%;font-family:var(--fhead);font-size:19px;color:var(--ink);text-align:left;}
+    .syrnav-dwr-dot{width:15px;height:15px;border-radius:5px;border:1.5px solid var(--ink);flex:0 0 auto;}
+    .syrnav-dwr-link .lbl{flex:1;}
+    .syrnav-dwr-link.on{color:var(--accent);}
+    .syrnav-dwr-link.on .syrnav-dwr-chev{transform:rotate(180deg);}
+    .syrnav-dwr-drill{display:none;padding:0 8px 14px;}
+    .syrnav-dwr-drill.open{display:block;}
+    .syrnav-dwr-cats{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+    .syrnav-dwr-cat{border:var(--rule);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);background:var(--surface);display:block;}
+    .syrnav-dwr-cat-media{display:block;aspect-ratio:415/299;background:var(--tile);}
+    .syrnav-dwr-cat-media img{display:block;width:100%;height:100%;object-fit:cover;}
+    .syrnav-dwr-cat-lbl{display:block;font-family:var(--fui);font-weight:800;font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;text-align:center;padding:7px 5px 8px;border-top:1.5px solid var(--ink);}
+    .syrnav-dwr-deal{display:flex;align-items:center;gap:11px;padding:11px 4px;border-bottom:var(--rule-1);font-family:var(--fui);font-weight:700;font-size:13px;color:var(--ink);}
+    .syrnav-dwr-deal-dot{width:11px;height:11px;border-radius:4px;border:1.5px solid var(--ink);flex:0 0 auto;}
+    .syrnav-dwr-sub{margin-top:auto;padding:14px 22px 6px;display:flex;flex-direction:column;gap:15px;border-top:var(--rule-1);}
+    .syrnav-dwr-subrow{display:flex;align-items:center;gap:12px;background:transparent;border:0;padding:0;font-family:var(--fui);font-weight:700;font-size:13.5px;color:var(--ink);}
+    .syrnav-dwr-promo{margin:14px 16px 18px;padding:13px 15px;background:{{ section.settings.drawer_promo_bg | default: '#FCE2A0' }};border:var(--rule);border-radius:14px;box-shadow:var(--shadow-sm);}
+    .syrnav-dwr-promo b{display:block;font-family:var(--fhead);font-size:14px;}
+    .syrnav-dwr-promo span{display:block;font-family:var(--fbody);font-size:13px;color:#6b5d2e;}
+  }
+</style>
+
+{%- liquid
+  assign sIcon = '<svg viewBox="0 0 19 19" width="19" height="19" fill="none"><circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.8"/><path d="M12.8 12.8L17 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
+  assign uIcon = '<svg viewBox="0 0 19 19" width="19" height="19" fill="none"><circle cx="9.5" cy="6" r="3.3" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 16.5c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>'
+  assign hIcon = '<svg viewBox="0 0 20 18" width="19" height="19" fill="none"><path d="M10 16S2 11.4 2 6.2C2 3.9 3.9 2 6.2 2 7.8 2 9.2 3 10 4.3 10.8 3 12.2 2 13.8 2 16.1 2 18 3.9 18 6.2 18 11.4 10 16 10 16z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>'
+  assign bIcon = '<svg viewBox="0 0 19 20" width="19" height="19" fill="none"><path d="M4 6h11l-.8 11.5a1.5 1.5 0 01-1.5 1.4H6.3a1.5 1.5 0 01-1.5-1.4L4 6z" stroke="currentColor" stroke-width="1.7"/><path d="M6.8 6V4.8a2.7 2.7 0 015.4 0V6" stroke="currentColor" stroke-width="1.7"/></svg>'
+  assign chev = '<svg viewBox="0 0 12 12" width="12" height="12"><path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>'
+  assign burger = '<svg viewBox="0 0 20 20" width="20" height="20"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
+  assign xIcon = '<svg viewBox="0 0 16 16" width="16" height="16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+  assign igIcon = '<svg viewBox="0 0 22 22" width="17" height="17" fill="none"><rect x="2.5" y="2.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="11" cy="11" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="16.2" cy="5.8" r="1.1" fill="currentColor"/></svg>'
+  assign ttIcon = '<svg viewBox="0 0 22 22" width="17" height="17" fill="none"><path d="M13 3v10.5a3 3 0 11-2.4-2.94" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M13 3c.4 2.2 1.8 3.7 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
+  assign ytIcon = '<svg viewBox="0 0 22 22" width="17" height="17" fill="none"><rect x="2" y="5" width="18" height="12" rx="3.4" stroke="currentColor" stroke-width="1.8"/><path d="M9.4 8.4l4.4 2.6-4.4 2.6V8.4z" fill="currentColor"/></svg>'
+-%}
+
+{%- assign m1_lbl = section.settings.menu1_label | default: 'Shop' -%}{%- assign m1_url = section.settings.menu1_url | default: '/collections/all' -%}
+{%- assign m2_lbl = section.settings.menu2_label | default: 'Bundle & Save' -%}{%- assign m2_url = section.settings.menu2_url | default: '/pages/build-your-bundle' -%}
+{%- assign m3_lbl = section.settings.menu3_label | default: 'Sugar-Free' -%}{%- assign m3_url = section.settings.menu3_url | default: '/collections/sugar-free' -%}
+{%- assign m4_lbl = section.settings.menu4_label | default: 'Deals' -%}{%- assign m4_url = section.settings.menu4_url | default: '/collections/on-sale' -%}
+{%- assign m5_lbl = section.settings.menu5_label | default: 'About Us' -%}{%- assign m5_url = section.settings.menu5_url | default: '/pages/about-us' -%}
+{%- assign m6_lbl = section.settings.menu6_label | default: 'More' -%}{%- assign m6_url = section.settings.menu6_url | default: '/blogs/blog-posts' -%}
+{%- assign ig_url = section.settings.instagram_url | default: 'https://www.instagram.com/syruvia_official' -%}
+{%- assign tt_url = section.settings.tiktok_url | default: 'https://www.tiktok.com/@syruviaofficial' -%}
+{%- assign yt_url = section.settings.youtube_url | default: 'https://www.youtube.com/@Syruvia' -%}
+{%- assign social_handle = section.settings.social_handle | default: '@SYRUVIAOFFICAL' -%}
+
+<div id="syrnav" data-syrnav>
+  {%- if section.settings.show_inline_promo -%}<div class="syrnav-promo">{{ section.settings.promo_text | default: '40% OFF ENTIRE SITE · USE CODE' }} <b>{{ section.settings.promo_highlight | default: 'MONDAY40' }}</b></div>{%- endif -%}
+  <div class="syrnav-wrap" data-megawrap>
+    <div class="syrnav-bar">
+      <div class="syrnav-left">
+        <button class="syrnav-hamb" aria-label="Open menu" data-open-drawer>{{ burger }}</button>
+        <nav class="syrnav-links">
+          <a href="{{ m1_url }}" class="has-mega" data-mega="shop">{{ m1_lbl }}<span class="syrnav-chev">{{ chev }}</span></a>
+          <a href="{{ m2_url }}">{{ m2_lbl }}</a>
+          <a href="{{ m3_url }}">{{ m3_lbl }}</a>
+          <a href="{{ m4_url }}" class="has-mega" data-mega="deals">{{ m4_lbl }}<span class="syrnav-chev">{{ chev }}</span></a>
+          <a href="{{ m5_url }}" class="has-mega" data-mega="about">{{ m5_lbl }}<span class="syrnav-chev">{{ chev }}</span></a>
+          <a href="{{ m6_url }}" class="has-mega" data-mega="more">{{ m6_lbl }}<span class="syrnav-chev">{{ chev }}</span></a>
+        </nav>
+      </div>
+      <a class="syrnav-brand" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}"><img class="syrnav-brand-img" src="{{ brand_logo_url }}" alt="{{ shop.name | escape }}" width="200" height="60" loading="eager"></a>
+      <div class="syrnav-icons" data-closemega>
+        <a class="syrnav-ic" href="{{ routes.search_url }}" aria-label="Search">{{ sIcon }}</a>
+        <a class="syrnav-ic syrnav-acct" href="{{ acct_url }}" aria-label="Account">{{ uIcon }}</a>
+        <a class="syrnav-ic syrnav-wish" href="/pages/swym-wishlist" aria-label="Wishlist">{{ hIcon }}</a>
+        <a class="syrnav-ic syrnav-cart" id="cart-icon-bubble" href="{{ routes.cart_url }}" aria-label="Cart">{{ bIcon }}<span class="syrnav-cart-n"{% if cart.item_count == 0 %} style="display:none"{% endif %}>{{ cart.item_count }}</span></a>
+      </div>
+    </div>
+
+    <div class="syrnav-mega" data-panel="shop">
+      <div class="syrnav-mega-inner">
+        <div class="syrnav-subtabs">
+          <button class="syrnav-subtab active" data-subtab="Shop By">{{ section.settings.shop_tab1 | default: 'Shop By' }}</button>
+          <button class="syrnav-subtab" data-subtab="Featured">{{ section.settings.shop_tab2 | default: 'Featured' }}</button>
+          <button class="syrnav-subtab" data-subtab="Browse by Taste">{{ section.settings.shop_tab3 | default: 'Browse by Taste' }}</button>
+        </div>
+        <div class="syrnav-grid active" data-grid="Shop By">
+          {%- if has_shopby -%}
+            {%- for block in section.blocks -%}{%- if block.type == 'shop_card' and block.settings.tab == 'shop_by' -%}
+              <a class="syrnav-cat" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }}><span class="syrnav-cat-media">{%- if block.settings.image != blank -%}<img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.label | escape }}" loading="lazy">{%- endif -%}</span><span class="syrnav-cat-lbl">{{ block.settings.label }}</span></a>
+            {%- endif -%}{%- endfor -%}
+          {%- else -%}
+            <a class="syrnav-cat" href="/collections/coffee"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-coffee.webp' | asset_url }}" alt="Coffee Syrup" loading="lazy"></span><span class="syrnav-cat-lbl">Coffee Syrup</span></a>
+            <a class="syrnav-cat" href="/collections/collections-original-syrups"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-original.webp' | asset_url }}" alt="Original Syrups" loading="lazy"></span><span class="syrnav-cat-lbl">Original Syrups</span></a>
+            <a class="syrnav-cat" href="/collections/sugar-free"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-sugarfree.webp' | asset_url }}" alt="Sugar-Free" loading="lazy"></span><span class="syrnav-cat-lbl">Sugar-Free</span></a>
+            <a class="syrnav-cat" href="/collections/shaved-ice-syrups"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-shavedice.webp' | asset_url }}" alt="Shaved Ice" loading="lazy"></span><span class="syrnav-cat-lbl">Shaved Ice Syrup</span></a>
+            <a class="syrnav-cat" href="/collections/shakable-toppings-for-coffee-and-fruit-salad"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-topping.webp' | asset_url }}" alt="Topping" loading="lazy"></span><span class="syrnav-cat-lbl">Shakeable Topping</span></a>
+            <a class="syrnav-cat" href="/collections/bursting-balls"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-bursting.webp' | asset_url }}" alt="Bursting Balls" loading="lazy"></span><span class="syrnav-cat-lbl">Bursting Balls</span></a>
+            <a class="syrnav-cat" href="/collections/variety-packs-for-coffee-and-cocktails"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-variety.webp' | asset_url }}" alt="Variety" loading="lazy"></span><span class="syrnav-cat-lbl">Variety Packs</span></a>
+            <a class="syrnav-cat" href="/collections/all"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-all.webp' | asset_url }}" alt="All" loading="lazy"></span><span class="syrnav-cat-lbl">Shop All</span></a>
+          {%- endif -%}
+        </div>
+        <div class="syrnav-grid" data-grid="Featured">
+          {%- if has_featured -%}
+            {%- for block in section.blocks -%}{%- if block.type == 'shop_card' and block.settings.tab == 'featured' -%}
+              <a class="syrnav-cat" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }}><span class="syrnav-cat-media">{%- if block.settings.image != blank -%}<img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.label | escape }}" loading="lazy">{%- endif -%}</span><span class="syrnav-cat-lbl">{{ block.settings.label }}</span></a>
+            {%- endif -%}{%- endfor -%}
+          {%- else -%}
+            <a class="syrnav-cat" href="/collections/new-flavors"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-newarrivals.webp' | asset_url }}" alt="New" loading="lazy"></span><span class="syrnav-cat-lbl">New Arrivals</span></a>
+            <a class="syrnav-cat" href="/pages/build-your-bundle"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-variety.webp' | asset_url }}" alt="Bundle" loading="lazy"></span><span class="syrnav-cat-lbl">Bundle &amp; Save</span></a>
+            <a class="syrnav-cat" href="/pages/best-sellers"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-coffee.webp' | asset_url }}" alt="Best" loading="lazy"></span><span class="syrnav-cat-lbl">Best Sellers</span></a>
+            <a class="syrnav-cat" href="/collections/all"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-all.webp' | asset_url }}" alt="All" loading="lazy"></span><span class="syrnav-cat-lbl">Shop All</span></a>
+          {%- endif -%}
+        </div>
+        <div class="syrnav-grid" data-grid="Browse by Taste">
+          {%- if has_taste -%}
+            {%- for block in section.blocks -%}{%- if block.type == 'shop_card' and block.settings.tab == 'taste' -%}
+              <a class="syrnav-cat" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }}><span class="syrnav-cat-media">{%- if block.settings.image != blank -%}<img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.label | escape }}" loading="lazy">{%- endif -%}</span><span class="syrnav-cat-lbl">{{ block.settings.label }}</span></a>
+            {%- endif -%}{%- endfor -%}
+          {%- else -%}
+            <a class="syrnav-cat" href="/collections/hazelnut"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-hazelnut.webp' | asset_url }}" alt="Hazelnut" loading="lazy"></span><span class="syrnav-cat-lbl">Hazelnut</span></a>
+            <a class="syrnav-cat" href="/collections/peppermint"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-mint.webp' | asset_url }}" alt="Mint" loading="lazy"></span><span class="syrnav-cat-lbl">Mint</span></a>
+            <a class="syrnav-cat" href="/collections/caramel"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-caramel.webp' | asset_url }}" alt="Caramel" loading="lazy"></span><span class="syrnav-cat-lbl">Caramel</span></a>
+            <a class="syrnav-cat" href="/collections/vanilla"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-vanilla.webp' | asset_url }}" alt="Vanilla" loading="lazy"></span><span class="syrnav-cat-lbl">Vanilla</span></a>
+            <a class="syrnav-cat" href="/collections/new-spring-flavors"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-pinksplash.webp' | asset_url }}" alt="Pink Splash" loading="lazy"></span><span class="syrnav-cat-lbl">Pink Splash</span></a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="syrnav-mega" data-panel="deals">
+      <div class="syrnav-mega-inner deals">
+        <div class="syrnav-deals">
+          {%- if has_deals -%}
+            {%- for block in section.blocks -%}{%- if block.type == 'deal_link' -%}
+              <a class="syrnav-deal" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }}><span class="syrnav-deal-dot" style="background:{{ block.settings.dot_color | default: '#FCE2A0' }}"></span>{{ block.settings.label }}</a>
+            {%- endif -%}{%- endfor -%}
+          {%- else -%}
+            <a class="syrnav-deal" href="/collections/on-sale"><span class="syrnav-deal-dot" style="background:#FCE2A0"></span>On sale</a>
+            <a class="syrnav-deal" href="/products/pack-of-the-week"><span class="syrnav-deal-dot" style="background:#FFD4B8"></span>Pack of the week</a>
+            <a class="syrnav-deal" href="/collections/todays-deals"><span class="syrnav-deal-dot" style="background:#C5E4D4"></span>Today's deals</a>
+            <a class="syrnav-deal" href="/collections/limited-time-offers"><span class="syrnav-deal-dot" style="background:#B8DCEB"></span>Limited-time offers</a>
+            <a class="syrnav-deal" href="/collections/trending-flavors"><span class="syrnav-deal-dot" style="background:#F5C7BE"></span>Trending now</a>
+            <a class="syrnav-deal" href="/collections/fall-flavors-to-warm-up-your-coffee-routine-a-seasonal-guide"><span class="syrnav-deal-dot" style="background:#c58548"></span>Seasonal picks</a>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.deals_promo_image != blank -%}
+          <a class="syrnav-promo-card" href="{{ section.settings.deals_promo_url | default: '#' }}"><img src="{{ section.settings.deals_promo_image | image_url: width: 800 }}" alt="" loading="lazy"><span class="syrnav-promo-cap"><b>{{ section.settings.deals_promo_title | default: '40% OFF' }}</b><span>{{ section.settings.deals_promo_sub | default: 'Entire site · code MONDAY40' }}</span></span></a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="syrnav-mega" data-panel="about">
+      <div class="syrnav-mega-inner links">
+        <div class="syrnav-cols">
+          {%- for ci in (1..3) -%}
+            {%- assign hk = 'about_col' | append: ci | append: '_heading' -%}
+            {%- assign heading = section.settings[hk] -%}
+            {%- if heading != blank -%}
+              <div class="syrnav-col"><div class="syrnav-col-h">{{ heading }}</div>
+                {%- for li in (1..6) -%}
+                  {%- assign tk = 'about_col' | append: ci | append: '_l' | append: li | append: '_text' -%}
+                  {%- assign uk = 'about_col' | append: ci | append: '_l' | append: li | append: '_url' -%}
+                  {%- if section.settings[tk] != blank -%}<a class="syrnav-col-link" href="{{ section.settings[uk] | default: '#' }}">{{ section.settings[tk] }}</a>{%- endif -%}
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        <div class="syrnav-promo2">
+          {%- if section.settings.about_promo_image != blank -%}<a class="syrnav-promo2-card" href="{{ section.settings.about_promo_url | default: '#' }}"><img src="{{ section.settings.about_promo_image | image_url: width: 600 }}" alt="" loading="lazy"></a>{%- endif -%}
+          <div class="syrnav-social"><a href="{{ ig_url }}" target="_blank" aria-label="Instagram">{{ igIcon }}</a><a href="{{ tt_url }}" target="_blank" aria-label="TikTok">{{ ttIcon }}</a><a href="{{ yt_url }}" target="_blank" aria-label="YouTube">{{ ytIcon }}</a><span class="syrnav-social-h">{{ social_handle }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="syrnav-mega" data-panel="more">
+      <div class="syrnav-mega-inner links">
+        <div class="syrnav-cols">
+          {%- for ci in (1..2) -%}
+            {%- assign hk = 'more_col' | append: ci | append: '_heading' -%}
+            {%- assign heading = section.settings[hk] -%}
+            {%- if heading != blank -%}
+              <div class="syrnav-col"><div class="syrnav-col-h">{{ heading }}</div>
+                {%- for li in (1..6) -%}
+                  {%- assign tk = 'more_col' | append: ci | append: '_l' | append: li | append: '_text' -%}
+                  {%- assign uk = 'more_col' | append: ci | append: '_l' | append: li | append: '_url' -%}
+                  {%- if section.settings[tk] != blank -%}<a class="syrnav-col-link" href="{{ section.settings[uk] | default: '#' }}">{{ section.settings[tk] }}</a>{%- endif -%}
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        <div class="syrnav-promo2">
+          {%- if section.settings.more_promo_image != blank -%}<a class="syrnav-promo2-card" href="{{ section.settings.more_promo_url | default: '#' }}"><img src="{{ section.settings.more_promo_image | image_url: width: 600 }}" alt="" loading="lazy"></a>{%- endif -%}
+          <div class="syrnav-social"><a href="{{ ig_url }}" target="_blank" aria-label="Instagram">{{ igIcon }}</a><a href="{{ tt_url }}" target="_blank" aria-label="TikTok">{{ ttIcon }}</a><a href="{{ yt_url }}" target="_blank" aria-label="YouTube">{{ ytIcon }}</a><span class="syrnav-social-h">{{ social_handle }}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="syrnav-msearch"><form action="{{ routes.search_url }}" method="get" role="search"><div class="syrnav-msearch-box">{{ sIcon }}<input type="search" name="q" placeholder="{{ section.settings.search_placeholder | default: 'Search 100+ flavors…' }}" aria-label="Search"></div></form></div>
+
+  <div class="syrnav-scrim" data-close-drawer></div>
+  <aside class="syrnav-drawer" aria-hidden="true">
+    <div class="syrnav-dwr-head"><a class="syrnav-brand" href="{{ routes.root_url }}"><img class="syrnav-brand-img" src="{{ brand_logo_url }}" alt="{{ shop.name | escape }}"></a><button class="syrnav-dwr-x" data-close-drawer>{{ xIcon }}</button></div>
+    <nav class="syrnav-dwr-links">
+      <div class="syrnav-dwr-sec">
+        <button class="syrnav-dwr-link" data-drill="shop"><span class="syrnav-dwr-dot" style="background:#FCE2A0"></span><span class="lbl">{{ m1_lbl }}</span><span class="syrnav-dwr-chev">{{ chev }}</span></button>
+        <div class="syrnav-dwr-drill" data-drillpanel="shop">
+          <div class="syrnav-subtabs"><button class="syrnav-subtab active" data-subtab="Shop By">{{ section.settings.shop_tab1 | default: 'Shop By' }}</button><button class="syrnav-subtab" data-subtab="Featured">{{ section.settings.shop_tab2 | default: 'Featured' }}</button><button class="syrnav-subtab" data-subtab="Browse by Taste">{{ section.settings.shop_tab3 | default: 'Browse by Taste' }}</button></div>
+          <div class="syrnav-grid syrnav-dwr-cats active" data-grid="Shop By">
+            {%- if has_shopby -%}
+              {%- for block in section.blocks -%}{%- if block.type == 'shop_card' and block.settings.tab == 'shop_by' -%}
+                <a class="syrnav-dwr-cat" href="{{ block.settings.url | default: '#' }}"><span class="syrnav-dwr-cat-media">{%- if block.settings.image != blank -%}<img src="{{ block.settings.image | image_url: width: 400 }}" alt="{{ block.settings.label | escape }}" loading="lazy">{%- endif -%}</span><span class="syrnav-dwr-cat-lbl">{{ block.settings.label }}</span></a>
+              {%- endif -%}{%- endfor -%}
+            {%- else -%}
+              <a class="syrnav-dwr-cat" href="/collections/coffee"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-coffee.webp' | asset_url }}" alt="Coffee" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Coffee Syrup</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/collections-original-syrups"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-original.webp' | asset_url }}" alt="Original" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Original Syrups</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/sugar-free"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-sugarfree.webp' | asset_url }}" alt="SF" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Sugar-Free</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/shaved-ice-syrups"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-shavedice.webp' | asset_url }}" alt="Ice" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Shaved Ice</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/shakable-toppings-for-coffee-and-fruit-salad"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-topping.webp' | asset_url }}" alt="Top" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Toppings</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/bursting-balls"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-bursting.webp' | asset_url }}" alt="Bursting" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Bursting Balls</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/variety-packs-for-coffee-and-cocktails"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-variety.webp' | asset_url }}" alt="Var" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Variety Packs</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/all"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-all.webp' | asset_url }}" alt="All" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Shop All</span></a>
+            {%- endif -%}
+          </div>
+          <div class="syrnav-grid syrnav-dwr-cats" data-grid="Featured">
+            {%- if has_featured -%}
+              {%- for block in section.blocks -%}{%- if block.type == 'shop_card' and block.settings.tab == 'featured' -%}
+                <a class="syrnav-dwr-cat" href="{{ block.settings.url | default: '#' }}"><span class="syrnav-dwr-cat-media">{%- if block.settings.image != blank -%}<img src="{{ block.settings.image | image_url: width: 400 }}" alt="{{ block.settings.label | escape }}">{%- endif -%}</span><span class="syrnav-dwr-cat-lbl">{{ block.settings.label }}</span></a>
+              {%- endif -%}{%- endfor -%}
+            {%- else -%}
+              <a class="syrnav-dwr-cat" href="/collections/new-flavors"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-newarrivals.webp' | asset_url }}" alt="New" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">New Arrivals</span></a>
+              <a class="syrnav-dwr-cat" href="/pages/build-your-bundle"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-variety.webp' | asset_url }}" alt="Bundle" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Bundle &amp; Save</span></a>
+              <a class="syrnav-dwr-cat" href="/pages/best-sellers"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-coffee.webp' | asset_url }}" alt="Best" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Best Sellers</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/all"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-all.webp' | asset_url }}" alt="All" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Shop All</span></a>
+            {%- endif -%}
+          </div>
+          <div class="syrnav-grid syrnav-dwr-cats" data-grid="Browse by Taste">
+            {%- if has_taste -%}
+              {%- for block in section.blocks -%}{%- if block.type == 'shop_card' and block.settings.tab == 'taste' -%}
+                <a class="syrnav-dwr-cat" href="{{ block.settings.url | default: '#' }}"><span class="syrnav-dwr-cat-media">{%- if block.settings.image != blank -%}<img src="{{ block.settings.image | image_url: width: 400 }}" alt="{{ block.settings.label | escape }}">{%- endif -%}</span><span class="syrnav-dwr-cat-lbl">{{ block.settings.label }}</span></a>
+              {%- endif -%}{%- endfor -%}
+            {%- else -%}
+              <a class="syrnav-dwr-cat" href="/collections/hazelnut"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-hazelnut.webp' | asset_url }}" alt="Haz" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Hazelnut</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/peppermint"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-mint.webp' | asset_url }}" alt="Mint" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Mint</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/caramel"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-caramel.webp' | asset_url }}" alt="Cara" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Caramel</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/vanilla"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-vanilla.webp' | asset_url }}" alt="Van" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Vanilla</span></a>
+              <a class="syrnav-dwr-cat" href="/collections/new-spring-flavors"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-pinksplash.webp' | asset_url }}" alt="Pink" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Pink Splash</span></a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+      <div class="syrnav-dwr-sec"><a class="syrnav-dwr-link" href="{{ m2_url }}"><span class="syrnav-dwr-dot" style="background:#FFD4B8"></span><span class="lbl">{{ m2_lbl }}</span></a></div>
+      <div class="syrnav-dwr-sec"><a class="syrnav-dwr-link" href="{{ m3_url }}"><span class="syrnav-dwr-dot" style="background:#C5E4D4"></span><span class="lbl">{{ m3_lbl }}</span></a></div>
+      <div class="syrnav-dwr-sec">
+        <button class="syrnav-dwr-link" data-drill="deals"><span class="syrnav-dwr-dot" style="background:#B8DCEB"></span><span class="lbl">{{ m4_lbl }}</span><span class="syrnav-dwr-chev">{{ chev }}</span></button>
+        <div class="syrnav-dwr-drill" data-drillpanel="deals">
+          {%- if has_deals -%}
+            {%- for block in section.blocks -%}{%- if block.type == 'deal_link' -%}
+              <a class="syrnav-dwr-deal" href="{{ block.settings.url | default: '#' }}"><span class="syrnav-dwr-deal-dot" style="background:{{ block.settings.dot_color | default: '#FCE2A0' }}"></span>{{ block.settings.label }}</a>
+            {%- endif -%}{%- endfor -%}
+          {%- else -%}
+            <a class="syrnav-dwr-deal" href="/collections/on-sale"><span class="syrnav-dwr-deal-dot" style="background:#FCE2A0"></span>On sale</a>
+            <a class="syrnav-dwr-deal" href="/products/pack-of-the-week"><span class="syrnav-dwr-deal-dot" style="background:#FFD4B8"></span>Pack of the week</a>
+            <a class="syrnav-dwr-deal" href="/collections/todays-deals"><span class="syrnav-dwr-deal-dot" style="background:#C5E4D4"></span>Today's deals</a>
+            <a class="syrnav-dwr-deal" href="/collections/limited-time-offers"><span class="syrnav-dwr-deal-dot" style="background:#B8DCEB"></span>Limited-time</a>
+            <a class="syrnav-dwr-deal" href="/collections/trending-flavors"><span class="syrnav-dwr-deal-dot" style="background:#F5C7BE"></span>Trending now</a>
+            <a class="syrnav-dwr-deal" href="/collections/fall-flavors-to-warm-up-your-coffee-routine-a-seasonal-guide"><span class="syrnav-dwr-deal-dot" style="background:#c58548"></span>Seasonal picks</a>
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="syrnav-dwr-sec"><a class="syrnav-dwr-link" href="{{ m5_url }}"><span class="syrnav-dwr-dot" style="background:#F5C7BE"></span><span class="lbl">{{ m5_lbl }}</span></a></div>
+      <div class="syrnav-dwr-sec"><a class="syrnav-dwr-link" href="{{ m6_url }}"><span class="syrnav-dwr-dot" style="background:#c58548"></span><span class="lbl">{{ m6_lbl }}</span></a></div>
+    </nav>
+    <div class="syrnav-dwr-sub">
+      <a class="syrnav-dwr-subrow" href="{{ acct_url }}">{{ uIcon }} {{ section.settings.drawer_account_label | default: 'My account' }}</a>
+      <a class="syrnav-dwr-subrow" href="{{ section.settings.wishlist_url | default: '/pages/swym-wishlist' }}">{{ hIcon }} {{ section.settings.drawer_wishlist_label | default: 'Wishlist' }}</a>
+      <a class="syrnav-dwr-subrow" href="{{ acct_url }}">{{ bIcon }} {{ section.settings.drawer_track_label | default: 'Track my order' }}</a>
+    </div>
+    <div class="syrnav-dwr-promo"><b>{{ section.settings.drawer_promo_title | default: 'Free shipping' }}</b><span>{{ section.settings.drawer_promo_sub | default: 'on orders over $34' }}</span></div>
+  </aside>
+</div>
+
+{%- if settings.cart_type == 'drawer' -%}{% render 'cart-drawer' %}{%- endif -%}
+
+<script>
+(function(){
+  var root=document.getElementById('syrnav');if(!root||root.dataset.syrInit)return;root.dataset.syrInit='1';
+  var wrap=root.querySelector('[data-megawrap]');
+  var triggers=root.querySelectorAll('.syrnav-links a.has-mega');
+  var panels=root.querySelectorAll('.syrnav-mega');
+  function closeMega(){panels.forEach(function(p){p.classList.remove('open');});triggers.forEach(function(t){t.classList.remove('mega-on');});}
+  function openMega(key){closeMega();var p=root.querySelector('.syrnav-mega[data-panel="'+key+'"]');if(p)p.classList.add('open');var t=root.querySelector('.syrnav-links a[data-mega="'+key+'"]');if(t)t.classList.add('mega-on');}
+  triggers.forEach(function(t){t.addEventListener('mouseenter',function(){openMega(t.dataset.mega);});});
+  if(wrap)wrap.addEventListener('mouseleave',closeMega);
+  var iconCluster=root.querySelector('[data-closemega]');if(iconCluster)iconCluster.addEventListener('mouseenter',closeMega);
+  root.querySelectorAll('.syrnav-subtabs').forEach(function(bar){
+    var scope=bar.parentElement;
+    bar.querySelectorAll('.syrnav-subtab').forEach(function(btn){
+      function activate(){bar.querySelectorAll('.syrnav-subtab').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');scope.querySelectorAll('.syrnav-grid').forEach(function(g){g.classList.toggle('active',g.getAttribute('data-grid')===btn.getAttribute('data-subtab'));});}
+      btn.addEventListener('mouseenter',activate);btn.addEventListener('click',activate);
+    });
+  });
+  var drawer=root.querySelector('.syrnav-drawer');var scrim=root.querySelector('.syrnav-scrim');
+  function openDrawer(){drawer.classList.add('open');scrim.classList.add('open');drawer.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';document.body.classList.add('overflow-hidden-mobile');document.body.classList.add('pd-menu-open');}
+  function closeDrawer(){drawer.classList.remove('open');scrim.classList.remove('open');drawer.setAttribute('aria-hidden','true');document.body.style.overflow='';document.body.classList.remove('overflow-hidden-mobile');document.body.classList.remove('pd-menu-open');}
+  root.querySelectorAll('[data-open-drawer]').forEach(function(b){b.addEventListener('click',openDrawer);});
+  root.querySelectorAll('[data-close-drawer]').forEach(function(b){b.addEventListener('click',closeDrawer);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&drawer.classList.contains('open'))closeDrawer();});
+  root.querySelectorAll('[data-drill]').forEach(function(btn){btn.addEventListener('click',function(){var key=btn.getAttribute('data-drill');var panel=root.querySelector('[data-drillpanel="'+key+'"]');var open=btn.classList.contains('on');root.querySelectorAll('[data-drill]').forEach(function(b){b.classList.remove('on');});root.querySelectorAll('[data-drillpanel]').forEach(function(p){p.classList.remove('open');});if(!open){btn.classList.add('on');if(panel)panel.classList.add('open');}});});
+  function setH(){document.documentElement.style.setProperty('--header-height',root.offsetHeight+'px');}
+  setH();window.addEventListener('resize',setH);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Syruvia Nav",
+  "class": "section-header syrnav-section",
+  "max_blocks": 30,
+  "settings": [
+    { "type": "header", "content": "Brand logo" },
+    { "type": "image_picker", "id": "brand_logo", "label": "Logo (leave blank for site logo)" },
+    { "type": "range", "id": "logo_height", "label": "Logo height", "min": 24, "max": 64, "step": 2, "default": 38, "unit": "px" },
+    { "type": "header", "content": "Inline announcement bar" },
+    { "type": "checkbox", "id": "show_inline_promo", "label": "Show inline announcement bar", "default": true },
+    { "type": "text", "id": "promo_text", "label": "Text", "default": "40% OFF ENTIRE SITE · USE CODE" },
+    { "type": "text", "id": "promo_highlight", "label": "Highlighted code", "default": "MONDAY40" },
+    { "type": "color", "id": "promo_bg", "label": "Background", "default": "#1F1813" },
+    { "type": "color", "id": "promo_color", "label": "Text", "default": "#FAF3E9" },
+    { "type": "color", "id": "promo_highlight_color", "label": "Highlight", "default": "#FCE2A0" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "nav_bg", "label": "Background", "default": "#FAF3E9" },
+    { "type": "color", "id": "nav_text", "label": "Text + icons", "default": "#1F1813" },
+    { "type": "color", "id": "nav_accent", "label": "Accent", "default": "#c58548" },
+    { "type": "header", "content": "Top-level menu" },
+    { "type": "text", "id": "menu1_label", "label": "Item 1 label", "default": "Shop" },
+    { "type": "url", "id": "menu1_url", "label": "Item 1 link" },
+    { "type": "text", "id": "menu2_label", "label": "Item 2 label", "default": "Bundle & Save" },
+    { "type": "url", "id": "menu2_url", "label": "Item 2 link" },
+    { "type": "text", "id": "menu3_label", "label": "Item 3 label", "default": "Sugar-Free" },
+    { "type": "url", "id": "menu3_url", "label": "Item 3 link" },
+    { "type": "text", "id": "menu4_label", "label": "Item 4 label", "default": "Deals" },
+    { "type": "url", "id": "menu4_url", "label": "Item 4 link" },
+    { "type": "text", "id": "menu5_label", "label": "Item 5 label", "default": "About Us" },
+    { "type": "url", "id": "menu5_url", "label": "Item 5 link" },
+    { "type": "text", "id": "menu6_label", "label": "Item 6 label", "default": "More" },
+    { "type": "url", "id": "menu6_url", "label": "Item 6 link" },
+    { "type": "header", "content": "SHOP tab names" },
+    { "type": "text", "id": "shop_tab1", "label": "Tab 1", "default": "Shop By" },
+    { "type": "text", "id": "shop_tab2", "label": "Tab 2", "default": "Featured" },
+    { "type": "text", "id": "shop_tab3", "label": "Tab 3", "default": "Browse by Taste" },
+    { "type": "header", "content": "DEALS promo card" },
+    { "type": "image_picker", "id": "deals_promo_image", "label": "Image" },
+    { "type": "text", "id": "deals_promo_title", "label": "Big title", "default": "40% OFF" },
+    { "type": "text", "id": "deals_promo_sub", "label": "Subtitle", "default": "Entire site · code MONDAY40" },
+    { "type": "url", "id": "deals_promo_url", "label": "Link" },
+    { "type": "header", "content": "ABOUT US Column 1" },
+    { "type": "text", "id": "about_col1_heading", "label": "Heading", "default": "About Us" },
+    { "type": "text", "id": "about_col1_l1_text", "label": "Link 1", "default": "The Syruvia Story" }, { "type": "url", "id": "about_col1_l1_url", "label": "Link 1 URL" },
+    { "type": "text", "id": "about_col1_l2_text", "label": "Link 2", "default": "The Syruvia Mission" }, { "type": "url", "id": "about_col1_l2_url", "label": "Link 2 URL" },
+    { "type": "text", "id": "about_col1_l3_text", "label": "Link 3", "default": "Customer Love" }, { "type": "url", "id": "about_col1_l3_url", "label": "Link 3 URL" },
+    { "type": "text", "id": "about_col1_l4_text", "label": "Link 4", "default": "Contact Us" }, { "type": "url", "id": "about_col1_l4_url", "label": "Link 4 URL" },
+    { "type": "text", "id": "about_col1_l5_text", "label": "Link 5" }, { "type": "url", "id": "about_col1_l5_url", "label": "Link 5 URL" },
+    { "type": "text", "id": "about_col1_l6_text", "label": "Link 6" }, { "type": "url", "id": "about_col1_l6_url", "label": "Link 6 URL" },
+    { "type": "header", "content": "ABOUT US Column 2" },
+    { "type": "text", "id": "about_col2_heading", "label": "Heading", "default": "Syruvia Social" },
+    { "type": "text", "id": "about_col2_l1_text", "label": "Link 1", "default": "Instagram" }, { "type": "url", "id": "about_col2_l1_url", "label": "Link 1 URL" },
+    { "type": "text", "id": "about_col2_l2_text", "label": "Link 2", "default": "YouTube" }, { "type": "url", "id": "about_col2_l2_url", "label": "Link 2 URL" },
+    { "type": "text", "id": "about_col2_l3_text", "label": "Link 3", "default": "TikTok" }, { "type": "url", "id": "about_col2_l3_url", "label": "Link 3 URL" },
+    { "type": "header", "content": "ABOUT US Column 3" },
+    { "type": "text", "id": "about_col3_heading", "label": "Heading", "default": "Join the Syruvia Mission" },
+    { "type": "text", "id": "about_col3_l1_text", "label": "Link 1", "default": "Affiliate" }, { "type": "url", "id": "about_col3_l1_url", "label": "Link 1 URL" },
+    { "type": "text", "id": "about_col3_l2_text", "label": "Link 2", "default": "Wholesale" }, { "type": "url", "id": "about_col3_l2_url", "label": "Link 2 URL" },
+    { "type": "text", "id": "about_col3_l3_text", "label": "Link 3", "default": "Coffee Shops" }, { "type": "url", "id": "about_col3_l3_url", "label": "Link 3 URL" },
+    { "type": "text", "id": "about_col3_l4_text", "label": "Link 4", "default": "Content Creation" }, { "type": "url", "id": "about_col3_l4_url", "label": "Link 4 URL" },
+    { "type": "header", "content": "ABOUT promo card" },
+    { "type": "image_picker", "id": "about_promo_image", "label": "Image" },
+    { "type": "url", "id": "about_promo_url", "label": "Link" },
+    { "type": "header", "content": "MORE Column 1" },
+    { "type": "text", "id": "more_col1_heading", "label": "Heading", "default": "Discover" },
+    { "type": "text", "id": "more_col1_l1_text", "label": "Link 1", "default": "Blog Post" }, { "type": "url", "id": "more_col1_l1_url", "label": "Link 1 URL" },
+    { "type": "text", "id": "more_col1_l2_text", "label": "Link 2", "default": "Instagram Shop" }, { "type": "url", "id": "more_col1_l2_url", "label": "Link 2 URL" },
+    { "type": "text", "id": "more_col1_l3_text", "label": "Link 3", "default": "Customer Love" }, { "type": "url", "id": "more_col1_l3_url", "label": "Link 3 URL" },
+    { "type": "header", "content": "MORE Column 2" },
+    { "type": "text", "id": "more_col2_heading", "label": "Heading", "default": "Deals" },
+    { "type": "text", "id": "more_col2_l1_text", "label": "Link 1", "default": "On Sale" }, { "type": "url", "id": "more_col2_l1_url", "label": "Link 1 URL" },
+    { "type": "text", "id": "more_col2_l2_text", "label": "Link 2", "default": "Trending" }, { "type": "url", "id": "more_col2_l2_url", "label": "Link 2 URL" },
+    { "type": "text", "id": "more_col2_l3_text", "label": "Link 3", "default": "Seasonal" }, { "type": "url", "id": "more_col2_l3_url", "label": "Link 3 URL" },
+    { "type": "header", "content": "MORE promo card" },
+    { "type": "image_picker", "id": "more_promo_image", "label": "Image" },
+    { "type": "url", "id": "more_promo_url", "label": "Link" },
+    { "type": "header", "content": "Social URLs" },
+    { "type": "url", "id": "instagram_url", "label": "Instagram" },
+    { "type": "url", "id": "tiktok_url", "label": "TikTok" },
+    { "type": "url", "id": "youtube_url", "label": "YouTube" },
+    { "type": "text", "id": "social_handle", "label": "Handle text", "default": "@SYRUVIAOFFICAL" },
+    { "type": "header", "content": "Mobile drawer" },
+    { "type": "text", "id": "drawer_account_label", "label": "My account label", "default": "My account" },
+    { "type": "text", "id": "drawer_wishlist_label", "label": "Wishlist label", "default": "Wishlist" },
+    { "type": "text", "id": "drawer_track_label", "label": "Track order label", "default": "Track my order" },
+    { "type": "url", "id": "wishlist_url", "label": "Wishlist link" },
+    { "type": "text", "id": "drawer_promo_title", "label": "Free shipping title", "default": "Free shipping" },
+    { "type": "text", "id": "drawer_promo_sub", "label": "Free shipping subtext", "default": "on orders over $34" },
+    { "type": "color", "id": "drawer_promo_bg", "label": "Free shipping bg", "default": "#FCE2A0" },
+    { "type": "header", "content": "Mobile search" },
+    { "type": "text", "id": "search_placeholder", "label": "Placeholder", "default": "Search 100+ flavors…" }
+  ],
+  "blocks": [
+    { "type": "shop_card", "name": "Shop image card", "settings": [
+      { "type": "select", "id": "tab", "label": "Which tab", "default": "shop_by", "options": [
+        { "value": "shop_by", "label": "Shop By" },
+        { "value": "featured", "label": "Featured" },
+        { "value": "taste", "label": "Browse by Taste" }
+      ]},
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "text", "id": "label", "label": "Label", "default": "Card" },
+      { "type": "url", "id": "url", "label": "Link" }
+    ]},
+    { "type": "deal_link", "name": "Deal link", "settings": [
+      { "type": "text", "id": "label", "label": "Label", "default": "On sale" },
+      { "type": "url", "id": "url", "label": "Link" },
+      { "type": "color", "id": "dot_color", "label": "Dot color", "default": "#FCE2A0" }
+    ]}
+  ],
+  "presets": [ { "name": "Syruvia Nav" } ]
+}
+{% endschema %}

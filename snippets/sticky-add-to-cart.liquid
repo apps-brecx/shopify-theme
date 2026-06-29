@@ -1,0 +1,603 @@
+{%- comment -%}
+Sticky ATC bar (SNIPPET version)
+- Render from theme.liquid on product pages
+- IDs are scoped by product.id to avoid collisions
+{%- endcomment -%}
+
+{%- assign sel_variant = product.selected_or_first_available_variant -%}
+{%- assign sticky_id  = product.id | default: 'global' -%}
+
+<div class="sticky-add-to-cart" id="sticky-atc-{{ sticky_id }}">
+  <form
+    method="post"
+    action="/cart/add"
+    id="sticky-atc-form-{{ sticky_id }}"
+    class="form"
+    novalidate
+    data-initial-available="{{ sel_variant.available | default: false }}">
+    <!-- Hidden variant id; kept in sync with the main product form -->
+    <input type="hidden" name="id" value="{{ sel_variant.id }}">
+    <input type="hidden" name="return_to" value="" id="sticky-return-{{ sticky_id }}">
+
+    <div class="sticky-navbar">
+      <!-- TOP: price + qty at the right -->
+      <div class="sticky-top">
+        <a class="sticky-top-left" href="#cst-custom-child-wrap__scroll">
+            {% if product.selling_plan_groups.size > 0 %}
+            <span>Subscribe and Save 15%</span>
+          {% endif %}
+          </a>
+        <div class="sticky-top-right">
+          <div
+            class="sticky-price"
+            data-sticky-price
+            data-unit-price="{{ sel_variant.price | default: 0 }}"
+            data-subscription-price="{{ sel_variant.selling_plan_allocations.first.price | default: sel_variant.price }}"
+          >
+            ${{ sel_variant.price | money_without_currency | default: '0.00' }}
+          </div>
+          <div class="sticky-qty">
+            <button type="button" class="quantity-btn" data-action="down" aria-label="Decrease">−</button>
+            <input
+              id="sticky-qty-{{ sticky_id }}"
+              name="quantity"
+              type="number"
+              value="1"
+              min="1"
+              class="qty-input"
+              inputmode="numeric"
+            >
+            <button type="button" class="quantity-btn" data-action="up" aria-label="Increase">+</button>
+          </div>
+        </div>
+      </div>
+
+      {%- comment -%} Related link resolution {%- endcomment -%}
+      {%- assign link_url = nil -%}
+      {%- assign link_label = nil -%}
+      {%- assign link_class = nil -%}
+      {%- assign m_reg = product.metafields.custom.regular -%}
+      {%- assign m_sf  = product.metafields.custom.sugar_free -%}
+
+      {%- if m_reg -%}
+        {%- if m_reg.value and m_reg.value.url -%}
+          {%- assign link_url = m_reg.value.url -%}
+        {%- elsif m_reg != blank -%}
+          {%- assign link_url = all_products[m_reg].url -%}
+        {%- endif -%}
+        {%- assign link_label = 'View Regular' -%}
+        {%- assign link_class = 'add-to-cart-button regular-button' -%}
+      {%- elsif m_sf -%}
+        {%- if m_sf.value and m_sf.value.url -%}
+          {%- assign link_url = m_sf.value.url -%}
+        {%- elsif m_sf != blank -%}
+          {%- assign link_url = all_products[m_sf].url -%}
+        {%- endif -%}
+        {%- assign link_label = 'View Sugar-Free' -%}
+        {%- assign link_class = 'sugar-free-button add-to-cart-button' -%}
+      {%- else -%}
+        {%- assign link_url = routes.all_products_collection_url -%}
+        {%- assign link_label = 'All Products' -%}
+        {%- assign link_class = 'all-products-button add-to-cart-button' -%}
+      {%- endif -%}
+
+      <!-- BOTTOM: related link + SINGLE CTA (Add to Cart OR Sold Out) -->
+      <div class="sticky-bottom">
+        <a href="{{ link_url }}" class="alt-related-btn {{ link_class }}" id="sticky-related-{{ sticky_id }}">
+          {{ link_label }}
+        </a>
+
+        <button
+          type="submit"
+          class="btn-brown add-to-cart-button"
+          id="sticky-cta-{{ sticky_id }}"
+          data-label-add="{{ 'products.product.add_to_cart' | t }}"
+          data-label-sold="{{ 'products.product.sold_out' | t }}"
+          data-class-add="cta-add"
+          data-class-sold="cta-sold"
+          {% unless sel_variant.available %}disabled{% endunless %}>
+          {%- if sel_variant.available -%}
+            {{ 'products.product.add_to_cart' | t }}
+          {%- else -%}
+            {{ 'products.product.sold_out' | t }}
+          {%- endif -%}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<style>
+  .sticky-add-to-cart {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #FFF6EE;
+    border-top: 1px solid #ddd;
+    padding: 10px 12px  ;
+    z-index: 3;
+    font-family: "Inter24pt" !important;
+  }
+  .sticky-navbar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sticky-top{
+      display: flex;
+      justify-content: space-between;
+    }
+     .sticky-top-left {
+        display: flex;
+        color: inherit;
+        align-items: center;
+        font-size: 12px;
+    }
+    .sticky-top-right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+    }
+  .sticky-price {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    font-size: 25px;
+    font-weight: 600;
+    color: #341C02;
+    white-space: nowrap;
+    font-family: "Josefin Sans" !important;
+  }
+  .sticky-qty {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .sticky-qty .quantity-btn {
+    border: 1px solid #341C02;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 100%;
+    background-color: transparent !important;
+  }
+  .sticky-qty .qty-input {
+    background: transparent;
+    width: 48px;
+    height: 36px;
+    text-align: center;
+    border: none;
+    outline: none;
+   font-size: 20px;
+    -moz-appearance: textfield;
+  }
+  .sticky-qty .qty-input::-webkit-outer-spin-button,
+  .sticky-qty .qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .sticky-bottom {
+    display: flex;
+    gap: 10px;
+  }
+  .sticky-bottom .alt-related-btn,
+  .sticky-bottom .btn-brown {
+    flex: 1 1 0;
+    text-align: center;
+    padding: 10px 4px;
+    border-radius:  20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+  }
+  .sugar-free-button,
+  .regular-button,
+  .all-products-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    border: 1px solid #341C02;
+    background: #fff;
+    color: #341C02;
+  }
+  .sugar-free-button {
+    border-color: #1C6FB9;
+    color: #1C6FB9;
+  }
+  #sticky-cta-{{ section.id }}.cta-add {
+    cursor: pointer;
+}
+ .add-to-cart-button::after{
+    display: none;
+  }
+  .add-to-cart-button::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ffdcbd;
+    width: 0%;
+    height: 100%;
+    z-index: -1;
+    transition: all 0.3s linear;   
+    border-radius: 20px;    
+  }
+  .add-to-cart-button{
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    border-radius: 20px;
+   
+  }
+  .add-to-cart-button:hover:before{
+    width: 100%;
+    right: 0;
+  }
+  .add-to-cart-button:hover{
+    color: #341c02 !important;
+  }
+
+/* Sold Out state */
+#sticky-cta-{{ section.id }}.cta-sold {
+ cursor: not-allowed;
+}
+  .btn-brown {
+    border: 1px solid #341C02;
+    background: #341C02;
+    color: #fff;
+  }
+  .btn-brown[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  /* hide sticky on desktop */
+  @media (min-width: 768px) {
+    .sticky-add-to-cart {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+(function(){
+  var wrap   = document.getElementById('sticky-atc-{{ sticky_id }}');
+  if(!wrap) return;
+
+  var priceEl = wrap.querySelector('[data-sticky-price]');
+  var qtyEl   = wrap.querySelector('#sticky-qty-{{ sticky_id }}') || wrap.querySelector('.qty-input');
+  var formEl  = document.getElementById('sticky-atc-form-{{ sticky_id }}');
+  var ctaBtn  = document.getElementById('sticky-cta-{{ sticky_id }}');
+
+  function formatMoney(cents){
+    try{
+      if (window.Shopify && typeof Shopify.formatMoney === 'function'){
+        var num = Shopify.formatMoney(cents, "{{ shop.money_without_currency_format | escape }}");
+        return '$' + String(num).trim();
+      }
+    }catch(e){}
+    return '$' + (cents/100).toFixed(2);
+  }
+
+  function getUnitCents(){ return Number(priceEl.getAttribute('data-unit-price')) || 0; }
+  function renderTotal(){
+    var q = Math.max(1, parseInt((qtyEl && qtyEl.value) || '1', 10));
+    priceEl.textContent = formatMoney(getUnitCents() * q);
+  }
+
+  // qty UI
+  wrap.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-action]');
+    if(!btn || !qtyEl) return;
+    var v = Math.max(1, parseInt(qtyEl.value||'1',10));
+    if(btn.getAttribute('data-action') === 'down') v = Math.max(1, v-1);
+    if(btn.getAttribute('data-action') === 'up')   v = v+1;
+    qtyEl.value = v; renderTotal();
+  });
+  if(qtyEl){ qtyEl.addEventListener('input', renderTotal); qtyEl.addEventListener('change', renderTotal); }
+
+  // --- main form helpers ---
+  function getMainForm(){
+    var pf = document.querySelector('product-form');
+    if (pf) {
+      var f = pf.querySelector('form[data-type="add-to-cart-form"]') || pf.querySelector('form[action*="/cart/add"]');
+      if (f) return f;
+    }
+    return document.querySelector('form[id^="product-form-"][action*="/cart/add"]') ||
+           document.querySelector('form[action*="/cart/add"]');
+  }
+  function selectedVariantId(mainForm){
+    if(!mainForm) return null;
+    var el = mainForm.querySelector('input[name="id"][type="radio"]:checked') ||
+             mainForm.querySelector('select[name="id"]') ||
+             mainForm.querySelector('input[name="id"]');
+    return el ? el.value : null;
+  }
+
+  // product JSON helpers
+  function readProductJSON(){
+    var jsonScript =
+      document.querySelector('script[type="application/json"][id^="ProductJson-"]') ||
+      document.querySelector('script[type="application/json"][data-product]');
+    if(!jsonScript) return null;
+    try { return JSON.parse(jsonScript.textContent); } catch(e){ return null; }
+  }
+  function findVariantById(productJSON, vid){
+    if(!productJSON || !productJSON.variants) return null;
+    return productJSON.variants.find(function(x){ return String(x.id) === String(vid); }) || null;
+  }
+
+  function isVariantAvailableByRules(variant){
+    if (!variant) return false;
+    var invMgmt   = variant.inventory_management;   // "shopify" | null
+    var invPolicy = variant.inventory_policy;       // "continue" | "deny"
+    if (invMgmt !== 'shopify' || invPolicy === 'continue') return !!variant.available;
+
+    var minQty = (variant.quantity_rule && typeof variant.quantity_rule.min === 'number') ? variant.quantity_rule.min : 1;
+    var invQty = (typeof variant.inventory_quantity === 'number') ? variant.inventory_quantity : null;
+
+    if (invQty !== null && minQty > invQty) return false;
+    return !!variant.available;
+  }
+
+  function setCTA(isAvailable){
+    if (!ctaBtn) return;
+    var addLabel  = ctaBtn.getAttribute('data-label-add')  || 'Add to Cart';
+    var soldLabel = ctaBtn.getAttribute('data-label-sold') || 'Sold Out';
+    if (isAvailable) { ctaBtn.disabled = false; ctaBtn.textContent = addLabel; }
+    else { ctaBtn.disabled = true; ctaBtn.textContent = soldLabel; }
+  }
+
+  // keep sticky variant + price + availability in sync with the main form
+  function syncVariantAndPrice(){
+    var mainForm = getMainForm();
+    var vid = selectedVariantId(mainForm);
+
+    if(vid){
+      var stickyId = formEl.querySelector('input[name="id"]');
+      if(stickyId) stickyId.value = vid;
+    }
+
+    var productJSON = readProductJSON();
+    var v = null;
+
+    if (productJSON) {
+   v = findVariantById(productJSON, vid);
+ if (!v || !v.available) v = productJSON.variants.find(function(x){ return x.available; }) || productJSON.variants[0];
+
+      if (v && typeof v.price === 'number') {
+        priceEl.setAttribute('data-unit-price', v.price);
+      }
+      setCTA(isVariantAvailableByRules(v));
+    } else {
+      var initAvailAttr = formEl.getAttribute('data-initial-available');
+      if (initAvailAttr != null) setCTA(String(initAvailAttr) === 'true');
+    }
+
+    renderTotal();
+  }
+
+  // init + listeners
+  var mainFormOnce = getMainForm();
+  if (mainFormOnce) mainFormOnce.addEventListener('change', syncVariantAndPrice);
+  document.addEventListener('variant:changed', syncVariantAndPrice);
+  window.addEventListener('popstate', syncVariantAndPrice);
+  document.addEventListener('shopify:section:load', syncVariantAndPrice);
+  syncVariantAndPrice();
+
+  // forward submit to main product form so theme popup/drawer opens
+  formEl.addEventListener('submit', function(e){
+    if (ctaBtn && ctaBtn.disabled) { e.preventDefault(); return; }
+    e.preventDefault();
+
+    var mainForm = getMainForm();
+    if (!mainForm) { formEl.submit(); return; }
+
+    var q = Math.max(1, parseInt((qtyEl && qtyEl.value) || '1', 10));
+    var mainQty = mainForm.querySelector('input[name="quantity"]');
+    if (mainQty) {
+      mainQty.value = q;
+      mainQty.dispatchEvent(new Event('input', {bubbles:true}));
+      mainQty.dispatchEvent(new Event('change', {bubbles:true}));
+    } else {
+      var h = document.createElement('input');
+      h.type = 'hidden'; h.name = 'quantity'; h.value = String(q);
+      mainForm.appendChild(h);
+    }
+
+    var vid = (formEl.querySelector('input[name="id"]') || {}).value;
+    var sel = mainForm.querySelector('select[name="id"]');
+    var hid = mainForm.querySelector('input[name="id"]:not([type="radio"])');
+    if (vid && sel) { sel.value = String(vid); sel.dispatchEvent(new Event('change', {bubbles:true})); }
+    else if (vid && hid) { hid.value = String(vid); }
+
+    if (typeof mainForm.requestSubmit === 'function') mainForm.requestSubmit();
+    else mainForm.dispatchEvent(new Event('submit', {cancelable:true, bubbles:true}));
+  });
+
+  // ===== Safe padding so footer isn't hidden by sticky bars (robust) =====
+(function(){
+  // Expose a flag so other snippets can choose to no-op their own padding logic
+  window.__bottomSafePadAggregator = true;
+
+  // We'll pad multiple likely containers AND nudge the footer itself.
+  var containers = [
+    document.getElementById('MainContent'),
+    document.querySelector('main'),
+    document.body
+  ].filter(Boolean);
+
+  function isHidden(el){
+    if (!el) return true;
+    var cs = getComputedStyle(el);
+    return cs.display === 'none' || cs.visibility === 'hidden';
+  }
+
+  function collectBars(){
+    // Any current/future bottom-fixed elements you tag will be included.
+    var set = new Set();
+    document.querySelectorAll('.sticky-add-to-cart, .sticky-syrups-nav, [data-safepad="bottom-fixed"]')
+      .forEach(el => set.add(el));
+    return Array.from(set);
+  }
+
+  function totalHeight(){
+    return collectBars()
+      .filter(el => !isHidden(el))
+      .reduce((sum, el) => sum + Math.round(el.getBoundingClientRect().height || 0), 0);
+  }
+
+  function applySafePad(){
+    var h = totalHeight();
+    var v = h ? h + 'px' : '';
+
+    // CSS variable (useful if you want to reference in styles)
+    document.documentElement.style.setProperty('--bottom-safe-h', v);
+
+    // Apply padding to multiple containers to avoid theme-specific quirks
+    containers.forEach(function(el){ el.style.paddingBottom = v; });
+
+    // Also add bottom margin to the footer so the footer itself clears the bars
+    var footer = document.querySelector('footer, #shopify-section-footer');
+    if (footer) footer.style.marginBottom = v;
+  }
+
+  // Initial + respond to changes
+  window.addEventListener('load', applySafePad, { once: true });
+  window.addEventListener('resize', applySafePad);
+  window.addEventListener('orientationchange', applySafePad);
+  document.addEventListener('shopify:section:load', applySafePad);
+  document.addEventListener('shopify:section:unload', applySafePad);
+
+  // Watch bar height changes (images/fonts, cart drawer state, etc.)
+  if ('ResizeObserver' in window) {
+    var ro = new ResizeObserver(applySafePad);
+    collectBars().forEach(el => ro.observe(el));
+  }
+
+  // If another script rewrites body/main padding, re-apply immediately.
+  if ('MutationObserver' in window) {
+    var mo = new MutationObserver(applySafePad);
+    mo.observe(document.body, { attributes:true, attributeFilter:['style'] });
+    var main = document.querySelector('main');
+    if (main) mo.observe(main, { attributes:true, attributeFilter:['style'] });
+  }
+
+  // A few retries after load for late assets/fonts & any race conditions
+  var tries = 0;
+  (function retry(){ tries++; if (tries <= 8){ applySafePad(); setTimeout(retry, 180); } })();
+
+  // Run once now in case this loaded late
+  applySafePad();
+})();
+
+ 
+
+})();
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const stickyPrice = document.querySelector('.sticky-price');
+  const qtyInput = document.querySelector('.qty-input');
+
+  if (!stickyPrice) return;
+
+  function parsePriceToCents(priceText) {
+    return Math.round(
+      parseFloat(priceText.replace(/[^0-9.]/g, '')) * 100
+    );
+  }
+
+  function getQty() {
+    return Math.max(1, parseInt(qtyInput?.value || '1', 10));
+  }
+
+  function renderStickyTotal(unitCents) {
+    const total = unitCents * getQty();
+
+    if (window.Shopify && Shopify.formatMoney) {
+      stickyPrice.textContent =
+        '$' +
+        Shopify.formatMoney(
+          total,
+          "{{ shop.money_without_currency_format | escape }}"
+        );
+    } else {
+      stickyPrice.textContent = '$' + (total / 100).toFixed(2);
+    }
+  }
+
+  function updatePrice() {
+    const container = document.querySelector('.sealsubs-container');
+    if (!container) return;
+
+    let priceEl;
+
+    // subscription selected
+    const activeSubscription = container.querySelector(
+      '.sls-option-container.sls-active .seal-money'
+    );
+
+    if (activeSubscription) {
+      priceEl = activeSubscription;
+    } else {
+      // fallback = one-time
+      priceEl = container.querySelector(
+        '.sls-one-time-price .seal-money'
+      );
+    }
+
+    if (!priceEl) return;
+
+    const priceText = priceEl.textContent.trim();
+    const unitCents = parsePriceToCents(priceText);
+
+    // ✅ IMPORTANT: update the real source used by qty script
+    stickyPrice.setAttribute('data-unit-price', unitCents);
+
+    // render total based on qty
+    renderStickyTotal(unitCents);
+  }
+
+  function watchSealContainer() {
+    const container = document.querySelector('.sealsubs-container');
+    if (!container) return;
+
+    const observer = new MutationObserver(updatePrice);
+    observer.observe(container, {
+      childList: true,
+      subtree: true,
+      attributes: true
+    });
+
+    updatePrice();
+  }
+
+  const checkInterval = setInterval(() => {
+    const container = document.querySelector('.sealsubs-container');
+    if (container) {
+      clearInterval(checkInterval);
+      watchSealContainer();
+    }
+  }, 200);
+
+  document.addEventListener('change', function (e) {
+    if (
+      e.target.name === 'subs_interval' ||
+      e.target.closest('.sealsubs-container')
+    ) {
+      setTimeout(updatePrice, 100);
+    }
+  });
+
+  qtyInput?.addEventListener('input', updatePrice);
+});
+</script>

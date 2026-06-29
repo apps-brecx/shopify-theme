@@ -1,0 +1,356 @@
+{%- comment -%} Syruvia — Account dashboard (logged in). Scoped .sdash. Wired to customer object. VIP from metafields (vip.*). v2: editable profile + valid password form type. {%- endcomment -%}
+{%- liquid
+  assign is_vip = false
+  if customer.tags contains 'VIP'
+    assign is_vip = true
+  endif
+  assign vpoints = customer.metafields.vip.points.value | default: 0
+  assign vtier = customer.metafields.vip.tier.value | default: 'Member'
+  assign vnext = customer.metafields.vip.next_tier.value | default: 'next tier'
+  assign vtonext = customer.metafields.vip.points_to_next.value | default: 0
+  assign vsaved = customer.metafields.vip.lifetime_saved.value | default: 0
+  assign goalpts = vpoints | plus: vtonext
+  assign trackpct = 0
+  if goalpts > 0
+    assign trackpct = vpoints | times: 100 | divided_by: goalpts
+  endif
+  assign fname = customer.first_name | default: 'there'
+-%}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700;800&family=Josefin+Sans:ital,wght@0,300..700;1,300..600&display=swap');
+  .sdash{ --bg:#FFFBF4; --bg-2:#FFF8EE; --surface:#FFFFFF; --ink:#39220f; --ink-2:#5a4632; --muted:#8a7a68; --hair:color-mix(in srgb,var(--ink) 16%,transparent);
+    --accent:#c58548; --butter:#FCE2A0; --peach:#FFD4B8; --mint:#C5E4D4; --sky:#B8DCEB; --blush:#F5C7BE; --sf-ink:#1f6b4f;
+    --vip:#C53156; --vip-soft:#FBE0E5; --vip-ink:#8e1e3c; --rule:2px solid var(--ink); --rule-1:1.5px solid var(--ink); --shadow:4px 4px 0 var(--ink); --shadow-sm:3px 3px 0 var(--ink); --shadow-vip:4px 4px 0 var(--vip); --radius:18px;
+    --font-head:'Archivo Black',sans-serif; --font-body:'Josefin Sans',sans-serif; background:var(--bg); color:var(--ink); font-family:var(--font-body); }
+  .sdash *,.sdash *::before,.sdash *::after{ box-sizing:border-box; }
+  .sdash h1,.sdash h2,.sdash h3,.sdash h4{ font-family:'Archivo Black',sans-serif; margin:0; font-weight:400; letter-spacing:-.01em; }
+  .sdash button{ font-family:inherit; cursor:pointer; } .sdash a{ cursor:pointer; }
+  .sdash,.sdash p,.sdash span,.sdash a,.sdash input,.sdash label,.sdash li{ font-family:'Josefin Sans',sans-serif; }
+  .sdash .mono,.sdash .crumbs,.sdash .order-meta .k,.sdash .sub-next .k,.sdash .addr-acts button,.sdash .order-foot .totals .sv,.sdash .dash-hello .eyebrow,.sdash .rw-points .lbl{ font-family:'Archivo',sans-serif; }
+  .sdash .dash-wrap{ max-width:1180px; margin:0 auto; padding:26px 28px 60px; }
+  .sdash .crumbs{ font-size:12px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); display:flex; gap:8px; align-items:center; margin-bottom:18px; }
+  .sdash .crumbs b{ color:var(--ink); } .sdash .crumbs span{ opacity:.5; } .sdash .crumbs a{ color:var(--muted); } .sdash .crumbs a:hover{ color:var(--ink); }
+  .sdash .dash-hero{ position:relative; overflow:hidden; border:var(--rule); border-radius:var(--radius); box-shadow:var(--shadow); padding:26px 28px; margin-bottom:24px; display:flex; align-items:center; gap:22px; flex-wrap:wrap; background:radial-gradient(120% 150% at 100% 0%,var(--vip-soft),transparent 55%),var(--surface); }
+  .sdash .dash-hello{ flex:1; min-width:240px; }
+  .sdash .dash-hello .eyebrow{ font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+  .sdash .dash-hello h1{ font-size:clamp(28px,4vw,40px); line-height:.98; text-transform:uppercase; letter-spacing:-.02em; margin-top:5px; }
+  .sdash .dash-hello h1 em{ font-style:normal; color:var(--vip); }
+  .sdash .dash-hello p{ color:var(--ink-2); margin:9px 0 0; font-size:14.5px; }
+  .sdash .dash-vipcard{ flex:0 0 auto; min-width:250px; border:var(--rule); border-radius:16px; background:var(--vip); color:#fff; box-shadow:var(--shadow-sm); padding:16px 18px; display:flex; flex-direction:column; gap:4px; }
+  .sdash .dash-vipcard .vc-top{ display:flex; align-items:center; gap:9px; font-family:var(--font-head); font-size:12px; letter-spacing:.05em; text-transform:uppercase; }
+  .sdash .dash-vipcard .vc-top .seal{ width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.18); border:1.5px solid rgba(255,255,255,.55); display:grid; place-items:center; }
+  .sdash .dash-vipcard .vc-saved{ font-family:var(--font-head); font-size:30px; line-height:1.05; color:var(--butter); margin-top:6px; }
+  .sdash .dash-vipcard .vc-lbl{ font-size:12.5px; color:rgba(255,255,255,.85); }
+  .sdash .dash-grid{ display:grid; grid-template-columns:232px 1fr; gap:26px; align-items:start; }
+  .sdash .dash-nav{ position:sticky; top:124px; background:var(--surface); border:var(--rule); border-radius:var(--radius); box-shadow:var(--shadow-sm); padding:12px; display:flex; flex-direction:column; gap:3px; }
+  .sdash .dnav-user{ display:flex; align-items:center; gap:11px; padding:8px 10px 14px; border-bottom:var(--rule-1); margin-bottom:8px; }
+  .sdash .dnav-user .av{ width:42px; height:42px; border-radius:50%; border:var(--rule-1); background:var(--butter); color:var(--ink); font-family:var(--font-head); font-size:15px; display:grid; place-items:center; flex:0 0 auto; }
+  .sdash .dnav-user .nm{ font-family:var(--font-head); font-size:14px; line-height:1.1; display:block; }
+  .sdash .dnav-user .em{ font-size:12px; color:var(--muted); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:140px; display:block; }
+  .sdash .dnav-item{ display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:12px; border:1.5px solid transparent; background:transparent; color:var(--ink-2); font-family:var(--font-head); font-size:12.5px; letter-spacing:.02em; text-transform:uppercase; text-align:left; transition:background .14s,color .14s,border-color .14s; width:100%; text-decoration:none; }
+  .sdash .dnav-item svg{ flex:0 0 auto; opacity:.8; }
+  .sdash .dnav-item .badge-n{ margin-left:auto; font-size:11px; background:var(--bg-2); border:var(--rule-1); border-radius:999px; padding:1px 8px; min-width:22px; text-align:center; }
+  .sdash .dnav-item:hover{ background:var(--bg-2); color:var(--ink); }
+  .sdash .dnav-item.on{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+  .sdash .dnav-item.on svg{ opacity:1; }
+  .sdash .dnav-item.vip.on{ background:var(--vip); border-color:var(--vip); }
+  .sdash .dnav-sep{ height:0; border-top:var(--rule-1); opacity:.5; margin:8px 4px; }
+  .sdash .dnav-item.signout{ color:var(--muted); } .sdash .dnav-item.signout:hover{ color:var(--vip); background:var(--vip-soft); }
+  .sdash .dash-main{ min-width:0; display:flex; flex-direction:column; gap:20px; }
+  .sdash .dpanel{ display:none; flex-direction:column; gap:20px; } .sdash .dpanel.show{ display:flex; }
+  .sdash .sect-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .sdash .sect-head h2{ font-size:clamp(24px,3vw,32px); text-transform:uppercase; letter-spacing:-.02em; line-height:1; }
+  .sdash .sect-head p{ color:var(--ink-2); font-size:14px; margin:6px 0 0; }
+  .sdash .sect-head .sh-right{ display:flex; gap:9px; align-items:center; }
+  .sdash .card{ background:var(--surface); border:var(--rule); border-radius:var(--radius); box-shadow:var(--shadow-sm); } .sdash .card-pad{ padding:20px 22px; }
+  .sdash .btn-ink{ display:inline-flex; align-items:center; justify-content:center; gap:9px; height:46px; padding:0 18px; border:var(--rule); border-radius:999px; background:var(--ink); color:var(--bg); font-family:var(--font-head); font-size:12px; letter-spacing:.06em; text-transform:uppercase; box-shadow:var(--shadow-sm); text-decoration:none; transition:transform .14s,box-shadow .14s,background .2s,color .2s; }
+  .sdash .btn-ink:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--accent); background:var(--accent); color:var(--ink); }
+  .sdash .btn-vip{ display:inline-flex; align-items:center; justify-content:center; gap:8px; height:46px; padding:0 18px; border:var(--rule); border-radius:999px; background:var(--vip); color:#fff; font-family:var(--font-head); font-size:12px; letter-spacing:.06em; text-transform:uppercase; box-shadow:var(--shadow-sm); text-decoration:none; transition:transform .14s,box-shadow .14s; }
+  .sdash .btn-vip:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+  .sdash .btn-ghost{ display:inline-flex; align-items:center; justify-content:center; gap:8px; height:46px; padding:0 16px; border:var(--rule-1); border-radius:999px; background:var(--surface); color:var(--ink); font-family:var(--font-head); font-size:12px; letter-spacing:.05em; text-transform:uppercase; text-decoration:none; transition:transform .14s,box-shadow .14s; }
+  .sdash .btn-ghost:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-sm); }
+  .sdash .ov-tiles{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .sdash .ov-tile{ background:var(--surface); border:var(--rule); border-radius:16px; box-shadow:var(--shadow-sm); padding:18px; display:flex; flex-direction:column; gap:4px; }
+  .sdash .ov-tile .ic{ width:38px; height:38px; border-radius:50%; border:var(--rule-1); display:grid; place-items:center; margin-bottom:8px; }
+  .sdash .ov-tile .big{ font-family:var(--font-head); font-size:28px; line-height:1; } .sdash .ov-tile .lbl{ font-size:13px; color:var(--ink-2); }
+  .sdash .ov-tile.vip{ background:radial-gradient(130% 120% at 100% 0%,var(--vip-soft),transparent 60%),var(--surface); } .sdash .ov-tile.vip .ic{ background:var(--vip-soft); color:var(--vip); } .sdash .ov-tile.vip .big{ color:var(--vip); }
+  .sdash .ov-tile .ic.mint{ background:var(--mint); color:var(--sf-ink); } .sdash .ov-tile .ic.butter{ background:var(--butter); color:#7a5a14; }
+  .sdash .vip-track{ display:flex; flex-direction:column; gap:9px; }
+  .sdash .vip-track-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:14px; color:var(--ink-2); flex-wrap:wrap; } .sdash .vip-track-top b{ font-family:var(--font-head); font-weight:400; color:var(--ink); }
+  .sdash .track{ height:11px; border-radius:999px; background:var(--bg-2); border:var(--rule-1); overflow:hidden; }
+  .sdash .track-fill{ height:100%; background:repeating-linear-gradient(45deg,var(--vip),var(--vip) 8px,color-mix(in srgb,var(--vip) 70%,#fff) 8px,color-mix(in srgb,var(--vip) 70%,#fff) 16px); transition:width .6s cubic-bezier(.3,1,.5,1); }
+  .sdash .order{ background:var(--surface); border:var(--rule); border-radius:var(--radius); box-shadow:var(--shadow-sm); overflow:hidden; }
+  .sdash .order-top{ display:flex; align-items:center; gap:14px 18px; flex-wrap:wrap; padding:15px 20px; border-bottom:var(--rule-1); background:var(--bg-2); }
+  .sdash .order-meta{ display:flex; flex-direction:column; gap:1px; } .sdash .order-meta .k{ font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); } .sdash .order-meta .v{ font-family:var(--font-head); font-size:14px; }
+  .sdash .order-top .spacer{ flex:1; }
+  .sdash .pill-status{ display:inline-flex; align-items:center; gap:6px; font-family:var(--font-head); font-size:10px; letter-spacing:.06em; text-transform:uppercase; padding:5px 11px; border:var(--rule-1); border-radius:999px; }
+  .sdash .pill-status.delivered{ background:var(--mint); color:var(--sf-ink); } .sdash .pill-status.transit{ background:var(--butter); color:#7a5a14; } .sdash .pill-status.processing{ background:var(--sky); color:#2b5876; }
+  .sdash .order-body{ padding:16px 20px; display:flex; flex-direction:column; gap:13px; }
+  .sdash .oline{ display:flex; align-items:center; gap:14px; }
+  .sdash .oline-media{ width:56px; height:56px; flex:0 0 auto; border:var(--rule-1); border-radius:12px; background:radial-gradient(120% 95% at 50% 8%,#fff,var(--tint,var(--bg-2))); display:grid; place-items:center; padding:6px; }
+  .sdash .oline-media img{ width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; }
+  .sdash .oline-body{ flex:1; min-width:0; } .sdash .oline-name{ font-family:var(--font-head); font-size:15px; line-height:1.1; } .sdash .oline-sub{ font-size:12.5px; color:var(--muted); margin-top:2px; }
+  .sdash .oline-price{ font-family:var(--font-head); font-size:15px; white-space:nowrap; }
+  .sdash .order-foot{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; padding:14px 20px; border-top:var(--rule-1); }
+  .sdash .order-foot .totals{ display:flex; align-items:baseline; gap:10px; } .sdash .order-foot .totals .tt{ font-family:var(--font-head); font-size:18px; } .sdash .order-foot .totals .sv{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--sf-ink); }
+  .sdash .order-foot .acts{ display:flex; gap:9px; flex-wrap:wrap; }
+  .sdash .fav-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .sdash .fav{ background:var(--surface); border:var(--rule); border-radius:16px; box-shadow:var(--shadow-sm); overflow:hidden; display:flex; flex-direction:column; transition:transform .16s,box-shadow .16s; }
+  .sdash .fav:hover{ transform:translate(-2px,-2px); box-shadow:var(--shadow); }
+  .sdash .fav-media{ position:relative; aspect-ratio:1 / .92; background:radial-gradient(120% 95% at 50% 6%,#fff,var(--tint,var(--bg-2))); display:grid; place-items:center; padding:16px; border-bottom:var(--rule-1); }
+  .sdash .fav-media img{ max-height:100%; object-fit:contain; mix-blend-mode:multiply; }
+  .sdash .fav-body{ padding:13px 15px 15px; display:flex; flex-direction:column; gap:7px; flex:1; }
+  .sdash .fav-name{ font-family:var(--font-head); font-size:16px; line-height:1.05; }
+  .sdash .fav-foot{ margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:8px; padding-top:6px; } .sdash .fav-price{ font-family:var(--font-head); font-size:16px; }
+  .sdash .empty-state{ text-align:center; padding:44px 20px; color:var(--ink-2); }
+  .sdash .empty-state .eg{ width:72px; height:72px; margin:0 auto 14px; border-radius:50%; border:var(--rule); background:var(--bg-2); display:grid; place-items:center; box-shadow:var(--shadow-sm); }
+  .sdash .empty-state h3{ font-size:20px; text-transform:uppercase; } .sdash .empty-state p{ margin:6px 0 16px; }
+  .sdash .vip-hero{ position:relative; overflow:hidden; border:var(--rule); border-radius:var(--radius); box-shadow:var(--shadow); color:#fff; padding:30px 32px; background:radial-gradient(120% 130% at 100% 0%,color-mix(in srgb,var(--vip) 80%,#000 5%),var(--vip) 60%,var(--vip-ink)); }
+  .sdash .vip-hero .grain{ position:absolute; inset:0; opacity:.45; mix-blend-mode:soft-light; background-image:radial-gradient(rgba(255,255,255,.5) 1px,transparent 1.4px); background-size:12px 12px; }
+  .sdash .vip-hero-row{ position:relative; display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+  .sdash .vip-hero .seal{ width:64px; height:64px; border-radius:50%; background:rgba(255,255,255,.16); border:2px solid rgba(255,255,255,.6); display:grid; place-items:center; flex:0 0 auto; }
+  .sdash .vip-hero h2{ color:#fff; font-size:clamp(26px,3vw,36px); text-transform:uppercase; letter-spacing:-.02em; line-height:1; }
+  .sdash .vip-hero .tier{ display:inline-flex; align-items:center; gap:7px; margin-top:8px; font-family:var(--font-head); font-size:12px; letter-spacing:.05em; text-transform:uppercase; color:var(--vip-ink); background:var(--butter); border:2px solid var(--ink); border-radius:999px; padding:5px 12px; }
+  .sdash .vip-hero .savings{ margin-left:auto; text-align:right; } .sdash .vip-hero .savings .big{ font-family:var(--font-head); font-size:42px; line-height:1; color:var(--butter); } .sdash .vip-hero .savings .lbl{ font-size:13px; color:rgba(255,255,255,.85); }
+  .sdash .vip-tier-track{ position:relative; margin-top:22px; } .sdash .vip-tier-track .tt-top{ display:flex; justify-content:space-between; font-size:13px; color:rgba(255,255,255,.9); margin-bottom:8px; } .sdash .vip-tier-track .tt-top b{ color:#fff; font-family:var(--font-head); font-weight:400; }
+  .sdash .vip-tier-track .track{ background:rgba(255,255,255,.2); border-color:rgba(255,255,255,.5); } .sdash .vip-tier-track .track-fill{ background:repeating-linear-gradient(45deg,var(--butter),var(--butter) 8px,#f0cf7c 8px,#f0cf7c 16px); }
+  .sdash .vip-perks{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  .sdash .vperk{ display:flex; align-items:flex-start; gap:13px; background:var(--surface); border:var(--rule); border-radius:16px; box-shadow:var(--shadow-sm); padding:16px 18px; } .sdash .vperk .pic{ flex:0 0 auto; width:40px; height:40px; border-radius:50%; border:var(--rule-1); background:var(--vip-soft); color:var(--vip); display:grid; place-items:center; } .sdash .vperk .pt{ font-size:14px; line-height:1.4; color:var(--ink-2); }
+  .sdash .addr-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .sdash .addr{ position:relative; background:var(--surface); border:var(--rule); border-radius:16px; box-shadow:var(--shadow-sm); padding:18px 20px; } .sdash .addr.default{ box-shadow:var(--shadow); }
+  .sdash .addr-top{ display:flex; align-items:center; gap:9px; margin-bottom:10px; } .sdash .addr-label{ font-family:var(--font-head); font-size:14px; text-transform:uppercase; letter-spacing:.02em; }
+  .sdash .addr-default-pill{ font-family:var(--font-head); font-size:9px; letter-spacing:.06em; text-transform:uppercase; background:var(--mint); color:var(--sf-ink); border:var(--rule-1); border-radius:999px; padding:3px 9px; }
+  .sdash .addr-name{ font-family:var(--font-head); font-size:14px; } .sdash .addr-lines{ color:var(--ink-2); font-size:14px; line-height:1.5; margin-top:3px; } .sdash .addr-phone{ color:var(--muted); font-size:13px; margin-top:6px; }
+  .sdash .addr-acts{ display:flex; gap:14px; margin-top:14px; padding-top:12px; border-top:var(--rule-1); } .sdash .addr-acts a,.sdash .addr-acts button{ background:transparent; border:0; font-family:'Archivo',sans-serif; font-size:12px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--ink-2); transition:color .14s; padding:0; text-decoration:none; } .sdash .addr-acts a:hover{ color:var(--ink); } .sdash .addr-acts .danger:hover{ color:var(--vip); }
+  .sdash .addr-add{ border:2px dashed var(--hair); border-radius:16px; background:transparent; display:grid; place-items:center; min-height:150px; gap:8px; color:var(--muted); font-family:var(--font-head); font-size:13px; letter-spacing:.03em; text-transform:uppercase; text-decoration:none; transition:border-color .15s,color .15s,background .15s; } .sdash .addr-add:hover{ border-color:var(--ink); color:var(--ink); background:var(--bg-2); } .sdash .addr-add .plus{ width:42px; height:42px; border-radius:50%; border:var(--rule-1); display:grid; place-items:center; }
+  .sdash .set-grid{ display:flex; flex-direction:column; gap:18px; } .sdash .set-block{ padding:22px; } .sdash .set-block h3{ font-size:17px; text-transform:uppercase; letter-spacing:-.01em; margin-bottom:4px; } .sdash .set-block .desc{ font-size:13.5px; color:var(--muted); margin-bottom:16px; }
+  .sdash .set-row2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; } .sdash .set-actions{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+  .sdash .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:13px; } .sdash .field label{ font-family:'Archivo',sans-serif; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .sdash .field input{ width:100%; height:50px; border:var(--rule); border-radius:13px; background:var(--surface); padding:0 16px; font-size:16px; color:var(--ink); outline:none; } .sdash .field input:focus{ border-color:var(--accent); }
+  .sdash .toggle-line{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0; border-top:var(--rule-1); } .sdash .toggle-line:first-of-type{ border-top:0; } .sdash .toggle-line .nm{ font-family:var(--font-head); font-size:14px; } .sdash .toggle-line .ds{ font-size:13px; color:var(--muted); margin-top:2px; }
+  .sdash .sw{ width:50px; height:28px; border:var(--rule-1); border-radius:999px; background:var(--bg-2); position:relative; flex:0 0 auto; transition:background .18s; cursor:pointer; } .sdash .sw .knob{ position:absolute; top:2px; left:2px; width:22px; height:22px; border-radius:50%; background:var(--surface); border:var(--rule-1); transition:transform .2s cubic-bezier(.4,1.3,.5,1); } .sdash .sw.on{ background:var(--mint); } .sdash .sw.on .knob{ transform:translateX(22px); }
+  .sdash .toast{ position:fixed; left:50%; bottom:30px; transform:translate(-50%,14px); z-index:130; background:var(--ink); color:var(--bg); font-family:var(--font-head); font-size:13px; letter-spacing:.03em; text-transform:uppercase; padding:14px 22px; border:var(--rule); border-radius:999px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:opacity .3s,transform .3s; } .sdash .toast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (max-width:1000px){ .sdash .dash-grid{ grid-template-columns:1fr; } .sdash .dash-nav{ position:static; flex-direction:row; flex-wrap:wrap; } .sdash .dnav-user{ width:100%; } .sdash .dnav-item{ width:auto; } .sdash .dnav-item .badge-n{ margin-left:6px; } .sdash .dnav-sep{ display:none; } }
+  @media (max-width:920px){ .sdash .ov-tiles{ grid-template-columns:1fr; } .sdash .fav-grid{ grid-template-columns:repeat(2,1fr); } .sdash .vip-perks,.sdash .addr-grid,.sdash .set-row2{ grid-template-columns:1fr; } }
+  @media (max-width:680px){ .sdash .dash-wrap{ padding:20px 16px 50px; } .sdash .fav-grid{ grid-template-columns:1fr 1fr; gap:12px; } .sdash .dash-hero{ padding:20px; } .sdash .dash-vipcard{ width:100%; } .sdash .vip-hero .savings{ margin-left:0; text-align:left; width:100%; } .sdash .order-foot{ flex-direction:column; align-items:stretch; } .sdash .order-foot .acts a,.sdash .order-foot .acts button{ flex:1; } }
+  @media (max-width:460px){ .sdash .fav-grid{ grid-template-columns:1fr; } }
+  @media (max-width:1000px){ .sdash{ overflow-x:clip; } }
+  @media (prefers-reduced-motion:reduce){ .sdash *{ animation-duration:.001ms !important; transition-duration:.001ms !important; } }
+</style>
+
+{%- capture icDiamond -%}<svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor"><path d="M8 1.6l5.6 4.4L8 14.4 2.4 6 8 1.6z"/></svg>{%- endcapture -%}
+{%- capture icDiamondLg -%}<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 2.5l8.5 6.6L12 21.5 3.5 9.1 12 2.5z"/></svg>{%- endcapture -%}
+{%- capture icCheck -%}<svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 8.5l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icTruck -%}<svg viewBox="0 0 22 16" width="17" height="15" fill="none"><path d="M1 2.5h12v8H1zM13 5.5h4l3 3v2h-7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="5" cy="12.5" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="16.5" cy="12.5" r="2" stroke="currentColor" stroke-width="1.6"/></svg>{%- endcapture -%}
+{%- capture icArrow -%}<svg viewBox="0 0 16 14" width="15" height="13" fill="none"><path d="M2 7h11M9 3l4 4-4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icBox -%}<svg viewBox="0 0 18 18" width="17" height="17" fill="none"><path d="M9 1.5l6.5 3.2v8.6L9 16.5 2.5 13.3V4.7L9 1.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M2.6 4.8L9 8l6.4-3.2M9 8v8.4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icPin -%}<svg viewBox="0 0 16 18" width="15" height="17" fill="none"><path d="M8 16.5S13 11.6 13 7a5 5 0 10-10 0c0 4.6 5 9.5 5 9.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="8" cy="7" r="2" stroke="currentColor" stroke-width="1.6"/></svg>{%- endcapture -%}
+{%- capture icRefresh -%}<svg viewBox="0 0 18 18" width="16" height="16" fill="none"><path d="M15.5 7.5A6.5 6.5 0 003.6 4.6M2.5 10.5A6.5 6.5 0 0014.4 13.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M15.8 3.2l-.3 4.3-4.3-.3M2.2 14.8l.3-4.3 4.3.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icGear -%}<svg viewBox="0 0 18 18" width="16" height="16" fill="none"><circle cx="9" cy="9" r="2.4" stroke="currentColor" stroke-width="1.6"/><path d="M9 1.8v2.1M9 14.1v2.1M16.2 9h-2.1M3.9 9H1.8M14 4l-1.5 1.5M5.5 12.5L4 14M14 14l-1.5-1.5M5.5 5.5L4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>{%- endcapture -%}
+{%- capture icHeart -%}<svg viewBox="0 0 20 18" width="16" height="16" fill="none"><path d="M10 16S2 11.4 2 6.2C2 3.9 3.9 2 6.2 2 7.8 2 9.2 3 10 4.3 10.8 3 12.2 2 13.8 2 16.1 2 18 3.9 18 6.2 18 11.4 10 16 10 16z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icGrid -%}<svg viewBox="0 0 18 18" width="16" height="16" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.4" stroke="currentColor" stroke-width="1.7"/><rect x="10" y="2" width="6" height="6" rx="1.4" stroke="currentColor" stroke-width="1.7"/><rect x="2" y="10" width="6" height="6" rx="1.4" stroke="currentColor" stroke-width="1.7"/><rect x="10" y="10" width="6" height="6" rx="1.4" stroke="currentColor" stroke-width="1.7"/></svg>{%- endcapture -%}
+{%- capture icGift -%}<svg viewBox="0 0 18 18" width="16" height="16" fill="none"><rect x="2.5" y="6.5" width="13" height="9" rx="1.4" stroke="currentColor" stroke-width="1.5"/><path d="M2 9h14M9 6.5v9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icLock -%}<svg viewBox="0 0 16 18" width="14" height="15" fill="none"><rect x="2.5" y="7.5" width="11" height="8" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M5 7.5V5a3 3 0 016 0v2.5" stroke="currentColor" stroke-width="1.6"/></svg>{%- endcapture -%}
+{%- capture icSpark -%}<svg viewBox="0 0 18 18" width="16" height="16" fill="none"><path d="M9 1.5v15M1.5 9h15M3.8 3.8l10.4 10.4M14.2 3.8L3.8 14.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>{%- endcapture -%}
+
+<div class="sdash" data-sdash>
+  <div class="dash-wrap">
+    <nav class="crumbs"><a href="{{ routes.root_url }}">Home</a> <span>/</span> <b>My account</b></nav>
+
+    <div class="dash-hero">
+      <div class="dash-hello">
+        <span class="eyebrow">Welcome back</span>
+        <h1>Hi, <em>{{ fname }}</em></h1>
+        <p>{% if customer.created_at %}Member since {{ customer.created_at | date: '%b %Y' }}{% endif %}{% if is_vip %} · {{ vtier }} VIP{% endif %}</p>
+      </div>
+      {%- if is_vip -%}
+      <div class="dash-vipcard">
+        <div class="vc-top"><span class="seal">{{ icDiamond }}</span> VIP savings</div>
+        <div class="vc-saved">{{ vsaved | money }}</div>
+        <div class="vc-lbl">saved as a VIP member so far</div>
+      </div>
+      {%- endif -%}
+    </div>
+
+    <div class="dash-grid">
+      <aside class="dash-nav">
+        <div class="dnav-user">
+          <span class="av">{{ customer.first_name | slice: 0 | upcase }}{{ customer.last_name | slice: 0 | upcase }}</span>
+          <span><span class="nm">{{ customer.first_name }} {{ customer.last_name }}</span><span class="em">{{ customer.email }}</span></span>
+        </div>
+        <button class="dnav-item on" data-nav="overview">{{ icGrid }}<span>Overview</span></button>
+        <button class="dnav-item" data-nav="orders">{{ icBox }}<span>Orders</span>{%- if customer.orders_count > 0 -%}<span class="badge-n">{{ customer.orders_count }}</span>{%- endif -%}</button>
+        <button class="dnav-item" data-nav="favorites">{{ icHeart }}<span>Favorites</span></button>
+        <button class="dnav-item vip" data-nav="vip">{{ icDiamond }}<span>VIP Rewards</span></button>
+        <button class="dnav-item" data-nav="subscriptions">{{ icRefresh }}<span>Subscriptions</span></button>
+        <button class="dnav-item" data-nav="addresses">{{ icPin }}<span>Addresses</span>{%- if customer.addresses_count > 0 -%}<span class="badge-n">{{ customer.addresses_count }}</span>{%- endif -%}</button>
+        <button class="dnav-item" data-nav="settings">{{ icGear }}<span>Settings</span></button>
+        <span class="dnav-sep"></span>
+        <a class="dnav-item signout" href="{{ routes.account_logout_url }}">{{ icLock }}<span>Sign out</span></a>
+      </aside>
+
+      <div class="dash-main">
+        <div class="dpanel show" data-panel="overview">
+          <div class="sect-head"><div><h2>Overview</h2><p>Your Syruvia at a glance — orders, savings and what's next.</p></div></div>
+          <div class="ov-tiles">
+            <div class="ov-tile vip"><span class="ic">{{ icDiamond }}</span><span class="big">{{ vsaved | money }}</span><span class="lbl">Saved as a VIP member</span></div>
+            <div class="ov-tile"><span class="ic mint">{{ icBox }}</span><span class="big">{{ customer.orders_count }}</span><span class="lbl">Orders placed</span></div>
+            <div class="ov-tile"><span class="ic butter">{{ icGift }}</span><span class="big">{{ vpoints }}</span><span class="lbl">Reward points</span></div>
+          </div>
+          {%- if is_vip -%}
+          <div class="card card-pad"><div class="vip-track"><div class="vip-track-top"><span>You're <b>{{ vtonext }} points</b> from <b>{{ vnext }}</b> tier</span><span style="color:var(--vip-ink);font-family:var(--font-head)">{{ vtier }} · {{ vpoints }} pts</span></div><div class="track"><div class="track-fill" style="width:{{ trackpct }}%"></div></div></div></div>
+          {%- endif -%}
+          <div class="sect-head" style="margin-top:4px"><div><h2 style="font-size:22px">Recent order</h2></div><div class="sh-right"><button class="btn-ghost" data-nav="orders">View all orders {{ icArrow }}</button></div></div>
+          {%- if customer.orders.size > 0 -%}
+            {%- assign recent = customer.orders.first -%}
+            <article class="order">
+              <div class="order-top">
+                <div class="order-meta"><span class="k">Order</span><span class="v">{{ recent.name }}</span></div>
+                <div class="order-meta"><span class="k">Placed</span><span class="v">{{ recent.created_at | date: '%b %-d, %Y' }}</span></div>
+                <span class="spacer"></span>
+                {%- assign st = 'processing' -%}{%- if recent.fulfillment_status == 'fulfilled' -%}{%- assign st = 'delivered' -%}{%- elsif recent.fulfillment_status == 'partial' -%}{%- assign st = 'transit' -%}{%- endif -%}
+                <span class="pill-status {{ st }}">{% if st == 'delivered' %}{{ icCheck }} Delivered{% elsif st == 'transit' %}{{ icTruck }} In transit{% else %}{{ icRefresh }} {{ recent.financial_status_label }}{% endif %}</span>
+              </div>
+              <div class="order-body">
+                {%- for line in recent.line_items limit: 3 -%}
+                  <div class="oline"><div class="oline-media">{% if line.image %}<img src="{{ line.image | image_url: width: 120 }}" alt="">{% endif %}</div><div class="oline-body"><div class="oline-name">{{ line.title }}</div><div class="oline-sub">Qty {{ line.quantity }}</div></div><div class="oline-price">{{ line.final_line_price | money }}</div></div>
+                {%- endfor -%}
+              </div>
+              <div class="order-foot"><div class="totals"><span class="tt">{{ recent.total_price | money }}</span></div><div class="acts">{% if recent.order_status_url %}<a class="btn-ghost" href="{{ recent.order_status_url }}">Track {{ icArrow }}</a>{% endif %}<button class="btn-ink" data-reorder="{{ recent.id }}">{{ icRefresh }} Reorder</button></div></div>
+            </article>
+          {%- else -%}
+            <div class="card"><div class="empty-state"><div class="eg">{{ icBox }}</div><h3>No orders yet</h3><p>Your orders will show up here once you check out.</p><a class="btn-ink" href="{{ routes.all_products_collection_url | default: '/collections/all' }}">Start shopping {{ icArrow }}</a></div></div>
+          {%- endif -%}
+        </div>
+
+        <div class="dpanel" data-panel="orders">
+          <div class="sect-head"><div><h2>Order history</h2><p>{{ customer.orders_count }} order{% if customer.orders_count != 1 %}s{% endif %} · reorder your favorites in one tap.</p></div></div>
+          {%- if customer.orders.size > 0 -%}
+            {%- paginate customer.orders by 10 -%}
+            {%- for order in customer.orders -%}
+              <article class="order">
+                <div class="order-top">
+                  <div class="order-meta"><span class="k">Order</span><span class="v">{{ order.name }}</span></div>
+                  <div class="order-meta"><span class="k">Placed</span><span class="v">{{ order.created_at | date: '%b %-d, %Y' }}</span></div>
+                  <div class="order-meta"><span class="k">Items</span><span class="v">{{ order.item_count }}</span></div>
+                  <span class="spacer"></span>
+                  {%- assign st = 'processing' -%}{%- if order.fulfillment_status == 'fulfilled' -%}{%- assign st = 'delivered' -%}{%- elsif order.fulfillment_status == 'partial' -%}{%- assign st = 'transit' -%}{%- endif -%}
+                  <span class="pill-status {{ st }}">{% if st == 'delivered' %}{{ icCheck }} Delivered{% elsif st == 'transit' %}{{ icTruck }} In transit{% else %}{{ icRefresh }} {{ order.financial_status_label }}{% endif %}</span>
+                </div>
+                <div class="order-body">
+                  {%- for line in order.line_items limit: 4 -%}
+                    <div class="oline"><div class="oline-media">{% if line.image %}<img src="{{ line.image | image_url: width: 120 }}" alt="">{% endif %}</div><div class="oline-body"><div class="oline-name">{{ line.title }}</div><div class="oline-sub">Qty {{ line.quantity }}</div></div><div class="oline-price">{{ line.final_line_price | money }}</div></div>
+                  {%- endfor -%}
+                </div>
+                <div class="order-foot"><div class="totals"><span class="tt">{{ order.total_price | money }}</span></div><div class="acts">{% if order.order_status_url %}<a class="btn-ghost" href="{{ order.order_status_url }}">Track {{ icArrow }}</a>{% endif %}<button class="btn-ink" data-reorder="{{ order.id }}">{{ icRefresh }} Reorder</button></div></div>
+              </article>
+            {%- endfor -%}
+            {%- endpaginate -%}
+          {%- else -%}
+            <div class="card"><div class="empty-state"><div class="eg">{{ icBox }}</div><h3>No orders yet</h3><p>Your orders will appear here.</p><a class="btn-ink" href="{{ routes.all_products_collection_url | default: '/collections/all' }}">Start shopping {{ icArrow }}</a></div></div>
+          {%- endif -%}
+        </div>
+
+        <div class="dpanel" data-panel="favorites">
+          <div class="sect-head"><div><h2>Favorites</h2><p>Your saved flavors.</p></div></div>
+          <div class="card"><div class="empty-state"><div class="eg">{{ icHeart }}</div><h3>No favorites yet</h3><p>Tap the heart on any product to save it here. (Connects to your wishlist app.)</p><a class="btn-ink" href="{{ routes.all_products_collection_url | default: '/collections/all' }}">Browse flavors {{ icArrow }}</a></div></div>
+        </div>
+
+        <div class="dpanel" data-panel="vip">
+          <div class="sect-head"><div><h2>VIP Rewards</h2><p>Your points, tier and perks — a snapshot of the full rewards program.</p></div><div class="sh-right"><a class="btn-vip" href="/apps/vip/rewards">{{ icDiamond }} Open VIP Rewards {{ icArrow }}</a></div></div>
+          <div class="vip-hero">
+            <span class="grain"></span>
+            <div class="vip-hero-row">
+              <span class="seal">{{ icDiamondLg }}</span>
+              <div><h2>{{ vpoints }} points</h2><span class="tier">{{ icDiamond }} {{ vtier }} tier</span></div>
+              <div class="savings"><div class="big">{{ vsaved | money }}</div><div class="lbl">saved as a member so far</div></div>
+            </div>
+            <div class="vip-tier-track"><div class="tt-top"><span>{{ vtier }}</span><span><b>{{ vtonext }} points</b> to {{ vnext }}</span></div><div class="track"><div class="track-fill" style="width:{{ trackpct }}%"></div></div></div>
+          </div>
+          <div class="vip-perks">
+            <div class="vperk"><span class="pic">{{ icDiamond }}</span><span class="pt"><b style="font-family:var(--font-head);font-weight:400">Earn points</b> on every order, redeem for credit &amp; free bottles</span></div>
+            <div class="vperk"><span class="pic">{{ icSpark }}</span><span class="pt"><b style="font-family:var(--font-head);font-weight:400">Daily games</b> &amp; members-only codes</span></div>
+            <div class="vperk"><span class="pic">{{ icTruck }}</span><span class="pt"><b style="font-family:var(--font-head);font-weight:400">Free shipping</b> perks &amp; early flavor drops</span></div>
+            <div class="vperk"><span class="pic">{{ icGift }}</span><span class="pt">Climb tiers from <b style="font-family:var(--font-head);font-weight:400">Taster to Legend</b></span></div>
+          </div>
+          <div class="card card-pad" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center"><a class="btn-vip" href="/apps/vip/rewards">{{ icSpark }} Open the rewards hub</a><span style="font-size:13px;color:var(--muted)">The full program — points, daily games, redemptions &amp; referrals — lives on your VIP Rewards page.</span></div>
+        </div>
+
+        <div class="dpanel" data-panel="subscriptions">
+          <div class="sect-head"><div><h2>Subscriptions</h2><p>Auto-refills, delivered on your schedule.</p></div></div>
+          <div class="card"><div class="empty-state"><div class="eg">{{ icRefresh }}</div><h3>No active subscriptions</h3><p>Set up an auto-refill on any product to never run out. (Connects to your subscriptions app.)</p><a class="btn-ink" href="{{ routes.all_products_collection_url | default: '/collections/all' }}">Browse flavors {{ icArrow }}</a></div></div>
+        </div>
+
+        <div class="dpanel" data-panel="addresses">
+          <div class="sect-head"><div><h2>Addresses</h2><p>Where we ship your orders.</p></div></div>
+          <div class="addr-grid">
+            {%- for address in customer.addresses -%}
+              <div class="addr{% if address == customer.default_address %} default{% endif %}">
+                <div class="addr-top"><span class="addr-label">{{ address.company | default: 'Address' }}</span>{% if address == customer.default_address %}<span class="addr-default-pill">Default</span>{% endif %}</div>
+                <div class="addr-name">{{ address.first_name }} {{ address.last_name }}</div>
+                <div class="addr-lines">{{ address.address1 }}{% if address.address2 != blank %}<div>{{ address.address2 }}</div>{% endif %}<div>{{ address.city }}{% if address.province != blank %}, {{ address.province }}{% endif %} {{ address.zip }}</div><div>{{ address.country }}</div></div>
+                {% if address.phone != blank %}<div class="addr-phone">{{ address.phone }}</div>{% endif %}
+                <div class="addr-acts"><a href="{{ routes.account_addresses_url }}">Edit</a><a class="danger" href="{{ routes.account_addresses_url }}">Manage</a></div>
+              </div>
+            {%- endfor -%}
+            <a class="addr-add" href="{{ routes.account_addresses_url }}"><span class="plus">+</span>Add address</a>
+          </div>
+        </div>
+
+        <div class="dpanel" data-panel="settings">
+          <div class="sect-head"><div><h2>Settings</h2><p>Your details, password and notifications.</p></div></div>
+          <div class="set-grid">
+            <div class="card set-block">
+              <h3>Profile</h3><div class="desc">The name &amp; email on your account. Update and click Save.</div>
+              {%- form 'customer' -%}
+                {%- if form.posted_successfully? -%}<div style="background:var(--mint);border:var(--rule-1);border-radius:12px;padding:10px 14px;font-size:13px;color:var(--sf-ink);margin-bottom:14px">{{ icCheck }} Profile updated.</div>{%- endif -%}
+                {%- if form.errors -%}<div style="background:var(--vip-soft);border:1.5px solid var(--vip-ink);border-radius:12px;padding:10px 14px;font-size:13px;color:var(--vip-ink);margin-bottom:14px">{{ form.errors | default_errors }}</div>{%- endif -%}
+                <div class="set-row2"><div class="field"><label>First name</label><input type="text" name="customer[first_name]" value="{{ customer.first_name | escape }}"></div><div class="field"><label>Last name</label><input type="text" name="customer[last_name]" value="{{ customer.last_name | escape }}"></div></div>
+                <div class="field"><label>Email address</label><input type="email" name="customer[email]" value="{{ customer.email }}"></div>
+                <div class="set-actions"><button class="btn-ink" type="submit">Save changes {{ icArrow }}</button></div>
+              {%- endform -%}
+            </div>
+            <div class="card set-block">
+              <h3>Password</h3><div class="desc">We'll email you a secure link to set a new password.</div>
+              {%- form 'recover_customer_password' -%}
+                {%- if form.posted_successfully? -%}<div style="background:var(--mint);border:var(--rule-1);border-radius:12px;padding:10px 14px;font-size:13px;color:var(--sf-ink);margin-bottom:12px">{{ icCheck }} Reset link sent to your email.</div>{%- endif -%}
+                <input type="hidden" name="email" value="{{ customer.email }}">
+                <div class="set-actions"><button class="btn-ink" type="submit" style="height:48px">Send password reset email</button></div>
+              {%- endform -%}
+            </div>
+            <div class="card set-block">
+              <h3>Notifications</h3><div class="desc">Pick what lands in your inbox.</div>
+              <div class="toggle-line"><div><div class="nm">New flavor drops</div><div class="ds">Be first to know when we launch a flavor</div></div><button class="sw on" data-sw role="switch" aria-checked="true"><span class="knob"></span></button></div>
+              <div class="toggle-line"><div><div class="nm">Back-in-stock alerts</div><div class="ds">Email me when a sold-out favorite returns</div></div><button class="sw on" data-sw role="switch" aria-checked="true"><span class="knob"></span></button></div>
+              <div class="toggle-line"><div><div class="nm">Rewards &amp; VIP news</div><div class="ds">Points milestones and member-only events</div></div><button class="sw on" data-sw role="switch" aria-checked="true"><span class="knob"></span></button></div>
+            </div>
+            <div class="card set-block" style="border-color:var(--vip);box-shadow:var(--shadow-vip)">
+              <h3 style="color:var(--vip-ink)">Danger zone</h3><div class="desc">Closing your account also ends your free VIP membership.</div>
+              <div class="set-actions"><a class="btn-ghost" style="color:var(--vip-ink);border-color:var(--vip)" href="/pages/contact-us">Close account</a></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="toast" data-toast></div>
+</div>
+
+<script>
+(function(){
+  var root=document.querySelector('[data-sdash]'); if(!root) return;
+  var toastEl=root.querySelector('[data-toast]'), tT;
+  function toast(m){ if(!toastEl)return; toastEl.textContent=m; toastEl.classList.add('show'); clearTimeout(tT); tT=setTimeout(function(){toastEl.classList.remove('show');},2200); }
+  var navs=[].slice.call(root.querySelectorAll('[data-nav]')), panels=[].slice.call(root.querySelectorAll('[data-panel]'));
+  function go(id){ navs.forEach(function(b){ if(b.hasAttribute('data-nav')&&b.classList.contains('dnav-item')) b.classList.toggle('on', b.getAttribute('data-nav')===id); }); panels.forEach(function(p){ p.classList.toggle('show', p.getAttribute('data-panel')===id); }); try{ history.replaceState(null,'','#'+id); }catch(e){} window.scrollTo({top:0,behavior:'smooth'}); }
+  root.addEventListener('click',function(e){ var b=e.target.closest('[data-nav]'); if(b){ e.preventDefault(); go(b.getAttribute('data-nav')); } });
+  if(location.hash){ var h=location.hash.slice(1); if(panels.some(function(p){return p.getAttribute('data-panel')===h;})) go(h); }
+  [].slice.call(root.querySelectorAll('[data-sw]')).forEach(function(sw){ sw.addEventListener('click',function(){ var on=sw.classList.toggle('on'); sw.setAttribute('aria-checked', on?'true':'false'); }); });
+  root.addEventListener('click',function(e){ var b=e.target.closest('[data-reorder]'); if(!b)return; var id=b.getAttribute('data-reorder'); b.disabled=true; fetch('/account/orders/'+id+'.js').then(function(r){return r.ok?r.json():Promise.reject();}).then(function(o){ var items=(o.line_items||[]).filter(function(l){return l.product_exists!==false && l.variant_id;}).map(function(l){return {id:l.variant_id, quantity:l.quantity};}); if(!items.length){ throw 0; } return fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:items})}); }).then(function(){ toast('Items added to cart'); setTimeout(function(){window.location.href='/cart';},700); }).catch(function(){ b.disabled=false; toast('Could not reorder — some items may be unavailable'); }); });
+})();
+</script>
+
+{% schema %}
+{ "name": "Account (Custom)", "settings": [], "presets": [{ "name": "Account (Custom)" }] }
+{% endschema %}

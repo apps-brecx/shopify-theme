@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "syr-wholesale",
+      "settings": {
+        "portal_url": "https://syruvia-wholesale.com/",
+        "faire_url": "https://syruvia.faire.com",
+        "airgoods_url": "https://www.airgoods.com/u/syruvia",
+        "contact_url": "/pages/contact-us"
+      }
+    }
+  },
+  "order": ["main"]
+}

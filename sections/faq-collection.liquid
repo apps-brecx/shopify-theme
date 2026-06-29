@@ -1,0 +1,152 @@
+{% schema %}
+{
+  "name": "FAQ by Heading",
+  "settings": [],
+  "presets": [
+    {
+      "name": "FAQ by Heading",
+      "category": "Collections"
+    }
+  ]
+}
+{% endschema %}
+
+  <!-- FAQ Section 1 -->
+  {% if collection.metafields.custom.learn_more_main_heading
+  %}
+    <div class="faqs-sections-cstm">
+    <div class="faq-learn-section">
+      <div class="top-content-more">
+        <h2>{{ collection.metafields.custom.learn_more_main_heading }}</h2>
+        <p>{{ collection.metafields.custom.learn_more_sub_content }}</p>
+      </div>
+
+      {% assign faq_headings = collection.metafields.custom.learn_more_heading %}
+      {% assign faq_content = collection.metafields.custom.learn_more_content %}
+
+      {% assign headings_array = faq_headings.value %}
+      {% assign content_array = faq_content.value %}
+
+      {% if headings_array and content_array %}
+        <div class="faq-container">
+          {% for heading in headings_array %}
+            {% assign clean_heading = heading | strip %}
+            <div class="faq-group">
+              <h3 class="faq-group-heading">{{ clean_heading }}</h3>
+
+              {% assign heading_index = forloop.index0 %}
+              {% if content_array[heading_index] %}
+                <div class="faq-item">
+                  <p>{{ content_array[heading_index] | strip }}</p>
+                </div>
+              {% else %}
+             
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <!-- FAQ Section 2 -->
+  {% if collection.metafields.custom.faq_main_heading
+  %}
+    <div class="faq-coll-section">
+      <div class="top-content-more">
+        <h2>{{ collection.metafields.custom.faq_main_heading }}</h2>
+        <p>{{ collection.metafields.custom.faq_sub_heading }}</p>
+      </div>
+
+      {% assign faq_headings = collection.metafields.custom.faq_heading %}
+      {% assign faq_content = collection.metafields.custom.faq_content %}
+
+      {% assign headings_array = faq_headings.value %}
+      {% assign content_array = faq_content.value %}
+
+      {% if headings_array and content_array %}
+        <div class="faq-container">
+          {% for heading in headings_array %}
+            {% assign clean_heading = heading | strip %}
+            <div class="faq-group">
+              <h3 class="faq-group-heading">{{ clean_heading }}</h3>
+
+              {% assign heading_index = forloop.index0 %}
+              {% if content_array[heading_index] %}
+                <div class="faq-item">
+                  <p>{{ content_array[heading_index] | strip }}</p>
+                </div>
+              {% else %}
+              
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+<!-- <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const faqQuestions = document.querySelectorAll('.faq-group-heading');
+    const faqContents = document.querySelectorAll('.faq-item'); // Get all FAQ contents
+
+    // Close all tabs and hide all content by default
+    faqContents.forEach(content => content.style.display = 'none');
+
+    faqQuestions.forEach(button => {
+      button.addEventListener('click', function () {
+        // Toggle the clicked FAQ item
+        const content = this.nextElementSibling;
+
+        if (content.style.display === 'block') {
+          // If the content is already visible, hide it
+          content.style.display = 'none';
+          this.classList.remove('active'); // Remove active class
+        } else {
+          // Otherwise, show the clicked content
+          content.style.display = 'block';
+          this.classList.add('active'); // Add active class
+        }
+      });
+    });
+  });
+</script> -->
+
+ <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const faqQuestions = document.querySelectorAll('.faq-group-heading');
+
+    faqQuestions.forEach((button, index) => {
+      const content = button.nextElementSibling;
+
+      // Open the first item by default
+      if (index === 0) {
+        button.classList.add('active');
+        if (content && content.classList.contains('faq-item')) {
+          content.style.display = 'block';
+        }
+      } else {
+        // Hide all others
+        if (content && content.classList.contains('faq-item')) {
+          content.style.display = 'none';
+        }
+      }
+
+      //  Add toggle logic
+      button.addEventListener('click', function () {
+        const isOpen = content.style.display === 'block';
+
+        if (isOpen) {
+          content.style.display = 'none';
+          this.classList.remove('active');
+        } else {
+          content.style.display = 'block';
+          this.classList.add('active');
+        }
+      });
+    });
+  });
+</script>
+
+

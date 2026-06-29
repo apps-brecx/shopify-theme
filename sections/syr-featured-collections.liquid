@@ -1,0 +1,152 @@
+{%- comment -%} Section 3 — Featured Collections (3 clean cards, PDP style) {%- endcomment -%}
+<style id="syr-fc-{{ section.id }}-css">
+  #syr-fc-{{ section.id }}{
+    --ink:#39220f; --paper:#FFFBF4; --bg:#F4E8CE; --accent:#c58548; --butter:#FCE2A0;
+    background:var(--bg);
+    padding:90px 40px;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    color:var(--ink);
+  }
+  #syr-fc-{{ section.id }} .syr-fc-wrap{ max-width:1320px; margin:0 auto; }
+  #syr-fc-{{ section.id }} .syr-fc-head{ text-align:center; max-width:680px; margin:0 auto 48px; }
+  #syr-fc-{{ section.id }} .syr-fc-eyebrow{
+    display:inline-block; background:var(--butter); color:var(--ink);
+    border:2px solid var(--ink); border-radius:999px;
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    padding:7px 16px; margin-bottom:16px; box-shadow:3px 3px 0 var(--ink);
+  }
+  #syr-fc-{{ section.id }} h2{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:clamp(38px, 5.4vw, 64px); line-height:.95;
+    letter-spacing:-.02em; text-transform:uppercase;
+    margin:0 0 12px;
+  }
+  #syr-fc-{{ section.id }} .syr-fc-sub{ font-size:16px; color:rgba(57,34,15,.7); margin:0; max-width:48ch; margin:0 auto; }
+
+  #syr-fc-{{ section.id }} .syr-fc-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:24px;
+  }
+  #syr-fc-{{ section.id }} .syr-fc-card{
+    position:relative;
+    background:var(--paper);
+    border:2px solid var(--ink); border-radius:24px;
+    box-shadow:6px 6px 0 var(--ink);
+    overflow:hidden;
+    text-decoration:none; color:var(--ink);
+    display:flex; flex-direction:column;
+    transition:transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s cubic-bezier(.4,0,.2,1);
+  }
+  #syr-fc-{{ section.id }} .syr-fc-card:hover{ transform:translate(-4px,-4px); box-shadow:10px 10px 0 var(--ink); }
+  #syr-fc-{{ section.id }} .syr-fc-media{
+    aspect-ratio:4/3; background:#fff;
+    border-bottom:2px solid var(--ink);
+    overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #syr-fc-{{ section.id }} .syr-fc-media img{ width:100%; height:100%; object-fit:cover; transition:transform .35s ease; }
+  #syr-fc-{{ section.id }} .syr-fc-card:hover .syr-fc-media img{ transform:scale(1.06); }
+  #syr-fc-{{ section.id }} .syr-fc-body{
+    padding:24px 24px 26px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  #syr-fc-{{ section.id }} .syr-fc-count{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--accent);
+  }
+  #syr-fc-{{ section.id }} .syr-fc-title{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:clamp(22px, 2.4vw, 32px); line-height:1;
+    letter-spacing:-.01em; text-transform:uppercase;
+    color:var(--ink); margin:0;
+  }
+  #syr-fc-{{ section.id }} .syr-fc-desc{
+    font-size:14.5px; line-height:1.45; color:rgba(57,34,15,.7); margin:6px 0 0;
+  }
+  #syr-fc-{{ section.id }} .syr-fc-arrow{
+    display:inline-flex; align-items:center; gap:8px;
+    margin-top:16px;
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink);
+  }
+  #syr-fc-{{ section.id }} .syr-fc-arrow svg{ width:14px; height:14px; transition:transform .18s ease; }
+  #syr-fc-{{ section.id }} .syr-fc-card:hover .syr-fc-arrow svg{ transform:translateX(4px); }
+
+  @media (max-width:960px){
+    #syr-fc-{{ section.id }}{ padding:60px 16px 70px; }
+    #syr-fc-{{ section.id }} .syr-fc-head{ margin-bottom:28px; }
+    #syr-fc-{{ section.id }} .syr-fc-grid{ grid-template-columns:1fr; gap:18px; }
+    #syr-fc-{{ section.id }} .syr-fc-card{ box-shadow:5px 5px 0 var(--ink); border-radius:20px; }
+    #syr-fc-{{ section.id }} .syr-fc-body{ padding:20px 20px 22px; }
+    #syr-fc-{{ section.id }} .syr-fc-title{ font-size:24px; }
+    #syr-fc-{{ section.id }} h2{ font-size:clamp(30px, 9vw, 42px); }
+    #syr-fc-{{ section.id }} .syr-fc-sub{ font-size:14px; }
+  }
+</style>
+
+<section id="syr-fc-{{ section.id }}">
+  <div class="syr-fc-wrap">
+    <div class="syr-fc-head">
+      <span class="syr-fc-eyebrow" data-reveal="up">Shop by flavor</span>
+      <h2 data-reveal="up" data-reveal-delay="80">{{ section.settings.headline }}</h2>
+      <p class="syr-fc-sub" data-reveal="up" data-reveal-delay="160">{{ section.settings.sub }}</p>
+    </div>
+    <div class="syr-fc-grid">
+      {%- assign keys = 'c1,c2,c3' | split: ',' -%}
+      {%- for key in keys -%}
+        {%- assign handle_k = key | append: '_handle' -%}
+        {%- assign title_k = key | append: '_title' -%}
+        {%- assign desc_k = key | append: '_desc' -%}
+        {%- assign img_k = key | append: '_image' -%}
+        {%- assign handle = section.settings[handle_k] -%}
+        {%- assign coll = collections[handle] -%}
+        {%- assign img = section.settings[img_k] | default: coll.image -%}
+        {%- assign title = section.settings[title_k] | default: coll.title -%}
+        <a class="syr-fc-card" href="{{ coll.url | default: '/collections/all' }}" data-reveal="up" data-reveal-delay="{{ forloop.index0 | times: 120 }}">
+          <div class="syr-fc-media">
+            {%- if img -%}
+              <img src="{{ img | image_url: width: 800 }}" alt="{{ title | escape }}" loading="lazy" width="480" height="360">
+            {%- else -%}
+              <div style="width:100%;height:100%;background:linear-gradient(160deg,#FCE2A0,#c58548);"></div>
+            {%- endif -%}
+          </div>
+          <div class="syr-fc-body">
+            <span class="syr-fc-count">{{ coll.products_count | default: 100 }}+ flavors</span>
+            <h3 class="syr-fc-title">{{ title }}</h3>
+            <p class="syr-fc-desc">{{ section.settings[desc_k] }}</p>
+            <span class="syr-fc-arrow">Shop now <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collections",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Find your flavor" },
+    { "type": "textarea", "id": "sub", "label": "Subtext", "default": "From morning coffee to weekend cocktails — every flavor for every occasion." },
+    { "type": "header", "content": "Card 1" },
+    { "type": "text", "id": "c1_handle", "label": "Collection handle", "default": "coffee" },
+    { "type": "text", "id": "c1_title", "label": "Card title (optional, defaults to collection name)" },
+    { "type": "textarea", "id": "c1_desc", "label": "Card description", "default": "Vanilla, caramel, hazelnut — the morning brew upgrade." },
+    { "type": "image_picker", "id": "c1_image", "label": "Card image (optional, defaults to collection image)" },
+    { "type": "header", "content": "Card 2" },
+    { "type": "text", "id": "c2_handle", "label": "Collection handle", "default": "fruit" },
+    { "type": "text", "id": "c2_title", "label": "Card title (optional)" },
+    { "type": "textarea", "id": "c2_desc", "label": "Card description", "default": "Real fruit flavor for lemonades, cocktails, and iced drinks." },
+    { "type": "image_picker", "id": "c2_image", "label": "Card image (optional)" },
+    { "type": "header", "content": "Card 3" },
+    { "type": "text", "id": "c3_handle", "label": "Collection handle", "default": "sugar-free" },
+    { "type": "text", "id": "c3_title", "label": "Card title (optional)" },
+    { "type": "textarea", "id": "c3_desc", "label": "Card description", "default": "All the flavor, zero sugar. Every flavor at $9.99." },
+    { "type": "image_picker", "id": "c3_image", "label": "Card image (optional)" }
+  ],
+  "presets": [ { "name": "Featured Collections" } ]
+}
+{% endschema %}

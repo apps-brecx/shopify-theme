@@ -1,0 +1,383 @@
+{% layout 'theme' %}
+
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+{% render 'pd-fixes' %}
+{% render 'pd-tweaks' %}
+{% render 'pd-rv2-affordances' %}
+{% render 'pd-reviews-style' %}
+{% render 'pd-color-swap' %}
+{% render 'pd-page-polish-v2' %}
+{% render 'pd-cat-styles' %}
+{% render 'pd-cat-extras' %}
+{% render 'pd-sale-display' %}
+
+<style>
+.pd-slider-mobile{display:none}.pd-slider-dots{display:none}
+@media (max-width:760px){
+  .pd-hero-frame{display:none!important}.pd-thumbs{display:none!important}
+  .pd-slider-mobile{display:block!important;position:relative;background:#FFFBF4;border:2px solid #1a1a1a;border-radius:20px;padding:0;box-shadow:4px 4px 0 #1a1a1a;overflow:hidden;max-width:340px;margin:0 auto}
+  .pd-slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%;position:relative;z-index:0}
+  .pd-slides::-webkit-scrollbar{display:none}.pd-slide{flex:0 0 100%;scroll-snap-align:start;min-width:100%}
+  .pd-slide img{width:100%;height:auto;display:block;aspect-ratio:1/1;object-fit:cover}
+  .pd-slider-dots{display:flex!important;justify-content:center;gap:5px;margin-top:10px}
+}
+html body .pd .pd-price-row{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important}
+</style>
+
+{%- assign hero_img = product.featured_media.preview_image -%}
+{%- assign hero_src = hero_img | image_url: width: 1400 -%}
+<link rel="preload" as="image" href="{{ hero_src }}" imagesrcset="{{ hero_img | image_url: width: 600 }} 600w, {{ hero_img | image_url: width: 1000 }} 1000w, {{ hero_img | image_url: width: 1400 }} 1400w" imagesizes="(max-width: 980px) 100vw, 600px" fetchpriority="high">
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign price = current_variant.price -%}
+{%- assign compare_at = current_variant.compare_at_price -%}
+{%- assign display_price = price -%}
+{%- assign review_count = product.metafields.reviews.rating_count.value | default: 0 -%}
+
+{%- assign has_sale = false -%}
+{%- if compare_at and compare_at > price -%}{%- assign has_sale = true -%}{%- endif -%}
+{%- assign sale_pct = 0 -%}
+{%- if has_sale -%}
+  {%- assign sale_diff = compare_at | minus: price -%}
+  {%- assign sale_pct = sale_diff | times: 100 | divided_by: compare_at -%}
+{%- endif -%}
+
+{%- assign pf_arr = '' | split: ',' -%}
+{%- assign mf = product.metafields.custom.pack_flavors -%}
+{%- if mf and mf.value -%}
+  {%- assign pf_arr = mf.value | strip | split: ',' -%}
+{%- else -%}
+  {%- assign pf_clean = product.title | remove_first: 'Variety Pack,' | remove_first: 'Variety Pack' | remove: ' Coffee Syrup' | remove: ' Tea Syrup' | remove: ' Syrup' | remove: ' Coffee' | replace: ' and ', ', ' -%}
+  {%- assign pf_arr = pf_clean | split: ',' -%}
+{%- endif -%}
+{%- assign flavor_count = pf_arr.size -%}
+{%- if flavor_count < 2 -%}{%- assign flavor_count = 4 -%}{%- endif -%}
+
+{%- capture flavor_csv -%}{%- for f in pf_arr -%}{{ f | strip }}{%- unless forloop.last %}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
+
+<div class="pd" data-product-id="{{ product.id }}" data-base-price="{{ display_price }}">
+
+  <nav class="pd-breadcrumbs" aria-label="Breadcrumb">
+    <div class="pd-wrap">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li class="pd-bc-sep" aria-hidden="true">/</li>
+        <li><a href="/collections/variety-packs">Variety Packs</a></li>
+        <li class="pd-bc-sep" aria-hidden="true">/</li>
+        <li class="pd-bc-current">{{ product.title }}</li>
+      </ol>
+    </div>
+  </nav>
+
+  <section class="pd-hero">
+    <div class="pd-wrap">
+      <div class="pd-hero-grid">
+        <div class="pd-hero-media">
+          <div class="pd-hero-frame">
+            <img id="pdHeroImg" src="{{ hero_src }}" alt="{{ product.title | escape }}" width="1200" height="1200" fetchpriority="high">
+          </div>
+          {%- if product.images.size > 1 -%}
+            <div class="pd-thumbs">
+              {%- for img in product.images limit: 4 -%}
+                <button type="button" class="pd-thumb{% if forloop.first %} is-active{% endif %}" data-src="{{ img | image_url: width: 1400 }}" aria-label="View image {{ forloop.index }}"><img src="{{ img | image_url: width: 200 }}" alt="" width="200" height="200" loading="lazy"></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+          <div class="pd-slider-mobile">
+            <div class="pd-slides" id="pdSlides">
+              {%- for img in product.images -%}
+                <div class="pd-slide" data-idx="{{ forloop.index0 }}"><img src="{{ img | image_url: width: 1000 }}" alt="{{ product.title | escape }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}></div>
+              {%- endfor -%}
+            </div>
+          </div>
+          {%- if product.images.size > 1 -%}
+            <div class="pd-slider-dots" id="pdDots">
+              {%- for img in product.images -%}<button type="button" class="pd-dot{% if forloop.first %} is-active{% endif %}" data-idx="{{ forloop.index0 }}" aria-label="View image {{ forloop.index }}"></button>{%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="pd-hero-info">
+          <a href="#reviews" class="pd-rating-row">
+            <span class="pd-stars" aria-hidden="true">
+              {%- for i in (1..5) -%}<svg viewBox="0 0 24 24" fill="#FF6B5C" stroke="#FF6B5C" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>{%- endfor -%}
+            </span>
+            <span class="pd-rating-text">{{ review_count }} reviews</span>
+          </a>
+          <h1 class="pd-h1">{{ product.title | upcase }}</h1>
+
+          <div class="pd-chips">
+            <span class="pd-chip pd-chip--peach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10 H21"/><path d="M9 6 V3 a1 1 0 0 1 1 -1 H14 a1 1 0 0 1 1 1 V6"/></svg>{{ flavor_count }} Bottles Inside</span>
+            <span class="pd-chip pd-chip--butter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 C 7 6, 7 14, 12 22 C 17 14, 17 6, 12 2 Z M12 7 V 18"/></svg>Pure Cane Sugar</span>
+            <span class="pd-chip pd-chip--mint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12 V21 H4 V12 M2 7 H22 V12 H2 Z M12 22 V7 M12 7 C 10 4, 6 4, 6 7 C 6 8, 8 8, 12 7 M12 7 C 14 4, 18 4, 18 7 C 18 8, 16 8, 12 7"/></svg>Gift-Ready</span>
+            <span class="pd-chip pd-chip--sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L14.5 8 L21 9 L16.5 13.5 L17.5 20 L12 16.5 L6.5 20 L7.5 13.5 L3 9 L9.5 8 Z"/></svg>Save vs Singles</span>
+          </div>
+
+          {%- form 'product', product, id: 'pdAtcForm', class: 'pd-form' -%}
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+            <div class="pd-priceqty">
+              <div class="pd-priceblock">
+                <div class="pd-price-row">
+                  <span class="pd-price" id="pdPriceTotal">{{ display_price | money }}</span>
+                  {%- if has_sale -%}
+                    <span class="pd-price-original" id="pdPriceCompareAt">{{ compare_at | money }}</span>
+                    <span class="pd-sale-badge">Save {{ sale_pct }}%</span>
+                  {%- endif -%}
+                  <span class="pd-price-was" id="pdPriceWas" style="display:none"></span>
+                </div>
+                <span class="pd-save-inline" id="pdSaveTag" style="display:none"></span>
+              </div>
+              <div class="pd-qty" aria-label="Quantity">
+                <button type="button" data-qty="-1" aria-label="Decrease">−</button>
+                <input type="number" name="quantity" value="1" min="1" inputmode="numeric">
+                <button type="button" data-qty="1" aria-label="Increase">+</button>
+              </div>
+            </div>
+            <button type="submit" class="pd-atc pd-atc--full" {% unless product.available %}disabled{% endunless %}>
+              <svg class="pd-atc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 L4 6 V20 a2 2 0 0 0 2 2 H18 a2 2 0 0 0 2 -2 V6 L18 2 Z M4 6 H20 M16 10 a4 4 0 0 1 -8 0"/></svg>
+              <span class="pd-atc-text" id="pdAtcText">{%- if product.available -%}Add to cart{%- else -%}Sold Out{%- endif -%}</span>
+              {%- if product.available -%}<svg class="pd-atc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 H19 M13 6 l6 6 -6 6"/></svg>{%- endif -%}
+            </button>
+          {%- endform -%}
+
+          <div class="pd-minibundle">
+            <div class="pd-mb-head">
+              <span class="pd-mb-headline">Stock up, save more</span>
+              <span class="pd-mb-sub">Bigger discount per pack</span>
+            </div>
+            <div class="pd-mb-grid">
+              <button type="button" class="pd-mb-cell" data-tier="2"><span class="pd-mb-num">2</span><span class="pd-mb-label">Packs</span><span class="pd-mb-save">Save 5%</span></button>
+              <button type="button" class="pd-mb-cell" data-tier="3"><span class="pd-mb-flag">Most Popular</span><span class="pd-mb-num">3</span><span class="pd-mb-label">Packs</span><span class="pd-mb-save">Save 10%</span></button>
+              <button type="button" class="pd-mb-cell" data-tier="4"><span class="pd-mb-num">4+</span><span class="pd-mb-label">Packs</span><span class="pd-mb-save">Save 15%</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="pd-marquee" aria-hidden="true">
+    <div class="pd-marquee-track">
+      {%- for i in (1..2) -%}<span>{{ flavor_count }} Bottles Inside</span><span>Pure Cane Sugar</span><span>Gift-Ready</span><span>Save vs Singles</span><span>Gluten-Free · Kosher</span><span>Made in the USA</span>{%- endfor -%}
+    </div>
+  </div>
+
+  {% render 'pd-pack-flavors' %}
+
+  <section class="pd-description">
+    <div class="pd-wrap">
+      <div class="pd-desc-head">
+        <span class="pd-eyebrow">About this pack</span>
+        <h2 class="pd-h2" style="margin-top:14px;">Taste of <em>everything</em>.</h2>
+      </div>
+      <div class="pd-desc-content">
+        <ul>
+          {%- if pf_arr.size >= 2 -%}
+            <li><strong>Flavors inside:</strong> {{ flavor_csv }}.</li>
+          {%- endif -%}
+          <li>Curated Lineup: A hand-picked set of bestseller flavors, balanced so every cup tastes different.</li>
+          <li>Save vs Singles: Bundle pricing built in. Always cheaper than buying these flavors one bottle at a time.</li>
+          <li>Gift-Ready: Comes packed and presentable. Hand it off as-is to a coffee fan, or split between friends.</li>
+          <li>Same Real Flavor: Same Syruvia recipes inside, made with pure cane sugar and real fruit and natural notes.</li>
+          <li>Café-Quality: 50+ servings per bottle. Roughly 200+ drinks per pack.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="pd-standards" aria-hidden="true">
+    <div class="pd-wrap">
+      <div class="pd-ingredients">
+        <span class="pd-ingredients-label">Ingredients</span>
+        <div>Varies by flavor. Each bottle: Pure Cane Sugar, Filtered Water, Natural Flavor, Citric Acid, Potassium Sorbate (preservative).</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pd-nutrition-wrap" aria-hidden="true">
+    <div class="pd-wrap">
+      <div class="pd-nutrition">
+        <div class="pd-nutrition-title">Nutrition Facts</div>
+        <div class="pd-nut-serv">Per bottle · Serving size 2 Tbsp (30 mL)</div>
+        <div class="pd-nut-rule--thick"></div>
+        <div class="pd-nut-row"><strong>Amount per serving</strong></div>
+        <div class="pd-nut-row" style="font-size:18px;"><strong>Calories</strong><strong>60</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div style="font-size:12px;text-align:right;">% Daily Value*</div>
+        <div class="pd-nut-row"><span><strong>Total Fat</strong> 0g</span><strong>0%</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>Sodium</strong> 5mg</span><strong>0%</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>Total Carbohydrate</strong> 15g</span><strong>5%</strong></div>
+        <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Total Sugars 14g</span><span></span></div>
+        <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Incl. 14g Added Sugars</span><strong>28%</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>Protein</strong> 0g</span></div>
+        <div class="pd-nut-rule--med"></div>
+        <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">*% DV based on a 2,000 calorie diet. Sugar-free flavors in this pack will list 0g sugar.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pd-why">
+    <div class="pd-wrap pd-why-wrap" style="text-align:center;">
+      <span class="pd-eyebrow">Why this pack</span>
+      <h2 class="pd-h2 pd-why-h2">A tour of <em>flavor</em>.</h2>
+      <div class="pd-why-grid pd-why-grid--spaced">
+        <div class="pd-why-card pd-why-card--peach">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10 H21"/><path d="M9 6 V3 a1 1 0 0 1 1 -1 H14 a1 1 0 0 1 1 1 V6"/></svg></div>
+          <h3 class="pd-why-title">Bestseller Lineup</h3>
+          <p class="pd-why-body">Hand-picked flavors that work together. No filler. Every bottle pulls its weight.</p>
+        </div>
+        <div class="pd-why-card pd-why-card--butter">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L14.5 8 L21 9 L16.5 13.5 L17.5 20 L12 16.5 L6.5 20 L7.5 13.5 L3 9 L9.5 8 Z"/></svg></div>
+          <h3 class="pd-why-title">Save vs Singles</h3>
+          <p class="pd-why-body">Bundle price built in. Always less than the same bottles one-by-one.</p>
+        </div>
+        <div class="pd-why-card pd-why-card--mint">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12 V21 H4 V12 M2 7 H22 V12 H2 Z M12 22 V7 M12 7 C 10 4, 6 4, 6 7 C 6 8, 8 8, 12 7 M12 7 C 14 4, 18 4, 18 7 C 18 8, 16 8, 12 7"/></svg></div>
+          <h3 class="pd-why-title">Gift-Ready</h3>
+          <p class="pd-why-body">Presentable as-is. A great drop for a coffee lover, or split it between friends.</p>
+        </div>
+        <div class="pd-why-card pd-why-card--sky">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg></div>
+          <h3 class="pd-why-title">Café Quality</h3>
+          <p class="pd-why-body">Same real-flavor Syruvia recipes inside. Pure cane sugar, no funky aftertaste.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% render 'pd-reels-section' %}
+
+  <section class="pd-recipes-v2">
+    <div class="pd-wrap pd-rv2-head">
+      <span class="pd-eyebrow">Featured recipe</span>
+      <h2 class="pd-h2">Pour <em>a flight</em>.</h2>
+      <p class="pd-rv2-lede">Side-by-side mini lattes — try all the flavors in one sitting.</p>
+    </div>
+    <div class="pd-wrap">
+      <article class="pd-rv2-feature">
+        <div class="pd-rv2-feature-img">
+          <img src="{{ product.featured_image | image_url: width: 1200 }}" alt="{{ product.title | escape }} flight" loading="lazy">
+          <span class="pd-rv2-feature-tag">Signature flight</span>
+        </div>
+        <div class="pd-rv2-feature-body">
+          <div class="pd-rv2-feature-content is-trimmed">
+            <h3 class="pd-rv2-feature-name">Tasting Flight</h3>
+            <p class="pd-rv2-feature-ing-head"><strong>INGREDIENTS</strong></p>
+            <ul>
+              <li>{{ flavor_count }} small glasses, each with 1 espresso shot (or 3 oz cold brew)</li>
+              <li>1 pump from each flavor in this pack</li>
+              <li>2 oz steamed or cold milk per glass</li>
+              <li>Optional: ice + a sprinkle of cinnamon</li>
+            </ul>
+          </div>
+          <span class="pd-rv2-feature-time">7 min</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="pd-cat-recipes">
+    <div class="pd-wrap" style="text-align:center;">
+      <span class="pd-eyebrow">Ways to pour</span>
+      <h2 class="pd-h2" style="margin:14px auto 14px;">More than a <em>latte</em>.</h2>
+      <p class="pd-cat-recipes-sub">Once you have the pack, here’s how to use every bottle.</p>
+    </div>
+    <div class="pd-cat-recipes-scroll">
+      <button type="button" class="pd-cat-recipes-nav pd-cat-recipes-nav--prev" aria-label="Previous"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6 l-6 6 6 6"/></svg></button>
+      <div class="pd-cat-recipes-marquee">
+        <div class="pd-cat-recipes-track">
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Hot Latte</span><h3 class="pd-cat-recipes-card-title">Classic Café Latte</h3><p class="pd-cat-recipes-card-body">1 shot espresso, 8 oz steamed milk, 1 pump of any flavor in the pack. Stir + sip.</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Iced</span><h3 class="pd-cat-recipes-card-title">Iced Flavored Coffee</h3><p class="pd-cat-recipes-card-body">Cold brew over ice, splash of milk, one pump. Endless combos.</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Dessert</span><h3 class="pd-cat-recipes-card-title">Vanilla Ice Cream Drizzle</h3><p class="pd-cat-recipes-card-body">Drizzle any syrup over vanilla ice cream. Different flavor every night.</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Breakfast</span><h3 class="pd-cat-recipes-card-title">Pancake Pour</h3><p class="pd-cat-recipes-card-body">Swap syrup for one of these on pancakes, waffles, or French toast.</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Mocktail</span><h3 class="pd-cat-recipes-card-title">Sparkling Spritz</h3><p class="pd-cat-recipes-card-body">Soda water + 1 pump syrup + lemon = bright, zero-proof drink.</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Cocktail</span><h3 class="pd-cat-recipes-card-title">Bar Cart Upgrade</h3><p class="pd-cat-recipes-card-body">Pump into bourbon, vodka, or rum cocktails. House signature in 30 seconds.</p></div>
+        </div>
+      </div>
+      <button type="button" class="pd-cat-recipes-nav pd-cat-recipes-nav--next" aria-label="Next"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 l6 6 -6 6"/></svg></button>
+    </div>
+  </section>
+
+  {% render 'pd-reviews-v2' %}
+  {% render 'pd-write-review' %}
+  {% render 'pd-recommended' %}
+
+  <section class="pd-faq" id="pdFaq">
+    <div class="pd-wrap pd-faq-head">
+      <span class="pd-eyebrow">FAQ</span>
+      <h2 class="pd-h2">Before you <em>pour</em>.</h2>
+      <p class="pd-faq-lede">Everything you might want to know about this variety pack.</p>
+    </div>
+    {%- assign faqs = 'What flavors come in this pack?|The flavors are listed in the product title and product images. Each bottle is 750 ml — 50+ servings per bottle.;;How much do I save vs buying singles?|Pack pricing is built in. You always pay less than buying these exact flavors bottle-by-bottle.;;Can I swap a flavor?|These are pre-packed sets so we can keep the price low. If you want full custom, check out our Build Your Own Bundle page.;;How long does a bottle last?|Unopened, up to 18 months at room temperature. Once opened, refrigerate and use within 6 weeks for best flavor.;;Are these gift-ready?|Yes — packs ship in their own clean carton. Hand it to a coffee fan as-is, no extra wrapping needed.;;Are your syrups kosher and gluten free?|Yes. All Syruvia syrups are OU kosher certified and gluten free.;;How fast do you ship?|Orders ship in 1 business day from our New Jersey warehouse. Flat-rate $5.99 shipping, free over $34.;;What if I do not love it?|30-day taste guarantee on every pack. Email us — refund, swap, or store credit, your call.' | split: ';;' -%}
+    <ul class="pd-faq-list">
+      {%- for faq in faqs -%}
+        {%- assign parts = faq | split: '|' -%}
+        <li class="pd-faq-item">
+          <button type="button" class="pd-faq-q" aria-expanded="false">
+            <span class="pd-faq-q-text">{{ parts[0] }}</span>
+            <span class="pd-faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="pd-faq-a"><div class="pd-faq-a-inner">{{ parts[1] }}</div></div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </section>
+
+  {% render 'pd-vip-section' %}
+
+  <div class="pd-stickybar" id="pdStickybar">
+    <span class="pd-price">
+      <span id="pdStickyPrice">{{ display_price | money }}</span>
+      {%- if has_sale -%}<span class="pd-price-original">{{ compare_at | money }}</span>{%- endif -%}
+    </span>
+    <button type="button" class="pd-atc" {% unless product.available %}disabled{% endunless %} onclick="document.getElementById('pdAtcForm').requestSubmit()">{%- if product.available -%}Add to cart{%- else -%}Sold Out{%- endif -%}</button>
+  </div>
+</div>
+
+{% render 'pd-mb-prices' %}
+
+<script>
+window.PD_BASE_CENTS = {{ display_price }};
+window.PD_COMPARE_AT_CENTS = {{ compare_at | default: 0 }};
+window.PD_HAS_SALE = {% if has_sale %}true{% else %}false{% endif %};
+window.PD_TIERS = [1, 0.95, 0.90, 0.85];
+(function(){
+  var currentBaseCents = window.PD_BASE_CENTS;
+  var compareAtCents = window.PD_COMPARE_AT_CENTS;
+  var hasSale = window.PD_HAS_SALE;
+  const tiers = window.PD_TIERS;
+  const fmt = (c)=>{const d=c/100; return '$' + d.toFixed(2);};
+  function updatePrice(qty){
+    qty = Math.max(1, parseInt(qty)||1);
+    const tierIdx = Math.min(qty-1, tiers.length-1);
+    const discount = tiers[tierIdx];
+    const totalCents = Math.round(currentBaseCents * qty * discount);
+    const origCents = currentBaseCents * qty;
+    const compareCents = compareAtCents * qty;
+    const priceEl = document.getElementById('pdPriceTotal');
+    const wasEl = document.getElementById('pdPriceWas');
+    const saveEl = document.getElementById('pdSaveTag');
+    const stickyPriceEl = document.getElementById('pdStickyPrice');
+    const compareEl = document.getElementById('pdPriceCompareAt');
+    if (priceEl) priceEl.textContent = fmt(totalCents);
+    if (stickyPriceEl) stickyPriceEl.textContent = fmt(totalCents);
+    if (hasSale && compareEl) compareEl.textContent = fmt(compareCents);
+    document.querySelectorAll('.pd-stickybar .pd-price-original').forEach(function(el){ el.textContent = fmt(compareCents); });
+    if (qty > 1){ if (wasEl){wasEl.textContent = fmt(origCents); wasEl.style.display='inline';} if (saveEl){saveEl.textContent = 'Save '+Math.round((1-discount)*100)+'%'; saveEl.style.display='inline-block';} }
+    else { if (wasEl) wasEl.style.display='none'; if (saveEl) saveEl.style.display='none'; }
+    document.querySelectorAll('.pd-mb-cell').forEach(c=>{ const t = parseInt(c.dataset.tier)||1; const match = (qty === t) || (qty >= 4 && t === 4); if (match) c.setAttribute('data-active',''); else c.removeAttribute('data-active'); });
+  }
+  document.querySelectorAll('.pd-qty [data-qty]').forEach(b=>{b.addEventListener('click',()=>{const inp=b.parentElement.querySelector('input'); const v=Math.max(1,(parseInt(inp.value)||1)+parseInt(b.dataset.qty)); inp.value=v; updatePrice(v);});});
+  document.querySelectorAll('.pd-qty input').forEach(inp=>{inp.addEventListener('change',()=>updatePrice(parseInt(inp.value)||1)); inp.addEventListener('input',()=>updatePrice(parseInt(inp.value)||1));});
+  document.querySelectorAll('.pd-mb-cell').forEach(c=>{c.addEventListener('click',()=>{const tier=parseInt(c.dataset.tier)||1; const qtyInp=document.querySelector('.pd-qty input'); if(qtyInp){qtyInp.value=tier; updatePrice(tier);}});});
+  const heroImg=document.getElementById('pdHeroImg');
+  document.querySelectorAll('.pd-thumb').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.pd-thumb').forEach(x=>x.classList.remove('is-active'));t.classList.add('is-active');if(heroImg&&t.dataset.src)heroImg.src=t.dataset.src;});});
+  const slides=document.getElementById('pdSlides'); const dots=document.querySelectorAll('.pd-dot');
+  if(slides&&dots.length){let st; slides.addEventListener('scroll',()=>{clearTimeout(st);st=setTimeout(()=>{const idx=Math.round(slides.scrollLeft/slides.clientWidth);dots.forEach((d,i)=>d.classList.toggle('is-active',i===idx));},50);}); dots.forEach((d,i)=>d.addEventListener('click',()=>{slides.scrollTo({left:i*slides.clientWidth,behavior:'smooth'});}));}
+  const mainAtc=document.querySelector('.pd-atc--full'); const stickyBar=document.getElementById('pdStickybar');
+  if(mainAtc&&stickyBar&&'IntersectionObserver' in window){const io=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)stickyBar.classList.add('is-hidden');else stickyBar.classList.remove('is-hidden');});},{threshold:0.15}); io.observe(mainAtc);}
+})();
+</script>

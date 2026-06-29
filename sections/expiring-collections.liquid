@@ -1,0 +1,278 @@
+<style>
+         .expiring-collection-cards__inner{
+            padding: 40px 0;
+        }
+        .expiring-collection-cards .expiring-product-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 15px;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .expiring-product-card {
+        border-radius: 20px;
+        overflow: hidden;
+      border: 1px solid #eee;
+      padding: 10px;
+      background: #fff;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      cursor: pointer;
+    }
+
+    .expiring-card-image {
+      position: relative;
+    }
+
+    .expiring-card-image img {
+      width: 100%;
+    }
+
+    .expiring-badge {
+        position: absolute;
+        top: 10px;
+        left: 5px;
+        background: red;
+        color: #fff;
+        padding: 5px 9px;
+        font-size: 10px;
+        line-height: normal;
+        border-radius: 20px;
+    }
+
+    .expiring-price .compare {
+      text-decoration: line-through;
+      color: #969595;
+      margin-left: 5px;
+    }
+  .expiring-price-new{
+    color: #d21625;
+  }
+    .add-to-cart-btn {
+      width: 100%;
+      padding: 10px;
+      background: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .expiring-card-content h3 a{
+      text-decoration: none;
+      color: inherit;
+      font-weight: normal;
+    }
+    .expiring-card-content h3{
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+        margin: 0 0 10px 0;
+        min-height: 36px;
+    }
+    .expiring-card-content .expiring-price{
+        margin: 0;
+        color: #341c02;
+        text-align: center;
+        font-size: 16px;
+    }
+    
+  .expiring-stock svg{
+    width: 18px;
+      height: 18px;
+    }
+    .expiring-stock{
+      display: flex;
+          justify-content: center;
+      align-items: center;
+      gap: 10px;
+        margin: 5px 0;
+          font-size: 14px;
+        text-align: center;
+    }
+    .expiring-card-content button{
+        border-radius: 20px;
+        background: #341c02;
+        transition: all 0.3s ease;
+    }
+    .expiring-card-content button:hover{
+        opacity: 0.8;
+    }
+    @media(max-width: 1440px){
+       .expiring-collection-cards .expiring-product-grid {
+
+      grid-template-columns: repeat(4, 1fr);
+
+    }
+
+    }
+    @media(max-width: 991px){
+       .expiring-collection-cards .expiring-product-grid {
+
+      grid-template-columns: repeat(3, 1fr);
+
+    }
+
+    }
+    @media(max-width: 600px){
+       .expiring-card-content h3{
+          min-height:50px;
+      }
+       .expiring-collection-cards .expiring-product-grid {
+
+      grid-template-columns: repeat(2, 1fr);
+
+    }
+
+    }
+</style>
+<div class="expiring-collection-cards__inner">
+  <div class="expiring-collection-cards page-width">
+    <h2>{{ section.settings.heading }}</h2>
+
+    {% assign collection = collections[section.settings.collection] %}
+
+    <div class="expiring-product-grid">
+      {% for product in collection.products %}
+        {% assign variant = product.selected_or_first_available_variant %}
+
+        <div class="expiring-product-card" data-stock="{{ variant.inventory_quantity }}">
+          <div class="expiring-card-image">
+            <a href="{{ product.url }}">
+              <img src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title }}">
+            </a>
+
+            {% if product.compare_at_price > product.price %}
+              {% assign discount = product.compare_at_price
+                | minus: product.price
+                | times: 100
+                | divided_by: product.compare_at_price
+              %}
+              <span class="expiring-badge"> {{ discount | round }}% OFF </span>
+            {% endif %}
+          </div>
+
+          <div class="expiring-card-content">
+            <h3> <a href="{{ product.url }}">{{ product.title }}         </a></h3>
+
+            <div class="expiring-price">
+              <span class="current {% if product.compare_at_price > product.price %}expiring-price-new {% endif %}">{{ product.price | money }}</span>
+
+              {% if product.compare_at_price > product.price %}
+                <span class="compare">{{ product.compare_at_price | money }}</span>
+              {% endif %}
+            </div>
+
+            <!-- CUSTOM TEXT FIELDS -->
+            <p class="expiring-custom-best-before">
+              {{ section.settings.text_one }}
+            </p>
+            <p class="expiring-custom-expires-soon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 24 24" fill="none">
+                <path d="M3 5.5L5 3.5M21 5.5L19 3.5M9 12.5L11 14.5L15 10.5M20 12.5C20 16.9183 16.4183 20.5 12 20.5C7.58172 20.5 4 16.9183 4 12.5C4 8.08172 7.58172 4.5 12 4.5C16.4183 4.5 20 8.08172 20 12.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              {{ section.settings.text_two }}
+            </p>
+
+            <!-- STOCK -->
+            <p class="expiring-stock">
+              <svg xmlns="http://www.w3.org/2000/svg" width="800px" height="800px" viewBox="0 0 24 24" fill="none">
+                <path d="M15.5777 3.38197L17.5777 4.43152C19.7294 5.56066 20.8052 6.12523 21.4026 7.13974C22 8.15425 22 9.41667 22 11.9415V12.0585C22 14.5833 22 15.8458 21.4026 16.8603C20.8052 17.8748 19.7294 18.4393 17.5777 19.5685L15.5777 20.618C13.8221 21.5393 12.9443 22 12 22C11.0557 22 10.1779 21.5393 8.42229 20.618L6.42229 19.5685C4.27063 18.4393 3.19479 17.8748 2.5974 16.8603C2 15.8458 2 14.5833 2 12.0585V11.9415C2 9.41667 2 8.15425 2.5974 7.13974C3.19479 6.12523 4.27063 5.56066 6.42229 4.43152L8.42229 3.38197C10.1779 2.46066 11.0557 2 12 2C12.9443 2 13.8221 2.46066 15.5777 3.38197Z" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M21 7.5L12 12M12 12L3 7.5M12 12V21.5" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              {% if variant.inventory_quantity < 30 %}
+                Low stock: {{ variant.inventory_quantity }}
+              {% else %}
+                Stock left: {{ variant.inventory_quantity }}
+              {% endif %}
+            </p>
+
+            <!-- ADD TO CART -->
+            {% assign product_form_id = 'product-form-' | append: section.id | append: product.id %}
+
+            <product-form data-section-id="{{ section.id }}">
+              {%- form 'product',
+                product,
+                id: product_form_id,
+                class: 'form',
+                novalidate: 'novalidate',
+                data-type: 'add-to-cart-form'
+              -%}
+                <input
+                  type="hidden"
+                  name="id"
+                  value="{{ variant.id }}"
+                  {% if variant.available == false %}
+                    disabled
+                  {% endif %}
+                >
+
+                <button
+                  type="submit"
+                  class="add-to-cart-btn"
+                  {% if variant.available == false %}
+                    disabled
+                  {% endif %}
+                >
+                  {% if variant.available %}
+                    Add to Cart
+                  {% else %}
+                    Sold Out
+                  {% endif %}
+                </button>
+              {%- endform -%}
+            </product-form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const container = document.querySelector('.expiring-product-grid');
+    if (!container) return;
+
+    const cards = Array.from(container.querySelectorAll('.expiring-product-card'));
+
+    cards.sort((a, b) => {
+      return Number(b.dataset.stock) - Number(a.dataset.stock);
+    });
+
+    cards.forEach((card) => container.appendChild(card));
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Expiring Product Cards",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "text",
+      "id": "text_one",
+      "label": "Custom Text 1",
+      "default": "Free Shipping Available"
+    },
+    {
+      "type": "text",
+      "id": "text_two",
+      "label": "Custom Text 2",
+      "default": "Limited Time Offer"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Expiring Product Cards"
+    }
+  ]
+}
+{% endschema %}

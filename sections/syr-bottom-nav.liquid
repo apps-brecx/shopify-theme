@@ -1,0 +1,361 @@
+{%- comment -%} Syruvia Bottom Nav — mobile sticky bar, fully block-customizable {%- endcomment -%}
+{%- liquid
+  assign hide = false
+  if section.settings.hide_on_pdp and request.page_type == 'product'
+    assign hide = true
+  endif
+  if section.settings.hide_on_cart and request.page_type == 'cart'
+    assign hide = true
+  endif
+  if section.settings.hide_on_checkout and request.path contains '/account'
+    assign hide = true
+  endif
+  if section.settings.hide_on_checkout and request.path contains '/login'
+    assign hide = true
+  endif
+-%}
+{%- unless hide -%}
+
+<style id="syr-bot-{{ section.id }}-css">
+  html body nav.pd-snav-v4{ display:none !important; }
+
+  #syr-bot-{{ section.id }}{
+    --bar-bg:{{ section.settings.bar_bg | default: '#FFFBF4' }};
+    --bar-border:{{ section.settings.bar_border | default: '#39220f' }};
+    --bar-shadow:{{ section.settings.bar_shadow | default: '#39220f' }};
+    --icon-bg:{{ section.settings.icon_bg | default: '#FFFBF4' }};
+    --icon-stroke:{{ section.settings.icon_stroke | default: '#39220f' }};
+    --active-bg:{{ section.settings.active_bg | default: '#FFD4B8' }};
+    --active-icon-bg:{{ section.settings.active_icon_bg | default: '#FCE2A0' }};
+    --active-accent:{{ section.settings.active_accent | default: '#c58548' }};
+    --label-color:{{ section.settings.label_color | default: '#39220f' }};
+    --badge-bg:{{ section.settings.badge_bg | default: '#c58548' }};
+    --badge-color:{{ section.settings.badge_color | default: '#FFFBF4' }};
+    --bar-radius:{{ section.settings.bar_radius | default: 22 }}px;
+    --side-pad:{{ section.settings.side_padding | default: 12 }}px;
+  }
+  html body nav#syr-bot-{{ section.id }}{
+    position:fixed !important; left:0 !important; right:0 !important; bottom:0 !important;
+    z-index:50 !important;
+    padding:0 var(--side-pad) var(--side-pad) !important;
+    padding-bottom:calc(var(--side-pad) + env(safe-area-inset-bottom, 0px)) !important;
+    pointer-events:none !important; background:transparent !important;
+    display:block !important;
+    transform:{% if section.settings.always_show %}translateY(0){% else %}translateY(140%){% endif %} !important;
+    opacity:{% if section.settings.always_show %}1{% else %}0{% endif %} !important;
+    transition:transform .45s cubic-bezier(.25,.46,.45,.94), opacity .25s ease !important;
+    will-change:transform;
+  }
+  html body nav#syr-bot-{{ section.id }}.is-revealed{ transform:translateY(0) !important; opacity:1 !important; }
+  html body nav#syr-bot-{{ section.id }} .snav-inner{
+    pointer-events:auto;
+    background:var(--bar-bg) !important;
+    border:2px solid var(--bar-border) !important;
+    border-radius:var(--bar-radius) !important;
+    padding:8px 6px !important;
+    display:grid !important;
+    grid-template-columns:repeat({{ section.blocks.size | default: 5 }}, 1fr) !important;
+    gap:2px !important;
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    box-shadow:4px 4px 0 var(--bar-shadow), 0 10px 24px rgba(57,34,15,.12) !important;
+    position:relative !important;
+  }
+  html body nav#syr-bot-{{ section.id }} .snav-item{
+    position:relative !important; z-index:1 !important;
+    display:flex !important; flex-direction:column !important;
+    align-items:center !important; justify-content:center !important;
+    gap:4px !important; padding:6px 2px 4px !important;
+    color:var(--label-color) !important; text-decoration:none !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important;
+    border-radius:14px !important; background:transparent !important;
+    transition:background .15s ease, transform .12s ease !important;
+    -webkit-tap-highlight-color:transparent !important; min-width:0 !important;
+    cursor:pointer;
+  }
+  html body nav#syr-bot-{{ section.id }} .snav-item:active{ transform:scale(.94) !important; }
+  html body nav#syr-bot-{{ section.id }} .snav-item:hover .snav-ic{ background:var(--active-icon-bg) !important; }
+  html body nav#syr-bot-{{ section.id }} .snav-item.is-active{ background:var(--active-bg) !important; }
+  html body nav#syr-bot-{{ section.id }} .snav-item.is-active::after{
+    content:"" !important; position:absolute !important; bottom:1px !important; left:50% !important;
+    width:18px !important; height:2.5px !important; border-radius:2px !important;
+    background:var(--active-accent) !important; transform:translateX(-50%) !important;
+  }
+  html body nav#syr-bot-{{ section.id }} .snav-item.is-active .snav-ic{ background:var(--active-icon-bg) !important; }
+  html body nav#syr-bot-{{ section.id }} .snav-ic{
+    position:relative !important;
+    display:inline-flex !important; align-items:center !important; justify-content:center !important;
+    width:40px !important; height:40px !important;
+    background:var(--icon-bg) !important;
+    border:1.5px solid var(--icon-stroke) !important;
+    border-radius:50% !important;
+    box-shadow:1.5px 1.5px 0 var(--icon-stroke) !important;
+    transition:background .15s ease, transform .15s ease, box-shadow .15s ease !important; padding:0 !important;
+  }
+  html body nav#syr-bot-{{ section.id }} .snav-ic svg{ width:20px !important; height:20px !important; color:var(--icon-stroke) !important; display:block !important; }
+  html body nav#syr-bot-{{ section.id }} .snav-lbl{
+    margin-top:1px !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important;
+    font-size:9px !important; letter-spacing:.12em !important; text-transform:uppercase !important;
+    color:var(--label-color) !important; white-space:nowrap !important; line-height:1 !important;
+  }
+  html body nav#syr-bot-{{ section.id }} .snav-badge{
+    position:absolute !important; top:-3px !important; right:-3px !important;
+    background:var(--badge-bg) !important; color:var(--badge-color) !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important;
+    font-size:9.5px !important; letter-spacing:.02em !important;
+    min-width:17px !important; height:17px !important; padding:0 4px !important;
+    border:1.5px solid var(--bar-bg) !important; border-radius:999px !important;
+    display:inline-flex !important; align-items:center !important; justify-content:center !important;
+    line-height:1 !important; box-shadow:0 1px 2px rgba(57,34,15,.2) !important;
+  }
+  @media (max-width:380px){
+    html body nav#syr-bot-{{ section.id }} .snav-inner{ padding:7px 4px !important; }
+    html body nav#syr-bot-{{ section.id }} .snav-ic{ width:36px !important; height:36px !important; }
+    html body nav#syr-bot-{{ section.id }} .snav-ic svg{ width:18px !important; height:18px !important; }
+    html body nav#syr-bot-{{ section.id }} .snav-lbl{ font-size:8.5px !important; letter-spacing:.1em !important; }
+  }
+  {% if section.settings.show_on_desktop == false %}
+  @media (min-width:768px){ html body nav#syr-bot-{{ section.id }}{ display:none !important; } }
+  {% endif %}
+</style>
+
+{%- assign path = request.path | default: '' -%}
+
+<nav id="syr-bot-{{ section.id }}" role="navigation" aria-label="{{ section.settings.aria_label | default: 'Mobile Bottom' }}">
+  <div class="snav-inner">
+    {%- for block in section.blocks -%}
+      {%- assign is_active = false -%}
+      {%- assign blk_url = block.settings.link | default: '#' -%}
+      {%- if blk_url == '/' or blk_url == routes.root_url -%}
+        {%- if path == '/' or request.page_type == 'index' -%}{%- assign is_active = true -%}{%- endif -%}
+      {%- elsif blk_url != '#' and blk_url != blank -%}
+        {%- if path contains blk_url -%}{%- assign is_active = true -%}{%- endif -%}
+      {%- endif -%}
+
+      {%- assign action = block.settings.action_type | default: 'link' -%}
+      {%- if action == 'open_drawer' -%}
+        <a class="snav-item" href="#" role="button" data-syrbot-action="open_drawer" aria-label="{{ block.settings.label | default: 'Menu' }}" {{ block.shopify_attributes }}>
+      {%- elsif action == 'open_search' -%}
+        <a class="snav-item" href="{{ routes.search_url }}" data-syrbot-action="open_search" aria-label="{{ block.settings.label | default: 'Search' }}" {{ block.shopify_attributes }}>
+      {%- elsif action == 'open_cart_drawer' -%}
+        <a class="snav-item snav-cart" href="{{ routes.cart_url }}" data-syrbot-action="open_cart" aria-label="{{ block.settings.label | default: 'Cart' }}" {{ block.shopify_attributes }}>
+      {%- elsif action == 'open_wishlist' -%}
+        <a class="snav-item" href="{{ block.settings.link | default: '/pages/swym-wishlist' }}" data-syrbot-action="open_wishlist" aria-label="{{ block.settings.label | default: 'Saved' }}" {{ block.shopify_attributes }}>
+      {%- else -%}
+        <a class="snav-item{% if is_active %} is-active{% endif %}" href="{{ blk_url }}" aria-label="{{ block.settings.label | default: 'Link' }}" {{ block.shopify_attributes }}>
+      {%- endif -%}
+        <span class="snav-ic" aria-hidden="true">
+          {%- case block.settings.icon -%}
+            {%- when 'home' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-7h4v7h4a1 1 0 0 0 1-1V10"/></svg>
+            {%- when 'shop' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg>
+            {%- when 'search' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            {%- when 'heart' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            {%- when 'cart' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1.2 11.3a2 2 0 0 1-2 1.7H9.2a2 2 0 0 1-2-1.7L6 7z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>
+            {%- when 'user' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+            {%- when 'menu' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+            {%- when 'gift' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="1.5"/><path d="M3 12h18"/><path d="M12 8v12"/><path d="M8 8s-2-4 2-4 2 4 2 4"/><path d="M16 8s2-4-2-4-2 4-2 4"/></svg>
+            {%- when 'star' -%}
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15 9 22 9 17 14 18 22 12 18 6 22 7 14 2 9 9 9"/></svg>
+            {%- when 'tag' -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12l-8 8-9-9V3h8z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor"/></svg>
+            {%- when 'custom' -%}
+              {%- if block.settings.custom_svg != blank -%}{{ block.settings.custom_svg }}{%- else -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/></svg>
+              {%- endif -%}
+          {%- endcase -%}
+
+          {%- if action == 'open_cart_drawer' and section.settings.show_cart_badge -%}
+            {%- if cart.item_count > 0 -%}
+              <span class="snav-badge" data-syrbot-cart-count>{{ cart.item_count }}</span>
+            {%- else -%}
+              <span class="snav-badge" data-syrbot-cart-count style="display:none">0</span>
+            {%- endif -%}
+          {%- endif -%}
+        </span>
+        <span class="snav-lbl">{{ block.settings.label | default: 'Link' }}</span>
+      </a>
+    {%- endfor -%}
+  </div>
+</nav>
+
+<script>
+(function(){
+  var bar = document.getElementById('syr-bot-{{ section.id }}');
+  if (!bar) return;
+  var mqDesktop = window.matchMedia('(min-width: 768px)');
+  var alwaysShow = {% if section.settings.always_show %}true{% else %}false{% endif %};
+  var showOnDesktop = {% if section.settings.show_on_desktop %}true{% else %}false{% endif %};
+
+  function applyPad(){
+    if (!showOnDesktop && mqDesktop.matches){ document.body.style.paddingBottom = '0px'; return; }
+    if (!alwaysShow && !bar.classList.contains('is-revealed')){ document.body.style.paddingBottom = '0px'; return; }
+    var h = bar.getBoundingClientRect().height || 0;
+    document.body.style.paddingBottom = Math.round(h) + 'px';
+  }
+
+  if (!alwaysShow){
+    var revealed = false;
+    var baseY = window.scrollY || window.pageYOffset || 0;
+    var DELTA = {{ section.settings.reveal_threshold | default: 60 }};
+    function reveal(){
+      if (revealed) return; revealed = true;
+      bar.classList.add('is-revealed');
+      applyPad();
+      window.removeEventListener('scroll', onScroll);
+    }
+    function onScroll(){
+      var y = window.scrollY || window.pageYOffset || 0;
+      if (y - baseY > DELTA) reveal();
+    }
+    window.addEventListener('scroll', onScroll, { passive:true });
+  } else {
+    bar.classList.add('is-revealed'); applyPad();
+  }
+
+  bar.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-syrbot-action]');
+    if (!btn) return;
+    var action = btn.getAttribute('data-syrbot-action');
+    if (action === 'open_drawer'){
+      e.preventDefault();
+      var hamb = document.querySelector('[id^="syrn-"] [data-syrn-hamb], [id^="syrn-"] .syrn-hamb, .syrnav-hamb, [data-open-drawer]');
+      if (hamb){ try { hamb.click(); } catch(err){} }
+    } else if (action === 'open_search'){
+      e.preventDefault();
+      /* Try new nav search first, then old, then any search-toggle */
+      var icon = document.querySelector(
+        '[id^="syrn-"] .syrn-ic-search, [id^="syrn-"] [data-syrn-search], ' +
+        '[data-search-toggle], ' +
+        '#syrnav .syrnav-icons a.syrnav-ic[aria-label*="earch" i], ' +
+        '#syrnav .syrnav-icons a.syrnav-ic[href*="/search"]'
+      );
+      if (icon){ try { icon.click(); } catch(err){ window.location.href = '/search'; } }
+      else { window.location.href = '/search'; }
+    } else if (action === 'open_cart'){
+      var opener = document.querySelector('#cart-icon-bubble, a[href="/cart"][aria-controls], summary[aria-controls*="cart" i], .header__icon--cart, [data-cart-drawer-trigger], [id^="syrn-"] .syrn-ic-cart');
+      var drawer = document.querySelector('cart-drawer, .cart-drawer, .scd-bd, #SyrCD');
+      if (drawer && opener){ e.preventDefault(); try { opener.click(); } catch(err){ window.location.href = '/cart'; } }
+    } else if (action === 'open_wishlist'){
+      var swym = document.querySelector('.cst-wislist.swym-wishlist, .swym-wishlist-cta, a[href*="swym-wishlist"], [data-swaction="loadWishlist"]');
+      if (swym){ e.preventDefault(); try { swym.click(); } catch(err){ window.location.href = '/pages/swym-wishlist'; } }
+    }
+  });
+
+  {% if section.settings.show_cart_badge %}
+  function setCount(n){
+    var b = bar.querySelector('.snav-badge[data-syrbot-cart-count]');
+    if (!b) return;
+    if (n > 0){ b.textContent = String(n); b.style.display = ''; } else { b.style.display = 'none'; }
+  }
+  function refreshCart(){
+    try {
+      fetch('/cart.js', {credentials:'same-origin', headers:{Accept:'application/json'}})
+        .then(function(r){ return r.json(); })
+        .then(function(c){ if (c && typeof c.item_count === 'number') setCount(c.item_count); })
+        .catch(function(){});
+    } catch(e){}
+  }
+  document.addEventListener('cart:updated', refreshCart);
+  document.addEventListener('cart:refresh', refreshCart);
+  document.addEventListener('ajaxCart:updated', refreshCart);
+  window.addEventListener('load', refreshCart, { once:true });
+  {% endif %}
+
+  window.addEventListener('resize', applyPad);
+  applyPad();
+})();
+</script>
+
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "Bottom Nav (Syr)",
+  "tag": "section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "header", "content": "Visibility" },
+    { "type": "checkbox", "id": "always_show", "label": "Always show (don't wait for scroll)", "default": false },
+    { "type": "checkbox", "id": "show_on_desktop", "label": "Show on desktop too", "default": false },
+    { "type": "checkbox", "id": "hide_on_pdp", "label": "Hide on product pages", "default": true },
+    { "type": "checkbox", "id": "hide_on_cart", "label": "Hide on cart page", "default": true },
+    { "type": "checkbox", "id": "hide_on_checkout", "label": "Hide on account/login pages", "default": true },
+    { "type": "range", "id": "reveal_threshold", "label": "Scroll distance before reveal (px)", "min": 0, "max": 300, "step": 10, "default": 60 },
+
+    { "type": "header", "content": "Bar styling" },
+    { "type": "color", "id": "bar_bg", "label": "Bar background", "default": "#FFFBF4" },
+    { "type": "color", "id": "bar_border", "label": "Bar border", "default": "#39220f" },
+    { "type": "color", "id": "bar_shadow", "label": "Bar offset shadow", "default": "#39220f" },
+    { "type": "range", "id": "bar_radius", "label": "Bar corner radius", "min": 0, "max": 40, "step": 2, "default": 22, "unit": "px" },
+    { "type": "range", "id": "side_padding", "label": "Side padding", "min": 0, "max": 32, "step": 2, "default": 12, "unit": "px" },
+
+    { "type": "header", "content": "Icon styling" },
+    { "type": "color", "id": "icon_bg", "label": "Icon background (idle)", "default": "#FFFBF4" },
+    { "type": "color", "id": "icon_stroke", "label": "Icon color", "default": "#39220f" },
+    { "type": "color", "id": "label_color", "label": "Label color", "default": "#39220f" },
+
+    { "type": "header", "content": "Active state" },
+    { "type": "color", "id": "active_bg", "label": "Active button background", "default": "#FFD4B8" },
+    { "type": "color", "id": "active_icon_bg", "label": "Active icon background", "default": "#FCE2A0" },
+    { "type": "color", "id": "active_accent", "label": "Active underline accent", "default": "#c58548" },
+
+    { "type": "header", "content": "Cart badge" },
+    { "type": "checkbox", "id": "show_cart_badge", "label": "Show cart item count badge", "default": true },
+    { "type": "color", "id": "badge_bg", "label": "Badge background", "default": "#c58548" },
+    { "type": "color", "id": "badge_color", "label": "Badge text", "default": "#FFFBF4" },
+
+    { "type": "text", "id": "aria_label", "label": "Aria label", "default": "Mobile Bottom" }
+  ],
+  "blocks": [
+    {
+      "type": "nav_button",
+      "name": "Nav button",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Button label", "default": "Home" },
+        { "type": "select", "id": "icon", "label": "Icon", "default": "home", "options": [
+          { "value": "home", "label": "Home" },
+          { "value": "shop", "label": "Shop (grid)" },
+          { "value": "menu", "label": "Menu (hamburger)" },
+          { "value": "search", "label": "Search" },
+          { "value": "heart", "label": "Heart (wishlist)" },
+          { "value": "cart", "label": "Cart (bag)" },
+          { "value": "user", "label": "User account" },
+          { "value": "gift", "label": "Gift" },
+          { "value": "star", "label": "Star" },
+          { "value": "tag", "label": "Tag/Deal" },
+          { "value": "custom", "label": "Custom SVG" }
+        ]},
+        { "type": "textarea", "id": "custom_svg", "label": "Custom SVG (only used if icon = Custom)", "info": "Paste full <svg>...</svg> markup" },
+        { "type": "select", "id": "action_type", "label": "Action", "default": "link", "options": [
+          { "value": "link", "label": "Go to URL" },
+          { "value": "open_drawer", "label": "Open mobile menu drawer" },
+          { "value": "open_search", "label": "Open search" },
+          { "value": "open_cart_drawer", "label": "Open cart drawer" },
+          { "value": "open_wishlist", "label": "Open wishlist" }
+        ]},
+        { "type": "url", "id": "link", "label": "Link URL", "info": "Used when Action = Go to URL, or as fallback." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bottom Nav (Syr)",
+      "blocks": [
+        { "type": "nav_button", "settings": { "label": "Home", "icon": "home", "action_type": "link", "link": "/" } },
+        { "type": "nav_button", "settings": { "label": "Shop", "icon": "shop", "action_type": "link", "link": "/collections/all" } },
+        { "type": "nav_button", "settings": { "label": "Search", "icon": "search", "action_type": "open_search" } },
+        { "type": "nav_button", "settings": { "label": "Saved", "icon": "heart", "action_type": "open_wishlist", "link": "/pages/swym-wishlist" } },
+        { "type": "nav_button", "settings": { "label": "Cart", "icon": "cart", "action_type": "open_cart_drawer" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

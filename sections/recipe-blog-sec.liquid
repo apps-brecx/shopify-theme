@@ -1,0 +1,136 @@
+<section class="{{ section.settings.custom_class }} recipe-section">
+  <div class="page-width container">
+    <div class="recipe-header">
+      {% if section.settings.top_image %}
+        <img
+          src="{{ section.settings.top_image | img_url: 'large' }}"
+          alt="{{ section.settings.title }}"
+          class="center top-image"
+          loading="lazy"
+        >
+      {% endif %}
+      <div class="cst-custom-heading h1">
+        <h2>{{ section.settings.title }}</h2>
+      </div>
+      <div class="cst-multicolumn-content">
+        <p>{{ section.settings.subtitle }}</p>
+      </div>
+    </div>
+
+    <div class="recipe-content">
+      <div class="blogs-wrapper">
+        {% for block in section.blocks %}
+          {% assign blog_handle = block.settings.blog_handle %}
+          {% assign article_handle = block.settings.article_handle %}
+          {% assign blog = blogs[blog_handle] %}
+
+          {% if blog and article_handle %}
+            {% assign post = blog.articles | where: 'handle', article_handle | first %}
+            {{ blog.articles.title }}
+            {% if post %}
+              <div class="blog-item {{ block.settings.custom_class_blog }}">
+                <a href="{{ post.url }}" class="blog-link">
+                  <img
+                    src="{{ post.image | img_url: 'master' }}"
+                    alt="{{ post.title }}"
+                    class="blog-image"
+                    loading="lazy"
+                  >
+                  <div class="blog-title">
+                    <h3>{{ post.title }}</h3>
+                  </div>
+                </a>
+                <p class="blog-excerpt">{{ post.excerpt | strip_html | truncate: 100 }}</p>
+              </div>
+            {% else %}
+              <p>Post not found for {{ article_handle }}.</p>
+            {% endif %}
+          {% else %}
+            <p>Blog or article handle not found.</p>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% if section.settings.view_all_button_text and section.settings.view_all_button_link %}
+        <div class="center view-all-wrapper">
+          <a href="{{ section.settings.view_all_button_link }}" class="button view-all-button">
+            {{ section.settings.view_all_button_text }}
+            <span class="cst-custom-arrow"
+              ><img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/arroww.png?v=1728394015" loading="lazy"
+            ></span>
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Recipe Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom class form main section"
+    },
+    {
+      "type": "image_picker",
+      "id": "top_image",
+      "label": "Top Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Featured Recipes"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Explore our curated collection of recipes."
+    },
+    {
+  "type": "url",
+  "id": "view_all_button_link",
+  "label": "View All Button Link"
+},
+{
+  "type": "text",
+  "id": "view_all_button_text",
+  "label": "View All Button Text",
+  "default": "View All"
+}
+
+  ],
+  "blocks": [
+    {
+      "type": "blog_article",
+      "name": "Blog Article",
+      "settings": [
+        {
+      "type": "text",
+      "id": "custom_class_blog",
+      "label": "Custom class for blogs"
+    },
+        {
+          "type": "blog",
+          "id": "blog_handle",
+          "label": "Select Blog"
+        },
+        {
+          "type": "article",
+          "id": "article_handle",
+          "label": "Select Article"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recipe Section with Blogs",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}

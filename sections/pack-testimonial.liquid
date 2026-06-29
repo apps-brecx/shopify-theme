@@ -1,0 +1,681 @@
+{% comment %}
+  Section: People Love This Combo
+  A testimonial slider with star ratings, quote text, and reviewer info.
+  Uses Slick Carousel (already loaded globally in the theme).
+{% endcomment %}
+
+<section
+  class="people-love-combo people-love-combo--{{ section.id }} color-{{ section.settings.color_scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="page-width">
+    {% comment %} Heading + Average rating {% endcomment %}
+    <div class="people-love-combo__header">
+      <h2 class="people-love-combo__title">
+        {{ section.settings.heading | newline_to_br }}
+      </h2>
+
+      {% if section.settings.show_average_rating %}
+        <div class="people-love-combo__avg-rating">
+          <div class="people-love-combo__avg-stars" aria-label="{{ section.settings.average_rating }} out of 5 stars">
+            {% assign full_stars = section.settings.average_rating | floor %}
+            {% assign decimal = section.settings.average_rating | minus: full_stars %}
+            {% assign has_half = false %}
+            {% if decimal >= 0.25 and decimal < 0.75 %}
+              {% assign has_half = true %}
+            {% elsif decimal >= 0.75 %}
+              {% assign full_stars = full_stars | plus: 1 %}
+            {% endif %}
+            {% assign half_star_position = full_stars | plus: 1 %}
+
+            {% for i in (1..5) %}
+              {% if i <= full_stars %}
+                <svg class="plc-star plc-star--full" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              {% elsif has_half and i == half_star_position %}
+                <svg class="plc-star plc-star--half" viewBox="0 0 24 24" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="halfGrad-{{ section.id }}">
+                      <stop offset="50%" stop-color="currentColor"/>
+                      <stop offset="50%" stop-color="#e0d6c8"/>
+                    </linearGradient>
+                  </defs>
+                  <path fill="url(#halfGrad-{{ section.id }})" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              {% else %}
+                <svg class="plc-star plc-star--empty" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <span class="people-love-combo__avg-text">
+            {{ section.settings.average_rating }}/5 Average
+          </span>
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Testimonial slider {% endcomment %}
+    {% if section.blocks.size > 0 %}
+      <div class="people-love-combo__slider" id="PeopleLoveCombo-{{ section.id }}">
+        {% for block in section.blocks %}
+          {% if block.type == 'testimonial' %}
+            <div class="plc-card" {{ block.shopify_attributes }}>
+              <div class="plc-card__stars" aria-label="{{ block.settings.rating }} out of 5 stars">
+                {% for i in (1..5) %}
+                  {% if i <= block.settings.rating %}
+                    <svg class="plc-star plc-star--full" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  {% else %}
+                    <svg class="plc-star plc-star--empty" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              <p class="plc-card__quote">"{{ block.settings.quote }}"</p>
+
+              <div class="plc-card__reviewer">
+                <div class="plc-card__avatar">
+                  {% if block.settings.avatar_image != blank %}
+                    <img
+                      src="{{ block.settings.avatar_image | image_url: width: 80 }}"
+                      alt="{{ block.settings.reviewer_name | escape }}"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <span class="plc-card__initials">{{ block.settings.reviewer_initials }}</span>
+                  {% endif %}
+                </div>
+                <div class="plc-card__reviewer-info">
+                  <div class="plc-card__name">{{ block.settings.reviewer_name }}</div>
+                  <div class="plc-card__role">{{ block.settings.reviewer_role }}</div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .people-love-combo {
+    padding-top: {{ section.settings.padding_top | times: 0.6 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round: 0 }}px;
+    background-color: {{ section.settings.background_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .people-love-combo {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  /* ---------- Heading ---------- */
+  .people-love-combo__header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .people-love-combo__title {
+    font-family: "Epilogue", sans-serif !important;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: {{ section.settings.heading_color }};
+    margin: 0 0 14px 0;
+    letter-spacing: -0.5px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .people-love-combo__title {
+      font-size: 44px;
+    }
+  }
+
+  /* ---------- Average rating ---------- */
+  .people-love-combo__avg-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Manrope", sans-serif !important;
+  }
+
+  .people-love-combo__avg-stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    color: {{ section.settings.star_color }};
+  }
+
+  .people-love-combo__avg-text {
+    font-family: "Manrope", sans-serif !important;
+    font-size: 16px;
+    font-weight: 700;
+    color: {{ section.settings.heading_color }};
+  }
+
+  .plc-star {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  .plc-star--full {
+    fill: {{ section.settings.star_color }};
+  }
+
+  .plc-star--empty {
+    fill: #e0d6c8;
+  }
+
+  /* ---------- Slider ---------- */
+  .people-love-combo__slider {
+    margin: 0 -10px;
+  }
+
+  .people-love-combo__slider .slick-list {
+    padding: 10px 0;
+  }
+
+  .people-love-combo__slider .slick-track {
+    display: flex;
+  }
+
+  .people-love-combo__slider .slick-slide {
+    margin: 0 20px;
+    padding: 40px;
+    box-sizing: border-box;
+  }
+
+  .people-love-combo__slider .slick-slide > div {
+    height: 100%;
+  }
+
+  /* ---------- Card ---------- */
+  .plc-card {
+    background-color: {{ section.settings.card_background }};
+    border-radius: 14px;
+    padding: 22px 20px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    font-family: "Manrope", sans-serif !important;
+  }
+
+  .plc-card__stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: 12px;
+    color: {{ section.settings.star_color }};
+  }
+
+  .plc-card__stars .plc-star {
+    width: 16px;
+    height: 16px;
+  }
+
+  .plc-card__quote {
+    font-family: "Manrope", sans-serif !important;
+    font-size: 14px;
+    line-height: 1.55;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 22px 0;
+    flex-grow: 1;
+  }
+
+  .plc-card__reviewer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .plc-card__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: {{ section.settings.avatar_background }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    font-family: "Manrope", sans-serif !important;
+  }
+
+  .plc-card__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .plc-card__initials {
+    font-family: "Manrope", sans-serif !important;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+  }
+
+  .plc-card__reviewer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .plc-card__name {
+    font-family: "Manrope", sans-serif !important;
+    font-size: 14px;
+    font-weight: 700;
+    color: {{ section.settings.heading_color }};
+    line-height: 1.2;
+  }
+
+  .plc-card__role {
+    font-family: "Manrope", sans-serif !important;
+    font-size: 11px;
+    font-weight: 500;
+    color: {{ section.settings.text_color }};
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    line-height: 1.2;
+  }
+
+  /* ---------- Slick arrows & dots ---------- */
+  .people-love-combo__slider .slick-prev,
+  .people-love-combo__slider .slick-next {
+    width: 36px;
+    height: 36px;
+    z-index: 2;
+  }
+
+  .people-love-combo__slider .slick-prev {
+    left: -10px;
+  }
+
+  .people-love-combo__slider .slick-next {
+    right: -10px;
+  }
+
+  .people-love-combo__slider .slick-prev:before,
+  .people-love-combo__slider .slick-next:before {
+    color: {{ section.settings.heading_color }};
+    font-size: 28px;
+    opacity: 1;
+  }
+
+  .people-love-combo__slider .slick-dots {
+    bottom: -32px;
+  }
+
+  .people-love-combo__slider .slick-dots li button:before {
+    font-size: 10px;
+    color: {{ section.settings.star_color }};
+    opacity: 0.4;
+  }
+
+  .people-love-combo__slider .slick-dots li.slick-active button:before {
+    opacity: 1;
+    color: {{ section.settings.star_color }};
+  }
+
+  /* ---------- Mobile ---------- */
+  @media screen and (max-width: 749px) {
+    .people-love-combo__header {
+      margin-bottom: 24px;
+    }
+
+    .plc-card {
+      padding: 18px 16px;
+    }
+
+    .plc-card__quote {
+      font-size: 13px;
+    }
+
+    .people-love-combo__slider .slick-prev {
+      left: 5px;
+    }
+
+    .people-love-combo__slider .slick-next {
+      right: 5px;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    function initPeopleLoveComboSlider() {
+      var $slider = $('#PeopleLoveCombo-{{ section.id }}');
+      if (!$slider.length) return;
+      if ($slider.hasClass('slick-initialized')) {
+        $slider.slick('unslick');
+      }
+
+      $slider.slick({
+        slidesToShow: {{ section.settings.slides_desktop }},
+        slidesToScroll: 1,
+        arrows: {{ section.settings.show_arrows }},
+        dots: {{ section.settings.show_dots }},
+        infinite: true,
+        autoplay: {{ section.settings.autoplay }},
+        autoplaySpeed: {{ section.settings.autoplay_speed | times: 1000 }},
+        pauseOnHover: true,
+        responsive: [
+          {
+            breakpoint: 1200,
+            settings: {
+              slidesToShow: {{ section.settings.slides_desktop | minus: 1 | at_least: 1 }}
+            }
+          },
+          {
+            breakpoint: 990,
+            settings: {
+              slidesToShow: {{ section.settings.slides_tablet }}
+            }
+          },
+          {
+            breakpoint: 749,
+            settings: {
+              slidesToShow: {{ section.settings.slides_mobile }},
+              arrows: false,
+              dots: true
+            }
+          }
+        ]
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPeopleLoveComboSlider);
+    } else {
+      initPeopleLoveComboSlider();
+    }
+
+    // Re-init on Shopify theme editor block changes
+    if (Shopify && Shopify.designMode) {
+      document.addEventListener('shopify:section:load', function (event) {
+        if (event.detail.sectionId === '{{ section.id }}') {
+          initPeopleLoveComboSlider();
+        }
+      });
+      document.addEventListener('shopify:block:select', function (event) {
+        var $slider = $('#PeopleLoveCombo-{{ section.id }}');
+        var blockIndex = $(event.target).closest('.plc-card').index();
+        if ($slider.length && blockIndex >= 0) {
+          $slider.slick('slickGoTo', blockIndex);
+        }
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Pack Testimonial",
+  "tag": "section",
+  "class": "section-people-love-combo",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "People\nLove this Combo",
+      "info": "Use line breaks for multi-line heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_average_rating",
+      "label": "Show average rating",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "average_rating",
+      "label": "Average rating (1-5)",
+      "default": "4.9"
+    },
+    {
+      "type": "header",
+      "content": "Slider Behavior"
+    },
+    {
+      "type": "range",
+      "id": "slides_desktop",
+      "label": "Slides on desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "slides_tablet",
+      "label": "Slides on tablet",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "slides_mobile",
+      "label": "Slides on mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show pagination dots",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay speed (seconds)",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#f5e6f0"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text color",
+      "default": "#5a4a4a"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star color",
+      "default": "#b85423"
+    },
+    {
+      "type": "color",
+      "id": "avatar_background",
+      "label": "Avatar background (fallback)",
+      "default": "#d9b8c8"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "limit": 20,
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote / Review text",
+          "default": "Finally, a sugar-free vanilla that doesn't have that weird aftertaste. Perfect for my keto lattes. The concentration is insane, one bottle lasts forever!"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar_image",
+          "label": "Reviewer avatar (optional)",
+          "info": "If empty, initials will be shown"
+        },
+        {
+          "type": "text",
+          "id": "reviewer_initials",
+          "label": "Reviewer initials",
+          "default": "MR",
+          "info": "Shown if no avatar image is uploaded"
+        },
+        {
+          "type": "text",
+          "id": "reviewer_name",
+          "label": "Reviewer name",
+          "default": "Michael R."
+        },
+        {
+          "type": "text",
+          "id": "reviewer_role",
+          "label": "Reviewer role / tag",
+          "default": "COFFEE ENTHUSIAST"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "People Love This Combo",
+      "category": "Custom",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Salted Caramel is a game changer for my morning cold brew, saving over $150 a month and my drinks taste better than the coffee shop.",
+            "reviewer_initials": "SJ",
+            "reviewer_name": "Sarah J.",
+            "reviewer_role": "VERIFIED BUYER"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Finally, a sugar-free vanilla that doesn't have that weird aftertaste. Perfect for my keto lattes. The concentration is insane, one bottle lasts forever!",
+            "reviewer_initials": "MR",
+            "reviewer_name": "Michael R.",
+            "reviewer_role": "COFFEE ENTHUSIAST"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "I use the fruit refreshers for my sparkling water every afternoon. It's so crisp and light. My kids even love making their own healthy 'sodas' with them.",
+            "reviewer_initials": "EG",
+            "reviewer_name": "Elena G.",
+            "reviewer_role": "HAPPY MOTHER"
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "I use the fruit refreshers for my sparkling water every afternoon. It's so crisp and light. My kids even love making their own healthy 'sodas' with them.",
+            "reviewer_initials": "EG",
+            "reviewer_name": "Elena G.",
+            "reviewer_role": "HAPPY MOTHER"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

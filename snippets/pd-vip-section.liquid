@@ -1,0 +1,120 @@
+{%- comment -%} Become VIP section — only renders if the visitor is NOT signed in. Members already have VIP pricing. {%- endcomment -%}
+{%- if customer == nil -%}
+
+{%- assign vsec_current = product.selected_or_first_available_variant -%}
+{%- assign vsec_base = vsec_current.price -%}
+
+{%- assign vsec_is_sf = false -%}
+{%- assign vsec_t_lc = product.title | downcase -%}
+{%- if vsec_t_lc contains 'sugar-free' or vsec_t_lc contains 'sugar free' -%}{%- assign vsec_is_sf = true -%}{%- endif -%}
+
+{%- assign vsec_vip_price = 799 -%}
+{%- if vsec_is_sf -%}{%- assign vsec_vip_price = 799 -%}{%- endif -%}
+
+{%- assign vsec_savings = vsec_base | minus: vsec_vip_price -%}
+
+{%- comment -%} Return-to URL so login/signup brings the shopper back to this exact product {%- endcomment -%}
+{%- assign vsec_return_to = request.path | url_encode -%}
+
+<style>
+html body .pd .pd-vip-section{padding:80px 0!important;background:#FFFBF4!important;border-top:2px solid #39220f!important}
+@media (max-width:760px){html body .pd .pd-vip-section{padding:56px 0!important}}
+html body .pd .pd-vip-card{max-width:760px!important;margin:0 auto!important;padding:48px 40px!important;background:#FFFFFF!important;border:2px solid #39220f!important;border-radius:28px!important;box-shadow:8px 8px 0 #39220f!important;text-align:center!important;position:relative!important;overflow:hidden!important}
+html body .pd .pd-vip-card::before{content:''!important;position:absolute!important;top:-30px!important;right:-30px!important;width:140px!important;height:140px!important;background:#FCE2A0!important;border:2px solid #39220f!important;border-radius:50%!important;opacity:.45!important;z-index:0!important}
+html body .pd .pd-vip-card::after{content:''!important;position:absolute!important;bottom:-40px!important;left:-30px!important;width:120px!important;height:120px!important;background:#C5E4D4!important;border:2px solid #39220f!important;border-radius:50%!important;opacity:.4!important;z-index:0!important}
+html body .pd .pd-vip-card > *{position:relative!important;z-index:1!important}
+@media (max-width:760px){html body .pd .pd-vip-card{padding:36px 24px!important;border-radius:22px!important;box-shadow:5px 5px 0 #39220f!important;margin:0 18px!important}html body .pd .pd-vip-card::before{width:100px!important;height:100px!important;top:-20px!important;right:-20px!important}html body .pd .pd-vip-card::after{width:80px!important;height:80px!important;bottom:-25px!important;left:-20px!important}}
+html body .pd .pd-vip-eyebrow{--vipsec-s:0.85;display:inline-block!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:calc(11px * var(--vipsec-s))!important;letter-spacing:.18em!important;text-transform:uppercase!important;background:#FCE2A0!important;border:1.5px solid #39220f!important;border-radius:999px!important;padding:calc(7px * var(--vipsec-s)) calc(16px * var(--vipsec-s))!important;color:#39220f!important;margin:0 auto 20px!important;box-shadow:2px 2px 0 #39220f!important;line-height:1!important;will-change:font-size,padding!important}
+html body .pd .pd-vip-h{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:clamp(28px,4.4vw,42px)!important;letter-spacing:-.01em!important;color:#39220f!important;line-height:1.05!important;margin:0 0 14px!important;text-transform:uppercase!important}
+html body .pd .pd-vip-h em{font-style:italic!important;font-family:'Josefin Sans',sans-serif!important;font-weight:600!important;text-transform:lowercase!important;color:#c58548!important}
+html body .pd .pd-vip-lede{font-family:'Josefin Sans',sans-serif!important;font-size:16px!important;line-height:1.55!important;color:#3a3a3a!important;font-weight:500!important;margin:0 auto 32px!important;max-width:46ch!important}
+@media (max-width:760px){html body .pd .pd-vip-lede{font-size:14.5px!important;margin-bottom:28px!important}}
+html body .pd .pd-vip-savings{display:inline-flex!important;align-items:center!important;gap:8px!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:12px!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:#FFFBF4!important;background:#c58548!important;border:1.5px solid #39220f!important;border-radius:999px!important;padding:9px 16px!important;margin:0 auto 24px!important;box-shadow:2px 2px 0 #39220f!important;line-height:1!important}
+html body .pd .pd-vip-perks{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;gap:14px 22px!important;margin:0 auto 36px!important;list-style:none!important;padding:0!important;max-width:520px!important}
+html body .pd .pd-vip-perk{display:inline-flex!important;align-items:center!important;gap:8px!important;font-family:'Josefin Sans',sans-serif!important;font-size:14px!important;font-weight:600!important;color:#39220f!important;line-height:1.1!important}
+html body .pd .pd-vip-perk svg{flex:0 0 auto!important;background:#C5E4D4!important;border:1.5px solid #39220f!important;border-radius:50%!important;padding:4px!important;color:#39220f!important;box-shadow:1.5px 1.5px 0 #39220f!important}
+@media (max-width:760px){html body .pd .pd-vip-perks{gap:10px 14px!important;margin-bottom:28px!important}html body .pd .pd-vip-perk{font-size:13px!important}html body .pd .pd-vip-perk svg{width:22px!important;height:22px!important}}
+html body .pd .pd-vip-ctas{display:flex!important;flex-wrap:wrap!important;justify-content:center!important;align-items:center!important;gap:14px!important;margin:0 auto!important}
+html body .pd .pd-vip-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:13px!important;letter-spacing:.16em!important;text-transform:uppercase!important;text-decoration:none!important;padding:16px 28px!important;border:2px solid #39220f!important;border-radius:999px!important;cursor:pointer!important;transition:transform .2s ease, box-shadow .2s ease, background .15s ease!important;line-height:1!important}
+html body .pd .pd-vip-btn--primary{background:#39220f!important;color:#FFFBF4!important;box-shadow:5px 5px 0 #c58548!important}
+html body .pd .pd-vip-btn--primary:hover{transform:translate(-2px,-2px)!important;box-shadow:7px 7px 0 #c58548!important;color:#FFFBF4!important}
+html body .pd .pd-vip-btn--secondary{background:#FFFBF4!important;color:#39220f!important;box-shadow:5px 5px 0 #39220f!important}
+html body .pd .pd-vip-btn--secondary:hover{transform:translate(-2px,-2px)!important;box-shadow:7px 7px 0 #39220f!important;background:#FCE2A0!important;color:#39220f!important}
+html body .pd .pd-vip-btn svg{transition:transform .2s ease!important}
+html body .pd .pd-vip-btn:hover svg{transform:translateX(3px)!important}
+html body .pd .pd-vip-already{font-family:'Josefin Sans',sans-serif!important;font-size:13px!important;color:#3a3a3a!important;margin:24px auto 0!important;line-height:1.5!important;font-weight:500!important}
+html body .pd .pd-vip-already a{color:#2F7DC4!important;text-decoration:underline!important;text-underline-offset:2px!important;font-weight:600!important}
+html body .pd .pd-vip-already a:hover{color:#1F5D9C!important}
+@media (max-width:760px){html body .pd .pd-vip-btn{font-size:11.5px!important;padding:14px 22px!important;box-shadow:4px 4px 0 #c58548!important}html body .pd .pd-vip-btn--secondary{box-shadow:4px 4px 0 #39220f!important}html body .pd .pd-vip-ctas{flex-direction:column!important;width:100%!important}html body .pd .pd-vip-btn{width:100%!important}}
+</style>
+
+<section class="pd-vip-section" id="pdVipSection">
+  <div class="pd-wrap">
+    <div class="pd-vip-card">
+      <span class="pd-vip-eyebrow">VIP Pricing</span>
+      <h2 class="pd-vip-h">Become a <em>member</em>.</h2>
+      <p class="pd-vip-lede">Create a free Syruvia account to unlock VIP pricing on every bottle, forever.</p>
+
+      <div class="pd-vip-savings">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 L14.5 8 L21 9 L16.5 13.5 L17.5 20 L12 16.5 L6.5 20 L7.5 13.5 L3 9 L9.5 8 Z"/></svg>
+        VIP price: {{ vsec_vip_price | money }} · save {{ vsec_savings | money }}
+      </div>
+
+      <ul class="pd-vip-perks">
+        <li class="pd-vip-perk">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 L19 7"/></svg>
+          $7.99 on every flavor
+        </li>
+        <li class="pd-vip-perk">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 L19 7"/></svg>
+          Free to join · no fees
+        </li>
+        <li class="pd-vip-perk">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 L19 7"/></svg>
+          Early access to new flavors
+        </li>
+      </ul>
+
+      <div class="pd-vip-ctas">
+        <a href="/account/register?return_to={{ vsec_return_to }}" class="pd-vip-btn pd-vip-btn--primary">
+          Create free account
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 h14 M13 6 l6 6 -6 6"/></svg>
+        </a>
+        <a href="/account/login?return_to={{ vsec_return_to }}" class="pd-vip-btn pd-vip-btn--secondary">
+          Sign in
+        </a>
+      </div>
+
+      <p class="pd-vip-already">Already a member? <a href="/account/login?return_to={{ vsec_return_to }}">Sign in to activate VIP pricing.</a></p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  function init(){
+    var section = document.getElementById('pdVipSection');
+    var badge = section && section.querySelector('.pd-vip-eyebrow');
+    if (!badge) return;
+    var minS = 0.85, maxS = 1.45, raf = null;
+    function update(){
+      raf = null;
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var r = section.getBoundingClientRect();
+      var denom = (vh - vh * 0.20) || 1;
+      var p = (vh - r.top) / denom;
+      if (p < 0) p = 0; if (p > 1) p = 1;
+      var ease = p * p * (3 - 2 * p);
+      badge.style.setProperty('--vipsec-s', (minS + (maxS - minS) * ease).toFixed(3));
+    }
+    function onScroll(){ if (raf) return; raf = requestAnimationFrame(update); }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    window.addEventListener('resize', onScroll, {passive:true});
+    update();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+{%- endif -%}

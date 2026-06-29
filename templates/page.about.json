@@ -1,0 +1,43 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-our-story",
+      "settings": {
+        "hero_eyebrow": "What we're about",
+        "hero_title": "About <em>Syruvia</em>.",
+        "hero_sub": "Café-quality flavor for every cup — without the fuss.",
+        "founder_bignum": "250+",
+        "founder_eyebrow": "What we do",
+        "founder_title": "We make flavor <em>simple</em>.",
+        "founder_p1": "Syruvia makes café-quality flavored syrups for coffee, sodas, cocktails, desserts and everything in between — real, true-to-source taste you can pour at home in seconds.",
+        "founder_p2": "From everyday classics like vanilla and caramel to fruit, seasonal and limited-edition flavors, there's something for every cup — including a full sugar-free range with zero sugar and zero calories.",
+        "marquee_words": "Real flavor,Zero compromise,250+ flavors,Sugar-free options,Made in the USA,Kosher & gluten-free,50+ servings a bottle",
+        "make_eyebrow": "What we focus on",
+        "make_title": "Flavor first, <em>always</em>.",
+        "card1_title": "Real, clean flavor",
+        "card1_body": "No high-fructose corn syrup and no artificial dyes — just real, true-to-source taste and clean labels in every single pour.",
+        "card2_title": "A flavor for everyone",
+        "card2_body": "250+ flavors and counting, including 68 sugar-free options with zero sugar and zero calories — all the taste, none of the guilt.",
+        "card3_title": "Café quality, fair prices",
+        "card3_body": "Premium syrups without the premium markup. VIP members pay just $7.99 a bottle — and it's free to join.",
+        "stat1_num": "250+",
+        "stat1_lbl": "Flavors",
+        "stat2_num": "68",
+        "stat2_lbl": "Sugar-free",
+        "stat3_num": "50+",
+        "stat3_lbl": "Servings a bottle",
+        "stat4_num": "$7.99",
+        "stat4_lbl": "VIP price",
+        "legacy_eyebrow": "What we stand for",
+        "legacy_title": "Great flavor, <em>made right</em>.",
+        "legacy_p1": "Everything starts with one question: does it taste amazing? We craft our syrups in the USA, keep them kosher and gluten-free, and skip the junk — so you get café-quality flavor you can feel good about.",
+        "legacy_p2": "Whether it's your morning coffee, a weekend cocktail, or a treat for the kids, Syruvia turns an ordinary drink into something you actually look forward to.",
+        "cta_title": "Ready to find <em>your flavor</em>?",
+        "cta_sub": "Explore 250+ syrups — from everyday classics to sugar-free favorites.",
+        "cta_text": "Shop all syrups",
+        "cta_link": "/collections/all"
+      }
+    }
+  },
+  "order": ["main"]
+}

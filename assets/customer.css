@@ -1,0 +1,143 @@
+.account .page-width.breadcrumbs {
+    display: none;
+}
+
+.customer-account-header {
+    max-width: 1900px;
+    padding: 60px 5rem;
+}
+
+.customer.account.tabs-wrapper {
+    max-width: 1900px;
+    padding: 80px 5rem;
+}
+
+.account .profile-info {
+    display: flex;
+    align-items: start;
+    gap: 20px;
+}
+
+.account .profile-info .profile-image {
+    max-width: 90px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+}
+
+.account .customer .tabs-nav .tab-button {
+    background: transparent;
+    font-size: 20px;
+    color: #341c02;
+    border-bottom: 2px solid #fff0;
+    font-family: Redrains!important;
+    font-weight: 500;
+    transition: all .5s ease;
+    position: relative;
+    margin-bottom: -2px;
+}
+
+.account .customer .tabs-nav .tab-button.active {
+    border-color: #341c02;
+}
+
+.account .customer .tabs-nav .tab-button:hover::after {
+    box-shadow: none;
+}
+
+
+.customer.account.tabs-wrapper #details form {
+    max-width: 300px;
+}
+
+.customer.account.tabs-wrapper #details form label {
+    display: block;
+    margin: 10px 0;
+}
+
+.customer.account.tabs-wrapper #details form textarea {
+    display: block;
+    width: 100%;
+    resize: none;
+    margin: 10px 0;
+}
+
+.account .profile-info .user-name {
+    margin-top: 20px;
+}
+
+.account .profile-info .user-name h4 {
+    margin: 0;
+}
+
+.account .profile-info .user-name  h3 {
+    margin: 10px 0 0;
+    font-size: 22px;
+}
+.cst-custom-logn-drawer.already a {
+    padding: 0;
+    background: transparent;
+}
+.customer.account.tabs-wrapper {
+    padding-top: 0;
+}
+.customer.account.tabs-wrapper p {
+    word-break: break-word;
+}
+.cst-custom-logn-drawer.already {
+    display: flex;
+    align-items: center;
+}
+a.logout-button {
+    background-color: #3b1f05;
+    display: block;
+    padding: 6px 60px;
+    font-size: 25px;
+    letter-spacing: 1px;
+    color: #fff;
+    font-family: Inter24pt !important;
+    text-decoration: none;
+}
+.customer.account.tabs-wrapper .cst-custom-signup-drawer a.logout-button {
+    background: #ffdcbd;
+    color: #000;
+}
+/* .cst-custom-signup-drawer {
+    width: 20%;
+} */
+@media screen and (max-width:767px){
+.customer.account.tabs-wrapper {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.account .customer .tabs-nav .tab-button {
+    font-size: 15px;
+}
+body.account {
+    padding-top: 70px;
+}
+}
+/* @media screen and (min-width:992px){
+
+.customer.account.tabs-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.customer.account.tabs-wrapper .tabs-nav {
+    width: 100%;
+}
+
+.customer.account.tabs-wrapper .tab-content {
+    width: calc(100% - 224px);
+}
+.customer.account.tabs-wrapper  .cst-custom-signup-drawer {
+    width: 200px;
+}
+.customer.account.tabs-wrapper  .cst-custom-signup-drawer a.logout-button {
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+}
+
+} */

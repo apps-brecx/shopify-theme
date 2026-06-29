@@ -1,0 +1,313 @@
+<section class="wholesale-benefits-section">
+  <div class="page-width">
+    <div class="wholesale-benefits-wrap">
+
+      <div class="wholesale-benefits-left">
+        {% if section.settings.main_image != blank %}
+          <img
+            src="{{ section.settings.main_image | image_url: width: 1231 }}"
+            alt="{{ section.settings.heading | escape }}"
+            loading="lazy"
+            width="1231"
+            height="700"
+          >
+        {% endif %}
+      </div>
+
+      <div class="wholesale-benefits-right">
+        <div class="wholesale-benefits-grid">
+          {% for block in section.blocks %}
+            <div class="wholesale-benefit-item" {{ block.shopify_attributes }}>
+              <div class="wholesale-benefit-icon">
+                {% if block.settings.icon != blank %}
+                  <img
+                    src="{{ block.settings.icon | image_url: width: 120 }}"
+                    alt="{{ block.settings.title | escape }}"
+                    loading="lazy"
+                    width="42"
+                    height="42"
+                  >
+                {% endif %}
+              </div>
+              <div class="wholesale-benefit-text">
+                <h3>{{ block.settings.title }}</h3>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+
+    {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+      <div class="wholesale-benefits-btn-wrap">
+        <a href="{{ section.settings.button_link }}" class="wholesale-benefits-btn">
+          {{ section.settings.button_label }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+<style>
+.wholesale-benefits-section{
+  background:#FFF6EE;
+  margin-top:-50px;
+  padding-bottom:80px;
+}
+
+.wholesale-benefits-section .page-width{
+  max-width:1700px;
+  margin:0 auto;
+}
+
+/* MAIN WRAP */
+.wholesale-benefits-wrap{
+  display:grid;
+  grid-template-columns:1.1fr 0.9fr;
+  gap:70px;
+  align-items:center;
+}
+
+/* IMAGE */
+.wholesale-benefits-left{
+  width:100%;
+}
+
+.wholesale-benefits-left img{
+  width:100%;
+  height:auto;
+  display:block;
+  border-radius:12px;
+  object-fit:cover;
+}
+
+/* GRID */
+.wholesale-benefits-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  column-gap:60px;
+  row-gap:40px;
+}
+
+/* ITEM (DESKTOP CLEAN) */
+.wholesale-benefit-item{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:16px;
+}
+
+/* ICON */
+.wholesale-benefit-icon{
+  width:48px;
+  height:48px;
+}
+
+.wholesale-benefit-icon img{
+  width:48px;
+  height:48px;
+  object-fit:contain;
+  display:block;
+}
+
+/* TEXT */
+.wholesale-benefit-text h3{
+  margin:0;
+  color:#3f3027;
+  font-family:"Bricolage Grotesque" !important;
+  font-size:25px;
+  line-height:1.3;
+  font-weight:500;
+}
+
+/* BUTTON */
+.wholesale-benefits-btn-wrap{
+  text-align:center;
+  margin-top:100px;
+}
+
+.wholesale-benefits-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:360px;
+  min-height:70px;
+  padding:18px 40px;
+  border-radius:999px;
+  background:#7a4a24;
+  color:#ffffff;
+  text-decoration:none;
+  font-family:"Inter" !important;
+  font-size:21px;
+  font-weight:500;
+  box-shadow:0 10px 20px rgba(74,44,22,0.22);
+  transition:all .25s ease;
+}
+
+.wholesale-benefits-btn:hover{
+  opacity:.96;
+  transform:translateY(-3px);
+}
+
+/* TABLET */
+@media screen and (max-width:990px){
+  .wholesale-benefits-wrap{
+    grid-template-columns:1fr;
+    gap:50px;
+  }
+
+  .wholesale-benefits-left{
+    order:1;
+  }
+
+  .wholesale-benefits-right{
+    order:2;
+  }
+
+  .wholesale-benefits-grid{
+    column-gap:30px;
+    row-gap:30px;
+  }
+
+  .wholesale-benefits-btn{
+    min-width:280px;
+  }
+}
+
+/* MOBILE */
+@media screen and (max-width:749px){
+
+  .wholesale-benefits-section{
+    margin-top:0;
+    padding:50px 0 70px;
+  }
+
+  .wholesale-benefits-section .page-width{
+    padding:0 !important;
+    max-width:100% !important;
+  }
+
+  .wholesale-benefits-wrap{
+    gap:30px;
+    margin-top:-30px;
+  }
+
+  /* FULL WIDTH IMAGE */
+  .wholesale-benefits-left img{
+    width:100vw;
+    max-width:100vw;
+    margin-left:calc(-50vw + 50%);
+    height:auto;
+    object-fit:cover;
+    border-radius:0;
+    display:block;
+  }
+
+  /* GRID */
+  .wholesale-benefits-grid{
+    row-gap:15px;
+    column-gap:15px;
+    padding:0 16px;
+  }
+
+  /* CARD — SAME COLOR + VISIBLE SHADOW */
+  .wholesale-benefit-item{
+    background:#FFF6EE;
+    padding:18px;
+    border-radius:12px;
+
+    border:2px solid #FFF6EE;
+
+    /* PERFECT BALANCED SHADOW */
+    box-shadow:
+      0 8px 18px rgba(120, 74, 36, 0.12),   /* soft brown depth */
+      0 0 12px rgba(255, 246, 238, 0.9);    /* warm glow */
+
+    gap:12px;
+  }
+
+  .wholesale-benefit-icon{
+    width:40px;
+    height:40px;
+  }
+
+  .wholesale-benefit-icon img{
+    width:40px;
+    height:40px;
+  }
+
+  .wholesale-benefit-text h3{
+    font-size:14px !important;
+  }
+
+  .wholesale-benefits-btn-wrap{
+    margin-top:40px;
+    padding:0 16px;
+  }
+
+  .wholesale-benefits-btn{
+    min-width:100%;
+    font-size:18px;
+    min-height:58px;
+    padding:16px 24px;
+  }
+}
+</style>
+
+  {% schema %}
+  {
+    "name": "Wholesale Benefits",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "main_image",
+        "label": "Left Image"
+      },
+      {
+        "type": "text",
+        "id": "button_label",
+        "label": "Button Label",
+        "default": "Shop Syruvia Wholesale"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button Link"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "benefit",
+        "name": "Benefit",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "icon",
+            "label": "Icon"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Premium Café-Quality Flavor"
+          }
+        ]
+      }
+    ],
+    "max_blocks": 6,
+    "presets": [
+      {
+        "name": "Wholesale Benefits",
+        "blocks": [
+          { "type": "benefit" },
+          { "type": "benefit" },
+          { "type": "benefit" },
+          { "type": "benefit" },
+          { "type": "benefit" },
+          { "type": "benefit" }
+        ]
+      }
+    ]
+  }
+  {% endschema %}
+</section>

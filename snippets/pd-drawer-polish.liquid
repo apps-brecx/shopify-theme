@@ -1,0 +1,351 @@
+{%- comment -%}
+  Mobile side-drawer brand polish v5 — hide inactive subtab grids + breathing room between cards.
+{%- endcomment -%}
+<style id="pd-drawer-polish">
+@media (max-width:980px){
+  /* SCRIM */
+  html body .syrnav-scrim{
+    background:rgba(57,34,15,.55) !important;
+    backdrop-filter:blur(2px) !important;
+    -webkit-backdrop-filter:blur(2px) !important;
+  }
+
+  /* DRAWER SHELL */
+  html body .syrnav-drawer{
+    background:#FFFBF4 !important;
+    border-right:2px solid #39220f !important;
+    box-shadow:8px 0 0 rgba(57,34,15,.06), 12px 0 32px -8px rgba(57,34,15,.32) !important;
+    width:86% !important; max-width:340px !important;
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    color:#39220f !important;
+    flex-direction:column !important;
+    overflow-y:auto !important; overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior:contain !important;
+    padding-bottom:env(safe-area-inset-bottom) !important;
+    transition:transform .38s cubic-bezier(.32,1.15,.4,1) !important;
+  }
+  html body .syrnav-drawer *{ -webkit-tap-highlight-color:transparent !important; }
+
+  /* HEAD — centered logo */
+  html body .syrnav-drawer .syrnav-dwr-head{
+    position:sticky !important; top:0 !important; z-index:2 !important;
+    height:68px !important; padding:0 !important;
+    border-bottom:1.5px solid #39220f !important;
+    background:#FFFBF4 !important;
+    display:flex !important; align-items:center !important; justify-content:center !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-head .syrnav-brand{ margin:0 auto !important; height:42px !important; padding:0 !important; flex:0 0 auto !important; display:inline-flex !important; align-items:center !important; }
+  html body .syrnav-drawer .syrnav-dwr-head .syrnav-brand img.syrnav-brand-img{ height:32px !important; max-height:42px !important; width:auto !important; max-width:160px !important; display:block !important; }
+  html body .syrnav-drawer .syrnav-dwr-x{
+    position:absolute !important; right:14px !important; top:50% !important; transform:translateY(-50%) !important;
+    width:40px !important; height:40px !important;
+    border-radius:50% !important; border:1.5px solid #39220f !important;
+    background:#FFFBF4 !important; color:#39220f !important;
+    display:inline-flex !important; align-items:center !important; justify-content:center !important;
+    box-shadow:1.5px 1.5px 0 #39220f !important;
+    transition:background .15s ease, transform .15s ease, box-shadow .15s ease !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-x:hover,
+  html body .syrnav-drawer .syrnav-dwr-x:active{
+    background:#FCE2A0 !important; transform:translateY(-50%) scale(.95) !important; box-shadow:2px 2px 0 #39220f !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-x svg{ width:14px !important; height:14px !important; color:#39220f !important; }
+
+  /* NAV LINKS */
+  html body .syrnav-drawer .syrnav-dwr-links{
+    display:flex !important; flex-direction:column !important;
+    padding:6px 12px 8px !important; gap:0 !important; flex:0 0 auto !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-sec{
+    border-bottom:1px solid rgba(57,34,15,.12) !important;
+    padding:0 !important; margin:0 !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-sec:last-child{ border-bottom:0 !important; }
+  html body .syrnav-drawer .syrnav-dwr-link{
+    display:flex !important; align-items:center !important; gap:0 !important;
+    width:100% !important; padding:16px 12px !important;
+    background:transparent !important; border:0 !important; text-align:left !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:17px !important; letter-spacing:-.005em !important;
+    color:#39220f !important; text-decoration:none !important; text-transform:none !important;
+    cursor:pointer !important; border-radius:14px !important;
+    transition:background .15s ease, color .15s ease, transform .12s ease !important;
+    min-height:54px !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-link:hover{ background:rgba(252,226,160,.4) !important; }
+  html body .syrnav-drawer .syrnav-dwr-link:active{ transform:scale(.985) !important; }
+  html body .syrnav-drawer .syrnav-dwr-link.on,
+  html body .syrnav-drawer .syrnav-dwr-link.active{ color:#c58548 !important; background:#FCE2A0 !important; }
+  html body .syrnav-drawer .syrnav-dwr-link .lbl{ flex:1 1 auto !important; min-width:0 !important; color:inherit !important; }
+  html body .syrnav-drawer .syrnav-dwr-link .syrnav-dwr-dot,
+  html body .syrnav-drawer .syrnav-dwr-dot{ display:none !important; }
+  html body .syrnav-drawer .syrnav-dwr-link .syrnav-dwr-chev{
+    display:inline-flex !important; align-items:center !important; justify-content:center !important;
+    width:22px !important; height:22px !important;
+    color:rgba(57,34,15,.5) !important;
+    transition:transform .25s ease, color .15s ease !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-link .syrnav-dwr-chev.plain{ transform:rotate(-90deg) !important; color:#c58548 !important; }
+  html body .syrnav-drawer .syrnav-dwr-link.on .syrnav-dwr-chev{ transform:rotate(180deg) !important; color:#c58548 !important; }
+  html body .syrnav-drawer .syrnav-dwr-link .syrnav-dwr-chev svg{ width:14px !important; height:14px !important; }
+
+  /* SHOP DRILL container */
+  html body .syrnav-drawer .syrnav-dwr-drill{
+    padding:10px 8px 16px !important;
+    background:rgba(252,226,160,.22) !important;
+    border-radius:14px !important;
+    margin:0 0 8px !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-drill .syrnav-subtabs{
+    display:flex !important; gap:18px !important;
+    border-bottom:1.5px solid #39220f !important;
+    margin:4px 6px 14px !important; padding-bottom:0 !important;
+    overflow-x:auto !important;
+    scrollbar-width:none !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-drill .syrnav-subtabs::-webkit-scrollbar{ display:none !important; }
+  html body .syrnav-drawer .syrnav-dwr-drill .syrnav-subtab{
+    background:transparent !important; border:0 !important;
+    padding:2px 0 10px !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:11px !important; letter-spacing:.12em !important; text-transform:uppercase !important;
+    color:rgba(57,34,15,.5) !important; position:relative !important;
+    cursor:pointer !important; white-space:nowrap !important; flex:0 0 auto !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-drill .syrnav-subtab.active{ color:#39220f !important; }
+  html body .syrnav-drawer .syrnav-dwr-drill .syrnav-subtab.active::after{
+    content:"" !important; position:absolute !important; left:0 !important; right:0 !important; bottom:-1.5px !important;
+    height:3px !important; background:#c58548 !important; border-radius:2px !important;
+  }
+
+  /* === ONLY show the ACTIVE subtab's grid — hide the others === */
+  html body .syrnav-drawer .syrnav-dwr-drill .syrnav-grid.syrnav-dwr-cats,
+  html body .syrnav-drawer .syrnav-dwr-drill .syrnav-dwr-cats{
+    display:none !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-drill .syrnav-grid.syrnav-dwr-cats.active,
+  html body .syrnav-drawer .syrnav-dwr-drill .syrnav-dwr-cats.active{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:14px !important;
+    padding:2px 8px 4px !important;
+  }
+
+  /* Card itself — chunky shadow, no card touches a neighbor */
+  html body .syrnav-drawer .syrnav-dwr-cat{
+    border:1.5px solid #39220f !important; border-radius:12px !important;
+    overflow:hidden !important; background:#FFFFFF !important;
+    box-shadow:2.5px 2.5px 0 #39220f !important;
+    transition:transform .14s ease, box-shadow .14s ease !important;
+    display:flex !important; flex-direction:column !important;
+    text-decoration:none !important;
+    margin:0 !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-cat:active{ transform:translate(-1px,-1px) !important; box-shadow:3.5px 3.5px 0 #39220f !important; }
+  html body .syrnav-drawer .syrnav-dwr-cat-media{
+    aspect-ratio:1 / .92 !important;
+    background:radial-gradient(120% 95% at 50% 8%, #fff, #FFF8EE) !important;
+    line-height:0 !important; display:block !important;
+    flex:1 1 auto !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-cat-media img{ width:100% !important; height:100% !important; object-fit:cover !important; display:block !important; }
+  html body .syrnav-drawer .syrnav-dwr-cat-lbl{
+    display:block !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:9.5px !important; letter-spacing:.06em !important; text-transform:uppercase !important;
+    text-align:center !important; padding:9px 6px 11px !important;
+    color:#39220f !important; border-top:1.5px solid #39220f !important;
+    background:#FFFBF4 !important;
+    flex:0 0 auto !important;
+  }
+
+  /* Deals list */
+  html body .syrnav-drawer .syrnav-dwr-deal{
+    display:flex !important; align-items:center !important; gap:0 !important;
+    padding:13px 12px !important;
+    border-bottom:1px solid rgba(57,34,15,.12) !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:13px !important; letter-spacing:.04em !important; text-transform:uppercase !important;
+    color:#39220f !important; text-decoration:none !important;
+    cursor:pointer !important;
+    transition:background .15s ease !important;
+    border-radius:10px !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-deal:hover{ background:rgba(252,226,160,.35) !important; }
+  html body .syrnav-drawer .syrnav-dwr-deal:last-child{ border-bottom:0 !important; }
+  html body .syrnav-drawer .syrnav-dwr-deal-dot{ display:none !important; }
+
+  /* COLUMN-LIST DRILL — About Us / More */
+  html body .syrnav-drawer .syrnav-dwr-cols{
+    display:flex !important; flex-direction:column !important; gap:18px !important;
+    padding:6px 6px !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-col{ display:flex !important; flex-direction:column !important; gap:2px !important; }
+  html body .syrnav-drawer .syrnav-dwr-col-h{
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:11px !important; letter-spacing:.16em !important; text-transform:uppercase !important;
+    color:#c58548 !important;
+    padding:0 8px 8px !important;
+    border-bottom:1.5px solid rgba(57,34,15,.18) !important;
+    margin:0 0 6px !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-col-link{
+    display:flex !important; align-items:center !important;
+    padding:11px 10px !important;
+    font-family:'Josefin Sans','Josefin',sans-serif !important; font-weight:500 !important;
+    font-size:14.5px !important; letter-spacing:.005em !important;
+    color:#39220f !important; text-decoration:none !important;
+    border-radius:10px !important;
+    transition:background .15s ease, color .15s ease !important;
+    text-transform:none !important;
+    min-height:42px !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-col-link:hover{ background:rgba(252,226,160,.5) !important; color:#c58548 !important; }
+
+  /* FOOTER SUBROWS */
+  html body .syrnav-drawer .syrnav-dwr-sub{
+    margin-top:auto !important;
+    padding:18px 18px 8px !important;
+    display:flex !important; flex-direction:column !important; gap:14px !important;
+    border-top:1.5px solid #39220f !important;
+    background:#FFFBF4 !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-subrow{
+    display:flex !important; align-items:center !important; gap:12px !important;
+    background:transparent !important; border:0 !important; padding:6px 4px !important;
+    text-align:left !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:13px !important; letter-spacing:.06em !important; text-transform:uppercase !important;
+    color:#39220f !important; text-decoration:none !important;
+    border-radius:10px !important;
+    transition:background .15s ease, color .15s ease !important;
+    min-height:42px !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-subrow:hover{ background:rgba(252,226,160,.4) !important; color:#c58548 !important; }
+  html body .syrnav-drawer .syrnav-dwr-subrow svg{ width:18px !important; height:18px !important; color:inherit !important; flex:0 0 auto !important; }
+
+  /* PROMO */
+  html body .syrnav-drawer .syrnav-dwr-promo{
+    margin:14px 16px 20px !important;
+    padding:14px 16px !important;
+    background:#FCE2A0 !important;
+    border:2px solid #39220f !important; border-radius:14px !important;
+    box-shadow:3px 3px 0 #39220f !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-promo b{
+    display:block !important;
+    font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+    font-size:14px !important; letter-spacing:.01em !important; text-transform:uppercase !important;
+    color:#39220f !important;
+  }
+  html body .syrnav-drawer .syrnav-dwr-promo span{
+    display:block !important;
+    font-family:'Josefin Sans','Josefin',sans-serif !important; font-weight:500 !important;
+    font-size:12.5px !important; color:rgba(57,34,15,.75) !important; margin-top:3px !important;
+  }
+}
+</style>
+
+<script id="pd-drawer-enhance">
+(function(){
+  if (window.__pdDrawerEnhanceInit) return; window.__pdDrawerEnhanceInit = true;
+
+  var CHEV_SVG = '<svg viewBox="0 0 12 12" width="12" height="12"><path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+
+  function buildDrillHTML(key){
+    if (key === 'about'){
+      return '<div class="syrnav-dwr-cols">' +
+        '<div class="syrnav-dwr-col">' +
+          '<div class="syrnav-dwr-col-h">About Us</div>' +
+          '<a class="syrnav-dwr-col-link" href="/pages/our-story">The Syruvia Story</a>' +
+          '<a class="syrnav-dwr-col-link" href="/pages/our-mission">The Syruvia Mission</a>' +
+          '<a class="syrnav-dwr-col-link" href="/pages/customer-love">Customer Love</a>' +
+          '<a class="syrnav-dwr-col-link" href="/pages/contact-us">Contact Us</a>' +
+        '</div>' +
+        '<div class="syrnav-dwr-col">' +
+          '<div class="syrnav-dwr-col-h">Syruvia Social</div>' +
+          '<a class="syrnav-dwr-col-link" href="https://www.instagram.com/syruvia_official" target="_blank" rel="noopener">Instagram</a>' +
+          '<a class="syrnav-dwr-col-link" href="https://www.youtube.com/@Syruvia" target="_blank" rel="noopener">Youtube</a>' +
+          '<a class="syrnav-dwr-col-link" href="https://www.tiktok.com/@syruviaofficial" target="_blank" rel="noopener">TikTok</a>' +
+        '</div>' +
+        '<div class="syrnav-dwr-col">' +
+          '<div class="syrnav-dwr-col-h">Join the Syruvia Mission</div>' +
+          '<a class="syrnav-dwr-col-link" href="/pages/affiliate">Affiliate</a>' +
+          '<a class="syrnav-dwr-col-link" href="/pages/wholesale">Wholesale</a>' +
+          '<a class="syrnav-dwr-col-link" href="/pages/coffee-shop">Coffee Shops</a>' +
+          '<a class="syrnav-dwr-col-link" href="/pages/content-creation">Content Creation</a>' +
+          '<a class="syrnav-dwr-col-link" href="https://www.instagram.com/explore/search/keyword/?q=%23syruviasyrups" target="_blank" rel="noopener">#syruviasyrups</a>' +
+        '</div>' +
+      '</div>';
+    }
+    if (key === 'more'){
+      return '<div class="syrnav-dwr-cols">' +
+        '<div class="syrnav-dwr-col">' +
+          '<div class="syrnav-dwr-col-h">Discover</div>' +
+          '<a class="syrnav-dwr-col-link" href="/blogs/blog-posts">Blog Post</a>' +
+          '<a class="syrnav-dwr-col-link" href="/pages/instagram-shop">Instagram Shop</a>' +
+          '<a class="syrnav-dwr-col-link" href="/pages/customer-love">Customer Love</a>' +
+        '</div>' +
+        '<div class="syrnav-dwr-col">' +
+          '<div class="syrnav-dwr-col-h">Deals</div>' +
+          '<a class="syrnav-dwr-col-link" href="/collections/on-sale">On Sale</a>' +
+          '<a class="syrnav-dwr-col-link" href="/collections/trending-flavors">Trending</a>' +
+          '<a class="syrnav-dwr-col-link" href="/collections/fall-flavors-to-warm-up-your-coffee-routine-a-seasonal-guide">Seasonal</a>' +
+        '</div>' +
+      '</div>';
+    }
+    return '';
+  }
+
+  function enhanceSection(drawer, matchHref, drillKey, labelText){
+    var link = drawer.querySelector('a.syrnav-dwr-link[href*="' + matchHref + '"]');
+    if (!link) return;
+    if (link.dataset.pdEnhanced === '1') return;
+    var section = link.closest('.syrnav-dwr-sec');
+    if (!section) return;
+    section.innerHTML =
+      '<button class="syrnav-dwr-link" data-drill="pd-' + drillKey + '" type="button">' +
+        '<span class="lbl">' + labelText + '</span>' +
+        '<span class="syrnav-dwr-chev">' + CHEV_SVG + '</span>' +
+      '</button>' +
+      '<div class="syrnav-dwr-drill" data-drillpanel="pd-' + drillKey + '">' + buildDrillHTML(drillKey) + '</div>';
+    var newBtn = section.querySelector('[data-drill="pd-' + drillKey + '"]');
+    if (newBtn) newBtn.dataset.pdEnhanced = '1';
+  }
+
+  function bindPdDrillClicks(drawer){
+    if (drawer.dataset.pdDrillBound === '1') return;
+    drawer.dataset.pdDrillBound = '1';
+    drawer.addEventListener('click', function(e){
+      var btn = e.target.closest('[data-drill]');
+      if (!btn || !drawer.contains(btn)) return;
+      var key = btn.getAttribute('data-drill');
+      if (!key || key.indexOf('pd-') !== 0) return;
+      e.preventDefault();
+      var panel = drawer.querySelector('[data-drillpanel="' + key + '"]');
+      var wasOpen = btn.classList.contains('on');
+      drawer.querySelectorAll('[data-drill]').forEach(function(b){ b.classList.remove('on'); });
+      drawer.querySelectorAll('[data-drillpanel]').forEach(function(p){ p.classList.remove('open'); });
+      if (!wasOpen && panel){
+        btn.classList.add('on');
+        panel.classList.add('open');
+      }
+    });
+  }
+
+  function init(){
+    var drawer = document.querySelector('.syrnav-drawer');
+    if (!drawer) return;
+    enhanceSection(drawer, '/pages/about-us', 'about', 'About Us');
+    enhanceSection(drawer, '/blogs/blog-posts', 'more', 'More');
+    bindPdDrillClicks(drawer);
+  }
+  init();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  setTimeout(init, 200); setTimeout(init, 1000);
+  if ('MutationObserver' in window){
+    new MutationObserver(init).observe(document.body, {childList:true, subtree:true});
+  }
+})();
+</script>

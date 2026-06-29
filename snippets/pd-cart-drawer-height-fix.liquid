@@ -1,0 +1,162 @@
+{%- comment -%}
+  Mobile cart drawer fixes (all bundled):
+  1. Tiered max-height so the close (X) is always reachable.
+  2. Bigger, visible drag handle + grab/grabbing cursor.
+  3. Upward-drag-to-expand + downward-to-collapse/close (capture-phase, doesn't fight original).
+  4. COMPACT footer — was eating ~50% of the smaller drawer.
+  5. Scroll containment: cart body scrolls, page underneath stays put.
+{%- endcomment -%}
+<style id="pd-cart-drawer-height-fix">
+@media (max-width:560px){
+  /* === HEIGHT === */
+  html body #SyrCD .scd-panel{
+    max-height:75vh !important;
+    max-height:75svh !important;
+    max-height:calc(100svh - 24px) !important;
+    transition:transform .42s cubic-bezier(.32,1.2,.4,1), max-height .35s ease !important;
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  html body #SyrCD .scd-panel.pd-expanded{
+    max-height:92vh !important;
+    max-height:92svh !important;
+    max-height:calc(100svh - 24px) !important;
+  }
+
+  /* === LAYOUT — strict three-row flex so footer is fixed, body scrolls === */
+  html body #SyrCD #SyrCD-content{
+    display:flex !important;
+    flex-direction:column !important;
+    flex:1 1 auto !important;
+    min-height:0 !important;
+    max-height:100% !important;
+    overflow:hidden !important;
+  }
+  html body #SyrCD .scd-grip,
+  html body #SyrCD .scd-head,
+  html body #SyrCD .scd-foot{ flex:0 0 auto !important; }
+  html body #SyrCD .scd-body{
+    flex:1 1 auto !important;
+    min-height:0 !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    overscroll-behavior:contain !important;
+    -webkit-overflow-scrolling:touch !important;
+    touch-action:pan-y !important;
+  }
+
+  /* === GRIP — bigger touch target === */
+  html body #SyrCD .scd-grip{
+    padding:14px 0 8px !important;
+    min-height:34px !important;
+    cursor:grab !important;
+    touch-action:none !important;
+    -webkit-user-select:none !important;
+    user-select:none !important;
+  }
+  html body #SyrCD .scd-grip:active{ cursor:grabbing !important; }
+  html body #SyrCD .scd-grip::before{
+    width:56px !important; height:5px !important;
+    border-radius:999px !important;
+    background:rgba(57,34,15,.35) !important;
+    transition:background .15s ease, width .15s ease !important;
+  }
+  html body #SyrCD .scd-grip:active::before{
+    background:rgba(57,34,15,.55) !important; width:64px !important;
+  }
+
+  /* === COMPACT FOOTER — was bloating the small drawer === */
+  html body #SyrCD .scd-foot{
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom)) !important;
+    gap:7px !important;
+  }
+  html body #SyrCD .scd-foot .d-vsave{
+    padding:7px 11px !important;
+    font-size:11px !important;
+    border-radius:10px !important;
+  }
+  html body #SyrCD .scd-foot .d-vsave .lft svg,
+  html body #SyrCD .scd-foot .d-vsave svg{
+    width:13px !important; height:13px !important;
+  }
+  html body #SyrCD .scd-foot .d-sub .l{ font-size:11px !important; letter-spacing:.04em !important; }
+  html body #SyrCD .scd-foot .d-sub .v{ font-size:20px !important; }
+  html body #SyrCD .scd-foot .scd-checkout{
+    height:48px !important;
+    font-size:13px !important;
+    letter-spacing:.06em !important;
+  }
+  html body #SyrCD .scd-foot .scd-checkout svg{ width:14px !important; height:14px !important; }
+  html body #SyrCD .scd-foot .scd-continue{
+    height:36px !important;
+    font-size:11px !important;
+    letter-spacing:.04em !important;
+  }
+  html body #SyrCD .scd-foot .scd-continue svg{ width:12px !important; height:11px !important; }
+  html body #SyrCD .scd-foot .scd-viewcart{
+    font-size:10.5px !important;
+    padding:0 !important;
+    margin:0 !important;
+  }
+}
+</style>
+<script id="pd-cart-drawer-grip-up">
+(function(){
+  if (window.__pdCDGripInit) return; window.__pdCDGripInit = true;
+  var st = { y:0, dy:0, active:false, expanded:false };
+  function panel(){ return document.querySelector('#SyrCD .scd-panel'); }
+  function isMobile(){ return window.matchMedia('(max-width:560px)').matches; }
+
+  document.addEventListener('touchstart', function(e){
+    if (!isMobile()) return;
+    var g = e.target.closest('[data-syr-grip]');
+    if (!g) return;
+    st.y = e.touches[0].clientY;
+    st.dy = 0;
+    st.active = true;
+  }, {passive:true, capture:true});
+
+  document.addEventListener('touchmove', function(e){
+    if (!st.active) return;
+    var dy = e.touches[0].clientY - st.y;
+    st.dy = dy;
+    var p = panel(); if (!p) return;
+    if (dy < 0){
+      var pct = Math.min(1, -dy / 80);
+      p.style.transition = 'none';
+      if (!st.expanded && pct > 0.05){
+        p.classList.add('pd-expanding');
+      }
+    } else {
+      if (st.expanded){
+        p.style.transition = 'none';
+        var d = Math.min(1, dy / 80);
+        if (d > 0.6){ p.classList.remove('pd-expanded'); st.expanded = false; }
+      }
+    }
+  }, {passive:true, capture:true});
+
+  document.addEventListener('touchend', function(){
+    if (!st.active) return;
+    var dy = st.dy;
+    st.active = false;
+    var p = panel(); if (!p) return;
+    p.style.transition = '';
+    p.classList.remove('pd-expanding');
+    if (dy < -40){
+      st.expanded = true;
+      p.classList.add('pd-expanded');
+    } else if (dy > 40 && st.expanded){
+      st.expanded = false;
+      p.classList.remove('pd-expanded');
+    }
+  }, true);
+
+  document.addEventListener('click', function(e){
+    if (e.target.closest('[data-syr-close]')){
+      var p = panel(); if (p) p.classList.remove('pd-expanded');
+      st.expanded = false;
+    }
+  }, true);
+})();
+</script>

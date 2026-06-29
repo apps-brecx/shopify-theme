@@ -1,0 +1,212 @@
+{%- comment -%} How We Stack Up — comparison table (Skinny Mixes inspired) {%- endcomment -%}
+<style id="syr-cmp-{{ section.id }}-css">
+  #syr-cmp-{{ section.id }}{
+    --ink:#39220f; --paper:#FFFBF4; --bg:#F4E8CE; --accent:#c58548;
+    --butter:#FCE2A0; --peach:#FFD4B8; --mint:#C5E4D4;
+    background:var(--bg);
+    padding:84px 40px;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    color:var(--ink);
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-wrap{ max-width:1180px; margin:0 auto; }
+  #syr-cmp-{{ section.id }} .syr-cmp-head{ text-align:center; max-width:720px; margin:0 auto 44px; }
+  #syr-cmp-{{ section.id }} .syr-cmp-eyebrow{
+    display:inline-block; background:var(--butter); color:var(--ink);
+    border:2px solid var(--ink); border-radius:999px;
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    padding:7px 16px; margin-bottom:14px; box-shadow:3px 3px 0 var(--ink);
+  }
+  #syr-cmp-{{ section.id }} h2{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:clamp(34px, 5vw, 56px); line-height:.95;
+    letter-spacing:-.015em; text-transform:uppercase;
+    margin:0 0 12px;
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-sub{ font-size:16px; color:rgba(57,34,15,.7); margin:0; max-width:46ch; margin:0 auto; }
+
+  #syr-cmp-{{ section.id }} .syr-cmp-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:24px;
+    align-items:stretch;
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-col{
+    position:relative;
+    background:var(--paper);
+    border:2px solid var(--ink); border-radius:24px;
+    box-shadow:5px 5px 0 var(--ink);
+    padding:38px 32px 32px;
+    display:flex; flex-direction:column;
+    transition:transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s cubic-bezier(.4,0,.2,1);
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-col.is-winner{
+    background:linear-gradient(160deg, var(--butter) 0%, var(--peach) 100%);
+    border-width:3px;
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-col:hover{ transform:translateY(-4px); box-shadow:8px 8px 0 var(--ink); }
+  #syr-cmp-{{ section.id }} .syr-cmp-badge{
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+    background:var(--ink); color:var(--butter);
+    border:2px solid var(--ink); border-radius:999px;
+    box-shadow:3px 3px 0 var(--accent);
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    padding:7px 16px;
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-brand{
+    text-align:center; margin-bottom:22px;
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-img{
+    width:130px; height:170px;
+    margin:0 auto 14px;
+    background:#fff;
+    border:2px solid var(--ink); border-radius:18px;
+    box-shadow:4px 4px 0 var(--ink);
+    overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-col.other .syr-cmp-img{
+    background:#E8D7C8; opacity:.85;
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-img img{ width:100%; height:100%; object-fit:contain; padding:10px; }
+  #syr-cmp-{{ section.id }} .syr-cmp-name{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:clamp(20px, 2.4vw, 26px); line-height:1;
+    letter-spacing:-.005em; text-transform:uppercase;
+    color:var(--ink); margin:0;
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-col.other .syr-cmp-name{ color:rgba(57,34,15,.55); }
+  #syr-cmp-{{ section.id }} .syr-cmp-stats{
+    display:flex; flex-direction:column; gap:12px;
+    margin-top:6px;
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-stat{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:14px 18px;
+    background:var(--paper); border:2px solid var(--ink); border-radius:14px;
+    box-shadow:3px 3px 0 var(--ink);
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-col.is-winner .syr-cmp-stat{ background:var(--paper); }
+  #syr-cmp-{{ section.id }} .syr-cmp-col.other .syr-cmp-stat{
+    background:rgba(255,251,244,.6); border-color:rgba(57,34,15,.5);
+    box-shadow:2px 2px 0 rgba(57,34,15,.4);
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-stat-lbl{
+    font-family:'Josefin Sans','Josefin',sans-serif; font-weight:600;
+    font-size:13px; letter-spacing:.04em; text-transform:uppercase;
+    color:rgba(57,34,15,.65);
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-stat-val{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:24px; line-height:1; color:var(--ink);
+  }
+  #syr-cmp-{{ section.id }} .syr-cmp-col.other .syr-cmp-stat-val{ color:rgba(57,34,15,.5); }
+  #syr-cmp-{{ section.id }} .syr-cmp-col.is-winner .syr-cmp-stat-val em{ color:var(--accent); font-style:normal; }
+
+  #syr-cmp-{{ section.id }} .syr-cmp-foot{
+    text-align:center; margin-top:28px;
+    font-size:12px; color:rgba(57,34,15,.6);
+  }
+
+  @media (max-width:760px){
+    #syr-cmp-{{ section.id }}{ padding:52px 16px 64px; }
+    #syr-cmp-{{ section.id }} .syr-cmp-head{ margin-bottom:28px; }
+    #syr-cmp-{{ section.id }} h2{ font-size:clamp(28px, 9vw, 40px); }
+    #syr-cmp-{{ section.id }} .syr-cmp-sub{ font-size:14px; }
+    #syr-cmp-{{ section.id }} .syr-cmp-grid{ grid-template-columns:1fr; gap:36px; }
+    #syr-cmp-{{ section.id }} .syr-cmp-col{ padding:32px 22px 26px; box-shadow:4px 4px 0 var(--ink); }
+    #syr-cmp-{{ section.id }} .syr-cmp-img{ width:110px; height:140px; }
+    #syr-cmp-{{ section.id }} .syr-cmp-stat{ padding:12px 14px; }
+    #syr-cmp-{{ section.id }} .syr-cmp-stat-val{ font-size:20px; }
+  }
+</style>
+
+<section id="syr-cmp-{{ section.id }}">
+  <div class="syr-cmp-wrap">
+    <div class="syr-cmp-head">
+      <span class="syr-cmp-eyebrow" data-reveal="up">How we stack up</span>
+      <h2 data-reveal="up" data-reveal-delay="80">{{ section.settings.headline }}</h2>
+      <p class="syr-cmp-sub" data-reveal="up" data-reveal-delay="160">{{ section.settings.sub }}</p>
+    </div>
+    <div class="syr-cmp-grid">
+      <div class="syr-cmp-col is-winner" data-reveal="left" data-reveal-delay="100">
+        <span class="syr-cmp-badge">★ Winner</span>
+        <div class="syr-cmp-brand">
+          <div class="syr-cmp-img">
+            {%- if section.settings.us_image -%}
+              <img src="{{ section.settings.us_image | image_url: width: 320 }}" alt="Syruvia" loading="lazy">
+            {%- else -%}
+              <div style="width:100%;height:100%;background:linear-gradient(160deg,#FCE2A0,#c58548);"></div>
+            {%- endif -%}
+          </div>
+          <h3 class="syr-cmp-name">{{ section.settings.us_name }}</h3>
+        </div>
+        <div class="syr-cmp-stats">
+          <div class="syr-cmp-stat">
+            <span class="syr-cmp-stat-lbl">Calories</span>
+            <span class="syr-cmp-stat-val"><em>{{ section.settings.us_calories }}</em></span>
+          </div>
+          <div class="syr-cmp-stat">
+            <span class="syr-cmp-stat-lbl">Sugar</span>
+            <span class="syr-cmp-stat-val"><em>{{ section.settings.us_sugar }}</em></span>
+          </div>
+          <div class="syr-cmp-stat">
+            <span class="syr-cmp-stat-lbl">Per serving</span>
+            <span class="syr-cmp-stat-val">{{ section.settings.us_price }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="syr-cmp-col other" data-reveal="right" data-reveal-delay="100">
+        <div class="syr-cmp-brand">
+          <div class="syr-cmp-img">
+            {%- if section.settings.them_image -%}
+              <img src="{{ section.settings.them_image | image_url: width: 320 }}" alt="Other syrup" loading="lazy">
+            {%- else -%}
+              <div style="width:100%;height:100%;background:linear-gradient(160deg,#999,#666);opacity:.5;"></div>
+            {%- endif -%}
+          </div>
+          <h3 class="syr-cmp-name">{{ section.settings.them_name }}</h3>
+        </div>
+        <div class="syr-cmp-stats">
+          <div class="syr-cmp-stat">
+            <span class="syr-cmp-stat-lbl">Calories</span>
+            <span class="syr-cmp-stat-val">{{ section.settings.them_calories }}</span>
+          </div>
+          <div class="syr-cmp-stat">
+            <span class="syr-cmp-stat-lbl">Sugar</span>
+            <span class="syr-cmp-stat-val">{{ section.settings.them_sugar }}</span>
+          </div>
+          <div class="syr-cmp-stat">
+            <span class="syr-cmp-stat-lbl">Per serving</span>
+            <span class="syr-cmp-stat-val">{{ section.settings.them_price }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="syr-cmp-foot">{{ section.settings.foot }}</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Comparison",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "headline", "label": "Headline", "default": "Why Syruvia wins" },
+    { "type": "textarea", "id": "sub", "label": "Subtext", "default": "Zero sugar. Real flavor. Better price per serving." },
+    { "type": "header", "content": "Syruvia column" },
+    { "type": "image_picker", "id": "us_image", "label": "Our bottle" },
+    { "type": "text", "id": "us_name", "label": "Name", "default": "Syruvia" },
+    { "type": "text", "id": "us_calories", "label": "Calories", "default": "0" },
+    { "type": "text", "id": "us_sugar", "label": "Sugar", "default": "0g" },
+    { "type": "text", "id": "us_price", "label": "Per serving", "default": "$0.30" },
+    { "type": "header", "content": "Other column" },
+    { "type": "image_picker", "id": "them_image", "label": "Their bottle" },
+    { "type": "text", "id": "them_name", "label": "Name", "default": "Other syrup" },
+    { "type": "text", "id": "them_calories", "label": "Calories", "default": "110" },
+    { "type": "text", "id": "them_sugar", "label": "Sugar", "default": "23g" },
+    { "type": "text", "id": "them_price", "label": "Per serving", "default": "$0.50" },
+    { "type": "text", "id": "foot", "label": "Footnote", "default": "* Based on a 2 tbsp serving comparison vs leading traditional syrups." }
+  ],
+  "presets": [ { "name": "Comparison" } ]
+}
+{% endschema %}

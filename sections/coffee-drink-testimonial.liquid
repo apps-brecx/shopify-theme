@@ -1,0 +1,298 @@
+<style>
+.coffee-drink-testimonial__inner{
+    background: #f7f3eb;
+    padding: 50px 0;
+}
+    .coffee-drink-testimonial__title{
+        margin-bottom: 20px;
+          max-width: 60%;
+    }
+    .coffee-drink-testimonial__title h2{
+               font-family: "Epilogue", sans-serif !important;
+        margin: 0;
+        font-weight: 700;
+        font-size: 45px;
+     }
+     .coffee-drink-testimonial__title h2 em{
+         font-family: "Epilogue", sans-serif !important;
+        color: #bb2a56;
+        font-style: normal;
+     }
+     .coffee-drink-testimonial__heading{
+      position: relative;
+        margin-bottom: 60px;        
+     }
+     .coffee-drink-testimonial__description{
+                font-family: "Manrope", sans-serif !important;
+      max-width: 60%;
+      font-size: 20px;
+    }
+     .coffee-drink-testimonial__item{
+        background: #fff;
+        border-radius: 20px;
+        padding: 20px;
+        margin: 0 20px; 
+     }
+     .coffee-drink-testimonial__item-stars{
+        max-width: 116px;
+        margin-bottom: 30px;
+     }
+     .coffee-drink-testimonial__item-stars img{
+        width: 100%;
+        display: block;
+     }
+     .coffee-drink-testimonial__item-text{
+          font-family: "Manrope", sans-serif !important;
+        margin-bottom: 40px;        
+     }
+
+    .coffee-drink-testimonial__item-bottom{
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    .coffee-drink-testimonial__bottom-title{
+          font-family: "Manrope", sans-serif !important;
+        color: #393833;
+        line-height: normal;
+        font-weight: 600;
+        margin: 0 0 5px 0;
+    }
+    .coffee-drink-testimonial__bottom-info{
+          font-family: "Manrope", sans-serif !important;
+        color: #393833;
+        line-height: normal;
+        font-size: 12px;
+        margin: 0;
+    }
+    .coffee-drink-testimonial__arrow{
+      cursor: pointer;
+      border: 1px solid #bb2a56;
+      border-radius: 50%;
+      line-height: 0;
+      padding: 5px;
+      transition: all 0.3s ease;
+    }
+    .coffee-drink-testimonial__arrow:hover{
+      background:  #bb2a56;
+    }
+    .coffee-drink-testimonial__arrow:hover svg{
+      color: #fff;
+    }
+    .coffee-drink-testimonial__arrows {    
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+    .coffee-drink-testimonial__arrow_right svg{
+      transform: rotate(180deg);
+    }
+    .coffee-drink-testimonial__arrow svg{
+      color: #bb2a56;
+      border: none;
+      stroke: none;
+      width: 30px;
+      height: 30px;
+    }
+
+    @media(max-width: 991px){
+           .coffee-drink-testimonial__heading{      
+        margin-bottom: 40px;        
+     }
+        .coffee-drink-testimonial__arrows {  
+          gap: 15px;
+        }
+         .coffee-drink-testimonial__title{
+          max-width: 100%;
+        }
+         .coffee-drink-testimonial__title h2{
+          font-size: 30px;
+        
+        }
+        .coffee-drink-testimonial__description{
+          font-size: 16px;
+          line-height: normal;
+          max-width: 70%;
+      }
+    }
+
+      @media(max-width: 750px){
+            .coffee-drink-testimonial__items {
+              width: calc(100% + 30px);
+              margin: 0 -15px;
+              padding-left: 15px;
+            }
+            .coffee-drink-testimonial__items .slick-list{
+                padding-right: 90px;
+                
+            }
+        .coffee-drink-testimonial__item {
+          margin: 0 0 0 10px;
+        }
+        
+      }
+
+</style>
+<div class="coffee-drink-testimonial__inner scroll-trigger animate--slide-in">
+  <div class="page-width">
+    
+    <div class="coffee-drink-testimonial__heading">
+      {% if section.settings.title != blank %}
+        <div class="coffee-drink-testimonial__title">
+          {{ section.settings.title }}
+        </div>
+      {% endif %}
+      
+      {% if section.settings.description != blank %}
+        <div class="coffee-drink-testimonial__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+
+      <div class="coffee-drink-testimonial__arrows">
+        <div class="coffee-drink-testimonial__arrow coffee-drink-testimonial__arrow_left">
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z" fill="currentColor"/>
+        </svg>
+      </div>
+    <div class="coffee-drink-testimonial__arrow coffee-drink-testimonial__arrow_right">
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z" fill="currentColor"/>
+        </svg>
+      </div>
+
+    </div>
+      </div>
+     
+
+    <div class="coffee-drink-testimonial__items">
+      
+      {% for block in section.blocks %}
+        <div class="coffee-drink-testimonial__item" {{ block.shopify_attributes }}>
+          
+          <div class="coffee-drink-testimonial__item-stars">
+            {% if block.settings.star_image != blank %}
+              <img src="{{ block.settings.star_image | image_url: width: 200 }}" alt="Rating Stars" />
+            {% endif %}
+          </div>
+
+          <div class="coffee-drink-testimonial__item-text">
+            {{ block.settings.testimonial_text }}
+          </div>
+
+          <div class="coffee-drink-testimonial__item-bottom">
+            <div class="coffee-drink-testimonial__image">
+              {% if block.settings.user_image != blank %}
+                <img src="{{ block.settings.user_image | image_url: width: 150, height: 150, crop: 'center' }}" alt="{{ block.settings.user_name }}" />
+              {% endif %}
+            </div>
+            
+            <div class="coffee-drink-testimonial__bottom-text">
+              <div class="coffee-drink-testimonial__bottom-title">
+                {{ block.settings.user_name }}
+              </div>
+              <div class="coffee-drink-testimonial__bottom-info">
+                {{ block.settings.user_info }}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+<script>
+$('.coffee-drink-testimonial__items').slick({
+  slidesToShow: 3,
+  slidesToScroll: 1,
+  infinite: true,
+  prevArrow: $('.coffee-drink-testimonial__arrow_left'),
+  nextArrow: $('.coffee-drink-testimonial__arrow_right'),
+  responsive: [
+    {
+      breakpoint: 992, // Standard tablet breakpoint
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1
+      }
+    },
+    {
+      breakpoint: 751, // Standard mobile breakpoint
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1,    
+      }
+    }
+  ]
+});
+
+</script>
+{% schema %}
+{
+  "name": "Coffee Testimonials",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Section Title",      
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Section Description",
+      "default": "See why thousands of coffee lovers start their day with us."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "star_image",
+          "label": "Star Rating Image"
+        },
+        {
+          "type": "textarea",
+          "id": "testimonial_text",
+          "label": "Review Text",
+          "default": "This is the best coffee I have ever tasted! Highly recommended."
+        },
+        {
+          "type": "image_picker",
+          "id": "user_image",
+          "label": "User Avatar"
+        },
+        {
+          "type": "text",
+          "id": "user_name",
+          "label": "User Name",
+          "default": "Jane Doe"
+        },
+        {
+          "type": "text",
+          "id": "user_info",
+          "label": "User Info",
+          "default": "Verified Enthusiast"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Coffee Testimonials",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}

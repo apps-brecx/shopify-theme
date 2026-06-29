@@ -1,0 +1,186 @@
+{%- comment -%} Syruvia recipe detail — brand style, metafield-driven. {%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign mf = article.metafields.custom -%}
+{%- assign has_ing = false -%}{%- if mf.ingredients_for_recipe != blank -%}{%- assign has_ing = true -%}{%- endif -%}
+{%- assign has_ins = false -%}{%- if mf.instructions_of_recipe != blank -%}{%- assign has_ins = true -%}{%- endif -%}
+<style id="rc-{{ section.id }}-css">
+  #rc-{{ section.id }}{--ink:#39220f;--ink-2:#5a4632;--paper:#FFFBF4;--white:#fff;--butter:#FCE2A0;--copper:#c58548;--peach:#ffd4b8;--mint:#c5e4d4;--sky:#b8dceb;--fh:'Archivo Black','Arial Black',sans-serif;--fb:'Josefin Sans','Josefin',sans-serif;background:var(--paper);color:var(--ink);font-family:var(--fb);}
+  #rc-{{ section.id }} *{box-sizing:border-box;}
+  #rc-{{ section.id }} .rc-wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  #rc-{{ section.id }} .rc-rev{opacity:0;transform:translateY(18px) scale(.96);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.3,1.2);}
+  #rc-{{ section.id }} .rc-rev.in{opacity:1;transform:none;}
+  #rc-{{ section.id }} .rc-head{text-align:center;padding:48px 0 6px;position:relative;}
+  #rc-{{ section.id }} .rc-back{display:inline-block;font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--copper);text-decoration:none;margin-bottom:16px;}
+  #rc-{{ section.id }} .rc-back:hover{text-decoration:underline;}
+  #rc-{{ section.id }} .rc-tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
+  #rc-{{ section.id }} .rc-tag{background:var(--mint);border:2px solid var(--ink);border-radius:999px;box-shadow:2px 2px 0 var(--ink);font-family:'Archivo',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;color:var(--ink);}
+  #rc-{{ section.id }} .rc-title{font-family:var(--fh);font-weight:400;font-size:clamp(30px,5.4vw,58px);line-height:.96;letter-spacing:-.02em;text-transform:uppercase;margin:0 auto;max-width:16ch;}
+  #rc-{{ section.id }} .rc-intro{font-size:clamp(15px,2vw,18px);color:var(--ink-2);font-weight:500;line-height:1.6;margin:18px auto 0;max-width:60ch;}
+  #rc-{{ section.id }} .rc-hash{display:inline-block;margin-top:16px;background:var(--butter);border:2px solid var(--ink);border-radius:999px;box-shadow:2px 2px 0 var(--ink);font-family:var(--fh);font-size:12px;letter-spacing:.02em;padding:7px 16px;color:var(--ink);}
+  #rc-{{ section.id }} .rc-hero-img{margin:30px auto 0;max-width:760px;}
+  #rc-{{ section.id }} .rc-hero-img img{width:100%;aspect-ratio:16/10;object-fit:cover;border:3px solid var(--ink);border-radius:24px;box-shadow:8px 8px 0 var(--ink);display:block;}
+  #rc-{{ section.id }} .rc-cols{display:grid;grid-template-columns:1fr 1.25fr;gap:22px;padding:46px 0 8px;align-items:start;}
+  #rc-{{ section.id }} .rc-card{border:2.5px solid var(--ink);border-radius:22px;box-shadow:7px 7px 0 var(--ink);padding:26px 26px 28px;background:var(--white);}
+  #rc-{{ section.id }} .rc-card.ing{background:var(--peach);}
+  #rc-{{ section.id }} .rc-card.steps{background:var(--white);}
+  #rc-{{ section.id }} .rc-card h2{font-family:var(--fh);font-weight:400;font-size:clamp(20px,2.8vw,26px);text-transform:uppercase;letter-spacing:-.01em;margin:0 0 16px;display:flex;align-items:center;gap:10px;}
+  #rc-{{ section.id }} .rc-card h2 .em{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:var(--white);border:2.5px solid var(--ink);border-radius:10px;font-size:17px;box-shadow:2px 2px 0 var(--ink);}
+  #rc-{{ section.id }} .rc-card.steps h2 .em{background:var(--mint);}
+  #rc-{{ section.id }} .rc-body{font-size:16.5px;line-height:1.6;color:var(--ink);}
+  #rc-{{ section.id }} .rc-card.ing ul{list-style:none;margin:0;padding:0;}
+  #rc-{{ section.id }} .rc-card.ing li{position:relative;padding:9px 0 9px 30px;border-bottom:1.5px dashed rgba(57,34,15,.25);font-weight:500;}
+  #rc-{{ section.id }} .rc-card.ing li:last-child{border-bottom:none;}
+  #rc-{{ section.id }} .rc-card.ing li::before{content:'';position:absolute;left:0;top:13px;width:15px;height:15px;background:var(--copper);border:2px solid var(--ink);border-radius:5px;}
+  #rc-{{ section.id }} .rc-card.steps ol{margin:0;padding:0;list-style:none;counter-reset:st;}
+  #rc-{{ section.id }} .rc-card.steps li{position:relative;padding:4px 0 18px 46px;counter-increment:st;}
+  #rc-{{ section.id }} .rc-card.steps li:last-child{padding-bottom:0;}
+  #rc-{{ section.id }} .rc-card.steps li::before{content:counter(st);position:absolute;left:0;top:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:var(--copper);color:#fff;border:2.5px solid var(--ink);border-radius:50%;font-family:var(--fh);font-size:14px;box-shadow:2px 2px 0 var(--ink);}
+  #rc-{{ section.id }} .rc-card.steps li strong{color:var(--ink);font-weight:700;}
+  #rc-{{ section.id }} .rc-need{margin-top:50px;padding:48px 0 50px;background:var(--butter);border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);}
+  #rc-{{ section.id }} .rc-need h2{font-family:var(--fh);font-weight:400;font-size:clamp(26px,4vw,42px);text-transform:uppercase;text-align:center;letter-spacing:-.01em;margin:0 0 6px;}
+  #rc-{{ section.id }} .rc-need .sub{text-align:center;color:var(--ink-2);font-weight:500;margin:0 auto 28px;max-width:46ch;}
+  #rc-{{ section.id }} .rc-pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  #rc-{{ section.id }} .rc-pcard{display:flex;flex-direction:column;background:var(--white);border:2.5px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);overflow:hidden;color:var(--ink);text-align:center;transition:transform .2s ease,box-shadow .2s ease;}
+  #rc-{{ section.id }} .rc-pcard:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--ink);}
+  #rc-{{ section.id }} .rc-pimg{aspect-ratio:1/1;background:var(--peach);border-bottom:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;}
+  #rc-{{ section.id }} .rc-pgrid .rc-pcard:nth-child(4n+2) .rc-pimg{background:var(--mint);}
+  #rc-{{ section.id }} .rc-pgrid .rc-pcard:nth-child(4n+3) .rc-pimg{background:var(--sky);}
+  #rc-{{ section.id }} .rc-pgrid .rc-pcard:nth-child(4n+4) .rc-pimg{background:var(--white);}
+  #rc-{{ section.id }} .rc-pimg img{width:100%;height:100%;object-fit:cover;}
+  #rc-{{ section.id }} .rc-pcard a.img{display:block;}
+  #rc-{{ section.id }} .rc-pb{padding:14px 12px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;}
+  #rc-{{ section.id }} .rc-pn{font-family:var(--fh);font-weight:400;font-size:13px;text-transform:uppercase;line-height:1.12;color:var(--ink);text-decoration:none;}
+  #rc-{{ section.id }} .syrvip{display:flex;flex-direction:column;align-items:center;gap:5px;}
+  #rc-{{ section.id }} .syrvip-now{font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;color:var(--copper);}
+  #rc-{{ section.id }} .syrvip-was{font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;color:#a8967f;text-decoration:line-through;margin-top:-2px;}
+  #rc-{{ section.id }} .syrvip-tag{display:inline-flex;align-items:center;gap:4px;background:#dcebf2;color:#1f5a85;border:1.5px solid #2f7bb0;border-radius:999px;font-family:var(--fh);font-weight:400;font-size:9.5px;letter-spacing:.03em;text-transform:uppercase;padding:4px 9px;line-height:1;}
+  #rc-{{ section.id }} .syrvip-tag svg{width:10px;height:10px;}
+  #rc-{{ section.id }} .syrvip-tag.is-vip{background:#c5e4d4;color:#2f6b4a;border-color:#2f6b4a;}
+  #rc-{{ section.id }} .rc-atc{margin-top:auto;background:var(--ink);color:#fff;border:none;border-radius:10px;font-family:var(--fh);font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:11px 8px;cursor:pointer;width:100%;}
+  #rc-{{ section.id }} .rc-atc:hover{background:var(--copper);}
+  #rc-{{ section.id }} .rc-foot{padding:42px 0 64px;text-align:center;}
+  #rc-{{ section.id }} .rc-share{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;padding-bottom:30px;}
+  #rc-{{ section.id }} .rc-share .lbl{font-family:var(--fh);font-size:12px;letter-spacing:.1em;text-transform:uppercase;}
+  #rc-{{ section.id }} .rc-share a,#rc-{{ section.id }} .rc-share button{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:var(--white);border:2.5px solid var(--ink);border-radius:12px;box-shadow:3px 3px 0 var(--ink);color:var(--ink);text-decoration:none;cursor:pointer;font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;}
+  #rc-{{ section.id }} .rc-share a:hover,#rc-{{ section.id }} .rc-share button:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);}
+  #rc-{{ section.id }} .rc-btn{display:inline-block;background:var(--copper);color:#fff;border:2.5px solid var(--ink);border-radius:14px;box-shadow:5px 5px 0 var(--ink);font-family:var(--fh);font-size:14px;letter-spacing:.04em;text-transform:uppercase;padding:15px 30px;text-decoration:none;}
+  #rc-{{ section.id }} .rc-btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink);}
+  @media (max-width:820px){
+    #rc-{{ section.id }} .rc-cols{grid-template-columns:1fr;gap:18px;}
+    #rc-{{ section.id }} .rc-pgrid{grid-template-columns:repeat(2,1fr);}
+    #rc-{{ section.id }} .rc-head{padding:30px 0 4px;}
+  }
+  @media (prefers-reduced-motion: reduce){#rc-{{ section.id }} .rc-rev{opacity:1;transform:none;}}
+</style>
+
+<section id="rc-{{ section.id }}">
+  <div class="rc-head">
+    <div class="rc-wrap">
+      <a class="rc-back" href="{{ s.recipes_url | default: '/pages/recipe' }}">← All recipes</a>
+      {%- if article.tags.size > 0 -%}
+        <div class="rc-tags rc-rev">{%- for t in article.tags limit: 4 -%}<span class="rc-tag">{{ t | remove: 'recipe_' | remove: 'dietary_' | replace: '-', ' ' }}</span>{%- endfor -%}</div>
+      {%- endif -%}
+      <h1 class="rc-title rc-rev">{{ article.title }}</h1>
+      {%- if article.content != blank -%}<p class="rc-intro rc-rev">{{ article.content | strip_html | strip }}</p>{%- endif -%}
+      {%- if mf.recipe_hashtag != blank -%}<div class="rc-rev"><span class="rc-hash">{{ mf.recipe_hashtag }}</span></div>{%- endif -%}
+    </div>
+  </div>
+
+  {%- if article.image -%}
+    <div class="rc-hero-img rc-rev"><img src="{{ article.image | image_url: width: 1200 }}" alt="{{ article.title | escape }}"></div>
+  {%- endif -%}
+
+  <div class="rc-wrap">
+    {%- if has_ing or has_ins -%}
+      <div class="rc-cols">
+        {%- if has_ing -%}
+          <div class="rc-card ing rc-rev">
+            <h2><span class="em">🛒</span> Ingredients</h2>
+            <div class="rc-body">{{ mf.ingredients_for_recipe | metafield_tag }}</div>
+          </div>
+        {%- endif -%}
+        {%- if has_ins -%}
+          <div class="rc-card steps rc-rev">
+            <h2><span class="em">👩‍🍳</span> Instructions</h2>
+            <div class="rc-body">{{ mf.instructions_of_recipe | metafield_tag }}</div>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- assign rec_products = mf.custom_products.value -%}
+  {%- if rec_products == blank -%}
+    {%- assign fbh = s.fallback_collection | default: 'best-sellers' -%}
+    {%- assign rec_products = collections[fbh].products -%}
+  {%- endif -%}
+  {%- if rec_products and rec_products.size > 0 -%}
+    <div class="rc-need">
+      <div class="rc-wrap">
+        <h2 class="rc-rev">{{ s.need_heading | default: 'You will need' }}</h2>
+        <p class="sub rc-rev">{{ s.need_sub | default: 'Grab the Syruvia syrups behind this recipe.' }}</p>
+        <div class="rc-pgrid">
+          {%- for product in rec_products limit: 8 -%}
+            <div class="rc-pcard rc-rev">
+              <a class="img" href="{{ product.url }}"><div class="rc-pimg">{%- if product.featured_image -%}<img src="{{ product.featured_image | image_url: width: 500 }}" alt="{{ product.title | escape }}" loading="lazy">{%- endif -%}</div></a>
+              <div class="rc-pb">
+                <a class="rc-pn" href="{{ product.url }}">{{ product.title | remove: 'Syrup' | strip }}</a>
+                {% render 'syr-vip-price', product: product %}
+                {%- if product.available -%}
+                  <form action="/cart/add" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button class="rc-atc" type="submit">Add to cart</button>
+                  </form>
+                {%- else -%}
+                  <button class="rc-atc" type="button" disabled style="opacity:.5;cursor:default;">Sold out</button>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="rc-foot">
+    <div class="rc-wrap">
+      <div class="rc-share rc-rev">
+        <span class="lbl">Share</span>
+        <a href="https://www.facebook.com/sharer.php?u={{ shop.url }}{{ article.url }}" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+        <a href="https://twitter.com/intent/tweet?url={{ shop.url }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" rel="noopener" aria-label="X">X</a>
+        <a href="https://pinterest.com/pin/create/button/?url={{ shop.url }}{{ article.url }}&description={{ article.title | url_encode }}" target="_blank" rel="noopener" aria-label="Pinterest">P</a>
+        <button type="button" class="rc-copy" data-url="{{ shop.url }}{{ article.url }}" aria-label="Copy link">⧉</button>
+      </div>
+      <a class="rc-btn rc-rev" href="{{ s.recipes_url | default: '/pages/recipe' }}">Browse more recipes</a>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('rc-{{ section.id }}');
+  if(!root) return;
+  if('IntersectionObserver' in window && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.08});
+    root.querySelectorAll('.rc-rev').forEach(function(el){io.observe(el);});
+    setTimeout(function(){root.querySelectorAll('.rc-rev:not(.in)').forEach(function(el){el.classList.add('in');});},2600);
+  } else { root.querySelectorAll('.rc-rev').forEach(function(el){el.classList.add('in');}); }
+  var cp=root.querySelector('.rc-copy');
+  if(cp){cp.addEventListener('click',function(){var u=cp.getAttribute('data-url');if(navigator.clipboard){navigator.clipboard.writeText(u).then(function(){var o=cp.textContent;cp.textContent='✓';setTimeout(function(){cp.textContent=o;},1400);});}});}
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Recipe detail",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "recipes_url", "label": "All-recipes URL", "default": "/pages/recipe" },
+    { "type": "text", "id": "need_heading", "label": "Products heading", "default": "You will need" },
+    { "type": "textarea", "id": "need_sub", "label": "Products subtitle", "default": "Grab the Syruvia syrups behind this recipe." },
+    { "type": "text", "id": "fallback_collection", "label": "Fallback collection handle", "default": "best-sellers" }
+  ],
+  "presets": [ { "name": "Recipe detail" } ]
+}
+{% endschema %}

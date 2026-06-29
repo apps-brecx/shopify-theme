@@ -1,0 +1,382 @@
+<div
+  id="AnnouncementPopup"
+  class="announcement-popup"
+  aria-hidden="true"
+>
+  <div class="announcement-popup__backdrop" id="AnnouncementPopupBackdrop"></div>
+
+  <div
+    class="announcement-popup__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="AnnouncementPopupTitle"
+  >
+    <button
+      type="button"
+      class="announcement-popup__close"
+      id="AnnouncementPopupClose"
+      aria-label="Close popup"
+    >
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="announcement-popup__inner">
+      <p class="announcement-popup__eyebrow">Important Notice</p>
+
+      <h2 id="AnnouncementPopupTitle" class="announcement-popup__title">
+        Shipping Update
+      </h2>
+
+      <p class="announcement-popup__desc">
+        Due to scheduled maintenance, orders may be delayed by 1 business day.
+      </p>
+
+      <p class="announcement-popup__subtext">
+        We appreciate your patience and understanding while our team completes the scheduled update.
+      </p>
+
+      <div class="announcement-popup__actions">
+        <button
+          type="button"
+          id="AnnouncementPopupContinue"
+          class="announcement-popup__btn announcement-popup__btn--primary"
+        >
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  html.announcement-popup-lock,
+  body.announcement-popup-lock {
+    overflow: hidden;
+  }
+
+  .announcement-popup {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.58);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+
+  .announcement-popup.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .announcement-popup__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: transparent;
+  }
+
+  .announcement-popup__dialog {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 700px;
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: 28px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.15)),
+      #f4e9dd;
+    color: #4a2a12;
+    box-shadow:
+      0 28px 70px rgba(0, 0, 0, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(74, 42, 18, 0.12);
+    transform: translateY(26px) scale(0.97);
+    opacity: 0;
+    transition: transform 0.42s cubic-bezier(.2,.8,.2,1), opacity 0.42s ease;
+  }
+
+  .announcement-popup.is-visible .announcement-popup__dialog {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  .announcement-popup__inner {
+    padding: 52px 42px 38px;
+    text-align: center;
+  }
+
+  .announcement-popup__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(74, 42, 18, 0.06);
+    cursor: pointer;
+    transition: all 0.22s ease;
+    z-index: 3;
+  }
+
+  .announcement-popup__close:hover {
+    background: rgba(74, 42, 18, 0.12);
+    transform: rotate(90deg);
+  }
+
+  .announcement-popup__close span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 2px;
+    background: #4a2a12;
+    border-radius: 999px;
+    transform-origin: center;
+  }
+
+  .announcement-popup__close span:first-child {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .announcement-popup__close span:last-child {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  .announcement-popup__eyebrow {
+    margin: 0 0 14px;
+    color: #6d4321;
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .announcement-popup__title {
+    margin: 0 0 18px;
+    color: #4a2a12;
+    font-size: clamp(38px, 6vw, 56px);
+    line-height: 1.02;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    max-width: 100%;
+  }
+
+  .announcement-popup__desc {
+    margin: 0 auto 16px;
+    max-width: 560px;
+    color: #4a2a12;
+    font-size: clamp(18px, 2.5vw, 24px);
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  .announcement-popup__subtext {
+    margin: 0 auto 28px;
+    max-width: 520px;
+    color: rgba(74, 42, 18, 0.82);
+    font-size: clamp(15px, 2vw, 18px);
+    line-height: 1.65;
+  }
+
+  .announcement-popup__actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+.announcement-popup__btn {
+  min-width: 210px;
+  height: 52px;
+  padding: 0 24px;
+  border-radius: 0;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.announcement-popup__btn::after {
+  display: none;
+}
+
+.announcement-popup__btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #ffdcbd;
+  width: 0%;
+  height: 100%;
+  z-index: -1;
+  transition: all 0.3s linear;
+  border-radius: 0;
+}
+
+.announcement-popup__btn:hover::before {
+  width: 100%;
+  right: 0;
+}
+
+.announcement-popup__btn:hover {
+  color: #4a2a12 !important;
+}
+
+.announcement-popup__btn--primary {
+  border: 1px solid #4a2a12;
+  background: #4a2a12;
+  color: #f7efe6;
+  box-shadow: none;
+}
+
+  @media screen and (max-width: 749px) {
+    .announcement-popup {
+      padding: 12px;
+    }
+
+    .announcement-popup__dialog {
+      max-height: 94vh;
+      border-radius: 22px;
+    }
+
+    .announcement-popup__inner {
+      padding: 40px 22px 26px;
+    }
+
+    .announcement-popup__close {
+      top: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+    }
+
+    .announcement-popup__desc,
+    .announcement-popup__subtext {
+      max-width: 100%;
+    }
+
+    .announcement-popup__btn {
+      width: 100%;
+      min-width: 100%;
+      height: 50px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .announcement-popup__inner {
+      padding: 34px 16px 22px;
+    }
+
+    .announcement-popup__eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      margin-bottom: 10px;
+    }
+
+    .announcement-popup__title {
+      font-size: clamp(30px, 9vw, 40px);
+    }
+
+    .announcement-popup__desc {
+      font-size: 17px;
+      line-height: 1.55;
+    }
+
+    .announcement-popup__subtext {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .announcement-popup__btn {
+      height: 48px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const SESSION_KEY = "announcement_popup_seen";
+    const popup = document.getElementById("AnnouncementPopup");
+    const closeBtn = document.getElementById("AnnouncementPopupClose");
+    const continueBtn = document.getElementById("AnnouncementPopupContinue");
+    const backdrop = document.getElementById("AnnouncementPopupBackdrop");
+
+    if (!popup) return;
+
+    function hasSeenPopupThisSession() {
+      try {
+        return sessionStorage.getItem(SESSION_KEY) === "true";
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function markSeenThisSession() {
+      try {
+        sessionStorage.setItem(SESSION_KEY, "true");
+      } catch (e) {}
+    }
+
+    function showPopup() {
+      popup.classList.add("is-visible");
+      document.documentElement.classList.add("announcement-popup-lock");
+      document.body.classList.add("announcement-popup-lock");
+      popup.setAttribute("aria-hidden", "false");
+    }
+
+    function hidePopup() {
+      popup.classList.remove("is-visible");
+      document.documentElement.classList.remove("announcement-popup-lock");
+      document.body.classList.remove("announcement-popup-lock");
+      popup.setAttribute("aria-hidden", "true");
+    }
+
+    if (!hasSeenPopupThisSession()) {
+      setTimeout(function () {
+        showPopup();
+        markSeenThisSession();
+      }, 2500);
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function () {
+        hidePopup();
+      });
+    }
+
+    if (continueBtn) {
+      continueBtn.addEventListener("click", function () {
+        hidePopup();
+      });
+    }
+
+    if (backdrop) {
+      backdrop.addEventListener("click", function () {
+        hidePopup();
+      });
+    }
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && popup.classList.contains("is-visible")) {
+        hidePopup();
+      }
+    });
+  });
+</script>

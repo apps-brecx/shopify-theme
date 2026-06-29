@@ -1,0 +1,36 @@
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" defer></script>
+<script>
+  $('.slider-recipe-gt').slick({
+  slidesToShow: 2,
+  slidesToScroll: 1,
+  arrows: true,
+  prevArrow: $('.custom-prev'), // Link to custom prev arrow
+  nextArrow: $('.custom-next'), // Link to custom next arrow
+  responsive: [
+    {
+      breakpoint: 768,
+      settings: {
+        slidesToShow: 2
+      }
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        slidesToShow: 1
+      }
+    }
+  ]
+});
+</script>
+{% schema %}
+  {
+    "name": "Section name",
+    "settings": [],
+    "presets": [
+    {
+      "name": "slider for recipe"
+    }
+  ]
+  }
+{% endschema %}

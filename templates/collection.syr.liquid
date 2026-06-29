@@ -1,0 +1,148 @@
+{%- paginate collection.products by 24 -%}
+<div class='syrc'>
+  <header class='syrc-hero'>
+    <h1 class='syrc-title'>{{ collection.title | escape }}</h1>
+    {%- if collection.description != blank -%}<div class='syrc-sub'>{{ collection.description | strip_html | truncatewords: 30 }}</div>{%- endif -%}
+  </header>
+  <div class='syrc-wrap'>
+    <aside class='syrc-side'>
+      <div class='syrc-search'>
+        <svg class='syrc-search__i' viewBox='0 0 20 20' aria-hidden='true'><path d='M9 3a6 6 0 104.47 10.03l3.75 3.75 1.06-1.06-3.75-3.75A6 6 0 009 3zm0 1.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9z' fill='currentColor'/></svg>
+        <input type='text' id='syrcSearch' placeholder='Search products' autocomplete='off'>
+      </div>
+      {%- if collection.filters.size > 0 -%}
+        {%- for filter in collection.filters -%}
+          <details class='syrc-fgroup' open>
+            <summary class='syrc-fsum'>{{ filter.label }}<span class='syrc-chev'></span></summary>
+            {%- case filter.type -%}
+              {%- when 'price_range' -%}
+                <div class='syrc-price'>
+                  <input type='number' class='syrc-pinput' id='syrcMin' placeholder='Min' min='0' value='{{ filter.min_value.value }}' data-name='{{ filter.min_value.param_name }}'>
+                  <span class='syrc-pdash'>to</span>
+                  <input type='number' class='syrc-pinput' id='syrcMax' placeholder='Max' min='0' value='{{ filter.max_value.value }}' data-name='{{ filter.max_value.param_name }}'>
+                  <button type='button' class='syrc-pgo' onclick='syrcPrice()'>Go</button>
+                </div>
+              {%- else -%}
+                <ul class='syrc-flist'>
+                  {%- for value in filter.values -%}
+                    <li>
+                      <a class='syrc-fopt{% if value.active %} is-active{% endif %}' href='{{ value.active ? value.url_to_remove : value.url_to_add }}'>
+                        <span class='syrc-fbox'></span>
+                        <span class='syrc-flabel'>{{ value.label }}</span>
+                        <span class='syrc-fcount'>{{ value.count }}</span>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+            {%- endcase -%}
+          </details>
+        {%- endfor -%}
+      {%- endif -%}
+    </aside>
+    <div class='syrc-main'>
+      <div class='syrc-toolbar'>
+        <span class='syrc-count'>{{ collection.products_count }} Products</span>
+        <div class='syrc-sortwrap'>
+          <span class='syrc-sortlbl'>Sort</span>
+          <select id='syrcSort' class='syrc-sort'>
+            {%- for o in collection.sort_options -%}<option value='{{ o.value }}'{% if o.value == collection.sort_by %} selected{% endif %}>{{ o.name }}</option>{%- endfor -%}
+          </select>
+        </div>
+      </div>
+      {%- if collection.products.size == 0 -%}
+        <p class='syrc-empty'>No products match. <a href='{{ collection.url }}'>Clear filters</a></p>
+      {%- else -%}
+        <ul class='syrc-grid' id='syrcGrid'>
+          {%- for product in collection.products -%}
+            <li class='syrc-card' data-title='{{ product.title | downcase | escape }}'>
+              <a class='syrc-card__media' href='{{ product.url }}'>
+                <img src='{{ product.featured_image | image_url: width: 600 }}' alt='{{ product.featured_image.alt | escape }}' loading='lazy' width='600' height='600'>
+                {%- if product.compare_at_price > product.price -%}<span class='syrc-sale'>Sale</span>{%- endif -%}
+              </a>
+              {%- assign hl = product.metafields.custom.product_highlights.value -%}
+              {%- if hl -%}<div class='syrc-pills'>{%- for h in hl limit: 3 -%}<span class='syrc-pill syrc-pill--{{ forloop.index0 }}'>{{ h }}</span>{%- endfor -%}</div>{%- endif -%}
+              <h3 class='syrc-card__title'><a href='{{ product.url }}'>{{ product.title | escape }}</a></h3>
+              {%- if product.metafields.judgeme.badge != blank -%}<div class='syrc-card__rating'>{{ product.metafields.judgeme.badge }}</div>{%- endif -%}
+              <div class='syrc-card__price'>{{ product.price | money }}{%- if product.compare_at_price > product.price -%} <s class='syrc-was'>{{ product.compare_at_price | money }}</s>{%- endif -%}</div>
+              {%- if product.variants.size > 1 -%}
+                <a class='syrc-card__btn' href='{{ product.url }}'>View Options</a>
+              {%- else -%}
+                <form method='post' action='/cart/add' class='syrc-card__form'>
+                  <input type='hidden' name='id' value='{{ product.selected_or_first_available_variant.id }}'>
+                  <button type='submit' class='syrc-card__btn'{% unless product.available %} disabled{% endunless %}>{% if product.available %}Add to Cart{% else %}Sold Out{% endif %}</button>
+                </form>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+        {%- if paginate.pages > 1 -%}<nav class='syrc-pager'>{% render 'pagination', paginate: paginate %}</nav>{%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+{%- endpaginate -%}
+<script>
+function syrcPrice(){var mn=document.getElementById('syrcMin'),mx=document.getElementById('syrcMax');var u=new URL(window.location.href);if(mn){if(mn.value)u.searchParams.set(mn.dataset.name,mn.value);else u.searchParams.delete(mn.dataset.name);}if(mx){if(mx.value)u.searchParams.set(mx.dataset.name,mx.value);else u.searchParams.delete(mx.dataset.name);}window.location.href=u.toString();}
+document.addEventListener('DOMContentLoaded',function(){var s=document.getElementById('syrcSort');if(s)s.addEventListener('change',function(){var u=new URL(window.location.href);u.searchParams.set('sort_by',this.value);window.location.href=u.toString();});var sb=document.getElementById('syrcSearch');if(sb)sb.addEventListener('input',function(){var q=this.value.trim().toLowerCase();document.querySelectorAll('#syrcGrid .syrc-card').forEach(function(c){c.style.display=(!q||(c.dataset.title||'').indexOf(q)>-1)?'':'none';});});});
+</script>
+{% style %}
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&display=swap');
+.syrc{ --ink:#1a1a1a; --cream:#FFF6EE; --card:#FFFBF4; --coral:#e0674a; background:var(--cream); padding:0 0 64px; font-family:'Archivo',sans-serif; }
+.syrc *{ box-sizing:border-box; }
+.syrc-hero{ text-align:center; padding:34px 20px 16px; }
+.syrc h1.syrc-title{ font-family:'Archivo Black',sans-serif !important; text-transform:uppercase !important; font-size:52px !important; line-height:.96 !important; letter-spacing:-.01em !important; color:var(--ink) !important; margin:0 !important; }
+.syrc-sub{ color:#6b5847; font-size:15px; margin:10px auto 0; max-width:640px; }
+.syrc-wrap{ display:grid; grid-template-columns:250px 1fr; gap:34px; max-width:1320px; margin:0 auto; padding:8px 24px 0; }
+.syrc-search{ position:relative; margin-bottom:18px; }
+.syrc-search__i{ position:absolute; left:15px; top:50%; transform:translateY(-50%); width:18px; height:18px; color:#9b8a78; }
+.syrc-search input{ width:100%; height:48px; border:2px solid var(--ink); border-radius:999px; background:#fff; padding:0 16px 0 42px; font-size:14px; color:var(--ink); box-shadow:3px 3px 0 0 var(--ink); }
+.syrc-search input::placeholder{ color:#9b8a78; }
+.syrc-fgroup{ border-top:1px solid rgba(26,26,26,.14); padding:15px 0; }
+.syrc-fsum{ list-style:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-family:'Archivo Black',sans-serif; text-transform:uppercase; font-size:12px; letter-spacing:.05em; color:var(--ink); }
+.syrc-fsum::-webkit-details-marker{ display:none; }
+.syrc-chev{ width:7px; height:7px; border-right:2px solid var(--ink); border-bottom:2px solid var(--ink); transform:rotate(45deg); transition:transform .2s; }
+.syrc-fgroup[open] .syrc-chev{ transform:rotate(-135deg); }
+.syrc-flist{ list-style:none; margin:12px 0 0; padding:0; display:flex; flex-direction:column; gap:9px; max-height:300px; overflow-y:auto; }
+.syrc-fopt{ display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink); font-size:14px; }
+.syrc-fbox{ width:18px; height:18px; border:2px solid var(--ink); border-radius:5px; flex:0 0 auto; position:relative; background:#fff; }
+.syrc-fopt.is-active .syrc-fbox{ background:var(--ink); }
+.syrc-fopt.is-active .syrc-fbox::after{ content:''; position:absolute; left:5px; top:1px; width:5px; height:10px; border-right:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(45deg); }
+.syrc-flabel{ flex:1; }
+.syrc-fcount{ color:#9b8a78; font-size:12px; }
+.syrc-price{ display:flex; align-items:center; gap:8px; margin-top:12px; }
+.syrc-pinput{ width:70px; height:40px; border:2px solid var(--ink); border-radius:10px; background:#fff; padding:0 8px; font-size:14px; }
+.syrc-pdash{ font-size:12px; color:#9b8a78; }
+.syrc-pgo{ height:40px; padding:0 14px; border:0; border-radius:999px; background:var(--ink); color:#fff; font-family:'Archivo Black',sans-serif; text-transform:uppercase; font-size:11px; cursor:pointer; }
+.syrc-toolbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.syrc-count{ font-family:'Archivo Black',sans-serif; text-transform:uppercase; font-size:12px; letter-spacing:.05em; color:var(--ink); }
+.syrc-sortwrap{ display:flex; align-items:center; gap:10px; border:2px solid var(--ink); border-radius:999px; padding:8px 16px; background:#fff; box-shadow:3px 3px 0 0 var(--ink); }
+.syrc-sortlbl{ font-family:'Archivo Black',sans-serif; text-transform:uppercase; font-size:11px; letter-spacing:.06em; }
+.syrc-sort{ border:0; background:transparent; font-size:14px; color:var(--ink); cursor:pointer; outline:none; }
+.syrc-grid{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3,1fr); gap:36px 26px; }
+.syrc-card{ display:flex; flex-direction:column; }
+.syrc-card__media{ position:relative; display:block; background:var(--card); border:2px solid var(--ink); border-radius:20px; box-shadow:4px 4px 0 0 var(--ink); overflow:hidden; aspect-ratio:1/1; transition:transform .18s,box-shadow .18s; }
+.syrc-card__media img{ width:100%; height:100%; object-fit:contain; padding:14px; transition:transform .5s ease; }
+.syrc-card:hover .syrc-card__media{ transform:translate(-3px,-3px); box-shadow:7px 7px 0 0 var(--ink); }
+.syrc-card:hover .syrc-card__media img{ transform:scale(1.05); }
+.syrc-sale{ position:absolute; top:12px; left:12px; background:var(--coral); color:#fff; font-family:'Archivo Black',sans-serif; text-transform:uppercase; font-size:10px; padding:5px 10px; border-radius:999px; }
+.syrc-pills{ display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
+.syrc-pill{ font-family:'Archivo Black',sans-serif; text-transform:uppercase; font-size:9.5px; letter-spacing:.02em; border:1px solid var(--ink); border-radius:999px; padding:5px 9px; color:var(--ink); }
+.syrc-pill--0{ background:#FCE2A0; }
+.syrc-pill--1{ background:#C7E3CE; }
+.syrc-pill--2{ background:#BBD7E8; }
+.syrc-card__title{ font-family:'Archivo Black',sans-serif; text-transform:uppercase; font-size:15px; line-height:1.15; letter-spacing:.004em; color:var(--ink); margin:12px 0 8px; }
+.syrc-card__title a{ color:inherit; text-decoration:none; }
+.syrc-card__title a:hover{ color:var(--coral); }
+.syrc-card__rating{ margin-bottom:8px; }
+.syrc-card__rating .jdgm-prev-badge{ display:inline-flex; align-items:center; gap:6px; border:1px solid var(--ink); border-radius:999px; padding:5px 12px; background:#fff; }
+.syrc-card__rating .jdgm-prev-badge__text{ color:var(--ink); font-weight:600; font-size:12px; }
+.syrc-card__price{ font-family:'Archivo Black',sans-serif; font-size:18px; color:var(--ink); margin-bottom:12px; }
+.syrc-was{ color:#9b8a78; font-size:13px; margin-left:6px; }
+.syrc-card__form{ margin-top:auto; }
+.syrc-card__btn{ display:block; width:100%; text-align:center; min-height:48px; line-height:48px; border:0; border-radius:999px; background:var(--ink); color:#fff; font-family:'Archivo Black',sans-serif; text-transform:uppercase; letter-spacing:.06em; font-size:13px; cursor:pointer; text-decoration:none; transition:background-color .2s,transform .15s; }
+.syrc-card__btn:hover{ background:var(--coral); transform:translateY(-1px); }
+.syrc-empty{ text-align:center; padding:60px 0; font-size:16px; color:var(--ink); }
+.syrc-pager{ margin-top:42px; text-align:center; }
+.syrc-pager .pagination__list{ display:inline-flex; gap:8px; list-style:none; padding:0; }
+@media(max-width:900px){ .syrc-wrap{ grid-template-columns:1fr; } .syrc-grid{ grid-template-columns:repeat(2,1fr); gap:22px 14px; } .syrc h1.syrc-title{ font-size:34px !important; } }
+{% endstyle %}

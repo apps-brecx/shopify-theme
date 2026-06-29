@@ -1,0 +1,49 @@
+{%- comment -%}
+  Compare-at sale display — inject via {% render 'pd-sale-display', product: product %} or use product directly.
+  Outputs CSS + utility classes for the rest of the page to use.
+{%- endcomment -%}
+<style id="pd-sale-display-css">
+  .pd-price-original{
+    text-decoration: line-through !important;
+    text-decoration-thickness: 2px !important;
+    color: rgba(57,34,15,.45) !important;
+    font-size: 0.7em !important;
+    font-weight: 600 !important;
+    margin-left: 6px !important;
+    letter-spacing: -.01em;
+  }
+  .pd-sale-badge{
+    display: inline-flex;
+    align-items: center;
+    background: #c58548;
+    color: #FFFBF4;
+    font-family: 'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    font-weight: 400;
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-left: 6px;
+    text-transform: uppercase;
+    box-shadow: 1.5px 1.5px 0 #39220f;
+    border: 1.5px solid #39220f;
+    line-height: 1;
+    vertical-align: middle;
+  }
+  .pd-stickybar .pd-price-original{
+    font-size: 14px !important;
+  }
+  .pd-stickybar .pd-sale-badge{
+    display: none;
+  }
+  /* Collection card sale styling — in case theme renders compare-at on cards */
+  .scol-card .pd-price-original,
+  .product-card .pd-price-original{
+    font-size: .85em !important;
+  }
+  @media (max-width: 760px){
+    .pd-sale-badge{ font-size: 9.5px; padding: 3px 8px; }
+    .pd-price-original{ font-size: 0.65em !important; }
+  }
+</style>
+{% render 'pd-qty-wire' %}

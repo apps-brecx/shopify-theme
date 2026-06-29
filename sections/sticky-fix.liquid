@@ -1,0 +1,107 @@
+{%- comment -%} Syruvia — small theme fixes: (1) hide product sticky add-to-cart bar while a drawer/menu is open; (2) tighten breadcrumb→hero gap; (3) defer far-below-fold product sections on mobile to cut load jank; (4) hide collection toolbar while mobile nav drawer is open; (5) mobile-only fly-in reveal for collection grid cards (left/right on scroll). Reversible: toggle off or remove from footer-group. {%- endcomment -%}
+{%- if section.settings.enabled -%}
+<style>
+  /* Hide the category tag (Coffee / Fruit / etc.) on collection product cards — does not affect the filter pills */
+  .scol .pcard .flavor-tag{ display:none !important; }
+  /* Login/Register: "OR" divider above the social-login button, to match the design */
+  .sauth .social-login-container{ position:relative; margin-top:26px !important; border-top:1.5px solid rgba(57,34,15,.16); padding-top:24px; }
+  .sauth .social-login-container::before{ content:"OR"; position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:#FFFFFF; padding:0 12px; font-family:'Archivo',sans-serif; font-size:11px; font-weight:700; letter-spacing:.1em; color:#8a7a68; }
+  /* Customer/account pages: header never sticky at any width (prevents overlap of page content) */
+  body[class*="customers-"] .shopify-section-group-header-group,
+  body[class*="customers-"] .shopify-section-group-header-group .shopify-section,
+  body[class*="customers-"] .shopify-section-header-sticky,
+  body[class*="customers-"] sticky-header,
+  body[class*="customers-"] .header-wrapper{ position:static !important; top:auto !important; transform:none !important; }
+  /* The header override above removes the positioning context the absolute .menu-drawer relied on (top:100%), parking it off-screen. Anchor the mobile nav drawer to the viewport instead so it overlays the screen and slides in normally. */
+  body[class*="customers-"] .menu-drawer{ position:fixed !important; top:0 !important; left:0 !important; height:100vh !important; }
+  body[class*="customers-"] .menu-drawer__inner-container{ position:relative !important; top:0 !important; height:100% !important; }
+  html body.overflow-hidden-tablet .pd .pd-stickybar,
+  html body.overflow-hidden-mobile .pd .pd-stickybar,
+  html body.header-custom-bg .pd .pd-stickybar,
+  html body.overflow-hidden-tablet .pd-stickybar,
+  html body.overflow-hidden-mobile .pd-stickybar,
+  html body.header-custom-bg .pd-stickybar,
+  html body.overflow-hidden-tablet .sticky-add-to-cart,
+  html body.overflow-hidden-mobile .sticky-add-to-cart,
+  html body.header-custom-bg .sticky-add-to-cart{ display:none !important; visibility:hidden !important; }
+
+  /* Hide the collection sticky toolbar (search / sort / filter pills) while the mobile nav drawer is open. The toolbar is sticky at z-index 5, above the menu drawer (z-index 3), so without this it bleeds through over the open menu. */
+  html body.overflow-hidden-tablet .scol .toolbar,
+  html body.overflow-hidden-mobile .scol .toolbar{ visibility:hidden !important; pointer-events:none !important; }
+
+  /* (5) Mobile fly-in for collection grid cards (left / right on scroll). */
+  @media (max-width:760px){
+    /* Kill the section's load-time card entrance on mobile: it pre-animated below-fold cards off-screen (so you never saw them move), overrode this fly-in on products, AND re-fired on every load-more / filter re-append, which looked like a full-grid "refresh" flash. */
+    .scol .pcard{ animation:none !important; }
+    /* Only cards BELOW the fold at load get hidden + animated; on-screen products stay visible. Fail-safe: if JS doesn't run, no card is ever hidden. */
+    .scol .pgrid > .sr-card{ opacity:0; transform:translateX(var(--sr-x,-52px)) translateY(18px); transition:opacity .60s cubic-bezier(.22,.68,.16,1), transform .64s cubic-bezier(.22,.68,.16,1); will-change:opacity,transform; }
+    .scol .pgrid > .sr-card.sr-in{ opacity:1; transform:translateX(0) translateY(0); }
+    /* Clip the horizontal fly-in offset so off-position cards can't widen the page (was causing right-side white space + an over-wide cart drawer via the expanded layout viewport). Does not affect the sticky toolbar (sibling, not inside grid-wrap). */
+    .scol .grid-wrap, .scol .pgrid{ overflow-x:clip; }
+    /* Fix the collection search bar: keep the magnifier pinned left and pad the text past it (was overlapping the placeholder on mobile). */
+    html body .scol .scol-search{ position:relative; }
+    html body .scol .scol-search > svg{ position:absolute; left:14px; top:50%; transform:translateY(-50%); pointer-events:none; z-index:1; }
+    html body .scol .scol-search input{ padding-left:42px !important; }
+    /* Let the breadcrumb wrap cleanly instead of overflowing/looking cramped on mobile. */
+    html body .scol .crumbs{ flex-wrap:wrap; white-space:normal; font-size:11px; column-gap:6px; row-gap:2px; line-height:1.35; }
+    /* Clear the sticky header on mobile so account/auth top content (greeting, sign-in tabs) isn't cut/cramped */
+    html{ scroll-padding-top:120px; }
+    .sauth .auth-formwrap{ padding-top:30px !important; }
+    .sauth .auth-aside{ padding-top:32px !important; }
+    .sdash .dash-wrap{ padding-top:28px !important; }
+    /* On customer/account pages, let the header scroll away (non-sticky) on mobile so it can't overlap the page content */
+    body[class*="customers-"] .shopify-section-group-header-group,
+    body[class*="customers-"] .shopify-section-group-header-group .shopify-section{ position:static !important; top:auto !important; }
+  }
+  @media (max-width:760px) and (prefers-reduced-motion:reduce){
+    .scol .pgrid > .sr-card{ opacity:1 !important; transform:none !important; transition:none !important; }
+  }
+
+  /* Tighten the empty space between the breadcrumb and the product hero image */
+  html body.product .pd .pd-hero{ padding-top:24px !important; }
+  @media (max-width:760px){ html body.product .pd .pd-hero{ padding-top:14px !important; } }
+
+  /* Reduce mobile load jank: skip rendering far-below-the-fold sections (incl. the video reels) until scrolled near. contain-intrinsic-size keeps the scrollbar stable; 'auto' remembers real heights after first render. */
+  @media (max-width:1024px){
+    html body.product .pd .pd-reels{ content-visibility:auto; contain-intrinsic-size:auto 900px; }
+    html body.product .pd .pd-recipes-v2{ content-visibility:auto; contain-intrinsic-size:auto 1500px; }
+    html body.product .pd .pd-recs{ content-visibility:auto; contain-intrinsic-size:auto 800px; }
+    html body.product .pd .pd-faq{ content-visibility:auto; contain-intrinsic-size:auto 1100px; }
+    html body.product .pd .pd-vip-section{ content-visibility:auto; contain-intrinsic-size:auto 650px; }
+  }
+</style>
+<script>
+(function(){
+  try{
+    if(!window.matchMedia || !window.matchMedia('(max-width:760px)').matches) return;
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if(!('IntersectionObserver' in window)) return;
+    function start(){
+      var scol=document.querySelector('.scol'); if(!scol) return;
+      var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('sr-in'); io.unobserve(e.target); } }); }, { rootMargin:'0px 0px -6% 0px', threshold:0.06 });
+      function register(card, idx){
+        if(card.__sr) return; card.__sr=true;
+        var r=card.getBoundingClientRect();
+        if(r.top <= window.innerHeight*0.86) return;
+        if(idx%2===1){ card.style.setProperty('--sr-x','52px'); }
+        card.classList.add('sr-card'); io.observe(card);
+      }
+      function scan(){ scol.querySelectorAll('.pgrid').forEach(function(g){ Array.prototype.slice.call(g.children).forEach(function(c,i){ register(c,i); }); }); }
+      scan();
+      var mo=new MutationObserver(function(){ scan(); }); mo.observe(scol, { childList:true, subtree:true });
+      var t=0, iv=setInterval(function(){ t++; scol.querySelectorAll('.sr-card:not(.sr-in)').forEach(function(c){ var r=c.getBoundingClientRect(); if(r.top<window.innerHeight*0.96 && r.bottom>0){ c.classList.add('sr-in'); } }); if(t>12) clearInterval(iv); }, 700);
+    }
+    if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', start); } else { start(); }
+  }catch(e){}
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Sticky Bar Fix",
+  "settings": [
+    { "type": "checkbox", "id": "enabled", "label": "Enable theme fixes (sticky bar + hero gap + perf)", "default": true }
+  ]
+}
+{% endschema %}

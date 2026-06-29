@@ -1,0 +1,297 @@
+{%- comment -%} Our Story / About — Syruvia brand design + scroll effects. {%- endcomment -%}
+{%- assign s = section.settings -%}
+<style id="syr-story-{{ section.id }}-css">
+  #syr-story-{{ section.id }}{
+    --ink:#39220f;--paper:#FFFBF4;--butter:#FCE2A0;--copper:#c58548;--blue:{{ s.cta_bg | default: '#2f7bb0' }};--blue2:{{ s.cta_bg2 | default: '#1f5a85' }};
+    --peach:#ffd4b8;--mint:#c5e4d4;--sky:#b8dceb;
+    --eye-scale:.62;
+    background:var(--paper);color:var(--ink);
+    font-family:'Josefin Sans','Josefin',sans-serif;position:relative;overflow:hidden;
+  }
+  #syr-story-{{ section.id }} *{box-sizing:border-box;}
+  #syr-story-{{ section.id }} .syr-st-wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:2;}
+  #syr-story-{{ section.id }} .syr-st-eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--butter);color:var(--ink);border:2px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:8px 18px;line-height:1;}
+  #syr-story-{{ section.id }} .syr-st-h2{font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:clamp(28px,4vw,46px);line-height:1.04;letter-spacing:-.01em;text-transform:uppercase;margin:18px 0 0;}
+  #syr-story-{{ section.id }} .syr-st-h2 em,#syr-story-{{ section.id }} .syr-st-hero h1 em{font-family:'Josefin Sans',sans-serif;font-style:italic;font-weight:300;color:var(--copper);text-transform:none;letter-spacing:0;}
+  #syr-story-{{ section.id }} .syr-st-lede{font-size:16px;line-height:1.75;color:#5a4632;font-weight:500;}
+  #syr-story-{{ section.id }} .syr-rev{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s cubic-bezier(.16,.84,.34,1);}
+  #syr-story-{{ section.id }} .syr-rev.in{opacity:1;transform:none;}
+  #syr-story-{{ section.id }} .syr-st-hero{text-align:center;padding:88px 0 64px;position:relative;}
+  #syr-story-{{ section.id }} .syr-st-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(circle, rgba(57,34,15,.05) 1.4px, transparent 1.6px);background-size:26px 26px;opacity:.5;pointer-events:none;z-index:0;}
+  #syr-story-{{ section.id }} .syr-st-hero .syr-st-eyebrow{transform-origin:center;transform:scale(var(--eye-scale));transition:transform .25s cubic-bezier(.16,.84,.34,1);font-size:12px;}
+  #syr-story-{{ section.id }} .syr-st-hero h1{font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:clamp(52px,10vw,118px);line-height:.9;letter-spacing:-.03em;text-transform:uppercase;margin:22px 0 0;}
+  #syr-story-{{ section.id }} .syr-st-hero .syr-st-sub{font-size:clamp(16px,2vw,20px);color:#5a4632;font-weight:500;margin:18px auto 0;max-width:30ch;letter-spacing:.01em;}
+  #syr-story-{{ section.id }} .syr-st-founder{padding:40px 0 84px;text-align:center;position:relative;}
+  #syr-story-{{ section.id }} .syr-st-bignum{font-family:'Archivo Black','Arial Black',sans-serif;font-size:clamp(120px,26vw,300px);line-height:.8;color:var(--butter);opacity:.55;letter-spacing:-.04em;margin:0 0 -.32em;user-select:none;}
+  #syr-story-{{ section.id }} .syr-st-founder .syr-st-eyebrow{position:relative;z-index:2;}
+  #syr-story-{{ section.id }} .syr-st-founder .syr-st-h2{position:relative;z-index:2;max-width:18ch;margin-left:auto;margin-right:auto;}
+  #syr-story-{{ section.id }} .syr-st-founder .syr-st-lede{position:relative;z-index:2;max-width:62ch;margin:22px auto 0;}
+  #syr-story-{{ section.id }} .syr-st-founder .syr-st-lede + .syr-st-lede{margin-top:16px;}
+  #syr-story-{{ section.id }} .syr-st-cats{padding:0 0 84px;text-align:center;}
+  #syr-story-{{ section.id }} .syr-st-cats .syr-st-h2{max-width:20ch;margin:14px auto 0;}
+  #syr-story-{{ section.id }} .syr-st-catgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px;}
+  #syr-story-{{ section.id }} .syr-st-cat{display:flex;flex-direction:column;align-items:center;gap:13px;background:var(--cardbg,#fff);border:2.5px solid var(--ink);border-radius:22px;box-shadow:5px 5px 0 var(--ink);padding:28px 18px;text-decoration:none;color:var(--ink);transition:transform .2s ease,box-shadow .2s ease;}
+  #syr-story-{{ section.id }} .syr-st-cat:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--ink);}
+  #syr-story-{{ section.id }} .syr-st-cat .cic{width:56px;height:56px;border-radius:50%;background:var(--paper);border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 var(--ink);}
+  #syr-story-{{ section.id }} .syr-st-cat .cic svg{width:28px;height:28px;color:var(--ink);}
+  #syr-story-{{ section.id }} .syr-st-cat .cnm{font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:13.5px;text-transform:uppercase;letter-spacing:-.005em;line-height:1.15;}
+  #syr-story-{{ section.id }} .syr-st-marquee{background:var(--ink);color:var(--paper);border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);overflow:hidden;white-space:nowrap;padding:16px 0;}
+  #syr-story-{{ section.id }} .syr-st-track{display:inline-block;white-space:nowrap;animation:syrStMar 26s linear infinite;}
+  #syr-story-{{ section.id }} .syr-st-track span{font-family:'Archivo Black','Arial Black',sans-serif;font-size:15px;letter-spacing:.14em;text-transform:uppercase;margin:0 14px;}
+  #syr-story-{{ section.id }} .syr-st-track span::after{content:'•';color:var(--butter);margin-left:28px;}
+  @keyframes syrStMar{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion: reduce){#syr-story-{{ section.id }} .syr-st-track{animation:none;}}
+  #syr-story-{{ section.id }} .syr-st-make{padding:84px 0;text-align:center;}
+  #syr-story-{{ section.id }} .syr-st-make .syr-st-h2{max-width:16ch;margin:14px auto 0;}
+  #syr-story-{{ section.id }} .syr-st-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;text-align:left;}
+  #syr-story-{{ section.id }} .syr-st-card{background:var(--cardbg,#ffd4b8);border:2.5px solid var(--ink);border-radius:24px;box-shadow:6px 6px 0 var(--ink);padding:32px 28px 30px;transition:transform .25s ease,box-shadow .25s ease;}
+  #syr-story-{{ section.id }} .syr-st-card:hover{transform:translate(-2px,-2px);box-shadow:9px 9px 0 var(--ink);}
+  #syr-story-{{ section.id }} .syr-st-card .ic{width:54px;height:54px;border-radius:50%;background:var(--paper);border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 var(--ink);margin-bottom:20px;}
+  #syr-story-{{ section.id }} .syr-st-card .ic svg{width:28px;height:28px;color:var(--ink);}
+  #syr-story-{{ section.id }} .syr-st-card h3{font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:18px;text-transform:uppercase;letter-spacing:-.005em;margin:0 0 10px;line-height:1.1;}
+  #syr-story-{{ section.id }} .syr-st-card p{font-size:14.5px;line-height:1.6;color:#39220f;font-weight:500;margin:0;}
+  #syr-story-{{ section.id }} .syr-st-stats{padding:0 0 84px;}
+  #syr-story-{{ section.id }} .syr-st-statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  #syr-story-{{ section.id }} .syr-st-stat{background:var(--cardbg,#b8dceb);border:2.5px solid var(--ink);border-radius:22px;box-shadow:5px 5px 0 var(--ink);padding:30px 18px;text-align:center;}
+  #syr-story-{{ section.id }} .syr-st-stat .num{font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:clamp(32px,4vw,46px);line-height:1;letter-spacing:-.02em;}
+  #syr-story-{{ section.id }} .syr-st-stat .lbl{font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;margin-top:10px;color:#5a4632;}
+  #syr-story-{{ section.id }} .syr-st-legacy{padding:0 0 84px;}
+  #syr-story-{{ section.id }} .syr-st-legacy-card{background:linear-gradient(140deg,var(--blue) 0%,var(--blue2) 100%);color:var(--paper);border:3px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--ink);padding:54px clamp(28px,5vw,64px);text-align:center;position:relative;overflow:hidden;}
+  #syr-story-{{ section.id }} .syr-st-legacy-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle, rgba(255,251,244,.07) 1.4px, transparent 1.6px);background-size:26px 26px;pointer-events:none;}
+  #syr-story-{{ section.id }} .syr-st-legacy-card .syr-st-eyebrow{background:var(--butter);}
+  #syr-story-{{ section.id }} .syr-st-legacy-card .syr-st-h2{color:var(--paper);max-width:20ch;margin:16px auto 0;position:relative;}
+  #syr-story-{{ section.id }} .syr-st-legacy-card .syr-st-h2 em{color:var(--butter);}
+  #syr-story-{{ section.id }} .syr-st-legacy-card p{color:var(--paper);opacity:.94;font-size:16px;line-height:1.75;font-weight:500;max-width:64ch;margin:20px auto 0;position:relative;}
+  #syr-story-{{ section.id }} .syr-st-cta{padding:0 0 96px;text-align:center;}
+  #syr-story-{{ section.id }} .syr-st-cta-card{background:var(--ink);color:var(--paper);border:3px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--copper);padding:60px clamp(28px,5vw,64px);}
+  #syr-story-{{ section.id }} .syr-st-cta-card .syr-st-h2{color:var(--paper);margin:0 auto;max-width:18ch;}
+  #syr-story-{{ section.id }} .syr-st-cta-card .syr-st-h2 em{color:var(--butter);}
+  #syr-story-{{ section.id }} .syr-st-cta-card p{color:var(--paper);opacity:.85;font-size:15px;margin:16px auto 0;max-width:46ch;line-height:1.5;}
+  #syr-story-{{ section.id }} .syr-st-btn{display:inline-flex;align-items:center;gap:10px;margin-top:28px;background:var(--butter);color:var(--ink);border:2.5px solid var(--ink);border-radius:999px;box-shadow:5px 5px 0 var(--copper);padding:18px 30px;font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:13.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease;}
+  #syr-story-{{ section.id }} .syr-st-btn:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--copper);}
+  #syr-story-{{ section.id }} .syr-st-btn .ar{transition:transform .2s ease;}
+  #syr-story-{{ section.id }} .syr-st-btn:hover .ar{transform:translateX(5px);}
+  @media (max-width:860px){
+    #syr-story-{{ section.id }} .syr-st-cards{grid-template-columns:1fr;gap:18px;}
+    #syr-story-{{ section.id }} .syr-st-statgrid{grid-template-columns:repeat(2,1fr);gap:14px;}
+    #syr-story-{{ section.id }} .syr-st-catgrid{grid-template-columns:repeat(2,1fr);gap:12px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    #syr-story-{{ section.id }} .syr-rev{opacity:1;transform:none;}
+    #syr-story-{{ section.id }} .syr-st-hero .syr-st-eyebrow{transform:none;}
+  }
+</style>
+
+<section id="syr-story-{{ section.id }}">
+
+  <div class="syr-st-hero">
+    <div class="syr-st-wrap">
+      <span class="syr-st-eyebrow">{{ s.hero_eyebrow | default: 'Est. 1974 · Upstate New York' }}</span>
+      <h1>{{ s.hero_title | default: 'Our <em>story</em>.' }}</h1>
+      <p class="syr-st-sub">{{ s.hero_sub | default: 'From our farm to flavorful moments.' }}</p>
+    </div>
+  </div>
+
+  <div class="syr-st-founder">
+    <div class="syr-st-wrap">
+      <div class="syr-st-bignum syr-rev" aria-hidden="true">{{ s.founder_bignum | default: '1974' }}</div>
+      <span class="syr-st-eyebrow syr-rev">{{ s.founder_eyebrow | default: 'The beginning' }}</span>
+      <h2 class="syr-st-h2 syr-rev">{{ s.founder_title | default: 'It started in a <em>farmhouse kitchen</em>.' }}</h2>
+      <p class="syr-st-lede syr-rev">{{ s.founder_p1 | default: 'In a picturesque town in upstate New York, the Anderson family tended their farm.' }}</p>
+      <p class="syr-st-lede syr-rev">{{ s.founder_p2 | default: 'What began in their kitchen has grown into a celebrated line of syrups.' }}</p>
+    </div>
+  </div>
+
+  {%- if s.show_categories != false -%}
+  <div class="syr-st-cats">
+    <div class="syr-st-wrap">
+      <span class="syr-st-eyebrow syr-rev">{{ s.cats_eyebrow | default: 'What we make' }}</span>
+      <h2 class="syr-st-h2 syr-rev">{{ s.cats_title | default: 'A flavor for <em>every craving</em>.' }}</h2>
+      <div class="syr-st-catgrid">
+        <a class="syr-st-cat syr-rev" href="/collections/coffee" style="--cardbg:#ffd4b8;">
+          <span class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8z"/><path d="M17 9h2.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 2c-.6 1 .6 2 0 3M12 2c-.6 1 .6 2 0 3"/></svg></span>
+          <span class="cnm">Coffee Syrups</span>
+        </a>
+        <a class="syr-st-cat syr-rev" href="/collections/sugar-free" style="--cardbg:#c5e4d4;">
+          <span class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6 L18.4 18.4"/></svg></span>
+          <span class="cnm">Sugar-Free Syrups</span>
+        </a>
+        <a class="syr-st-cat syr-rev" href="/collections/fruit" style="--cardbg:#fce2a0;">
+          <span class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7c-4 0-7 3-7 7a5 5 0 0 0 10 0c3 0 5-2 5-5 0-3-3-4-5-4-1.5 0-3 .6-3 .6z"/><path d="M12 7c0-2 1-4 4-5"/></svg></span>
+          <span class="cnm">Fruity Syrups</span>
+        </a>
+        <a class="syr-st-cat syr-rev" href="/collections/shaved-ice-syrups" style="--cardbg:#b8dceb;">
+          <span class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12l-2 11H8L6 9z"/><path d="M5 9c0-3 3-5 7-5s7 2 7 5"/><path d="M12 13v4M10 15h4"/></svg></span>
+          <span class="cnm">Shaved Ice Syrups</span>
+        </a>
+        <a class="syr-st-cat syr-rev" href="/collections/bursting-balls" style="--cardbg:#ffd4b8;">
+          <span class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="9" r="2.4"/><circle cx="15.5" cy="7.5" r="2"/><circle cx="16" cy="14" r="2.6"/><circle cx="9" cy="16" r="2"/></svg></span>
+          <span class="cnm">Popping Boba</span>
+        </a>
+        <a class="syr-st-cat syr-rev" href="/collections/shakable-toppings-for-coffee-and-fruit-salad" style="--cardbg:#c5e4d4;">
+          <span class="cic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8h8l-1 12H9L8 8z"/><path d="M9 8V5a3 3 0 0 1 6 0v3"/><path d="M11 12h.01M13 14h.01M11.5 16h.01"/></svg></span>
+          <span class="cnm">Shakeable Toppings</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  <div class="syr-st-marquee" aria-hidden="true">
+    <div class="syr-st-track">
+      {%- assign mwords = s.marquee_words | default: 'Real flavor,Zero compromise,250+ flavors,Sugar-free options,Made in the USA,Kosher & gluten-free' | split: ',' -%}
+      {%- for i in (1..2) -%}{%- for w in mwords -%}<span>{{ w | strip }}</span>{%- endfor -%}{%- endfor -%}
+    </div>
+  </div>
+
+  <div class="syr-st-make">
+    <div class="syr-st-wrap">
+      <span class="syr-st-eyebrow syr-rev">{{ s.make_eyebrow | default: 'How we make it' }}</span>
+      <h2 class="syr-st-h2 syr-rev">{{ s.make_title | default: 'Crafted the <em>slow way</em>.' }}</h2>
+      <div class="syr-st-cards">
+        <div class="syr-st-card syr-rev" style="--cardbg:#ffd4b8;">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21 C 5 18, 3 11, 7 6 C 10 3, 14 3, 17 6 C 21 11, 19 18, 12 21 Z"/><path d="M9 12 a3 3 0 0 0 6 0"/></svg></div>
+          <h3>{{ s.card1_title | default: 'Real, clean flavor' }}</h3>
+          <p>{{ s.card1_body | default: 'No high-fructose corn syrup, no artificial dyes — just real taste in every pour.' }}</p>
+        </div>
+        <div class="syr-st-card syr-rev" style="--cardbg:#fce2a0;">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 h6 M10 3 v6 l-5 8 a2 2 0 0 0 2 3 h10 a2 2 0 0 0 2 -3 l-5 -8 V3"/><path d="M7.5 14 h9"/></svg></div>
+          <h3>{{ s.card2_title | default: 'A flavor for everyone' }}</h3>
+          <p>{{ s.card2_body | default: '250+ flavors and counting, including 68 sugar-free options with zero sugar and zero calories.' }}</p>
+        </div>
+        <div class="syr-st-card syr-rev" style="--cardbg:#c5e4d4;">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg></div>
+          <h3>{{ s.card3_title | default: 'Café quality, fair prices' }}</h3>
+          <p>{{ s.card3_body | default: 'Premium syrups without the premium markup. VIP members pay just $7.99 a bottle.' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="syr-st-stats">
+    <div class="syr-st-wrap">
+      <div class="syr-st-statgrid">
+        <div class="syr-st-stat syr-rev" style="--cardbg:#b8dceb;"><div class="num" data-count="{{ s.stat1_num | default: '250+' }}">{{ s.stat1_num | default: '250+' }}</div><div class="lbl">{{ s.stat1_lbl | default: 'Flavors' }}</div></div>
+        <div class="syr-st-stat syr-rev" style="--cardbg:#ffd4b8;"><div class="num" data-count="{{ s.stat2_num | default: '68' }}">{{ s.stat2_num | default: '68' }}</div><div class="lbl">{{ s.stat2_lbl | default: 'Sugar-free' }}</div></div>
+        <div class="syr-st-stat syr-rev" style="--cardbg:#fce2a0;"><div class="num" data-count="{{ s.stat3_num | default: '50+' }}">{{ s.stat3_num | default: '50+' }}</div><div class="lbl">{{ s.stat3_lbl | default: 'Servings a bottle' }}</div></div>
+        <div class="syr-st-stat syr-rev" style="--cardbg:#c5e4d4;"><div class="num">{{ s.stat4_num | default: '$7.99' }}</div><div class="lbl">{{ s.stat4_lbl | default: 'VIP price' }}</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="syr-st-legacy">
+    <div class="syr-st-wrap">
+      <div class="syr-st-legacy-card syr-rev">
+        <span class="syr-st-eyebrow">{{ s.legacy_eyebrow | default: 'What we stand for' }}</span>
+        <h2 class="syr-st-h2">{{ s.legacy_title | default: 'Great flavor, <em>made right</em>.' }}</h2>
+        <p>{{ s.legacy_p1 | default: 'Everything starts with one question: does it taste amazing? Made in the USA, kosher and gluten-free, with no junk.' }}</p>
+        <p>{{ s.legacy_p2 | default: 'From your morning coffee to a weekend cocktail, Syruvia turns an ordinary drink into something you look forward to.' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="syr-st-cta">
+    <div class="syr-st-wrap">
+      <div class="syr-st-cta-card syr-rev">
+        <h2 class="syr-st-h2">{{ s.cta_title | default: 'Ready to find <em>your flavor</em>?' }}</h2>
+        <p>{{ s.cta_sub | default: 'Explore 250+ syrups — from everyday classics to sugar-free favorites.' }}</p>
+        <a class="syr-st-btn" href="{{ s.cta_link | default: '/collections/all' }}">{{ s.cta_text | default: 'Shop all syrups' }} <span class="ar">→</span></a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('syr-story-{{ section.id }}');
+  if(!root) return;
+  var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function revealAll(){ root.querySelectorAll('.syr-rev').forEach(function(el){ el.classList.add('in'); }); }
+  function animate(el){
+    if(el.getAttribute('data-done')) return;
+    var raw=el.getAttribute('data-count')||el.textContent;
+    var m=String(raw).match(/^([^0-9]*)([0-9][0-9,]*)(.*)$/);
+    if(!m){ return; }
+    el.setAttribute('data-done','1');
+    var pre=m[1]||'', num=parseInt(m[2].replace(/,/g,''),10), suf=m[3]||'';
+    if(reduced||!num){ el.textContent=raw; return; }
+    var st=performance.now(), dur=1500;
+    function step(now){ var t=Math.min(1,(now-st)/dur); var e=1-Math.pow(1-t,3); var v=Math.round(num*e); el.textContent=pre+v.toLocaleString('en-US')+suf; if(t<1) requestAnimationFrame(step); else el.textContent=raw; }
+    requestAnimationFrame(step);
+  }
+  if(reduced){ revealAll(); return; }
+  if('IntersectionObserver' in window){
+    var ro=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); ro.unobserve(e.target); } }); },{threshold:.14});
+    root.querySelectorAll('.syr-rev').forEach(function(el){ ro.observe(el); });
+    var sio=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ animate(e.target); sio.unobserve(e.target); } }); },{threshold:.5});
+    root.querySelectorAll('[data-count]').forEach(function(el){ sio.observe(el); });
+    setTimeout(function(){ root.querySelectorAll('.syr-rev:not(.in)').forEach(function(el){ el.classList.add('in'); }); }, 2800);
+  } else {
+    revealAll();
+  }
+  var eye=root.querySelector('.syr-st-hero .syr-st-eyebrow');
+  var raf=null;
+  function upd(){ raf=null; if(!eye) return; var vh=window.innerHeight||800; var r=eye.getBoundingClientRect(); var p=(vh/2-(r.top+r.height/2))/vh; if(p<-1)p=-1; if(p>1)p=1; var sc=.7+(p+.4)*.62; if(sc<.5)sc=.5; if(sc>1.25)sc=1.25; root.style.setProperty('--eye-scale',sc.toFixed(3)); }
+  window.addEventListener('scroll',function(){ if(!raf) raf=requestAnimationFrame(upd); },{passive:true});
+  window.addEventListener('resize',function(){ if(!raf) raf=requestAnimationFrame(upd); });
+  upd();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Our Story",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "What we're about" },
+    { "type": "text", "id": "hero_title", "label": "Title", "default": "About <em>Syruvia</em>." },
+    { "type": "text", "id": "hero_sub", "label": "Subtitle", "default": "Cafe-quality flavor for every cup." },
+    { "type": "header", "content": "Intro" },
+    { "type": "text", "id": "founder_bignum", "label": "Big background text", "default": "250+" },
+    { "type": "text", "id": "founder_eyebrow", "label": "Eyebrow", "default": "What we do" },
+    { "type": "text", "id": "founder_title", "label": "Heading", "default": "We make flavor <em>simple</em>." },
+    { "type": "textarea", "id": "founder_p1", "label": "Paragraph 1", "default": "Syruvia makes cafe-quality flavored syrups for coffee, sodas, cocktails and desserts." },
+    { "type": "textarea", "id": "founder_p2", "label": "Paragraph 2", "default": "From classics to a full sugar-free range, there is something for every cup." },
+    { "type": "header", "content": "Categories" },
+    { "type": "checkbox", "id": "show_categories", "label": "Show product categories", "default": true },
+    { "type": "text", "id": "cats_eyebrow", "label": "Eyebrow", "default": "What we make" },
+    { "type": "text", "id": "cats_title", "label": "Heading", "default": "A flavor for <em>every craving</em>." },
+    { "type": "header", "content": "Scrolling strip" },
+    { "type": "text", "id": "marquee_words", "label": "Words (comma-separated)", "default": "Real flavor,Zero compromise,250+ flavors,Sugar-free options,Made in the USA,Kosher & gluten-free" },
+    { "type": "header", "content": "Focus cards" },
+    { "type": "text", "id": "make_eyebrow", "label": "Eyebrow", "default": "What we focus on" },
+    { "type": "text", "id": "make_title", "label": "Heading", "default": "Flavor first, <em>always</em>." },
+    { "type": "text", "id": "card1_title", "label": "Card 1 title", "default": "Real, clean flavor" },
+    { "type": "textarea", "id": "card1_body", "label": "Card 1 body", "default": "No high-fructose corn syrup, no artificial dyes." },
+    { "type": "text", "id": "card2_title", "label": "Card 2 title", "default": "A flavor for everyone" },
+    { "type": "textarea", "id": "card2_body", "label": "Card 2 body", "default": "250+ flavors, including 68 sugar-free options." },
+    { "type": "text", "id": "card3_title", "label": "Card 3 title", "default": "Cafe quality, fair prices" },
+    { "type": "textarea", "id": "card3_body", "label": "Card 3 body", "default": "VIP members pay just $7.99 a bottle." },
+    { "type": "header", "content": "Stats" },
+    { "type": "text", "id": "stat1_num", "label": "Stat 1 number", "default": "250+" },
+    { "type": "text", "id": "stat1_lbl", "label": "Stat 1 label", "default": "Flavors" },
+    { "type": "text", "id": "stat2_num", "label": "Stat 2 number", "default": "68" },
+    { "type": "text", "id": "stat2_lbl", "label": "Stat 2 label", "default": "Sugar-free" },
+    { "type": "text", "id": "stat3_num", "label": "Stat 3 number", "default": "50+" },
+    { "type": "text", "id": "stat3_lbl", "label": "Stat 3 label", "default": "Servings a bottle" },
+    { "type": "text", "id": "stat4_num", "label": "Stat 4 number", "default": "$7.99" },
+    { "type": "text", "id": "stat4_lbl", "label": "Stat 4 label", "default": "VIP price" },
+    { "type": "header", "content": "Stand for" },
+    { "type": "text", "id": "legacy_eyebrow", "label": "Eyebrow", "default": "What we stand for" },
+    { "type": "text", "id": "legacy_title", "label": "Heading", "default": "Great flavor, <em>made right</em>." },
+    { "type": "textarea", "id": "legacy_p1", "label": "Paragraph 1", "default": "Made in the USA, kosher and gluten-free, with no junk." },
+    { "type": "textarea", "id": "legacy_p2", "label": "Paragraph 2", "default": "Syruvia turns an ordinary drink into something you look forward to." },
+    { "type": "header", "content": "Call to action" },
+    { "type": "text", "id": "cta_title", "label": "Heading", "default": "Ready to find <em>your flavor</em>?" },
+    { "type": "text", "id": "cta_sub", "label": "Sub-text", "default": "Explore 250+ syrups." },
+    { "type": "text", "id": "cta_text", "label": "Button text", "default": "Shop all syrups" },
+    { "type": "url", "id": "cta_link", "label": "Button link", "default": "/collections/all" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "cta_bg", "label": "Stand-for card top", "default": "#2f7bb0" },
+    { "type": "color", "id": "cta_bg2", "label": "Stand-for card bottom", "default": "#1f5a85" }
+  ],
+  "presets": [ { "name": "Our Story" } ]
+}
+{% endschema %}

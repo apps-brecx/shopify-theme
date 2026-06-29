@@ -1,0 +1,68 @@
+<div class="cst-custom-social-media-section {{ section.settings.custom_class }}">
+  <div class="page-width">
+    <div class="social-heading-group">
+      <span class="cst-leaf-image"
+        ><img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Asset_1.svg?v=1762441289"
+      ></span>
+      <h2>
+        {{ section.settings.heading }}
+      </h2>
+      <h4>{{ section.settings.text }}</h4>
+    </div>
+    <ul class="list-unstyled list-social" role="list">
+      <li class="list-social__item">
+        <a href="https://www.tiktok.com/@syruviaofficial" class="link list-social__link">
+          <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/New_Project_2_8f1c6116-49ce-429f-bec4-114607e8c8c1.png?v=1730547713">
+        </a>
+      </li>
+      <li class="list-social__item">
+        <a href="https://www.youtube.com/@Syruvia" class="link list-social__link">
+          <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object_00d4dc8f-d1b9-437c-89e9-87e206cf3715.png?v=1730727621">
+        </a>
+      </li>
+      <li class="list-social__item">
+        <a href="https://www.instagram.com/syruvia_official/" class="link list-social__link">
+          <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/New_Project_3_719b4b0a-da9d-43af-b7ec-63743c06397e.png?v=1730547713">
+        </a>
+      </li>
+    </ul>
+    {% comment %}
+      {% if section.settings.show_social != blank %}
+        {%- render 'social-icons', class: 'footer__list-social' -%}
+      {% endif %}
+    {% endcomment %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Social Media",
+  "settings": [
+     {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom class"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Paragraph"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show Social",
+      "default": true
+    }
+  ],
+    "presets": [
+    {
+      "name": "Social Media"
+    }
+  ]
+}
+{% endschema %}

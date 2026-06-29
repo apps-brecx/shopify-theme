@@ -1,0 +1,402 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- assign hero_img = product.featured_image -%}
+{%- if hero_img -%}
+<link rel="preload" as="image" href="{{ hero_img | image_url: width: 1400, format: 'webp' }}" imagesrcset="{{ hero_img | image_url: width: 600, format: 'webp' }} 600w, {{ hero_img | image_url: width: 900, format: 'webp' }} 900w, {{ hero_img | image_url: width: 1400, format: 'webp' }} 1400w" imagesizes="(max-width: 980px) 100vw, 55vw" />
+{%- endif -%}
+
+<div class="pd">
+
+<nav class="pd-crumb" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">/</span><a href="/collections/all">Syrups</a><span class="sep">/</span><span>{{ product.title | escape }}</span></nav>
+
+<div class="pd-grid">
+  <div class="pd-gallery pd-reveal">
+    <div class="pd-main-img-wrap" id="pd-main-wrap">
+      {% if product.tags contains 'Best Seller' %}<span class="pd-flag">Best Seller</span>{% elsif product.tags contains 'Trending Flavors' %}<span class="pd-flag">Trending</span>{% endif %}
+      <img id="pd-main-img" class="pd-main-img" src="{{ hero_img | image_url: width: 1400, format: 'webp' }}" srcset="{{ hero_img | image_url: width: 600, format: 'webp' }} 600w, {{ hero_img | image_url: width: 900, format: 'webp' }} 900w, {{ hero_img | image_url: width: 1400, format: 'webp' }} 1400w" sizes="(max-width: 980px) 100vw, 55vw" alt="{{ hero_img.alt | default: product.title | escape }}" fetchpriority="high" width="1400" height="1400" />
+    </div>
+    {% if product.images.size > 1 %}
+    <div class="pd-thumbs">
+      {% for img in product.images limit: 5 %}
+      <button type="button" class="pd-thumb{% if forloop.first %} active{% endif %}" data-src="{{ img | image_url: width: 1400, format: 'webp' }}" data-srcset="{{ img | image_url: width: 600, format: 'webp' }} 600w, {{ img | image_url: width: 1400, format: 'webp' }} 1400w" aria-label="View image {{ forloop.index }}"><img src="{{ img | image_url: width: 240, format: 'webp' }}" alt="" loading="lazy" width="240" height="240" /></button>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="pd-info pd-reveal" data-delay="100">
+    {% assign title_main = product.title | replace: ' Syrup', '' %}
+    {% if title_main != product.title %}
+    <h1 class="pd-title">
+      <span class="row1">{{ title_main }}</span>
+      <span class="row2">syrup.</span>
+    </h1>
+    {% else %}
+    <h1 class="pd-title"><span class="row1">{{ product.title }}</span></h1>
+    {% endif %}
+
+    {% assign review_rating = product.metafields.reviews.rating.value.rating | default: 0 %}
+    {% assign review_count = product.metafields.reviews.rating_count.value | default: 0 %}
+    {% if review_count > 0 %}
+    <div class="pd-rating">
+      <span class="stars" aria-label="{{ review_rating }} out of 5 stars">{% assign full = review_rating | floor %}{% for i in (1..5) %}{% if i <= full %}★{% else %}☆{% endif %}{% endfor %}</span>
+      <span class="pd-rating-text">{{ review_rating }}/5</span>
+      <a href="#reviews" class="pd-rating-link">{{ review_count }} reviews</a>
+    </div>
+    {% endif %}
+
+    {% assign cv = product.selected_or_first_available_variant %}
+    <div class="pd-price-row">
+      <span class="pd-price">{{ cv.price | money }}</span>
+      {% if cv.compare_at_price and cv.compare_at_price > cv.price %}<span class="pd-price-was">{{ cv.compare_at_price | money }}</span>{% endif %}
+    </div>
+
+    <ul class="pd-bens">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>Pure cane sugar</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>50+ servings</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>Real flavor</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17 4 12"/></svg>Made in USA</li>
+    </ul>
+
+    {% assign sf_ref = product.metafields.custom.sugar_free.value %}
+    {% if sf_ref %}
+    <div class="pd-version">
+      <span class="pd-version-label">Choose Version</span>
+      <div class="pd-version-toggle">
+        <a class="pd-version-btn active" href="{{ product.url }}">Regular</a>
+        <a class="pd-version-btn" href="{{ sf_ref.url }}">Sugar-Free</a>
+      </div>
+    </div>
+    {% endif %}
+
+    {% assign related = product.metafields.custom.you_might_enjoy_products.value %}
+    {% if related and related.size > 0 %}
+    <div class="pd-explore">
+      <span class="pd-explore-label"><span>Other flavors</span><a href="/collections/all">View all →</a></span>
+      <div class="pd-explore-row">
+        {% assign sw_count = 0 %}
+        {% for rp in related %}
+          {% if rp.id != product.id and sw_count < 8 %}
+          <a class="pd-swatch" href="{{ rp.url }}" title="{{ rp.title | escape }}">
+            <span class="pd-swatch-img"><img src="{{ rp.featured_image | image_url: width: 200, format: 'webp' }}" alt="{{ rp.title | escape }}" loading="lazy" width="200" height="200" /></span>
+            <span class="pd-swatch-name">{{ rp.title | replace: ' Syrup', '' }}</span>
+          </a>
+          {% assign sw_count = sw_count | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% form 'product', product, id: 'pd-product-form' %}
+      <input type="hidden" name="id" value="{{ cv.id }}" />
+      <div class="pd-qty-row">
+        <div class="pd-qty">
+          <button type="button" data-qty="-1" aria-label="Decrease quantity">−</button>
+          <input type="number" name="quantity" value="1" min="1" max="99" aria-label="Quantity" />
+          <button type="button" data-qty="1" aria-label="Increase quantity">+</button>
+        </div>
+        <button type="submit" class="pd-atc"{% unless cv.available %} disabled{% endunless %}><span>{% if cv.available %}Add to Cart — {{ cv.price | money }}{% else %}Sold Out{% endif %}</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
+      </div>
+    {% endform %}
+
+    <ul class="pd-trust">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v10H3z"/><path d="M14 10h4l3 3v4h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><span><strong>$5.99 flat shipping</strong> · Free over $34</span></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span><strong>Ships in 1 business day</strong> from our US warehouse</span></li>
+    </ul>
+  </div>
+</div>
+
+<div class="pd-tape pd-reveal">
+  <div class="pd-tape-track">
+    <span class="pd-tape-item"><span class="dot"></span>Real flavor</span><span class="pd-tape-item"><span class="dot"></span>Pure cane sugar</span><span class="pd-tape-item"><span class="dot"></span>Made in USA</span><span class="pd-tape-item"><span class="dot"></span>50+ servings</span><span class="pd-tape-item"><span class="dot"></span>Gluten-free</span><span class="pd-tape-item"><span class="dot"></span>Kosher</span><span class="pd-tape-item"><span class="dot"></span>Real flavor</span><span class="pd-tape-item"><span class="dot"></span>Pure cane sugar</span><span class="pd-tape-item"><span class="dot"></span>Made in USA</span><span class="pd-tape-item"><span class="dot"></span>50+ servings</span><span class="pd-tape-item"><span class="dot"></span>Gluten-free</span><span class="pd-tape-item"><span class="dot"></span>Kosher</span>
+  </div>
+</div>
+
+<section class="pd-quote pd-reveal">
+  <p class="pd-quote-text">One pump. Fifty pours. <em>Zero shortcuts.</em></p>
+  <span class="pd-quote-attribution">— The Syruvia Kitchen</span>
+</section>
+
+<section class="pd-section pd-reveal">
+  <div class="pd-section-head">
+    <span class="pd-eyebrow">Why Syruvia</span>
+    <h2 class="pd-h2">A better way to <span class="italic">pour</span>.</h2>
+  </div>
+  <div class="pd-why">
+    <div class="pd-why-card">
+      <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+      <h3>Pure cane sweet</h3>
+      <p>Real sugar, no HFCS, no weird aftertaste.</p>
+    </div>
+    <div class="pd-why-card">
+      <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18"/></svg></div>
+      <h3>Made in USA</h3>
+      <p>Small-batch crafted, quality you can taste.</p>
+    </div>
+    <div class="pd-why-card">
+      <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg></div>
+      <h3>Gluten free</h3>
+      <p>Kosher certified, dietary-friendly.</p>
+    </div>
+    <div class="pd-why-card">
+      <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v10H3z"/><path d="M14 10h4l3 3v4h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg></div>
+      <h3>Free over $34</h3>
+      <p>Ships in 1 business day from the US.</p>
+    </div>
+  </div>
+</section>
+
+{% if product.metafields.custom.product_summary %}
+<section class="pd-section pd-reveal">
+  <div class="pd-section-head">
+    <span class="pd-eyebrow">Featured Recipe</span>
+    <h2 class="pd-h2">Start with <span class="italic">this one</span>.</h2>
+  </div>
+  <div class="pd-recipe">
+    <div class="pd-recipe-img pd-reveal" data-delay="100">
+      {% if product.metafields.custom.product_summary_image.value %}
+      <img src="{{ product.metafields.custom.product_summary_image.value | image_url: width: 1100, format: 'webp' }}" srcset="{{ product.metafields.custom.product_summary_image.value | image_url: width: 600, format: 'webp' }} 600w, {{ product.metafields.custom.product_summary_image.value | image_url: width: 1100, format: 'webp' }} 1100w" sizes="(max-width: 980px) 100vw, 50vw" alt="Recipe featuring {{ product.title }}" loading="lazy" width="1100" height="1100" />
+      {% else %}
+      <img src="{{ product.featured_image | image_url: width: 1100, format: 'webp' }}" alt="{{ product.title }}" loading="lazy" width="1100" height="1100" />
+      {% endif %}
+    </div>
+    <div class="pd-recipe-body pd-reveal" data-delay="200">
+      <span class="pd-recipe-eyebrow">30-second sip</span>
+      {{ product.metafields.custom.product_summary | metafield_tag }}
+    </div>
+  </div>
+  <div class="pd-more-recipes">
+    <div class="pd-mini-recipe pd-reveal" data-delay="100">
+      <div class="pd-mini-recipe-head">
+        <div class="pd-mini-recipe-num">Recipe 02</div>
+        <h3 class="pd-mini-recipe-name"><em>Iced</em> {{ title_main | default: 'Syrup' }} Latte</h3>
+      </div>
+      <div class="pd-mini-recipe-body">
+        <p>The everyday move. Coffee + syrup + milk + ice. Reliable, repeatable, ridiculously good.</p>
+        <ul>
+          <li>1 pump {{ title_main | default: 'Syruvia' }} Syrup</li>
+          <li>1 shot espresso (or 4 oz cold brew)</li>
+          <li>8 oz cold milk of choice</li>
+          <li>Ice, to fill</li>
+        </ul>
+        <div class="pd-mini-recipe-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Takes 60 seconds</div>
+      </div>
+    </div>
+    <div class="pd-mini-recipe pd-reveal" data-delay="200">
+      <div class="pd-mini-recipe-head">
+        <div class="pd-mini-recipe-num">Recipe 03</div>
+        <h3 class="pd-mini-recipe-name"><em>Sparkling</em> {{ title_main | default: 'Syrup' }} Soda</h3>
+      </div>
+      <div class="pd-mini-recipe-body">
+        <p>Light, fizzy, zero brewing. Pump it, top it, garnish it. Instant party drink.</p>
+        <ul>
+          <li>1 pump {{ title_main | default: 'Syruvia' }} Syrup</li>
+          <li>8 oz cold sparkling water</li>
+          <li>Ice, to fill</li>
+          <li>Lemon or lime wedge to garnish</li>
+        </ul>
+        <div class="pd-mini-recipe-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Takes 30 seconds</div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if product.metafields.custom.additionalfield %}
+<section class="pd-section pd-reveal">
+  <div class="pd-section-head">
+    <span class="pd-eyebrow">Inside the Bottle</span>
+    <h2 class="pd-h2">Nothing <span class="italic">hidden</span>.</h2>
+  </div>
+  <div class="pd-ing">
+    <div class="pd-ing-circle"><div>Real<br/>Ingredients<br/>Always</div></div>
+    <div class="pd-ing-body">
+      <h3>Clean, simple, no <em>surprises</em>.</h3>
+      {{ product.metafields.custom.additionalfield | metafield_tag }}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if related and related.size > 0 %}
+<section class="pd-section pd-reveal">
+  <div class="pd-section-head">
+    <span class="pd-eyebrow">Pair With</span>
+    <h2 class="pd-h2">More flavors to <span class="italic">try</span>.</h2>
+  </div>
+  <div class="pd-rel">
+    {% assign rel_count = 0 %}
+    {% for rp in related %}
+      {% if rp.id != product.id and rel_count < 6 %}
+      <a class="pd-rel-card pd-reveal" data-delay="{{ rel_count | times: 80 | plus: 100 }}" href="{{ rp.url }}">
+        <div class="pd-rel-img"><img src="{{ rp.featured_image | image_url: width: 600, format: 'webp' }}" srcset="{{ rp.featured_image | image_url: width: 400, format: 'webp' }} 400w, {{ rp.featured_image | image_url: width: 600, format: 'webp' }} 600w" sizes="(max-width: 560px) 50vw, 16vw" alt="{{ rp.title | escape }}" loading="lazy" width="600" height="600" /></div>
+        <div class="pd-rel-body">
+          <h3 class="pd-rel-name">{{ rp.title }}</h3>
+          <span class="pd-rel-price">{{ rp.price | money }}</span>
+        </div>
+      </a>
+      {% assign rel_count = rel_count | plus: 1 %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="pd-section pd-reveal" id="reviews">
+  <div class="pd-section-head">
+    <span class="pd-eyebrow">Customer Reviews</span>
+    <h2 class="pd-h2">Read the <span class="italic">love</span>.</h2>
+  </div>
+  {% if review_count > 0 %}
+  <div class="pd-cs">
+    <div class="pd-cs-left">
+      <div class="pd-cs-rating">{{ review_rating }}</div>
+      <div class="pd-cs-stars" aria-label="{{ review_rating }} out of 5">{% assign full = review_rating | floor %}{% for i in (1..5) %}{% if i <= full %}★{% else %}☆{% endif %}{% endfor %}</div>
+      <div class="pd-cs-count">{{ review_count }} verified reviews</div>
+    </div>
+    <div class="pd-cs-right">
+      <h3>What customers say</h3>
+      <p>Reviewers consistently call out the <strong>rich real flavor</strong>, how well it mixes in hot and cold drinks, and the <strong>clean, no-aftertaste finish</strong>. Many are repeat buyers using it daily in their morning coffee.</p>
+    </div>
+  </div>
+  {% endif %}
+  <div class="pd-reviews-wrap">
+    {% if product.metafields.judgeme.widget %}{{ product.metafields.judgeme.widget }}{% else %}<div class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}"></div>{% endif %}
+  </div>
+</section>
+
+<section class="pd-section pd-reveal">
+  <div class="pd-section-head">
+    <span class="pd-eyebrow">FAQ</span>
+    <h2 class="pd-h2">Quick <span class="italic">answers</span>.</h2>
+  </div>
+  <div class="pd-faq">
+    <div class="pd-faq-item"><h3>How much syrup per drink?</h3><p>One pump (about ½ oz) per 12 oz drink. Adjust to taste — lighter for delicate teas, bolder for iced lattes.</p></div>
+    <div class="pd-faq-item"><h3>How many drinks per bottle?</h3><p>Roughly 50+ servings at one pump each from a 750ml bottle. Plenty for daily ritual.</p></div>
+    <div class="pd-faq-item"><h3>Shelf life once opened?</h3><p>Refrigerate after opening and use within 90 days. Unopened bottles keep well past a year.</p></div>
+    <div class="pd-faq-item"><h3>Sugar-free option?</h3><p>{% if sf_ref %}Yes — see <a href="{{ sf_ref.url }}">{{ sf_ref.title }}</a> for the zero-sugar, zero-calorie version.{% else %}Yes — most Syruvia flavors come in both Regular (pure cane sugar) and Sugar-Free.{% endif %}</p></div>
+    <div class="pd-faq-item"><h3>How fast do you ship?</h3><p>Orders ship within 1 business day from our US warehouse. $5.99 flat shipping, free over $34.</p></div>
+  </div>
+</section>
+
+<section class="pd-section pd-reveal">
+  <div class="pd-cta">
+    <div class="pd-cta-inner">
+      <h2>Add the <em>{{ title_main | default: product.title }}</em>.</h2>
+      <p>{{ cv.price | money }} · 50+ servings · Free shipping over $34.</p>
+      {% form 'product', product, id: 'pd-cta-form' %}
+      <input type="hidden" name="id" value="{{ cv.id }}" />
+      <input type="hidden" name="quantity" value="1" />
+      <button type="submit" class="pd-cta-btn"{% unless cv.available %} disabled{% endunless %}>{% if cv.available %}Add to Cart{% else %}Sold Out{% endif %} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
+      {% endform %}
+    </div>
+  </div>
+</section>
+
+<div class="pd-services pd-reveal">
+  <div class="pd-service">
+    <div class="pd-service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v10H3z"/><path d="M14 10h4l3 3v4h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg></div>
+    <div class="pd-service-body"><h4>Free Shipping</h4><p>Orders over $34</p></div>
+  </div>
+  <div class="pd-service">
+    <div class="pd-service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18"/></svg></div>
+    <div class="pd-service-body"><h4>Made in USA</h4><p>Small-batch crafted</p></div>
+  </div>
+  <div class="pd-service">
+    <div class="pd-service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+    <div class="pd-service-body"><h4>Ships Fast</h4><p>Within 1 business day</p></div>
+  </div>
+</div>
+
+</div>
+
+<div class="pd-mobile-bar">
+  {% if sf_ref %}
+  <div class="pd-mb-top">Looking for less sugar? <a href="{{ sf_ref.url }}">View Sugar-Free →</a></div>
+  {% endif %}
+  <div class="pd-mb-main">
+    <div class="pd-mb-price-wrap">
+      <span class="pd-mb-price">{{ cv.price | money }}</span>
+      <span class="pd-mb-name">{{ title_main | default: product.title | truncate: 16 }}</span>
+    </div>
+    <div class="pd-mb-qty">
+      <button type="button" data-qty="-1" aria-label="Decrease quantity">−</button>
+      <input type="number" id="pd-mb-qty-input" value="1" min="1" max="99" aria-label="Quantity" />
+      <button type="button" data-qty="1" aria-label="Increase quantity">+</button>
+    </div>
+    <form class="pd-mb-form" method="post" action="/cart/add" id="pd-mobile-form">
+      <input type="hidden" name="id" value="{{ cv.id }}" />
+      <input type="hidden" name="quantity" id="pd-mb-qty-hidden" value="1" />
+      <button type="submit" class="pd-mb-atc"{% unless cv.available %} disabled{% endunless %}>{% if cv.available %}Add{% else %}Sold Out{% endif %} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  var mainImg = document.getElementById('pd-main-img');
+  var mainWrap = document.getElementById('pd-main-wrap');
+  document.querySelectorAll('.pd-thumb').forEach(function(t){
+    t.addEventListener('click', function(){
+      var src = t.getAttribute('data-src');
+      var srcset = t.getAttribute('data-srcset');
+      if (!src || !mainImg) return;
+      document.querySelectorAll('.pd-thumb').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active');
+      if (mainWrap) mainWrap.classList.add('swapping');
+      setTimeout(function(){mainImg.src = src; if (srcset) mainImg.srcset = srcset; if (mainWrap) mainWrap.classList.remove('swapping');}, 200);
+    });
+  });
+  document.querySelectorAll('.pd-qty button[data-qty]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var input = b.parentElement.querySelector('input[name="quantity"]');
+      if (!input) return;
+      var v = parseInt(input.value, 10) || 1;
+      v = v + parseInt(b.getAttribute('data-qty'), 10);
+      if (v < 1) v = 1;
+      if (v > 99) v = 99;
+      input.value = v;
+    });
+  });
+  var mbInput = document.getElementById('pd-mb-qty-input');
+  var mbHidden = document.getElementById('pd-mb-qty-hidden');
+  document.querySelectorAll('.pd-mb-qty button[data-qty]').forEach(function(b){
+    b.addEventListener('click', function(){
+      if (!mbInput) return;
+      var v = parseInt(mbInput.value, 10) || 1;
+      v = v + parseInt(b.getAttribute('data-qty'), 10);
+      if (v < 1) v = 1;
+      if (v > 99) v = 99;
+      mbInput.value = v;
+      if (mbHidden) mbHidden.value = v;
+    });
+  });
+  if (mbInput && mbHidden) {
+    mbInput.addEventListener('input', function(){mbHidden.value = mbInput.value;});
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, {threshold: 0.12, rootMargin: '0px 0px -60px 0px'});
+    document.querySelectorAll('.pd-reveal').forEach(function(el){io.observe(el);});
+  } else {
+    document.querySelectorAll('.pd-reveal').forEach(function(el){el.classList.add('is-visible');});
+  }
+})();
+</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":{{ product.title | json }},"description":{{ product.description | strip_html | truncate: 300 | json }},"image":[{% for img in product.images limit: 4 %}{{ img | image_url: width: 1200 | json }}{% unless forloop.last %},{% endunless %}{% endfor %}],"brand":{"@type":"Brand","name":{{ product.vendor | json }}},"sku":{{ product.selected_or_first_available_variant.sku | json }},"offers":{"@type":"Offer","url":{{ product.url | prepend: shop.url | json }},"priceCurrency":{{ shop.currency | json }},"price":{{ product.selected_or_first_available_variant.price | money_without_currency | replace: ',', '' | json }},"availability":{% if product.selected_or_first_available_variant.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %}}{% if review_count > 0 %},"aggregateRating":{"@type":"AggregateRating","ratingValue":"{{ review_rating }}","reviewCount":"{{ review_count }}"}{% endif %}}</script>
+
+{% schema %}
+{
+  "name": "Brand Product Page",
+  "settings": [],
+  "presets": [{ "name": "Brand Product Page" }]
+}
+{% endschema %}

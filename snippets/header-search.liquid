@@ -1,0 +1,133 @@
+{% comment %}
+  Renders a header search modal. Should be used with 'header.liquid'
+
+  Accepts:
+  - input_id: {String} Id for the search input element (required)
+
+  Usage:
+  {% render 'header-search', input_id: 'My-Id'%}
+{% endcomment %}
+
+<details-modal class="header__search">
+  <details>
+    <summary
+      class="header__icon header__icon--search header__icon--summary link focus-inset modal__toggle"
+      aria-haspopup="dialog"
+      aria-label="{{ 'general.search.search' | t }}"
+    >
+      <span>
+        {% comment %}
+          <svg class="modal__toggle-open icon icon-search" aria-hidden="true" focusable="false">
+            <use href="#icon-search">
+          </svg>
+        {% endcomment %}
+        <svg
+          class="modal__toggle-open icon icon-search desktop-only-svg"
+          aria-hidden="true"
+          focusable="false"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          width="31"
+          height="32"
+          viewBox="0 0 31 32"
+        >
+          <use href="#icon-search">
+          <image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAgCAYAAADqgqNBAAAAAXNSR0IArs4c6QAABBtJREFUWEe9lmuIlFUYx3/PvLuru34pChZXnXPmktYaEV4CyS4G2gehi24E+qkPCQUVGlLZxZCwC2URRIFCUWpBGaVCoCGFteUHy/ywocw7c866bVlmRKzb7s7MU+/e3B1nZ1wdPR/f85z/73/Oec77PEKVYa21gcp9oHeAXg8yAxBgAMFR5AcV3UcQ7Mpms39X0xs7H4mUHel4vFUl9gJwzzAMlBOIepABoBGYA1w5LHAGYWtfPr+pq6vr9PmYKAePpUxiAxQ3gtQpHBHl7UKM3c6530pFrzHmuiKxNtCHgOnAn6LyQKYzt6eagXHw1tbWhr6eMx8CK4BfReXRTGfuk2oi0fzQ2p71IM8BDSDrQ597tdLasfBYytiPh8Ht1AX3hmH4+/mAx8YkZyUXSKy4OzoFEdZlnHt9Io1ReMokngXdBPJt70Dfsu7u7jOTBY/Ep2am0gSFduAq0KWh9wfKaQ3C0/H4XBU5AvIHdcGNF7LjUvG0tbepckDB9xfyc7u6unpLYwbhqbj9DOFuRVdmvf/0Qndcui5lzJsgj6iwNuvcG+fA5xiTyCNZ4HDo3YJagSOd2S2zry7U958ATobeJYge65ghSWufFOVFVNaEnbmttYQPXqmxOxRWgd4ceh/lweiQtLX7VFlaEKaXe8cXayZl7f0oHwn6dMb7zePgKWN/QSmEnS5+saBy60euVWBnxrvVpXAF/Sb0/pZLAQei/0cB+Dr07vYy8HMnamkkZawiHAydu7UU3gd6NPR+YS2BI1otLS1NjfUNPSLszzi3bHzCGfuzwozQuyuAYq0NpI2Zp8hhlHfCThcVnzHZbhLbFV0t6LyM9z/WHG7tWlW2CPJgxue2jX/nxqwSZAfCK6FzT9QcHreHVFhIXWDCMIx+OGd3Pnwn3QKFYOoUe+zYsX9qZSBtzCJF2kG/DL1fWqo7VFisfV6VjYpsyfrc4zWCB+m4bVfhJhGWZJz7qiz8hubmaT1TGzuAWaDLQ++/uFgDybjdLMJTguzK+FxbOb3Rep6MJxeLFKO62yvCnRnnvr9QA2ljHlbkrajnC/IN8453Hz9VER5NJoeS7wOgT1TWZDpz2ydjYP78+fV/nTr9kqDrBjXQRZVe0DkNZNKYFSDvC0wTdG8hFnsml8v9VMWEJOPJ5SLFl6N2Doi6oCYV9kxtamrr6Ojor7rzkQBr7bWByraoDA5/+06F3aJ6KKbqtdDQX5xSbIrldY7GdDHKyqgniWIF3s0LGwJl5///8yWVDEzYt0c6aWvvUuUxICoIlWL/jRILiq+NHPPwE95byUAlwdGTSiQSzTHVJajORWUmokF0p4BD5PC03t6DR0+e7Ck92moGzgs+maSbjIFLDo/MTHQClwU+kYHLBi9n4LLCzxqo/1zhvf8A1hq5gxj9A3oAAAAASUVORK5CYII=" x="0" y="0" width="31" height="32"/>
+        </svg>
+        <svg
+          class="mobile-only-svg"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          width="42"
+          height="43"
+          viewBox="0 0 42 43"
+        >
+          <image xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACoAAAArCAYAAAAOnxr+AAAAAXNSR0IArs4c6QAABPZJREFUWEfNmFeonFUUhb9lRbFgiBA1NtSIYonGgARrBCN2hGisDxqNIUElBEVfFEGxYIkY7IINjVggdkQRSzQiERV7QUWNiGKJvS3/Zc6EydyZO//cJJO7Xwbm3+fsdfbZZ5clehTbY4BJwP7AjsDWwIZlm9+Ar4H3Kp2XgWfyK8k9mhmgrjob2F4LOBGYAYyvs6ZJ5zPgVuB6ST/0uHaZelegto8ArgG2azISzy0AXgM+Br4D/q30Nga2AXYtHh/ZtOZH4GLgOkl/9wq4I1DbGwA3Fk829n0BmAvMlxSwHcX2GgXsVOA4YM2inMNNkZQD1pa2QG2PBh4vnslmbwNnSXq29s5NirZ3AK4FDi1/x7tHSnq+7n4DgBaQLwFblU3mAOdK+rPupp30bJ+aWAXWA/4ADpOUB9dVlgNqO693IbBTiblpkvIQVprY3ht4pAKc+P0Z2EfSG90MtAK9v7rmyWXRVEm3ddtgKN9tjwMSRhsBH1Uxv6ekJYPttQyo7QAM0MhVkmYPBUTdNbaPBh4u+nMlzewK1Pa6wCfA5sBb1dWMk/RXXaND1bOdrDKthNlukvJo28r/HrV9JnBD0dhX0otDNd7LOtublKsfUb2LeZKmdAOak+ycuJF0UC/GVlTX9kWVry4E/qkq2GhJKcEDRLbHAq+XL5MlPbCixntZX13/KOCLUhDOkZR02BboecBlVa78tSpvIyQlv/VVbCeXTgSekNQoCsthiEfnA6nnT0k6pK8IizHb5wOXAkskJWW19WjyWBqOK6r6He/2XWzHi48Vw1tI+qoVRDz6SwVyfeAMSbf0HeXSrJMe9/1ie7ykNC4Drr7R1B4v6b7VBHSzylENLx4o6bnBgJ4k6Z7VBHRL4PNiuyPQtFwJ4JmS0mv2XWyn0X6zGB7brklJjEYhium8z+47yqUxekyF4cFiOyny+3ZXPw84tgxhE1YT0OTxZJzFktJvtE1PjTqfEjZyRQawoR7S9iJgj8Hqfa4+4+6nxch0Selo+ia202M0uqaTJd3d1qP503bSQeb0d4FdJGWi7Is0tXrp9kdJSl4fePUFaHMTe4qku/qB0vb21ft4B1g7I7mkWZ3sNvrR/L4K7AV8k5ZPUmb1VSa2Y/NpIG1lvDlG0uJBgRavhgF5pSIJMo8/WZELh0vKA1slYvuCypOXlM1nSQrJ0VFah7tGE5sF6fhnrAzeqNW67dBDjUeTFm9SN6e0Ag2b8VDIgbL57ZlphkLBdHKN7dMLA5ObC1syQVLCbVBpR0Ckk8rcnUY2EjLiBEmNWtxtz7bfbWffsCUBGklYHVyXfelE6awD3BGOqGya7j+N7ZxqjE7g15bCQYV7SvVpsC+N9V8CB0hKT9ybR5u1bYdmvLJQMPmUGnxnxYveGyZvsLgqqSdcwWktTGAKSjLMTSUt1QJbh3ZM5bq89APN+j+VofBDIB1YqMRQQttWxMLuhSNoPneootmNUbwqm3kHGSSTQwN2oqQPOrm1K9DGQtvho6aXcNi021WV77+HoqxA39yODGsB+20BGwJkgNQG2gQ4mSENxH6FCwhxGy41rHTiN6NvPBOid4GkxHdHqQu2Z6A1PdmTWh2wwwJoTmX78ELShTsdEAbDBmgBm9z9aMkyAZuKlV6VYQW0DdhklhSFhcMOaEewPUV9H5VtN4fBomHp0aZUmKnj6qqwHPUfomzAUtZ/gx4AAAAASUVORK5CYII=" x="0" y="0" width="42" height="43"/>
+        </svg>
+        <svg class="modal__toggle-close icon icon-close" aria-hidden="true" focusable="false">
+          <use href="#icon-close">
+        </svg>
+      </span>
+    </summary>
+    <div
+      class="search-modal modal__content gradient"
+      role="dialog"
+      aria-modal="true"
+      aria-label="{{ 'general.search.search' | t }}"
+    >
+      <div class="modal-overlay"></div>
+      <div
+        class="search-modal__content{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} search-modal__content-top{% else %} search-modal__content-bottom{% endif %}"
+        tabindex="-1"
+      >
+        {%- if settings.predictive_search_enabled -%}
+          <predictive-search class="search-modal__form" data-loading-text="{{ 'accessibility.loading' | t }}">
+        {%- else -%}
+          <search-form class="search-modal__form">
+        {%- endif -%}
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form">
+          <div class="field">
+            <input
+              class="search__input field__input"
+              id="{{ input_id }}"
+              type="search"
+              name="q"
+              value="{{ search.terms | escape }}"
+              placeholder="{{ 'general.search.search' | t }}"
+              {%- if settings.predictive_search_enabled -%}
+                role="combobox"
+                aria-expanded="false"
+                aria-owns="predictive-search-results"
+                aria-controls="predictive-search-results"
+                aria-haspopup="listbox"
+                aria-autocomplete="list"
+                autocorrect="off"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+              {%- endif -%}
+            >
+            <label class="field__label" for="{{ input_id }}">{{ 'general.search.search' | t }}</label>
+            <input type="hidden" name="options[prefix]" value="last">
+            <button
+              type="reset"
+              class="reset__button field__button{% if search.terms == blank %} hidden{% endif %}"
+              aria-label="{{ 'general.search.reset' | t }}"
+            >
+              <svg class="icon icon-close" aria-hidden="true" focusable="false">
+                <use xlink:href="#icon-reset">
+              </svg>
+            </button>
+            <button class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+              <svg class="icon icon-search" aria-hidden="true" focusable="false">
+                <use href="#icon-search">
+              </svg>
+            </button>
+          </div>
+
+          {%- if settings.predictive_search_enabled -%}
+            <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
+              {%- render 'loading-spinner', class: 'predictive-search__loading-state' -%}
+            </div>
+
+            <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+          {%- endif -%}
+        </form>
+        {%- if settings.predictive_search_enabled -%}
+          </predictive-search>
+        {%- else -%}
+          </search-form>
+        {%- endif -%}
+        <button
+          type="button"
+          class="search-modal__close-button modal__close-button link link--text focus-inset"
+          aria-label="{{ 'accessibility.close' | t }}"
+        >
+          <svg class="icon icon-close" aria-hidden="true" focusable="false">
+            <use href="#icon-close">
+          </svg>
+        </button>
+      </div>
+    </div>
+  </details>
+</details-modal>

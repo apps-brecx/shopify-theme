@@ -1,0 +1,88 @@
+{%- comment -%} Pd top-gap nuker — standalone snippet, kills the cream gap on collection pages, runs forever. {%- endcomment -%}
+<style id="pd-topgap-kill">
+@media (max-width:760px){
+  html body main, html body #MainContent, html body main.content-for-layout{ padding-top:0 !important; margin-top:0 !important; }
+  html body main > .shopify-section, html body #MainContent > .shopify-section,
+  html body main > section, html body #MainContent > section{ margin-top:0 !important; padding-top:0 !important; }
+  html body main > *:first-child, html body #MainContent > *:first-child{ margin-top:0 !important; padding-top:0 !important; }
+  html body .shopify-section[id*="header"], html body header.shopify-section,
+  html body .shopify-section-header{ margin-bottom:0 !important; padding-bottom:0 !important; }
+  /* Hide any spacer-like element between header and the hero */
+  html body .pd-spacer-killed{ display:none !important; height:0 !important; visibility:hidden !important; }
+}
+</style>
+<script id="pd-topgap-kill-js">
+(function(){
+  function isMobile(){ return window.innerWidth <= 760; }
+  var lastRun = 0;
+  function nukeTopGap(){
+    if (!isMobile()) return;
+    var now = Date.now();
+    if (now - lastRun < 40) return; /* throttle 25fps */
+    lastRun = now;
+    /* Find an anchor element — hero or first content section */
+    var hero = document.querySelector('.hero.hero-float');
+    var scol = document.querySelector('.scol');
+    var anchor = hero || scol;
+    if (!anchor) return;
+    /* 1) Walk up ancestors, kill padding-top + margin-top */
+    var el = anchor;
+    var depth = 0;
+    while (el && el !== document.body && el !== document.documentElement && depth < 12){
+      try {
+        el.style.setProperty('padding-top', '0', 'important');
+        el.style.setProperty('margin-top', '0', 'important');
+      } catch(e){}
+      el = el.parentElement; depth++;
+    }
+    /* 2) Find the section containing anchor, hide empty siblings BEFORE it */
+    var sec = anchor.closest('.shopify-section, section, [id^="shopify-section"]');
+    if (sec){
+      var prev = sec.previousElementSibling;
+      while (prev){
+        var skip = false;
+        var fp = ((prev.id || '') + ' ' + (prev.className || '')).toLowerCase();
+        /* Skip header / nav / announcement */
+        if (/header|announcement|topbar|navigation/.test(fp)) skip = true;
+        if (prev.tagName === 'SCRIPT' || prev.tagName === 'STYLE' || prev.tagName === 'LINK') skip = true;
+        if (!skip){
+          var rect = prev.getBoundingClientRect();
+          var txt = (prev.textContent || '').trim();
+          /* Hide if it's a small empty spacer */
+          if (rect.height < 200 && txt.length < 30){
+            prev.classList.add('pd-spacer-killed');
+            prev.style.setProperty('display', 'none', 'important');
+          } else {
+            /* Otherwise just kill its bottom spacing */
+            prev.style.setProperty('padding-bottom', '0', 'important');
+            prev.style.setProperty('margin-bottom', '0', 'important');
+          }
+        }
+        prev = prev.previousElementSibling;
+      }
+    }
+    /* 3) Kill header's bottom margin/padding */
+    var headers = document.querySelectorAll('header, .shopify-section-header, [id*="shopify-section"][id*="header"], section.shopify-section-header');
+    headers.forEach(function(h){
+      try {
+        h.style.setProperty('margin-bottom', '0', 'important');
+        /* but keep header's own internal padding */
+      } catch(e){}
+    });
+  }
+
+  /* Run on init + scroll (rAF) + interval safety + mutations */
+  function rafRun(){ requestAnimationFrame(nukeTopGap); }
+  nukeTopGap();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', nukeTopGap);
+  window.addEventListener('load', nukeTopGap);
+  window.addEventListener('scroll', rafRun, {passive:true});
+  window.addEventListener('resize', nukeTopGap);
+  window.addEventListener('orientationchange', nukeTopGap);
+  /* Interval safety: 250ms forever — catches anything that re-adds padding */
+  setInterval(nukeTopGap, 250);
+  if ('MutationObserver' in window){
+    new MutationObserver(rafRun).observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['style','class']});
+  }
+})();
+</script>

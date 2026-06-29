@@ -1,0 +1,78 @@
+{%- comment -%} Global helpers (footer group, every page):
+  1) Cart drawer (#SyrCD) stays in the viewport on mobile so the X is tappable.
+  2) Hide the redundant "Just added" hero card in the cart drawer.
+  3) Force sign-in / create-account links (incl. VIP buttons) to /account/login.
+  4) Autoplay + loop landing-page videos.
+  5) Re-enable position:sticky inside the Fancy Food section.
+  6) Hide the mobile bottom nav on the Fancy Food landing page.
+  7) Scale the Fancy Food hero banner up a touch on mobile. {%- endcomment -%}
+<style id="syr-drawer-xfix-css">
+html body #SyrCD .added{ display:none !important; }
+html body section[id^="ff-"]{ overflow:visible !important; }
+@media (max-width:860px){
+  html body section[id^="ff-"] .ff-hero-fig{ max-width:640px !important; }
+}
+@media (max-width:680px){
+  html body section[id^="ff-"] .ff-hero-fig{ overflow:visible !important; }
+  html body section[id^="ff-"] .ff-hero-fig img{ transform:scale(1.07) !important; }
+}
+@media (max-width:767px){
+  html body #SyrCD{ overflow-x:hidden !important; }
+  html body #SyrCD .scd-panel{ width:100% !important; max-width:100% !important; left:0 !important; right:0 !important; margin-left:0 !important; margin-right:0 !important; box-sizing:border-box !important; overflow:visible !important; }
+  html body #SyrCD .scd-head{ box-sizing:border-box !important; padding-right:14px !important; column-gap:8px !important; }
+  html body #SyrCD .scd-close{ flex:0 0 auto !important; margin-left:auto !important; position:relative !important; z-index:3 !important; }
+  html body:has(section[id^="ff-"]) nav[id*="syr_bottom_nav"]{ display:none !important; }
+}
+</style>
+<script>
+(function(){
+  function isAcct(){ var p=location.pathname; return p.indexOf('/account')===0 || p.indexOf('/customer_authentication')===0; }
+  function fix(){
+    if(isAcct()) return;
+    var links=document.querySelectorAll('a[href*="/account/login"], a[href*="/account/register"], a[href*="/customer_authentication"]');
+    for(var i=0;i<links.length;i++){
+      var a=links[i];
+      if(a.getAttribute('data-syr-login')) continue;
+      a.setAttribute('data-syr-login','1');
+      a.setAttribute('href','/account/login');
+    }
+  }
+  fix();
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', fix); }
+  window.addEventListener('load', fix);
+  var t; function deb(){ if(t) clearTimeout(t); t=setTimeout(fix,140); }
+  try{ new MutationObserver(deb).observe(document.documentElement,{childList:true,subtree:true}); }catch(e){}
+  document.addEventListener('click', function(){ setTimeout(fix,30); }, true);
+})();
+(function(){
+  function tryPlay(v){ try{ v.muted=true; v.loop=true; var p=v.play(); if(p&&p.catch) p.catch(function(){}); }catch(e){} }
+  function wire(){
+    var vids=document.querySelectorAll('.ff-reel video, video.ff-shelf-bg');
+    if(!vids.length) return;
+    for(var k=0;k<vids.length;k++){ vids[k].setAttribute('muted',''); vids[k].setAttribute('loop',''); vids[k].setAttribute('playsinline',''); vids[k].setAttribute('autoplay',''); }
+    if(!('IntersectionObserver' in window)){ for(var i=0;i<vids.length;i++) tryPlay(vids[i]); return; }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ tryPlay(e.target); } }); }, {threshold:0.05});
+    for(var j=0;j<vids.length;j++){ if(!vids[j].__syrv){ vids[j].__syrv=1; io.observe(vids[j]); } tryPlay(vids[j]); }
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', wire); } else { wire(); }
+  window.addEventListener('load', wire);
+  setTimeout(wire,800); setTimeout(wire,2000);
+})();
+(function(){
+  function apply(){
+    var nav=document.querySelector('nav[id*="syr_bottom_nav"]');
+    if(!nav) return;
+    var onFF=!!document.querySelector('section[id^="ff-"]');
+    var mobile=window.matchMedia('(max-width:767px)').matches;
+    if(onFF && mobile){ nav.style.setProperty('display','none','important'); }
+    else { if(nav.style.getPropertyValue('display')==='none'){ nav.style.removeProperty('display'); } }
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', apply); } else { apply(); }
+  window.addEventListener('load', apply);
+  window.addEventListener('resize', apply);
+  setTimeout(apply,400); setTimeout(apply,1200);
+})();
+</script>
+{% schema %}
+{ "name": "Syr Global Fixes", "settings": [] }
+{% endschema %}

@@ -1,0 +1,200 @@
+<style>
+    .quality-trsut__inner{
+        padding: 40px 0;
+    }
+    .quality-trust__container{
+    
+        max-width: 1300px;
+    margin: 0 auto;
+    }
+    .quality-trust__wrapper{
+        padding: 20px 40px;
+        border-radius: 20px;
+        background: #fff6ee;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;      
+        gap: 40px;      
+    }
+    .quality-trust__left-image{
+        width: 60px;
+        height: 60px;
+        flex: 1 0 40%;
+        max-width: 60px;
+    }
+    .quality-trust__left-image img{
+        width: 100%;
+        height: 100%;        
+      
+    }
+    .quality-trust__right-image img{
+       width: 100%;
+        height: 100%;  
+          margin: 0 auto;
+    }
+    .quality-trust__right-image{
+        width: 40px;
+        height: 40px;
+        margin-bottom: 10px;
+    }
+    .quality-trust__left, .quality-trust__right{
+        flex: 1 0 45%;        
+        gap: 40px;
+    }
+     .quality-trust__left{
+        display: flex;
+        align-items: center;
+    }
+    .quality-trust__right{
+        display: flex;
+        justify-content: end;
+    }
+    .quality-trust__right-item{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        max-width: 100px;
+    }
+    .quality-trust__left-title{
+        margin-bottom: 5px;
+    }
+      .quality-trust__left-description{
+        font-size: 14px;
+    }
+    .quality-trust__left-title h2{
+        margin: 0;
+        font-weight: 700;
+        font-size: 30px;
+    }
+    .quality-trust__right-text{
+        line-height: normal;
+        text-align: center;
+    }
+    @media(max-width: 991px){
+        .quality-trust__wrapper{
+            gap: 20px;
+        }
+     .quality-trust__left, .quality-trust__right{
+        flex: 1 0 100%;        
+        gap: 20px;
+    }
+    .quality-trust__right{
+        justify-content: start;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .quality-trust__right-item{
+        flex-direction: row;
+        max-width: 100%;
+        gap: 5px;
+    }
+    .quality-trust__right-text{
+        text-align: start;
+    }
+    }
+
+     @media(max-width: 750px){
+        .quality-trust__left{
+            align-items: start;
+              flex-direction: column;
+        }
+    
+    }
+</style>
+
+<div class="quality-trsut__inner">
+  <div class="quality-trust__container page-width">
+    <div class="quality-trust__wrapper">
+
+      <!-- LEFT SIDE -->
+      <div class="quality-trust__left">
+        <div class="quality-trust__left-image">
+          {% if section.settings.left_image %}
+            <img src="{{ section.settings.left_image | image_url: width: 600 }}" alt="Left Image">
+          {% endif %}
+        </div>
+
+        <div class="quality-trust__left-text">
+          <div class="quality-trust__left-title">
+            <h2>{{ section.settings.left_title }}</h2>
+          </div>
+          <div class="quality-trust__left-description">
+            {{ section.settings.left_description }}
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE (BLOCKS) -->
+      <div class="quality-trust__right">
+        {% for block in section.blocks %}
+          <div class="quality-trust__right-item" {{ block.shopify_attributes }}>
+            <div class="quality-trust__right-image">
+              {% if block.settings.image %}
+                <img src="{{ block.settings.image | image_url: width: 200 }}" alt="Item Image">
+              {% endif %}
+            </div>
+            <div class="quality-trust__right-text">
+              {{ block.settings.text }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Quality Trust Section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "Left Image"
+    },
+    {
+      "type": "text",
+      "id": "left_title",
+      "label": "Left Title",
+      "default": "Your Title Here"
+    },
+    {
+      "type": "textarea",
+      "id": "left_description",
+      "label": "Left Description",
+      "default": "Your description goes here"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Right Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Item Image"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Item Text",
+          "default": "Item description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quality Trust Section",
+      "category": "Custom",
+      "blocks": [
+        { "type": "item" },
+        { "type": "item" },
+        { "type": "item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

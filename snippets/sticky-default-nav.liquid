@@ -1,0 +1,111 @@
+{%- render 'pd-drawer-polish' -%}
+{%- render 'pd-search-toggle' -%}
+{%- render 'pd-logo-center' -%}
+{%- render 'pd-shipping-progress' -%}
+{%- render 'syr-drawer-offset-fix' -%}
+{%- render 'syr-nav-visibility' -%}
+{%- render 'syr-nav-icon-fix' -%}
+
+<style>
+html body.pd-menu-open nav.pd-snav-v4,
+html body.overflow-hidden-mobile nav.pd-snav-v4{ visibility:hidden !important; opacity:0 !important; pointer-events:none !important; }
+html body nav.sticky-default-nav:not(.pd-snav-v4){ display:none !important; }
+</style>
+
+<script>
+(function(){
+  function attach(){
+    var root = document.getElementById('syrnav');
+    if (!root){ setTimeout(attach, 400); return; }
+    var lastY = window.scrollY || 0;
+    var threshold = 80;
+    window.addEventListener('scroll', function(){
+      var y = window.scrollY || 0;
+      if (y <= 5){ root.classList.remove('is-hidden'); lastY = y; return; }
+      if (document.body.classList.contains('pd-menu-open') || document.body.classList.contains('overflow-hidden-mobile')){ root.classList.remove('is-hidden'); lastY = y; return; }
+      if (y > lastY && y > threshold){ root.classList.add('is-hidden'); }
+      else if (y < lastY){ root.classList.remove('is-hidden'); }
+      lastY = y;
+    }, { passive: true });
+  }
+  if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', attach); }
+  else { attach(); }
+})();
+(function(){
+  function isDrawerOpen(){
+    var drawer = document.querySelector('.syrnav-drawer');
+    if (drawer && drawer.classList.contains('open')) return true;
+    if (document.body.classList.contains('overflow-hidden-mobile')) return true;
+    return false;
+  }
+  function update(){ document.body.classList.toggle('pd-menu-open', isDrawerOpen()); }
+  update();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', update);
+  window.addEventListener('load', update);
+  document.addEventListener('click', function(){ setTimeout(update, 50); }, true);
+  setInterval(update, 300);
+})();
+</script>
+
+{%- liquid
+  assign hide = false
+  if request.page_type == 'product' or request.page_type == 'cart'
+    assign hide = true
+  endif
+  if request.path == '/pages/build-your-bundle'
+    assign hide = true
+  endif
+  if request.path contains '/account' or request.path contains '/login' or request.path contains '/register' or request.path contains '/recover'
+    assign hide = true
+  endif
+-%}
+{%- unless hide -%}
+{%- assign path = request.path | default: '' -%}
+{%- assign is_home = false -%}{%- if path == '/' or request.page_type == 'index' -%}{%- assign is_home = true -%}{%- endif -%}
+
+<nav class="pd-snav-v4" role="navigation" aria-label="Mobile Bottom">
+  <div class="snav-inner">
+    <a class="snav-item {% if is_home %}is-active{% endif %}" href="{{ routes.root_url }}"><span class="snav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-7h4v7h4a1 1 0 0 0 1-1V10"/></svg></span><span class="snav-lbl">Home</span></a>
+    <a class="snav-item" href="#" data-snav-shop><span class="snav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg></span><span class="snav-lbl">Shop</span></a>
+    <a class="snav-item" href="{{ routes.search_url }}"><span class="snav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span><span class="snav-lbl">Search</span></a>
+    <a class="snav-item" href="/pages/swym-wishlist"><span class="snav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span class="snav-lbl">Saved</span></a>
+    <a class="snav-item" href="{{ routes.cart_url }}"><span class="snav-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 7h12l-1.2 11.3a2 2 0 0 1-2 1.7H9.2a2 2 0 0 1-2-1.7L6 7z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>{%- if cart.item_count > 0 -%}<span class="snav-badge">{{ cart.item_count }}</span>{%- endif -%}</span><span class="snav-lbl">Cart</span></a>
+  </div>
+</nav>
+
+<style>
+html body nav.pd-snav-v4{ position:fixed !important; left:0 !important; right:0 !important; bottom:0 !important; z-index:50 !important; padding:0 12px 12px !important; padding-bottom:calc(12px + env(safe-area-inset-bottom, 0px)) !important; pointer-events:none !important; background:transparent !important; border:0 !important; display:block !important; transform:translateY(140%) !important; opacity:0 !important; transition:transform .45s cubic-bezier(.25,.46,.45,.94), opacity .25s ease !important; }
+html body nav.pd-snav-v4.is-revealed{ transform:translateY(0) !important; opacity:1 !important; }
+html body nav.pd-snav-v4 .snav-inner{ pointer-events:auto; background:#FFFBF4 !important; border:2px solid #39220f !important; border-radius:22px !important; padding:8px 6px !important; display:grid !important; grid-template-columns:repeat(5, 1fr) !important; gap:2px !important; font-family:'Josefin Sans',sans-serif !important; box-shadow:4px 4px 0 #39220f, 0 10px 24px rgba(57,34,15,.12) !important; }
+html body nav.pd-snav-v4 .snav-item{ display:flex !important; flex-direction:column !important; align-items:center !important; justify-content:center !important; gap:4px !important; padding:6px 2px 4px !important; color:#39220f !important; text-decoration:none !important; font-family:'Archivo Black',sans-serif !important; border-radius:14px !important; }
+html body nav.pd-snav-v4 .snav-ic{ display:inline-flex !important; align-items:center !important; justify-content:center !important; width:40px !important; height:40px !important; background:#FFFBF4 !important; border:1.5px solid #39220f !important; border-radius:50% !important; box-shadow:1.5px 1.5px 0 #39220f !important; position:relative !important; }
+html body nav.pd-snav-v4 .snav-ic svg{ width:20px !important; height:20px !important; color:#39220f !important; }
+html body nav.pd-snav-v4 .snav-lbl{ font-size:9px !important; letter-spacing:.12em !important; text-transform:uppercase !important; color:#39220f !important; }
+html body nav.pd-snav-v4 .snav-badge{ position:absolute; top:-3px; right:-3px; background:#c58548; color:#FFFBF4; font-size:9.5px; min-width:17px; height:17px; padding:0 4px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; border:1.5px solid #FFFBF4; }
+@media (min-width:768px){ html body nav.pd-snav-v4{ display:none !important; } }
+</style>
+
+<script>
+(function(){
+  var mq = window.matchMedia('(min-width: 768px)');
+  function applyPad(){
+    if (mq.matches){ document.body.style.paddingBottom = '0px'; return; }
+    var bar = document.querySelector('nav.pd-snav-v4');
+    if (!bar || !bar.classList.contains('is-revealed')){ document.body.style.paddingBottom = '0px'; return; }
+    document.body.style.paddingBottom = Math.round(bar.getBoundingClientRect().height) + 'px';
+  }
+  function setupReveal(){
+    var bar = document.querySelector('nav.pd-snav-v4');
+    if (!bar) return;
+    var revealed = false;
+    var baseY = window.scrollY || 0;
+    function reveal(){ if (revealed) return; revealed = true; bar.classList.add('is-revealed'); applyPad(); window.removeEventListener('scroll', onScroll); }
+    function onScroll(){ if ((window.scrollY || 0) - baseY > 60) reveal(); }
+    window.addEventListener('scroll', onScroll, { passive:true });
+  }
+  function init(){ setupReveal(); applyPad(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  window.addEventListener('resize', applyPad);
+})();
+</script>
+{%- endunless -%}

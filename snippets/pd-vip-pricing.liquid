@@ -1,0 +1,36 @@
+{%- comment -%} VIP pricing tag. SF now $7.99 flat. Hidden when product price is already <= $7.99. {%- endcomment -%}
+{%- assign vip_variant_name = variant | default: 'main' -%}
+{%- assign vip_member_price = 799 -%}
+{%- assign vip_price_in = price | default: 0 -%}
+{%- assign vip_is_member = false -%}
+{%- if customer and customer.tags contains 'VIP' -%}{%- assign vip_is_member = true -%}{%- endif -%}
+{%- if vip_price_in == 0 or vip_price_in > 799 -%}
+  {%- if vip_is_member -%}
+    <span class="pd-vip-tag pd-vip-tag--member pd-vip-tag--{{ vip_variant_name }}" role="status" aria-label="VIP member">
+      <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 2 L14.5 8 L21 9 L16.5 13.5 L17.5 20 L12 16.5 L6.5 20 L7.5 13.5 L3 9 L9.5 8 Z"/></svg>
+      VIP
+    </span>
+  {%- else -%}
+    <a href="#pdVipSection" class="pd-vip-tag pd-vip-tag--cta pd-vip-tag--{{ vip_variant_name }}" aria-label="Unlock VIP price by joining free">
+      <svg class="pd-vip-tag-star" viewBox="0 0 24 24" width="11" height="11" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 2 L14.5 8 L21 9 L16.5 13.5 L17.5 20 L12 16.5 L6.5 20 L7.5 13.5 L3 9 L9.5 8 Z"/></svg>
+      <span class="pd-vip-tag-label">Unlock VIP {{ vip_member_price | money }}</span>
+      <svg class="pd-vip-tag-arrow" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 h14 M13 6 l6 6 -6 6"/></svg>
+    </a>
+  {%- endif -%}
+{%- endif -%}
+<style>
+html body .pd .pd-vip-tag{display:inline-flex!important;align-items:center!important;gap:5px!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;letter-spacing:.14em!important;text-transform:uppercase!important;border:1.5px solid #39220f!important;border-radius:999px!important;line-height:1!important;text-decoration:none!important;transition:transform .15s ease, box-shadow .15s ease, background .15s ease!important;white-space:nowrap!important;cursor:pointer!important}
+html body .pd .pd-vip-tag--member{background:#c58548!important;color:#FFFBF4!important;font-size:11px!important;padding:6px 11px!important;letter-spacing:.18em!important;box-shadow:2px 2px 0 #39220f!important;cursor:default!important}
+html body .pd .pd-vip-tag--member svg{color:#FCE2A0!important}
+html body .pd .pd-vip-tag--cta{background:#2F7DC4!important;color:#FFFBF4!important;font-size:10px!important;padding:7px 12px!important;letter-spacing:.14em!important;box-shadow:2.5px 2.5px 0 #39220f!important;gap:6px!important}
+html body .pd .pd-vip-tag--cta .pd-vip-tag-star{color:#B8DCEB!important}
+html body .pd .pd-vip-tag--cta .pd-vip-tag-label{color:#FFFBF4!important}
+html body .pd .pd-vip-tag--cta .pd-vip-tag-arrow{color:#B8DCEB!important;transition:transform .2s ease!important}
+html body .pd .pd-vip-tag--cta:hover{background:#1F5D9C!important;color:#FFFBF4!important;transform:translate(-1.5px,-1.5px)!important;box-shadow:4px 4px 0 #39220f!important}
+html body .pd .pd-vip-tag--cta:hover .pd-vip-tag-arrow{color:#FFFBF4!important;transform:translateX(2px)!important}
+html body .pd .pd-vip-tag--cta:hover .pd-vip-tag-star{color:#FFFBF4!important}
+html body .pd .pd-vip-tag--sticky{font-size:10px!important;padding:6px 10px!important;letter-spacing:.12em!important;gap:5px!important;box-shadow:none!important;border-width:1.5px!important}
+html body .pd .pd-vip-tag--sticky.pd-vip-tag--cta{box-shadow:none!important;font-size:9.5px!important;padding:6px 9px!important;background:#2F7DC4!important}
+html body .pd .pd-vip-tag--sticky.pd-vip-tag--cta:hover{transform:none!important;box-shadow:none!important;background:#1F5D9C!important}
+@media (max-width:760px){html body .pd .pd-vip-tag--main{font-size:9.5px!important;padding:6px 10px!important;letter-spacing:.10em!important}html body .pd .pd-vip-tag--main.pd-vip-tag--cta{font-size:9.5px!important;letter-spacing:.10em!important;gap:5px!important;padding:6px 10px!important}}
+</style>

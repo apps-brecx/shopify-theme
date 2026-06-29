@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "syr-recipe-detail",
+      "settings": {
+        "recipes_url": "/pages/recipe",
+        "need_heading": "You will need",
+        "need_sub": "Grab the Syruvia syrups behind this recipe.",
+        "fallback_collection": "best-sellers"
+      }
+    }
+  },
+  "order": ["main"]
+}

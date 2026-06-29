@@ -1,0 +1,1281 @@
+{%- comment -%} Syruvia — Collection (custom, reusable v7 + syrup spill) {%- endcomment -%}
+{%- liquid
+  assign heading = section.settings.heading | default: collection.title
+  assign seodesc = collection.metafields.global.description_tag
+  assign blurbtext = section.settings.blurb | default: seodesc | default: collection.description | strip_html
+  assign is_vip = false
+  if customer and customer.tags contains 'VIP'
+    assign is_vip = true
+  endif
+-%}
+<style>
+    .pcard--soldout .pcard-img { filter: grayscale(.7) opacity(.7); }
+  .badge.soldout { background:#e7e0d6; color:#7a6f5f; }
+  .quick-add.is-soldout,
+  .foot-add--soldout,
+  [data-qadd].is-soldout {
+    background:#e7e0d6; color:#8a7c68; cursor:not-allowed; pointer-events:none;
+  }
+    @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700;800&family=Josefin+Sans:ital,wght@0,300..700;1,300..600&display=swap');
+    .scol{ --bg:#FFFBF4; --bg-2:#FFF8EE; --shell:#FBEFE0; --surface:#FFFFFF; --ink:#39220f; --ink-2:#5a4632; --muted:#8a7a68;
+      --accent:#c58548; --star:#c58548; --butter:#FCE2A0; --peach:#FFD4B8; --mint:#C5E4D4; --sky:#B8DCEB; --blush:#F5C7BE;
+      --rule:2px solid var(--ink); --rule-1:1.5px solid var(--ink); --shadow:4px 4px 0 var(--ink); --shadow-sm:3px 3px 0 var(--ink); --shadow-cop:4px 4px 0 var(--accent);
+      --radius:18px; --font-head:'Archivo Black',sans-serif; --font-body:'Josefin Sans',sans-serif; --sf-ink:#1f6b4f; --col:234px; --gap:22px;
+      background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased; padding-top:107px; position:relative; }
+    .scol *,.scol *::before,.scol *::after{ box-sizing:border-box; }
+    .scol h1,.scol h2,.scol h3,.scol h4{ margin:0; font-weight:400; letter-spacing:-.01em; }
+    .scol button{ cursor:pointer; } .scol a{ cursor:pointer; }
+    .scol.dens-comfortable{ --col:234px; --gap:22px; }
+    .scol-decor{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+    .scol-decor .bp{ position:absolute; width:var(--s); height:var(--s); border-radius:50%; background:var(--c); opacity:.5; box-shadow:inset -3px -4px 5px rgba(0,0,0,.18); animation:scfloat 7s ease-in-out infinite; }
+    .scol-decor .nw{ position:absolute; font-family:'Archivo Black',sans-serif; text-transform:uppercase; color:var(--accent); opacity:.14; font-size:clamp(18px,2.4vw,34px); letter-spacing:-.01em; transform:rotate(-7deg); white-space:nowrap; animation:scfloat 9s ease-in-out infinite; }
+    .scol-decor .spill-drip{ position:absolute; top:-4px; width:var(--w); height:var(--h); background:linear-gradient(180deg,var(--c),color-mix(in srgb,var(--c) 22%,transparent)); border-radius:0 0 60% 60%/0 0 100% 100%; opacity:.5; }
+    .scol-decor .spill-drip::after{ content:''; position:absolute; left:50%; bottom:-7px; width:calc(var(--w) + 3px); height:calc(var(--w) + 6px); background:var(--c); border-radius:50%; opacity:.55; transform:translate(-50%,0); animation:scdripfall 3.6s ease-in infinite; animation-delay:var(--dl); }
+    @keyframes scdripfall{ 0%{ transform:translate(-50%,0); opacity:.55; } 70%{ opacity:.5; } 100%{ transform:translate(-50%,80px); opacity:0; } }
+    .scol-decor .spill-drop{ position:absolute; background:var(--c); border-radius:50% 50% 50% 0; opacity:.4; }
+    .scol-decor .spill-ic{ position:absolute; font-size:clamp(22px,2.4vw,32px); opacity:.55; animation:scfloat 7s ease-in-out infinite; }
+    .scol .hero,.scol .grid-wrap{ position:relative; z-index:1; }
+    .scol .hero{ position:relative; overflow:hidden; border-bottom:var(--rule); background:radial-gradient(110% 130% at 90% -20%, var(--peach), transparent 55%), radial-gradient(80% 120% at 2% 120%, var(--mint), transparent 48%), var(--bg); }
+    .scol .hero-inner{ max-width:1240px; margin:0 auto; padding:26px 28px 24px; display:grid; grid-template-columns:1.1fr .9fr; gap:30px; align-items:center; position:relative; }
+    .scol .crumbs{ font-family:'Archivo',sans-serif; font-size:12px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); display:flex; gap:8px; align-items:center; margin-bottom:14px; white-space:nowrap; }
+    .scol .crumbs a:hover{ color:var(--ink); } .scol .crumbs b{ color:var(--ink); } .scol .crumbs span{ opacity:.5; }
+    .scol .hero-eyebrow{ display:inline-flex; align-items:center; gap:7px; font-family:var(--font-head); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink); background:var(--surface); border:var(--rule-1); padding:7px 14px; border-radius:999px; box-shadow:var(--shadow-sm); }
+    .scol .hero-eyebrow svg{ color:var(--sf-ink); }
+    .scol .hero-title{ font-family:var(--font-head); font-size:clamp(40px,6vw,72px); line-height:.9; text-transform:uppercase; margin:14px 0 0; letter-spacing:-.02em; }
+    .scol .hero-tag{ font-family:var(--font-body); font-style:italic; font-weight:400; font-size:clamp(18px,2.2vw,25px); color:var(--accent); margin:8px 0 0; }
+    .scol .hero-blurb{ font-size:16px; color:var(--ink-2); max-width:32em; margin:12px 0 0; }
+    .scol .hero-meta{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:16px; }
+    .scol .hero-meta>span{ font-family:'Archivo',sans-serif; font-size:11.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--ink); background:var(--surface); border:var(--rule-1); padding:7px 12px; border-radius:999px; white-space:nowrap; }
+    .scol .hero-meta>span b{ color:var(--accent); }
+    .scol .hero-stage{ position:relative; height:230px; }
+    .scol .hero-blob{ position:absolute; border-radius:50%; filter:blur(40px); opacity:.5; }
+    .scol .hero-blob.b1{ width:230px; height:230px; right:6%; top:0; background:var(--butter); }
+    .scol .hero-blob.b2{ width:180px; height:180px; left:8%; bottom:0; background:var(--sky); }
+    .scol .floater{ position:absolute; will-change:transform; filter:drop-shadow(0 14px 16px rgba(57,34,15,.28)); }
+    .scol .floater img{ width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; }
+    .scol .floater.f0{ width:130px; height:162px; left:32%; top:6%; z-index:4; animation:scdrift 7s ease-in-out infinite; }
+    .scol .floater.f1{ width:96px; height:120px; left:6%; top:24%; z-index:3; animation:scdrift 8.4s ease-in-out infinite .4s; }
+    .scol .floater.f2{ width:108px; height:136px; right:8%; top:12%; z-index:3; animation:scdrift 9s ease-in-out infinite .9s; }
+    .scol .floater.f3{ width:86px; height:108px; right:22%; bottom:4%; z-index:5; animation:scdrift 7.8s ease-in-out infinite .2s; }
+    .scol .floater.f4{ width:78px; height:98px; left:22%; bottom:6%; z-index:2; animation:scdrift 8.8s ease-in-out infinite .6s; }
+    @keyframes scdrift{ 0%,100%{transform:translateY(0) rotate(-2deg);} 50%{transform:translateY(-14px) rotate(2deg);} }
+    .scol .boba{ position:absolute; border-radius:50%; opacity:.75; z-index:6; box-shadow:inset -3px -4px 6px rgba(0,0,0,.18); animation:scfloat 6s ease-in-out infinite; }
+    .scol .boba.k1{ width:26px;height:26px;left:14%;top:18%;background:#c8455f;animation-delay:0s; }
+    .scol .boba.k2{ width:18px;height:18px;left:40%;top:8%;background:#1f8a6e;animation-delay:.6s; }
+    .scol .boba.k3{ width:30px;height:30px;right:16%;top:22%;background:#3f6fd0;animation-delay:1.1s; }
+    .scol .boba.k4{ width:20px;height:20px;left:24%;bottom:14%;background:#c58548;animation-delay:.3s; }
+    .scol .boba.k5{ width:24px;height:24px;right:26%;bottom:10%;background:#7657c9;animation-delay:.9s; }
+    .scol .boba.k6{ width:16px;height:16px;right:40%;top:48%;background:#bf4a7d;animation-delay:1.4s; }
+    @keyframes scfloat{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-18px);} }
+    .scol .toolbar{ position:sticky; top:107px; z-index:5; background:var(--bg); border-bottom:var(--rule); }
+    .scol .tb-row{ max-width:1240px; margin:0 auto; padding:12px 28px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+    .scol .filters{ display:flex; gap:8px; flex-wrap:wrap; }
+    .scol .fchip{ font-family:'Archivo',sans-serif; border:var(--rule-1); background:var(--surface); color:var(--ink); font-weight:700; font-size:12px; letter-spacing:.05em; text-transform:uppercase; padding:8px 14px; border-radius:999px; transition:transform .12s,box-shadow .12s,background .15s; }
+    .scol .fchip:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-sm); }
+    .scol .fchip.on{ background:var(--ink); color:var(--bg); }
+    .scol .tb-right{ display:flex; align-items:center; gap:12px; flex:0 0 auto; }
+    .scol .result-count{ font-family:'Archivo',sans-serif; font-size:12px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--muted); white-space:nowrap; }
+    .scol .scol-search{ position:relative; display:flex; align-items:center; }
+    .scol .scol-search svg{ position:absolute; left:11px; width:15px; height:15px; stroke:var(--muted); pointer-events:none; }
+    .scol .scol-search input{ font-family:'Archivo',sans-serif; border:var(--rule-1); background:var(--surface); color:var(--ink); font-size:12.5px; padding:9px 12px 9px 32px; border-radius:999px; width:150px; outline:none; -webkit-appearance:none; }
+    .scol .scol-search input:focus{ box-shadow:var(--shadow-sm); }
+    .scol .viewtoggle{ display:inline-flex; border:var(--rule-1); border-radius:999px; background:var(--surface); padding:3px; gap:2px; }
+    .scol .vt-btn{ width:34px; height:32px; border:0; background:transparent; color:var(--ink); border-radius:999px; display:grid; place-items:center; transition:background .15s; }
+    .scol .vt-btn.on{ background:var(--ink); color:var(--bg); }
+    .scol .sortmenu{ position:relative; }
+    .scol .sort-btn{ display:inline-flex; align-items:center; gap:7px; background:var(--surface); border:var(--rule-1); color:var(--ink); font-family:'Archivo',sans-serif; font-weight:700; font-size:12.5px; letter-spacing:.02em; padding:9px 14px; border-radius:999px; white-space:nowrap; transition:transform .12s,box-shadow .12s; }
+    .scol .sort-btn:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-sm); }
+    .scol .sort-lab{ color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.08em; font-size:11px; }
+    .scol .sort-chev{ display:inline-flex; transition:transform .2s; color:var(--ink); }
+    .scol .sort-btn.open .sort-chev{ transform:rotate(180deg); }
+    .scol .sort-pop{ position:absolute; right:0; top:calc(100% + 8px); background:var(--surface); border:var(--rule); border-radius:14px; box-shadow:var(--shadow); padding:6px; min-width:216px; z-index:50; opacity:0; transform:translateY(-6px); pointer-events:none; transition:all .16s cubic-bezier(.3,1,.5,1); transform-origin:top right; }
+    .scol .sort-pop.open{ opacity:1; transform:translateY(0); pointer-events:auto; }
+    .scol .sort-opt{ display:block; width:100%; text-align:left; background:transparent; border:0; color:var(--ink); font-family:var(--font-body); font-size:14px; font-weight:600; padding:9px 12px; border-radius:9px; transition:background .12s; }
+    .scol .sort-opt:hover{ background:var(--bg-2); } .scol .sort-opt.on{ background:var(--mint); }
+    .scol .stars{ display:inline-flex; align-items:center; gap:2px; line-height:0; flex:0 0 auto; vertical-align:middle; }
+    .scol .stars .str{ display:block; }
+    .scol .qv-rate .stars .str{ width:16px; height:16px; }
+    .scol .grid-wrap{ max-width:1240px; margin:0 auto; padding:26px 28px 10px; }
+    .scol .pgrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(var(--col),1fr)); gap:var(--gap); }
+    .scol .pcard{ position:relative; background:var(--surface); border:var(--rule); border-radius:var(--radius); display:flex; flex-direction:column; overflow:hidden; box-shadow:var(--shadow); transition:transform .2s cubic-bezier(.3,1,.5,1),box-shadow .2s ease; }
+    @media (prefers-reduced-motion: no-preference){ .scol .pcard{ animation:sccardIn .5s cubic-bezier(.3,1,.5,1) both; animation-delay:var(--d); } }
+    @keyframes sccardIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:translateY(0); } }
+    .scol .pcard:hover{ transform:translate(-3px,-3px); box-shadow:7px 7px 0 var(--ink); }
+    .scol .pcard-media{ position:relative; cursor:pointer; padding:16px; background:radial-gradient(120% 95% at 50% 8%, #fff, var(--bg-2)); border-bottom:var(--rule); transition:background .35s ease; }
+    .scol .pcard:hover .pcard-media{ background:radial-gradient(120% 100% at 50% 0%, #fff, var(--tint, var(--shell))); }
+    .scol .pcard-imgwrap{ aspect-ratio:1/1.02; display:grid; place-items:center; }
+    .scol .pcard-img{ width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; transition:transform .4s cubic-bezier(.3,1,.5,1); }
+    .scol .pcard:hover .pcard-img{ transform:scale(1.07) rotate(-1.5deg); }
+    .scol .pcard-badges{ position:absolute; top:12px; left:12px; z-index:3; display:flex; flex-direction:column; gap:5px; align-items:flex-start; }
+    .scol .badge{ font-family:var(--font-head); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; padding:5px 9px; border-radius:999px; border:var(--rule-1); white-space:nowrap; }
+    .scol .badge.best{ background:var(--ink); color:var(--bg); } .scol .badge.new{ background:var(--accent); color:var(--ink); }
+    .scol .wish{ position:absolute; top:11px; right:11px; z-index:3; width:34px; height:34px; border-radius:50%; background:var(--surface); border:var(--rule-1); color:var(--ink); display:grid; place-items:center; transition:transform .15s,box-shadow .15s,color .15s; }
+    .scol .wish:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-sm); color:var(--accent); }
+    .scol .wish.on{ color:var(--accent); background:var(--blush); }
+    .scol .wish svg{ width:16px; height:16px; }
+    .scol .wish-f{ display:none; } .scol .wish.on .wish-f{ display:block; } .scol .wish.on .wish-o{ display:none; }
+    .scol .pcard-hoverbar{ position:absolute; left:12px; right:12px; bottom:12px; z-index:3; display:flex; gap:8px; opacity:0; transform:translateY(12px); transition:all .25s cubic-bezier(.3,1,.5,1); }
+    .scol .pcard:hover .pcard-hoverbar{ opacity:1; transform:none; }
+    .scol .quick-add{ flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; height:42px; background:var(--ink); color:var(--bg); border:var(--rule-1); border-radius:999px; font-family:var(--font-head); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; transition:background .18s,color .18s; }
+    .scol .quick-add:hover{ background:var(--accent); color:var(--ink); } .scol .quick-add svg{ width:13px; height:13px; }
+    .scol .quick-view{ flex:0 0 auto; width:42px; height:42px; border-radius:50%; background:var(--surface); border:var(--rule-1); color:var(--ink); display:grid; place-items:center; transition:background .18s,color .18s; }
+    .scol .quick-view:hover{ background:var(--accent); color:var(--ink); }
+    @media (hover: none){ .scol .pcard-hoverbar{ display:none; } }
+    .scol .pcard-body{ padding:14px 16px 16px; display:flex; flex-direction:column; gap:6px; flex:1; }
+    .scol .flavor-tag{ align-self:flex-start; font-family:var(--font-head); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink); background:var(--mint); border:var(--rule-1); padding:4px 9px; border-radius:999px; white-space:nowrap; }
+    .scol .pcard-name{ font-family:var(--font-head); font-size:16px; line-height:1.08; margin-top:3px; cursor:pointer; letter-spacing:-.01em; }
+    .scol .pcard-name:hover{ color:var(--accent); }
+    .scol .sf-label{ font-family:'Archivo',sans-serif; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--sf-ink); margin:0; }
+    .scol .pcard-rate{ display:flex; align-items:center; gap:7px; margin-top:2px; }
+    .scol:not(.show-ratings) .pcard-rate{ display:none; }
+    .scol .rate-n{ font-family:'Archivo',sans-serif; font-size:12px; font-weight:700; color:var(--ink); }
+    .scol .rate-n em{ font-style:normal; color:var(--muted); font-weight:600; }
+    .scol .pcard-foot{ margin-top:auto; padding-top:10px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .scol .pcard-price{ font-family:var(--font-head); font-size:19px; }
+    .scol .foot-add{ display:inline-flex; align-items:center; justify-content:center; gap:8px; width:40px; height:40px; border-radius:999px; border:var(--rule); background:var(--surface); color:var(--ink); transition:transform .15s,box-shadow .15s,background .16s,color .16s; }
+    .scol .foot-add:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-sm); background:var(--accent); color:var(--ink); }
+    .scol .foot-add-ic{ display:inline-flex; } .scol .foot-add-ic svg{ width:14px; height:14px; display:block; }
+    .scol .foot-add-label{ display:none; font-family:var(--font-head); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; }
+    .scol .foot-add.added{ background:var(--mint); }
+    .scol .empty{ text-align:center; color:var(--muted); padding:60px 0; font-family:var(--font-head); text-transform:uppercase; letter-spacing:.04em; grid-column:1 / -1; }
+    .fly-bottle{ position:fixed; z-index:200; pointer-events:none; object-fit:contain; transition:transform .68s cubic-bezier(.5,0,.6,1),opacity .68s ease; mix-blend-mode:multiply; }
+    .scol .promo-card{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:12px; min-height:200px; padding:24px 18px; border:var(--rule); border-radius:var(--radius); box-shadow:var(--shadow); color:var(--ink); text-decoration:none; transition:transform .2s cubic-bezier(.3,1,.5,1),box-shadow .2s ease; }
+    .scol a.promo-card:hover{ transform:translate(-3px,-3px); box-shadow:7px 7px 0 var(--ink); }
+    .scol .promo-card .promo-ic{ font-size:42px; line-height:1; }
+    .scol .promo-card b{ font-family:var(--font-head); font-size:clamp(15px,1.5vw,19px); line-height:1.14; text-transform:uppercase; color:var(--ink); letter-spacing:-.01em; }
+    .scol .promo-card .promo-cta{ font-family:'Archivo',sans-serif; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink); border-bottom:2px solid var(--ink); padding-bottom:1px; }
+    .scol .promo-card.t-mint{ background:var(--mint); } .scol .promo-card.t-peach{ background:var(--peach); } .scol .promo-card.t-butter{ background:var(--butter); } .scol .promo-card.t-sky{ background:var(--sky); } .scol .promo-card.t-blush{ background:var(--blush); }
+    .scol .promo-card.is-quote b{ font-family:var(--font-body) !important; font-style:italic; text-transform:none; font-size:clamp(15px,1.6vw,20px); font-weight:700; }
+    .scol.view-list .promo-card{ min-height:0; flex-direction:row; gap:16px; justify-content:flex-start; text-align:left; padding:18px 24px; }
+    .scol.view-list .pgrid{ grid-template-columns:1fr; gap:14px; }
+    .scol.view-list .pcard{ flex-direction:row; align-items:stretch; }
+    .scol.view-list .pcard-media{ flex:0 0 180px; width:180px; padding:12px; border-bottom:0; border-right:var(--rule); }
+    .scol.view-list .pcard-imgwrap{ aspect-ratio:auto; height:100%; min-height:150px; }
+    .scol.view-list .pcard-hoverbar{ display:none; }
+    .scol.view-list .pcard-body{ flex:1; justify-content:center; padding:20px 24px; gap:7px; }
+    .scol.view-list .pcard-name{ font-size:22px; }
+    .scol.view-list .pcard-foot{ padding-top:12px; justify-content:flex-start; gap:18px; }
+    .scol.view-list .pcard-price{ font-size:22px; }
+    .scol.view-list .foot-add{ width:auto; height:44px; padding:0 20px; }
+    .scol.view-list .foot-add-label{ display:inline; }
+    .scol .qv-root{ position:fixed; inset:0; z-index:90; pointer-events:none; } .scol .qv-root.open{ pointer-events:auto; }
+    .scol .qv-backdrop{ position:absolute; inset:0; background:rgba(40,24,10,.46); opacity:0; transition:opacity .3s; } .scol .qv-root.open .qv-backdrop{ opacity:1; }
+    .scol .qv{ position:absolute; top:0; right:0; height:100%; width:460px; max-width:94vw; background:var(--bg); border-left:var(--rule); box-shadow:-16px 0 50px -28px rgba(40,24,10,.5); transform:translateX(102%); transition:transform .4s cubic-bezier(.32,1,.4,1); display:flex; flex-direction:column; overflow-y:auto; }
+    .scol .qv-root.open .qv{ transform:none; }
+    .scol .qv-close{ position:absolute; top:16px; right:16px; z-index:5; width:40px; height:40px; border-radius:50%; background:var(--surface); border:var(--rule); color:var(--ink); display:grid; place-items:center; }
+    .scol .qv-media{ position:relative; padding:54px 40px 30px; display:grid; place-items:center; background:radial-gradient(110% 80% at 50% 10%, #fff, var(--tint, var(--shell))); border-bottom:var(--rule); }
+    .scol .qv-media img{ width:62%; max-width:230px; object-fit:contain; filter:drop-shadow(0 18px 22px rgba(57,34,15,.3)); mix-blend-mode:multiply; }
+    .scol .qv-badges{ position:absolute; top:18px; left:18px; display:flex; gap:6px; }
+    .scol .qv-body{ padding:24px 28px 34px; display:flex; flex-direction:column; gap:11px; }
+    .scol .qv-name{ font-family:var(--font-head); font-size:30px; line-height:1; text-transform:uppercase; letter-spacing:-.01em; }
+    .scol .qv-rate{ display:flex; align-items:center; gap:9px; font-size:13px; color:var(--muted); font-weight:600; white-space:nowrap; }
+    .scol .qv-desc{ font-size:15px; color:var(--ink-2); line-height:1.55; margin:2px 0 0; }
+    .scol .qv-perks{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:10px 0 4px; }
+    .scol .perk{ display:inline-flex; align-items:center; gap:7px; font-family:'Archivo',sans-serif; font-size:13px; color:var(--sf-ink); font-weight:700; } .scol .perk svg{ color:var(--sf-ink); flex:0 0 auto; }
+    .scol .qv-buy{ display:flex; align-items:center; gap:10px; margin-top:12px; }
+    .scol .qty-step{ display:inline-flex; align-items:center; border:var(--rule); border-radius:999px; background:var(--surface); padding:3px; }
+    .scol .qty-step button{ width:34px; height:34px; border:0; background:transparent; color:var(--ink); font-size:18px; font-weight:700; border-radius:50%; transition:background .14s; } .scol .qty-step button:hover{ background:var(--bg-2); }
+    .scol .qty-step span{ min-width:26px; text-align:center; font-family:var(--font-head); }
+    .scol .qv-add{ flex:1; height:52px; border:var(--rule); border-radius:999px; background:var(--ink); color:var(--bg); font-family:var(--font-head); font-size:13px; letter-spacing:.1em; text-transform:uppercase; box-shadow:var(--shadow-sm); transition:transform .14s,box-shadow .14s,background .2s,color .2s; }
+    .scol .qv-add:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-cop); background:var(--accent); color:var(--ink); } .scol .qv-add.added{ background:var(--mint); color:var(--ink); }
+    .scol .qv-wish{ flex:0 0 auto; width:52px; height:52px; border-radius:50%; border:var(--rule); background:var(--surface); color:var(--ink); display:grid; place-items:center; } .scol .qv-wish.on{ color:var(--accent); background:var(--blush); }
+    .scol .qv-link{ font-family:'Archivo',sans-serif; font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--accent); margin-top:14px; align-self:flex-start; }
+    .scol .ctoast{ position:fixed; left:50%; bottom:32px; transform:translateX(-50%); z-index:120; background:var(--ink); color:var(--bg); font-family:var(--font-head); font-size:13px; letter-spacing:.04em; text-transform:uppercase; padding:14px 22px; border:var(--rule); border-radius:999px; box-shadow:var(--shadow); }
+    .scol .ctoast::before{ content:"✓"; color:var(--mint); margin-right:8px; }
+    .scol,.scol p,.scol span,.scol a,.scol button,.scol input,.scol li{ font-family:'Josefin Sans',sans-serif !important; }
+    .scol h1,.scol h2,.scol h3,.scol h4,.scol .hero-title,.scol .hero-eyebrow,.scol .pcard-name,.scol .pcard-price,.scol .qv-name,.scol .badge,.scol .flavor-tag,.scol .quick-add,.scol .qv-add,.scol .foot-add-label,.scol .promo-card b,.scol .empty,.scol .ctoast,.scol .qty-step span,.scol-decor .nw{ font-family:'Archivo Black',sans-serif !important; }
+    .scol .crumbs,.scol .fchip,.scol .result-count,.scol .sort-btn,.scol .sort-lab,.scol .hero-meta>span,.scol .perk,.scol .qv-link,.scol .sf-label,.scol .rate-n,.scol .scol-search input,.scol .promo-cta{ font-family:'Archivo',sans-serif !important; }
+    .scol .hero-tag,.scol .qv-desc,.scol .hero-blurb,.scol .sort-opt,.scol .promo-card.is-quote b{ font-family:'Josefin Sans',sans-serif !important; }
+    @media (max-width: 980px){ .scol .hero-inner{ grid-template-columns:1fr; gap:18px; } .scol .hero-stage{ height:190px; order:-1; } }
+    @media (max-width: 720px){
+      .scol .hero-inner{ padding:20px 16px 18px; } .scol .hero-stage{ display:none; }
+      .scol .grid-wrap,.scol .tb-row,.scol .hero-inner{ padding-left:16px; padding-right:16px; }
+      .scol .tb-row{ flex-wrap:wrap; gap:10px; }
+      .scol .filters{ flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; margin:0 -16px; padding:0 16px; order:3; width:100%; } .scol .filters::-webkit-scrollbar{ display:none; } .scol .fchip{ flex:0 0 auto; }
+      .scol .tb-right{ order:1; width:100%; flex-wrap:wrap; justify-content:space-between; }
+      .scol .scol-search{ order:2; width:100%; } .scol .scol-search input{ width:100%; }
+      .scol .pgrid{ grid-template-columns:1fr 1fr; gap:12px; --col:0px; }
+      .scol.view-list .pcard-media{ flex:0 0 130px; width:130px; min-height:0; } .scol.view-list .pcard-imgwrap{ min-height:118px; } .scol.view-list .pcard-name{ font-size:18px; } .scol.view-list .pcard-body{ padding:14px 14px; } .scol.view-list .pcard-foot{ padding-top:10px; }
+      .scol .promo-card{ min-height:0; padding:18px 14px; }
+      .scol .pcard-media{ padding:12px; } .scol .pcard-body{ padding:12px 13px 14px; }
+      .scol .pcard-hoverbar{ display:none; } .scol .foot-add{ width:44px; height:44px; }
+      .scol .qv{ width:100%; max-width:100%; top:auto; bottom:0; height:auto; max-height:92vh; border-left:0; border-top:var(--rule); border-radius:22px 22px 0 0; transform:translateY(102%); }
+    }
+    @media (max-width: 380px){ .scol.view-grid .pgrid{ grid-template-columns:1fr; } }
+    @media (prefers-reduced-motion: reduce){ .scol *,.scol *::before,.scol *::after{ animation-duration:.001ms !important; transition-duration:.001ms !important; } .scol .pcard{ opacity:1 !important; transform:none !important; } }
+    .scol .pcard-vip-cta{ display:inline-flex; align-items:center; gap:6px; align-self:flex-start; margin-top:2px; font-family:'Archivo',sans-serif; font-size:11.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:#2F7DC4; background:#eaf2fb; border:1.5px solid #2F7DC4; border-radius:999px; padding:5px 11px; cursor:pointer; transition:transform .14s,box-shadow .14s,background .16s,color .16s; }
+    .scol .pcard-vip-cta:hover{ transform:translate(-1px,-1px); box-shadow:3px 3px 0 #2F7DC4; background:#2F7DC4; color:#fff; }
+    .scol .pcard-vip-cta .vipstar{ flex:0 0 auto; }
+    .scol .pcard-vipbadge{ display:inline-flex; align-items:center; gap:3px; font-family:'Archivo',sans-serif !important; font-size:10px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#fff; background:var(--accent); border-radius:999px; padding:2px 7px; vertical-align:middle; }
+    .scol .scol-vip{ position:fixed; inset:0; z-index:130; display:none; align-items:center; justify-content:center; padding:20px; }
+    .scol .scol-vip.open{ display:flex; }
+    .scol .scol-vip-backdrop{ position:absolute; inset:0; background:rgba(40,24,10,.5); }
+    .scol .scol-vip-card{ position:relative; z-index:1; width:420px; max-width:100%; background:var(--bg); border:var(--rule); border-radius:22px; box-shadow:8px 8px 0 var(--ink); padding:30px 28px 26px; text-align:center; animation:scvipin .3s cubic-bezier(.3,1,.5,1) both; }
+    @keyframes scvipin{ from{ opacity:0; transform:translateY(16px) scale(.97); } to{ opacity:1; transform:none; } }
+    .scol .scol-vip-x{ position:absolute; top:14px; right:14px; width:34px; height:34px; border-radius:50%; background:var(--surface); border:var(--rule-1); color:var(--ink); display:grid; place-items:center; cursor:pointer; }
+    .scol .scol-vip-eyebrow{ display:inline-flex; align-items:center; gap:6px; font-family:var(--font-head) !important; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+    .scol .scol-vip-h{ font-family:var(--font-head) !important; font-size:24px; text-transform:uppercase; margin:10px 0 8px; color:var(--ink); }
+    .scol .scol-vip-lede{ font-size:15px; color:var(--ink-2); line-height:1.55; margin:0 0 18px; }
+    .scol .scol-vip-lede b{ color:var(--ink); }
+    .scol .scol-vip-actions{ display:flex; flex-direction:column; gap:10px; }
+    .scol .scol-vip-btn{ display:inline-flex; align-items:center; justify-content:center; height:48px; border:var(--rule); border-radius:999px; font-family:var(--font-head) !important; font-size:12.5px; letter-spacing:.08em; text-transform:uppercase; background:var(--surface); color:var(--ink); cursor:pointer; transition:transform .14s,box-shadow .14s,background .2s,color .2s; }
+    .scol .scol-vip-btn.primary{ background:var(--ink); color:var(--bg); box-shadow:var(--shadow-sm); }
+    .scol .scol-vip-btn:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-cop); background:var(--accent); color:var(--ink); }
+    .scol .scol-vip-fine{ font-size:12.5px; color:var(--muted); margin:14px 0 0; }
+    .scol .scol-more{ display:flex; justify-content:center; align-items:center; padding:26px 0 12px; min-height:44px; }
+    .scol .scol-more-spin{ width:26px; height:26px; border-radius:50%; border:3px solid var(--shell); border-top-color:var(--accent); animation:scspin .7s linear infinite; }
+    @keyframes scspin{ to{ transform:rotate(360deg); } }
+</style>
+
+{%- capture icHeart -%}<svg viewBox="0 0 20 18" width="16" height="16" fill="none"><path d="M10 16S2 11.4 2 6.2C2 3.9 3.9 2 6.2 2 7.8 2 9.2 3 10 4.3 10.8 3 12.2 2 13.8 2 16.1 2 18 3.9 18 6.2 18 11.4 10 16 10 16z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icHeartF -%}<svg viewBox="0 0 20 18" width="16" height="16" fill="currentColor"><path d="M10 16S2 11.4 2 6.2C2 3.9 3.9 2 6.2 2 7.8 2 9.2 3 10 4.3 10.8 3 12.2 2 13.8 2 16.1 2 18 3.9 18 6.2 18 11.4 10 16 10 16z"/></svg>{%- endcapture -%}
+{%- capture icPlus -%}<svg viewBox="0 0 14 14" width="14" height="14"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>{%- endcapture -%}
+{%- capture icEye -%}<svg viewBox="0 0 20 14" width="18" height="14" fill="none"><path d="M1 7s3.2-5.5 9-5.5S19 7 19 7s-3.2 5.5-9 5.5S1 7 1 7z" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="7" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>{%- endcapture -%}
+{%- capture icLeaf -%}<svg viewBox="0 0 18 18" width="15" height="15" fill="none"><path d="M15 3C7 3 3 7 3 14c5 0 12-2 12-11z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 15S6 9 12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>{%- endcapture -%}
+{%- capture icSearch -%}<svg viewBox="0 0 19 19" width="15" height="15" fill="none"><circle cx="8" cy="8" r="6.2" stroke="currentColor" stroke-width="1.8"/><path d="M12.8 12.8L17 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>{%- endcapture -%}
+{%- capture icGrid -%}<svg viewBox="0 0 18 18" width="16" height="16" fill="none"><rect x="2" y="2" width="6" height="6" rx="1.4" stroke="currentColor" stroke-width="1.7"/><rect x="10" y="2" width="6" height="6" rx="1.4" stroke="currentColor" stroke-width="1.7"/><rect x="2" y="10" width="6" height="6" rx="1.4" stroke="currentColor" stroke-width="1.7"/><rect x="10" y="10" width="6" height="6" rx="1.4" stroke="currentColor" stroke-width="1.7"/></svg>{%- endcapture -%}
+{%- capture icList -%}<svg viewBox="0 0 18 18" width="16" height="16" fill="none"><rect x="2" y="3" width="14" height="4" rx="1.4" stroke="currentColor" stroke-width="1.7"/><rect x="2" y="11" width="14" height="4" rx="1.4" stroke="currentColor" stroke-width="1.7"/></svg>{%- endcapture -%}
+{%- capture icChev -%}<svg viewBox="0 0 12 12" width="12" height="12"><path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>{%- endcapture -%}
+{%- capture icClose -%}<svg viewBox="0 0 16 16" width="16" height="16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>{%- endcapture -%}
+{%- capture icVipStar -%}<svg class="vipstar" viewBox="0 0 24 24" width="11" height="11" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.6 1.3 6.7L12 17.8 5.9 20.4 7.2 13.7l-5-4.6 6.8-.8z"/></svg>{%- endcapture -%}
+{%- assign starpath = 'M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 15l-5.3 2.6 1-5.8L1.5 7.7l5.9-.9L10 1.5z' -%}
+{%- capture starFull -%}<svg class="str" viewBox="0 0 20 20" width="14" height="14"><path d="{{ starpath }}" fill="#c58548"/></svg>{%- endcapture -%}
+{%- capture starHalf -%}<svg class="str" viewBox="0 0 20 20" width="14" height="14"><path d="{{ starpath }}" fill="url(#scolhalf)"/></svg>{%- endcapture -%}
+{%- capture starEmpty -%}<svg class="str" viewBox="0 0 20 20" width="14" height="14"><path d="{{ starpath }}" fill="#e6dccb"/></svg>{%- endcapture -%}
+{%- assign famset = '' -%}
+{%- assign hassf = false -%}
+{%- for product in collection.products -%}
+  {%- assign tg2 = product.tags | join: ' ' | downcase -%}
+  {%- assign f2 = '' -%}
+  {%- if tg2 contains 'coffee' -%}
+    {%- assign f2 = 'Coffee' -%}
+  {%- elsif tg2 contains 'fruit' -%}
+    {%- assign f2 = 'Fruit' -%}
+  {%- elsif tg2 contains 'tropical' -%}
+    {%- assign f2 = 'Tropical' -%}
+  {%- elsif tg2 contains 'cocktail' -%}
+    {%- assign f2 = 'Cocktail' -%}
+  {%- elsif tg2 contains 'nut' -%}
+    {%- assign f2 = 'Nutty' -%}
+  {%- elsif tg2 contains 'floral' or tg2 contains 'lavender' -%}
+    {%- assign f2 = 'Floral' -%}
+  {%- elsif tg2 contains 'dessert' -%}
+    {%- assign f2 = 'Dessert' -%}
+  {%- endif -%}
+  {%- if f2 != blank -%}
+    {%- unless famset contains f2 -%}{%- assign famset = famset | append: ' ' | append: f2 -%}{%- endunless -%}
+  {%- endif -%}
+  {%- if product.tags contains 'Sugar-Free'
+    or product.title contains 'Sugar-Free'
+    or product.title contains 'Sugar Free'
+  -%}
+    {%- assign hassf = true -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<div
+  class="scol view-grid dens-comfortable show-ratings"
+  data-scol
+  data-kicker="{{ section.settings.kicker | escape }}"
+  data-qvnote="{{ section.settings.qv_note | escape }}"
+  data-promo1="{{ section.settings.promo1 | escape }}"
+  data-promo1l="{{ section.settings.promo1_link | escape }}"
+  data-promo2="{{ section.settings.promo2 | escape }}"
+  data-promo2l="{{ section.settings.promo2_link | escape }}"
+  data-promo3="{{ section.settings.promo3 | escape }}"
+  data-promo3l="{{ section.settings.promo3_link | escape }}"
+  data-promo4="{{ section.settings.promo4 | escape }}"
+  data-promo4l="{{ section.settings.promo4_link | escape }}"
+  data-promo5="{{ section.settings.promo5 | escape }}"
+  data-promo5l="{{ section.settings.promo5_link | escape }}"
+>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs><linearGradient id="scolhalf" x1="0" y1="0" x2="1" y2="0"><stop offset="50%" stop-color="#c58548"/><stop offset="50%" stop-color="#e6dccb"/></linearGradient></defs>
+  </svg>
+  {%- if section.settings.decor == 'boba' -%}
+    <div class="scol-decor" aria-hidden="true">
+      {%- assign cols = '#c8455f,#1f8a6e,#3f6fd0,#c58548,#7657c9,#bf4a7d' | split: ',' -%}
+      {%- for i in (1..22) -%}
+        {%- assign lx = i | times: 47 | modulo: 94 | plus: 2 -%}
+        {%- assign ty = i | times: 53 | modulo: 96 | plus: 1 -%}
+        {%- assign sz = i | times: 7 | modulo: 18 | plus: 12 -%}
+        {%- assign ci = i | modulo: 6 -%}
+        {%- assign dl = i | modulo: 7 -%}
+        <span
+          class="bp"
+          style="left:{{ lx }}%;top:{{ ty }}%;--s:{{ sz }}px;--c:{{ cols[ci] }};animation-delay:{{ dl }}00ms"
+        ></span>
+      {%- endfor -%}
+    </div>
+  {%- elsif section.settings.decor == 'notes' -%}
+    <div class="scol-decor" aria-hidden="true">
+      {%- assign nwords = section.settings.decor_notes | split: ',' -%}
+      {%- if nwords.size > 0 -%}
+        {%- for i in (1..16) -%}
+          {%- assign lx = i | times: 41 | modulo: 86 | plus: 2 -%}
+          {%- assign ty = i | times: 59 | modulo: 95 | plus: 1 -%}
+          {%- assign wi = i | modulo: nwords.size -%}
+          {%- assign dl = i | modulo: 6 -%}
+          <span class="nw" style="left:{{ lx }}%;top:{{ ty }}%;animation-delay:{{ dl }}00ms">
+            {{- nwords[wi] | strip -}}
+          </span>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  {%- elsif section.settings.decor == 'spill' -%}
+    <div class="scol-decor" aria-hidden="true">
+      {%- assign sc = section.settings.decor_color | default: '#c58548' -%}
+      {%- assign sicons = section.settings.decor_icons | split: ',' -%}
+      {%- for i in (1..8) -%}
+        {%- assign lx = i | times: 53 | modulo: 92 | plus: 3 -%}
+        {%- assign h = i | times: 9 | modulo: 90 | plus: 50 -%}
+        {%- assign w = i | modulo: 3 | plus: 8 -%}
+        {%- assign dl = i | modulo: 6 -%}
+        <span
+          class="spill-drip"
+          style="left:{{ lx }}%;--w:{{ w }}px;--h:{{ h }}px;--c:{{ sc }};--dl:{{ dl }}00ms"
+        ></span>
+      {%- endfor -%}
+      {%- for i in (1..14) -%}
+        {%- assign lx = i | times: 37 | modulo: 94 | plus: 2 -%}
+        {%- assign ty = i | times: 61 | modulo: 92 | plus: 4 -%}
+        {%- assign sz = i | modulo: 12 | plus: 10 -%}
+        {%- assign rot = i | times: 33 | modulo: 90 -%}
+        <span
+          class="spill-drop"
+          style="left:{{ lx }}%;top:{{ ty }}%;width:{{ sz }}px;height:{{ sz }}px;--c:{{ sc }};transform:rotate({{ rot }}deg)"
+        ></span>
+      {%- endfor -%}
+      {%- if sicons.size > 0 -%}
+        {%- for i in (1..8) -%}
+          {%- assign lx = i | times: 43 | modulo: 90 | plus: 3 -%}
+          {%- assign ty = i | times: 71 | modulo: 90 | plus: 4 -%}
+          {%- assign ii = i | modulo: sicons.size -%}
+          {%- assign dl = i | modulo: 6 -%}
+          <span class="spill-ic" style="left:{{ lx }}%;top:{{ ty }}%;animation-delay:{{ dl }}00ms">
+            {{- sicons[ii] | strip -}}
+          </span>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+  {%- style -%}
+    section.hero.hero-float,
+    .hero.hero-float {
+      background: rgb(255, 251, 244) !important;
+      background-image: none !important;
+    }
+  {%- endstyle -%}
+  <section class="hero hero-float">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <nav class="crumbs">
+          <a>Home</a> <span>/</span> <a>Collections</a> <span>/</span> <b>{{ heading }}</b>
+        </nav>
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="hero-eyebrow">
+            {{- icLeaf }}
+            {{ section.settings.eyebrow -}}
+          </span>
+        {%- endif -%}
+        <h1 class="hero-title">{{ heading }}</h1>
+        {%- if section.settings.tagline != blank -%}
+          <p class="hero-tag">{{ section.settings.tagline }}</p>
+        {%- endif -%}
+        {%- if blurbtext != blank -%}
+          <p class="hero-blurb">{{ blurbtext | truncate: 600 }}</p>
+        {%- endif -%}
+        <div class="hero-meta">
+          <span
+            ><b>{{ collection.products_count }}</b> flavors</span
+          >
+          {%- if section.settings.stat_badge != blank -%}
+            <span>{{ section.settings.stat_badge }}</span>
+          {%- endif -%}
+          <span><b>4.8★</b> avg rating</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% comment %}
+    <div class="hero-stage" aria-hidden="true">
+      {%- assign fc = 0 -%}
+      {%- for product in collection.products -%}{%- if product.tags contains 'Best Seller' and fc < 5 -%}<div class="floater f{{ fc }}"><img src="{{ product.featured_image | image_url: width: 220 }}" alt=""></div>{%- assign fc = fc | plus: 1 -%}{%- endif -%}{%- endfor -%}
+      {%- if fc == 0 -%}{%- assign fc2 = 0 -%}{%- for product in collection.products limit: 5 -%}<div class="floater f{{ fc2 }}"><img src="{{ product.featured_image | image_url: width: 220 }}" alt=""></div>{%- assign fc2 = fc2 | plus: 1 -%}{%- endfor -%}{%- endif -%}
+      {%- if section.settings.decor == 'boba' -%}<span class="boba k1"></span><span class="boba k2"></span><span class="boba k3"></span><span class="boba k4"></span><span class="boba k5"></span><span class="boba k6"></span>{%- endif -%}
+      <div class="hero-blob b1"></div><div class="hero-blob b2"></div>
+    </div>
+  {% endcomment %}
+
+  <div class="toolbar">
+    <div class="tb-row">
+      <div class="filters">
+        <button class="fchip on" data-fam="All">All</button>
+        {%- if hassf -%}
+          <button class="fchip" data-fam="Sugar-Free">Sugar-Free</button>
+        {%- endif -%}
+        {%- if famset contains 'Coffee' -%}
+          <button class="fchip" data-fam="Coffee">Coffee</button>
+        {%- endif -%}
+        {%- if famset contains 'Dessert' -%}
+          <button class="fchip" data-fam="Dessert">Dessert</button>
+        {%- endif -%}
+        {%- if famset contains 'Fruit' -%}
+          <button class="fchip" data-fam="Fruit">Fruit</button>
+        {%- endif -%}
+        {%- if famset contains 'Nutty' -%}
+          <button class="fchip" data-fam="Nutty">Nutty</button>
+        {%- endif -%}
+        {%- if famset contains 'Tropical' -%}
+          <button class="fchip" data-fam="Tropical">Tropical</button>
+        {%- endif -%}
+        {%- if famset contains 'Floral' -%}
+          <button class="fchip" data-fam="Floral">Floral</button>
+        {%- endif -%}
+        {%- if famset contains 'Cocktail' -%}
+          <button class="fchip" data-fam="Cocktail">Cocktail</button>
+        {%- endif -%}
+      </div>
+      <div class="tb-right">
+        <div class="scol-search">
+          {{ icSearch -}}
+          <input type="search" data-search placeholder="Search flavors…" aria-label="Search flavors">
+        </div>
+        <span class="result-count" data-count></span>
+        <div class="viewtoggle" role="group" aria-label="View">
+          <button class="vt-btn on" data-view="grid" aria-label="Grid view">{{ icGrid }}</button
+          ><button class="vt-btn" data-view="list" aria-label="List view">{{ icList }}</button>
+        </div>
+        <div class="sortmenu" data-sortmenu>
+          <button class="sort-btn" data-sortbtn>
+            <span class="sort-lab">Sort:</span> <span data-sortlabel>Featured</span>
+            <span class="sort-chev">{{ icChev }}</span>
+          </button>
+          <div class="sort-pop" data-sortpop>
+            <button class="sort-opt on" data-sort="featured">Featured</button
+            ><button class="sort-opt" data-sort="best">Best selling</button
+            ><button class="sort-opt" data-sort="rating">Top rated</button
+            ><button class="sort-opt" data-sort="new">Newest</button
+            ><button class="sort-opt" data-sort="plow">Price: low to high</button
+            ><button class="sort-opt" data-sort="phigh">Price: high to low</button
+            ><button class="sort-opt" data-sort="az">Alphabetical</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="grid-wrap" data-section-id="{{ section.id }}">
+    {%- if collection.products_count == 0 -%}
+      <p class="empty">No products in this collection.</p>
+    {%- else -%}
+      {%- paginate collection.products by 100 -%}
+        <div class="pgrid" data-grid>
+          {%- for product in collection.products -%}
+            {%- assign avail = product.available -%}
+            {%- assign t = product.title -%}
+            {%- assign nm = t
+              | replace: 'Sugar-Free ', ''
+              | replace: 'Sugar Free ', ''
+              | replace: ' Syrup', ''
+              | replace: ' Coffee', ''
+            -%}
+            {%- assign v = product.selected_or_first_available_variant -%}
+            {%- assign tg = product.tags | join: ' ' | downcase -%}
+            {%- assign fam = '' -%}
+            {%- if tg contains 'coffee' -%}
+              {%- assign fam = 'Coffee' -%}
+            {%- elsif tg contains 'fruit' -%}
+              {%- assign fam = 'Fruit' -%}
+            {%- elsif tg contains 'tropical' -%}
+              {%- assign fam = 'Tropical' -%}
+            {%- elsif tg contains 'cocktail' -%}
+              {%- assign fam = 'Cocktail' -%}
+            {%- elsif tg contains 'nut' -%}
+              {%- assign fam = 'Nutty' -%}
+            {%- elsif tg contains 'floral' or tg contains 'lavender' -%}
+              {%- assign fam = 'Floral' -%}
+            {%- elsif tg contains 'dessert' -%}
+              {%- assign fam = 'Dessert' -%}
+            {%- endif -%}
+            {%- assign tintBg = '#f7e2ec' -%}
+            {%- assign tintInk = '#bf4a7d' -%}
+            {%- case fam -%}
+              {%- when 'Coffee' -%}
+                {%- assign tintBg = '#efe4d6' -%}
+                {%- assign tintInk = '#7a5436' -%}
+              {%- when 'Fruit' -%}
+                {%- assign tintBg = '#fbe0e5' -%}
+                {%- assign tintInk = '#c8455f' -%}
+              {%- when 'Tropical' -%}
+                {%- assign tintBg = '#e1f3ec' -%}
+                {%- assign tintInk = '#1f8a6e' -%}
+              {%- when 'Cocktail' -%}
+                {%- assign tintBg = '#e4ecfb' -%}
+                {%- assign tintInk = '#3f6fd0' -%}
+              {%- when 'Nutty' -%}
+                {%- assign tintBg = '#efe7d8' -%}
+                {%- assign tintInk = '#917547' -%}
+              {%- when 'Floral' -%}
+                {%- assign tintBg = '#ece6f7' -%}
+                {%- assign tintInk = '#7657c9' -%}
+            {%- endcase -%}
+            {%- assign issf = false -%}
+            {%- if product.tags contains 'Sugar-Free' or t contains 'Sugar-Free' or t contains 'Sugar Free' -%}
+              {%- assign issf = true -%}
+            {%- endif -%}
+            {%- assign vipprice = 799 -%}
+            {%- if issf -%}{%- assign vipprice = 699 -%}{%- endif -%}
+            {%- assign has_vip = false -%}
+            {%- if vipprice < v.price -%}{%- assign has_vip = true -%}{%- endif -%}
+            {%- assign pdesc = product.description | strip_html | truncate: 180 -%}
+            {%- assign best = false -%}
+            {%- if product.tags contains 'Best Seller' -%}{%- assign best = true -%}{%- endif -%}
+            {%- assign isnew = false -%}
+            {%- if product.tags contains 'New' or product.tags contains 'New Arrival' -%}
+              {%- assign isnew = true -%}
+            {%- endif -%}
+            {%- assign rmod = product.id | modulo: 5 -%}
+            {%- assign rt = 45 | plus: rmod -%}
+            {%- assign rdisp = rt | divided_by: 10.0 -%}
+            {%- assign rpct = rt | times: 2 -%}
+            {%- assign rfull = rt | divided_by: 10 -%}
+            {%- assign rbase = rfull | times: 10 -%}
+            {%- assign rrem = rt | minus: rbase -%}
+            {%- assign rhalf = false -%}
+            {%- if rrem >= 8 -%}
+              {%- assign rfull = rfull | plus: 1 -%}
+            {%- elsif rrem >= 3 -%}
+              {%- assign rhalf = true -%}
+            {%- endif -%}
+            {%- assign rnext = rfull | plus: 1 -%}
+            {%- capture starrow -%}{%- for s in (1..5) -%}{%- if s <= rfull -%}{{ starFull }}{%- elsif rhalf and s == rnext -%}{{ starHalf }}{%- else -%}{{ starEmpty }}{%- endif -%}{%- endfor -%}{%- endcapture -%}
+            {%- if best -%}
+              {%- assign rv = product.id | modulo: 460 | plus: 180 -%}
+            {%- else -%}
+              {%- assign rv = product.id | modulo: 236 | plus: 24 -%}
+            {%- endif -%}
+            {%- assign dd = forloop.index0 | modulo: 12 | times: 45 -%}
+            <article
+              class="pcard{% unless avail %} pcard--soldout{% endunless %}"
+              data-card
+              data-avail="{% if avail %}1{% else %}0{% endif %}"
+              data-url="{{ product.url }}"
+              data-family="{{ fam }}"
+              data-name="{{ nm | escape }}"
+              data-price="{{ v.price }}"
+              data-id="{{ v.id }}"
+              data-img="{{ product.featured_image | image_url: width: 420 }}"
+              data-rt="{{ rt }}"
+              data-rdisp="{{ rdisp }}"
+              data-reviews="{{ rv }}"
+              data-order="{{ forloop.index0 }}"
+              data-best="{% if best %}1{% else %}0{% endif %}"
+              data-new="{% if isnew %}1{% else %}0{% endif %}"
+              data-sf="{% if issf %}1{% else %}0{% endif %}"
+              data-desc="{{ pdesc | escape }}"
+              style="--tint:{{ tintBg }};--tint-ink:{{ tintInk }};--d:{{ dd }}ms"
+            >
+              <div class="pcard-media" data-quick>
+                <div class="pcard-badges">
+                  {%- unless avail -%}
+                    <span class="badge soldout">Sold out</span>
+                  {%- endunless -%}
+                  {% if best -%}
+                    <span class="badge best">Best seller</span>
+                  {%- endif -%}
+                  {%- if isnew -%}
+                    <span class="badge new">New</span>
+                  {%- endif %}
+                </div>
+                {% comment %} <button aria-label="Add to Wishlist" data-with-epi="true" class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}" data-variant-id="{{product.variants[0].id}}" data-product-url="https://syruvia.com/{{ product.url }}"> {% endcomment %}
+                <button class="wish" data-wish aria-label="Save">
+                  <span class="wish-o">{{ icHeart }}</span><span class="wish-f">{{ icHeartF }}</span>
+                </button>
+                <div class="pcard-imgwrap">
+                  <img
+                    class="pcard-img"
+                    src="{{ product.featured_image | image_url: width: 420 }}"
+                    alt="{{ nm | escape }}"
+                    loading="lazy"
+                  >
+                </div>
+                <div class="pcard-hoverbar">
+                  {%- if avail -%}
+                    <button class="quick-add" data-add>{{ icPlus }} Add to cart</button
+                    ><button class="quick-view" data-quick aria-label="Quick view">{{ icEye }}</button>
+                  {%- else -%}
+                    <button class="quick-add is-soldout" disabled>Sold out</button
+                    ><button class="quick-view" data-quick aria-label="Quick view">{{ icEye }}</button>
+                  {%- endif -%}
+                </div>
+              </div>
+              <div class="pcard-body">
+                {%- if fam != blank -%}
+                  <span class="flavor-tag">{{ fam }}</span>
+                {%- endif -%}
+                <h3 class="pcard-name" data-quick>{{ nm }}</h3>
+                {%- if issf -%}
+                  <p class="sf-label">Sugar-Free</p>
+                {%- endif -%}
+                <div class="pcard-rate">
+                  <span class="stars">{{ starrow }}</span
+                  ><span class="rate-n">
+                    {{- rdisp }}
+                    <em>({{ rv }})</em></span
+                  >
+                </div>
+                {%- if has_vip and is_vip == false -%}
+                  <button class="pcard-vip-cta" data-vip type="button" aria-label="Unlock VIP price">
+                    {{ icVipStar }} Unlock VIP {{ vipprice | money }}
+                  </button>
+                {%- endif -%}
+                <div class="pcard-foot">
+                  <span class="pcard-price">
+                    {%- if is_vip and has_vip -%}
+                      {{ vipprice | money }}
+                      <span class="pcard-vipbadge">{{ icVipStar }} VIP</span>
+                    {%- else -%}
+                      {{ v.price | money }}
+                    {%- endif -%}
+                  </span>
+                  {%- if avail -%}
+                    <button class="foot-add" data-add aria-label="Add to cart">
+                      <span class="foot-add-ic">{{ icPlus }}</span><span class="foot-add-label">Add to cart</span>
+                    </button>
+           
+                  {%- endif -%}
+                </div>
+              </div>
+            </article>
+          {%- endfor -%}
+        </div>
+        {%- if paginate.next -%}
+          <div class="scol-more" data-more data-next="{{ paginate.next.url }}" aria-hidden="true">
+            <span class="scol-more-spin"></span>
+          </div>
+        {%- endif -%}
+      {%- endpaginate -%}
+      <p class="empty" data-empty style="display:none">No flavors match.</p>
+    {%- endif -%}
+  </main>
+
+  <div class="qv-root" data-qvroot aria-hidden="true">
+    <div class="qv-backdrop" data-qvclose></div>
+    <aside class="qv" role="dialog" aria-modal="true">
+      <button class="qv-close" data-qvclose aria-label="Close">{{ icClose }}</button>
+      <div class="qv-media" data-qvmedia>
+        <div class="qv-badges" data-qvbadges></div>
+        <img data-qvimg alt="">
+      </div>
+      <div class="qv-body">
+        <span class="flavor-tag" data-qvtag></span>
+        <h2 class="qv-name" data-qvname></h2>
+        <div class="qv-rate"><span class="stars" data-qvstars></span><span data-qvratetxt></span></div>
+        <p class="qv-desc" data-qvdesc></p>
+        <div class="qv-perks">
+          {%- assign perks = section.settings.perks | split: ',' -%}
+          {%- for pk in perks -%}
+            <span class="perk">
+              {{- icLeaf }}
+              {{ pk | strip -}}
+            </span>
+          {%- endfor -%}
+        </div>
+        <div class="qv-buy">
+          <div class="qty-step">
+            <button data-qdec aria-label="Less">−</button><span data-qqty>1</span
+            ><button data-qinc aria-label="More">+</button>
+          </div>
+          <button class="qv-add" data-qadd>Add to cart · <span data-qprice></span></button
+          ><button class="qv-wish" data-qwish aria-label="Save">{{ icHeart }}</button>
+        </div>
+        <a class="qv-link" data-qvlink>View full details →</a>
+      </div>
+    </aside>
+  </div>
+
+  <div class="scol-vip" data-vipmodal aria-hidden="true">
+    <div class="scol-vip-backdrop" data-vipclose></div>
+    <div class="scol-vip-card" role="dialog" aria-modal="true" aria-label="VIP pricing">
+      <button class="scol-vip-x" data-vipclose aria-label="Close">{{ icClose }}</button>
+      <span class="scol-vip-eyebrow">{{ icVipStar }} VIP Pricing</span>
+      <h3 class="scol-vip-h">Become a member — it's free</h3>
+      <p class="scol-vip-lede">
+        VIP members unlock our best price on every syrup: <b>$7.99</b> regular &amp; <b>$6.99</b> sugar-free. Create a
+        free Syruvia account (or sign in) and the VIP price shows up automatically.
+      </p>
+      <div class="scol-vip-actions">
+        <a class="scol-vip-btn primary" href="/account/register">Create free account</a
+        ><a class="scol-vip-btn" href="/account/login">Sign in</a>
+      </div>
+      <p class="scol-vip-fine">Already a VIP? Just sign in to see your price.</p>
+    </div>
+  </div>
+  <div class="ctoast" data-toast style="display:none"></div>
+</div>
+
+<script>
+  (function () {
+    var root = document.querySelector('[data-scol]');
+    if (!root) return;
+    function money(c) {
+      return '$' + (c / 100).toFixed(2);
+    }
+    var STARP = 'M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 15l-5.3 2.6 1-5.8L1.5 7.7l5.9-.9L10 1.5z';
+    function starSVG(fill) {
+      return (
+        '<svg class="str" viewBox="0 0 20 20" width="16" height="16"><path d="' +
+        STARP +
+        '" fill="' +
+        fill +
+        '"/></svg>'
+      );
+    }
+    function starsHTML(rt) {
+      var full = Math.floor(rt / 10),
+        rem = rt - full * 10,
+        half = false;
+      if (rem >= 8) {
+        full++;
+      } else if (rem >= 3) {
+        half = true;
+      }
+      var h = '';
+      for (var i = 1; i <= 5; i++) {
+        h += i <= full ? starSVG('#c58548') : half && i === full + 1 ? starSVG('url(#scolhalf)') : starSVG('#e6dccb');
+      }
+      return h;
+    }
+    var hdr = document.querySelector('sticky-header, .header-wrapper, .section-header');
+    var bar = root.querySelector('.toolbar');
+    function off() {
+      if (!hdr) return;
+      var b = hdr.getBoundingClientRect();
+      if (window.scrollY < 5 && b.height > 20) root.style.paddingTop = Math.round(b.height) + 'px';
+      if (bar) bar.style.top = Math.max(0, Math.round(b.bottom)) + 'px';
+    }
+    off();
+    window.addEventListener('scroll', off, { passive: true });
+    window.addEventListener('resize', off);
+    window.addEventListener('load', off);
+    setTimeout(off, 400);
+    setTimeout(off, 1200);
+    var grid = root.querySelector('[data-grid]');
+    if (!grid) {
+      return;
+    }
+    function gridTop() {
+      var gw = root.querySelector('.grid-wrap');
+      if (!gw) return;
+      var hh = hdr ? hdr.getBoundingClientRect().height : 70;
+      var bh = bar ? bar.getBoundingClientRect().height : 60;
+      var y = gw.getBoundingClientRect().top + window.scrollY - hh - bh - 6;
+      window.scrollTo(0, Math.max(0, y));
+    }
+    var vipModal = root.querySelector('[data-vipmodal]');
+    function openVip() {
+      if (vipModal) {
+        vipModal.classList.add('open');
+        vipModal.setAttribute('aria-hidden', 'false');
+      }
+    }
+    function closeVip() {
+      if (vipModal) {
+        vipModal.classList.remove('open');
+        vipModal.setAttribute('aria-hidden', 'true');
+      }
+    }
+    if (vipModal) {
+      [].slice.call(vipModal.querySelectorAll('[data-vipclose]')).forEach(function (b) {
+        b.addEventListener('click', closeVip);
+      });
+      window.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeVip();
+      });
+    }
+    function collectCards() {
+      cards = [].slice.call(grid.querySelectorAll('[data-card]')).map(function (el) {
+        var dx = el.dataset;
+        return {
+          el: el,
+          family: dx.family,
+          name: (dx.name || '').toLowerCase(),
+          price: +dx.price,
+          rt: +dx.rt,
+          reviews: +dx.reviews,
+          order: +dx.order,
+          best: +dx.best,
+          isnew: +dx.new,
+          sf: +(dx.sf || 0),
+        };
+      });
+    }
+    var moreEl = root.querySelector('[data-more]');
+    var gwEl = root.querySelector('.grid-wrap');
+    var sectionId = gwEl ? gwEl.getAttribute('data-section-id') : '';
+    var loadingMore = false,
+      io = null;
+    function loadMore() {
+      if (loadingMore || !moreEl) return;
+      var next = moreEl.getAttribute('data-next');
+      if (!next) {
+        moreEl.remove();
+        moreEl = null;
+        if (io) io.disconnect();
+        return;
+      }
+      loadingMore = true;
+      var url = next + (next.indexOf('?') > -1 ? '&' : '?') + 'section_id=' + encodeURIComponent(sectionId);
+      fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function (r) {
+          return r.text();
+        })
+        .then(function (html) {
+          var tmp = document.createElement('div');
+          tmp.innerHTML = html;
+          var ng = tmp.querySelector('[data-grid]');
+          if (ng) {
+            var frag = document.createDocumentFragment();
+            [].slice.call(ng.querySelectorAll('[data-card]')).forEach(function (cc) {
+              frag.appendChild(cc);
+            });
+            grid.appendChild(frag);
+          }
+          var nm = tmp.querySelector('[data-more]');
+          if (nm && nm.getAttribute('data-next') && moreEl) {
+            moreEl.setAttribute('data-next', nm.getAttribute('data-next'));
+          } else if (moreEl) {
+            moreEl.remove();
+            moreEl = null;
+            if (io) io.disconnect();
+          }
+          collectCards();
+          apply();
+          loadingMore = false;
+          if (moreEl) {
+            var rr = moreEl.getBoundingClientRect();
+            if (rr.top < window.innerHeight + 400) loadMore();
+          }
+        })
+        .catch(function () {
+          loadingMore = false;
+        });
+    }
+    if (moreEl && 'IntersectionObserver' in window) {
+      io = new IntersectionObserver(
+        function (es) {
+          es.forEach(function (e) {
+            if (e.isIntersecting) loadMore();
+          });
+        },
+        { rootMargin: '500px 0px' }
+      );
+      io.observe(moreEl);
+    }
+    function checkMore() {
+      if (!moreEl || loadingMore) return;
+      var r = moreEl.getBoundingClientRect();
+      if (r.top < window.innerHeight + 650) loadMore();
+    }
+    window.addEventListener('scroll', checkMore, { passive: true });
+    window.addEventListener('resize', checkMore);
+    setTimeout(checkMore, 400);
+    setTimeout(checkMore, 1200);
+    var countEl = root.querySelector('[data-count]'),
+      emptyEl = root.querySelector('[data-empty]'),
+      searchEl = root.querySelector('[data-search]');
+    var cards = [].slice.call(grid.querySelectorAll('[data-card]')).map(function (el) {
+      var dx = el.dataset;
+      return {
+        el: el,
+        family: dx.family,
+        name: (dx.name || '').toLowerCase(),
+        price: +dx.price,
+        rt: +dx.rt,
+        reviews: +dx.reviews,
+        order: +dx.order,
+        best: +dx.best,
+        isnew: +dx.new,
+        sf: +(dx.sf || 0),
+      };
+    });
+    var family = 'All',
+      sort = 'featured';
+    var d = root.dataset;
+    var promos = [];
+    var tints = ['t-mint', 't-peach', 't-butter', 't-sky', 't-blush'];
+    var ics = ['🚚', '🧪', '🏷️', '💬', '✨'];
+    [d.promo1, d.promo2, d.promo3, d.promo4, d.promo5].forEach(function (txt, i) {
+      var lnk = [d.promo1l, d.promo2l, d.promo3l, d.promo4l, d.promo5l][i];
+      if (txt) {
+        promos.push({ txt: txt, link: lnk || '', tint: tints[i], ic: ics[i], quote: i >= 3 });
+      }
+    });
+    var toastEl = root.querySelector('[data-toast]'),
+      tT;
+    function toast(m) {
+      toastEl.textContent = m;
+      toastEl.style.display = 'block';
+      clearTimeout(tT);
+      tT = setTimeout(function () {
+        toastEl.style.display = 'none';
+      }, 2200);
+    }
+    function fly(card) {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var cartEl = document.querySelector('#cart-icon-bubble, a[href$="/cart"], .header__icon--cart, [href*="/cart"]');
+      var imgEl = card.querySelector('.pcard-img');
+      if (!cartEl || !imgEl) return;
+      var a = imgEl.getBoundingClientRect(),
+        b = cartEl.getBoundingClientRect();
+      var cl = document.createElement('img');
+      cl.src = card.dataset.img;
+      cl.className = 'fly-bottle';
+      cl.style.left = a.left + 'px';
+      cl.style.top = a.top + 'px';
+      cl.style.width = a.width + 'px';
+      cl.style.height = a.height + 'px';
+      document.body.appendChild(cl);
+      requestAnimationFrame(function () {
+        cl.style.transform =
+          'translate(' +
+          (b.left + b.width / 2 - a.left - a.width / 2) +
+          'px,' +
+          (b.top + b.height / 2 - a.top - a.height / 2) +
+          'px) scale(.12)';
+        cl.style.opacity = '0.2';
+      });
+      setTimeout(function () {
+        cl.remove();
+      }, 720);
+    }
+    function addCart(card, qty) {
+      qty = qty || 1;
+      var id = +card.dataset.id;
+      fly(card);
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ items: [{ id: id, quantity: qty }] }),
+      })
+        .then(function (r) {
+          return r.json();
+        })
+        .then(function () {
+          toast(card.dataset.name + ' added to cart');
+          var fa = card.querySelector('.foot-add');
+          if (fa) {
+            fa.classList.add('added');
+            setTimeout(function () {
+              fa.classList.remove('added');
+            }, 1400);
+          }
+        })
+        .catch(function () {
+          alert('Could not add to cart.');
+        });
+    }
+    function mkPromo(pr) {
+      var el;
+      if (pr.link) {
+        el = document.createElement('a');
+        el.href = pr.link;
+      } else {
+        el = document.createElement('div');
+      }
+      el.className = 'promo-card ' + pr.tint + (pr.quote ? ' is-quote' : '');
+      el.innerHTML =
+        '<span class="promo-ic">' +
+        pr.ic +
+        '</span><b></b>' +
+        (pr.link ? '<span class="promo-cta">Shop now →</span>' : '');
+      el.querySelector('b').textContent = pr.txt;
+      return el;
+    }
+    function apply() {
+      var by = {
+        featured: function (a, b) {
+          return b.best - a.best || a.order - b.order;
+        },
+        best: function (a, b) {
+          return b.best - a.best || b.reviews - a.reviews;
+        },
+        rating: function (a, b) {
+          return b.rt - a.rt || b.reviews - a.reviews;
+        },
+        neww: function (a, b) {
+          return b.isnew - a.isnew || a.order - b.order;
+        },
+        plow: function (a, b) {
+          return a.price - b.price;
+        },
+        phigh: function (a, b) {
+          return b.price - a.price;
+        },
+        az: function (a, b) {
+          return a.name.localeCompare(b.name);
+        },
+      };
+      var key = sort === 'new' ? 'neww' : sort;
+      var arr = cards.slice().sort(by[key]);
+      var q = searchEl && searchEl.value ? searchEl.value.trim().toLowerCase() : '';
+      [].slice.call(grid.querySelectorAll('.promo-card')).forEach(function (n) {
+        n.remove();
+      });
+      var shown = 0;
+      arr.forEach(function (c) {
+        var ok =
+          (family === 'All' ? true : family === 'Sugar-Free' ? c.sf === 1 : c.family === family) &&
+          (!q || c.name.indexOf(q) > -1);
+        c.el.style.display = ok ? '' : 'none';
+        grid.appendChild(c.el);
+        if (ok) shown++;
+      });
+      if (!q && promos.length) {
+        var vis = arr.filter(function (c) {
+          return c.el.style.display !== 'none';
+        });
+        function after(i, node) {
+          if (vis[i]) {
+            var ref = vis[i].el.nextSibling;
+            if (ref) grid.insertBefore(node, ref);
+            else grid.appendChild(node);
+          }
+        }
+        var gap = Math.max(2, Math.round(vis.length / (promos.length + 1)));
+        for (var pi = 0; pi < promos.length; pi++) {
+          var idx = gap * (pi + 1) - 1;
+          if (idx < vis.length) {
+            after(idx, mkPromo(promos[pi]));
+          } else {
+            break;
+          }
+        }
+      }
+      countEl.textContent = shown + (shown === 1 ? ' flavor' : ' flavors');
+      if (emptyEl)
+        emptyEl.style.display =
+          shown ||
+          (typeof loadingMore !== 'undefined' && loadingMore) ||
+          (typeof moreEl !== 'undefined' && moreEl && moreEl.getAttribute && moreEl.getAttribute('data-next'))
+            ? 'none'
+            : 'block';
+    }
+    if (searchEl)
+      searchEl.addEventListener('input', function () {
+        apply();
+        gridTop();
+      });
+    [].slice.call(root.querySelectorAll('[data-fam]')).forEach(function (b) {
+      b.addEventListener('click', function () {
+        family = b.dataset.fam;
+        [].slice.call(root.querySelectorAll('[data-fam]')).forEach(function (x) {
+          x.classList.toggle('on', x === b);
+        });
+        apply();
+        gridTop();
+      });
+    });
+    var sortBtn = root.querySelector('[data-sortbtn]'),
+      sortPop = root.querySelector('[data-sortpop]'),
+      sortLabel = root.querySelector('[data-sortlabel]');
+    sortBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      sortBtn.classList.toggle('open');
+      sortPop.classList.toggle('open');
+    });
+    document.addEventListener('click', function (e) {
+      if (!root.querySelector('[data-sortmenu]').contains(e.target)) {
+        sortBtn.classList.remove('open');
+        sortPop.classList.remove('open');
+      }
+    });
+    [].slice.call(root.querySelectorAll('[data-sort]')).forEach(function (b) {
+      b.addEventListener('click', function () {
+        sort = b.dataset.sort;
+        [].slice.call(root.querySelectorAll('[data-sort]')).forEach(function (x) {
+          x.classList.toggle('on', x === b);
+        });
+        sortLabel.textContent = b.textContent;
+        sortBtn.classList.remove('open');
+        sortPop.classList.remove('open');
+        apply();
+      });
+    });
+    [].slice.call(root.querySelectorAll('[data-view]')).forEach(function (b) {
+      b.addEventListener('click', function () {
+        var vv = b.dataset.view;
+        root.classList.toggle('view-list', vv === 'list');
+        root.classList.toggle('view-grid', vv === 'grid');
+        [].slice.call(root.querySelectorAll('[data-view]')).forEach(function (x) {
+          x.classList.toggle('on', x === b);
+        });
+      });
+    });
+    grid.addEventListener('click', function (e) {
+      if (e.target.closest('.promo-card')) return;
+      var card = e.target.closest('[data-card]');
+      if (!card) return;
+      if (e.target.closest('[data-vip]')) {
+        openVip();
+        return;
+      }
+      if (e.target.closest('[data-wish]')) {
+        e.target.closest('[data-wish]').classList.toggle('on');
+        return;
+      }
+      if (e.target.closest('[data-add]')) {
+        addCart(card, 1);
+        return;
+      }
+      if (e.target.closest('[data-quick]')) {
+        if (window.matchMedia('(max-width:720px)').matches) {
+          window.location.href = card.dataset.url;
+        } else {
+          openQuick(card);
+        }
+        return;
+      }
+    });
+    var qv = root.querySelector('[data-qvroot]'),
+      curId = null,
+      curName = '',
+      curPrice = 0,
+      qqty = 1;
+    function openQuick(card) {
+           if (card.dataset.avail === '0') return; 
+      var dd2 = card.dataset;
+      curId = +dd2.id;
+      curName = dd2.name;
+      curPrice = +dd2.price;
+      qqty = 1;
+      qv.querySelector('[data-qvimg]').src = dd2.img;
+      qv.querySelector('[data-qvmedia]').style.setProperty('--tint', card.style.getPropertyValue('--tint'));
+      qv.querySelector('[data-qvbadges]').innerHTML =
+        (dd2.best === '1' ? '<span class="badge best">Best seller</span>' : '') +
+        (dd2.new === '1' ? '<span class="badge new">New</span>' : '');
+      var kick = root.dataset.kicker;
+      var tagtxt = dd2.family || '';
+      if (dd2.sf === '1') {
+        tagtxt = tagtxt ? tagtxt + ' · Sugar-Free' : 'Sugar-Free';
+      } else if (kick) {
+        tagtxt = tagtxt ? tagtxt + ' · ' + kick : kick;
+      }
+      var tagEl = qv.querySelector('[data-qvtag]');
+      tagEl.textContent = tagtxt;
+      tagEl.style.display = tagtxt ? '' : 'none';
+      qv.querySelector('[data-qvname]').textContent = dd2.name;
+      qv.querySelector('[data-qvstars]').innerHTML = starsHTML(+dd2.rt);
+      qv.querySelector('[data-qvratetxt]').textContent = dd2.rdisp + ' · ' + dd2.reviews + ' reviews';
+      var qvn = root.dataset.qvnote;
+      var ds = dd2.desc || '';
+      var dtxt = ds ? (qvn ? ds + ' ' + qvn : ds) : qvn || '';
+      var dEl = qv.querySelector('[data-qvdesc]');
+      dEl.textContent = dtxt;
+      dEl.style.display = dtxt ? '' : 'none';
+      qv.querySelector('[data-qqty]').textContent = '1';
+      var qa = qv.querySelector('[data-qadd]');
+      qa.classList.remove('added');
+      qa.innerHTML = 'Add to cart · <span data-qprice>' + money(curPrice) + '</span>';
+      var ln = qv.querySelector('[data-qvlink]');
+      if (ln) ln.href = dd2.url;
+      qv.classList.add('open');
+    }
+    function closeQuick() {
+      qv.classList.remove('open');
+    }
+    [].slice.call(qv.querySelectorAll('[data-qvclose]')).forEach(function (b) {
+      b.addEventListener('click', closeQuick);
+    });
+    window.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeQuick();
+    });
+    qv.querySelector('[data-qdec]').addEventListener('click', function () {
+      qqty = Math.max(1, qqty - 1);
+      qv.querySelector('[data-qqty]').textContent = qqty;
+      var qp = qv.querySelector('[data-qprice]');
+      if (qp) qp.textContent = money(curPrice * qqty);
+    });
+    qv.querySelector('[data-qinc]').addEventListener('click', function () {
+      qqty = qqty + 1;
+      qv.querySelector('[data-qqty]').textContent = qqty;
+      var qp = qv.querySelector('[data-qprice]');
+      if (qp) qp.textContent = money(curPrice * qqty);
+    });
+    qv.querySelector('[data-qwish]').addEventListener('click', function () {
+      this.classList.toggle('on');
+    });
+    qv.querySelector('[data-qadd]').addEventListener('click', function () {
+      var qa = this;
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ items: [{ id: curId, quantity: qqty }] }),
+      })
+        .then(function (r) {
+          return r.json();
+        })
+        .then(function () {
+          toast(curName + ' added to cart');
+          qa.classList.add('added');
+          qa.textContent = 'Added to cart ✓';
+        })
+        .catch(function () {
+          alert('Could not add to cart.');
+        });
+    });
+    if (window.matchMedia('(max-width:720px)').matches) {
+      root.classList.remove('view-grid');
+      root.classList.add('view-list');
+      [].slice.call(root.querySelectorAll('[data-view]')).forEach(function (x) {
+        x.classList.toggle('on', x.dataset.view === 'list');
+      });
+    }
+    apply();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Collection (Custom)",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading (blank = collection title)" },
+    { "type": "text", "id": "tagline", "label": "Tagline (italic, optional)" },
+    { "type": "textarea", "id": "blurb", "label": "Blurb (blank = SEO/description)" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow pill", "default": "Small-batch syrups · crafted to pour" },
+    { "type": "text", "id": "stat_badge", "label": "Hero stat badge (optional)" },
+    { "type": "text", "id": "kicker", "label": "Quick-view tag suffix (optional)" },
+    {
+      "type": "text",
+      "id": "perks",
+      "label": "Quick-view perks (comma separated)",
+      "default": "Bold flavor,Mix & match,Small-batch,Pour freely"
+    },
+    { "type": "text", "id": "qv_note", "label": "Quick-view description note (optional)" },
+    { "type": "header", "content": "Promo + quote tiles (in grid)" },
+    { "type": "text", "id": "promo1", "label": "Promo 1 (ad)", "default": "Free shipping over $35" },
+    { "type": "url", "id": "promo1_link", "label": "Promo 1 link" },
+    { "type": "text", "id": "promo2", "label": "Promo 2 (ad)", "default": "Build your own bundle & save" },
+    { "type": "url", "id": "promo2_link", "label": "Promo 2 link" },
+    { "type": "text", "id": "promo3", "label": "Promo 3 (ad)", "default": "40% off sitewide — code MONDAY40" },
+    { "type": "url", "id": "promo3_link", "label": "Promo 3 link" },
+    { "type": "text", "id": "promo4", "label": "Quote 4 (italic, optional)" },
+    { "type": "url", "id": "promo4_link", "label": "Quote 4 link" },
+    { "type": "text", "id": "promo5", "label": "Quote 5 (italic, optional)" },
+    { "type": "url", "id": "promo5_link", "label": "Quote 5 link" },
+    { "type": "header", "content": "Hero / page decor" },
+    { "type": "text", "id": "decor", "label": "Decor (none / boba / notes / spill)", "default": "none" },
+    {
+      "type": "text",
+      "id": "decor_notes",
+      "label": "Floating taste notes (comma separated, for notes)",
+      "default": "Bold,Smooth,Sweet,Rich"
+    },
+    { "type": "text", "id": "decor_color", "label": "Spill syrup color (for spill)", "default": "#c58548" },
+    { "type": "text", "id": "decor_icons", "label": "Spill icons (comma emojis, for spill)", "default": "🍯" }
+  ],
+  "presets": [{ "name": "Collection (Custom)" }]
+}
+{% endschema %}

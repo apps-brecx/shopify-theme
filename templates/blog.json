@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "syr-blog",
+      "settings": {
+        "eyebrow": "The Syruvia Blog",
+        "title": "Sips, tips & <em>flavor</em>.",
+        "sub": "Coffee inspiration, syrup pairings, recipes and the latest from the Syruvia kitchen."
+      }
+    }
+  },
+  "order": ["main"]
+}

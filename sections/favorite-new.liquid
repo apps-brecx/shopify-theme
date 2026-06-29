@@ -1,0 +1,177 @@
+<script src="{{ 'favorite-new-javascript.js' | asset_url }}" defer="defer"></script>
+<div id="favorite-tabs" class="cst-custom-tabs is-prep">
+  <!-- Tab controls -->
+  <input type="radio" id="tab1" name="tab-control" checked>
+  <input type="radio" id="tab2" name="tab-control">
+  <input type="radio" id="tab3" name="tab-control">
+  <div class="cst-custom-section-heading work-on-mobile">
+    <h2>{{ section.settings.heading }}</h2>
+  </div>
+  <div class="cst-custom-content-wrap">
+    <div class="cst-custom-section-heading work-on-desktop">
+      <h2>{{ section.settings.heading }}</h2>
+    </div>
+    <div class="cstcustom-collection-title-wrap">
+      <ul class="cst-collection-titles">
+        {% assign collections = section.settings.collection_list %}
+        {% if collections != blank %}
+          {% for collection in collections %}
+            <li title="Tab {{ forloop.index }}" class="{% if forloop.index == 1 %}active{% endif %}">
+              <label for="tab{{ forloop.index }}" role="button">
+                <span>{{ collection.title }}</span>
+              </label>
+            </li>
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Content section for each tab -->
+  <div class="content">
+    {% assign tab_counter = 1 %}
+    {% for collection in collections %}
+      <section id="tab-content{{ tab_counter }}">
+        <div class="product-grid-section">
+          {% if collection.products.size > 0 %}
+             {% assign in_stock  = collection.products | where: 'available', true  %}
+{% assign sold_out  = collection.products | where: 'available', false %}
+{% assign ordered   = in_stock | concat: sold_out %}
+            {% for product in ordered limit: 8 %}
+              <div class="product-card {% assign colorIndex = forloop.index0 | modulo: 4 %}{% if colorIndex == 0 %}colorone{% elsif colorIndex == 1 %}colortwo{% elsif colorIndex == 2 %}colorthree{% elsif colorIndex == 3 %}colorfour{% endif %}">
+                <div class="cst-custom-product-featured-image">
+                  <a href="{{ product.url }}">
+                    <!--
+                      <img
+                        src="{{ product.featured_image | img_url: 'master' }}"
+                        alt="{{ product.title }}"
+                        loading="lazy"
+                      >
+                    -->
+                    <img
+                      src="{{ product.featured_image | img_url: '300x300' }}"
+                      srcset="
+                        {{ product.featured_image | img_url: '300x300' }} 300w,
+                        {{ product.featured_image | img_url: '600x600' }} 600w,
+                        {{ product.featured_image | img_url: '900x900' }} 900w
+                      "
+                      sizes="
+                        (max-width: 600px) 300px,
+                        (max-width: 1000px) 600px,
+                        900px
+                      "
+                      alt="{{ product.title }}"
+                      loading="lazy"
+                    >
+                  </a>
+                </div>
+                <div class="cst-custom-product-content">
+                  {% comment %} <div
+                    class="areviews_product_item areviews_stars{{ product.id }}"
+                    data-product-id="{{ product.id }}"
+                  ></div> {% endcomment %}
+                       <!-- Start of Judge.me Star Rating Badge under title -->
+                      <div style="display: flex; justify-content:center; margin-top: 3px" class="product-title__stars">
+                        <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}">
+                          {{ product.metafields.judgeme.badge }}
+                        </div>
+                      </div>
+    <!-- End of Judge.me Star Rating Badge -->
+                  <h3>{{ product.title }}</h3>
+                  <p>{{ product.price | money }}</p>
+                  <!-- <a class="button" href="{{ product.url }}" class="add-to-cart-btn">Add to Cart</a> -->
+                  <!-- Add to Cart Button -->
+                  {% comment %} <form action="/cart/add" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+                    <button class="quick-add__submit button" type="submit">Add to Cart</button>
+                  </form> {% endcomment %}
+
+                  <product-form>
+  <form
+    method="post"
+    action="{{ routes.cart_add_url }}"
+    class="quick-add__form"
+    data-type="add-to-cart-form"
+    data-ajax-atc
+  >
+    <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+    <input type="hidden" name="quantity" value="1">
+    <button type="submit" class="quick-add__submit button">
+      {{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}
+    </button>
+  </form>
+</product-form>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+
+          {% endif %}
+        </div>
+      </section>
+      {% assign tab_counter = tab_counter | plus: 1 %}
+    {% endfor %}
+  </div>
+  <div class="cst-btn">
+    <a href="{{ section.settings.button_link }}" class="button">
+      {{ section.settings.button_text }}
+      <span class="cst-custom-arrow"
+        ><img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/arroww.png?v=1728394015" loading="lazy"
+      ></span>
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Favorite Section",
+  "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading"
+      },
+      {
+        "type": "collection_list",
+        "id": "collection_list",
+        "label": "Collections",
+        "limit": 8
+      },
+      {
+        "type": "text",
+        "id": "button_text",
+        "label": "Button text"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button link"
+      }
+  ],
+  "presets": [
+    {
+      "name": "Favorite Section"
+    }
+  ]
+}
+{% endschema %}
+
+
+<style>
+  .cst-custom-tabs.is-prep { visibility:hidden; }
+  .cst-custom-tabs.is-prep .product-grid-section { min-height: 600px; }
+</style>
+<script>
+(function () {
+  function reveal() {
+    var el = document.querySelector('#favorite-tabs.is-prep, .cst-custom-tabs.is-prep');
+    if (el) el.classList.remove('is-prep');
+  }
+  if (document.readyState === 'complete') {
+    // Page already loaded (e.g., script injected late)
+    reveal();
+  } else {
+    window.addEventListener('load', reveal);
+  }
+})();
+</script>

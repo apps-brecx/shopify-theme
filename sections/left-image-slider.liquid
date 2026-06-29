@@ -1,0 +1,435 @@
+<!-- Full Section Code: Left Image Slider with Static Text -->
+
+<div class="new-sec-left-img-slider {{ section.settings.custom_class }}">
+  <!-- Left Side Image Slider -->
+  <div class="left-image-slider">
+    {% for block in section.blocks %}
+      <div class="slider-item">
+        <div class="slider-item-content">
+
+          <div class="slider-image">
+            <picture>
+              <source
+                srcset="{{ block.settings.slider_image | image_url: width: 1000 }}"
+                type="image/webp"
+                sizes="(max-width: 600px) 100vw, 50vw"
+              >
+              <img
+                srcset="{{ block.settings.slider_image | image_url: width: 1000 }} 1x, {{ block.settings.slider_image | image_url: width: 2000 }} 2x"
+                src="{{ block.settings.slider_image | image_url: width: 1000 }}"
+                alt="{{ block.settings.slider_image.alt | escape }}"
+                width="{{ block.settings.slider_image.width }}"
+                height="{{ block.settings.slider_image.height }}"
+                loading="lazy"
+                sizes="(max-width: 600px) 100vw, (max-width: 1000px) 50vw, 33vw"
+              >
+            </picture>
+          <a href="{{ section.settings.slider_button_link }}" class="button-link button">
+          {{ section.settings.slider_button_text }}
+          <span class="cst-custom-arrow">
+            <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/arroww.png?v=1728394015" loading="lazy">
+          </span>
+        </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Right Side Static Text Section -->
+  <div class="slider-text">
+    <div class="text-content">
+      <h2>{{ section.settings.slider_title }}</h2>
+      <p>{{ section.settings.slider_description }}</p>
+      {% if section.settings.slider_button_link %}
+        <a href="{{ section.settings.slider_button_link }}" class="button-link button">
+          {{ section.settings.slider_button_text }}
+          <span class="cst-custom-arrow">
+            <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/arroww.png?v=1728394015" loading="lazy">
+          </span>
+        </a>
+      {% endif %}
+      {% if section.settings.slider_sub_text %}
+        <p class="slider-sub-text">{{ section.settings.slider_sub_text }}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- CSS Styles for the Section -->
+<style>
+
+
+  .left-image-slider .slider-item-content {
+      width: 100%;
+      display: grid;
+      grid-template-columns:1fr;
+      align-items: normal;
+      height: 100%;
+  }
+  .left-image-slider .button span img {
+      width: 58px;
+      margin-left: 17px;
+  }
+.new-sec-left-img-slider .text-content {
+text-align: center;
+}
+
+.new-sec-left-img-slider .text-content .button {
+margin-top: 40px;
+}
+.new-sec-left-img-slider {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 45% 55%;
+    align-items: center;
+    height: 100%;
+    margin-top: 100px;
+}
+
+    .left-image-slider .slider-text {
+      flex: 1;
+      padding: 20px;
+      text-align: left;
+      background-size: cover; /* Ensure the background image covers the area */
+      background-position: center; /* Center the background image */
+      background-repeat: no-repeat; /* Prevent repeating the background */
+    }
+
+    .left-image-slider .slider-image {
+      max-width: 100%;
+      padding: 0px;
+      height: 100%;
+    }
+
+
+
+    .slider-sub-text {
+      font-style: italic;
+    }
+.slider-text {
+position: relative;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 118px 40px 40px 40px!important;
+}
+
+  .slider-text p {
+  font-size: 27px;
+  color: #341c02;
+  font-family: "Inter" !important;
+  text-align: center;
+  line-height: 37px;
+  max-width: 631px;
+  margin: 19px auto 0;
+  width: 100%;
+  }
+  .slider-text .text-content .button{
+    background-color: #833b04;
+    font-family: "Inter" !important;
+    font-size: 22px;
+    font-weight: 400;
+    text-align: center;
+  }
+
+  .slider-text h2 {
+  font-size: 77px;
+  line-height: 80px;
+  color: #341c02;
+  text-align: center;
+  width: 100%;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  }
+.slider-text h2:before {
+    content: "";
+    position: absolute;
+    top: -61px;
+    left: 50%;
+    background: url(/cdn/shop/files/leaf.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 77px;
+    height: 45px;
+    z-index: -1;
+    transform: translateX(-50%);
+}
+.new-sec-left-img-slider  .slider-text:before {
+    content: "";
+    position: absolute;
+    top: 59%;
+    left: 50%;
+   
+    /* background: url(https://cdn.shopify.com/s/files/1/0861/1106/0252/files/429cfc663e.png?v=1752233895); */
+    background: url(https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Layer_2_430x.png?v=1773327820);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  
+    /* width: 549px; */
+    width: 329px;
+    height: 300px;
+    /* height: 452px; */
+    transform: translate(-50%,-56%);
+    z-index: -1;
+}
+
+  .left-image-slider .top-image img {
+  width: 87px;
+  margin-bottom: 10px;
+  }
+
+  .left-image-slider .button {
+  color: #fff;
+  margin: 42px auto 0 !important;
+  max-width: 348px;
+  width: 100%;
+  }
+
+.left-image-slider .slider-image .button {
+    display: none;
+}
+.left-image-slider .slider-image img {
+    width: 100%;
+    height: 100%;
+}
+
+
+
+  @media (max-width: 1400px) {
+  .slider-text h2 {
+  font-size: 60px;
+  }
+  .slider-text p {
+  font-size: 24px;
+  line-height: 30px;
+  }
+  .new-sec-left-img-slider  .slider-text:before {
+    /* width: 535px; */
+    /* width: 396px;
+    height: 396px; */
+    width: 452px;
+    height: 396px;
+}
+
+.slider-text .text-content .button{
+    background-color: #833b04;
+  }
+  }
+
+
+  @media (max-width: 1024px) {
+.new-sec-left-img-slider {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: normal;
+}
+.left-image-slider .slider-image .button {
+    display: flex;
+}
+.new-sec-left-img-slider .text-content .button {
+   display: none;
+}
+.new-sec-left-img-slider  .slider-text:before {
+    /* width: 375px;
+    height: 274px; */
+
+    /* width: 321px;
+    height: 308px; */
+
+    width: 312px;
+    height: 269px;
+}
+.slider-text .text-content .button{
+    background-color: #833b04;
+  }
+.slider-text h2:before {
+    top: -46px;
+}
+}
+
+
+  @media (max-width: 991px) {
+  .left-image-slider .slider-item-content {
+      display: flex;
+      flex-direction: column-reverse;
+  }
+  .slider-image .button{
+    background-color: #833b04; !important;
+  }
+  }
+
+
+  @media (max-width: 767px) {
+  .slider-text h2 {
+  font-size: 40px;
+  }
+  .slider-text {
+  padding: 40px 10px!important;
+  }
+  .slider-text p {
+  line-height: normal;
+  font-size: 21px;
+  margin-top: 0;
+  }
+  .left-image-slider .button {
+  max-width: fit-content;
+  }
+  .left-image-slider .button span img {
+  width: 50px;
+  margin-left: 17px;
+  top: 0;
+  }
+
+  .new-sec-left-img-slider  .slider-text:before {
+    /* width: 375px;
+    height: 274px; */
+
+    /* width: 321px;
+    height: 308px; */
+
+    /* width: 301px; */
+    /* height: 300px; */
+
+    width: 310px;
+    height: 269px;
+}
+.slider-image .button{
+    background-color: #833b04; !important;
+  }
+
+.left-image-slider .slider-image img {
+    width: 100%;
+    max-height: 600px;
+    object-fit: cover;
+}
+  }
+
+  @media (max-width: 575px) {
+
+  /* .left-image-slider .slider-text:before {
+  width: 452px;
+  height: 328px;
+  } */
+  .slider-text p {
+      margin-top: 0;
+  }
+  .slider-text h2:before{
+    width: 80px;
+  top: -40px; 
+}
+  .left-image-slider .slider-image {
+    max-width: 100%;
+    padding: 0px;
+    height: 100%;
+}
+.slider-image .button{
+    background-color: #833b04; !important;
+  }
+  }
+</style>
+
+<!-- JavaScript for Slick Slider Initialization -->
+<script>
+  // Initialize Slick Slider for the left side image slider
+  $(document).ready(function() {
+    $('.left-image-slider').slick({
+      slidesToShow: 1,
+      infinite: true,
+      arrows: false,
+      dots: false,
+      speed: 500,
+      fade: true,
+      cssEase: 'linear',
+      autoplay: true,
+      autoplaySpeed: 10000
+    });
+     responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        autoplay: true
+      }
+    },
+    {
+      breakpoint: 600,
+      settings: {
+       autoplay: true
+      }
+    },
+    {
+      breakpoint: 480,
+      settings: {
+     autoplay: true
+      }
+    }
+  ]
+  });
+</script>
+
+<!-- Shopify Liquid Schema for Section Settings -->
+{% schema %}
+{
+  "name": "Left-Image Slider",
+  "settings": [
+    {
+          "type": "image_picker",
+          "id": "top_image",
+          "label": "Top Image"
+        },
+    {
+      "type": "text",
+      "id": "slider_title",
+      "label": "Slider Title",
+      "default": "Your Title Here"
+    },
+    {
+      "type": "textarea",
+      "id": "slider_description",
+      "label": "Slider Description",
+      "default": "Your description here"
+    },
+    {
+      "type": "text",
+      "id": "slider_button_text",
+      "label": "Button Text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "slider_button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "textarea",
+      "id": "slider_sub_text",
+      "label": "Sub Text",
+      "default": "Additional information"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slider_item",
+      "name": "Slider Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "slider_image",
+          "label": "Slider Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Left-Image Slider",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}

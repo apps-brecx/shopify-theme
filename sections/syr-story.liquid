@@ -1,0 +1,173 @@
+{%- comment -%} Editorial sticky statements (Manchepani-inspired) {%- endcomment -%}
+<style id="syr-story-{{ section.id }}-css">
+  #syr-story-{{ section.id }}{
+    --ink:#39220f; --paper:#FFFBF4; --bg:#F4E8CE; --accent:#c58548;
+    --butter:#FCE2A0; --peach:#FFD4B8; --mint:#C5E4D4; --sky:#B8DCEB;
+    position:relative; background:var(--paper);
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    color:var(--ink);
+  }
+  #syr-story-{{ section.id }} .syr-story-stack{ position:relative; }
+  #syr-story-{{ section.id }} .syr-story-stmt{
+    position:sticky; top:0;
+    height:100vh; height:100svh;
+    display:flex; align-items:center; justify-content:center;
+    padding:40px 32px;
+    overflow:hidden;
+  }
+  #syr-story-{{ section.id }} .syr-story-stmt.bg-1{ background:linear-gradient(160deg, var(--paper) 0%, var(--butter) 100%); z-index:1; }
+  #syr-story-{{ section.id }} .syr-story-stmt.bg-2{ background:linear-gradient(160deg, var(--peach) 0%, var(--paper) 100%); z-index:2; }
+  #syr-story-{{ section.id }} .syr-story-stmt.bg-3{ background:linear-gradient(160deg, var(--mint) 0%, var(--sky) 100%); z-index:3; }
+  #syr-story-{{ section.id }} .syr-story-stmt.bg-4{ background:linear-gradient(160deg, var(--bg) 0%, var(--butter) 100%); z-index:4; }
+
+  #syr-story-{{ section.id }} .syr-story-inner{
+    max-width:1080px; width:100%; margin:0 auto;
+    text-align:center; position:relative; z-index:2;
+  }
+  #syr-story-{{ section.id }} .syr-story-num{
+    display:inline-block;
+    font-family:'Caveat','Brush Script MT',cursive; font-style:italic;
+    color:var(--accent); font-size:clamp(48px, 8vw, 96px); line-height:1;
+    letter-spacing:.02em; margin-bottom:10px;
+    transform:rotate(-4deg);
+    opacity:0; transform-origin:center;
+    transition:opacity .8s ease, transform .8s cubic-bezier(.4,0,.2,1);
+  }
+  #syr-story-{{ section.id }} .syr-story-stmt.is-active .syr-story-num{ opacity:1; transform:rotate(-4deg) translateY(0); }
+
+  #syr-story-{{ section.id }} .syr-story-h2{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:clamp(40px, 7.5vw, 120px); line-height:.92;
+    letter-spacing:-.025em; text-transform:uppercase;
+    color:var(--ink); margin:0 0 24px;
+    max-width:14ch; margin-left:auto; margin-right:auto;
+  }
+  #syr-story-{{ section.id }} .syr-story-h2 em{
+    font-family:'Caveat','Brush Script MT',cursive; font-style:italic;
+    color:var(--accent); font-size:.74em; letter-spacing:0;
+    text-transform:none; display:inline-block;
+    transform:rotate(-3deg) translateY(-6px);
+  }
+  #syr-story-{{ section.id }} .syr-story-h2 .word{
+    display:inline-block;
+    opacity:0; transform:translateY(30px);
+    transition:opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.4,0,.2,1);
+  }
+  #syr-story-{{ section.id }} .syr-story-stmt.is-active .syr-story-h2 .word{ opacity:1; transform:none; }
+
+  #syr-story-{{ section.id }} .syr-story-sub{
+    font-size:clamp(15px, 1.4vw, 19px); line-height:1.5;
+    color:rgba(57,34,15,.7);
+    max-width:46ch; margin:0 auto 28px;
+    opacity:0; transform:translateY(20px);
+    transition:opacity .8s ease .35s, transform .8s cubic-bezier(.4,0,.2,1) .35s;
+  }
+  #syr-story-{{ section.id }} .syr-story-stmt.is-active .syr-story-sub{ opacity:1; transform:none; }
+
+  /* Decorative bottles floating in background */
+  #syr-story-{{ section.id }} .syr-story-decor{
+    position:absolute; pointer-events:none; z-index:1;
+    opacity:.35; will-change:transform;
+  }
+  #syr-story-{{ section.id }} .syr-story-decor.tl{ top:8%; left:6%; width:18%; max-width:160px; transform:rotate(-12deg); }
+  #syr-story-{{ section.id }} .syr-story-decor.br{ bottom:8%; right:6%; width:18%; max-width:160px; transform:rotate(14deg); }
+  #syr-story-{{ section.id }} .syr-story-decor img,
+  #syr-story-{{ section.id }} .syr-story-decor div{ width:100%; height:auto; }
+  #syr-story-{{ section.id }} .syr-story-decor-fb{
+    aspect-ratio:1/2;
+    background:#fff; border:2px solid var(--ink); border-radius:50% / 12%;
+    box-shadow:5px 5px 0 var(--ink);
+  }
+
+  /* Tiny scroll cue under each statement */
+  #syr-story-{{ section.id }} .syr-story-cue{
+    position:absolute; left:50%; bottom:30px; transform:translateX(-50%);
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:9.5px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--ink); opacity:.5;
+    display:flex; align-items:center; gap:6px;
+    animation:syrStoryCue 2.4s ease-in-out infinite;
+  }
+  #syr-story-{{ section.id }} .syr-story-cue svg{ width:14px; height:14px; }
+  @keyframes syrStoryCue { 0%,100% { opacity:.45; transform:translate(-50%,0); } 50% { opacity:.75; transform:translate(-50%,4px); } }
+
+  @media (max-width:760px){
+    #syr-story-{{ section.id }} .syr-story-stmt{ padding:32px 20px; }
+    #syr-story-{{ section.id }} .syr-story-num{ font-size:clamp(40px, 13vw, 56px); }
+    #syr-story-{{ section.id }} .syr-story-h2{ font-size:clamp(34px, 11vw, 56px); margin-bottom:18px; }
+    #syr-story-{{ section.id }} .syr-story-sub{ font-size:14px; max-width:30ch; }
+    #syr-story-{{ section.id }} .syr-story-decor{ width:30%; max-width:120px; opacity:.25; }
+    #syr-story-{{ section.id }} .syr-story-cue{ bottom:22px; font-size:9px; }
+  }
+</style>
+
+{%- assign keys = 's1,s2,s3,s4' | split: ',' -%}
+<section id="syr-story-{{ section.id }}" aria-label="Brand story">
+  <div class="syr-story-stack">
+    {%- for k in keys -%}
+      {%- assign num_k = k | append: '_num' -%}
+      {%- assign h_k = k | append: '_h' -%}
+      {%- assign sub_k = k | append: '_sub' -%}
+      {%- assign idx = forloop.index -%}
+      {%- assign h_text = section.settings[h_k] -%}
+      <div class="syr-story-stmt bg-{{ idx }}" data-stmt-idx="{{ forloop.index0 }}">
+        <div class="syr-story-decor tl" aria-hidden="true"><div class="syr-story-decor-fb"></div></div>
+        <div class="syr-story-decor br" aria-hidden="true"><div class="syr-story-decor-fb"></div></div>
+        <div class="syr-story-inner">
+          <span class="syr-story-num">{{ section.settings[num_k] }}</span>
+          <h2 class="syr-story-h2">
+            {%- assign words = h_text | split: ' ' -%}
+            {%- for w in words -%}<span class="word" style="transition-delay:{{ forloop.index0 | times: 80 | plus: 100 }}ms;">{{ w }}</span>{% unless forloop.last %} {% endunless %}{%- endfor -%}
+          </h2>
+          <p class="syr-story-sub">{{ section.settings[sub_k] }}</p>
+        </div>
+        {%- if forloop.first -%}
+          <div class="syr-story-cue" aria-hidden="true"><span>Scroll</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+<script>
+(function(){
+  var root = document.getElementById('syr-story-{{ section.id }}');
+  if (!root) return;
+  var stmts = root.querySelectorAll('.syr-story-stmt');
+  if (!('IntersectionObserver' in window)){ stmts.forEach(function(s){ s.classList.add('is-active'); }); return; }
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting && e.intersectionRatio > .55){
+        e.target.classList.add('is-active');
+      }
+    });
+  }, { threshold:[.55, .8] });
+  stmts.forEach(function(s){ obs.observe(s); });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Statement 1" },
+    { "type": "text", "id": "s1_num", "label": "Tagline", "default": "chapter one" },
+    { "type": "text", "id": "s1_h", "label": "Heading", "default": "We don't fake our flavors. We craft them." },
+    { "type": "textarea", "id": "s1_sub", "label": "Subtext", "default": "Every syrup is small-batch made with real ingredients. No shortcuts. No mystery extracts. Just flavors that actually taste like what they say." },
+    { "type": "header", "content": "Statement 2" },
+    { "type": "text", "id": "s2_num", "label": "Tagline", "default": "the menu" },
+    { "type": "text", "id": "s2_h", "label": "Heading", "default": "250+ syrups. One bottle changes everything." },
+    { "type": "textarea", "id": "s2_sub", "label": "Subtext", "default": "Coffee. Fruit. Tea. Cocktails. Sugar-free. Every flavor you can imagine — and a few you haven't yet." },
+    { "type": "header", "content": "Statement 3" },
+    { "type": "text", "id": "s3_num", "label": "Tagline", "default": "the standard" },
+    { "type": "text", "id": "s3_h", "label": "Heading", "default": "Zero sugar. Full flavor. No compromise." },
+    { "type": "textarea", "id": "s3_sub", "label": "Subtext", "default": "Every single flavor comes in a sugar-free version. Same recipe. Same depth. Just no sugar. At $9.99 a bottle." },
+    { "type": "header", "content": "Statement 4" },
+    { "type": "text", "id": "s4_num", "label": "Tagline", "default": "the promise" },
+    { "type": "text", "id": "s4_h", "label": "Heading", "default": "Made for sippers. By sippers." },
+    { "type": "textarea", "id": "s4_sub", "label": "Subtext", "default": "5M+ customers. 4.9 stars. The kind of obsession that makes us pour another bottle the second we finish the last." }
+  ],
+  "presets": [ { "name": "Brand Story" } ]
+}
+{% endschema %}

@@ -1,0 +1,203 @@
+<!-- Save this as 'sections/custom-columns-section.liquid' -->
+<section class="{{ section.settings.custom_class }} custom-columns-section">
+  <div class="container">
+    <!-- Top Section with Image, Heading, and Content -->
+    {% if section.settings.top_image != blank %}
+    <div class="section-top-image">
+      <img src="{{ section.settings.top_image | img_url: 'large' }}" alt="{{ section.settings.top_heading }}">
+    </div>
+    {% endif %}
+    {% if section.settings.top_heading != blank %}
+    <h2 class="section-heading">{{ section.settings.top_heading }}</h2>
+    {% endif %}
+    {% if section.settings.top_content != blank %}
+    <p class="section-content">{{ section.settings.top_content }}</p>
+    {% endif %}
+    
+    <!-- Dynamic Columns -->
+    <div class="row">
+      {% for block in section.blocks %}
+      <div class="col-{{ block.settings.column_width }}">
+        <a href="{{ block.settings.column_link }}" class="custom-column-link">
+          {% if block.settings.column_image != blank %}
+          <img src="{{ block.settings.column_image | img_url: 'medium' }}" alt="{{ block.settings.column_title }}" />
+          {% endif %}
+          <h3>{{ block.settings.column_title }}</h3>
+          <p>{{ block.settings.column_content }}</p>
+        </a>
+        {% if block.settings.column_button_label != blank %}
+        <a href="{{ block.settings.column_button_link }}" class="column-button">{{ block.settings.column_button_label }}</a>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    
+    <!-- Button at the Bottom of the Leftmost Column -->
+    {%- if section.settings.button_label != blank -%}
+        <a
+          class="button button--primary"
+          {% if section.settings.button_link == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ section.settings.button_link }}"
+          {% endif %}
+        >
+          {{ section.settings.button_label | escape }}
+          <span class="cst-custom-arrow"
+            ><img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/arroww.png?v=1728394015"
+          ></span>
+        </a>
+      {%- endif -%}
+    
+  </div>
+</section>
+
+<style>
+  /* .custom-columns-section {
+    padding: 40px 20px;
+  }
+  .section-top-image {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .section-top-image img {
+    max-width: 100%;
+    height: auto;
+  }
+  .section-heading {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  .section-content {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1rem;
+    color: #666;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .col {
+    flex: 1 1 calc(33.333% - 20px);
+    box-sizing: border-box;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  .custom-column-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  .column-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+  .column-button:hover {
+    background-color: #0056b3;
+  }
+  .outer-column-button {
+    text-align: center;
+    margin-top: 20px;
+  } */
+</style>
+{% schema %}
+{
+  "name": "Recipe Custom Section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "top_image",
+      "label": "Top Image"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom class"
+    },
+    {
+      "type": "text",
+      "id": "top_heading",
+      "label": "Top Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "top_content",
+      "label": "Top Content"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Button label",
+      "label": "t:sections.multicolumn.settings.button_label.label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:sections.multicolumn.settings.button_link.label"
+    },
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "column_title",
+          "label": "Column Title"
+        },
+        {
+          "type": "textarea",
+          "id": "column_content",
+          "label": "Column Content"
+        },
+        {
+          "type": "image_picker",
+          "id": "column_image",
+          "label": "Column Image"
+        },
+        {
+          "type": "url",
+          "id": "column_link",
+          "label": "Column Link"
+        },
+        {
+          "type": "range",
+          "id": "column_width",
+          "label": "Column Width (1-12)",
+          "min": 1,
+          "max": 12,
+          "default": 4
+        },
+        {
+          "type": "text",
+          "id": "column_button_label",
+          "label": "Button Label"
+        },
+        {
+          "type": "url",
+          "id": "column_button_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recipe Custom Section",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+

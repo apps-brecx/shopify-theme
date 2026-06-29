@@ -1,0 +1,42 @@
+{%- comment -%} Cart page helpers: (1) sync the mobile sticky bar total to the real total incl. shipping; (2) re-price the cart when the customer's VIP/login state no longer matches the cart (mid-session sign-in or sign-out), since Shopify only re-evaluates discounts on a cart change, not on reload. Conservative: only acts on a syrup at FULL price with NO discount (genuine logged-out-then-signed-in case) or VIP showing while logged out. Never touches a cart that already has a bundle or any working discount. {%- endcomment -%}
+{%- assign viewer_vip = false -%}
+{%- if customer and customer.tags contains 'VIP' -%}{%- assign viewer_vip = true -%}{%- endif -%}
+<script>
+(function(){
+  function syncBar(){
+    var bar=document.getElementById('sticky-bottom-checkout'); if(!bar) return;
+    var v=document.querySelector('.scart .sum-total .val'); if(!v) return;
+    var t=bar.querySelector('[data-sbc-total]'); if(t && v.textContent.trim()) t.textContent=v.textContent.trim();
+  }
+  syncBar(); setTimeout(syncBar,250); setTimeout(syncBar,800); setTimeout(syncBar,1600);
+  window.addEventListener('load', syncBar);
+  try{ var sum=document.querySelector('.scart .summary'); if(sum && window.MutationObserver){ new MutationObserver(function(){ setTimeout(syncBar,60); }).observe(sum,{childList:true,subtree:true,characterData:true}); } }catch(e){}
+
+  var VIEWER_VIP = {{ viewer_vip }};
+  function excluded(nm){ nm=(nm||'').toLowerCase(); var bad=['pack','variety','bundle','topping','gift card','gift-card','sticker','tote','sampler','combo','apparel','merch']; for(var i=0;i<bad.length;i++){ if(nm.indexOf(bad[i])!==-1) return true; } if(nm.indexOf('pump')!==-1 && nm.indexOf('pumpkin')===-1) return true; return false; }
+  function hasVIP(c){ for(var i=0;i<c.items.length;i++){ var d=c.items[i].discounts||[]; for(var j=0;j<d.length;j++){ if(/vip/i.test(d[j].title||'')) return true; } } return false; }
+  function staleFullPrice(c){
+    /* only true if a syrup is at FULL price with NO discount of any kind (not a bundle, not VIP) */
+    for(var i=0;i<c.items.length;i++){ var it=c.items[i]; if(excluded(it.title)) continue;
+      var noDisc = (!it.discounts || it.discounts.length===0) && (it.final_price===it.original_price);
+      if(it.final_price>699 && noDisc) return true; }
+    return false;
+  }
+  try{
+    fetch('/cart.js',{headers:{Accept:'application/json'}}).then(function(r){return r.json();}).then(function(c){
+      if(!c.items || !c.items.length) return;
+      var mismatch = (VIEWER_VIP && staleFullPrice(c)) || (!VIEWER_VIP && hasVIP(c));
+      if(!mismatch) return;
+      var last=+(sessionStorage.getItem('syrRepriceTs')||0);
+      if(Date.now()-last < 8000) return;
+      sessionStorage.setItem('syrRepriceTs', String(Date.now()));
+      var updates={}; for(var i=0;i<c.items.length;i++){ updates[c.items[i].key]=c.items[i].quantity; }
+      fetch('/cart/update.js',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({updates:updates})})
+        .then(function(){ window.location.reload(); }).catch(function(){});
+    }).catch(function(){});
+  }catch(e){}
+})();
+</script>
+{% schema %}
+{ "name": "SBC Total Fix", "settings": [] }
+{% endschema %}

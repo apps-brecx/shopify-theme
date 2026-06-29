@@ -1,0 +1,10 @@
+{%- comment -%} Hand-picked other-flavor bottles for the Mix & Match visual {%- endcomment -%}
+{%- assign mm_handles = 'peanut-butter-cup,s-mores-syrup-for-coffee,blackberry-syrup' | split: ',' -%}
+{%- for h in mm_handles -%}
+  {%- assign p = all_products[h] -%}
+  {%- if p.featured_image -%}
+    <a href="/products/{{ p.handle }}" class="pd-mm-bottle" data-i="{{ forloop.index0 }}" aria-label="{{ p.title | escape }}">
+      <img src="{{ p.featured_image | image_url: width: 400 }}" alt="{{ p.title | escape }}" loading="lazy">
+    </a>
+  {%- endif -%}
+{%- endfor -%}

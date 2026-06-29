@@ -1,0 +1,84 @@
+{%- comment -%} Safety net: keeps the sticky-stack effect working AND prevents the card from clipping its own content on mobile. {%- endcomment -%}
+<style id="pd-desc-safety-css">
+/* === FORCE FIRST DESCRIPTION SECTION VISIBLE — beats any older cached/conflicting rule === */
+html body .pd .pd-desc-content .pd-desc-card .pd-desc-section:not(.is-hidden){
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  height:auto!important;
+  max-height:none!important;
+  min-height:0!important;
+  overflow:visible!important;
+  position:static!important;
+  transform:none!important;
+  pointer-events:auto!important
+}
+html body .pd .pd-desc-content .pd-desc-card .pd-desc-section:not(.is-hidden) > div{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important
+}
+html body .pd .pd-desc-content .pd-desc-card .pd-desc-section:not(.is-hidden) .pd-desc-label,
+html body .pd .pd-desc-content .pd-desc-card .pd-desc-section:not(.is-hidden) .pd-desc-text{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  color:#39220f!important;
+  height:auto!important
+}
+/* Belt-and-suspenders: make sure the card itself isn't height-capped */
+html body .pd .pd-desc-content .pd-desc-card{
+  max-height:none!important;
+  min-height:0!important
+}
+
+/* === STICKY-STACK FIX (preserves the effect, stops the clipping) ===
+   The card has position:sticky on mobile so it stacks under the next card while scrolling.
+   It also had overflow:hidden, which clipped text out of view when the card pinned and its
+   inner content area was shorter than the actual text. Fix: override overflow to visible on
+   the card AND the parent content, and remove every possible height cap. Sticky behavior stays
+   intact (position is NOT touched). */
+html body .pd .pd-desc-content,
+body .pd .pd-desc-content,
+html body .pd .pd-desc-content .pd-desc-card,
+body .pd .pd-desc-card{
+  overflow:visible!important;
+  max-height:none!important;
+  min-height:0!important;
+  height:auto!important;
+}
+
+/* Extra mobile safety — the sticky card on mobile should always show its real content height */
+@media (max-width:760px){
+  html body .pd .pd-desc-content .pd-desc-card{
+    overflow:visible!important;
+    max-height:none!important;
+    min-height:0!important;
+    height:auto!important;
+    contain:none!important;
+  }
+  html body .pd .pd-desc-content .pd-desc-card .pd-desc-section,
+  html body .pd .pd-desc-content .pd-desc-card > div{
+    overflow:visible!important;
+    max-height:none!important;
+    height:auto!important;
+  }
+}
+
+/* === LOAD-FLASH FIX (pre-transform only) ===
+   Before the JS rebuilds the raw <ul> into .pd-desc-card blocks, this keeps the area
+   from (a) flashing raw, unstyled bullet text and (b) collapsing to zero height and then
+   jumping when the cards appear. It is scoped to :not(:has(.pd-desc-card)) so the moment
+   the cards exist the rule stops matching — the final, transformed design is untouched. */
+html body .pd .pd-desc-content:not(:has(.pd-desc-card)) > *{
+  visibility:hidden!important;
+}
+html body .pd .pd-desc-content:not(:has(.pd-desc-card)){
+  min-height:283px!important;
+}
+@media (max-width:980px){
+  html body .pd .pd-desc-content:not(:has(.pd-desc-card)){
+    min-height:320px!important;
+  }
+}
+</style>

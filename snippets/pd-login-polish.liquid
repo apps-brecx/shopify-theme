@@ -1,0 +1,412 @@
+{%- comment -%} Login polish v6 — full brand styling + social login click rewire. {%- endcomment -%}
+{%- if template contains 'customers' or request.page_type == 'customers/login' or request.page_type == 'customers/register' or request.path contains '/account' -%}
+{%- render 'pd-social-login-fix' -%}
+<style id="pd-login-polish-css">
+/* ============================================================
+   VARIABLE SWAP — kill the coral/red at the CSS-variable source
+   ============================================================ */
+html body .sauth,
+html body .sauth *{
+  --vip:#5BA3D0 !important; --vip-soft:#DBEEF5 !important; --vip-ink:#2F7BB0 !important; --vip-deep:#2F7BB0 !important;
+  --coral:#5BA3D0 !important; --red:#5BA3D0 !important;
+  --ink:#39220f !important; --paper:#FFFBF4 !important; --copper:#c58548 !important;
+  --butter:#FCE2A0 !important; --peach:#FFD4B8 !important; --sky:#B8DCEB !important;
+  --blue:#5BA3D0 !important; --deep-blue:#2F7BB0 !important;
+  --muted:rgba(57,34,15,.55) !important; --hair:rgba(57,34,15,.18) !important;
+}
+
+/* FONT BASELINE */
+html body .sauth, html body .sauth p, html body .sauth span, html body .sauth a,
+html body .sauth input, html body .sauth label,
+html body .sauth .auth-foot, html body .sauth .auth-fine{
+  font-family:'Josefin Sans','Josefin',sans-serif !important;
+}
+html body .sauth h1, html body .sauth h2, html body .sauth h3,
+html body .sauth [class*="title"], html body .sauth .auth-tab,
+html body .sauth .auth-submit, html body .sauth button[type="submit"],
+html body .sauth .btn-ink, html body .sauth .btn-vip, html body .sauth .btn-ghost,
+html body .sauth .auth-or, html body .sauth .auth-aside-brand,
+html body .sauth .aside-stat .big, html body .sauth .perk-row b{
+  font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+}
+
+/* ============================================================
+   CARD CONTAINER — mobile centering
+   ============================================================ */
+html body .sauth{ width:100% !important; max-width:100% !important; overflow-x:clip !important; }
+html body .sauth .auth-stage{ width:100% !important; max-width:100% !important; }
+html body .sauth .auth-formwrap{
+  background:#FFFBF4 !important; background-image:none !important;
+  padding:48px 32px !important; width:100% !important; max-width:100% !important;
+  box-sizing:border-box !important;
+  display:flex !important; align-items:center !important; justify-content:center !important;
+}
+html body .sauth .auth-card{
+  background:#FFFFFF !important; background-image:none !important;
+  border:2px solid #39220f !important; border-radius:20px !important;
+  box-shadow:5px 5px 0 #39220f !important;
+  padding:32px 30px 28px !important; max-width:460px !important; width:100% !important;
+  margin-left:auto !important; margin-right:auto !important; box-sizing:border-box !important;
+}
+@media (max-width:680px){
+  html body .sauth .auth-formwrap{ padding:24px 16px 28px !important; }
+  html body .sauth .auth-card{ padding:24px 20px !important; box-shadow:4px 4px 0 #39220f !important; margin:0 auto !important; }
+}
+@media (max-width:420px){
+  html body .sauth .auth-formwrap{ padding:18px 12px 24px !important; }
+  html body .sauth .auth-card{ padding:22px 16px !important; }
+}
+
+/* ============================================================
+   TAB TOGGLE
+   ============================================================ */
+html body .sauth .auth-view, html body .sauth .auth-view.show{ text-align:center !important; }
+html body .sauth .auth-tabs{
+  background:#FFFBF4 !important; border:1.5px solid #39220f !important;
+  border-radius:999px !important; padding:5px !important;
+  position:relative !important; overflow:hidden !important;
+  display:inline-flex !important; align-items:stretch !important;
+  gap:0 !important; margin:0 auto 22px !important;
+  box-shadow:3px 3px 0 #39220f !important; vertical-align:middle !important;
+}
+html body .sauth .auth-tab{
+  font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+  letter-spacing:.14em !important; text-transform:uppercase !important; font-size:12.5px !important;
+  padding:0 32px !important; min-width:130px !important; height:42px !important;
+  border:0 !important; background:transparent !important;
+  color:#39220f !important; border-radius:999px !important;
+  position:relative !important; z-index:2 !important; cursor:pointer !important;
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  text-align:center !important; white-space:nowrap !important; box-sizing:border-box !important;
+  line-height:1 !important; transition:color .2s ease !important;
+  outline:none !important; -webkit-tap-highlight-color:transparent !important;
+  vertical-align:middle !important;
+}
+html body .sauth .auth-tab.on, html body .sauth .auth-tab.on.vip{ color:#39220f !important; }
+html body .sauth .auth-tab:not(.on):hover{ color:#c58548 !important; }
+html body .sauth .auth-tabglide{
+  background:#FCE2A0 !important; border:1.5px solid #39220f !important;
+  border-radius:999px !important; z-index:1 !important;
+  top:5px !important; bottom:5px !important; height:auto !important; box-shadow:none !important;
+  transition:transform .25s cubic-bezier(.5,1.5,.5,1), width .25s ease, left .25s ease !important;
+}
+html body .sauth .auth-tabglide.r{ background:#FCE2A0 !important; box-shadow:none !important; }
+
+/* HEADINGS */
+html body .sauth .auth-head{ margin-bottom:20px !important; text-align:center !important; }
+html body .sauth .auth-head h1, html body .sauth .auth-card h1, html body .sauth .auth-card h2{
+  font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+  font-size:28px !important; line-height:1.02 !important;
+  letter-spacing:-.005em !important; text-transform:uppercase !important;
+  color:#39220f !important; text-align:center !important; margin:0 !important;
+}
+html body .sauth .auth-head h1 em, html body .sauth .auth-card h1 em, html body .sauth .auth-card h2 em{
+  font-family:'Josefin Sans',sans-serif !important; font-style:italic !important;
+  font-weight:300 !important; color:#c58548 !important; text-transform:none !important;
+}
+html body .sauth .auth-head p{
+  font-family:'Josefin Sans',sans-serif !important; font-size:14.5px !important; line-height:1.5 !important;
+  color:rgba(57,34,15,.7) !important; text-align:center !important; margin:8px auto 0 !important; max-width:34ch !important;
+}
+html body .sauth .auth-head p b{ color:#2F7BB0 !important; font-weight:700 !important; }
+
+/* FIELDS / INPUTS / PLACEHOLDERS */
+html body .sauth .field{ margin-bottom:14px !important; text-align:left !important; }
+html body .sauth .auth-card label, html body .sauth .field label{
+  font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+  font-size:11px !important; letter-spacing:.14em !important; text-transform:uppercase !important;
+  color:#39220f !important; display:block !important; margin:0 0 8px !important;
+  text-align:left !important; justify-content:flex-start !important;
+}
+html body .sauth .field label a[data-goto="reset"]{ display:none !important; }
+html body .sauth .auth-card input[type="email"],
+html body .sauth .auth-card input[type="password"],
+html body .sauth .auth-card input[type="text"],
+html body .sauth .field input{
+  background:#FFFBF4 !important; border:1.5px solid #39220f !important;
+  border-radius:13px !important; height:52px !important;
+  font-family:'Josefin Sans',sans-serif !important; font-size:15px !important;
+  color:#39220f !important; padding:0 16px 0 44px !important;
+  outline:none !important; box-shadow:none !important;
+  -webkit-tap-highlight-color:transparent !important;
+  -webkit-text-fill-color:#39220f !important;
+  width:100% !important; box-sizing:border-box !important;
+  transition:border-color .15s ease, box-shadow .15s ease !important;
+}
+html body .sauth .field-wrap:not(.hasic) input,
+html body .sauth .auth-set2 .field input{ padding-left:16px !important; }
+html body .sauth .field-ic{ left:15px !important; color:rgba(57,34,15,.45) !important; }
+html body .sauth .field-eye{ right:12px !important; color:rgba(57,34,15,.45) !important; }
+html body .sauth input::placeholder{
+  color:rgba(57,34,15,.35) !important;
+  font-family:'Josefin Sans',sans-serif !important;
+  font-weight:400 !important; font-style:normal !important; opacity:1 !important;
+}
+html body .sauth .auth-card input:-webkit-autofill,
+html body .sauth .auth-card input:-webkit-autofill:hover,
+html body .sauth .auth-card input:-webkit-autofill:focus,
+html body .sauth .auth-card input:-webkit-autofill:active{
+  -webkit-box-shadow:0 0 0 1000px #FFFBF4 inset !important;
+          box-shadow:0 0 0 1000px #FFFBF4 inset !important;
+  -webkit-text-fill-color:#39220f !important;
+  caret-color:#39220f !important;
+  background-color:#FFFBF4 !important;
+  border:1.5px solid #39220f !important;
+  transition:background-color 9999s ease-in-out 0s !important;
+}
+html body .sauth .auth-card input:focus,
+html body .sauth .field input:focus{
+  outline:none !important; box-shadow:none !important;
+  border-color:#c58548 !important; background:#FFFBF4 !important;
+}
+html body .sauth a.pd-forgot{
+  display:inline-block !important;
+  font-family:'Josefin Sans',sans-serif !important;
+  font-size:12.5px !important; font-weight:700 !important;
+  letter-spacing:.04em !important;
+  color:#c58548 !important; text-decoration:underline !important; text-underline-offset:3px !important;
+  margin:-6px 0 16px !important; padding:2px 0 !important;
+  background:transparent !important; border:0 !important; cursor:pointer !important;
+  text-align:right !important; width:100% !important; box-shadow:none !important;
+  text-transform:none !important;
+}
+html body .sauth a.pd-forgot:hover{ color:#39220f !important; }
+
+/* PRIMARY BUTTONS */
+html body .sauth .btn-ink, html body .sauth .btn-vip,
+html body .sauth .auth-card button[type="submit"],
+html body .sauth .auth-card .auth-submit{
+  background:#39220f !important; background-color:#39220f !important; background-image:none !important;
+  color:#FFFBF4 !important;
+  border:1.5px solid #39220f !important; border-radius:999px !important;
+  font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+  letter-spacing:.12em !important; text-transform:uppercase !important; font-size:13px !important;
+  padding:0 22px !important; height:54px !important; min-height:54px !important; width:100% !important;
+  cursor:pointer !important;
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  gap:10px !important; margin:6px 0 4px !important;
+  outline:none !important;
+  box-shadow:3px 3px 0 #c58548 !important;
+  -webkit-tap-highlight-color:transparent !important;
+  transition:transform .12s ease, box-shadow .12s ease !important;
+  text-decoration:none !important; white-space:nowrap !important;
+  line-height:1.1 !important;
+}
+html body .sauth .btn-ink:hover, html body .sauth .btn-vip:hover,
+html body .sauth .auth-card button[type="submit"]:hover{
+  background:#39220f !important; color:#FFFBF4 !important;
+  transform:translate(-1px,-1px) !important; box-shadow:4px 4px 0 #c58548 !important;
+}
+html body .sauth .btn-ink:active, html body .sauth .btn-vip:active{
+  transform:translate(1px,1px) !important; box-shadow:1px 1px 0 #c58548 !important;
+}
+
+/* DIVIDER — OR CONTINUE WITH */
+html body .sauth .auth-or{
+  display:flex !important; align-items:center !important; gap:14px !important;
+  font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+  font-size:10.5px !important; letter-spacing:.18em !important; text-transform:uppercase !important;
+  color:rgba(57,34,15,.55) !important;
+  margin:22px 0 16px !important; padding:0 !important;
+  width:100% !important; position:static !important; text-align:center !important;
+}
+html body .sauth .auth-or::before,
+html body .sauth .auth-or::after{
+  content:"" !important;
+  flex:1 1 auto !important; height:1.5px !important;
+  background:rgba(57,34,15,.18) !important;
+  position:static !important; width:auto !important;
+  display:block !important; border:0 !important; margin:0 !important;
+}
+
+/* SOCIAL BUTTONS (unified Google/Apple/Shop — no purple, no coral) */
+html body .sauth .auth-social{ display:flex !important; flex-direction:column !important; gap:10px !important; }
+html body .sauth .soc-btn,
+html body .sauth .soc-btn.shop,
+html body .sauth button.soc-btn{
+  background:#FFFBF4 !important; background-color:#FFFBF4 !important; background-image:none !important;
+  color:#39220f !important;
+  border:1.5px solid #39220f !important; border-radius:999px !important;
+  font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+  letter-spacing:.08em !important; text-transform:uppercase !important; font-size:12.5px !important;
+  padding:0 18px !important; height:50px !important; min-height:50px !important; width:100% !important;
+  cursor:pointer !important;
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  gap:10px !important; margin:0 !important;
+  outline:none !important; box-shadow:none !important;
+  -webkit-tap-highlight-color:transparent !important;
+  text-decoration:none !important; position:relative !important;
+  transition:background .15s ease, transform .12s ease !important;
+  white-space:nowrap !important;
+}
+html body .sauth .soc-btn *{ color:#39220f !important; }
+html body .sauth .soc-btn:hover{
+  background:#FCE2A0 !important; color:#39220f !important;
+  border:1.5px solid #39220f !important; box-shadow:none !important;
+}
+html body .sauth .soc-btn:active{
+  background:#FCE2A0 !important; color:#39220f !important; transform:translate(0,1px) !important; box-shadow:none !important;
+}
+html body .sauth .soc-btn svg, html body .sauth .soc-ic{
+  flex:0 0 auto !important; width:18px !important; height:18px !important;
+}
+html body .sauth .soc-btn.shop .soc-ic svg{ color:#39220f !important; fill:#39220f !important; }
+
+/* FOOTER + VIP GHOST */
+html body .sauth .auth-foot{
+  text-align:center !important; font-family:'Josefin Sans',sans-serif !important;
+  font-size:14px !important; color:rgba(57,34,15,.7) !important; margin:18px 0 0 !important;
+}
+html body .sauth .auth-foot a, html body .sauth .auth-card a[href*="register"]{
+  color:#2F7BB0 !important; font-family:'Josefin Sans',sans-serif !important;
+  font-weight:700 !important; text-decoration:underline !important;
+  text-underline-offset:3px !important; letter-spacing:.02em !important;
+  text-transform:none !important; font-size:13.5px !important;
+}
+html body .sauth .btn-ghost,
+html body .sauth .auth-card a[href*="vip"]{
+  background:#FFFBF4 !important; color:#2F7BB0 !important;
+  border:1.5px solid #2F7BB0 !important; border-radius:999px !important;
+  font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important;
+  letter-spacing:.08em !important; text-transform:uppercase !important; font-size:12px !important;
+  padding:0 20px !important; height:48px !important; min-height:48px !important; width:100% !important;
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  gap:8px !important; margin:14px 0 0 !important; cursor:pointer !important; text-decoration:none !important;
+  -webkit-tap-highlight-color:transparent !important;
+  transition:background .15s ease, transform .12s ease, box-shadow .12s ease !important;
+  white-space:nowrap !important;
+}
+html body .sauth .btn-ghost:hover{
+  background:#DBEEF5 !important; transform:translate(-1px,-1px) !important; box-shadow:3px 3px 0 #2F7BB0 !important;
+}
+html body .sauth .auth-fine{
+  text-align:center !important; font-size:11.5px !important;
+  color:rgba(57,34,15,.55) !important; margin:14px 0 0 !important; line-height:1.55 !important;
+}
+
+/* VIP ASIDE — solid blue, white logo */
+html body .sauth .auth-aside{
+  background:#2F7BB0 !important; background-image:none !important;
+  color:#FFFBF4 !important; border-right:2px solid #39220f !important;
+  text-align:center !important; display:flex !important;
+  flex-direction:column !important; align-items:center !important;
+  justify-content:center !important; padding:48px 36px !important; gap:20px !important;
+}
+html body .sauth .auth-aside *{ color:#FFFBF4 !important; }
+html body .sauth .auth-aside-brand{
+  display:block !important; width:160px !important; height:42px !important;
+  margin:0 auto 16px !important;
+  background-image:url('https://cdn.shopify.com/s/files/1/0861/1106/0252/files/syruvia_logo.png?v=1760350871') !important;
+  background-repeat:no-repeat !important; background-position:center !important; background-size:contain !important;
+  filter:brightness(0) invert(1) !important;
+  font-size:0 !important; color:transparent !important; text-indent:-9999px !important; overflow:hidden !important;
+}
+html body .sauth .auth-aside-brand::after{ display:none !important; }
+
+/* Error / OK messages */
+html body .sauth .auth-err{
+  background:#FFE4D6 !important; border:1.5px solid #c58548 !important; border-radius:12px !important;
+  padding:10px 14px !important; font-size:13px !important; color:#39220f !important; margin-bottom:14px !important;
+}
+html body .sauth .auth-ok{
+  background:#DBEEF5 !important; border:1.5px solid #2F7BB0 !important; border-radius:12px !important;
+  padding:10px 14px !important; font-size:13px !important; color:#2F7BB0 !important; margin-bottom:14px !important;
+}
+
+html body .sauth button, html body .sauth a{ -webkit-tap-highlight-color:transparent !important; }
+</style>
+
+<script>
+(function(){
+  function isRedFamily(c){
+    var m = c.match(/rgba?\(\s*(\d+),\s*(\d+),\s*(\d+)/); if (!m) return false;
+    var r=+m[1], g=+m[2], b=+m[3];
+    if (r === 197 && g === 133 && b === 72) return false;
+    if (r === 255 && g === 212 && b === 184) return false;
+    if (r === 252 && g === 226 && b === 160) return false;
+    if (r === 57 && g === 34 && b === 15) return false;
+    if (r === 197 && g === 49 && b === 86) return true;
+    if (r === 142 && g === 30 && b === 60) return true;
+    if (r === 251 && g === 224 && b === 229) return true;
+    return r > 180 && r > g + 50 && r > b + 20;
+  }
+  function isAutofillBlue(c){ return /^rgb\(\s*232\s*,\s*240\s*,\s*254/.test(c); }
+  function sweep(){
+    var auth = document.querySelector('.sauth'); if (!auth) return;
+    auth.querySelectorAll('button, a').forEach(function(el){
+      var cs; try { cs = getComputedStyle(el); } catch(e){ return; }
+      if (isRedFamily(cs.backgroundColor)){
+        var isPrimary = el.matches('button[type="submit"], .auth-submit, .btn-ink, .btn-vip');
+        el.style.setProperty('background-color', isPrimary ? '#39220f' : '#FFFBF4', 'important');
+        el.style.setProperty('background-image', 'none', 'important');
+        el.style.setProperty('color', isPrimary ? '#FFFBF4' : '#39220f', 'important');
+      }
+      if (isRedFamily(cs.color) && !cs.color.match(/^rgb\(\s*197\s*,\s*133\s*,\s*72/)){
+        el.style.setProperty('color', '#c58548', 'important');
+      }
+    });
+    auth.querySelectorAll('input').forEach(function(el){
+      var cs; try { cs = getComputedStyle(el); } catch(e){ return; }
+      if (isAutofillBlue(cs.backgroundColor)){
+        el.style.setProperty('background-color', '#FFFBF4', 'important');
+        el.style.setProperty('-webkit-box-shadow', '0 0 0 1000px #FFFBF4 inset', 'important');
+        el.style.setProperty('-webkit-text-fill-color', '#39220f', 'important');
+      }
+    });
+  }
+
+  function relocateForgot(){
+    var view = document.querySelector('.sauth [data-v="signin"]'); if (!view) return;
+    if (view.querySelector('a.pd-forgot')) return;
+    var pwInput = view.querySelector('input[name="customer[password]"]'); if (!pwInput) return;
+    var fieldDiv = pwInput.closest('.field'); if (!fieldDiv) return;
+    var origForgot = fieldDiv.querySelector('a[data-goto="reset"]');
+    var newLink = document.createElement('a');
+    newLink.className = 'pd-forgot';
+    newLink.setAttribute('data-goto','reset');
+    newLink.textContent = 'Forgot password?';
+    newLink.href = 'javascript:void(0)';
+    fieldDiv.parentNode.insertBefore(newLink, fieldDiv.nextSibling);
+    if (origForgot){ origForgot.style.display = 'none'; }
+  }
+
+  function cleanupCreateView(){
+    var auth = document.querySelector('.sauth'); if (!auth) return;
+    var fn = auth.querySelector('input[name="customer[first_name]"]');
+    if (fn && (fn.placeholder === 'Maya' || !fn.dataset.pdPh)){
+      fn.placeholder = 'First name'; fn.dataset.pdPh = '1';
+    }
+    var ln = auth.querySelector('input[name="customer[last_name]"]');
+    if (ln && (ln.placeholder === 'Okafor' || !ln.dataset.pdPh)){
+      ln.placeholder = 'Last name'; ln.dataset.pdPh = '1';
+    }
+    var em = auth.querySelectorAll('input[name="customer[email]"]');
+    em.forEach(function(input){
+      if (input.placeholder === 'you@email.com' || !input.dataset.pdPh){
+        input.placeholder = 'your@email.com'; input.dataset.pdPh = '1';
+      }
+    });
+    var createBtn = auth.querySelector('[data-v="create"] button[type="submit"]');
+    if (createBtn && !createBtn.dataset.pdRetext){
+      var textNodes = [].slice.call(createBtn.childNodes).filter(function(n){ return n.nodeType === 3 && n.nodeValue.trim().length > 0; });
+      if (textNodes.length){ textNodes[textNodes.length - 1].nodeValue = ' Create my VIP account'; }
+      createBtn.dataset.pdRetext = '1';
+    }
+  }
+
+  function init(){
+    sweep(); relocateForgot(); cleanupCreateView();
+    [50,300,1000,2500].forEach(function(ms){
+      setTimeout(function(){ sweep(); relocateForgot(); cleanupCreateView(); }, ms);
+    });
+    document.addEventListener('mousedown', function(e){ if (e.target && e.target.closest('.sauth')) { sweep(); setTimeout(sweep, 0); setTimeout(sweep, 50); } });
+    document.addEventListener('focusin', function(e){ if (e.target && e.target.closest('.sauth')) setTimeout(sweep, 10); });
+    if ('MutationObserver' in window){
+      new MutationObserver(function(){ sweep(); relocateForgot(); cleanupCreateView(); }).observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:['class','style']});
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+{%- endif -%}

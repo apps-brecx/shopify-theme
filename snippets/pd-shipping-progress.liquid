@@ -1,0 +1,148 @@
+{%- comment -%}
+  Free-shipping progress fill v3 — surgical, conservative.
+  + chains the cart drawer height fix (max-height 82vh on mobile so the X is reachable).
+{%- endcomment -%}
+{%- render 'pd-cart-drawer-height-fix' -%}
+{%- assign free_ship_minimum = settings.minimum_free_shipping | default: 34 -%}
+{%- assign free_ship_cents = free_ship_minimum | times: 100 -%}
+<style id="pd-shipping-progress-css">
+.pd-ship-fill{
+  position:absolute !important;
+  top:0 !important; left:0 !important;
+  height:100% !important;
+  background:#c58548 !important;
+  border-radius:999px !important;
+  transition:width .45s cubic-bezier(.25,.46,.45,.94) !important;
+  display:block !important;
+  pointer-events:none !important;
+}
+</style>
+<script id="pd-shipping-progress-js">
+(function(){
+  var FREE_SHIPPING_CENTS = {{ free_ship_cents | json }};
+  var lastTotal = -1;
+
+  function findShipTextNodes(){
+    var hits = [];
+    var scopes = document.querySelectorAll('.scd-bd, .scart, .cart-drawer, cart-drawer, cart-notification, [class*="sticky-bottom-checkout"], #SyrCD');
+    scopes.forEach(function(scope){
+      var walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, null, false);
+      var node;
+      while ((node = walker.nextNode())){
+        var txt = (node.nodeValue || '').toLowerCase();
+        if (!txt.trim()) continue;
+        if (txt.indexOf('free shipping') !== -1 ||
+            txt.indexOf('from free ship') !== -1 ||
+            txt.indexOf('unlocked free') !== -1 ||
+            txt.indexOf('away from free') !== -1){
+          if (hits.indexOf(node) === -1) hits.push(node);
+        }
+      }
+    });
+    return hits;
+  }
+
+  function looksLikeTrack(el){
+    if (!el) return false;
+    if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'LINK') return false;
+    if ((el.textContent || '').trim().length > 0) return false;
+    if (el.querySelector('svg, img, picture')) return false;
+    if (el.classList && el.classList.contains('pd-ship-fill')) return false;
+    if (el.closest && el.closest('.pd-snav-v4')) return false;
+    var rect = el.getBoundingClientRect();
+    if (rect.width < 50) return false;
+    if (rect.height === 0 || rect.height > 14) return false;
+    if (rect.height >= rect.width * 0.2) return false;
+    return true;
+  }
+
+  function findTrackFor(textNode){
+    var msgEl = textNode.parentElement;
+    var box = msgEl;
+    for (var depth = 0; depth < 5 && box; depth++){
+      var candidates = box.querySelectorAll('div, span, hr, i');
+      for (var i = 0; i < candidates.length; i++){
+        var c = candidates[i];
+        if (c === msgEl || msgEl.contains(c) || c.contains(msgEl)) continue;
+        if (looksLikeTrack(c)) return c;
+      }
+      box = box.parentElement;
+    }
+    return null;
+  }
+
+  function fillTrack(track, pct){
+    var cs;
+    try { cs = getComputedStyle(track); } catch(e){ return; }
+    if (cs.position === 'static') track.style.position = 'relative';
+    if (cs.overflow === 'visible') track.style.overflow = 'hidden';
+    var fill = track.querySelector('.pd-ship-fill');
+    if (!fill){
+      fill = document.createElement('div');
+      fill.className = 'pd-ship-fill';
+      track.appendChild(fill);
+    }
+    fill.style.setProperty('width', pct + '%', 'important');
+    track.dataset.pdShipPct = pct.toFixed(1);
+  }
+
+  function applyAll(){
+    if (lastTotal < 0) return;
+    var pct = Math.min(100, Math.max(0, (lastTotal / FREE_SHIPPING_CENTS) * 100));
+    var tracks = [];
+    findShipTextNodes().forEach(function(textNode){
+      var t = findTrackFor(textNode);
+      if (t && tracks.indexOf(t) === -1) tracks.push(t);
+    });
+    tracks.forEach(function(t){ fillTrack(t, pct); });
+  }
+
+  function refresh(){
+    fetch('/cart.js', {credentials:'same-origin', headers:{Accept:'application/json'}})
+      .then(function(r){ return r.json(); })
+      .then(function(c){
+        if (!c || typeof c.total_price !== 'number') return;
+        lastTotal = c.total_price;
+        applyAll();
+        setTimeout(applyAll, 150);
+        setTimeout(applyAll, 500);
+        setTimeout(applyAll, 1200);
+      })
+      .catch(function(){});
+  }
+
+  function init(){
+    refresh();
+    document.addEventListener('cart:updated', refresh);
+    document.addEventListener('cart:refresh', refresh);
+    document.addEventListener('cart:change', refresh);
+    document.addEventListener('ajaxCart:updated', refresh);
+    document.addEventListener('shopify:section:load', refresh);
+    document.addEventListener('click', function(e){
+      if (e.target && (e.target.closest('#cart-icon-bubble') ||
+                       e.target.closest('a[href*="/cart"]') ||
+                       e.target.closest('[data-cart-drawer-trigger]') ||
+                       e.target.closest('summary[aria-controls*="cart" i]'))){
+        setTimeout(applyAll, 120);
+        setTimeout(refresh, 280);
+        setTimeout(applyAll, 800);
+      }
+    }, true);
+    document.addEventListener('submit', function(e){
+      if (e.target && e.target.matches && e.target.matches('form[action*="/cart"]')){
+        setTimeout(refresh, 400);
+      }
+    }, true);
+    if ('MutationObserver' in window){
+      var debounce = null;
+      new MutationObserver(function(){
+        if (debounce) clearTimeout(debounce);
+        debounce = setTimeout(applyAll, 80);
+      }).observe(document.body, {childList:true, subtree:true});
+    }
+    setInterval(applyAll, 1800);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>

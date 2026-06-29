@@ -1,0 +1,13 @@
+{%- comment -%}
+  Limited Time Timer (HTML ONLY)
+  JS is handled globally to prevent disappearing on page refresh
+{%- endcomment -%}
+
+{%- assign end_time_value = end_time -%}
+{%- if end_time_value != blank -%}
+  <div class="limited-timer" data-end-time="{{ end_time_value | date: '%Y-%m-%dT%H:%M:%S%z' }}">
+    <span class="limited-timer__label">Limited Time Deal</span>
+    <span class="limited-timer__countdown">00:00:00</span>
+  </div>
+{%- endif -%}
+

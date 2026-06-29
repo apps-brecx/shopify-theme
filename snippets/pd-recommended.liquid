@@ -1,0 +1,156 @@
+{%- comment -%} You might also love — curated metafield with smart auto-fallback to same-collection products. {%- endcomment -%}
+
+{%- assign recs = product.metafields.custom.you_might_enjoy_products.value -%}
+
+{%- if recs == blank or recs.size == 0 -%}
+  {%- comment -%} Fallback 1: pick the first meaningful collection the product belongs to (skip generic ones). {%- endcomment -%}
+  {%- assign skip_handles = 'all,frontpage,home,homepage' -%}
+  {%- for col in product.collections -%}
+    {%- assign skip = skip_handles | split: ',' -%}
+    {%- assign is_skip = false -%}
+    {%- for s in skip -%}{%- if col.handle == s -%}{%- assign is_skip = true -%}{%- break -%}{%- endif -%}{%- endfor -%}
+    {%- if is_skip -%}{%- continue -%}{%- endif -%}
+    {%- if col.products_count > 1 -%}
+      {%- assign recs = col.products -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if recs == blank or recs.size == 0 -%}
+  {%- comment -%} Fallback 2: "all" collection. {%- endcomment -%}
+  {%- assign recs = collections.all.products -%}
+{%- endif -%}
+
+{%- comment -%} Determine the counterpart (sugar-free ↔ regular) so we don't recommend it. {%- endcomment -%}
+{%- assign counterpart_handle = '' -%}
+{%- assign cp_mf = product.metafields.custom.sugar_free.value -%}
+{%- if cp_mf and cp_mf.handle -%}{%- assign counterpart_handle = cp_mf.handle -%}{%- endif -%}
+
+<style>
+html body .pd .pd-recs{padding:96px 0 80px!important;background:#FFFFFF!important;border-top:2px solid #1a1a1a!important}
+@media (max-width:760px){html body .pd .pd-recs{padding:64px 0 56px!important}}
+html body .pd .pd-recs-head{text-align:center!important;max-width:680px!important;margin:0 auto 40px!important}
+html body .pd .pd-recs-head .pd-eyebrow{--recs-s:0.85;display:inline-block!important;margin:0 auto 18px!important;font-size:calc(11px * var(--recs-s))!important;padding:calc(7px * var(--recs-s)) calc(16px * var(--recs-s))!important;will-change:font-size,padding!important}
+html body .pd .pd-recs-head .pd-h2{margin:0 auto 12px!important;text-align:center!important}
+html body .pd .pd-recs-lede{font-family:'Josefin Sans',sans-serif!important;font-size:15.5px!important;line-height:1.55!important;color:#3a3a3a!important;font-weight:500!important;margin:0 auto!important;max-width:42ch!important}
+@media (max-width:760px){html body .pd .pd-recs-head{margin-bottom:32px!important;padding:0 18px!important}html body .pd .pd-recs-lede{font-size:14px!important}}
+
+html body .pd .pd-recs-track{display:flex!important;gap:20px!important;overflow-x:auto!important;scroll-snap-type:x mandatory!important;-webkit-overflow-scrolling:touch!important;padding:8px 32px 24px!important;scrollbar-width:none!important;scroll-padding-left:32px!important;scroll-padding-inline-start:32px!important}
+html body .pd .pd-recs-track::-webkit-scrollbar{display:none!important}
+html body .pd .pd-recs-card{flex:0 0 280px!important;scroll-snap-align:start!important;background:#FFFBF4!important;border:2px solid #1a1a1a!important;border-radius:22px!important;box-shadow:5px 5px 0 #1a1a1a!important;padding:0!important;text-decoration:none!important;color:#1a1a1a!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease!important;cursor:pointer!important}
+html body .pd .pd-recs-card:hover{transform:translate(-3px,-3px)!important;box-shadow:8px 8px 0 #1a1a1a!important;color:#1a1a1a!important}
+html body .pd .pd-recs-img{aspect-ratio:1/1!important;background:#FFF8EE!important;border-bottom:2px solid #1a1a1a!important;overflow:hidden!important;display:block!important;width:100%!important}
+html body .pd .pd-recs-img img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important;transition:transform .4s ease!important}
+html body .pd .pd-recs-card:hover .pd-recs-img img{transform:scale(1.05)!important}
+html body .pd .pd-recs-body{padding:18px 20px 20px!important;display:flex!important;flex-direction:column!important;gap:8px!important;flex:1!important}
+html body .pd .pd-recs-title{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:14px!important;letter-spacing:.04em!important;text-transform:uppercase!important;color:#1a1a1a!important;margin:0!important;line-height:1.25!important;flex:1!important}
+html body .pd .pd-recs-foot{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;margin-top:6px!important;padding-top:12px!important;border-top:1.5px dashed rgba(26,26,26,.18)!important}
+html body .pd .pd-recs-price{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:16px!important;color:#1a1a1a!important;letter-spacing:.01em!important;line-height:1!important}
+html body .pd .pd-recs-arrow{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:32px!important;height:32px!important;background:#FF6B5C!important;color:#FFFBF4!important;border:1.5px solid #1a1a1a!important;border-radius:50%!important;flex-shrink:0!important;transition:transform .2s ease, background .15s ease!important;box-shadow:2px 2px 0 #1a1a1a!important}
+html body .pd .pd-recs-card:hover .pd-recs-arrow{transform:translateX(3px)!important;background:#1a1a1a!important}
+html body .pd .pd-recs-nav{display:flex!important;justify-content:center!important;align-items:center!important;gap:12px!important;margin-top:8px!important}
+html body .pd .pd-recs-nav-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:42px!important;height:42px!important;background:#FFFBF4!important;border:1.5px solid #1a1a1a!important;border-radius:50%!important;color:#1a1a1a!important;cursor:pointer!important;transition:transform .15s ease, background .15s ease, box-shadow .15s ease!important;padding:0!important}
+html body .pd .pd-recs-nav-btn:hover:not(:disabled){background:#FCE2A0!important;transform:translate(-1px,-1px)!important;box-shadow:2px 2px 0 #1a1a1a!important}
+html body .pd .pd-recs-nav-btn:disabled{opacity:.35!important;cursor:not-allowed!important}
+@media (max-width:760px){
+  html body .pd .pd-recs-track{gap:14px!important;padding:8px 18px 20px!important;scroll-padding-left:18px!important;scroll-padding-inline-start:18px!important}
+  html body .pd .pd-recs-card{flex-basis:calc(75vw - 36px)!important;max-width:240px!important;border-radius:18px!important;box-shadow:4px 4px 0 #1a1a1a!important}
+  html body .pd .pd-recs-body{padding:14px 16px 16px!important;gap:6px!important}
+  html body .pd .pd-recs-title{font-size:13px!important}
+  html body .pd .pd-recs-price{font-size:14px!important}
+  html body .pd .pd-recs-nav-btn{width:38px!important;height:38px!important}
+  html body .pd .pd-recs-arrow{width:28px!important;height:28px!important}
+}
+</style>
+
+{%- assign rendered_count = 0 -%}
+{%- capture cards_html -%}
+  {%- for rec in recs -%}
+    {%- if rendered_count >= 12 -%}{%- break -%}{%- endif -%}
+    {%- if rec.handle == product.handle -%}{%- continue -%}{%- endif -%}
+    {%- if counterpart_handle != '' and rec.handle == counterpart_handle -%}{%- continue -%}{%- endif -%}
+    {%- unless rec.available -%}{%- continue -%}{%- endunless -%}
+    <a class="pd-recs-card" href="/products/{{ rec.handle }}">
+      <span class="pd-recs-img">
+        <img src="{{ rec.featured_image | image_url: width: 600 }}" alt="{{ rec.title | escape }}" loading="lazy" width="600" height="600">
+      </span>
+      <div class="pd-recs-body">
+        <h3 class="pd-recs-title">{{ rec.title }}</h3>
+        <div class="pd-recs-foot">
+          <span class="pd-recs-price">{{ rec.price | money }}</span>
+          <span class="pd-recs-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 h14 M13 6 l6 6 -6 6"/></svg>
+          </span>
+        </div>
+      </div>
+    </a>
+    {%- assign rendered_count = rendered_count | plus: 1 -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if rendered_count > 0 -%}
+  <section class="pd-recs" id="pdRecs">
+    <div class="pd-wrap pd-recs-head">
+      <span class="pd-eyebrow">You might also love</span>
+      <h2 class="pd-h2">Pour <em>more</em> flavors.</h2>
+      <p class="pd-recs-lede">Customer favorites that pair beautifully with your cup.</p>
+    </div>
+
+    <div class="pd-recs-track" id="pdRecsTrack">{{ cards_html }}</div>
+
+    <div class="pd-wrap pd-recs-nav">
+      <button type="button" class="pd-recs-nav-btn" id="pdRecsPrev" aria-label="Previous">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6 l-6 6 6 6"/></svg>
+      </button>
+      <button type="button" class="pd-recs-nav-btn" id="pdRecsNext" aria-label="Next">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 l6 6 -6 6"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <script>
+  (function(){
+    function init(){
+      var track = document.getElementById('pdRecsTrack');
+      var prev  = document.getElementById('pdRecsPrev');
+      var next  = document.getElementById('pdRecsNext');
+      var section = document.getElementById('pdRecs');
+      if (!track || !prev || !next) return;
+      function step(){
+        var card = track.querySelector('.pd-recs-card');
+        if (!card) return 300;
+        return card.offsetWidth + 20;
+      }
+      function updateDisabled(){
+        prev.disabled = track.scrollLeft <= 5;
+        next.disabled = (track.scrollLeft + track.clientWidth) >= (track.scrollWidth - 5);
+      }
+      prev.addEventListener('click', function(){ track.scrollBy({left: -step(), behavior: 'smooth'}); });
+      next.addEventListener('click', function(){ track.scrollBy({left: step(), behavior: 'smooth'}); });
+      track.addEventListener('scroll', function(){ updateDisabled(); }, {passive:true});
+      window.addEventListener('resize', updateDisabled);
+      updateDisabled();
+      var badge = section && section.querySelector('.pd-eyebrow');
+      if (!badge) return;
+      var minS = 0.85, maxS = 1.45, raf = null;
+      function update(){
+        raf = null;
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        var r = section.getBoundingClientRect();
+        var denom = (vh - vh * 0.20) || 1;
+        var p = (vh - r.top) / denom;
+        if (p < 0) p = 0; if (p > 1) p = 1;
+        var ease = p * p * (3 - 2 * p);
+        badge.style.setProperty('--recs-s', (minS + (maxS - minS) * ease).toFixed(3));
+      }
+      function onScroll(){ if (raf) return; raf = requestAnimationFrame(update); }
+      window.addEventListener('scroll', onScroll, {passive:true});
+      window.addEventListener('resize', onScroll, {passive:true});
+      update();
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+  })();
+  </script>
+{%- endif -%}

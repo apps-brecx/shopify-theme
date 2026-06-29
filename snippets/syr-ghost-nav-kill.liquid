@@ -1,0 +1,43 @@
+{%- comment -%}
+  Kills the orphaned/duplicate bottom nav (nav.pd-snav-v4) injected by an external script.
+  Its Shop link is href="#" and it overlays the real Syruvia bottom nav, stealing taps.
+  This both hides it (bulletproof CSS specificity) and removes it from the DOM.
+  Loaded globally via theme head so it applies on every page.
+{%- endcomment -%}
+<style>
+  html body nav.pd-snav-v4,
+  html body nav.pd-snav-v4[role],
+  html body nav.pd-snav-v4.is-revealed,
+  html body nav.pd-snav-v4.is-revealed[role],
+  html body nav.pd-snav-v4 *{
+    display:none !important;
+    pointer-events:none !important;
+    visibility:hidden !important;
+    opacity:0 !important;
+  }
+</style>
+<script>
+(function(){
+  function sweep(){
+    var ghosts = document.querySelectorAll('nav.pd-snav-v4');
+    for (var i=0;i<ghosts.length;i++){ try { ghosts[i].remove(); } catch(e){} }
+  }
+  sweep();
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', sweep);
+  }
+  try {
+    var mo = new MutationObserver(function(muts){
+      for (var i=0;i<muts.length;i++){
+        var added = muts[i].addedNodes;
+        for (var j=0;j<added.length;j++){
+          var n = added[j];
+          if (n.nodeType === 1 && (n.classList && n.classList.contains('pd-snav-v4'))){ try { n.remove(); } catch(e){} }
+        }
+      }
+    });
+    mo.observe(document.documentElement, { childList:true, subtree:true });
+    window.addEventListener('load', function(){ sweep(); setTimeout(function(){ try { mo.disconnect(); } catch(e){} }, 4000); });
+  } catch(e){}
+})();
+</script>

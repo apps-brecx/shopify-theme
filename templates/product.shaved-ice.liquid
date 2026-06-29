@@ -1,0 +1,392 @@
+{% layout 'theme' %}
+
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+{% render 'pd-fixes' %}
+{% render 'pd-tweaks' %}
+{% render 'pd-rv2-affordances' %}
+{% render 'pd-reviews-style' %}
+{% render 'pd-color-swap' %}
+{% render 'pd-page-polish-v2' %}
+{% render 'pd-cat-styles' %}
+{% render 'pd-cat-extras' %}
+
+<style>
+.pd-slider-mobile{display:none}.pd-slider-dots{display:none}
+@media (max-width:760px){
+  .pd-hero-frame{display:none!important}.pd-thumbs{display:none!important}
+  .pd-slider-mobile{display:block!important;position:relative;background:#FFFBF4;border:2px solid #1a1a1a;border-radius:20px;padding:0;box-shadow:4px 4px 0 #1a1a1a;overflow:hidden;max-width:340px;margin:0 auto}
+  .pd-slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%;position:relative;z-index:0}
+  .pd-slides::-webkit-scrollbar{display:none}.pd-slide{flex:0 0 100%;scroll-snap-align:start;min-width:100%}
+  .pd-slide img{width:100%;height:auto;display:block;aspect-ratio:1/1;object-fit:cover}
+  .pd-slider-dots{display:flex!important;justify-content:center;gap:5px;margin-top:10px}
+}
+html body .pd .pd-price-row{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important}
+
+/* ========= Shaved Ice flavor color theming ========= */
+.pd-si-hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 30% 20%, var(--si-glow,#FFD4B8) 0%, transparent 55%),radial-gradient(ellipse at 75% 80%, var(--si-glow2,#B8DCEB) 0%, transparent 60%);opacity:.65;pointer-events:none}
+html body .pd .pd-si-chip{background:var(--si-chip,#FFD4B8)!important}
+html body .pd .pd-cat-recipes{background:var(--si-band,#FCE2A0)!important}
+</style>
+
+{%- assign hero_img = product.featured_media.preview_image -%}
+{%- assign hero_src = hero_img | image_url: width: 1400 -%}
+<link rel="preload" as="image" href="{{ hero_src }}" imagesrcset="{{ hero_img | image_url: width: 600 }} 600w, {{ hero_img | image_url: width: 1000 }} 1000w, {{ hero_img | image_url: width: 1400 }} 1400w" imagesizes="(max-width: 980px) 100vw, 600px" fetchpriority="high">
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign price = current_variant.price -%}
+{%- assign display_price = price -%}
+{%- assign review_count = product.metafields.reviews.rating_count.value | default: 0 -%}
+
+{%- assign t_lc = product.title | downcase -%}
+{%- assign is_sf = false -%}
+{%- if t_lc contains 'sugar-free' or t_lc contains 'sugar free' -%}{%- assign is_sf = true -%}{%- endif -%}
+
+{%- comment -%} ===== Flavor color theming ===== {%- endcomment -%}
+{%- assign si_main = '#FFD4B8' -%}
+{%- assign si_accent = '#FCE2A0' -%}
+{%- assign si_glow = '#FFD4B8' -%}
+{%- assign si_glow2 = '#B8DCEB' -%}
+{%- assign si_band = '#FCE2A0' -%}
+{%- assign flavor_name = 'snow cone' -%}
+
+{%- if t_lc contains 'blue raspberry' -%}
+  {%- assign si_main = '#B8DCEB' -%}{%- assign si_accent = '#5BA3D0' -%}{%- assign si_glow = '#B8DCEB' -%}{%- assign si_glow2 = '#E0F2FA' -%}{%- assign si_band = '#B8DCEB' -%}{%- assign flavor_name = 'blue raspberry' -%}
+{%- elsif t_lc contains 'blue cotton candy' -%}
+  {%- assign si_main = '#A8D8F0' -%}{%- assign si_accent = '#F5C7BE' -%}{%- assign si_glow = '#A8D8F0' -%}{%- assign si_glow2 = '#FFD4E5' -%}{%- assign si_band = '#A8D8F0' -%}{%- assign flavor_name = 'cotton candy' -%}
+{%- elsif t_lc contains 'cherry' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#D14B3F' -%}{%- assign si_glow = '#F5C7BE' -%}{%- assign si_glow2 = '#FFE8E5' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'cherry' -%}
+{%- elsif t_lc contains 'grape' -%}
+  {%- assign si_main = '#D4B8E0' -%}{%- assign si_accent = '#6B3F8C' -%}{%- assign si_glow = '#D4B8E0' -%}{%- assign si_glow2 = '#E8D5F0' -%}{%- assign si_band = '#D4B8E0' -%}{%- assign flavor_name = 'grape' -%}
+{%- elsif t_lc contains 'pina colada' -%}
+  {%- assign si_main = '#FCE2A0' -%}{%- assign si_accent = '#C5E4D4' -%}{%- assign si_glow = '#FCE2A0' -%}{%- assign si_glow2 = '#C5E4D4' -%}{%- assign si_band = '#FCE2A0' -%}{%- assign flavor_name = 'piña colada' -%}
+{%- elsif t_lc contains 'bubble gum' -%}
+  {%- assign si_main = '#FFD4E5' -%}{%- assign si_accent = '#FF8FB8' -%}{%- assign si_glow = '#FFD4E5' -%}{%- assign si_glow2 = '#FFE8F0' -%}{%- assign si_band = '#FFD4E5' -%}{%- assign flavor_name = 'bubble gum' -%}
+{%- elsif t_lc contains 'root beer' -%}
+  {%- assign si_main = '#D4A574' -%}{%- assign si_accent = '#7A4F2A' -%}{%- assign si_glow = '#E8C9A0' -%}{%- assign si_glow2 = '#FCE2A0' -%}{%- assign si_band = '#E8C9A0' -%}{%- assign flavor_name = 'root beer' -%}
+{%- elsif t_lc contains 'lime' -%}
+  {%- assign si_main = '#C5E4D4' -%}{%- assign si_accent = '#5A9968' -%}{%- assign si_glow = '#C5E4D4' -%}{%- assign si_glow2 = '#E5F3E0' -%}{%- assign si_band = '#C5E4D4' -%}{%- assign flavor_name = 'lime' -%}
+{%- elsif t_lc contains 'orange' -%}
+  {%- assign si_main = '#FFD4B8' -%}{%- assign si_accent = '#E87E2A' -%}{%- assign si_glow = '#FFD4B8' -%}{%- assign si_glow2 = '#FFE8D5' -%}{%- assign si_band = '#FFD4B8' -%}{%- assign flavor_name = 'orange' -%}
+{%- elsif t_lc contains 'strawberry' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#E85541' -%}{%- assign si_glow = '#F5C7BE' -%}{%- assign si_glow2 = '#FFE0DA' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'strawberry' -%}
+{%- elsif t_lc contains 'fruit punch' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#E85541' -%}{%- assign si_glow = '#FFD4B8' -%}{%- assign si_glow2 = '#F5C7BE' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'fruit punch' -%}
+{%- endif -%}
+
+<style>
+  :root{--si-main:{{ si_main }};--si-accent:{{ si_accent }};--si-glow:{{ si_glow }};--si-glow2:{{ si_glow2 }};--si-band:{{ si_band }};--si-chip:{{ si_main }}}
+</style>
+
+<div class="pd" data-product-id="{{ product.id }}" data-base-price="{{ display_price }}">
+
+  <nav class="pd-breadcrumbs" aria-label="Breadcrumb">
+    <div class="pd-wrap">
+      <ol>
+        <li><a href="/">Home</a></li>
+        <li class="pd-bc-sep" aria-hidden="true">/</li>
+        <li><a href="/collections/shaved-ice">Shaved Ice</a></li>
+        <li class="pd-bc-sep" aria-hidden="true">/</li>
+        <li class="pd-bc-current">{{ product.title }}</li>
+      </ol>
+    </div>
+  </nav>
+
+  <section class="pd-hero" style="position:relative;overflow:hidden">
+    <div class="pd-si-hero-bg" aria-hidden="true"></div>
+    <div class="pd-wrap" style="position:relative;z-index:1">
+      <div class="pd-hero-grid">
+        <div class="pd-hero-media">
+          <div class="pd-hero-frame">
+            <img id="pdHeroImg" src="{{ hero_src }}" alt="{{ product.title | escape }}" width="1200" height="1200" fetchpriority="high">
+          </div>
+          {%- if product.images.size > 1 -%}
+            <div class="pd-thumbs">
+              {%- for img in product.images limit: 4 -%}
+                <button type="button" class="pd-thumb{% if forloop.first %} is-active{% endif %}" data-src="{{ img | image_url: width: 1400 }}" aria-label="View image {{ forloop.index }}"><img src="{{ img | image_url: width: 200 }}" alt="" width="200" height="200" loading="lazy"></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+          <div class="pd-slider-mobile">
+            <div class="pd-slides" id="pdSlides">
+              {%- for img in product.images -%}
+                <div class="pd-slide" data-idx="{{ forloop.index0 }}"><img src="{{ img | image_url: width: 1000 }}" alt="{{ product.title | escape }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}></div>
+              {%- endfor -%}
+            </div>
+          </div>
+          {%- if product.images.size > 1 -%}
+            <div class="pd-slider-dots" id="pdDots">
+              {%- for img in product.images -%}<button type="button" class="pd-dot{% if forloop.first %} is-active{% endif %}" data-idx="{{ forloop.index0 }}" aria-label="View image {{ forloop.index }}"></button>{%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="pd-hero-info">
+          <a href="#reviews" class="pd-rating-row">
+            <span class="pd-stars" aria-hidden="true">
+              {%- for i in (1..5) -%}<svg viewBox="0 0 24 24" fill="#c58548" stroke="#c58548" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>{%- endfor -%}
+            </span>
+            <span class="pd-rating-text">{{ review_count }} reviews</span>
+          </a>
+          <h1 class="pd-h1">{{ product.title | upcase }}</h1>
+
+          <div class="pd-chips">
+            <span class="pd-chip pd-si-chip" style="background:var(--si-main)!important"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M8 15 Q12 18 16 15"/></svg>Bold {{ flavor_name | capitalize }} Flavor</span>
+            {%- if is_sf -%}
+              <span class="pd-chip pd-chip--blush"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M5 5l14 14"/></svg>Sugar-Free</span>
+            {%- else -%}
+              <span class="pd-chip pd-chip--butter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 Q12 4 21 12 Q12 20 3 12 Z"/></svg>Ready to Pour</span>
+            {%- endif -%}
+            <span class="pd-chip pd-chip--mint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg>Kosher · Non-GMO</span>
+            <span class="pd-chip pd-chip--sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L14 9 L20 9 L15 13 L17 19 L12 16 L7 19 L9 13 L4 9 L10 9 Z"/></svg>Party-Ready</span>
+          </div>
+
+          {%- form 'product', product, id: 'pdAtcForm', class: 'pd-form' -%}
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+            <div class="pd-priceqty">
+              <div class="pd-priceblock">
+                <div class="pd-price-row">
+                  <span class="pd-price" id="pdPriceTotal">{{ display_price | money }}</span>
+                  <span class="pd-price-was" id="pdPriceWas" style="display:none"></span>
+                </div>
+                <span class="pd-save-inline" id="pdSaveTag" style="display:none"></span>
+              </div>
+              <div class="pd-qty" aria-label="Quantity">
+                <button type="button" data-qty="-1" aria-label="Decrease">−</button>
+                <input type="number" name="quantity" value="1" min="1" inputmode="numeric">
+                <button type="button" data-qty="1" aria-label="Increase">+</button>
+              </div>
+            </div>
+            <button type="submit" class="pd-atc pd-atc--full" {% unless product.available %}disabled{% endunless %}>
+              <svg class="pd-atc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 L4 6 V20 a2 2 0 0 0 2 2 H18 a2 2 0 0 0 2 -2 V6 L18 2 Z M4 6 H20 M16 10 a4 4 0 0 1 -8 0"/></svg>
+              <span class="pd-atc-text" id="pdAtcText">{%- if product.available -%}Add to cart{%- else -%}Sold Out{%- endif -%}</span>
+              {%- if product.available -%}<svg class="pd-atc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 H19 M13 6 l6 6 -6 6"/></svg>{%- endif -%}
+            </button>
+          {%- endform -%}
+
+          <div class="pd-minibundle">
+            <div class="pd-mb-head">
+              <span class="pd-mb-headline">Stock up for summer</span>
+              <span class="pd-mb-sub">More bottles, more savings</span>
+            </div>
+            <div class="pd-mb-grid">
+              <button type="button" class="pd-mb-cell" data-tier="2"><span class="pd-mb-num">2</span><span class="pd-mb-label">Bottles</span><span class="pd-mb-save">Save 5%</span></button>
+              <button type="button" class="pd-mb-cell" data-tier="3"><span class="pd-mb-flag">Most Popular</span><span class="pd-mb-num">3</span><span class="pd-mb-label">Bottles</span><span class="pd-mb-save">Save 10%</span></button>
+              <button type="button" class="pd-mb-cell" data-tier="4"><span class="pd-mb-num">4+</span><span class="pd-mb-label">Bottles</span><span class="pd-mb-save">Save 15%</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="pd-marquee" aria-hidden="true">
+    <div class="pd-marquee-track">
+      {%- for i in (1..2) -%}<span>Bold {{ flavor_name | capitalize }}</span><span>Snow Cones</span><span>Slushies</span><span>Ice Pops</span><span>Kosher · Non-GMO</span><span>Pool Party Ready</span>{%- endfor -%}
+    </div>
+  </div>
+
+  <section class="pd-description">
+    <div class="pd-wrap">
+      <div class="pd-desc-head">
+        <span class="pd-eyebrow">About this flavor</span>
+        <h2 class="pd-h2" style="margin-top:14px;">Built for <em>summer</em>.</h2>
+      </div>
+      <div class="pd-desc-content">
+        {%- if product.description and product.description != blank -%}
+          {{ product.description }}
+        {%- else -%}
+          <ul>
+            <li>Bold {{ flavor_name | capitalize }}: A pop of bright, refreshing flavor with every pour.</li>
+            <li>Snow Cone Ready: Goes straight onto fresh-shaved ice. No mixing, no fuss.</li>
+            <li>Premium Recipe: Kosher, non-GMO, dairy-free, long shelf life.</li>
+            <li>Endless Possibilities: Snow cones, slushies, ice pops, sodas, shakes, smoothies.</li>
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+  <section class="pd-standards" aria-hidden="true">
+    <div class="pd-wrap">
+      <div class="pd-ingredients">
+        <span class="pd-ingredients-label">Ingredients</span>
+        <div>{%- if is_sf -%}Filtered Water, Natural & Artificial Flavor, Citric Acid, {{ flavor_name | capitalize }} Color, Sucralose, Sodium Benzoate (preservative).{%- else -%}Pure Cane Sugar, Filtered Water, Natural & Artificial Flavor, Citric Acid, {{ flavor_name | capitalize }} Color, Sodium Benzoate (preservative).{%- endif -%}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pd-nutrition-wrap" aria-hidden="true">
+    <div class="pd-wrap">
+      <div class="pd-nutrition">
+        <div class="pd-nutrition-title">Nutrition Facts</div>
+        <div class="pd-nut-serv">Serving size 1 fl oz (30 mL)</div>
+        <div class="pd-nut-rule--thick"></div>
+        <div class="pd-nut-row"><strong>Amount per serving</strong></div>
+        <div class="pd-nut-row" style="font-size:18px;"><strong>Calories</strong><strong>{%- if is_sf -%}0{%- else -%}80{%- endif -%}</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div style="font-size:12px;text-align:right;">% Daily Value*</div>
+        <div class="pd-nut-row"><span><strong>Total Fat</strong> 0g</span><strong>0%</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>Sodium</strong> 10mg</span><strong>0%</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>Total Carbohydrate</strong> {%- if is_sf -%}1g{%- else -%}20g{%- endif -%}</span><strong>{%- if is_sf -%}0%{%- else -%}7%{%- endif -%}</strong></div>
+        <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Total Sugars {%- if is_sf -%}0g{%- else -%}19g{%- endif -%}</span><span></span></div>
+        {%- unless is_sf -%}<div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Incl. 19g Added Sugars</span><strong>38%</strong></div>{%- endunless -%}
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>Protein</strong> 0g</span></div>
+        <div class="pd-nut-rule--med"></div>
+        <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">*% DV based on a 2,000 calorie diet.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pd-why">
+    <div class="pd-wrap pd-why-wrap" style="text-align:center;">
+      <span class="pd-eyebrow">Why Syruvia Shaved Ice</span>
+      <h2 class="pd-h2 pd-why-h2">Made for <em>summer days</em>.</h2>
+      <div class="pd-why-grid pd-why-grid--spaced">
+        <div class="pd-why-card pd-why-card--peach">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="#39220f"/><circle cx="15" cy="10" r="1" fill="#39220f"/><path d="M8 15 Q12 18 16 15"/></svg></div>
+          <h3 class="pd-why-title">Bold Flavor</h3>
+          <p class="pd-why-body">Vibrant {{ flavor_name }} taste with eye-catching color in every pour.</p>
+        </div>
+        <div class="pd-why-card pd-why-card--butter">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg></div>
+          <h3 class="pd-why-title">No Mixing Required</h3>
+          <p class="pd-why-body">Pour straight from the bottle. Ready to use, ready to serve.</p>
+        </div>
+        <div class="pd-why-card pd-why-card--mint">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L20 6 V12 C20 16.5 16.4 20.5 12 22 C7.6 20.5 4 16.5 4 12 V6 L12 3 Z"/><path d="M8.5 12 L11 14.5 L15.5 9.5"/></svg></div>
+          <h3 class="pd-why-title">Kosher &amp; Non-GMO</h3>
+          <p class="pd-why-body">Premium ingredients. Kosher certified, dairy-free, long shelf life.</p>
+        </div>
+        <div class="pd-why-card pd-why-card--sky">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L14 9 L20 9 L15 13 L17 19 L12 16 L7 19 L9 13 L4 9 L10 9 Z"/></svg></div>
+          <h3 class="pd-why-title">Party-Hit</h3>
+          <p class="pd-why-body">Pool parties, beach days, birthday bashes — always a crowd favorite.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% render 'pd-reels-section' %}
+
+  <section class="pd-recipes-v2">
+    <div class="pd-wrap pd-rv2-head">
+      <span class="pd-eyebrow">Featured recipe</span>
+      <h2 class="pd-h2">Build the <em>perfect</em> snow cone.</h2>
+      <p class="pd-rv2-lede">The signature pour for Syruvia {{ flavor_name }} shaved ice syrup.</p>
+    </div>
+    <div class="pd-wrap">
+      <article class="pd-rv2-feature">
+        <div class="pd-rv2-feature-img">
+          <img src="{{ product.featured_image | image_url: width: 1200 }}" alt="{{ product.title | escape }} snow cone" loading="lazy">
+          <span class="pd-rv2-feature-tag">Signature pour</span>
+        </div>
+        <div class="pd-rv2-feature-body">
+          <div class="pd-rv2-feature-content is-trimmed">
+            <h3 class="pd-rv2-feature-name">Classic {{ flavor_name | capitalize }} Snow Cone</h3>
+            <p class="pd-rv2-feature-ing-head"><strong>INGREDIENTS</strong></p>
+            <ul>
+              <li>1 paper snow cone cup, filled with finely-shaved ice</li>
+              <li>2 – 3 oz Syruvia {{ flavor_name }} shaved ice syrup</li>
+              <li>Optional: a squeeze of fresh lime + a straw-spoon</li>
+            </ul>
+          </div>
+          <span class="pd-rv2-feature-time">2 min</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="pd-cat-recipes">
+    <div class="pd-wrap" style="text-align:center;">
+      <span class="pd-eyebrow">Ways to pour</span>
+      <h2 class="pd-h2" style="margin:14px auto 14px;">Way more than a <em>snow cone</em>.</h2>
+      <p class="pd-cat-recipes-sub">One bottle, a dozen frosty creations.</p>
+    </div>
+    <div class="pd-cat-recipes-scroll">
+      <button type="button" class="pd-cat-recipes-nav pd-cat-recipes-nav--prev" aria-label="Previous"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6 l-6 6 6 6"/></svg></button>
+      <div class="pd-cat-recipes-marquee">
+        <div class="pd-cat-recipes-track">
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Snow Cone</span><h3 class="pd-cat-recipes-card-title">Classic Snow Cone</h3><p class="pd-cat-recipes-card-body">Fill a cup with shaved ice. Pour 2-3 oz of {{ flavor_name }} syrup. Sip + crunch.</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Slushie</span><h3 class="pd-cat-recipes-card-title">Frozen Slushie</h3><p class="pd-cat-recipes-card-body">Blend 2 cups crushed ice with 4 oz syrup until icy. Done in 30 seconds.</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Ice Pop</span><h3 class="pd-cat-recipes-card-title">Backyard Ice Pops</h3><p class="pd-cat-recipes-card-body">Mix syrup with water (1:3 ratio), freeze in pop molds. Summer in a stick.</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Soda</span><h3 class="pd-cat-recipes-card-title">Homemade Soda</h3><p class="pd-cat-recipes-card-body">2 oz syrup + 10 oz sparkling water over ice. Italian-soda style.</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Cocktail</span><h3 class="pd-cat-recipes-card-title">{{ flavor_name | capitalize }} Spritz</h3><p class="pd-cat-recipes-card-body">1 oz syrup + 2 oz vodka or rum + soda + ice. Party drink in 30 seconds.</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">Shake</span><h3 class="pd-cat-recipes-card-title">{{ flavor_name | capitalize }} Milkshake</h3><p class="pd-cat-recipes-card-body">Blend 2 scoops vanilla ice cream, 1/2 cup milk, 2 oz syrup. Old-school diner vibe.</p></div>
+        </div>
+      </div>
+      <button type="button" class="pd-cat-recipes-nav pd-cat-recipes-nav--next" aria-label="Next"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 l6 6 -6 6"/></svg></button>
+    </div>
+  </section>
+
+  {% render 'pd-reviews-v2' %}
+  {% render 'pd-write-review' %}
+  {% render 'pd-recommended' %}
+
+  <section class="pd-faq" id="pdFaq">
+    <div class="pd-wrap pd-faq-head">
+      <span class="pd-eyebrow">FAQ</span>
+      <h2 class="pd-h2">Before you <em>pour</em>.</h2>
+      <p class="pd-faq-lede">Everything you might want to know about Syruvia shaved ice syrup.</p>
+    </div>
+    {%- assign faqs = 'How much syrup per snow cone?|Most people use 2-3 oz per snow cone for a vivid color and full-on flavor. For lighter taste, start with 1 oz and add more.;;Do I need a snow cone machine?|Nope! Any shaved or crushed ice works. A snow cone machine gives you that classic fluffy texture but a sturdy blender pulses on crushed ice work great too.;;What can I make besides snow cones?|Slushies, ice pops, italian sodas, milkshakes, smoothies, cocktails, mocktails. Anything cold + sweet.;;Is the syrup ready to use?|Yes. No mixing, no diluting. Pour directly from the bottle onto ice.;;How long does an open bottle last?|Sealed bottles keep up to 12 months at room temp. Once opened, store cool/dark and use within 6 months for best flavor.;;Is it kosher? Gluten free?|Yes — kosher certified, gluten free, dairy free, non-GMO.;;How fast do you ship?|Orders ship in 1 business day from our New Jersey warehouse. Flat-rate $5.99 shipping, free over $34.;;What if I do not love it?|30-day taste guarantee. Email us and we will refund, replace, or credit — your call.' | split: ';;' -%}
+    <ul class="pd-faq-list">
+      {%- for faq in faqs -%}
+        {%- assign parts = faq | split: '|' -%}
+        <li class="pd-faq-item">
+          <button type="button" class="pd-faq-q" aria-expanded="false">
+            <span class="pd-faq-q-text">{{ parts[0] }}</span>
+            <span class="pd-faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="pd-faq-a"><div class="pd-faq-a-inner">{{ parts[1] }}</div></div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </section>
+
+  {% render 'pd-vip-section' %}
+
+  <div class="pd-stickybar" id="pdStickybar">
+    <span class="pd-price"><span id="pdStickyPrice">{{ display_price | money }}</span></span>
+    <button type="button" class="pd-atc" {% unless product.available %}disabled{% endunless %} onclick="document.getElementById('pdAtcForm').requestSubmit()">{%- if product.available -%}Add to cart{%- else -%}Sold Out{%- endif -%}</button>
+  </div>
+</div>
+
+{% render 'pd-mb-prices' %}
+
+<script>
+window.PD_BASE_CENTS = {{ display_price }};
+window.PD_TIERS = [1, 0.95, 0.90, 0.85];
+(function(){
+  var currentBaseCents = window.PD_BASE_CENTS;
+  const tiers = window.PD_TIERS;
+  const fmt = (c)=>{const d=c/100; return '$' + d.toFixed(2);};
+  function updatePrice(qty){
+    qty = Math.max(1, parseInt(qty)||1);
+    const tierIdx = Math.min(qty-1, tiers.length-1);
+    const discount = tiers[tierIdx];
+    const totalCents = Math.round(currentBaseCents * qty * discount);
+    const origCents = currentBaseCents * qty;
+    const priceEl = document.getElementById('pdPriceTotal');
+    const wasEl = document.getElementById('pdPriceWas');
+    const saveEl = document.getElementById('pdSaveTag');
+    const stickyPriceEl = document.getElementById('pdStickyPrice');
+    if (priceEl) priceEl.textContent = fmt(totalCents);
+    if (stickyPriceEl) stickyPriceEl.textContent = fmt(totalCents);
+    if (qty > 1){ if (wasEl){wasEl.textContent = fmt(origCents); wasEl.style.display='inline';} if (saveEl){saveEl.textContent = 'Save '+Math.round((1-discount)*100)+'%'; saveEl.style.display='inline-block';} }
+    else { if (wasEl) wasEl.style.display='none'; if (saveEl) saveEl.style.display='none'; }
+    document.querySelectorAll('.pd-mb-cell').forEach(c=>{ const t = parseInt(c.dataset.tier)||1; const match = (qty === t) || (qty >= 4 && t === 4); if (match) c.setAttribute('data-active',''); else c.removeAttribute('data-active'); });
+  }
+  document.querySelectorAll('.pd-qty [data-qty]').forEach(b=>{b.addEventListener('click',()=>{const inp=b.parentElement.querySelector('input'); const v=Math.max(1,(parseInt(inp.value)||1)+parseInt(b.dataset.qty)); inp.value=v; updatePrice(v);});});
+  document.querySelectorAll('.pd-qty input').forEach(inp=>{inp.addEventListener('change',()=>updatePrice(parseInt(inp.value)||1)); inp.addEventListener('input',()=>updatePrice(parseInt(inp.value)||1));});
+  document.querySelectorAll('.pd-mb-cell').forEach(c=>{c.addEventListener('click',()=>{const tier=parseInt(c.dataset.tier)||1; const qtyInp=document.querySelector('.pd-qty input'); if(qtyInp){qtyInp.value=tier; updatePrice(tier);}});});
+  const heroImg=document.getElementById('pdHeroImg');
+  document.querySelectorAll('.pd-thumb').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.pd-thumb').forEach(x=>x.classList.remove('is-active'));t.classList.add('is-active');if(heroImg&&t.dataset.src)heroImg.src=t.dataset.src;});});
+  const slides=document.getElementById('pdSlides'); const dots=document.querySelectorAll('.pd-dot');
+  if(slides&&dots.length){let st; slides.addEventListener('scroll',()=>{clearTimeout(st);st=setTimeout(()=>{const idx=Math.round(slides.scrollLeft/slides.clientWidth);dots.forEach((d,i)=>d.classList.toggle('is-active',i===idx));},50);}); dots.forEach((d,i)=>d.addEventListener('click',()=>{slides.scrollTo({left:i*slides.clientWidth,behavior:'smooth'});}));}
+  const mainAtc=document.querySelector('.pd-atc--full'); const stickyBar=document.getElementById('pdStickybar');
+  if(mainAtc&&stickyBar&&'IntersectionObserver' in window){const io=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)stickyBar.classList.add('is-hidden');else stickyBar.classList.remove('is-hidden');});},{threshold:0.15}); io.observe(mainAtc);}
+})();
+</script>

@@ -1,0 +1,14 @@
+{%- comment -%} Boba size picker (1 LB / 2 LB / 7 LB) styling — matches the pd brand design. {%- endcomment -%}
+<style id="pd-size-picker-css">
+html body .pd .pd-size-picker{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:10px!important;margin:6px 0 22px!important}
+html body .pd .pd-size-picker-label{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:11px!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:#39220f!important;margin-right:4px!important;line-height:1!important}
+html body .pd .pd-size-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:62px!important;padding:11px 18px!important;background:#FFFBF4!important;border:2px solid #39220f!important;border-radius:999px!important;box-shadow:3px 3px 0 #39220f!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:13px!important;letter-spacing:.04em!important;text-transform:uppercase!important;color:#39220f!important;text-decoration:none!important;line-height:1!important;cursor:pointer!important;transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease!important}
+html body .pd .pd-size-btn:hover{transform:translate(-1px,-1px)!important;box-shadow:4px 4px 0 #39220f!important;background:#FCE2A0!important;color:#39220f!important}
+html body .pd .pd-size-btn.is-active{background:#c58548!important;color:#FFFBF4!important;box-shadow:3px 3px 0 #39220f!important;transform:translate(1px,1px)!important}
+html body .pd .pd-size-btn.is-active:hover{background:#c58548!important;color:#FFFBF4!important}
+@media (max-width:760px){
+  html body .pd .pd-size-picker{gap:8px!important;margin:4px 0 18px!important}
+  html body .pd .pd-size-picker-label{width:100%!important;margin:0 0 2px!important}
+  html body .pd .pd-size-btn{min-width:54px!important;padding:10px 15px!important;font-size:12px!important;box-shadow:2px 2px 0 #39220f!important}
+}
+</style>

@@ -1,0 +1,183 @@
+<style>
+   .about-image-text__inner{
+       background-color: #fff6ee;
+       padding: 70px 0;
+   }
+   .about-image-text__wrapper{
+       overflow: hidden;
+       padding: 100px 70px;
+       border-radius: 20px;
+       display: flex;
+       gap: 95px;
+       background-color: #fff9f4;
+   }
+   .about-image-text__image{
+       width: 50%;
+       border-top-left-radius: 20%;
+       border-bottom-right-radius: 20%;
+       overflow: hidden;
+   }
+
+   .about-image-text__image img,     .about-image-text__image-mobile img{
+       width: 100%;
+       height: 100%;
+       object-fit: cover;
+       display: block;
+   }
+   .about-image-text__content{
+       width: 50%;
+       padding: 100px 0 200px;
+   }
+   .about-image-text__subtitle{
+       color: #4a3827;
+       font-size: 26px;
+       font-weight: 500;
+       margin-bottom: 40px;
+       line-height: 30px;
+   }
+   .about-image-text__title{
+       margin-bottom: 40px;
+   }
+   .about-image-text__title h2{
+       font-size: 45px;
+        color: #4a3827;
+        font-weight: 700;
+        margin: 0;
+        line-height: 50px;
+   }
+   .about-image-text__description p{
+        color: #4a3827;
+        font-size: 20px;
+        margin: 0;
+        line-height: 30px;
+   }
+   .about-image-text__image-mobile{
+       display: none;
+   }
+
+   @media(max-width: 1200px){
+       .about-image-text__wrapper{
+           gap: 20px;
+           padding: 100px 20px;
+       }
+   }
+    @media(max-width: 991px){
+       .about-image-text__image{
+           display: none;
+       }
+  .about-image-text__image-mobile{
+      display: block;
+   }
+   .about-image-text__image-mobile{
+       padding: 30px 0;
+       height: 500px;
+       max-width: 528px;
+       margin: 0 auto;
+    }
+    .about-image-text__image-mobile img{
+          border-radius: 99999px;
+    }
+    .about-image-text__content{
+           width: 100%;
+           padding: 0;
+    }
+        .about-image-text__wrapper{        
+           padding: 40px 20px;
+           text-align: center;
+       }
+     .about-image-text__subtitle{
+    
+       margin-bottom: 20px;
+   }
+   .about-image-text__title{
+       margin-bottom: 20px;
+   }
+    @media(max-width: 768px){
+        .about-image-text__inner{
+
+       padding: 50px 0;
+   }
+     .about-image-text__subtitle{
+        font-size: 24px;
+    }
+    .about-image-text__title h2{
+        font-size: 36px;
+    }
+   }
+</style>
+
+<div class="about-image-text__inner">
+  <div class="page-width">
+    <div class="about-image-text__wrapper">
+      <div class="about-image-text__image">
+        {% if section.settings.image != blank %}
+          {{
+            section.settings.image
+            | image_url: width: 1200
+            | image_tag: loading: 'lazy', alt: section.settings.title
+          }}
+        {% endif %}
+      </div>
+      <div class="about-image-text__content">
+        <div class="about-image-text__subtitle">
+          {{ section.settings.subtitle }}
+        </div>
+        <div class="about-image-text__title">
+          {{ section.settings.title }}
+        </div>
+        <div class="about-image-text__description">
+          {{ section.settings.description1 }}
+        </div>
+        <div class="about-image-text__image-mobile">
+          {% if section.settings.image != blank %}
+            {{
+              section.settings.image
+              | image_url: width: 1200
+              | image_tag: loading: 'lazy', alt: section.settings.title
+            }}
+          {% endif %}
+        </div>
+        <div class="about-image-text__description">
+          {{ section.settings.description2 }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "About image text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sub Title"
+    },
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "description1",
+      "label": "Description 1"
+    },
+    {
+      "type": "richtext",
+      "id": "description2",
+      "label": "Description 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "About image text"
+    }
+  ]
+}
+{% endschema %}

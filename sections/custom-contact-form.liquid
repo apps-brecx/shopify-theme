@@ -1,0 +1,355 @@
+{{ 'section-contact-form.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+    .grid-class {
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    min-height: 600px;
+      max-height: 600px;
+    }
+    .form-class {
+      width: 100% !important;
+      padding: 0px 40px !important;
+    }
+    .field__input:focus, .field__input:hover,.field__input:focus-visible {
+          box-shadow: 0 0 0 calc(.1rem + var(--inputs-border-width)) rgb(232 105 2) !important;
+    }
+    .button {
+      background: #b85423;
+      border-radius: 30px !important;
+    }
+    .button:after {
+      box-shadow: unset;
+    }
+    .right-grid {
+      position: relative;
+    }
+    .content {
+      position: absolute;
+      top: 0
+    }
+    .content > h1 {
+      text-align: center !important;
+     color: white
+    }
+    .unorder-list {
+      padding: 0px 11px;
+    }
+    .list {
+          display: inline-flex;
+    min-width: 140px;
+      max-width: 140px;
+    min-height: 129px;
+    background: white;
+          padding: 6px 10px !important;
+          vertical-align: middle;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    }
+    .anch {
+     text-decoration: none;
+    color: black;
+    font-size: 10px;
+    font-weight: 200;
+    text-align: center;
+    }
+    .heading3 {
+          max-width: 600px;
+    padding: 36px;
+    text-align: center;
+    line-height: 1.8;
+    color: white;
+    font-size: 18px;
+    }
+    .right-grid > img {
+      max-width: 592px;
+      max-hieght: 600px !important;
+      height: 600px !important;
+    }
+  @media screen and (max-width: 750px) {
+    .grid-class {
+    display: grid;
+    gap: 38px;
+    grid-template-columns: none;
+    min-height: none;
+    max-height: none;
+    }
+    .unorder-list {
+      display: flex;
+    gap: 17px;
+    flex-wrap: wrap;
+    justify-content: center;
+    }
+    .heading3 {
+    padding:0;
+      font-size: 16px
+    }
+  }
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  class="color-{{ section.settings.color_scheme }} gradient grid-class {{ section.settings.custom_class }}"
+  style="margin-top: 6rem;"
+>
+  <div class="right-grid">
+    <div class="content">
+      <h2>How Can We Help?</h2>
+      <p>
+        At Syruvia, we value every connection with our customers. Let us know how we can make your experience better.
+        Whether it’s a question about our syrups, a suggestion, or feedback, we’re here to assist you. Reach out and be
+        part of our flavor community! Reasons to Reach Out:
+        <ul>
+          <li>• Product Questions • Order Inquiries</li>
+          <li>• Recipe and Flavor Ideas • Feedback & Suggestions</li>
+          <li>• Business Inquiries</li>
+        </ul>
+      </p>
+      <h2 class="cst-custom-custom-contact-form">Other Ways to Reach Us</h2>
+      <ul>
+        <li>Email: <a href="mailto:cs@syruvia.com">cs@syruvia.com</a></li>
+        <li>Phone: <a href="tel:+1 877-201-4045">+1 877-201-4045</a></li>
+        <li>Address: 2950 W Cypress Creek Rd, Fort Lauderdale, FL 33309</li>
+      </ul>
+    </div>
+  </div>
+  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding form-class">
+    {%- if section.settings.heading != blank -%}
+      <span class="cst-leaf-image"
+        ><img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Asset_1.svg?v=1762441289"
+      ></span>
+      <h2 class="title title-wrapper--no-top-margin inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+        {{ section.settings.heading }}
+      </h2>
+    {%- else -%}
+      <h2 class="visually-hidden">{{ 'templates.contact.form.title' | t }}</h2>
+    {%- endif -%}
+    {%- liquid
+      assign contact_form_class = 'isolate'
+      if settings.animations_reveal_on_scroll
+        assign contact_form_class = 'isolate scroll-trigger animate--slide-in'
+      endif
+    -%}
+    {%- form 'contact', id: 'ContactForm', class: contact_form_class -%}
+      {%- if form.posted_successfully? -%}
+        <h2 class="form-status form-status-list form__message" tabindex="-1" autofocus>
+          {% render 'icon-success' %}
+          {{ 'templates.contact.form.post_success' | t }}
+        </h2>
+      {%- elsif form.errors -%}
+        <div class="form__message">
+          <h2 class="form-status caption-large text-body" role="alert" tabindex="-1" autofocus>
+            {% render 'icon-error' %}
+            {{ 'templates.contact.form.error_heading' | t }}
+          </h2>
+        </div>
+        <ul class="form-status-list caption-large" role="list">
+          <li>
+            <a href="#ContactForm-email" class="link">
+              {{ form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email }}
+            </a>
+          </li>
+        </ul>
+      {%- endif -%}
+      <div class="contact__fields">
+        <div class="field">
+          <input
+            class="field__input"
+            autocomplete="name"
+            type="text"
+            id="ContactForm-name"
+            name="contact[{{ 'templates.contact.form.name' | t }}]"
+            value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+            placeholder="Name"
+            required
+          >
+        </div>
+        <div class="field field--with-error">
+          <input
+            autocomplete="email"
+            type="email"
+            id="ContactForm-email"
+            class="field__input"
+            name="contact[email]"
+            spellcheck="false"
+            autocapitalize="off"
+            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+            aria-required="true"
+            {% if form.errors contains 'email' %}
+              aria-invalid="true"
+              aria-describedby="ContactForm-email-error"
+            {% endif %}
+            placeholder="Email"
+            required
+          >
+
+          {%- if form.errors contains 'email' -%}
+            <small class="contact__field-error" id="ContactForm-email-error">
+              <span class="visually-hidden">{{ 'accessibility.error' | t }}</span>
+              <span class="form__message">
+                {%- render 'icon-error' -%}
+                {{- form.errors.translated_fields.email | capitalize }}
+                {{ form.errors.messages.email -}}
+              </span>
+            </small>
+          {%- endif -%}
+        </div>
+      </div>
+      <div class="field">
+        <input
+          type="tel"
+          id="ContactForm-phone"
+          class="field__input"
+          autocomplete="tel"
+          name="contact[{{ 'templates.contact.form.phone' | t }}]"
+          pattern="[0-9\-]*"
+          value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+          placeholder="Phone Number"
+        >
+      </div>
+      <div class="field">
+        <textarea
+          rows="10"
+          id="ContactForm-body"
+          class="text-area field__input"
+          name="contact[Message]"
+          placeholder="Message"
+        >
+          {{- form.body -}}
+        </textarea>
+      </div>
+      <div class="contact__button">
+        <button type="submit" class="button">Submit</button>
+      </div>
+    {%- endform -%}
+  </div>
+  <div class="cst-custom-images-bg-img">
+    <img
+      src="//9yjspex0tetfqbj8-86111060252.shopifypreview.com/cdn/shop/files/Vector_Smart_Object_9e285ee5-c8ef-416f-9d6c-85373f477f4b_1024x1024.png?v=1730111489"
+      alt="Description of the ever drop image"
+    >
+    <img
+      src="//9yjspex0tetfqbj8-86111060252.shopifypreview.com/cdn/shop/files/Group_19_1024x1024.png?v=1730109673"
+      alt="ever drop image"
+    >
+    <img
+      src="//9yjspex0tetfqbj8-86111060252.shopifypreview.com/cdn/shop/files/Vector1_1024x1024.png?v=1730100137"
+      alt="Description of the ever drop image"
+    >
+  </div>
+
+  <div class="cst-custom-images-bg-img-mobile-sec">
+    <img
+      src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object2_f18c4af3-a9a6-4fec-90c8-ac49c5d180f7.png?v=1730725702"
+      alt="Description of the ever drop image"
+    >
+    <img
+      src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object5_f5bc507a-64a3-4626-851d-c521eaefe532.png?v=1730725702"
+      alt="ever drop image"
+    >
+    <img
+      src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object3_c6a701d5-2437-4268-a245-60393282b1d7.png?v=1730725702"
+      alt="Description of the ever drop image"
+    >
+    <img
+      src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Group_20_056b5982-45aa-4b5a-be3a-865698073936.png?v=1730725702"
+      alt="Description of the ever drop image"
+    >
+    <img
+      src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object1_05690c40-5a99-48db-b7c2-2ad93e811cf2.png?v=1730725702"
+      alt="Description of the ever drop image"
+    >
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object4_5260db4a-08eb-4763-93a8-0270554eec3f.png?v=1730725702">
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.contact-form.name",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+     {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom class"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Contact form",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.contact-form.presets.name"
+    }
+  ]
+}
+{% endschema %}

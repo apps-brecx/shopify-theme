@@ -1,0 +1,241 @@
+{%- comment -%}
+  Mobile search toggle + sitewide white-box killer for every search input.
+{%- endcomment -%}
+{%- render 'pd-search-suggest' -%}
+<style id="pd-search-toggle-css">
+/* ============================================================
+   SITEWIDE: kill the white inner box on every search input.
+   Applies to header mobile search bar, /search page hero,
+   predictive-search forms, and anywhere a type=search lives.
+   ============================================================ */
+html body input[type="search"],
+html body input.search-input,
+html body .search input,
+html body .syrnav-msearch input,
+html body .syrnav-msearch-box input,
+html body .syr-search input,
+html body .syr-search .syr-input,
+html body predictive-search input,
+html body main-search input{
+  background:transparent !important;
+  background-color:transparent !important;
+  background-image:none !important;
+  box-shadow:none !important;
+  -webkit-appearance:none !important;
+  appearance:none !important;
+  border-color:transparent !important;
+}
+html body input[type="search"]::-webkit-search-cancel-button,
+html body input[type="search"]::-webkit-search-decoration,
+html body input[type="search"]::-webkit-search-results-button,
+html body input[type="search"]::-webkit-search-results-decoration{
+  -webkit-appearance:none !important;
+  appearance:none !important;
+  display:none !important;
+  visibility:hidden !important;
+  width:0 !important; height:0 !important;
+}
+/* Kill autofill yellow/blue inner box for search inputs */
+html body input[type="search"]:-webkit-autofill,
+html body .syrnav-msearch input:-webkit-autofill,
+html body .syr-search input:-webkit-autofill{
+  -webkit-box-shadow:0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color:#39220f !important;
+  transition:background-color 99999s ease-out 0s !important;
+  caret-color:#39220f !important;
+}
+
+/* ============================================================
+   HEADER MOBILE SEARCH — brand pill
+   ============================================================ */
+@media (max-width:980px){
+  html body #syrnav .syrnav-msearch{
+    display:none !important;
+    overflow:hidden !important;
+    max-height:0 !important;
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+    border-bottom:0 !important;
+    transition:max-height .3s ease, padding .3s ease, border-color .2s ease !important;
+  }
+  html body #syrnav.search-open .syrnav-msearch{
+    display:block !important;
+    max-height:75vh !important;
+    padding-top:10px !important;
+    padding-bottom:12px !important;
+    border-bottom:2px solid #1F1813 !important;
+    overflow:visible !important;
+  }
+
+  html body #syrnav .syrnav-msearch-box{
+    position:relative !important;
+    display:flex !important; align-items:center !important; gap:8px !important;
+    background:transparent !important;
+    background-color:transparent !important;
+    border:2px solid #39220f !important;
+    border-radius:999px !important;
+    box-shadow:3px 3px 0 #39220f !important;
+    padding:4px 4px 4px 18px !important;
+    margin:0 4px !important;
+  }
+  html body #syrnav .syrnav-msearch-box input,
+  html body #syrnav .syrnav-msearch-box input[type="search"],
+  html body #syrnav .syrnav-msearch-box input[type="text"]{
+    flex:1 1 auto !important; min-width:0 !important;
+    background:transparent !important;
+    background-color:transparent !important;
+    background-image:none !important;
+    border:0 !important;
+    box-shadow:none !important;
+    outline:0 !important;
+    -webkit-appearance:none !important; appearance:none !important;
+    padding:8px 0 !important;
+    font-family:'Josefin Sans','Josefin',sans-serif !important;
+    font-size:15px !important;
+    color:#39220f !important;
+    -webkit-text-fill-color:#39220f !important;
+    height:auto !important;
+  }
+  html body #syrnav .syrnav-msearch-box input::placeholder{
+    color:rgba(57,34,15,.4) !important;
+  }
+  html body #syrnav .syrnav-msearch-close{
+    background:transparent !important; border:0 !important; padding:0 !important;
+    color:#39220f !important; cursor:pointer !important;
+    display:inline-flex !important; align-items:center !important; justify-content:center !important;
+    flex:0 0 auto !important; border-radius:50% !important;
+    width:34px !important; height:34px !important;
+    transition:background .15s ease, color .15s ease, transform .12s ease !important;
+    -webkit-tap-highlight-color:transparent !important;
+  }
+  html body #syrnav .syrnav-msearch-close:hover,
+  html body #syrnav .syrnav-msearch-close:active{
+    background:#FCE2A0 !important; color:#c58548 !important; transform:scale(1.05) !important;
+  }
+  html body #syrnav .syrnav-msearch-close svg{ width:14px !important; height:14px !important; display:block !important; }
+
+  /* If the form contains a submit/search button, brand it too */
+  html body #syrnav .syrnav-msearch-box button[type="submit"]{
+    background:#39220f !important; color:#FFFBF4 !important;
+    border:1.5px solid #39220f !important; border-radius:50% !important;
+    width:36px !important; height:36px !important; padding:0 !important;
+    display:inline-flex !important; align-items:center !important; justify-content:center !important;
+    flex:0 0 auto !important; cursor:pointer !important;
+  }
+  html body #syrnav .syrnav-msearch-box button[type="submit"] svg{ width:14px !important; height:14px !important; color:#FFFBF4 !important; }
+
+  html body #syrnav.search-open .syrnav-ic[data-search-toggle]{
+    background:rgba(252,226,160,.5) !important; color:#c58548 !important;
+  }
+  html body #syrnav.search-open .syrnav-ic[data-search-toggle] svg{ color:#c58548 !important; }
+}
+</style>
+
+<script id="pd-search-toggle-js">
+(function(){
+  if (window.__pdSearchToggleInit) return; window.__pdSearchToggleInit = true;
+  var CLOSE_SVG = '<svg viewBox="0 0 20 20" width="18" height="18" fill="none"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+  function isMobile(){ return window.matchMedia('(max-width:980px)').matches; }
+
+  function markSearchToggle(){
+    var syrnav = document.getElementById('syrnav'); if (!syrnav) return;
+    var icons = syrnav.querySelectorAll('.syrnav-icons .syrnav-ic');
+    icons.forEach(function(ic){
+      var href = ic.getAttribute('href') || '';
+      var label = (ic.getAttribute('aria-label') || '').toLowerCase();
+      var isSearch = (href.indexOf('/search') !== -1) || label.indexOf('search') !== -1;
+      if (!isSearch) return;
+      if (!ic.hasAttribute('data-search-toggle')) ic.setAttribute('data-search-toggle', '');
+    });
+  }
+
+  function injectCloseBtn(){
+    var box = document.querySelector('#syrnav .syrnav-msearch .syrnav-msearch-box');
+    if (!box) return;
+    if (box.querySelector('.syrnav-msearch-close')) return;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'syrnav-msearch-close';
+    btn.setAttribute('aria-label', 'Close search');
+    btn.setAttribute('data-search-close', '');
+    btn.innerHTML = CLOSE_SVG;
+    box.appendChild(btn);
+  }
+
+  /* Force-clear any inline white bg the theme JS might re-apply to search inputs */
+  function nukeInlineBg(){
+    var inputs = document.querySelectorAll('#syrnav .syrnav-msearch input, .syr-search input, input[type="search"]');
+    inputs.forEach(function(inp){
+      try {
+        inp.style.setProperty('background', 'transparent', 'important');
+        inp.style.setProperty('background-color', 'transparent', 'important');
+        inp.style.setProperty('background-image', 'none', 'important');
+        inp.style.setProperty('box-shadow', 'none', 'important');
+        inp.style.setProperty('border-color', 'transparent', 'important');
+      } catch(e){}
+    });
+  }
+
+  function openSearch(){
+    var syrnav = document.getElementById('syrnav'); if (!syrnav) return;
+    syrnav.classList.add('search-open');
+    setTimeout(function(){
+      var input = syrnav.querySelector('.syrnav-msearch input');
+      if (input) try { input.focus(); } catch(e){}
+      nukeInlineBg();
+    }, 250);
+  }
+  function closeSearch(){
+    var syrnav = document.getElementById('syrnav'); if (!syrnav) return;
+    syrnav.classList.remove('search-open');
+    var input = syrnav.querySelector('.syrnav-msearch input');
+    if (input) try { input.blur(); } catch(e){}
+    var suggest = document.getElementById('syrnav-suggest');
+    if (suggest) suggest.classList.remove('has-results');
+  }
+
+  document.addEventListener('click', function(e){
+    if (!isMobile()) return;
+    var toggle = e.target.closest('[data-search-toggle]');
+    if (toggle){
+      e.preventDefault();
+      var syrnav = document.getElementById('syrnav'); if (!syrnav) return;
+      if (syrnav.classList.contains('search-open')) closeSearch();
+      else openSearch();
+      return;
+    }
+    var closeBtn = e.target.closest('[data-search-close]');
+    if (closeBtn){
+      e.preventDefault();
+      closeSearch();
+      return;
+    }
+  }, false);
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape'){
+      var syrnav = document.getElementById('syrnav');
+      if (syrnav && syrnav.classList.contains('search-open')) closeSearch();
+    }
+  });
+
+  function init(){
+    markSearchToggle();
+    injectCloseBtn();
+    nukeInlineBg();
+  }
+  init();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  setTimeout(init, 200); setTimeout(init, 1000); setTimeout(init, 2500);
+  if ('MutationObserver' in window){
+    new MutationObserver(function(){ markSearchToggle(); injectCloseBtn(); nukeInlineBg(); }).observe(document.body, {childList:true, subtree:true});
+  }
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.matches && e.target.matches('input[type="search"]')) nukeInlineBg();
+  }, true);
+  document.addEventListener('focus', function(e){
+    if (e.target && e.target.matches && e.target.matches('input[type="search"]')) nukeInlineBg();
+  }, true);
+})();
+</script>

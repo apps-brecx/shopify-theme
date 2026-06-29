@@ -1,0 +1,370 @@
+{% layout 'theme' %}
+
+<style>
+  .wholesale-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+
+  .wholesale-hero {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .wholesale-hero h1 {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 700;
+    color: #39220f;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .wholesale-hero p {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  .wholesale-intro {
+    background: #faf8f5;
+    padding: 50px 40px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .wholesale-intro h2 {
+    font-size: 1.8rem;
+    color: #39220f;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+
+  .wholesale-intro p {
+    font-size: 1rem;
+    color: #555;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    margin-bottom: 80px;
+  }
+
+  .feature-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f0e8e0;
+    text-align: center;
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .feature-card h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #39220f;
+    margin-bottom: 15px;
+  }
+
+  .feature-card p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  .pricing-section {
+    background: #39220f;
+    color: white;
+    padding: 60px 40px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .pricing-section h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .price-tier {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .price-tier h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .price-tier p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.9;
+    margin: 0;
+  }
+
+  .process-section {
+    margin-bottom: 80px;
+  }
+
+  .process-section h2 {
+    font-size: 2rem;
+    color: #39220f;
+    text-align: center;
+    margin-bottom: 50px;
+    font-weight: 700;
+  }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+  }
+
+  .step {
+    text-align: center;
+  }
+
+  .step-number {
+    display: inline-block;
+    background: #39220f;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    line-height: 50px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+
+  .step h3 {
+    font-size: 1.2rem;
+    color: #39220f;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .step p {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .contact-cta {
+    background: #faf8f5;
+    padding: 60px 40px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .contact-cta h2 {
+    font-size: 2rem;
+    color: #39220f;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+
+  .contact-cta p {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .contact-button {
+    display: inline-block;
+    background: #39220f;
+    color: white;
+    padding: 15px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .contact-button:hover {
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    .wholesale-page {
+      padding: 40px 20px;
+    }
+
+    .wholesale-hero {
+      margin-bottom: 50px;
+    }
+
+    .wholesale-intro {
+      padding: 40px 20px;
+      margin-bottom: 50px;
+    }
+
+    .features-grid {
+      gap: 25px;
+      margin-bottom: 50px;
+    }
+
+    .feature-card {
+      padding: 30px;
+    }
+
+    .pricing-section {
+      padding: 40px 20px;
+      margin-bottom: 50px;
+    }
+
+    .process-section {
+      margin-bottom: 50px;
+    }
+
+    .process-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+
+    .process-steps {
+      gap: 30px;
+    }
+
+    .contact-cta {
+      padding: 40px 20px;
+    }
+
+    .contact-cta h2 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+
+<div class="wholesale-page">
+  <!-- Hero -->
+  <section class="wholesale-hero">
+    <h1>Wholesale Program</h1>
+    <p>Bring Syruvia's craft syrups to your café, restaurant, or retail location. Competitive pricing and dedicated support.</p>
+  </section>
+
+  <!-- Intro -->
+  <section class="wholesale-intro">
+    <h2>Why Partner With Syruvia?</h2>
+    <p>250+ flavors. Premium quality. Competitive wholesale pricing. We've been supporting businesses since 1974. Let's grow together.</p>
+  </section>
+
+  <!-- Features -->
+  <section class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">📦</span>
+      <h3>Bulk Ordering</h3>
+      <p>Order in bulk with tiered pricing that gets better the more you buy. Flexible order quantities.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">🚚</span>
+      <h3>Fast Delivery</h3>
+      <p>We handle logistics. Get your orders shipped quickly and reliably to your location.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">💼</span>
+      <h3>Account Manager</h3>
+      <p>Get a dedicated account manager who understands your business and supports your success.</p>
+    </div>
+
+    <div class="feature-card">
+      <span class="feature-icon">🎨</span>
+      <h3>Marketing Materials</h3>
+      <p>Access co-branded materials to help promote Syruvia syrups at your location.</p>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="pricing-section">
+    <h2>Wholesale Pricing</h2>
+    <div class="pricing-grid">
+      <div class="price-tier">
+        <h3>Starter</h3>
+        <p>Perfect for small venues. Order 12+ cases</p>
+      </div>
+      <div class="price-tier">
+        <h3>Growth</h3>
+        <p>For growing businesses. Order 25+ cases</p>
+      </div>
+      <div class="price-tier">
+        <h3>Premium</h3>
+        <p>Established partners. Order 50+ cases</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="process-section">
+    <h2>How It Works</h2>
+    <div class="process-steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Apply</h3>
+        <p>Submit your business details and let us know your location and needs.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Onboard</h3>
+        <p>Get assigned a dedicated account manager and discuss your specific needs.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Order</h3>
+        <p>Place orders easily through our wholesale portal with real-time inventory.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3>Grow</h3>
+        <p>Access marketing support, analytics, and ongoing resources to drive sales.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact CTA -->
+  <section class="contact-cta">
+    <h2>Let's Collaborate</h2>
+    <p>Contact our wholesale team to discuss your business and get started with competitive wholesale pricing.</p>
+    <a href="mailto:wholesale@syruvia.com" class="contact-button">Get in Touch</a>
+  </section>
+</div>

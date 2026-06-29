@@ -1,0 +1,127 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: calc({{ section.settings.padding_top }}px * 0.75);
+    padding-bottom: calc({{ section.settings.padding_bottom }}px  * 0.75);
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .referral-form-syruvia{
+    position: relative;
+  }
+  .referral-share-bg-3 img{
+    position: absolute; 
+    bottom: 0;
+    right: 0;
+  }
+  .referral-share-bg-4 img{
+    position: absolute; 
+    top: 220px; 
+    right: 0;
+  }
+  .referral-share-bg-5 img{
+    position: absolute; 
+    top: 250px; 
+    left: 0;
+  }
+{%- endstyle -%}
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="section-{{ section.id }}-padding referral-form-syruvia">
+    {{ section.settings.custom_liquid }}
+  </div>
+
+
+    <div class="referral-share-bg-3">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object-3.png?v=1748529083" />
+  </div>
+
+    <div class="referral-share-bg-4">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object-4.png?v=1748529364" />
+  </div>
+
+   <div class="referral-share-bg-5">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object-5.png?v=1748529628" />
+  </div>
+
+  
+</div>
+
+
+<style>
+  /* .referral-form-syruvia{
+    background-color: #FEECDC;
+  }
+  .referral-form-syruvia html{
+      background-color: #FEECDC;
+  }
+  .layout-page access_page{
+    background-color: none;
+  } */
+
+.referral-form-syruvia body.layout-page.access_page {
+  background-color: none !important;
+}
+
+
+
+  
+
+
+  
+</style>
+
+{% schema %}
+{
+  "name": "t:sections.custom-liquid.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "t:sections.custom-liquid.settings.custom_liquid.label",
+      "info": "t:sections.custom-liquid.settings.custom_liquid.info"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 52
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.custom-liquid.presets.name"
+    }
+  ]
+}
+{% endschema %}

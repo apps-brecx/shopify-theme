@@ -1,0 +1,19 @@
+{%- comment -%}
+  Outputs "1" if the product is a full-size syrup eligible for VIP pricing, else "0".
+  Excludes variety/dirty-soda packs, popping boba / bursting balls, toppings, syrup pumps,
+  bundles, jelly drink mixes, gifts and merch. Careful not to match flavor words like "pumpkin".
+  Usage: {%- capture is_syr -%}{%- render 'syr-is-syrup', product: item.product -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign tl = product.title | downcase
+  assign ty = product.type | downcase
+  assign tu = product.handle | downcase
+  assign blob = tl | append: ' ' | append: ty
+  assign syr = true
+  if blob contains 'variety' or blob contains 'pack' or blob contains 'boba' or blob contains 'bursting' or blob contains 'pearl' or blob contains 'topping' or blob contains 'bundle' or blob contains 'gift' or blob contains 'sample' or blob contains 'jelly' or blob contains 'sticker' or blob contains 'merch' or blob contains 'combo' or blob contains 'tote' or blob contains 'apparel'
+    assign syr = false
+  endif
+  if tl contains 'syrup pump' or tu contains 'syrup-pump' or tu contains '-pack' or tu contains 'popping-boba' or tu contains 'bursting-balls' or tu contains 'jelly-ball'
+    assign syr = false
+  endif
+-%}{% if syr %}1{% else %}0{% endif %}

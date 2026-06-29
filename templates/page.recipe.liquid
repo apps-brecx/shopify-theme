@@ -1,0 +1,1839 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geologica:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+    <script src="https://kit.fontawesome.com/a4f8ae2a61.js" crossorigin="anonymous"></script>
+
+    <script src="https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link href="https://recipejunction.boxtasks.com/assets/css/main.css" rel="stylesheet">
+    <link href="https://recipejunction.boxtasks.com/assets/css/layout-1/shopify-style.css" rel="stylesheet">
+
+    <meta name="description" id="metaDescription">
+    <meta name="keywords" id="metaKeyword">
+    <meta name="author" id="metaAuthor">
+    <meta name="robots" id="metaRobots" content="index, follow">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" id="ogTitle">
+    <meta property="og:type" id="ogType">
+    <meta property="og:image" id="ogImage">
+    <meta property="og:description" id="ogDescription">
+    <meta property="og:url" id="ogUrl">
+<!-- <script src="{{ 'custom-slider.js' | asset_url }}" defer="defer"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script> -->
+  <style>
+/* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"> */
+button.custom-next.custom-arrow.slick-arrow.slick-hidden {
+position: absolute!important;
+border-radius: 4px !important;
+background-color: #341c02;
+width: 72px;
+height: 33px;
+padding: 0 !important;
+bottom: 95px;
+}
+
+.available-products button.custom-prev.custom-arrow {
+left: 50%;
+transform: translateX(-113%);
+}
+
+.available-products button.custom-next.custom-arrow {
+right: 50%;
+transform: translateX(102%);
+}
+
+
+.available-products button.custom-prev.custom-arrow:before {
+content: "";
+position: absolute;
+top: 50%;
+left: 50%;
+background: url(/cdn/shop/files/Vector_Smart_Object.png?v=1728562686);
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+width: 25px;
+height: 17px;
+transform: translate(-50%, -50%);
+opacity: 1 !important;
+}
+
+.available-products button.custom-next.custom-arrow:before {
+content: "";
+position: absolute;
+top: 50%;
+left: 50%;
+background: url(/cdn/shop/files/Vector_Smart_Objectf.png?v=1728562686);
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+width: 25px;
+height: 17px;
+transform: translate(-50%, -50%);
+opacity: 1 !important;
+}
+
+.available-products .product-info {
+padding-bottom: 21px!important;
+}
+/* Wrapper for the available products */
+.available-products {
+   position: relative;
+   padding: 20px;
+}
+/* .slick-track {
+    display: flex;
+      width: 100% !important;
+}
+    .slick-list.draggable {
+    display: flex;
+}
+    .slider-recipe-gt.product-grid-section.slick-initialized.slick-slider {
+    display: flex;
+} */
+/* Product list styling */
+.product-list {
+   display: contents;
+   flex-wrap: wrap;
+   justify-content: space-between;
+   list-style: none;
+   padding: 0;
+   margin: 0;
+}
+
+
+.product-image img {
+   max-width: 100%;
+   max-height: 100%;
+   object-fit: cover;
+   border-radius: 8px;
+}
+
+/* Product info styling */
+.product-info {
+   padding: 10px;
+}
+
+.product-title {
+   font-size: 1.2rem;
+   font-weight: bold;
+   color: #333;
+   text-decoration: none;
+   margin-bottom: 5px;
+   display: block;
+}
+
+.product-price {
+   font-size: 1.1rem;
+   color: #666;
+   margin-bottom: 10px;
+}
+
+/* Add to Cart button styling */
+.add-to-cart-btn {
+   background-color: #333;
+   color: white;
+   padding: 10px 20px;
+   text-decoration: none;
+   border-radius: 8px;
+   display: inline-block;
+   transition: background-color 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+   background-color: #555;
+}
+
+/* Custom arrows for slick slider */
+.custom-arrow {
+   /* position: absolute; */
+   /* top: 50%; */
+   transform: translateY(-50%);
+   background-color: transparent;
+   border: none;
+   font-size: 24px;
+   color: #333;
+   cursor: pointer;
+   z-index: 10;
+}
+
+.custom-prev {
+   /* left: -40px; */
+}
+
+.custom-next {
+   /* right: -40px; */
+}
+@media (max-width: 991px) {
+   /* .recipe-body .filter-visible {
+    display: block !important;
+}
+
+.recipe-body .filter-hidden {
+    display: none !important;
+} */
+} 
+
+#filterRecipe {
+     /* Allows absolute positioning of the close button */
+    max-height: 100%; /* Adjust this height as per your design */
+    overflow-y: auto; /* Enables vertical scrolling */
+}
+  </style>
+  </head>
+
+  <body class="recipe-cstm-page" id="recipeBody" onload="setLink()">
+
+    <!-- get curreny symbol from store -->
+{% comment %}{% section 'image-banner' %}{% endcomment %}
+    <!-- Your Liquid template -->
+    <div id="wc-loader">
+      <div class="wc-loader"></div>
+    </div>
+
+    <!-- recipe view section design -->
+
+    <!-- recipe listing section -->
+    <div id="recipe-list" class="recipe-body" style="display: none">
+
+<section class="top-banner-cstm-recipe-gty">
+    <div class="top-banner-recipe">
+       <div class="banner__box content-container content-container--full-width-mobile color-scheme-1 gradient"><div class="banner__top-image">></div><h2 class="banner__heading inline-richtext h1">
+              Syruvia Sips
+            </h2><div class="banner__text rte body">
+              <p>Easy, delicious recipes to make at home</p>
+            </div></div>
+    </div>
+</section>
+      <div class="bg-images-gt">
+        <img class="bg-one-gt" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Group_24_680d533d-0b43-4c61-aa02-327bd95051ca.png?v=1731932628">
+        <img class="bg-two-gt" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object1_32341e86-a0be-42ab-90a2-0a0cf818edd6.png?v=1731932735">
+        <img class="bg-three-gt" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/ewdfwedwedwe.png?v=1730286283">
+        <img class="bg-four-gt" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/vfdgfdg.png?v=1730286347">
+        <img class="bg-five-gt" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/wedwededw.png?v=1730288187">
+      </div>
+      <section class="recipe-design1">
+        <div class="container">
+          <div class="filter-cstm-gt">
+    <div class="drop-down-filtre-cstm">
+        <i class="fa-solid fa-sliders"></i>
+        <h3>FILTER RECIPES: </h3>
+        <p>Search recipes by flavor or dietary choice!</p>
+    </div>
+    <div class="col-md-12">
+        <div class="d-flex justify-content-start justify-content-lg-end mt-2 mt-lg-0 flex-wrap mobile-filter-gty" id="filterRecipe" >
+            <!-- Filters will be rendered here -->
+        </div>
+    </div>
+</div>
+          
+          <div class="search-filter-cstm-gt">
+            <div class="row" id="pageEntry"></div>
+           <div class="row justify-content-between align-items-center search-gt-cstm">
+          <div class="col-md-12">
+            <input
+              class="form-control"
+              list="datalistOptions"
+              placeholder="Type to search recipes"
+              id="searchKeyword"
+            >
+          </div>
+         
+          <div class="col-lg-1 col-md-3 text-end" id="erase-filter" style="display: none;">
+            <button class="btn btn-link btn-lg border text-decoration-none" id="eraseAllBtn">
+              Reset
+            </button>
+          </div>
+        </div>
+          <div class="col-md-12">
+<div
+    class=""
+    id="anotherSectiontag"
+></div>
+<!-- <div class="arrows-cstm">
+<button class="cstm--gt--prev " aria-label="Previous" type="button">
+   <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/dasd.png?v=1730290076">
+</button>
+<button class="cstm--gt-next" aria-label="Next" type="button">
+    <img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/ewe.png?v=1730290076">
+</button>
+</div> -->
+</div>
+       <!-- <script>   $('.top-slider-recipe').slick({
+      variableWidth: true,
+    slidesToShow: 1,
+    slidesToScroll: 7,
+    swipe: true,
+      responsive: [
+        {
+          breakpoint: 1300,
+          settings: {
+            arrows: true,
+            slidesToShow: 3
+          }
+        },
+        {
+          breakpoint: 991,
+          settings: {
+            arrows: true,
+         
+            slidesToShow: 2
+          }
+        },
+        {
+          breakpoint: 768,
+          settings: {
+            arrows: true,
+          
+            centerPadding: '100px',
+            slidesToShow: 2
+
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            arrows: true,
+          
+            centerPadding: '70px',
+            slidesToShow: 1
+          }
+        }
+      ]
+    });
+</script>   -->
+          <div class="row" id="design1"></div> </div>
+           <div class="sort-options">
+    <label for="sortRecipes">Sort by:</label>
+    <select id="sortRecipes" class="form-select form-select-sm">
+        <option value="most-popular">Most Popular</option>
+        <!-- <option value="newest">Newest</option> -->
+        <option value="a-z">A-Z</option>
+        <option value="z-a">Z-A</option>
+        <option value="prep-time-shortest">Prep Time (Shortest to Longest)</option>
+        <option value="prep-time-longest">Prep Time (Longest to Shortest)</option>
+        <!-- <option value="date-old-to-new">Date, old to new</option>
+        <option value="date-new-to-old">Date, new to old</option> -->
+    </select>
+</div>
+        </div>
+        <div class="recipebg-mobimages-gty">
+        <img class="bg-one-mgty" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object2_51de3fcd-9999-42c0-8b6c-494ec8274df7.png?v=1730985589">
+        <img class="bg-two-mgty" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/unnamed_3ff5e284-a47e-4d13-b824-ae9a8150d7ae.png?v=1731306133">
+        <img class="bg-three-mgty" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/unnamed_08271496-eed4-4ab4-820f-a4c5a1705421.png?v=1731306151">
+        <img class="bg-four-mgty" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/unnamed_985a13e6-218b-450e-a29c-cd63538f60f6.png?v=1731305931">
+        <img class="bg-five-mgty" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object5_436d373d-f7cf-4b13-beff-54ae95391604.png?v=1730705664">
+          <img class="bg-six-mgty" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object6_2faeeacf-2169-4074-b6c1-9f08dbb2d588.png?v=1730725702">
+        </div>
+        </div>
+
+        
+      </section>
+      <section class="text-center mb-5">
+        <button id="loadMore" class="btn btn-outline-primary btn-lg">Loading...</button>
+      </section>
+      <div id="loadingIndicator" class="text-center my-4" style="display: none;">
+    <p>Loading...</p>
+</div>
+    </div>
+
+    <!-- recipe view section design -->
+    <section class="py-5 recipe-body" id="recipe-view" style="display: none;">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <div id="recipe-view-wrapper"></div>
+
+            
+          </div>
+        </div>
+        <div class="recipe-detail-cstm-page">
+        <img class="rec-one-gt" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object1_d7d72257-b1be-417d-b8b3-4dd055fc017f.png?v=1730985589">
+        <img class="rec-two-gt" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object2_51de3fcd-9999-42c0-8b6c-494ec8274df7.png?v=1730985589">
+        <img class="rec-three-gt" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object6_2faeeacf-2169-4074-b6c1-9f08dbb2d588.png?v=1730725702">
+        <img class="rec-four-gt" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object5_2.png?v=1730894717">
+        <img class="rec-five-gt" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object5_2.png?v=1730894717">
+      </div>
+      </div>
+
+      <div class="success-alert px-5 py-3 fs-5" id="success-alert" style="display:none">
+        Product has been added into cart!
+      </div>
+      <div class="danger-alert px-5 py-3 fs-5" id="danger-alert" style="display:none">
+        Something went wrong. Please try again later!
+      </div>
+       
+    </section>
+{% comment %}
+{% section 'favorite-new' %}
+{% endcomment %}
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+      crossorigin="anonymous"
+    ></script>
+
+
+
+
+ <script >
+      const baseUrl = 'https://recipejunction.boxtasks.com';
+      // labels
+      var minLabel = 'min';
+      var hourLabel = 'hr';
+      var personLabel = 'person';
+      var error_1 = 'No Results Found!';
+      var error_2 = 'Sorry, we could not find any matching recipes at the moment.';
+
+      // get recipe id
+      // Get the last element
+      var recipeDetails = [];
+      var shop_domain = '1afd15-57.myshopify.com';
+      let header_token = 'dop0dApKRN8VghflHZy7A2sEy';
+      let user_id = '1433';
+
+      // check recipe is exist or not
+      let inputString = window.location.pathname;
+      let fullLocation = inputString.split('/');
+      var lastData = fullLocation[fullLocation.length - 1];
+      var keywordData = 'recipe';
+      var pathLength = 0;
+      if (inputString.startsWith('/pages/')) {
+        pathLength = 3;
+      } else {
+        pathLength = 4;
+      }
+
+      // fetch carts products
+      var cartProductIds;
+      var cartVariantIds;
+      let rootValue = (Shopify && Shopify.routes && Shopify.routes.root) ?? '/';
+
+      // get product ids from cart
+      function getcartProductsId() {
+        const cartUrl = rootValue + 'cart.js';
+        fetch(cartUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Network response was not ok: ${response.status}`);
+            }
+            return response.json(); // Assuming the response is in JSON format
+          })
+          .then((data) => {
+            // Handle the retrieved data
+            cartProductIds = data.items.map((item) => item.product_id);
+
+            setProductIds(cartProductIds); // Set data
+          })
+          .catch((error) => {
+            console.error('There was a problem with the fetch operation:', error);
+          });
+      }
+
+      // set productIds to localStorage
+      function setProductIds(cartProductIds) {
+        const serializedProductIds = JSON.stringify(cartProductIds);
+        localStorage.setItem('productIds', serializedProductIds);
+      }
+
+      getcartProductsId();
+
+      // get productIds from localStorage
+      function getProductIds() {
+        const serializedProductIds = localStorage.getItem('productIds');
+        return JSON.parse(serializedProductIds) || [];
+      }
+
+      var allProductIds = getProductIds();
+
+      if (keywordData == lastData && fullLocation.length == pathLength) {
+        const apiUrl = `${baseUrl}/api/rest/v1/recipes`;
+
+        // get all recipes and add into list
+        fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            Authorization: header_token + '_____' + user_id,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // console.log(data);
+            const recipeList = document.getElementById('design1');
+            // const loadMoreButton = document.getElementById('loadMore');
+            const pageEntry = document.getElementById('pageEntry');
+            const eraseAll = document.getElementById('eraseAllBtn');
+            const eraseFilter = document.getElementById('erase-filter');
+            const pageKeywordUrl = data.sort_url;
+            
+    const loadingIndicator = document.getElementById('loadingIndicator'); // Loader reference
+
+            var allRecipes = data.items;
+            var recipes = allRecipes;
+            var filteredRecipes = allRecipes;
+
+            // set pagination
+            const itemsPerPage = 9;
+            let currentPage = 1;
+            let loading = false; // Prevent multiple loads during scroll
+            
+            // remder recipes
+            function renderRecipes(objRecipes) {
+              const startIndex = (currentPage - 1) * itemsPerPage;
+              const endIndex = startIndex + itemsPerPage;
+
+              if (objRecipes.length > 0) {
+                pageEntry.innerHTML = `<div class="col-md-12"><p class="text-muted">${objRecipes.length} recipes found!</p></div>`;
+
+                // for loop with load more
+                for (let i = startIndex; i < endIndex && i < objRecipes.length; i++) {
+                  var recipeImg = objRecipes[i].primary_image_full_url;
+
+                  recipeList.innerHTML += `
+                                            <div class="col-lg-4 col-md-6 mb-4 mb-lg-4 mb-md-3">
+                                                <div class="recipe-box">
+                                                    <a href="${rootValue}pages/${pageKeywordUrl}/${
+                    objRecipes[i].slug
+                  }" class="text-dark text-decoration-none">
+                                                        <div class="recipe-img">
+                                                            <img src="${recipeImg}" alt="${objRecipes[i].name}">
+                                                        </div>
+                                                        <div class="recipe-des p-3">
+                                                            <h4 class="mt-3">${objRecipes[i].name}</h4>
+                                                        </div>
+                                                        <div class="recipe-icon p-3">
+                                                            <ul>
+                                                                <li>
+                                                                    <i class="far fa-clock"></i>
+                                                                    ${
+                                                                      objRecipes[i].pt_hh > 0
+                                                                        ? objRecipes[i].pt_hh +
+                                                                          '' +
+                                                                          hourLabel +
+                                                                          ' ' +
+                                                                          objRecipes[i].pt_mm
+                                                                        : objRecipes[i].pt_mm
+                                                                    }
+                                                                    ${minLabel}
+                                                                </li>
+                                                                <li class="text-capitalize">
+                                                                    <i class="fa-solid fa-gauge"></i>
+                                                                    ${getDifficultyLevel(objRecipes[i].difficulty)}
+                                                                </li>
+                                                                <li>
+                                                                    <i class="far fa-user"></i>
+                                                                    ${objRecipes[i].serving_number} ${personLabel}
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                          `;
+                }
+              } else {
+                pageEntry.innerHTML = '';
+                recipeList.innerHTML += `<div class="col-md-12 my-5 my-md-3"><div class="text-center">
+                                                  <i class="fa-brands fa-searchengin error-icon"></i><h3 class="error-title">${error_1}</h3>
+                                                  <p class="text-muted">${error_2}</p></div></div>`;
+              }
+
+              // // check if endIndex is bigger or not for view load more button
+              // loadMoreButton.style.display = endIndex < objRecipes.length ? '' : 'none';
+
+              // // load meta keywords and seo data
+              // metaSeoData(false, null, null);
+
+              // Hide loader when recipes are rendered
+        loadingIndicator.style.display = 'none';
+        loading = false;
+            }
+
+   // Infinite scroll event listener
+    window.addEventListener('scroll', () => {
+        if (!loading && window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+            loading = true; // Set loading state
+            loadingIndicator.style.display = 'block'; // Show loader
+
+            if (currentPage * itemsPerPage < recipes.length) {
+                currentPage++; // Increment page
+                setTimeout(() => renderRecipes(recipes), 1000); // Simulate load delay
+            } else {
+                loadingIndicator.style.display = 'none'; // Hide loader if no more recipes
+            }
+        }
+    });
+            
+            // erase all data
+            eraseAll.addEventListener('click', function () {
+              location.reload();
+            });
+
+            // function loadMore() {
+            //   currentPage++;
+            //   renderRecipes(recipes);
+            // }
+
+            // loadMoreButton.addEventListener('click', loadMore);
+
+            renderRecipes(recipes);
+
+            var option_placeholder = 'Select';
+// Render filter
+var recipeFilter = document.getElementById('filterRecipe');
+var filters = data.filters;
+var filterLength = filters.length;
+// Function to toggle filter visibility
+function toggleFilterVisibility() {
+    var recipeFilter = document.getElementById('filterRecipe');
+
+    // Check if the 'filter-visible' class is already added
+    if (!recipeFilter.classList.contains('filter-visible')) {
+        recipeFilter.classList.add('filter-visible');
+
+        // Create a container div for the title and close button
+        var filterHeader = document.createElement('div');
+        filterHeader.className = 'filter-cross-gty';
+
+        // Add the "FILTER BY" text
+        var filterTitle = document.createElement('div');
+        filterTitle.className = 'filter-title';
+        filterTitle.innerHTML = 'FILTER BY'; // The title text
+
+        // Create the close button
+        var closeButton = document.createElement('button');
+        closeButton.className = 'close-filter-btn';
+        closeButton.style.cursor = 'pointer';
+
+        // Create the image element for the close button
+        var closeImage = document.createElement('img');
+        closeImage.src = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/cross-icon.png?v=1731933936';
+        closeImage.alt = 'Close';  // Optional for accessibility
+
+        // Append the image to the close button
+        closeButton.appendChild(closeImage);
+
+        // Add event listener to remove 'filter-visible' class when the close button is clicked
+        closeButton.addEventListener('click', function () {
+            recipeFilter.classList.remove('filter-visible');
+            filterHeader.remove(); // Remove the container along with title and close button
+        });
+
+        // Append the title and close button to the filter header
+        filterHeader.appendChild(filterTitle);
+        filterHeader.appendChild(closeButton);
+
+        // Append the filter header to the recipe filter container
+        recipeFilter.appendChild(filterHeader);
+    }
+}
+
+
+
+
+
+
+// Attach click event listener to the drop-down-filtre-cstm div
+var dropDownFilter = document.querySelector('.drop-down-filtre-cstm');
+dropDownFilter.addEventListener('click', toggleFilterVisibility);
+
+// The rest of your renderFilters function remains unchanged
+function renderFilters() {
+    var html = ''; // For the first six filters with checkboxes
+    var groupHtml = ''; // For the remaining filters
+
+    for (let id = 0; id < filterLength; id++) {
+        // Generate HTML for the first six filters with toggle functionality
+        if (id < 6) {
+            // Add heading for each filter with an arrow icon
+            html += `
+                <h5 class="filter-heading" data-target="filterRecipeChoiceGroup_${id}">
+                    <i class="fas fa-chevron-down arrow-icon"></i> ${filters[id].name}
+                </h5>`;
+            // Set display to 'block' for all filter groups to be open by default
+            html += `<div id="filterRecipeChoiceGroup_${id}" class="collapse mt-2" style="display: block;">`; 
+            
+            filters[id].options.forEach((option) => {
+                html += `
+                    <div class="form-check me-2">
+                        <input class="form-check-input filter-recipe-checkbox" type="checkbox" value="${option.name}" id="filterRecipeChoice_${id}_${option.name}">
+                        <label class="form-check-label" for="filterRecipeChoice_${id}_${option.name}">
+                            ${option.name}
+                        </label>
+                    </div>`;
+            });
+            html += `</div>`; // Close the collapse div
+        } else {
+            // Create checkbox structure for remaining filters
+            filters[id].options.forEach((option) => {
+                groupHtml += 
+                    `<div class="form-check me-2">
+                        <input class="form-check-input filter-recipe-checkbox" type="checkbox" value="${option.name}" id="filterRecipeChoice_${id}_${option.name}">
+                        <label class="form-check-label" for="filterRecipeChoice_${id}_${option.name}">
+                            ${option.name}
+                        </label>
+                    </div>`;
+            });
+        }
+    }
+
+    // Append the generated HTML to the recipe filter container
+    recipeFilter.innerHTML += html;
+
+    // Create and append a new <ul> for the tab structure
+    var groupContainer = document.createElement('ul');
+    groupContainer.className = 'top-slider-recipe cst-collection-titless';
+    groupContainer.innerHTML = groupHtml;
+    document.getElementById('anotherSectiontag').appendChild(groupContainer); // Keep appending to 'anotherSectiontag'
+// Initialize Slick Slider
+    // $('.top-slider-recipe').slick({
+    //     centerMode: false,
+    //     slidesToShow: 4,
+    //     responsive: [
+    //         {
+    //             breakpoint: 1300,
+    //             settings: {
+    //                 arrows: true,
+    //                 slidesToShow: 3
+    //             }
+    //         },
+    //         {
+    //             breakpoint: 991,
+    //             settings: {
+    //                 arrows: true,
+    //                 slidesToShow: 2
+    //             }
+    //         },
+    //         {
+    //             breakpoint: 768,
+    //             settings: {
+    //                 arrows: true,
+    //                 centerPadding: '100px',
+    //                 slidesToShow: 2
+    //             }
+    //         },
+    //         {
+    //             breakpoint: 480,
+    //             settings: {
+    //                 arrows: true,
+    //                 centerPadding: '70px',
+    //                 slidesToShow: 1
+    //             }
+    //         }
+    //     ]
+    // });
+
+
+    $('.top-slider-recipe').slick({
+     slidesToShow: 5,
+    infinite: false,
+      variableWidth: true,
+      responsive: [
+        {
+          breakpoint: 1300,
+          settings: {
+            arrows: true,
+            slidesToShow: 4,
+            slidesToScroll: 2
+          }
+        },
+        {
+          breakpoint: 991,
+          settings: {
+            arrows: false,
+            slidesToShow: 4,
+            slidesToScroll: 2
+          }
+        },
+        // {
+        //   breakpoint: 768,
+        //   settings: {
+        //     arrows: false,
+        //     slidesToShow: 3,
+        //     slidesToScroll: 2
+
+        //   }
+        // },
+        {
+          breakpoint: 480,
+          settings: {
+            arrows: false,
+            slidesToShow: 3,
+            slidesToScroll: 3
+          }
+        }
+      ]
+    });
+    // Attach event listeners to the filter headings
+    const headings = document.querySelectorAll('.filter-heading');
+    headings.forEach((heading) => {
+        heading.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const targetDiv = document.getElementById(targetId);
+            // Toggle visibility
+            if (targetDiv.style.display === "none") {
+                targetDiv.style.display = "block";
+                this.querySelector('.arrow-icon').classList.remove('fa-chevron-down');
+                this.querySelector('.arrow-icon').classList.add('fa-chevron-up');
+            } else {
+                targetDiv.style.display = "none";
+                this.querySelector('.arrow-icon').classList.remove('fa-chevron-up');
+                this.querySelector('.arrow-icon').classList.add('fa-chevron-down');
+            }
+        });
+    });
+
+    // Attach event listeners to the tab labels
+    const labels = groupContainer.querySelectorAll('label');
+    labels.forEach((label, index) => {
+        label.addEventListener('click', (event) => {
+            const filterValue = event.target.closest('.tab').dataset.filter; // Get the filter value from data attribute
+            filterRecipes(filterValue); // Call the filtering function
+        });
+    });
+}
+
+
+// Function to filter recipes based on selected tab and checkbox values
+function filterRecipes(filterValue) {
+    const selectedFilters = Array.from(document.querySelectorAll('.filter-recipe-checkbox:checked'))
+        .map(cb => cb.value);
+
+    // Apply filtering logic based on selectedFilters and the clicked tab's filterValue
+    let filteredData = recipes.filter((item) => {
+        const matchesCategory = item.category === filterValue; // Check category matches
+        const matchesOptions = selectedFilters.every(filter => item.option_pivot_names.some(option => option.name === filter)); // Check all selected filters
+        return matchesCategory && matchesOptions; // Return true only if both conditions are met
+    });
+
+    recipeList.innerHTML = ''; // Clear the current list
+    renderRecipes(filteredData); // Render the filtered recipes
+}
+
+// Ensure that renderFilters is called after defining the functions
+renderFilters();
+
+// Event listener for checkbox changes
+const checkboxElements = document.querySelectorAll('.filter-recipe-checkbox');
+
+checkboxElements.forEach((checkbox) => {
+    checkbox.addEventListener('change', function() {
+        const selectedFilters = Array.from(checkboxElements)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+        
+        // Re-filter based on currently selected checkboxes
+        let filteredData = recipes.filter((item) => {
+            return selectedFilters.every(filter => item.option_pivot_names.some(option => option.name === filter));
+        });
+
+        recipeList.innerHTML = ''; // Clear the current list
+        renderRecipes(filteredData); // Render the filtered recipes
+    });
+});
+
+// Tabs for additional filtering options
+const tabs = document.querySelectorAll('.tab');
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', (event) => {
+        const filterValue = event.currentTarget.dataset.filter; // Get the filter value from data attribute
+        filterRecipes(filterValue); // Call filtering function based on the tab clicked
+    });
+});
+
+
+// Sorting function
+// Sorting function with publish date for 'newest'
+function sortRecipes(recipes, criteria) {
+    switch (criteria) {
+        case 'most-popular':
+            return recipes.sort((a, b) => b.popularity - a.popularity); // Assuming popularity is a property
+        // case 'newest':
+        //     return recipes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // Sort by newest (publish_date)
+        case 'a-z':
+            return recipes.sort((a, b) => a.name.localeCompare(b.name));
+        case 'z-a':
+            return recipes.sort((a, b) => b.name.localeCompare(a.name));
+        case 'prep-time-shortest':
+            return recipes.sort((a, b) => (a.pt_hh * 60 + a.pt_mm) - (b.pt_hh * 60 + b.pt_mm));
+        case 'prep-time-longest':
+            return recipes.sort((a, b) => (b.pt_hh * 60 + b.pt_mm) - (a.pt_hh * 60 + a.pt_mm));
+        // case 'date-old-to-new':
+        //     return recipes.sort((a, b) => new Date(a.publish_date) - new Date(b.publish_date)); // Sort by old to new (publish_date)
+        // case 'date-new-to-old':
+        //     return recipes.sort((a, b) => new Date(b.publish_date) - new Date(a.publish_date)); // Sort by new to old (publish_date)
+        default:
+            return recipes;
+    }
+}
+
+            const sortDropdown = document.getElementById('sortRecipes');
+
+sortDropdown.addEventListener('change', function() {
+    const selectedSort = this.value;
+    const sortedRecipes = sortRecipes(filteredRecipes, selectedSort);
+    recipeList.innerHTML = ''; // Clear the current list
+    renderRecipes(sortedRecipes); // Render the sorted recipes
+});
+            // get data by search
+            const searchBox = document.getElementById('searchKeyword');
+
+            var oldSearchedKeyword = '';
+
+            searchBox.addEventListener('input', () => {
+              const searchText = searchBox.value.toLowerCase();
+
+              const filteredData = filteredRecipes.filter((item) => {
+                const lowerCaseName = item.name.toLowerCase();
+
+                const checks = [
+                  lowerCaseName.startsWith(searchText),
+                  lowerCaseName.endsWith(searchText),
+                  lowerCaseName.includes(searchText),
+                ];
+
+                return checks.some((check) => check);
+              });
+
+              if (searchText == '') {
+                recipeList.innerHTML = '';
+                renderRecipes(filteredRecipes);
+                eraseFilter.style.display = 'block';
+              } else {
+                recipeList.innerHTML = '';
+                renderRecipes(filteredData);
+                eraseFilter.style.display = 'block';
+              }
+
+              // recipeList.innerHTML = '';
+              // renderRecipes(filteredData);
+              // eraseFilter.style.display = 'block';
+            });
+
+            // get data by filters
+            const filterChoiceElements = document.querySelectorAll('.filter-recipe-choice');
+            const filterData = ['breakfast', 'punjabi'];
+            const olderFilter = new Array(filterData.length).fill(null); // Initialize an array to hold older filter values
+
+            filterChoiceElements.forEach(function (element, index) {
+              element.addEventListener('change', function () {
+                var filterText = element.value.toLowerCase();
+                olderFilter[index] = filterText;
+
+                // Apply filters based on olderFilter array
+                let filteredData = recipes.filter((item) => {
+                  return olderFilter.every((filter, idx) => {
+                    if (filter === null) {
+                      return true; // Skip empty filters
+                    }
+                    return item.option_pivot_names.some((option) => option.name.toLowerCase() === filter);
+                  });
+                });
+
+                recipeList.innerHTML = '';
+                renderRecipes(filteredData);
+                eraseFilter.style.display = 'block';
+                filteredRecipes = filteredData; // Update filteredRecipes with new filtered data
+
+                if (filterText.length > 0 && filteredData.length > 0) {
+                  const requestData = {
+                    searched: true,
+                    recipe_id: null,
+                    option_id: filterText,
+                    product_id: null,
+                    keyword: filterText,
+                    user_id: user_id,
+                  };
+                  postFetchedData(requestData)
+                    .then((data) => {})
+                    .catch((error) => {});
+                }
+              });
+            });
+          });
+
+        setTimeout(() => {
+          document.getElementById('recipe-list').style.display = 'block';
+          document.getElementById('wc-loader').style.display = 'none';
+        }, 2000);
+      } else {
+        const apiUrl = `${baseUrl}/api/rest/v1/recipes/${lastData}`;
+
+        fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            Authorization: header_token + '_____' + user_id,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const recipeView = document.getElementById('recipe-view-wrapper');
+            const recipeSocial = document.getElementById('shareBtn');
+            const pageKeywordUrl = data.sort_url;
+            var recipe = data.items;
+            recipeDetails = data.items;
+
+            metaSeoData(true, recipeDetails, data.schema);
+
+            if (document.referrer.endsWith(`/pages/${pageKeywordUrl}`)) {
+              const requestData = {
+                searched: true,
+                recipe_id: recipe.id,
+                option_id: null,
+                product_id: null,
+                keyword: recipe.name,
+                user_id: user_id,
+              };
+              postFetchedData(requestData)
+                .then((data) => {})
+                .catch((error) => {});
+            } else {
+              setTimeout(() => {
+                const requestData = {
+                  searched: false,
+                  recipe_id: recipe.id,
+                  option_id: null,
+                  product_id: null,
+                  keyword: recipe.name,
+                  user_id: user_id,
+                };
+                postFetchedData(requestData)
+                  .then((data) => {})
+                  .catch((error) => {});
+              }, 60000);
+            }
+
+            // tabs title;
+            var overview_tab = 'Overview';
+            var cooktime_tab = 'Cook Time';
+            var ingredients_tab = 'Ingredients';
+            var instructions_tab = 'Instructions';
+            var nutritions_tab = 'Nutrition';
+
+            // var recipePDFUrl = `${baseUrl}/api/pdf/recipe/${recipe.slug}`;
+            // recipeSocial.innerHTML += `<a class="d-block mt-2 text-dark" href="${recipePDFUrl}"><i class="fa-solid fa-file-pdf fs-4"></i></a>`;
+
+            // document.getElementById('pdfButton').href = recipePDFUrl;
+
+            var recipeImg = recipe.primary_image_full_url;
+            let html = '';
+            html += `<div class="back-to-page mb-3"><a href="${rootValue}pages/${pageKeywordUrl}">
+                                              <i class="fa fa-long-arrow-left me-2" aria-hidden="true"></i>Back</a></div>
+                                             
+                                              <div class="recipe-tabs d-flex py-3">
+                                                <ul><li><a href="#overview" class="tab-link">${overview_tab}</a></li>
+                                                  <li><a href="#cooktime" class="tab-link">${cooktime_tab}</a></li>
+                                                  <li id="ingredient-tab"><a href="#ingredients"  class="tab-link">${ingredients_tab}</a></li>
+                                                  <li><a href="#method" class="tab-link">${instructions_tab}</a></li>`;
+
+            if (recipe.nutritions.length > 0) {
+              html += `<li><a href="#nutrition" class="tab-link">${nutritions_tab}</a></li>`;
+            }
+
+            html += `</ul>`;
+
+            if (recipe.video_url) {
+              html += `<div class="video-btn ms-auto me-0" >
+                                              <a href="#video" class="tab-link"><i class="fa fa-play-circle" aria-hidden="true"></i></a>
+                                                  </div> `;
+            }
+
+            html += `</div> `;
+
+            // get overview data
+
+            html += `
+                                              <div id = "overview" class="overview py-3" ><div class="recipe-img-cstm-gt">
+                                                <img src="${recipeImg}" class="mb-3"></div>`;
+
+            if (recipe.options && recipe.options.length > 0) {
+              const optionHTML = recipe.options
+                .map((option) => `<div class="badge tag-info me-2 mb-md-0 mb-2">${option.name}</div>`)
+                .join('');
+
+              if (optionHTML.length > 0) {
+                html += `<div id="optionsTags" class="d-flex flex-wrap mt-3">${optionHTML}</div>`;
+              }
+            }
+            html += `<div class="recipe-desc-cstm-gt"> <div class="recipt-title pb-2"><h2>${recipe.name}</h2></div> <div class="recipe-desc">
+                                                <p>${recipe.desc ? recipe.desc : ''}</p>
+                                                <div class="recipe-video--making">
+                                                <h3>Create a Video making this Recipe</h3>
+                                                
+                                                <p>@syruvia</p>
+                                                <div class="recipe-social-icons" id="recipe-social" style="display: none;">
+              <div
+                id="shareBtn"
+                class="a2a_kit a2a_kit_size_28 a2a_default_style"
+                data-a2a-url="https://www.webcreta.com/"
+                data-a2a-title="Webcreta"
+              >
+               <!-- <a class="a2a_dd" href="https://www.addtoany.com/share"></a> 
+                <a class="a2a_button_facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a class="a2a_button_twitter"><i class="fa-brands fa-twitter"></i></a>
+                <a class="a2a_button_whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+                <a class="a2a_button_pinterest"><i class="fa-brands fa-pinterest"></i></a>
+                <a class="pdf-icon mb-0" onclick="rjPrint()" id="printPDF"
+                ><i class="fa-solid fa-print"></i
+              ></a>-->
+              <div class="social-buttons">
+    <a class="social-btn a2a_button_instagram" href="https://www.instagram.com/syruvia_official" target="_blank">
+        <i class="fa-brands fa-instagram"></i>
+    </a>
+    <a class="social-btn a2a_button_tiktok" href="https://www.tiktok.com/@syruviaofficial" target="_blank">
+        <i class="fa-brands fa-tiktok"></i>
+    </a>
+    <a class="social-btn a2a_button_youtube" href="https://www.youtube.com/@Syruvia" target="_blank">
+        <i class="fa-brands fa-youtube"></i>
+    </a>
+    <a class="pdf-icon mb-0" onclick="rjPrint()" id="printPDF"
+                ><i class="fa-solid fa-print"></i
+              ></a>
+</div>
+
+              </div>
+            </div>
+                                                </div></div></div>`;
+
+            html += `
+                                                 </div><div id="cooktime" class="cooktime py-4"><ul><li><img class="mb-2" src="${baseUrl}/images/cooktime.png">
+                                                  <p>Cook Time</p><span>${
+                                                    recipe.ct_hh > 0
+                                                      ? recipe.ct_hh +
+                                                        ' ' +
+                                                        hourLabel +
+                                                        ' ' +
+                                                        recipe.ct_mm +
+                                                        ' ' +
+                                                        minLabel +
+                                                        ''
+                                                      : recipe.ct_mm + ' ' + minLabel + ' '
+                                                  }</span></li>
+                                                  <li><img class="mb-2" src="${baseUrl}/images/preparationtime.png">
+                                                    <p>Preparation Time</p><span>${
+                                                      recipe.pt_hh > 0
+                                                        ? recipe.pt_hh +
+                                                          ' ' +
+                                                          hourLabel +
+                                                          ' ' +
+                                                          recipe.pt_mm +
+                                                          ' ' +
+                                                          minLabel +
+                                                          ''
+                                                        : recipe.pt_mm + '  ' + minLabel + ' '
+                                                    }</span></li>
+                                                  <li><img class="mb-2" src="${baseUrl}/images/serving.png">
+                                                    <p>Serving Person</p><span>${
+                                                      recipe.serving_number > 0 ? recipe.serving_number : '0'
+                                                    }</span></li>
+                                                    <li><img class="mb-2" src="${baseUrl}/images/difficulty.png">
+                                                    <p>Difficulty</p><span class="text-capitalize">
+                                                      ${getDifficultyLevel(recipe.difficulty)}
+                                                    </span></li>`;
+
+            if (recipe.calories > 0) {
+              html += `
+                                                        <li><img class="mb-2" src="${baseUrl}/images/calories.png">
+                                                          <p>Calories</p><span class="text-capitalize">
+                                                            ${recipe.calories}
+                                                          </span></li>
+                                                      `;
+            }
+
+            html += `</ul></div>`;
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', '/products.json?limit=250');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+        $(document).ready(function() {
+            xhr.onload = function () {
+  if (xhr.status === 200) {
+    var products = JSON.parse(xhr.responseText).products;
+    const recipeView = document.getElementById('recipe-view-wrapper');
+    var html = '';
+
+    // Array to hold all available products
+    var availableProducts = [];
+
+    if (recipe.ingredients.length > 0) {
+      html += `<div class="cstm-ingredient-gt-detail"><div class="new-ingredient" id="ingredients"><div class="ingredients-box"><h4>Ingredients</h4><ul>`;
+      var viewCartBtns = false;
+      recipe.ingredients.forEach(function (item, index) {
+        if (item.product_id) {
+          var shopifyProduct = products.filter((product) => parseInt(item.product_id) == product.id);
+
+          if (shopifyProduct.length > 0) {
+            if (shopifyProduct[0].variants[0].available) {
+              availableProducts.push(shopifyProduct[0]);
+            }
+
+            var variants = shopifyProduct[0].variants.length;
+
+            if (
+              Array.isArray(allProductIds) &&
+              allProductIds.length > 0 &&
+              allProductIds.includes(item.product_id)
+            ) {
+              html += `<li><div class="d-flex align-items-center flex-wrap">
+                          <a href="/products/${shopifyProduct[0].handle}" target="_blank" class="go-product text-decoration-none line-me">${item.name}</a>
+                          <a href="/products/${shopifyProduct[0].handle}" class="btn btn-dark disabled btn-lg ms-3">Added</a>
+                          </div></li>`;
+              viewCartBtns = true;
+            } else {
+              if (variants > 1) {
+                html += `<li><div class="d-flex align-items-center flex-wrap">
+                            <a href="/products/${shopifyProduct[0].handle}" target="_blank" class="go-product text-decoration-none line-me">${item.name}</a>
+                            <a href="/products/${shopifyProduct[0].handle}" target="_blank" data-product-link="/products/${shopifyProduct[0].handle}" data-recipe-id="${recipe.id}" data-product-name="${shopifyProduct[0].title}" onclick="addToEvent(event, ${shopifyProduct[0].variants[0].id})" class="add-to-cart-btn btn btn-outline-dark btn-lg ms-3">Choose Options</a>
+                            </div></li>`;
+              } else {
+                if (shopifyProduct[0].variants[0].available) {
+                  html += `<li><div class="d-flex align-items-center flex-wrap">`;
+                  html += `
+                          <a href="/products/${shopifyProduct[0].handle}" target="_blank" class="go-product text-decoration-none line-me">${item.name}</a>
+                          <a href="" class="add-to-cart-btn btn btn-outline-dark btn-lg ms-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title='<div class="fs-5">${shopifyProduct[0].title} at price ${shopifyProduct[0].variants[0].price}</div>' data-recipe-id="${recipe.id}" data-product-name="${shopifyProduct[0].title}" onclick="addToCart(event, ${shopifyProduct[0].variants[0].id})">Add to cart</a>
+                          </div></li>`;
+                } else {
+                  html += `<li><div class="d-flex align-items-center flex-wrap">`;
+                  html += `
+                          <a href="/products/${shopifyProduct[0].handle}" target="_blank" class="go-product text-decoration-none line-me">${item.name}</a>
+                          <a href="#" class="btn btn-danger disabled btn-lg ms-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title='<div class="fs-5">${shopifyProduct[0].title} at price ${shopifyProduct[0].variants[0].price}</div>'>Sold Out</a>
+                          </div></li>`;
+                }
+              }
+            }
+          }
+        } else {
+          html += `<li><span class="line-me">${item.name}</span></li>`;
+        }
+      });
+      html += `</ul><a href="/cart" id="viewCartBtn" class="btn btn-outline-dark btn-lg mt-5 ${viewCartBtns == false ? 'd-none' : ''}">View Cart</a> <a href="/checkout" id="checkoutBtn" class="btn btn-dark btn-lg mt-5 ml-2 ${viewCartBtns == false ? 'd-none' : ''}">Checkout</a></div></div>`;
+    } else {
+      document.getElementById('ingredient-tab').style.display = 'none';
+    }
+
+    // Additional sections for cooking instructions, notes, nutrition, and video
+    if (recipe.cooking_desc) {
+      html += `
+        <div id="method" class="method py-4">
+          <div class="method-box">
+            <h4>Instructions</h4>
+            <div class="recipe-method">${recipe.cooking_desc}</div>
+          </div>
+        </div>`;
+    }
+
+    if (recipe.notes) {
+      html += `<div id="note" class="method py-4">
+        <div class="method-box">
+          <h4>Notes</h4>
+          <div class="recipe-method">${recipe.notes}</div>
+        </div>
+      </div>`;
+    }
+
+    if (recipe.nutritions.length > 0) {
+      html += `
+        <div class="nutritional py-4" id="nutrition">
+          <div class="nutritional-box">
+            <h4>Nutrition</h4>
+            <div class="nutritional-details">
+              <div class="row">
+                <div class="col-lg-3">
+                  <div class="nutri-left">
+                    <ul>
+                      <li>
+                        <h5>Calories per serving</h5>
+                        <span>${recipe.calories ? recipe.calories : 'NA'}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-lg-9">
+                  <div class="nutri-right">
+                    <div class="top-hed pb-3">
+                      <h5>Amount/Serving</h5>
+                      <h5>% Daily Value</h5>
+                    </div>
+                    <ul>`;
+      recipe.nutritions.forEach(function (item) {
+        html += `<li>
+          <p><b>${item.name}:</b> ${item.value ? item.value : 'NA'}</p>
+          <span>${item.dv ? item.dv + '%' : '-'}</span>
+        </li>`;
+      });
+      html += `</ul></div></div></div></div></div></div>`;
+    }
+
+    if (recipe.video_url) {
+      if (recipe.video_url.startsWith('<iframe')) {
+        html += `<div id="video" class="video py-4"> ${recipe.video_url}</div>`;
+      } else {
+        html += `<div id="video" class="video py-4"><iframe width="100%" height="500" src="https://www.youtube.com/embed/${recipe.video_url}"
+          title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe></div>`;
+      }
+    }
+
+  if (availableProducts.length > 0) {
+   html += `<div class="available-products py-4">
+              <span><img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Blogfdzg-Page.png?v=1729753769"></span>
+              <h4>YOU WILL NEED</h4>
+              <div class=" product-grid-section">
+                <ul class="slider-recipe-gt product-list">`;
+
+   availableProducts.forEach(function (product, index) {
+      let price =  product.variants[0].price; // Use directly if already in dollars
+      let colorClass = '';
+      switch (index % 4) {
+        case 0:
+          colorClass = 'colorone';
+          break;
+        case 1:
+          colorClass = 'colortwo';
+          break;
+        case 2:
+          colorClass = 'colorthree';
+          break;
+        case 3:
+          colorClass = 'colorfour';
+          break;
+      }
+
+      html += `<li class="product-item product-card ${colorClass}">
+                 <div class="product-inner">
+                   <div class="product-image">
+                     <a href="/products/${product.handle}" target="_blank">
+                       <img src="${product.images[0].src}" alt="${product.title}" class="product-img">
+                     </a>
+                   </div>
+                   <div class="product-info">
+                     <a href="/products/${product.handle}" target="_blank" class="product-title">${product.title}</a>
+                      <!-- Start Areviews product title Rating Code -->
+                    <div class="areviews_header_stars"></div>
+                    <!-- End Areviews product title Rating Code -->
+                     <p class="product-price">$${price}</p>
+                     <a href="javascript:void(0);" class="add-to-cart-btn btn btn-outline-dark btn-lg button" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title='<div class="fs-5">${product.title} at price $${price}</div>' data-recipe-id="${recipe.id}" data-product-name="${product.title}" onclick="addToCart(event, ${product.variants[0].id})">Add to cart</a>
+                   </div>
+                 </div>
+               </li>`;
+   });
+// Initialize the Slick Carousel on the `.slider-recipe-gt` class
+// $('.slider-recipe-gt').slick({
+//   slidesToShow: 2,
+//   slidesToScroll: 1,
+//   arrows: true,
+//   prevArrow: $('.custom-prev'), // Link to custom prev arrow
+//   nextArrow: $('.custom-next'), // Link to custom next arrow
+//   responsive: [
+//     {
+//       breakpoint: 768,
+//       settings: {
+//         slidesToShow: 2
+//       }
+//     },
+//     {
+//       breakpoint: 480,
+//       settings: {
+//         slidesToShow: 1
+//       }
+//     }
+//   ]
+// });
+// $('.slider-recipe-gt').slick({
+//   centerMode: false,
+//    variableWidth: false,
+//       slidesToShow: 4,
+//       responsive: [
+//         {
+//           breakpoint: 1300,
+//           settings: {
+//             arrows: true,
+//             slidesToShow: 3
+//           }
+//         },
+//         {
+//           breakpoint: 991,
+//           settings: {
+//             arrows: true,
+         
+//             slidesToShow: 2
+//           }
+//         },
+//         {
+//           breakpoint: 768,
+//           settings: {
+//             arrows: true,
+          
+//             centerPadding: '100px',
+//             slidesToShow: 2
+
+//           }
+//         },
+//         {
+//           breakpoint: 480,
+//           settings: {
+//             arrows: true,
+          
+//             centerPadding: '70px',
+//             slidesToShow: 1
+//           }
+//         }
+//       ]
+//     });
+
+   html += `</ul>
+   </div>
+   <!-- Custom Arrows for the Slick Slider -->
+   <button class="custom-prev custom-arrow"><i class="fa fa-angle-left"></i></button>
+   <button class="custom-next custom-arrow"><i class="fa fa-angle-right"></i></button>
+ </div>`;
+}
+
+
+// Append the generated HTML to the recipe view
+recipeView.innerHTML += html;
+ 
+// Initialize the Slick Carousel on the `.slider-recipe-gt` class
+
+
+$('.slider-recipe-gt').slick({
+   slidesToShow:4,
+      responsive: [
+        {
+          breakpoint: 1300,
+          settings: {
+            arrows: true,
+            slidesToShow: 4,
+            slidesToScroll: 1
+          }
+        },
+        {
+          breakpoint: 991,
+          settings: {
+            arrows: true,
+            slidesToShow: 2,
+            slidesToScroll:1
+          }
+        },
+        {
+          breakpoint: 768,
+          settings: {
+            arrows: true,
+              centerMode: true,
+            slidesToShow: 1,
+            slidesToScroll: 1
+         
+          }
+        },
+        {
+          breakpoint: 481,
+          settings: {
+            arrows: true,
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+      ]
+    });
+
+setTimeout(function () {
+  console.log('here');
+   $('.slider-recipe-gt').slick({
+   slidesToShow:4,
+      responsive: [
+        {
+          breakpoint: 1300,
+          settings: {
+            arrows: true,
+            slidesToShow: 4,
+            slidesToScroll: 1
+          }
+        },
+        {
+          breakpoint: 991,
+          settings: {
+            arrows: true,
+            slidesToShow: 2,
+            slidesToScroll:1
+          }
+        },
+        {
+          breakpoint: 768,
+          settings: {
+            arrows: true,
+              centerMode: true,
+            slidesToShow: 1,
+            slidesToScroll: 1
+         
+          }
+        },
+        {
+          breakpoint: 481,
+          settings: {
+            arrows: true,
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+      ]
+    });
+}, 3000);
+
+ 
+  }
+};
+
+            
+});xhr.send();
+            recipeView.innerHTML = html;
+          });
+
+        setTimeout(() => {
+          document.getElementById('wc-loader').style.display = 'none';
+          document.getElementById('recipe-view').style.display = 'block';
+          document.getElementById('recipe-social').style.display = 'block';
+        }, 2000);
+      }
+
+      function removeOnclick(event) {
+        // Remove the onclick attribute from the clicked element
+        event.target.removeAttribute('onclick');
+      }
+
+      async function addToCart(event, id) {
+        event.preventDefault(); // Prevent the default link behavior
+        var button = this;
+
+        var currentElem = event.currentTarget;
+
+        // Get the values of data-recipe-id and data-product-name attributes
+        var recipeId = currentElem.getAttribute('data-recipe-id');
+        var productName = currentElem.getAttribute('data-product-name');
+
+        const requestData = {
+          searched: false,
+          recipe_id: recipeId,
+          option_id: null,
+          product_id: id,
+          keyword: productName,
+          user_id: user_id,
+        };
+        postFetchedData(requestData)
+          .then((data) => {})
+          .catch((error) => {});
+
+        let formData = {
+          items: [
+            {
+              id: id,
+              quantity: 1,
+            },
+          ],
+        };
+
+        try {
+          const response = await fetch(rootValue + 'cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const data = await response.json();
+          if (data.items.length > 0) {
+            event.target.innerHTML = 'Added';
+            removeOnclick(event);
+            event.target.href = '#';
+            successAlert();
+          } else {
+            dangerAlert();
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      }
+
+      async function addToEvent(event, id) {
+        event.preventDefault(); // Prevent the default link behavior
+        var button = this;
+
+        var currentElem = event.currentTarget;
+
+        // Get the values of data-recipe-id and data-product-name attributes
+        var recipeId = currentElem.getAttribute('data-recipe-id');
+        var productName = currentElem.getAttribute('data-product-name');
+        var productLink = currentElem.getAttribute('data-product-link');
+
+        const requestData = {
+          searched: false,
+          recipe_id: recipeId,
+          option_id: null,
+          product_id: id,
+          keyword: productName,
+          user_id: user_id,
+        };
+        postFetchedData(requestData)
+          .then((data) => {
+            window.open(productLink, '_blank');
+          })
+          .catch((error) => {
+            window.open(productLink, '_blank');
+          });
+
+        let formData = {
+          items: [
+            {
+              id: id,
+              quantity: 1,
+            },
+          ],
+        };
+      }
+
+      function getDifficultyLevel(difficulty) {
+        var easy = 'Easy';
+        var medium = 'Medium';
+        var hard = 'Hard';
+
+        var results = null;
+
+        switch (difficulty) {
+          case 'easy':
+            results = easy;
+            break;
+          case 'medium':
+            results = medium;
+            break;
+          case 'hard':
+            results = hard;
+            break;
+          default:
+            results = easy;
+        }
+
+        return results;
+      }
+    </script>
+    <script>
+      function successAlert() {
+        document.getElementById('success-alert').style.display = 'block';
+        var myElement = document.getElementById('viewCartBtn');
+        var checkoutElem = document.getElementById('checkoutBtn');
+
+        if (myElement.classList.contains('d-none')) {
+          // Add the 'd-block' class
+          myElement.classList.remove('d-none');
+          // myElement.classList.add("d-block");
+        }
+        if (checkoutElem.classList.contains('d-none')) {
+          // Add the 'd-block' class
+          checkoutElem.classList.remove('d-none');
+          // myElement.classList.add("d-block");
+        }
+
+        setTimeout(function () {
+          document.getElementById('success-alert').style.display = 'none';
+        }, 4000);
+      }
+
+      function dangerAlert() {
+        document.getElementById('danger-alert').style.display = 'block';
+
+        setTimeout(function () {
+          document.getElementById('danger-alert').style.display = 'none';
+        }, 4000);
+      }
+
+      function setLink() {
+    var text = window.location.href;
+
+    // Set the dynamic link for the share button
+    document.getElementById('shareBtn').setAttribute('data-a2a-url', text);
+
+    // Update social media links with the current page URL
+    var instagramLink = document.querySelector('.a2a_button_instagram');
+    var tiktokLink = document.querySelector('.a2a_button_tiktok');
+    var youtubeLink = document.querySelector('.a2a_button_youtube');
+
+    // Set the URLs with current page URL
+    if (instagramLink) {
+        instagramLink.setAttribute('href', 'https://www.instagram.com/syruvia_official?share=' + encodeURIComponent(text));
+    }
+    if (tiktokLink) {
+        tiktokLink.setAttribute('href', 'https://www.tiktok.com/@syruviaofficial?share=' + encodeURIComponent(text));
+    }
+    if (youtubeLink) {
+        youtubeLink.setAttribute('href', 'https://www.youtube.com/@Syruvia?share=' + encodeURIComponent(text));
+    }
+}
+
+      function setClickable() {
+        var lineMeElements = document.querySelectorAll('.new-ingredient li .line-me');
+
+        lineMeElements.forEach(function (element) {
+          element.addEventListener('click', function () {
+            element.classList.toggle('check-line');
+          });
+        });
+
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      }
+
+      /**
+       * fetch data for customr lookup
+       * @param {string[]} data - Pass an object to store data.
+       * @returns {message} - Returns a success or error message
+       */
+      async function postFetchedData(data) {
+        const url = `${baseUrl}/api/rest/v1/customer_lookup/post`;
+
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              Authorization: header_token + '_____' + user_id,
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          const responseData = await response.json(); // Assuming the response is JSON
+          return responseData;
+        } catch (error) {
+          throw error;
+        }
+      }
+
+      function metaSeoData(type, data, schema) {
+        var metaDescription = document.getElementById('metaDescription');
+        var metaKeyword = document.getElementById('metaKeyword');
+        var metaAuthor = document.getElementById('metaAuthor');
+        var ogTitle = document.getElementById('ogTitle');
+        var ogType = document.getElementById('ogType');
+        var ogImage = document.getElementById('ogImage');
+        var ogDescription = document.getElementById('ogDescription');
+        var ogUrl = document.getElementById('ogUrl');
+
+        // check that data type is list (false) or view (true)
+        const titleElement = document.head.querySelector('title');
+
+        const metaDescriptionElement = document.head.querySelector('meta[name="description"]');
+
+        if (type == false) {
+          var pageTitle = document.title;
+          var currentUrl = window.location.href;
+
+          // Set the new content for the title element
+          if (titleElement) {
+            titleElement.textContent = pageTitle;
+          }
+          if (metaDescriptionElement) {
+            metaDescriptionElement.setAttribute(
+              'content',
+              'Discover a world of flavors with our diverse recipe collection. From quick bites to gourmet delights, find inspiration for every meal. Start cooking today!'
+            );
+          }
+          metaKeyword.setAttribute(
+            'content',
+            'recipes, cooking, food, cuisine, meal ideas, culinary, gastronomy, homemade, easy recipes, gourmet, healthy eating, comfort food, quick meals, delicious, appetizers, main dishes, desserts, vegetarian, vegan, family-friendly, cooking tips'
+          );
+
+          ogTitle.setAttribute('content', pageTitle);
+          ogType.setAttribute('content', 'website');
+          ogDescription.setAttribute(
+            'content',
+            'Discover a world of flavors with our diverse recipe collection. From quick bites to gourmet delights, find inspiration for every meal. Start cooking today!'
+          );
+          ogUrl.setAttribute('content', currentUrl);
+        } else {
+          var recipe = data;
+          var pageTitle = recipe.name;
+          var currentUrl = window.location.href;
+
+          var recipeSchema = JSON.parse(schema);
+
+          metaKeyword.setAttribute('content', recipe.name);
+          ogTitle.setAttribute('content', pageTitle);
+          ogType.setAttribute('content', 'article');
+          ogImage.setAttribute('content', recipe.primary_image_full_url);
+          ogDescription.setAttribute('content', recipe.description);
+          ogUrl.setAttribute('content', currentUrl);
+
+          // Set the new content for the title element
+          if (titleElement) {
+            titleElement.textContent = pageTitle;
+          }
+
+          if (metaDescriptionElement) {
+            metaDescriptionElement.setAttribute('content', recipe.description);
+          }
+
+          // recipe schema markup
+          const script = document.createElement('script');
+          script.type = 'application/ld+json';
+          const recipeSchemaData = JSON.stringify(recipeSchema, null, 2);
+          script.textContent = recipeSchemaData;
+          document.body.appendChild(script);
+        }
+      }
+    </script>
+
+    <script>
+      const rjPrint = () => {
+        const popup = window.open('', 'popup', 'width=1200,height=800');
+        popup.addEventListener('afterprint', (event) => {
+          popup.close();
+        });
+        const content = document.getElementById('recipe-view');
+        popup.document.head.innerHTML = document.head.innerHTML;
+        popup.document.head.insertAdjacentHTML(
+          'beforeend',
+          `<link type="text/css" rel="stylesheet" href="https://recipejunction.boxtasks.com/assets/css/main.css">
+      <link href="https://recipejunction.boxtasks.com/assets/css/layout-1/shopify-style.css" type="text/css" rel="stylesheet">`
+        );
+        popup.document.head.insertAdjacentHTML(
+          'beforeend',
+          '<style> body{font-size:80% !importanrt;} #overview img{margin: 10px 0px;} #recipe-social, .recipe-tabs, .recipe-social-icons, .back-to-page, .add-to-cart-btn, #video, #viewCartBtn, #checkoutBtn {display: none !important;} #optionsTags{margin-top:10px;} </style>'
+        );
+        popup.document.body.innerHTML = content.innerHTML;
+        setTimeout(() => {
+          popup.print();
+          setTimeout(() => {
+            popup.close();
+          });
+        }, 250);
+      };
+    </script>
+  </body>
+</html>

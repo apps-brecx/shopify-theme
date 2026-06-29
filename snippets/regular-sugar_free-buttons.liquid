@@ -1,0 +1,21 @@
+
+
+<div >
+  {% if product.metafields.custom.regular %}
+    {% assign related_product = all_products[product.metafields.custom.regular] %}
+    {% if related_product %}
+      <div class="regular-sugar_free-button" style="width: 100%;">
+      <a href="{{ related_product.url }}" class="button button--full-width">View Regular Option</a>
+      </div>
+      
+    {% endif %}
+  {% elsif product.metafields.custom.sugar_free %}
+    {% assign related_product = all_products[product.metafields.custom.sugar_free] %}
+    {% if related_product %}
+       <div class="regular-sugar_free-button" style="width: 100%;">
+        <a href="{{ related_product.url }}" class="button button--full-width">View Sugar-Free Option</a>
+      </div>
+    
+    {% endif %}
+  {% endif %}
+</div>

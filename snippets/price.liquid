@@ -1,0 +1,119 @@
+{% comment %}
+  Renders product price and conditionally displays the sale badge
+{% endcomment %}
+{%- liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 1999
+  assign price_min = product.price_min
+  assign price_max = product.price_max
+  assign available = target.available | default: false
+  assign money_price = price | money
+  assign money_price_min = price_min | money
+  assign money_price_max = price_max | money
+  if settings.currency_code_enabled
+    assign money_price = price | money_with_currency
+    assign money_price_min = price_min | money_with_currency
+    assign money_price_max = price_max | money_with_currency
+  endif
+
+  if target == product and product.price_varies
+    assign money_price = 'products.product.price.from_price_html' | t: price: money_price
+  endif
+
+  # --- VIP $7.99 logged-in pricing (display mirror of the discount function) ---
+  # Logged-in customers see the flat VIP price (shop metafield vip.flat_price,
+  # default 7.99) on eligible products, with the normal price struck through.
+  # custom.vip_eligible == false opts a product out; absent => eligible.
+  assign vip_flat = shop.metafields.vip.flat_price.value | default: 7.99
+  assign vip_cents = vip_flat | times: 100 | round
+  assign vip_eligible = true
+  if product.metafields.custom.vip_eligible == false
+    assign vip_eligible = false
+  endif
+  if customer and vip_eligible and price > vip_cents
+    assign compare_at_price = price
+    assign price = vip_cents
+    if settings.currency_code_enabled
+      assign money_price = vip_cents | money_with_currency
+    else
+      assign money_price = vip_cents | money
+    endif
+  endif
+-%}
+<div
+  class="
+    price
+    {%- if price_class %} {{ price_class }}{% endif -%}
+    {%- if available == false %} price--sold-out{% endif -%}
+    {%- if compare_at_price > price and product.quantity_price_breaks_configured? != true %} price--on-sale{% endif -%}
+    {%- if compare_at_price > price and product.quantity_price_breaks_configured? %} volume-pricing--sale-badge{% endif -%}
+    {%- if product.price_varies == false and product.compare_at_price_varies %} price--no-compare{% endif -%}
+  "
+>
+  <div class="price__container">
+    <div class="price__regular">
+      {%- if product.quantity_price_breaks_configured? -%}
+        {%- if show_compare_at_price and compare_at_price -%}
+          {%- unless product.price_varies == false and product.compare_at_price_varies %}
+            <span>
+              <s class="price-item price-item--regular variant-item__old-price">
+                {% if settings.currency_code_enabled %}
+                  {{ compare_at_price | money_with_currency }}
+                {% else %}
+                  {{ compare_at_price | money }}
+                {% endif %}
+              </s>
+            </span>
+          {%- endunless -%}
+        {%- endif -%}
+        <span class="price-item price-item--regular">
+          {{- 'products.product.volume_pricing.price_range' | t: minimum: money_price_min, maximum: money_price_max -}}
+        </span>
+      {%- else -%}
+        <span class="price-item price-item--regular">
+          {{ money_price }}
+        </span>
+      {%- endif -%}
+    </div>
+    <div class="price__sale">
+      {%- unless product.price_varies == false and product.compare_at_price_varies %}
+        <span>
+          <s class="price-item price-item--regular">
+            {% if settings.currency_code_enabled %}
+              {{ compare_at_price | money_with_currency }}
+            {% else %}
+              {{ compare_at_price | money }}
+            {% endif %}
+          </s>
+        </span>
+      {%- endunless -%}
+      <span class="price-item price-item--sale price-item--last">
+        {{ money_price }}
+      </span>
+    </div>
+    <small class="unit-price caption{% if product.selected_or_first_available_variant.unit_price_measurement == nil %} hidden{% endif %}">
+      <span class="price-item price-item--last">
+        <span>{{- product.selected_or_first_available_variant.unit_price | money -}}</span>
+        <span aria-hidden="true">/</span>
+        <span>
+          {%- if product.selected_or_first_available_variant.unit_price_measurement.reference_value != 1 -%}
+            {{- product.selected_or_first_available_variant.unit_price_measurement.reference_value -}}
+          {%- endif -%}
+          {{ product.selected_or_first_available_variant.unit_price_measurement.reference_unit }}
+        </span>
+      </span>
+    </small>
+  </div>
+
+  {% comment %} {%- if product.metafields.custom.sale_badge == true -%}
+    <span class="badge price__badge-sale color-{{ settings.sale_badge_color_scheme }}">
+      {{ 'products.product.on_sale' | t }}
+    </span>
+  {%- endif -%} {% endcomment %}
+</div>

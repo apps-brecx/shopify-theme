@@ -1,0 +1,331 @@
+<style>html body .syr-drawer-close{display:none!important;}</style>
+<style id="syr-nav-flash-fix">
+@media (max-width: 900px){ html body [id$="__syr_nav"], html body [id$="--syr_nav"], html body #shopify-section-syr_nav{ display:none !important; } }
+@media (min-width: 901px){ html body [id$="__syruvia_nav"], html body [id$="--syruvia_nav"], html body #shopify-section-syruvia_nav, html body #syrnav{ display:none !important; } }
+</style>
+<style id="syr-crumbs-fix">.crumbs a[href]{cursor:pointer;}</style>
+<style id="syr-stickybar-desktop-hide">@media (min-width:761px){ html body .pd-stickybar, html body #pdStickybar{ display:none !important; } }</style>
+
+<style id="syr-new-vip-css">
+.syr-new-card .syr-new-vip-cta{display:inline-flex;align-items:center;gap:5px;margin-top:8px;background:#dbeef5;color:#2f7bb0;border:1px solid #2f7bb0;border-radius:999px;padding:5px 12px;font-family:'Archivo Black','Archivo',sans-serif;font-weight:400;font-size:10px;letter-spacing:.6px;text-transform:uppercase;line-height:1;cursor:pointer;position:relative;z-index:3;transition:background .15s ease, transform .15s ease;}
+.syr-new-card .syr-new-vip-cta:hover{background:#c7e4ef;transform:translateY(-1px);}
+.syr-new-card .syr-new-vip-cta svg{color:#2f7bb0;flex:0 0 auto;}
+.syr-new-card .syr-new-vipbadge{display:inline-flex;align-items:center;gap:4px;background:#c58548;color:#FFFBF4;border-radius:999px;padding:2px 8px;font-family:'Archivo Black','Archivo',sans-serif;font-weight:400;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;vertical-align:middle;}
+.syr-new-card .syr-new-vipbadge svg{color:#FCE2A0;}
+</style>
+
+<style id="syr-vipcard-css">
+.syr-rec-vipbadge{display:inline-flex;align-items:center;gap:3px;background:#c58548;color:#FFFBF4;border-radius:999px;padding:2px 7px;font-family:'Archivo Black','Archivo',sans-serif;font-weight:400;font-size:8.5px;letter-spacing:.05em;text-transform:uppercase;vertical-align:middle;line-height:1.4;}
+.syr-rec-vipbadge svg{color:#FCE2A0;}
+.syr-rec-vipcta{display:inline-flex;align-items:center;gap:3px;background:#2F7DC4;color:#FFFBF4;border-radius:999px;padding:3px 8px;font-family:'Archivo Black','Archivo',sans-serif;font-weight:400;font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;vertical-align:middle;line-height:1.4;}
+.syr-rec-vipcta svg{color:#B8DCEB;}
+html body .pd .pd-recs-foot{align-items:flex-start!important;}
+html body .pd .pd-recs-price{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:4px 6px!important;}
+.syr-card-price .now .syr-rec-vipbadge,.syr-card-price .now .syr-rec-vipcta{margin-left:5px;}
+</style>
+
+{% if request.page_type == 'product' and product %}
+{%- assign vip_ok = false -%}{%- if product.template_suffix == 'brand-page' or product.template_suffix == 'shaved-ice' -%}{%- assign vip_ok = true -%}{%- endif -%}
+<script id="syr-pd-realprice" type="application/json">{"price":{{ product.selected_or_first_available_variant.price | default: 0 }},"vip":{{ vip_ok }}}</script>
+{% endif %}
+<script id="syr-pd-vip-js">
+(function(){
+  if(window.__syrPdVip) return; window.__syrPdVip=true;
+  var VIP = {% if customer and customer.tags contains 'VIP' %}true{% else %}false{% endif %};
+  var node=document.getElementById('syr-pd-realprice');
+  var DATA=null; if(node){ try{ DATA=JSON.parse(node.textContent); }catch(e){} }
+  var STAR='<svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.6 1.3 6.7L12 17.8 5.9 20.4 7.2 13.7l-5-4.6 6.8-.8z"></path></svg>';
+  function money(c){return '$'+(c/100).toFixed(2);}
+  function cents(t){var m=(t||'').replace(/[^0-9.]/g,'');var f=parseFloat(m);return isNaN(f)?0:Math.round(f*100);}
+  function fixTiers(base){
+    var tiers=window.PD_TIERS||[1,0.95,0.90,0.85];
+    var cells=document.querySelectorAll('.pd-mb-cell');
+    for(var i=0;i<cells.length;i++){
+      var t=parseInt(cells[i].getAttribute('data-tier'),10)||1;
+      var d=tiers[Math.min(t-1,tiers.length-1)]||1;
+      var pe=cells[i].querySelector('.pd-mb-price');
+      if(pe) pe.textContent=money(Math.round(base*t*d));
+    }
+  }
+  function fixMain(){
+    if(!DATA || typeof DATA.price!=='number') return;
+    var vipEligible = DATA.vip !== false;
+    var real=DATA.price; var applies=vipEligible && real>799;
+    if(!applies){ var tags=document.querySelectorAll('.pd-vip-tag'); for(var i=0;i<tags.length;i++) tags[i].style.display='none'; return; }
+    if(!VIP) return;
+    var target=799;
+    if(typeof window.PD_BASE_CENTS==='number' && window.PD_BASE_CENTS!==target){ window.PD_BASE_CENTS=target; try{window.dispatchEvent(new CustomEvent('pd:purchase-option-changed',{detail:{price:target}}));}catch(e){} }
+    fixTiers(target);
+  }
+  function applyCard(priceEl, titleText){
+    if(!priceEl) return;
+    var reg=cents(priceEl.textContent); var isSyrup=/syrup/i.test(titleText||'');
+    if(!isSyrup || !(reg>799)) return false;
+    if(VIP){ priceEl.innerHTML=money(799)+' <span class="syr-rec-vipbadge">'+STAR+' VIP</span>'; }
+    else { priceEl.innerHTML=money(reg)+'<span class="syr-rec-vipcta">'+STAR+' VIP '+money(799)+'</span>'; }
+    return true;
+  }
+  function fixRecs(){
+    var cards=document.querySelectorAll('.pd-recs-card');
+    for(var i=0;i<cards.length;i++){
+      var c=cards[i]; if(c.getAttribute('data-vipdone')) continue; c.setAttribute('data-vipdone','1');
+      var t=c.querySelector('.pd-recs-title'); applyCard(c.querySelector('.pd-recs-price'), t?t.textContent:'');
+    }
+  }
+  function fixSearch(){
+    var cards=document.querySelectorAll('.syr-card');
+    for(var i=0;i<cards.length;i++){
+      var c=cards[i]; if(c.getAttribute('data-vipdone')) continue; c.setAttribute('data-vipdone','1');
+      var t=c.querySelector('.syr-card-title'); var now=c.querySelector('.syr-card-price .now')||c.querySelector('.now');
+      applyCard(now, t?t.textContent:'');
+    }
+  }
+  function tick(){ fixMain(); fixRecs(); fixSearch(); }
+  function init(){ tick(); setTimeout(tick,400); setTimeout(tick,1100);
+    if(window.MutationObserver){ var mo=new MutationObserver(function(){ if(window.__syrPdVipRAF) return; window.__syrPdVipRAF=requestAnimationFrame(function(){window.__syrPdVipRAF=0;fixRecs();fixSearch();}); }); mo.observe(document.body,{childList:true,subtree:true}); }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+  window.addEventListener('load',tick);
+})();
+</script>
+
+<script id="syr-pd-crumb-fix">
+(function(){
+  if(window.__pdCrumbFix) return; window.__pdCrumbFix=true;
+  var MAP={'/collections/popping-boba':'/collections/bursting-balls','/collections/variety-packs':'/collections/variety-packs-for-coffee-and-cocktails'};
+  function fix(){
+    var as=document.querySelectorAll('.pd-breadcrumbs a, .crumbs a');
+    for(var i=0;i<as.length;i++){ var h=as[i].getAttribute('href'); if(h&&MAP[h]) as[i].setAttribute('href',MAP[h]); }
+  }
+  function init(){ if(!document.querySelector('.pd-breadcrumbs') && !document.querySelector('.crumbs')) return; fix(); setTimeout(fix,500); setTimeout(fix,1500); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
+
+<script id="syr-faq-ship-fix">
+(function(){
+  if(window.__faqShipFix) return; window.__faqShipFix=true;
+  var CANON='We aim to ship every order within 48 hours from our New Jersey warehouse, though during busy periods it may take 1 to 3 business days. Flat-rate $4.95 shipping, free over $36.';
+  function fix(){
+    var els=document.querySelectorAll('.pd-faq-a-inner');
+    for(var i=0;i<els.length;i++){
+      var t=els[i].textContent;
+      if(/New Jersey warehouse/i.test(t) && t.replace(/\\s+/g,' ').trim()!==CANON){ els[i].textContent=CANON; }
+    }
+  }
+  function init(){
+    if(!document.querySelector('.pd-faq-a-inner')) return;
+    fix(); setTimeout(fix,400); setTimeout(fix,1200);
+    if(window.MutationObserver){ var mo=new MutationObserver(function(){ if(window.__faqShipRAF) return; window.__faqShipRAF=requestAnimationFrame(function(){window.__faqShipRAF=0;fix();}); }); mo.observe(document.body,{childList:true,subtree:true}); }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
+
+<script id="syr-new-vip-js">
+(function(){
+  if(window.__bsVipInit) return; window.__bsVipInit=true;
+  var SIGNED_IN = {% if customer %}true{% else %}false{% endif %};
+  var VIPMAX=799;
+  var STAR='<svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.6 1.3 6.7L12 17.8 5.9 20.4 7.2 13.7l-5-4.6 6.8-.8z"></path></svg>';
+  function cents(t){var m=(t||'').replace(/[^0-9.]/g,'');var f=parseFloat(m);return isNaN(f)?0:Math.round(f*100);}
+  function money(c){return '$'+(c/100).toFixed(2);}
+  function scrollVip(){var v=document.querySelector('[id^="shopify-section"][id*="__vip"]')||document.getElementById('pdVipSection');if(v)v.scrollIntoView({behavior:'smooth',block:'start'});}
+  function process(){
+    var cards=document.querySelectorAll('.syr-new-card');
+    for(var i=0;i<cards.length;i++){
+      var card=cards[i];
+      if(card.getAttribute('data-vip799')) continue;
+      var priceEl=card.querySelector('.syr-new-price');
+      if(!priceEl) continue;
+      var titleEl=card.querySelector('.syr-new-title');
+      if(!(titleEl && /syrup/i.test(titleEl.textContent))){ card.setAttribute('data-vip799','skip'); continue; }
+      var reg=cents(priceEl.textContent);
+      if(!(reg && VIPMAX<reg)){ card.setAttribute('data-vip799','skip'); continue; }
+      card.setAttribute('data-vip799','1');
+      if(SIGNED_IN){
+        if(/vip/i.test(priceEl.innerHTML)) continue;
+        priceEl.innerHTML=money(VIPMAX)+' <span class="syr-new-vipbadge">'+STAR+' VIP</span>';
+      } else {
+        if(card.querySelector('.syr-new-vip-cta')) continue;
+        var b=document.createElement('button');
+        b.type='button'; b.className='syr-new-vip-cta'; b.setAttribute('aria-label','Unlock VIP price');
+        b.innerHTML=STAR+' Unlock VIP $7.99';
+        b.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); scrollVip(); });
+        priceEl.parentNode.insertBefore(b, priceEl.nextSibling);
+      }
+    }
+  }
+  function init(){
+    if(!document.querySelector('.syr-new-card')) return;
+    process(); setTimeout(process,400); setTimeout(process,1000);
+    if(window.MutationObserver){ var mo=new MutationObserver(function(){ if(window.__bsVipRAF) return; window.__bsVipRAF=requestAnimationFrame(function(){window.__bsVipRAF=0;process();}); }); mo.observe(document.body,{childList:true,subtree:true}); }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
+
+<script id="syr-coll-vip-js">
+(function(){
+  if(window.__collVipInit) return; window.__collVipInit=true;
+  var SIGNED_IN = {% if customer %}true{% else %}false{% endif %};
+  var VIPMAX=799;
+  var BADGE='<span class="pcard-vipbadge"><svg class="vipstar" viewBox="0 0 24 24" width="11" height="11" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.6 1.3 6.7L12 17.8 5.9 20.4 7.2 13.7l-5-4.6 6.8-.8z"></path></svg> VIP</span>';
+  var NONSYRUP=/boba|popping|pearl|\\btopping|variety|jelly|bundle|sampler|combo|\\bkit\\b|\\bset\\b|\\bduo\\b|\\btrio\\b|coffeehouse|\\bball|\\bpump\\b|\\bpack/i;
+  var NONSYRUP_URL=/variety-pack|popping-boba|bursting-balls|shakable-topping|shakeable-topping|syrup-pump|-pump\\b/i;
+  var LABEL=' Unlock VIP $7.99';
+  var LEDE="VIP members unlock our best price on every syrup: a flat $7.99. Create a free Syruvia account (or sign in) and the VIP price shows up automatically.";
+  function money(c){return '$'+(c/100).toFixed(2);}
+  function isNonSyrup(card){ return NONSYRUP.test(card.getAttribute('data-name')||'') || NONSYRUP_URL.test(card.getAttribute('data-url')||''); }
+  function processIn(){
+    var cards=document.querySelectorAll('article.pcard');
+    for(var i=0;i<cards.length;i++){
+      var c=cards[i];
+      if(isNonSyrup(c)){
+        if(c.getAttribute('data-vipstrip')==='1') continue;
+        c.setAttribute('data-vipstrip','1');
+        var reg=parseInt(c.getAttribute('data-price'),10);
+        var pe=c.querySelector('.pcard-price');
+        if(pe && reg) pe.innerHTML=money(reg);
+        var pl=c.querySelector('.pcard-vip-cta'); if(pl && pl.parentNode) pl.parentNode.removeChild(pl);
+        continue;
+      }
+      if(c.getAttribute('data-sf')==='1'){
+        var reg2=parseInt(c.getAttribute('data-price'),10);
+        if(!reg2) continue;
+        var vip=Math.min(VIPMAX,reg2);
+        var pe2=c.querySelector('.pcard-price');
+        if(!pe2) continue;
+        if(pe2.getAttribute('data-vipfix')===String(vip)) continue;
+        pe2.innerHTML=(vip<reg2)?(money(vip)+' '+BADGE):money(vip);
+        pe2.setAttribute('data-vipfix',String(vip));
+      }
+    }
+  }
+  function processOut(){
+    var pills=document.querySelectorAll('.pcard-vip-cta');
+    for(var i=0;i<pills.length;i++){
+      var pill=pills[i];
+      var card=pill.closest('article.pcard');
+      if(card && isNonSyrup(card)){ if(pill.parentNode) pill.parentNode.removeChild(pill); continue; }
+      var reg=card?parseInt(card.getAttribute('data-price'),10):0;
+      if(reg && 799>=reg){ if(pill.parentNode) pill.parentNode.removeChild(pill); continue; }
+      if(pill.getAttribute('data-v799')==='1') continue;
+      pill.setAttribute('data-v799','1');
+      var kids=Array.prototype.slice.call(pill.childNodes);
+      for(var k=0;k<kids.length;k++){ if(kids[k].nodeType===3) pill.removeChild(kids[k]); }
+      pill.appendChild(document.createTextNode(LABEL));
+    }
+    var ledes=document.querySelectorAll('.scol-vip-lede');
+    for(var j=0;j<ledes.length;j++){ var p=ledes[j]; if(p.getAttribute('data-v799')==='1') continue; p.setAttribute('data-v799','1'); p.textContent=LEDE; }
+  }
+  function run(){ if(SIGNED_IN) processIn(); else processOut(); }
+  function init(){
+    if(!document.querySelector('article.pcard')) return;
+    run(); setTimeout(run,300); setTimeout(run,900); setTimeout(run,1800);
+    if(window.MutationObserver){ var mo=new MutationObserver(function(){ if(window.__collVipRAF) return; window.__collVipRAF=requestAnimationFrame(function(){window.__collVipRAF=0;run();}); }); mo.observe(document.body,{childList:true,subtree:true}); }
+    document.addEventListener('click',function(e){
+      if(e.target.closest('.pcard-vip-cta,[data-vip]')){ setTimeout(run,60); setTimeout(run,220); setTimeout(run,500); }
+      if(e.target.closest('.scol,[class*=filter],[class*=sort],[class*=chip]')) setTimeout(run,150);
+    },true);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
+
+<script id="syr-coll-filter-js">
+(function(){
+  if(window.__collFilterInit) return; window.__collFilterInit=true;
+  var RT='{% if collection %}{{ collection.metafields.custom.avg_rating }}{% endif %}';
+  var TAGMAP={all:null,coffee:'coffee',fruit:'fruit',nutty:'nut',nut:'nut',cocktail:'cocktails',cocktails:'cocktails','sugar-free':'sugar-free','sugar free':'sugar-free',sugarfree:'sugar-free',boba:'boba'};
+  function base(){var m=location.pathname.match(/\\/collections\\/([^\\/?#]+)/);return m?m[1]:null;}
+  function curTag(){var m=location.pathname.match(/\\/collections\\/[^\\/?#]+\\/([^\\/?#]+)/);return m?decodeURIComponent(m[1]).toLowerCase():'';}
+  function famKey(f){return (f||'').trim().toLowerCase();}
+  function tagFor(k){ if(k==='all') return null; if(TAGMAP.hasOwnProperty(k)) return TAGMAP[k]; return k; }
+  function urlFor(fam){
+    var b=base(); if(!b) return null;
+    var k=famKey(fam);
+    var tag=tagFor(k);
+    return tag ? ('/collections/'+b+'/'+tag) : ('/collections/'+b);
+  }
+  function makeChip(label,fam){
+    var c=document.createElement('button');
+    c.className='fchip'; c.type='button'; c.setAttribute('data-fam',fam); c.textContent=label;
+    return c;
+  }
+  function markActive(wrap){
+    var ct=curTag();
+    Array.prototype.forEach.call(wrap.querySelectorAll('.fchip'),function(ch){
+      var k=famKey(ch.getAttribute('data-fam')||ch.textContent);
+      var tag=tagFor(k);
+      var on = ct ? (tag===ct) : (k==='all');
+      ch.classList.toggle('on', !!on);
+    });
+  }
+  function setup(){
+    var wrap=document.querySelector('.filters'); if(!wrap) return;
+    var b=base();
+    if(wrap.getAttribute('data-wired')!=='1'){
+      wrap.setAttribute('data-wired','1');
+      var fams={};
+      Array.prototype.forEach.call(wrap.querySelectorAll('.fchip'),function(ch){ fams[famKey(ch.getAttribute('data-fam')||ch.textContent)]=ch; });
+      if(b==='all' && !fams['nutty'] && !fams['nut']){
+        var nc=makeChip('Nutty','Nutty');
+        var anchor=fams['fruit']||fams['coffee'];
+        if(anchor && anchor.nextSibling){ anchor.parentNode.insertBefore(nc, anchor.nextSibling); }
+        else if(anchor){ anchor.parentNode.appendChild(nc); }
+        else { wrap.appendChild(nc); }
+      }
+      if(b==='sugar-free'){ if(fams['sugar-free']) fams['sugar-free'].remove(); }
+      else if(!fams['sugar-free']){ wrap.appendChild(makeChip('Sugar-Free','Sugar-Free')); }
+      if(b==='all' && !fams['boba']){ wrap.appendChild(makeChip('Boba','Boba')); }
+    }
+    markActive(wrap);
+  }
+  function fixCrumbs(){
+    var crumbs=document.querySelectorAll('.crumbs a, nav.crumbs a');
+    for(var i=0;i<crumbs.length;i++){
+      var a=crumbs[i]; if(a.getAttribute('href')) continue;
+      var t=(a.textContent||'').trim().toLowerCase();
+      if(t==='home') a.setAttribute('href','/');
+      else if(t==='collections'||t==='collection'||t==='shop'||t==='all'||t==='products') a.setAttribute('href','/collections');
+    }
+  }
+  function syncCount(){
+    var hm=document.querySelector('.hero-meta'); var rc=document.querySelector('.result-count');
+    if(!hm||!rc) return;
+    var m=hm.textContent.match(/([\\d,]+)\\s*flavors/i);
+    if(m) rc.textContent=m[1]+' flavors';
+  }
+  function liveRating(){
+    var cards=document.querySelectorAll('article.pcard'); var sr=0,sc=0;
+    for(var i=0;i<cards.length;i++){ var r=parseFloat(cards[i].getAttribute('data-rdisp')||''); var n=parseInt(cards[i].getAttribute('data-reviews')||'0',10); if(!isNaN(r)&&n>0){sr+=r*n;sc+=n;} }
+    return sc>0?(sr/sc):null;
+  }
+  function fixRating(){
+    var hm=document.querySelector('.hero-meta'); if(!hm) return;
+    var val=RT;
+    if(!val){ var lv=liveRating(); if(lv!=null) val=lv.toFixed(1); }
+    if(!val) return;
+    var els=hm.querySelectorAll('*'); var target=null;
+    for(var i=0;i<els.length;i++){ if(els[i].children.length===0 && /★/.test(els[i].textContent) && /\\d/.test(els[i].textContent)){ target=els[i]; break; } }
+    if(target){ target.textContent=target.textContent.replace(/[\\d.]+(\\s*★)/, val+'$1'); }
+    else if(/[\\d.]+\\s*★/.test(hm.innerHTML)){ hm.innerHTML=hm.innerHTML.replace(/([\\d.]+)(\\s*★)/, val+'$2'); }
+  }
+  document.addEventListener('click',function(e){
+    var chip=e.target.closest && e.target.closest('.fchip');
+    if(!chip || !document.querySelector('.filters')) return;
+    var url=urlFor(chip.getAttribute('data-fam')||chip.textContent);
+    if(!url) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    location.href=url;
+  },true);
+  function tick(){ setup(); fixCrumbs(); syncCount(); fixRating(); }
+  function init(){
+    if(!document.querySelector('.filters') && !document.querySelector('.hero-meta') && !document.querySelector('.crumbs')) return;
+    tick(); setTimeout(tick,500); setTimeout(tick,1500); setTimeout(tick,3000);
+    if(window.MutationObserver){ var mo=new MutationObserver(function(){ if(window.__cfRAF) return; window.__cfRAF=requestAnimationFrame(function(){window.__cfRAF=0;tick();}); }); mo.observe(document.body,{childList:true,subtree:true}); }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>

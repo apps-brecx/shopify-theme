@@ -1,0 +1,42 @@
+{%- comment -%} Companion: splits the lumped 'VIP pricing applied' cart line into VIP pricing + Bundle/Quantity discount. Display only, totals unchanged. Logged-in only. {%- endcomment -%}
+{%- if customer -%}
+<script>
+(function(){
+  var CHECK='<svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 8.5l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+  var busy=false;
+  function patch(){
+    if(busy) return;
+    fetch('/cart.js',{headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).then(function(c){
+      var sv=document.querySelector('.sum-vip.applied'); if(!sv) return;
+      var apps=c.cart_level_discount_applications||[];
+      var bundleCents=apps.reduce(function(s,d){return s+(d.total_allocated_amount||0);},0);
+      var real=(c.original_total_price||0)-(c.total_price||0);
+      var vipCents=real-bundleCents;
+      busy=true;
+      var vv=sv.querySelector('.sum-vip-v');
+      if(vv) vv.textContent='−$'+(vipCents/100).toFixed(2);
+      sv.style.display = vipCents>0 ? '' : 'none';
+      var ex=document.querySelector('.sum-bundle-split');
+      if(bundleCents>0){
+        var title=(apps[0]&&apps[0].title)||'';
+        var label=/^QTY/i.test(title)?'Quantity discount':'Bundle discount';
+        if(!ex){ ex=document.createElement('div'); ex.className='sum-vip applied sum-bundle-split'; sv.parentNode.insertBefore(ex, sv.nextSibling); }
+        ex.innerHTML='<span class="sum-vip-l">'+CHECK+' '+label+'</span><span class="sum-vip-v">−$'+(bundleCents/100).toFixed(2)+'</span>';
+      } else if(ex){ ex.remove(); }
+      requestAnimationFrame(function(){busy=false;});
+    }).catch(function(){busy=false;});
+  }
+  patch(); setTimeout(patch,400); setTimeout(patch,1200);
+  var sumWrap=document.querySelector('.summary');
+  if(sumWrap && window.MutationObserver){
+    var mo=new MutationObserver(function(){ if(busy) return; if(window.__cartSplitRAF) return; window.__cartSplitRAF=requestAnimationFrame(function(){window.__cartSplitRAF=0; patch();}); });
+    mo.observe(sumWrap,{childList:true,subtree:true,characterData:true});
+  }
+  document.addEventListener('change',function(){setTimeout(patch,300);},true);
+  document.addEventListener('click',function(e){ if(e.target.closest('[class*=qty],[class*=remove],[data-qty],[data-remove]')) setTimeout(patch,500); },true);
+})();
+</script>
+{%- endif -%}
+{% schema %}
+{ "name": "VIP Cart Split", "settings": [] }
+{% endschema %}

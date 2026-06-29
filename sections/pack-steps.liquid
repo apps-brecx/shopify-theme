@@ -1,0 +1,155 @@
+<style>
+    .pack-steps__inner{
+        background: #fff;
+        padding: 60px 0;
+    }
+    .pack-steps__heading {
+        margin-bottom: 40px;
+    }
+    .pack-steps__heading h2{    
+        margin: 0;
+        text-align: center;
+        font-family: "Epilogue", sans-serif !important;
+        font-size: 36px;
+        font-weight: 700;
+    }
+     .pack-steps__heading h2 em{
+              font-family: "Epilogue", sans-serif !important;
+        font-style: normal;
+        color:  {{ section.settings.background_color }};
+    }
+    .pack-steps__items{
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;        
+    }
+    .pack-steps__item{
+        flex: 1 0 30%;
+        max-width: calc(100% / 3 - 20px);
+        text-align: center;
+    }  
+    .pack-steps__count{
+        color:  {{ section.settings.background_color }};
+        font-family: "Manrope", sans-serif !important;
+        font-size: 36px;
+        font-weight: 700;
+    }  
+    .pack-steps__item-title{
+        font-size: 22px;
+        font-family: "Manrope", sans-serif !important;
+        font-weight: 700;
+    }
+
+    .pack-steps__item-description{
+        font-size: 20px;
+        font-family: "Manrope", sans-serif !important;
+        color: #605b50;
+    }
+
+    @media(max-width: 991px){
+     .pack-steps__item-description,   .pack-steps__item-title{
+
+        font-size: 20px;
+      }
+      .pack-steps__inner{
+        padding: 20px 0;
+      }
+      .pack-steps__heading{
+        margin-bottom: 20px;
+      }
+        .pack-steps__item{
+            flex: 1 0 100%;
+            max-width: 100%;            
+        }  
+    
+    }
+    @media(max-width: 768px){
+     .pack-steps__item-description,   .pack-steps__item-title{
+
+        font-size: 16px;
+      }
+    
+    }
+</style>
+<div class="pack-steps__inner">
+  <div class="page-width">
+    {% if section.settings.heading != blank %}
+      <div class="pack-steps__heading">
+        {{ section.settings.heading }}
+      </div>
+    {% endif %}
+    <div class="pack-steps__items">
+      {% for block in section.blocks %}
+        <div class="pack-steps__item" {{ block.shopify_attributes }}>
+          <div class="pack-steps__count">
+            0{{ forloop.index }}
+          </div>
+          <div class="pack-steps__item-title">
+            {{ block.settings.title }}
+          </div>
+          <div class="pack-steps__item-description">
+            {{ block.settings.description }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Pack Steps",
+  "settings": [
+      {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background Color",
+          "default": "#61155b"
+        },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Step Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Step description goes here"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Pack Steps",
+      "blocks": [
+        {
+          "type": "step"
+        },
+        {
+          "type": "step"
+        },
+        {
+          "type": "step"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

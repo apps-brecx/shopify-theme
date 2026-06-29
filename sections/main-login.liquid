@@ -1,0 +1,272 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  /* Wrapper and background */
+  .cst-custom-login-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cst-login-background {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    filter: brightness(0.6);
+  }
+
+  /* Overlay container */
+  .cst-login-overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    text-align: center;
+  }
+
+  /* Heading style */
+  .cst-login-overlay h1 {
+    font-family: Redrains !important;
+    font-weight: 500;
+    font-size: 50px;
+    color: #3f2305;
+    margin-bottom: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  /* Content below heading */
+  .cst-login-overlay .cst-login-content {
+    margin-bottom: 25px;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+
+  /* Form fields */
+  .cst-login-overlay .field {
+    margin-bottom: 15px;
+  }
+
+  .cst-login-overlay input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+  }
+
+  /* Buttons container - stacked with same height */
+  .cst-login-button-wrapper {
+    display: flex;
+    flex-direction: column; /* stacked buttons */
+    gap: 12px;
+    margin-top: 15px;
+  }
+
+  /* Equal height buttons */
+  .cst-login-button-wrapper button,
+  .cst-login-button-wrapper a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 45px;  /* same height for both */
+    padding: 0 10px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  /* Sign In button style */
+  .cst-login-button-wrapper button {
+    background-color: #3f2305;
+    color: #fff;
+    border: none;
+  }
+
+  .cst-login-button-wrapper button:hover {
+    background-color: #2d1a02;
+  }
+
+  /* Join Syruvia button style */
+  .cst-login-button-wrapper a {
+    background-color: #fff;
+    color: #3f2305;
+    border: 2px solid #3f2305;
+  }
+
+  .cst-login-button-wrapper a:hover {
+    background-color: #3f2305;
+    color: #fff;
+  }
+
+  /* Recover and login forms toggling */
+  #recover-form {
+    display: none;
+    transition: all 0.3s ease-in-out;
+  }
+
+  #login-form {
+    transition: all 0.3s ease-in-out;
+  }
+{%- endstyle -%}
+
+<div class="cst-custom-login-wrapper section-{{ section.id }}-padding">
+  <!-- Background Image -->
+  <div class="cst-login-background" 
+       style="background-image: url('{{ section.settings.image | img_url: '2048x2048' }}');">
+  </div>
+
+  <!-- Overlay Form -->
+  <div class="cst-login-overlay">
+    <!-- Heading -->
+    <h1 id="login" tabindex="-1">Welcome Back</h1>
+    <div class="cst-login-content">{{ section.settings.content }}</div>
+
+    <!-- Login Form -->
+    <div id="login-form">
+      {% form 'customer_login', novalidate: 'novalidate' %}
+        <div class="field">
+          <input
+            type="email"
+            name="customer[email]"
+            id="CustomerEmail"
+            placeholder="{{ 'customer.login_page.email' | t }}"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+          >
+        </div>
+
+        {% if form.password_needed %}
+        <div class="field">
+          <input
+            type="password"
+            name="customer[password]"
+            id="CustomerPassword"
+            placeholder="{{ 'customer.login_page.password' | t }}"
+            autocomplete="current-password"
+          >
+        </div>
+
+        <a href="{{ routes.account_login_url }}?recover=true" class="cst-login-recover">
+          {{ 'customer.login_page.forgot_password' | t }}
+        </a>
+        {% endif %}
+
+        <div class="cst-login-button-wrapper">
+          <button type="submit" class="button">{{ 'customer.login_page.sign_in' | t }}</button>
+          <a href="{{ routes.account_register_url }}">Join Syruvia</a>
+        </div>
+      {% endform %}
+    </div>
+
+    <!-- Recovery Form -->
+    <div id="recover-form">
+      {% form 'recover_customer_password' %}
+        <h2>Reset your password</h2>
+        <input type="email" name="email" placeholder="Enter your email" required>
+        <button type="submit">Send Reset Link</button>
+        <a href="{{ routes.account_login_url }}">Back to Login</a>
+      {% endform %}
+    </div>
+
+    {% if shop.checkout.guest_login %}
+      <hr>
+      <h2>{{ 'customer.login_page.guest_title' | t }}</h2>
+      {% form 'guest_login' %}
+        <button>{{ 'customer.login_page.guest_continue' | t }}</button>
+      {% endform %}
+    {% endif %}
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const showRecoverForm = urlParams.get("recover") === "true";
+
+  const recoverForm = document.getElementById("recover-form");
+  const loginForm = document.getElementById("login-form");
+
+  if (showRecoverForm) {
+    if (recoverForm) recoverForm.style.display = "block";
+    if (loginForm) loginForm.style.display = "none";
+  } else {
+    if (recoverForm) recoverForm.style.display = "none";
+    if (loginForm) loginForm.style.display = "block";
+  }
+});
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-login.name",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "richtext",
+      "label": "Heading",
+      "id": "heading"
+    },
+    {
+      "type": "richtext",
+      "label": "Content",
+      "id": "content"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}

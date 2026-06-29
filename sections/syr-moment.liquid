@@ -1,0 +1,160 @@
+{%- comment -%} Shop By Moment — time-of-day cards (Skinny Mixes inspired, brand polish) {%- endcomment -%}
+<style id="syr-mom-{{ section.id }}-css">
+  #syr-mom-{{ section.id }}{
+    --ink:#39220f; --paper:#FFFBF4; --bg:#F4E8CE; --accent:#c58548;
+    --butter:#FCE2A0; --peach:#FFD4B8; --mint:#C5E4D4; --sky:#B8DCEB;
+    background:var(--paper);
+    padding:80px 40px;
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    color:var(--ink);
+  }
+  #syr-mom-{{ section.id }} .syr-mom-wrap{ max-width:1320px; margin:0 auto; }
+  #syr-mom-{{ section.id }} .syr-mom-head{ text-align:center; max-width:680px; margin:0 auto 36px; }
+  #syr-mom-{{ section.id }} .syr-mom-eyebrow{
+    display:inline-block; background:var(--butter); color:var(--ink);
+    border:2px solid var(--ink); border-radius:999px;
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    padding:7px 16px; margin-bottom:14px; box-shadow:3px 3px 0 var(--ink);
+  }
+  #syr-mom-{{ section.id }} h2{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:clamp(34px, 5vw, 56px); line-height:.95;
+    letter-spacing:-.015em; text-transform:uppercase;
+    margin:0 0 12px;
+  }
+  #syr-mom-{{ section.id }} .syr-mom-sub{ font-size:16px; color:rgba(57,34,15,.7); margin:0; max-width:46ch; margin:0 auto; }
+
+  #syr-mom-{{ section.id }} .syr-mom-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:20px;
+  }
+  #syr-mom-{{ section.id }} .syr-mom-card{
+    position:relative; overflow:hidden;
+    border:2px solid var(--ink); border-radius:24px;
+    box-shadow:5px 5px 0 var(--ink);
+    padding:34px 26px 30px;
+    text-decoration:none; color:var(--ink);
+    display:flex; flex-direction:column; align-items:flex-start;
+    transition:transform .22s cubic-bezier(.4,0,.2,1), box-shadow .22s cubic-bezier(.4,0,.2,1);
+    cursor:pointer;
+  }
+  #syr-mom-{{ section.id }} .syr-mom-card:hover{ transform:translate(-4px,-4px); box-shadow:9px 9px 0 var(--ink); }
+  #syr-mom-{{ section.id }} .syr-mom-card:active{ transform:scale(.98); box-shadow:3px 3px 0 var(--ink); transition-duration:.08s; }
+
+  #syr-mom-{{ section.id }} .syr-mom-1{ background:linear-gradient(160deg, var(--butter) 0%, var(--peach) 100%); }
+  #syr-mom-{{ section.id }} .syr-mom-2{ background:linear-gradient(160deg, var(--sky) 0%, var(--mint) 100%); }
+  #syr-mom-{{ section.id }} .syr-mom-3{ background:linear-gradient(160deg, var(--peach) 0%, var(--accent) 100%); color:var(--paper); }
+  #syr-mom-{{ section.id }} .syr-mom-3 .syr-mom-arrow{ background:var(--paper); color:var(--ink); }
+
+  #syr-mom-{{ section.id }} .syr-mom-ic{
+    width:64px; height:64px; border-radius:50%;
+    background:var(--paper); color:var(--ink);
+    border:2px solid var(--ink); box-shadow:3px 3px 0 var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:18px; font-size:30px;
+    transition:transform .3s ease;
+  }
+  #syr-mom-{{ section.id }} .syr-mom-card:hover .syr-mom-ic{ transform:rotate(-8deg) scale(1.08); }
+  #syr-mom-{{ section.id }} .syr-mom-time{
+    font-family:'Josefin Sans','Josefin',sans-serif; font-weight:600;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    opacity:.7; margin:0 0 4px;
+  }
+  #syr-mom-{{ section.id }} .syr-mom-title{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:clamp(26px, 3vw, 36px); line-height:1;
+    letter-spacing:-.005em; text-transform:uppercase;
+    margin:0 0 10px;
+  }
+  #syr-mom-{{ section.id }} .syr-mom-desc{ font-size:14.5px; line-height:1.45; opacity:.82; margin:0 0 22px; }
+  #syr-mom-{{ section.id }} .syr-mom-arrow{
+    margin-top:auto;
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--ink); color:var(--paper);
+    border:2px solid var(--ink); border-radius:999px;
+    padding:12px 22px;
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    transition:background .15s ease, transform .12s ease;
+  }
+  #syr-mom-{{ section.id }} .syr-mom-card:hover .syr-mom-arrow{ background:var(--accent); }
+  #syr-mom-{{ section.id }} .syr-mom-3:hover .syr-mom-arrow{ background:var(--butter); }
+
+  @media (max-width:900px){
+    #syr-mom-{{ section.id }}{ padding:50px 16px 60px; }
+    #syr-mom-{{ section.id }} .syr-mom-head{ margin-bottom:24px; }
+    #syr-mom-{{ section.id }} h2{ font-size:clamp(28px, 9vw, 38px); }
+    #syr-mom-{{ section.id }} .syr-mom-sub{ font-size:14px; }
+    #syr-mom-{{ section.id }} .syr-mom-grid{ grid-template-columns:1fr; gap:14px; }
+    #syr-mom-{{ section.id }} .syr-mom-card{ padding:24px 20px 22px; flex-direction:row; align-items:center; gap:16px; box-shadow:4px 4px 0 var(--ink); }
+    #syr-mom-{{ section.id }} .syr-mom-ic{ width:54px; height:54px; flex:0 0 54px; font-size:24px; margin:0; box-shadow:2.5px 2.5px 0 var(--ink); }
+    #syr-mom-{{ section.id }} .syr-mom-card-body{ flex:1 1 auto; }
+    #syr-mom-{{ section.id }} .syr-mom-title{ font-size:22px; }
+    #syr-mom-{{ section.id }} .syr-mom-desc{ font-size:13px; margin:0 0 12px; }
+    #syr-mom-{{ section.id }} .syr-mom-arrow{ padding:9px 16px; font-size:10px; }
+  }
+</style>
+
+<section id="syr-mom-{{ section.id }}">
+  <div class="syr-mom-wrap">
+    <div class="syr-mom-head">
+      <span class="syr-mom-eyebrow" data-reveal="up">Shop by moment</span>
+      <h2 data-reveal="up" data-reveal-delay="80">{{ section.settings.headline }}</h2>
+      <p class="syr-mom-sub" data-reveal="up" data-reveal-delay="160">{{ section.settings.sub }}</p>
+    </div>
+    <div class="syr-mom-grid">
+      {%- assign keys = 'm1,m2,m3' | split: ',' -%}
+      {%- for k in keys -%}
+        {%- assign icon_k = k | append: '_icon' -%}
+        {%- assign time_k = k | append: '_time' -%}
+        {%- assign title_k = k | append: '_title' -%}
+        {%- assign desc_k = k | append: '_desc' -%}
+        {%- assign cta_k = k | append: '_cta' -%}
+        {%- assign link_k = k | append: '_link' -%}
+        {%- assign cls_idx = forloop.index -%}
+        <a class="syr-mom-card syr-mom-{{ cls_idx }}" href="{{ section.settings[link_k] | default: '/collections/all' }}" data-reveal="up" data-reveal-delay="{{ forloop.index0 | times: 120 }}">
+          <div class="syr-mom-ic">{{ section.settings[icon_k] }}</div>
+          <div class="syr-mom-card-body">
+            <p class="syr-mom-time">{{ section.settings[time_k] }}</p>
+            <h3 class="syr-mom-title">{{ section.settings[title_k] }}</h3>
+            <p class="syr-mom-desc">{{ section.settings[desc_k] }}</p>
+            <span class="syr-mom-arrow">{{ section.settings[cta_k] }} →</span>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop By Moment",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "headline", "label": "Headline", "default": "A flavor for every moment" },
+    { "type": "textarea", "id": "sub", "label": "Subtext", "default": "From morning coffee to evening cocktails — find the flavor that fits the moment." },
+    { "type": "header", "content": "Card 1 - Morning" },
+    { "type": "text", "id": "m1_icon", "label": "Icon (emoji)", "default": "☀" },
+    { "type": "text", "id": "m1_time", "label": "Time", "default": "Morning" },
+    { "type": "text", "id": "m1_title", "label": "Title", "default": "Coffee Upgrade" },
+    { "type": "textarea", "id": "m1_desc", "label": "Description", "default": "Vanilla, caramel, hazelnut — turn your morning brew into something special." },
+    { "type": "text", "id": "m1_cta", "label": "CTA text", "default": "Shop morning" },
+    { "type": "url", "id": "m1_link", "label": "Link" },
+    { "type": "header", "content": "Card 2 - Afternoon" },
+    { "type": "text", "id": "m2_icon", "label": "Icon", "default": "⛅" },
+    { "type": "text", "id": "m2_time", "label": "Time", "default": "All Day" },
+    { "type": "text", "id": "m2_title", "label": "Title", "default": "Hydration & Tea" },
+    { "type": "textarea", "id": "m2_desc", "label": "Description", "default": "Fruit, tea & lemonade syrups for water bottles, iced tea, refreshers." },
+    { "type": "text", "id": "m2_cta", "label": "CTA text", "default": "Shop fruit & tea" },
+    { "type": "url", "id": "m2_link", "label": "Link" },
+    { "type": "header", "content": "Card 3 - Evening" },
+    { "type": "text", "id": "m3_icon", "label": "Icon", "default": "🌙" },
+    { "type": "text", "id": "m3_time", "label": "Time", "default": "Evening" },
+    { "type": "text", "id": "m3_title", "label": "Title", "default": "Cocktail Hour" },
+    { "type": "textarea", "id": "m3_desc", "label": "Description", "default": "Cocktail mixers, fruit syrups, dessert flavors. Skip the bar." },
+    { "type": "text", "id": "m3_cta", "label": "CTA text", "default": "Shop cocktails" },
+    { "type": "url", "id": "m3_link", "label": "Link" }
+  ],
+  "presets": [ { "name": "Shop By Moment" } ]
+}
+{% endschema %}

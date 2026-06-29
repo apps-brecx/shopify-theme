@@ -1,0 +1,39 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "byb_custom": {
+      "type": "build-your-bundle-custom",
+      "blocks": {
+        "t1": { "type": "tier", "settings": { "min_qty": 2, "discount_pct": 4 } },
+        "t2": { "type": "tier", "settings": { "min_qty": 3, "discount_pct": 5 } },
+        "t3": { "type": "tier", "settings": { "min_qty": 4, "discount_pct": 6 } },
+        "t4": { "type": "tier", "settings": { "min_qty": 5, "discount_pct": 7 } },
+        "t5": { "type": "tier", "settings": { "min_qty": 6, "discount_pct": 8 } },
+        "t6": { "type": "tier", "settings": { "min_qty": 8, "discount_pct": 10 } },
+        "t7": { "type": "tier", "settings": { "min_qty": 10, "discount_pct": 12 } },
+        "t8": { "type": "tier", "settings": { "min_qty": 12, "discount_pct": 14 } }
+      },
+      "block_order": ["t1","t2","t3","t4","t5","t6","t7","t8"],
+      "settings": {
+        "collection": "syruvia-bundle",
+        "eyebrow": "Bundle & save",
+        "heading_lead": "Build your own",
+        "heading_accent": "bundle.",
+        "lede": "Mix any flavors you like — the more bottles you stack, the deeper the discount.",
+        "free_shipping_threshold": 35,
+        "radius": 20,
+        "head_offset": 80,
+        "accent_color": "#D8345F",
+        "bg_color": "#FAF3E9"
+      }
+    },
+    "bb_brand_polish": { "type": "bb-brand-polish", "settings": {} },
+    "bb_price_hide": { "type": "bb-price-hide", "settings": {} },
+    "bb_vip_wire": { "type": "bb-vip-wire", "settings": {} }
+  },
+  "order": ["byb_custom", "bb_brand_polish", "bb_price_hide", "bb_vip_wire"]
+}

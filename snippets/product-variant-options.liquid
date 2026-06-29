@@ -1,0 +1,212 @@
+{% comment %}
+  Renders product variant options
+
+  Accepts:
+  - product: {Object} product object.
+  - option: {Object} current product_option object.
+  - block: {Object} block object.
+  - picker_type: {String} type of picker to dispay
+
+
+  Usage:
+  {% render 'product-variant-options',
+    product: product,
+    option: option,
+    block: block
+    picker_type: picker_type
+  %}
+{% endcomment %}
+{%- liquid
+  assign variants_available_arr = product.variants | map: 'available'
+  assign variants_option1_arr = product.variants | map: 'option1'
+  assign variants_option2_arr = product.variants | map: 'option2'
+  assign variants_option3_arr = product.variants | map: 'option3'
+
+  assign product_form_id = 'product-form-' | append: section.id
+-%}
+
+{%- for value in option.values -%}
+  {%- liquid
+    assign option_disabled = true
+
+    for option1_name in variants_option1_arr
+      case option.position
+        when 1
+          if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+        when 2
+          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+        when 3
+          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+      endcase
+    endfor
+
+    if value.swatch.image
+      assign image_url = value.swatch.image | image_url: width: 50
+      assign swatch_value = 'url(' | append: image_url | append: ')'
+    elsif value.swatch.color
+      assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+    else
+      assign swatch_value = null
+    endif
+  -%}
+
+  {%- capture input_id -%}
+    {{ section.id }}-{{ option.position }}-{{ forloop.index0 -}}
+  {%- endcapture -%}
+
+  {%- capture label_unavailable %}
+    <span class="visually-hidden label-unavailable">
+      {{- 'products.product.variant_sold_out_or_unavailable' | t -}}
+    </span>
+  {%- endcapture %}
+
+  {%- if picker_type == 'swatch' -%}
+    {% assign checked = false %}
+    {% if option.selected_value == value %}
+      {% assign checked = true %}
+    {% endif %}
+    {%
+      render 'swatch-input',
+      id: input_id,
+      name: option.name,
+      value: value | escape,
+      product_form_id: product_form_id,
+      checked: checked,
+      disabled: option_disabled,
+      shape: block.settings.swatch_shape,
+      help_text: label_unavailable
+    %}
+  {%- elsif picker_type == 'button' -%}
+    {% if product.id == 9167546482972 or product.id == 9620575650076 %}
+      <style>
+                .cst-csutom-variants[data-url="/products/pumpkin-spice-syrup-750-ml"] fieldset {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    gap: 10px;
+                }
+        .cst-csutom-variants[data-url="/products/pumpkin-spice-syrup-375-ml"] fieldset {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+        }                     .cst-custom-product-vair{
+                                                  border: var(--variant-pills-border-width) solid rgba(var(--color-foreground), var(--variant-pills-border-opacity));
+                                                  background-color: rgb(var(--color-background));
+                                                  color: rgba(var(--color-foreground));
+                                                  border-radius: var(--variant-pills-radius);
+                                                  color: rgb(var(--color-foreground));
+                                                  display: inline-block;
+                                                  margin: .7rem .5rem .2rem 0;
+                                                  padding: 1rem 2rem;
+                                                  font-size: 1.4rem;
+                                                  letter-spacing: .1rem;
+                                                  line-height: 1;
+                                                  text-align: center;
+                                                  transition: border var(--duration-short) ease;
+                                                  cursor: pointer;
+                                                  position: relative;
+                                                  text-decoration: none;
+                                              }
+
+                                              a.cst-custom-product-vair label
+                                              {
+                                                  cursor: pointer;
+                                              }
+                                              a.cst-custom-product-vair.selected {
+                                                background-color: rgb(var(--color-foreground));
+                                                color: rgb(var(--color-background));
+                                              }
+      </style>
+      <script>
+        $(document).ready(function(){
+          var currentUrl = window.location.href;
+          var productLinks = document.querySelectorAll('.cst-custom-product-vair');
+          productLinks.forEach(function(link) {
+            var linkUrl = link.getAttribute('href');
+            if (currentUrl.includes('750-ml') && linkUrl.includes('750-ml')) {
+              link.classList.add('selected');
+            } else if (currentUrl.includes('375-ml') && linkUrl.includes('375-ml')) {
+              link.classList.add('selected');
+            }
+          });
+        });
+      </script>
+      {% assign product_handle = product.handle %}
+      {% assign product = all_products[product_handle] %}
+
+      {% assign variant_titles = '' %}
+
+      {% for variant in product.variants %}
+        {% unless variant_titles contains variant.title %}
+          {% assign variant_titles = variant_titles | append: variant.title | append: ',' %}
+        {% endunless %}
+      {% endfor %}
+
+      {% assign unique_variant_titles = variant_titles | split: ',' %}
+      {% capture href_url %}
+  {% if unique_variant_titles contains value %}
+    {% if value == '750 ml' %}
+      /products/pumpkin-spice-syrup-750-ml
+    {% elsif value == '375 ml' %}
+      /products/pumpkin-spice-syrup-375-ml
+    {% else %}
+
+    {% endif %}
+  {% else %}
+
+  {% endif %}
+{% endcapture %}
+
+      <a class="cst-custom-product-vair" href="{{ href_url | strip }}">
+        <label for="template--23187835093276__main-1-{{ forloop.index0 }}">
+          {{ value | escape }}
+        </label>
+      </a>
+
+    {% else %}
+      <input
+        type="radio"
+        id="{{ input_id }}"
+        name="{{ option.name }}"
+        value="{{ value | escape }}"
+        form="{{ product_form_id }}"
+        {% if option.selected_value == value %}
+          checked
+        {% endif %}
+        {% if option_disabled %}
+          class="disabled"
+        {% endif %}
+      >
+
+      <label for="{{ input_id }}">
+        {{ value -}}
+        {{ label_unavailable }}
+      </label>
+    {% endif %}
+  {%- elsif picker_type == 'dropdown' or picker_type == 'swatch_dropdown' -%}
+    <option
+      value="{{ value | escape }}"
+      {% if option.selected_value == value %}
+        selected="selected"
+      {% endif %}
+      {% if swatch_value and picker_type == 'swatch_dropdown' %}
+        data-option-swatch-value="{{ swatch_value }}"
+      {% endif %}
+    >
+      {% if option_disabled -%}
+        {{- 'products.product.value_unavailable' | t: option_value: value -}}
+      {%- else -%}
+        {{- value -}}
+      {%- endif %}
+    </option>
+  {%- endif -%}
+{%- endfor -%}

@@ -1,0 +1,246 @@
+{{ 'section-custom-form.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .custom-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .custom-form__field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .custom-form__field input,
+  .custom-form__field select,
+  .custom-form__field textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+  }
+
+  .custom-form__button {
+    margin-top: 16px;
+    text-align: center;
+  }
+
+  .custom-form__button button {
+    padding: 12px 24px;
+    background-color: #007acc;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .custom-form__button button:hover {
+    background-color: #005f99;
+  }
+{%- endstyle -%}
+
+<div class="{{ section.settings.custom_class }} color-{{ section.settings.color_scheme }} gradient">
+  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding">
+     {%- if section.settings.top_image != blank -%}
+      <div class="form-top-image">
+        <img 
+          src="{{ section.settings.top_image | img_url: 'large' }}" 
+          alt="{{ section.settings.top_image_alt | escape }}" 
+          class="form-heading-image"
+        />
+      </div>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="title {{ section.settings.heading_size }}">
+        {{ section.settings.heading }}
+      </h2>
+    {%- endif -%}
+
+    {%- form 'contact', id: 'ContactForm', class: 'custom-form' -%}
+      {%- if form.posted_successfully? -%}
+        <p class="success-message">Thank you for your message! We will get back to you soon.</p>
+      {%- elsif form.errors -%}
+        <p class="error-message">There was an issue with your submission. Please correct the errors and try again.</p>
+      {%- endif -%}
+      <div class="cstm-fields">
+      <!-- Name Field -->
+      <div class="form-group">
+        <input
+          class="form-control"
+          type="text"
+          id="contact-name"
+          name="contact[name]"
+          placeholder="Name*"
+          required
+        />
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <input
+          class="form-control"
+          type="email"
+          id="contact-email"
+          name="contact[email]"
+          placeholder="Email*"
+          required
+        />
+      </div>
+      </div>
+      <!-- Country Field -->
+      <div class="form-group">
+        <input
+          class="form-control"
+          type="text"
+          id="contact-country"
+          name="contact[country]"
+          placeholder="Country"
+        />
+      </div>
+
+      <!-- Message Field -->
+      <div class="form-group">
+        <textarea
+          class="form-control"
+          id="contact-message"
+          name="contact[body]"
+          placeholder="Message"
+          rows="5"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-group">
+        <button type="submit" class="button">Submit</button>
+      </div>
+    {%- endform -%}
+
+    <!-- Custom Content Block -->
+    <div class="form-content-block">
+      {%- for block in section.blocks -%}
+        <div class="content-block-item">
+          {%- case block.type -%}
+            {%- when 'text' -%}
+              <p>{{ block.settings.text }}</p>
+            {%- when 'image' -%}
+              <img src="{{ block.settings.image | img_url: 'large' }}" alt="{{ block.settings.image_alt }}">
+            {%- when 'html' -%}
+              {{ block.settings.custom_html }}
+          {%- endcase -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+<div class="dis-form-bg-imgs">
+  <img class="form-img1" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object_copy_3.png?v=1732082325">
+  <img class="form-img2" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object6_1b253e27-b675-40d7-bd38-b4d9adc0aa3b.png?v=1732082377">
+  <img class="form-img3" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object4_7bd18785-e689-4441-919b-43e8c0312faa.png?v=1732082478">
+  <img class="form-img4" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object5_01721dbf-1423-427d-8466-f8a0d0479837.png?v=1732082500">
+</div>
+<div class="dis-form-mobbg-imgs">
+  <img class="form-mobimg1" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object2_1_8466e10f-16cf-49bd-b992-55c70d1836e7.png?v=1732083133">
+  <img class="form-mobimg2" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object_copy4.png?v=1732083178">
+  <img class="form-mobimg3" src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Vector_Smart_Object4_7bd18785-e689-4441-919b-43e8c0312faa.png?v=1732082478">
+</div>
+{% schema %}
+{
+  "name": "Distribution Contact Form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Form Heading",
+      "default": "Contact Us"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom CSS Class"
+    },
+    {
+      "type": "image_picker",
+      "id": "top_image",
+      "label": "Top Image"
+    },
+    {
+      "type": "text",
+      "id": "top_image_alt",
+      "label": "Top Image Alt Text",
+      "default": "Form Top Image"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "light", "label": "Light" },
+        { "value": "dark", "label": "Dark" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text Block",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text Content"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Alt Text"
+        }
+      ]
+    },
+    {
+      "type": "html",
+      "name": "Custom HTML Block",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "custom_html",
+          "label": "Custom HTML"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Distribution Contact Form"
+    }
+  ]
+}
+{% endschema %}

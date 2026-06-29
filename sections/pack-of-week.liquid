@@ -1,0 +1,462 @@
+{{ 'quick-add.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'quick-add.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
+<style>
+  .loading__spinner.hidden, .unit-price.hidden{
+    display: none;
+  }
+    .pack-of-the-week__multicolumn .cst-custom-heading h2{
+  margin-bottom: 10px !important;
+    line-height: normal;
+}
+.pack-of-the-week__multicolumn .cst-custom-heading h2 strong{
+  color: #000;
+
+    font-family: "Epilogue", sans-serif !important;
+}
+.pack-of-the-week__multicolumn  .cst-custom-heading h2:before {
+  display: none;
+}
+
+  .pack-of-the-week__multicolumn .cst-custom-heading h2{
+  margin-bottom: 10px !important;
+    line-height: normal;
+}
+.pack-of-the-week__multicolumn .cst-custom-heading h2 strong{
+  color: #000;
+
+    font-family: "Epilogue", sans-serif !important;
+}
+
+  .pack-of-week__inner{
+    padding: 40px 0;
+    background-size: cover;
+    background-position: center;
+  }
+  .pack-of-week__wrapper{
+    position: relative;
+    min-height: 80vh;
+    align-items: center;
+    display: flex;
+  }
+  .pack-of-week__image{
+    position: absolute;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    overflow: hidden;
+    top: 0;
+    bottom: 0;
+    width: 60%;
+  }
+  .pack-of-week__image img{
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
+  .pack-of-week__content-wrapper{
+    margin-left: auto;
+    padding-top: 40px;
+    max-width: 40%;
+  }
+  .pack-of-week__title h1{
+    font-weight: 700;
+    margin: 0;
+    font-family: "Epilogue", sans-serif !important;
+    font-size: 70px;
+      line-height: normal;
+  }
+  .product span.price-item.price-item--sale.price-item--last{
+     color: {{ section.settings.background_color }};
+  }
+  .pack-of-week__price{
+    margin-bottom: 20px;
+  }
+  .pack-of-week__inner .quantity:before{
+      background: none;
+  }
+  .product-form__submit{
+    width: fit-content;
+    border-radius: 1000px;
+    background:  {{ section.settings.background_color }};
+    color: #fff;
+    overflow: hidden;
+  }
+    .product-form__submit img{
+      display: none;
+    }
+    .pack-of-week__inner .product-form__quantity{
+    position: unset !important;
+    width: auto !important;
+  }
+  .product-form form{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .quantity__label{
+    display: none;
+  }
+  .pack-of-week__inner   .quantity__button{
+    height: 54px;
+    background: transparent;
+  }
+    .pack-of-week__inner .quantity:after{
+    border-radius: 1000px;
+  }
+  .pack-of-week__description{
+   line-height: 30px;
+  }
+  .pack-of-week__description h2{
+    font-weight: 500;
+    font-family: "Manrope", sans-serif !important;
+    color:   {{ section.settings.background_color }};
+    font-size: 36px;
+    margin: 0;
+  }
+  .pack-of-week__description p{
+    font-size: 24px;
+      font-family: "Manrope", sans-serif !important;
+  }
+
+  @media(max-width: 1440px){
+      .pack-of-week__image{
+        width: 50%;
+      }
+      .pack-of-week__wrapper{
+        min-height: auto;
+
+      }
+      .pack-of-week__content-wrapper{
+        max-width: 50%;
+      }
+  }
+  @media(max-width: 991px){
+    .pack-of-week__content{
+      text-align: center;
+    }
+
+    .product-form form{
+
+      justify-content: center;
+    }
+
+    .pack-of-week__wrapper{
+      flex-direction: column;
+    }
+    .pack-of-week__image{
+      position: unset;
+      width: 100%;
+          border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    }
+    .pack-of-week__content-wrapper{
+        max-width: 100%;
+   }
+   .pack-of-week__content-wrapper{
+    padding-top: 20px;
+  }
+  .pack-of-week__title h1 {
+    font-size: 54px;
+  
+  }
+  .pack-of-week__description h2 {
+    font-size: 28px;
+  }
+  .pack-of-week__description p {
+
+    font-size: 20px;
+  }
+  }
+  @media (max-width: 767px) {
+ 
+     .pack-of-week__inner .pack-of-week__add-to-cart .product-form__submit,     .pack-of-week__inner .product-form__quantity {
+      display: block !important;
+    }
+    .sticky-add-to-cart{
+      display: none;
+    }
+  }
+</style>
+{% assign package_products = product.metafields.custom.package_products.value %}
+<div class="pack-of-week__inner" style="background-image: url({{ section.settings.bg_img | image_url }})">
+  <div class="pack-of-week__wrapper">
+    {%- assign product_form_id = 'product-form-' | append: section.id -%}
+    <div class="pack-of-week__image">
+      {% if product.featured_image != blank %}
+        <img
+          src="{{ product.featured_image | image_url: width: 1200 }}"
+          alt="{{ product.featured_image.alt | escape }}"
+          width="{{ product.featured_image.width }}"
+          height="{{ product.featured_image.height }}"
+          loading="lazy"
+        >
+      {% endif %}
+    </div>
+
+    <div class="pack-of-week__content-wrapper">
+      <div class="page-width">
+        <div class="pack-of-week__content">
+          <div class="pack-of-week__title">
+            <h1>{{ product.title }}</h1>
+          </div>
+
+          <div class="pack-of-week__description">
+            {{ product.description }}
+          </div>
+
+          <div class="pack-of-week__actions">
+            <div class="pack-of-week__price">
+              {%- render 'price',
+                product: product,
+                use_variant: true,
+                show_badges: true,
+                price_class: 'price--large'
+              -%}
+            </div>
+
+            <div class="pack-of-week__add-to-cart">
+              <div {{ block.shopify_attributes }} class="responsive">
+                {%- if product != blank -%}
+                  {%- liquid
+                    assign gift_card_recipient_feature_active = false
+                    if block.settings.show_gift_card_recipient and product.gift_card?
+                      assign gift_card_recipient_feature_active = true
+                    endif
+
+                    assign show_dynamic_checkout = false
+                    if block.settings.show_dynamic_checkout and gift_card_recipient_feature_active == false
+                      assign show_dynamic_checkout = true
+                    endif
+                  -%}
+
+                  <product-form
+                    class="product-form"
+                    data-hide-errors="{{ gift_card_recipient_feature_active }}"
+                    data-section-id="{{ section.id }}"
+                  >
+                    <div class="product-form__error-message-wrapper" role="alert" hidden>
+                      <svg
+                        aria-hidden="true"
+                        focusable="false"
+                        class="icon icon-error"
+                        viewBox="0 0 13 13"
+                      >
+                        <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                        <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+                        <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                        <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+                      </svg>
+                      <span class="product-form__error-message"></span>
+                    </div>
+
+                    {%- form 'product',
+                      product,
+                      id: product_form_id,
+                      class: 'form',
+                      novalidate: 'novalidate',
+                      data-type: 'add-to-cart-form'
+                    -%}
+                      <input
+                        type="hidden"
+                        name="id"
+                        value="{{ product.selected_or_first_available_variant.id }}"
+                        {% if product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+                          disabled
+                        {% endif %}
+                        class="product-variant-id"
+                      >
+                      {% for item in package_products %}
+                        {% assign p = item.product.value %}
+                    
+
+                        <input
+                          type="hidden"
+                          name="properties[Item {{ forloop.index }}]"
+                          value="{{ item.quantity }}x {{ p.title }}"
+                        >
+                      {% endfor %}
+
+                      {% comment %}
+                        {% for item in package_products %}
+                          {% assign p = item.product.value %}
+
+                          <input
+                            type="hidden"
+                            name="properties[Inside Pack {{ forloop.index }}]"
+                            value="{{ item.quantity }}x {{ p.title }}"
+                          >
+                        {% endfor %}
+                      {% endcomment %}
+                      <div
+                        id="Quantity-Form-{{ section.id }}"
+                        class="new-product-counter-button product-form__input product-form__quantity{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} product-form__quantity-top{% endif %}"
+                      >
+                        {%- assign cart_qty = cart
+                          | item_count_for_variant: product.selected_or_first_available_variant.id
+                        -%}
+
+                        <label class="quantity__label form__label" for="Quantity-{{ section.id }}">
+                          {{ 'products.product.quantity.label' | t }}
+                          <span class="quantity__rules-cart no-js-hidden{% if cart_qty == 0 %} hidden{% endif %}">
+                            {%- render 'loading-spinner' -%}
+                            <span>( {{ 'products.product.quantity.in_cart_html' | t: quantity: cart_qty }} )</span>
+                          </span>
+                        </label>
+
+                        <quantity-input class="quantity" data-url="{{ product.url }}" data-section="{{ section.id }} ">
+                          <button class="quantity__button no-js-hidden" name="minus" type="button">
+                            <span class="visually-hidden">
+                              {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+                            </span>
+                            {% render 'icon-minus' %}
+                          </button>
+
+                          <input
+                            class="quantity__input"
+                            type="number"
+                            name="quantity"
+                            id="Quantity-{{ section.id }}"
+                            data-cart-quantity="{{ cart_qty }}"
+                            data-min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                            min="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                            {% if product.selected_or_first_available_variant.quantity_rule.max != null %}
+                              data-max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                              max="{{ product.selected_or_first_available_variant.quantity_rule.max }}"
+                            {% endif %}
+                            step="{{ product.selected_or_first_available_variant.quantity_rule.increment }}"
+                            value="{{ product.selected_or_first_available_variant.quantity_rule.min }}"
+                          >
+
+                          <button class="quantity__button no-js-hidden" name="plus" type="button">
+                            <span class="visually-hidden">
+                              {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
+                            </span>
+                            {% render 'icon-plus' %}
+                          </button>
+                        </quantity-input>
+
+                        <div class="quantity__rules caption no-js-hidden" id="Quantity-Rules-{{ section.id }}">
+                          {%- if product.selected_or_first_available_variant.quantity_rule.increment > 1 -%}
+                            <span class="divider">
+                              {{
+                                'products.product.quantity.multiples_of'
+                                | t: quantity: product.selected_or_first_available_variant.quantity_rule.increment
+                              }}
+                            </span>
+                          {%- endif -%}
+                          {%- if product.selected_or_first_available_variant.quantity_rule.min > 1 -%}
+                            <span class="divider">
+                              {{
+                                'products.product.quantity.minimum_of'
+                                | t: quantity: product.selected_or_first_available_variant.quantity_rule.min
+                              }}
+                            </span>
+                          {%- endif -%}
+                          {%- if product.selected_or_first_available_variant.quantity_rule.max != null -%}
+                            <span class="divider">
+                              {{
+                                'products.product.quantity.maximum_of'
+                                | t: quantity: product.selected_or_first_available_variant.quantity_rule.max
+                              }}
+                            </span>
+                          {%- endif -%}
+                        </div>
+                      </div>
+
+                      {%- if gift_card_recipient_feature_active -%}
+                        {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
+                      {%- endif -%}
+
+                      <div class="product-form__buttons cst-atc-buttons">
+                        <div class="sealsubs-target-element"></div>
+                        {%- liquid
+                          assign check_against_inventory = true
+                          if product.selected_or_first_available_variant.inventory_management != 'shopify' or product.selected_or_first_available_variant.inventory_policy == 'continue'
+                            assign check_against_inventory = false
+                          endif
+                          if product.selected_or_first_available_variant.quantity_rule.min > product.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+                            assign quantity_rule_soldout = true
+                          endif
+                        -%}
+
+                        <button
+                          id="ProductSubmitButton-{{ section_id }}"
+                          type="submit"
+                          name="add"
+                          class="product-form__submit button button--full-width {% if show_dynamic_checkout %}button--secondary{% else %}button--primary{% endif %}"
+                          {% if product.selected_or_first_available_variant.available == false
+                            or quantity_rule_soldout
+                          %}
+                            disabled
+                          {% endif %}
+                        >
+                          <span style="font-weight: 500; font-family: Manrope, sans-serif !important; font-size: 24px; font-size: 16px;">
+                            {%- if product.selected_or_first_available_variant.available == false
+                              or quantity_rule_soldout
+                            -%}
+                              {{ 'products.product.sold_out' | t }}
+                            {%- else -%}
+                              {{ 'products.product.add_to_cart' | t -}}
+                              <span
+                                ><img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Group_23.png?v=1729681997"
+                              ></span>
+                            {%- endif -%}
+                          </span>
+                          {%- render 'loading-spinner' -%}
+                        </button>
+                        {%- if show_dynamic_checkout -%}
+                          {{ form | payment_button }}
+                        {%- endif -%}
+                      </div>
+                    {%- endform -%}
+                  </product-form>
+                {%- else -%}
+                  <div class="product-form">
+                    <div class="product-form__buttons form">
+                      <button
+                        type="submit"
+                        name="add"
+                        class="product-form__submit button button--full-width button--primary"
+                        disabled
+                      >
+                        {{ 'products.product.sold_out' | t }}
+                      </button>
+                    </div>
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Pack of week",
+  "tag": "section",
+  "class": "section product-hero-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "label": "Background Image",
+      "id": "bg_img"
+    },
+    {
+  "type": "color",
+  "id": "background_color",
+  "label": "Background Color",
+  "default": "#61155b"
+}
+  ],
+  "presets": [
+    {
+      "name": "Product Hero"
+    }
+  ]
+}
+{% endschema %}

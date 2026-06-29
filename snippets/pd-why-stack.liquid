@@ -1,0 +1,67 @@
+{%- comment -%} Sticky-stack scroll effect for Why Syruvia + About this syrup. Cards pile on top of each other. Compact variant. {%- endcomment -%}
+<style>
+html,body{overflow-x:clip!important;overflow-y:visible!important}
+html body .pd{overflow-x:clip!important;overflow-y:visible!important}
+html body .pd .pd-why{overflow:visible!important}
+html body .pd .pd-why .pd-wrap{overflow:visible!important}
+html body .pd .pd-why .pd-why-wrap{overflow:visible!important}
+html body .pd .pd-why-grid{overflow:visible!important}
+html body .pd .pd-description{overflow:visible!important}
+html body .pd .pd-description .pd-wrap{overflow:visible!important}
+html body .pd .pd-desc-content{overflow:visible!important}
+
+/* WHY SYRUVIA — sticky stack (compact, non-square) */
+html body .pd .pd-why{padding:80px 0 180px!important;background:#FFFBF4!important;border-top:2px solid #39220f!important;position:relative!important}
+@media (max-width:760px){html body .pd .pd-why{padding:56px 0 140px!important}}
+html body .pd .pd-why .pd-why-wrap{max-width:640px!important;margin:0 auto!important;padding:0 18px!important;text-align:center!important;position:relative!important}
+html body .pd .pd-why .pd-eyebrow{--why-s:0.85;display:inline-block!important;margin:0 auto 18px!important;font-size:calc(11px * var(--why-s))!important;padding:calc(7px * var(--why-s)) calc(16px * var(--why-s))!important;will-change:font-size,padding!important}
+html body .pd .pd-why .pd-why-h2{margin:0 auto 12px!important}
+html body .pd .pd-why-lede{font-family:'Josefin Sans',sans-serif!important;font-size:15.5px!important;line-height:1.55!important;color:#3a3a3a!important;font-weight:500!important;margin:0 auto 48px!important;max-width:42ch!important}
+@media (max-width:760px){html body .pd .pd-why-lede{font-size:14px!important;margin-bottom:32px!important}}
+html body .pd .pd-why-grid{display:block!important;grid-template-columns:none!important;gap:0!important;max-width:500px!important;margin:0 auto!important;position:relative!important}
+html body .pd .pd-why-grid .pd-why-card{position:sticky!important;width:100%!important;max-width:500px!important;aspect-ratio:auto!important;height:auto!important;min-height:0!important;margin:0 auto 24px!important;padding:22px 24px 20px!important;background:#FFFFFF!important;border:2px solid #39220f!important;border-radius:22px!important;box-shadow:5px 5px 0 #39220f!important;display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;gap:10px!important;transition:transform .25s ease!important;justify-content:flex-start!important}
+html body .pd .pd-why-grid .pd-why-card:hover{transform:translate(-2px,-2px)!important;box-shadow:7px 7px 0 #39220f!important}
+html body .pd .pd-why-grid .pd-why-card:nth-child(1){top:100px!important;background:#FFD4B8!important;z-index:1}
+html body .pd .pd-why-grid .pd-why-card:nth-child(2){top:118px!important;background:#FCE2A0!important;z-index:2}
+html body .pd .pd-why-grid .pd-why-card:nth-child(3){top:136px!important;background:#C5E4D4!important;z-index:3}
+html body .pd .pd-why-grid .pd-why-card:nth-child(4){top:154px!important;background:#B8DCEB!important;z-index:4}
+html body .pd .pd-why-grid .pd-why-card .pd-why-icon{width:48px!important;height:48px!important;background:#FFFBF4!important;border:2px solid #39220f!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;flex-shrink:0!important;box-shadow:2.5px 2.5px 0 #39220f!important;margin:0 auto 2px!important}
+html body .pd .pd-why-grid .pd-why-card .pd-why-icon svg{width:24px!important;height:24px!important}
+html body .pd .pd-why-grid .pd-why-card .pd-why-title{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:18px!important;letter-spacing:.005em!important;text-transform:uppercase!important;color:#39220f!important;margin:0!important;line-height:1.15!important}
+html body .pd .pd-why-grid .pd-why-card .pd-why-body{font-family:'Josefin Sans',sans-serif!important;font-size:13.5px!important;line-height:1.5!important;color:#39220f!important;font-weight:500!important;margin:0!important;max-width:38ch!important}
+@media (max-width:760px){
+  html body .pd .pd-why-grid{max-width:380px!important;padding:0 8px!important}
+  html body .pd .pd-why-grid .pd-why-card{padding:18px 18px 16px!important;border-radius:18px!important;box-shadow:4px 4px 0 #39220f!important;margin-bottom:16px!important;gap:8px!important}
+  html body .pd .pd-why-grid .pd-why-card:nth-child(1){top:80px!important}
+  html body .pd .pd-why-grid .pd-why-card:nth-child(2){top:96px!important}
+  html body .pd .pd-why-grid .pd-why-card:nth-child(3){top:112px!important}
+  html body .pd .pd-why-grid .pd-why-card:nth-child(4){top:128px!important}
+  html body .pd .pd-why-grid .pd-why-card .pd-why-icon{width:42px!important;height:42px!important;box-shadow:2px 2px 0 #39220f!important}
+  html body .pd .pd-why-grid .pd-why-card .pd-why-icon svg{width:22px!important;height:22px!important}
+  html body .pd .pd-why-grid .pd-why-card .pd-why-title{font-size:15px!important}
+  html body .pd .pd-why-grid .pd-why-card .pd-why-body{font-size:12.5px!important;line-height:1.45!important}
+}
+html body .pd .pd-why-grid.pd-why-grid--spaced{display:block!important}
+html body .pd .pd-why.pd-reveal:not(.is-revealed){opacity:1!important;transform:none!important}
+
+/* ABOUT THIS SYRUP — sticky stack (unchanged) */
+html body .pd .pd-description{padding:96px 0 200px!important;background:#FFFFFF!important;overflow:visible!important}
+@media (max-width:760px){html body .pd .pd-description{padding:64px 0 160px!important}}
+html body .pd .pd-desc-content{display:block!important;flex-direction:initial!important;gap:0!important;max-width:720px!important;margin:0 auto!important;position:relative!important}
+html body .pd .pd-desc-content .pd-desc-card{position:sticky!important;width:100%!important;max-width:720px!important;margin:0 auto 32px!important;background:#FFF8EE!important;border:2px solid #39220f!important;border-radius:22px!important;box-shadow:6px 6px 0 #39220f!important;transition:transform .25s ease, box-shadow .25s ease!important}
+html body .pd .pd-desc-content .pd-desc-card:hover{transform:translate(-2px,-2px)!important;box-shadow:9px 9px 0 #39220f!important}
+html body .pd .pd-desc-content .pd-desc-card:nth-child(1){top:100px!important;z-index:1}
+html body .pd .pd-desc-content .pd-desc-card:nth-child(2){top:120px!important;z-index:2;background:#FCE2A0!important}
+html body .pd .pd-desc-content .pd-desc-card:nth-child(3){top:140px!important;z-index:3;background:#C5E4D4!important}
+html body .pd .pd-desc-content .pd-desc-card.pd-nf-card{background:#C5E4D4!important}
+html body .pd .pd-desc-content .pd-desc-card.pd-nf-card.is-open{background:#FFF8EE!important}
+html body .pd .pd-desc-content .pd-desc-card.pd-ing-card{background:#FCE2A0!important}
+@media (max-width:760px){
+  html body .pd .pd-desc-content{max-width:420px!important;padding:0 8px!important}
+  html body .pd .pd-desc-content .pd-desc-card{margin-bottom:28px!important;border-radius:20px!important;box-shadow:4px 4px 0 #39220f!important}
+  html body .pd .pd-desc-content .pd-desc-card:nth-child(1){top:84px!important}
+  html body .pd .pd-desc-content .pd-desc-card:nth-child(2){top:102px!important}
+  html body .pd .pd-desc-content .pd-desc-card:nth-child(3){top:120px!important}
+}
+html body .pd .pd-description.pd-reveal:not(.is-revealed){opacity:1!important;transform:none!important}
+</style>

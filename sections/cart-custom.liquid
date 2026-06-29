@@ -1,0 +1,367 @@
+{%- comment -%} Syruvia — Custom Cart page. Live cart + VIP teaser/modal. Scoped .scart {%- endcomment -%}
+{%- liquid
+  assign FREE_SHIP = 3500
+  assign SHIP_COST = 495
+  assign is_vip = false
+  if customer and customer.tags contains 'VIP'
+    assign is_vip = true
+  endif
+  assign vipsave = 0
+  for item in cart.items
+    capture _syr
+      render 'syr-is-syrup', product: item.product
+    endcapture
+    if _syr contains '1'
+      assign vf = 799
+      if vf < item.final_price
+        assign diff = item.final_price | minus: vf | times: item.quantity
+        assign vipsave = vipsave | plus: diff
+      endif
+    endif
+  endfor
+  assign real_discount = cart.original_total_price | minus: cart.total_price
+  assign payable = cart.total_price
+  assign ship = SHIP_COST
+  if payable >= FREE_SHIP or payable == 0
+    assign ship = 0
+  endif
+  assign grand = payable | plus: ship
+  assign remain = FREE_SHIP | minus: payable
+  assign pct = payable | times: 100 | divided_by: FREE_SHIP
+  if pct > 100
+    assign pct = 100
+  endif
+-%}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700;800&family=Josefin+Sans:ital,wght@0,300..700;1,300..600&display=swap');
+  .scart{ --bg:#FFFBF4; --bg-2:#FFF8EE; --shell:#FBEFE0; --surface:#FFFFFF; --ink:#39220f; --ink-2:#5a4632; --muted:#8a7a68;
+    --hair:color-mix(in srgb,var(--ink) 16%,transparent); --accent:#c58548; --butter:#FCE2A0; --peach:#FFD4B8; --mint:#C5E4D4; --sky:#B8DCEB; --blush:#F5C7BE; --sf-ink:#1f6b4f;
+    --vip:#C53156; --vip-soft:#FBE0E5; --vip-ink:#8e1e3c;
+    --rule:2px solid var(--ink); --rule-1:1.5px solid var(--ink); --shadow:5px 5px 0 var(--ink); --shadow-sm:3px 3px 0 var(--ink); --shadow-vip:4px 4px 0 var(--vip); --radius:20px;
+    --font-head:'Archivo Black',sans-serif; --font-body:'Josefin Sans',sans-serif;
+    background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  .scart *,.scart *::before,.scart *::after{ box-sizing:border-box; }
+  .scart h1,.scart h2,.scart h3,.scart h4{ font-family:var(--font-head); margin:0; font-weight:400; letter-spacing:-.01em; }
+  .scart button{ font-family:inherit; cursor:pointer; } .scart a{ cursor:pointer; }
+  .scart,.scart p,.scart span,.scart a,.scart button,.scart input,.scart li{ font-family:'Josefin Sans',sans-serif; }
+  .scart h1,.scart h2,.scart h3,.scart h4,.scart .cart-title,.scart .line-name,.scart .line-price,.scart .sum-total .val,.scart .sum-total .lab,.scart .checkout,.scart .line-tag,.scart .vip-tag,.scart .qty span,.scart .sum-h,.scart .sum-row .v,.scart .vipb-copy h3,.scart .vipb-cta,.scart .sum-vip-l,.scart .sum-vip-v,.scart .empty h2,.scart .empty-cta,.scart .ctoast,.scart .modal-top h2,.scart .modal-primary{ font-family:'Archivo Black',sans-serif; }
+  .scart .crumbs,.scart .cart-count,.scart .keepshop,.scart .line-remove,.scart .sum-save,.scart .trust span,.scart .sum-vip-link,.scart .field label,.scart .modal-or,.scart .modal-signin a{ font-family:'Archivo',sans-serif; }
+  .scart .cart-wrap{ max-width:1180px; margin:0 auto; padding:42px 30px 100px; }
+  .scart .crumbs{ font-size:12px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); display:flex; gap:8px; align-items:center; margin-bottom:20px; }
+  .scart .crumbs a:hover{ color:var(--ink); } .scart .crumbs b{ color:var(--ink); } .scart .crumbs span{ opacity:.5; }
+  .scart .cart-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:10px; }
+  .scart .cart-title{ font-size:clamp(36px,5vw,54px); line-height:.95; text-transform:uppercase; letter-spacing:-.02em; }
+  .scart .cart-title em{ font-style:normal; color:var(--accent); }
+  .scart .cart-count{ font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:18px; }
+  .scart .keepshop{ font-size:12.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--ink); display:inline-flex; align-items:center; gap:7px; border-bottom:2px solid transparent; padding-bottom:2px; transition:border-color .15s; }
+  .scart .keepshop:hover{ border-color:var(--accent); }
+  .scart .ship-bar{ background:var(--surface); border:var(--rule); border-radius:var(--radius); box-shadow:var(--shadow-sm); padding:16px 20px; margin-bottom:28px; display:flex; flex-direction:column; gap:11px; }
+  .scart .ship-top{ display:flex; align-items:center; flex-wrap:wrap; gap:4px 9px; font-size:14.5px; line-height:1.3; color:var(--ink-2); }
+  .scart .ship-top b{ color:var(--ink); font-family:var(--font-head); font-weight:400; }
+  .scart .ship-top svg{ color:var(--sf-ink); flex:0 0 auto; }
+  .scart .ship-top .done{ color:var(--sf-ink); font-weight:700; display:inline-flex; align-items:center; gap:7px; }
+  .scart .ship-track{ height:10px; border-radius:999px; background:var(--bg-2); border:var(--rule-1); overflow:hidden; }
+  .scart .ship-fill{ height:100%; background:repeating-linear-gradient(45deg,var(--mint),var(--mint) 7px,#b6dcc8 7px,#b6dcc8 14px); transition:width .5s cubic-bezier(.3,1,.5,1); }
+  .scart .cart-layout{ display:grid; grid-template-columns:1.62fr .95fr; gap:34px; align-items:start; }
+  .scart .cart-main{ display:flex; flex-direction:column; gap:18px; }
+  .scart .vipb{ position:relative; overflow:hidden; border:var(--rule); border-radius:var(--radius); background:radial-gradient(120% 140% at 100% 0%,var(--vip-soft),transparent 60%),var(--surface); box-shadow:var(--shadow); padding:22px 24px; display:flex; align-items:center; gap:18px; text-align:left; width:100%; }
+  .scart .vipb-seal{ flex:0 0 auto; width:54px; height:54px; border-radius:50%; background:var(--vip-soft); border:var(--rule); display:grid; place-items:center; color:var(--vip); }
+  .scart .vipb-copy{ flex:1; min-width:0; }
+  .scart .vipb-copy h3{ font-size:17px; text-transform:uppercase; letter-spacing:-.01em; line-height:1.1; }
+  .scart .vipb-copy h3 .amt{ color:var(--vip); }
+  .scart .vipb-copy p{ font-size:14px; color:var(--ink-2); margin:6px 0 0; line-height:1.45; }
+  .scart .vipb-cta{ flex:0 0 auto; display:inline-flex; align-items:center; gap:8px; height:48px; padding:0 22px; border:var(--rule); border-radius:999px; background:var(--vip); color:#fff; font-size:12px; letter-spacing:.08em; text-transform:uppercase; box-shadow:var(--shadow-sm); transition:transform .14s,box-shadow .14s; white-space:nowrap; }
+  .scart .vipb-cta:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+  .scart .vipb.active{ background:radial-gradient(120% 140% at 100% 0%,var(--mint),transparent 60%),var(--surface); }
+  .scart .vipb.active .vipb-seal{ background:var(--mint); color:var(--sf-ink); }
+  .scart .vipb.active .vipb-copy h3 .amt{ color:var(--sf-ink); }
+  .scart .line{ position:relative; display:grid; grid-template-columns:100px 1fr auto; gap:18px; align-items:stretch; background:var(--surface); border:var(--rule); border-radius:var(--radius); box-shadow:var(--shadow-sm); padding:18px; transition:box-shadow .18s,transform .18s; }
+  .scart .line:hover{ box-shadow:var(--shadow); transform:translateY(-1px); }
+  .scart .line.removing{ opacity:0; transform:translateX(-12px); }
+  .scart .line-media{ width:100px; height:100%; min-height:100px; border:var(--rule-1); border-radius:14px; background:radial-gradient(120% 95% at 50% 8%,#fff,var(--tint,var(--bg-2))); display:grid; place-items:center; padding:9px; }
+  .scart .line-img{ width:100%; height:100%; object-fit:contain; mix-blend-mode:multiply; }
+  .scart .line-body{ display:flex; flex-direction:column; gap:9px; min-width:0; }
+  .scart .line-tag{ align-self:flex-start; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink); background:var(--mint); border:var(--rule-1); padding:4px 9px; border-radius:999px; }
+  .scart .line-name{ font-size:19px; line-height:1.1; letter-spacing:-.01em; color:var(--ink); text-decoration:none; }
+  .scart .line-name:hover{ color:var(--accent); }
+  .scart .line-sub{ font-size:13px; color:var(--muted); }
+  .scart .line-ctrls{ margin-top:auto; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .scart .qty{ display:inline-flex; align-items:center; border:var(--rule-1); border-radius:999px; background:var(--surface); padding:3px; }
+  .scart .qty button{ width:32px; height:32px; border:0; background:transparent; color:var(--ink); font-size:17px; font-weight:700; border-radius:50%; display:grid; place-items:center; transition:background .14s; }
+  .scart .qty button:hover{ background:var(--bg-2); } .scart .qty button:disabled{ opacity:.3; cursor:not-allowed; }
+  .scart .qty span{ min-width:30px; text-align:center; font-size:15px; }
+  .scart .line-remove{ background:transparent; border:0; color:var(--muted); font-size:12px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; display:inline-flex; align-items:center; gap:5px; padding:4px; transition:color .14s; }
+  .scart .line-remove:hover{ color:var(--vip); }
+  .scart .line-right{ display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between; gap:10px; text-align:right; }
+  .scart .line-price{ font-size:21px; }
+  .scart .line-price .was{ display:block; font-size:12.5px; color:var(--muted); text-decoration:line-through; font-family:'Archivo',sans-serif; font-weight:700; }
+  .scart .vip-tag{ display:inline-flex; align-items:center; gap:6px; font-size:11px; letter-spacing:.04em; text-transform:uppercase; border:var(--rule-1); border-radius:999px; padding:6px 12px; white-space:nowrap; transition:transform .14s,box-shadow .14s; }
+  .scart button.vip-tag{ background:var(--vip-soft); color:var(--vip-ink); box-shadow:2px 2px 0 var(--vip); }
+  .scart button.vip-tag:hover{ transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--vip); }
+  .scart button.vip-tag svg{ color:var(--vip); }
+  .scart .vip-tag .vp{ font-size:12.5px; }
+  .scart span.vip-tag.applied{ background:var(--mint); color:var(--sf-ink); box-shadow:none; }
+  .scart span.vip-tag.applied svg{ color:var(--sf-ink); }
+  .scart .summary{ position:sticky; top:108px; background:var(--surface); border:var(--rule); border-radius:var(--radius); box-shadow:var(--shadow); padding:26px; display:flex; flex-direction:column; gap:6px; }
+  .scart .sum-h{ font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+  .scart .sum-row{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:9px 0; font-size:15px; color:var(--ink-2); }
+  .scart .sum-row .v{ font-weight:400; color:var(--ink); font-size:15px; }
+  .scart .sum-vip{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin:8px 0; padding:13px 15px; border:var(--rule-1); border-radius:14px; background:var(--mint); }
+  .scart .sum-vip.applied{ background:var(--mint); }
+  .scart .sum-vip-l{ display:flex; align-items:center; gap:9px; font-size:12.5px; text-transform:uppercase; letter-spacing:.02em; color:var(--sf-ink); line-height:1.2; }
+  .scart .sum-vip-l svg{ flex:0 0 auto; color:var(--sf-ink); }
+  .scart .sum-vip-v{ font-size:15px; color:var(--sf-ink); white-space:nowrap; }
+  .scart .sum-rule{ height:0; border-top:var(--rule-1); margin:10px 0; opacity:.5; }
+  .scart .sum-total{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:8px 0 2px; }
+  .scart .sum-total .lab{ font-size:16px; text-transform:uppercase; letter-spacing:.02em; }
+  .scart .sum-total .val{ font-size:32px; letter-spacing:-.01em; }
+  .scart .sum-save{ align-self:flex-end; font-size:12px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--sf-ink); margin-top:-2px; }
+  .scart .sum-tease{ display:inline-flex; align-items:center; gap:7px; align-self:flex-start; margin-top:6px; background:none; border:0; padding:0; color:var(--vip-ink); font-family:'Archivo',sans-serif; font-weight:700; font-size:12px; letter-spacing:.02em; text-transform:uppercase; cursor:pointer; }
+  .scart .sum-tease svg{ color:var(--vip); }
+  .scart .sum-tease:hover{ text-decoration:underline; }
+  .scart .checkout{ margin-top:18px; height:58px; width:100%; border:var(--rule); border-radius:999px; background:var(--ink); color:var(--bg); font-size:14px; letter-spacing:.08em; text-transform:uppercase; box-shadow:var(--shadow-sm); display:flex; align-items:center; justify-content:center; gap:9px; transition:transform .14s,box-shadow .14s,background .2s,color .2s; }
+  .scart .checkout:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--accent); background:var(--accent); color:var(--ink); }
+  .scart .checkout svg{ width:16px; height:16px; }
+  .scart .sum-note{ text-align:center; font-size:12.5px; color:var(--muted); margin-top:12px; line-height:1.5; }
+  .scart .trust{ display:flex; flex-wrap:wrap; gap:11px 18px; justify-content:center; margin-top:18px; padding-top:18px; border-top:var(--rule-1); }
+  .scart .trust span{ display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:var(--ink-2); }
+  .scart .trust svg{ color:var(--sf-ink); }
+  .scart .empty{ text-align:center; padding:80px 20px; }
+  .scart .empty-glyph{ width:96px; height:96px; margin:0 auto 20px; border-radius:50%; border:var(--rule); background:var(--bg-2); display:grid; place-items:center; color:var(--ink); box-shadow:var(--shadow-sm); }
+  .scart .empty h2{ font-size:28px; text-transform:uppercase; }
+  .scart .empty p{ color:var(--ink-2); margin:10px 0 24px; }
+  .scart .empty-cta{ display:inline-flex; align-items:center; gap:8px; height:54px; padding:0 28px; border:var(--rule); border-radius:999px; background:var(--accent); color:var(--ink); font-size:13px; letter-spacing:.08em; text-transform:uppercase; box-shadow:var(--shadow-sm); transition:transform .14s,box-shadow .14s; }
+  .scart .empty-cta:hover{ transform:translate(-2px,-2px); box-shadow:var(--shadow); }
+  .scart .modal-root{ position:fixed; inset:0; z-index:120; display:grid; place-items:center; padding:20px; pointer-events:none; }
+  .scart .modal-root.open{ pointer-events:auto; }
+  .scart .modal-bd{ position:absolute; inset:0; background:rgba(40,24,10,.5); opacity:0; transition:opacity .26s; }
+  .scart .modal-root.open .modal-bd{ opacity:1; }
+  .scart .modal{ position:relative; width:420px; max-width:100%; background:var(--bg); border:var(--rule); border-radius:22px; box-shadow:8px 8px 0 var(--ink); overflow:hidden; transform:translateY(16px) scale(.97); opacity:0; transition:transform .3s cubic-bezier(.32,1.3,.5,1),opacity .26s; }
+  .scart .modal-root.open .modal{ transform:none; opacity:1; }
+  .scart .modal-top{ position:relative; padding:28px 30px 22px; text-align:center; background:radial-gradient(120% 130% at 50% -10%,var(--vip-soft),transparent 62%); border-bottom:var(--rule); }
+  .scart .modal-seal{ width:58px; height:58px; margin:0 auto 14px; border-radius:50%; background:var(--vip-soft); border:var(--rule); display:grid; place-items:center; color:var(--vip); }
+  .scart .modal-top h2{ font-size:24px; text-transform:uppercase; line-height:1; letter-spacing:-.01em; }
+  .scart .modal-top p{ font-size:14.5px; color:var(--ink-2); margin:10px 0 0; line-height:1.5; }
+  .scart .modal-top p b{ color:var(--vip-ink); font-family:var(--font-head); font-weight:400; }
+  .scart .modal-close{ position:absolute; top:14px; right:14px; width:34px; height:34px; border-radius:50%; background:var(--surface); border:var(--rule-1); color:var(--ink); display:grid; place-items:center; transition:transform .14s; }
+  .scart .modal-close:hover{ transform:rotate(90deg); }
+  .scart .modal-body{ padding:24px 30px 28px; display:flex; flex-direction:column; gap:13px; }
+  .scart .modal-perks{ display:flex; flex-direction:column; gap:10px; margin-bottom:4px; }
+  .scart .modal-perk{ display:flex; align-items:center; gap:10px; font-size:14px; color:var(--ink-2); }
+  .scart .modal-perk svg{ color:var(--sf-ink); flex:0 0 auto; }
+  .scart .modal-perk b{ color:var(--ink); font-family:var(--font-head); font-weight:400; }
+  .scart .field{ display:flex; flex-direction:column; gap:6px; }
+  .scart .field label{ font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .scart .field input{ height:50px; border:var(--rule); border-radius:13px; background:var(--surface); padding:0 16px; font-size:16px; color:var(--ink); outline:none; transition:box-shadow .14s; }
+  .scart .field input:focus{ box-shadow:var(--shadow-sm); }
+  .scart .modal-primary{ height:54px; border:var(--rule); border-radius:999px; background:var(--vip); color:#fff; font-size:13px; letter-spacing:.07em; text-transform:uppercase; box-shadow:var(--shadow-sm); transition:transform .14s,box-shadow .14s; display:flex; align-items:center; justify-content:center; text-decoration:none; }
+  .scart .modal-primary:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--ink); }
+  .scart .modal-or{ text-align:center; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); position:relative; margin:4px 0; }
+  .scart .modal-or::before,.scart .modal-or::after{ content:""; position:absolute; top:50%; width:38%; height:1px; background:var(--hair); } .scart .modal-or::before{ left:0; } .scart .modal-or::after{ right:0; }
+  .scart .modal-signin{ font-size:14px; text-align:center; color:var(--ink-2); }
+  .scart .modal-signin a{ color:var(--vip-ink); font-weight:700; text-transform:uppercase; font-size:12.5px; letter-spacing:.03em; text-decoration:underline; }
+  .scart .modal-fine{ text-align:center; font-size:11.5px; color:var(--muted); margin-top:2px; }
+  .scart .ctoast{ position:fixed; left:50%; bottom:30px; transform:translate(-50%,14px); z-index:130; background:var(--ink); color:var(--bg); font-size:13px; letter-spacing:.03em; text-transform:uppercase; padding:14px 22px; border:var(--rule); border-radius:999px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:opacity .3s,transform .3s; }
+  .scart .ctoast.show{ opacity:1; transform:translate(-50%,0); }
+  @media (max-width:940px){ .scart .cart-layout{ grid-template-columns:1fr; gap:22px; } .scart .summary{ position:static; } }
+  @media (max-width:680px){
+    .scart .cart-wrap{ padding:28px 18px 76px; }
+    .scart .cart-title{ font-size:clamp(32px,8vw,42px); }
+    .scart .vipb{ flex-wrap:wrap; padding:18px 18px; } .scart .vipb-cta{ width:100%; justify-content:center; }
+    .scart .line{ grid-template-columns:84px 1fr; gap:14px; padding:14px; }
+    .scart .line-media{ width:84px; min-height:84px; }
+    .scart .line-right{ grid-column:1 / -1; flex-direction:row; align-items:center; justify-content:space-between; border-top:var(--rule-1); padding-top:13px; margin-top:4px; }
+    .scart .cart-head{ align-items:baseline; }
+    .scart .summary{ padding:22px; }
+    .scart .modal{ box-shadow:6px 6px 0 var(--ink); }
+  }
+  @media (prefers-reduced-motion:reduce){ .scart *,.scart *::before,.scart *::after{ animation-duration:.001ms !important; transition-duration:.001ms !important; } }
+</style>
+
+{%- capture icDiamond -%}<svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor"><path d="M8 1.6l5.6 4.4L8 14.4 2.4 6 8 1.6z"/></svg>{%- endcapture -%}
+{%- capture icDiamondLg -%}<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 2.5l8.5 6.6L12 21.5 3.5 9.1 12 2.5z"/></svg>{%- endcapture -%}
+{%- capture icCheck -%}<svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 8.5l3.2 3.3L13 4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icTruck -%}<svg viewBox="0 0 22 16" width="17" height="15" fill="none"><path d="M1 2.5h12v8H1zM13 5.5h4l3 3v2h-7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="5" cy="12.5" r="2" stroke="currentColor" stroke-width="1.6"/><circle cx="16.5" cy="12.5" r="2" stroke="currentColor" stroke-width="1.6"/></svg>{%- endcapture -%}
+{%- capture icLock -%}<svg viewBox="0 0 16 18" width="14" height="15" fill="none"><rect x="2.5" y="7.5" width="11" height="8" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M5 7.5V5a3 3 0 016 0v2.5" stroke="currentColor" stroke-width="1.6"/></svg>{%- endcapture -%}
+{%- capture icArrow -%}<svg viewBox="0 0 16 14" width="15" height="13" fill="none"><path d="M2 7h11M9 3l4 4-4 4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icTrash -%}<svg viewBox="0 0 16 16" width="14" height="14" fill="none"><path d="M3 4.5h10M6.5 4V2.8h3V4M4.5 4.5l.6 9a1 1 0 001 .9h3.8a1 1 0 001-.9l.6-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>{%- endcapture -%}
+{%- capture icLeaf -%}<svg viewBox="0 0 18 18" width="15" height="15" fill="none"><path d="M15 3C7 3 3 7 3 14c5 0 12-2 12-11z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 15S6 9 12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>{%- endcapture -%}
+{%- capture icBag -%}<svg viewBox="0 0 18 20" width="22" height="22" fill="none"><path d="M3 6h12l-1 12.5a1 1 0 01-1 .9H5a1 1 0 01-1-.9L3 6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.6"/></svg>{%- endcapture -%}
+{%- capture icClose -%}<svg viewBox="0 0 16 16" width="16" height="16"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>{%- endcapture -%}
+
+<div class="scart" data-scart>
+  <main class="cart-wrap">
+    <nav class="crumbs"><a href="{{ routes.root_url }}">Home</a> <span>/</span> <b>Cart</b></nav>
+    <div class="cart-head">
+      <h1 class="cart-title">Your <em>cart</em></h1>
+      <a class="keepshop" href="{{ routes.all_products_collection_url | default: '/collections/all' }}">{{ icArrow }} Keep shopping</a>
+    </div>
+
+    {%- if cart.item_count == 0 -%}
+      <div class="empty">
+        <div class="empty-glyph">{{ icBag }}</div>
+        <h2>Your cart is empty</h2>
+        <p>Add a flavor or two — your VIP price is waiting.</p>
+        <a class="empty-cta" href="{{ routes.all_products_collection_url | default: '/collections/all' }}">Shop the flavors {{ icArrow }}</a>
+      </div>
+    {%- else -%}
+      <span class="cart-count">{{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %} in your cart</span>
+
+      <div class="ship-bar">
+        <div class="ship-top">
+          {{ icTruck }}
+          {%- if remain > 0 -%}
+            <span>You're <b>{{ remain | money }}</b> away from <b>free shipping</b></span>
+          {%- else -%}
+            <span class="done">{{ icCheck }} You've unlocked free shipping</span>
+          {%- endif -%}
+        </div>
+        <div class="ship-track"><div class="ship-fill" data-shipfill style="width:{{ pct }}%"></div></div>
+      </div>
+
+      <div class="cart-layout">
+        <div class="cart-main">
+          {%- if is_vip and real_discount > 0 -%}
+            <div class="vipb active">
+              <span class="vipb-seal">{{ icCheck }}</span>
+              <span class="vipb-copy"><h3>VIP pricing is <span class="amt">active</span></h3><p>Your member discount is applied to every eligible bottle below.</p></span>
+            </div>
+          {%- elsif customer == blank and vipsave > 0 -%}
+            <button class="vipb" data-vipopen type="button">
+              <span class="vipb-seal">{{ icDiamondLg }}</span>
+              <span class="vipb-copy"><h3>You're leaving <span class="amt">{{ vipsave | money }}</span> on the table</h3><p>VIP members pay less on every bottle — and it's free for anyone to join. Sign up to apply your price to this cart.</p></span>
+              <span class="vipb-cta">{{ icDiamond }} Unlock VIP price</span>
+            </button>
+          {%- endif -%}
+
+          {%- for item in cart.items -%}
+            {%- assign nm = item.product.title | replace: 'Sugar-Free ','' | replace: 'Sugar Free ','' | replace: ' Syrup','' | replace: ' Coffee','' -%}
+            {%- assign tg = item.product.tags | join: ' ' | downcase -%}
+            {%- assign fam = '' -%}
+            {%- if tg contains 'coffee' -%}{%- assign fam='Coffee' -%}{%- elsif tg contains 'fruit' -%}{%- assign fam='Fruit' -%}{%- elsif tg contains 'tropical' -%}{%- assign fam='Tropical' -%}{%- elsif tg contains 'cocktail' -%}{%- assign fam='Cocktail' -%}{%- elsif tg contains 'nut' -%}{%- assign fam='Nutty' -%}{%- elsif tg contains 'floral' or tg contains 'lavender' -%}{%- assign fam='Floral' -%}{%- elsif tg contains 'dessert' -%}{%- assign fam='Dessert' -%}{%- endif -%}
+            {%- assign tint='#fbe0e5' -%}
+            {%- case fam -%}{%- when 'Coffee' -%}{%- assign tint='#efe4d6' -%}{%- when 'Fruit' -%}{%- assign tint='#fbe0e5' -%}{%- when 'Tropical' -%}{%- assign tint='#e1f3ec' -%}{%- when 'Cocktail' -%}{%- assign tint='#e4ecfb' -%}{%- when 'Nutty' -%}{%- assign tint='#efe7d8' -%}{%- when 'Floral' -%}{%- assign tint='#ece6f7' -%}{%- when 'Dessert' -%}{%- assign tint='#f7e2ec' -%}{%- endcase -%}
+            {%- assign vf = 799 -%}
+            {%- capture line_syr_raw -%}{%- render 'syr-is-syrup', product: item.product -%}{%- endcapture -%}
+            {%- assign line_syr = false -%}{%- if line_syr_raw contains '1' -%}{%- assign line_syr = true -%}{%- endif -%}
+            {%- assign discounted = false -%}{%- if item.original_line_price > item.final_line_price -%}{%- assign discounted = true -%}{%- endif -%}
+            <article class="line" data-line-item data-key="{{ item.key }}" data-line="{{ forloop.index }}" data-unit="{{ item.final_price }}" data-qty="{{ item.quantity }}" style="--tint:{{ tint }}">
+              <a class="line-media" href="{{ item.url }}">
+                {%- if item.image -%}<img class="line-img" src="{{ item.image | image_url: width: 220 }}" alt="{{ nm | escape }}" loading="lazy">{%- endif -%}
+              </a>
+              <div class="line-body">
+                {%- if fam != blank -%}<span class="line-tag">{{ fam }}{% if item.product.title contains 'Sugar' %} · Sugar-Free{% endif %}</span>{%- endif -%}
+                <a class="line-name" href="{{ item.url }}">{{ nm }}</a>
+                <span class="line-sub">{{ item.final_price | money }} each{% if item.variant.title and item.variant.title != 'Default Title' %} · {{ item.variant.title }}{% endif %}</span>
+                <div class="line-ctrls">
+                  <div class="qty">
+                    <button data-dec aria-label="Decrease" {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
+                    <span data-qval>{{ item.quantity }}</span>
+                    <button data-inc aria-label="Increase">+</button>
+                  </div>
+                  <button class="line-remove" data-remove>{{ icTrash }} Remove</button>
+                </div>
+              </div>
+              <div class="line-right">
+                <div class="line-price">
+                  {%- if discounted -%}<span class="was">{{ item.original_line_price | money }}</span>{%- endif -%}
+                  <span data-lineprice>{{ item.final_line_price | money }}</span>
+                </div>
+                {%- if is_vip and discounted and line_syr -%}
+                  <span class="vip-tag applied">{{ icCheck }} VIP price</span>
+                {%- elsif customer == blank and line_syr and vf < item.final_price -%}
+                  <button class="vip-tag" data-vipopen type="button" title="Unlock VIP pricing">{{ icDiamond }}<span class="vp">VIP {{ vf | money }}</span> ea</button>
+                {%- endif -%}
+              </div>
+            </article>
+          {%- endfor -%}
+        </div>
+
+        <aside class="summary">
+          <div class="sum-h">Order summary</div>
+          <div class="sum-row"><span>Subtotal</span><span class="v">{{ cart.original_total_price | money }}</span></div>
+          {%- if real_discount > 0 -%}
+            <div class="sum-vip applied">
+              <span class="sum-vip-l">{{ icCheck }} {% if is_vip %}VIP pricing applied{% else %}Discount applied{% endif %}</span>
+              <span class="sum-vip-v">−{{ real_discount | money }}</span>
+            </div>
+          {%- endif -%}
+          <div class="sum-row"><span>Shipping</span><span class="v">{% if ship == 0 %}Free{% else %}{{ ship | money }}{% endif %}</span></div>
+          <div class="sum-rule"></div>
+          <div class="sum-total"><span class="lab">Total</span><span class="val">{{ grand | money }}</span></div>
+          {%- if is_vip and real_discount > 0 -%}
+            <div class="sum-save">You're saving {{ real_discount | money }} as a VIP</div>
+          {%- elsif customer == blank and real_discount == 0 and vipsave > 0 -%}
+            <button class="sum-tease" data-vipopen type="button">{{ icDiamond }} VIP members save {{ vipsave | money }} — join free →</button>
+          {%- endif -%}
+          <form action="{{ routes.cart_url }}" method="post" id="scart-form">
+            <button type="submit" name="checkout" class="checkout">{{ icLock }} Checkout · {{ grand | money }}</button>
+          </form>
+          <div class="sum-note">Taxes &amp; discount codes calculated at checkout</div>
+          <div class="trust">
+            <span>{{ icTruck }} Ships in 1–3 days</span>
+            <span>{{ icLeaf }} Kosher &amp; gluten-free</span>
+            <span>{{ icLock }} Secure checkout</span>
+          </div>
+        </aside>
+      </div>
+    {%- endif -%}
+  </main>
+
+  <div class="modal-root" data-vipmodal aria-hidden="true">
+    <div class="modal-bd" data-vipclose></div>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Unlock VIP pricing">
+      <div class="modal-top">
+        <button class="modal-close" data-vipclose aria-label="Close">{{ icClose }}</button>
+        <div class="modal-seal">{{ icDiamondLg }}</div>
+        <h2>VIP pricing is free</h2>
+        <p>Create a free account and pay the <b>member price</b> on every eligible bottle. No fee, no subscription — VIP is free for everyone.</p>
+      </div>
+      <div class="modal-body">
+        <div class="modal-perks">
+          <div class="modal-perk">{{ icDiamond }}<span><b>Member pricing</b> on every syrup, automatically</span></div>
+          <div class="modal-perk">{{ icTruck }}<span>Free shipping perks &amp; early flavor drops</span></div>
+          <div class="modal-perk">{{ icLeaf }}<span><b>Always free</b> to join — no fee, no subscription</span></div>
+        </div>
+        <a class="modal-primary" href="{{ routes.account_register_url }}">Create my free account &amp; save</a>
+        <div class="modal-or">or</div>
+        <div class="modal-signin">Already a member? <a href="{{ routes.account_login_url }}">Sign in</a></div>
+        <div class="modal-fine">By joining you agree to Syruvia's Terms &amp; Privacy Policy.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ctoast" data-toast></div>
+</div>
+
+<script>
+(function(){
+  var root=document.querySelector('[data-scart]'); if(!root) return;
+  var toastEl=root.querySelector('[data-toast]'), tT;
+  function toast(m){ if(!toastEl)return; toastEl.textContent=m; toastEl.classList.add('show'); clearTimeout(tT); tT=setTimeout(function(){toastEl.classList.remove('show');},2200); }
+  var modal=root.querySelector('[data-vipmodal]');
+  function openVip(){ if(modal){ modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); } }
+  function closeVip(){ if(modal){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); } }
+  root.addEventListener('click',function(e){ if(e.target.closest('[data-vipopen]')){ e.preventDefault(); openVip(); } if(e.target.closest('[data-vipclose]')){ closeVip(); } });
+  window.addEventListener('keydown',function(e){ if(e.key==='Escape') closeVip(); });
+  var busy=false;
+  function change(line, qty, lineEl, removing){
+    if(busy) return; busy=true;
+    fetch('/cart/change.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({line:line, quantity:qty})})
+      .then(function(r){return r.json();})
+      .then(function(){ window.location.reload(); })
+      .catch(function(){ busy=false; if(lineEl&&removing) lineEl.classList.remove('removing'); alert('Could not update the cart. Please try again.'); });
+  }
+  root.addEventListener('click',function(e){
+    var item=e.target.closest('[data-line-item]'); if(!item) return;
+    var line=+item.getAttribute('data-line'), qty=+item.getAttribute('data-qty');
+    if(e.target.closest('[data-inc]')){ change(line, qty+1, item, false); }
+    else if(e.target.closest('[data-dec]')){ if(qty>1) change(line, qty-1, item, false); }
+    else if(e.target.closest('[data-remove]')){ item.classList.add('removing'); change(line, 0, item, true); }
+  });
+})();
+</script>
+
+{% schema %}
+{ "name": "Cart (Custom)", "settings": [], "presets": [{ "name": "Cart (Custom)" }] }
+{% endschema %}

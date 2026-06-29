@@ -1,0 +1,63 @@
+{%- comment -%} Hardcoded fallback HTML for syruvia-nav shop/deals when no blocks exist {%- endcomment -%}
+{%- capture default_shopby_desk -%}
+  <a class="syrnav-cat" href="/collections/coffee"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-coffee.webp' | asset_url }}" alt="Coffee Syrup" loading="lazy"></span><span class="syrnav-cat-lbl">Coffee Syrup</span></a>
+  <a class="syrnav-cat" href="/collections/collections-original-syrups"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-original.webp' | asset_url }}" alt="Original Syrups" loading="lazy"></span><span class="syrnav-cat-lbl">Original Syrups</span></a>
+  <a class="syrnav-cat" href="/collections/sugar-free"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-sugarfree.webp' | asset_url }}" alt="Sugar-Free" loading="lazy"></span><span class="syrnav-cat-lbl">Sugar-Free</span></a>
+  <a class="syrnav-cat" href="/collections/shaved-ice-syrups"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-shavedice.webp' | asset_url }}" alt="Shaved Ice Syrup" loading="lazy"></span><span class="syrnav-cat-lbl">Shaved Ice Syrup</span></a>
+  <a class="syrnav-cat" href="/collections/shakable-toppings-for-coffee-and-fruit-salad"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-topping.webp' | asset_url }}" alt="Shakeable Topping" loading="lazy"></span><span class="syrnav-cat-lbl">Shakeable Topping</span></a>
+  <a class="syrnav-cat" href="/collections/bursting-balls"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-bursting.webp' | asset_url }}" alt="Bursting Balls" loading="lazy"></span><span class="syrnav-cat-lbl">Bursting Balls</span></a>
+  <a class="syrnav-cat" href="/collections/variety-packs-for-coffee-and-cocktails"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-variety.webp' | asset_url }}" alt="Variety Packs" loading="lazy"></span><span class="syrnav-cat-lbl">Variety Packs</span></a>
+  <a class="syrnav-cat" href="/collections/all"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-all.webp' | asset_url }}" alt="Shop All" loading="lazy"></span><span class="syrnav-cat-lbl">Shop All</span></a>
+{%- endcapture -%}
+{%- capture default_featured_desk -%}
+  <a class="syrnav-cat" href="/collections/new-flavors"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-newarrivals.webp' | asset_url }}" alt="New Arrivals" loading="lazy"></span><span class="syrnav-cat-lbl">New Arrivals</span></a>
+  <a class="syrnav-cat" href="/pages/build-your-bundle"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-variety.webp' | asset_url }}" alt="Bundle &amp; Save" loading="lazy"></span><span class="syrnav-cat-lbl">Bundle &amp; Save</span></a>
+  <a class="syrnav-cat" href="/pages/best-sellers"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-coffee.webp' | asset_url }}" alt="Best Sellers" loading="lazy"></span><span class="syrnav-cat-lbl">Best Sellers</span></a>
+  <a class="syrnav-cat" href="/collections/all"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-all.webp' | asset_url }}" alt="Shop All" loading="lazy"></span><span class="syrnav-cat-lbl">Shop All</span></a>
+{%- endcapture -%}
+{%- capture default_taste_desk -%}
+  <a class="syrnav-cat" href="/collections/hazelnut"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-hazelnut.webp' | asset_url }}" alt="Hazelnut" loading="lazy"></span><span class="syrnav-cat-lbl">Hazelnut</span></a>
+  <a class="syrnav-cat" href="/collections/peppermint"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-mint.webp' | asset_url }}" alt="Mint" loading="lazy"></span><span class="syrnav-cat-lbl">Mint</span></a>
+  <a class="syrnav-cat" href="/collections/caramel"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-caramel.webp' | asset_url }}" alt="Caramel" loading="lazy"></span><span class="syrnav-cat-lbl">Caramel</span></a>
+  <a class="syrnav-cat" href="/collections/vanilla"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-vanilla.webp' | asset_url }}" alt="Vanilla" loading="lazy"></span><span class="syrnav-cat-lbl">Vanilla</span></a>
+  <a class="syrnav-cat" href="/collections/new-spring-flavors"><span class="syrnav-cat-media"><img src="{{ 'syr-nav-pinksplash.webp' | asset_url }}" alt="Pink Splash" loading="lazy"></span><span class="syrnav-cat-lbl">Pink Splash</span></a>
+{%- endcapture -%}
+{%- capture default_shopby_mob -%}
+  <a class="syrnav-dwr-cat" href="/collections/coffee"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-coffee.webp' | asset_url }}" alt="Coffee Syrup" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Coffee Syrup</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/collections-original-syrups"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-original.webp' | asset_url }}" alt="Original Syrups" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Original Syrups</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/sugar-free"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-sugarfree.webp' | asset_url }}" alt="Sugar-Free" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Sugar-Free</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/shaved-ice-syrups"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-shavedice.webp' | asset_url }}" alt="Shaved Ice Syrup" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Shaved Ice Syrup</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/shakable-toppings-for-coffee-and-fruit-salad"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-topping.webp' | asset_url }}" alt="Shakeable Topping" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Shakeable Topping</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/bursting-balls"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-bursting.webp' | asset_url }}" alt="Bursting Balls" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Bursting Balls</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/variety-packs-for-coffee-and-cocktails"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-variety.webp' | asset_url }}" alt="Variety Packs" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Variety Packs</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/all"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-all.webp' | asset_url }}" alt="Shop All" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Shop All</span></a>
+{%- endcapture -%}
+{%- capture default_featured_mob -%}
+  <a class="syrnav-dwr-cat" href="/collections/new-flavors"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-newarrivals.webp' | asset_url }}" alt="New Arrivals" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">New Arrivals</span></a>
+  <a class="syrnav-dwr-cat" href="/pages/build-your-bundle"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-variety.webp' | asset_url }}" alt="Bundle &amp; Save" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Bundle &amp; Save</span></a>
+  <a class="syrnav-dwr-cat" href="/pages/best-sellers"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-coffee.webp' | asset_url }}" alt="Best Sellers" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Best Sellers</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/all"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-all.webp' | asset_url }}" alt="Shop All" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Shop All</span></a>
+{%- endcapture -%}
+{%- capture default_taste_mob -%}
+  <a class="syrnav-dwr-cat" href="/collections/hazelnut"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-hazelnut.webp' | asset_url }}" alt="Hazelnut" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Hazelnut</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/peppermint"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-mint.webp' | asset_url }}" alt="Mint" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Mint</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/caramel"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-caramel.webp' | asset_url }}" alt="Caramel" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Caramel</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/vanilla"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-vanilla.webp' | asset_url }}" alt="Vanilla" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Vanilla</span></a>
+  <a class="syrnav-dwr-cat" href="/collections/new-spring-flavors"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-pinksplash.webp' | asset_url }}" alt="Pink Splash" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Pink Splash</span></a>
+{%- endcapture -%}
+{%- capture default_deals_desk -%}
+  <a class="syrnav-deal" href="/collections/on-sale"><span class="syrnav-deal-dot" style="background:#FCE2A0"></span>On sale</a>
+  <a class="syrnav-deal" href="/products/pack-of-the-week"><span class="syrnav-deal-dot" style="background:#FFD4B8"></span>Pack of the week</a>
+  <a class="syrnav-deal" href="/collections/todays-deals"><span class="syrnav-deal-dot" style="background:#C5E4D4"></span>Today's deals</a>
+  <a class="syrnav-deal" href="/collections/limited-time-offers"><span class="syrnav-deal-dot" style="background:#B8DCEB"></span>Limited-time offers</a>
+  <a class="syrnav-deal" href="/collections/trending-flavors"><span class="syrnav-deal-dot" style="background:#F5C7BE"></span>Trending now</a>
+  <a class="syrnav-deal" href="/collections/fall-flavors-to-warm-up-your-coffee-routine-a-seasonal-guide"><span class="syrnav-deal-dot" style="background:#c58548"></span>Seasonal picks</a>
+{%- endcapture -%}
+{%- capture default_deals_mob -%}
+  <a class="syrnav-dwr-deal" href="/collections/on-sale"><span class="syrnav-dwr-deal-dot" style="background:#FCE2A0"></span>On sale</a>
+  <a class="syrnav-dwr-deal" href="/products/pack-of-the-week"><span class="syrnav-dwr-deal-dot" style="background:#FFD4B8"></span>Pack of the week</a>
+  <a class="syrnav-dwr-deal" href="/collections/todays-deals"><span class="syrnav-dwr-deal-dot" style="background:#C5E4D4"></span>Today's deals</a>
+  <a class="syrnav-dwr-deal" href="/collections/limited-time-offers"><span class="syrnav-dwr-deal-dot" style="background:#B8DCEB"></span>Limited-time offers</a>
+  <a class="syrnav-dwr-deal" href="/collections/trending-flavors"><span class="syrnav-dwr-deal-dot" style="background:#F5C7BE"></span>Trending now</a>
+  <a class="syrnav-dwr-deal" href="/collections/fall-flavors-to-warm-up-your-coffee-routine-a-seasonal-guide"><span class="syrnav-dwr-deal-dot" style="background:#c58548"></span>Seasonal picks</a>
+{%- endcapture -%}

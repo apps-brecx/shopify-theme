@@ -1,0 +1,242 @@
+<style>
+    .start-pack__inner{
+        padding: 100px 0;
+    }
+    .start-pack__inner .page-width{
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .start-pack__wrapper{
+        background:  {{ section.settings.background_color }};
+        padding: 20px;
+        border-radius: 20px;
+        margin-bottom: 30px;
+    }
+    .start-pack__title{
+         font-family: "Epilogue", sans-serif !important;
+         color: #fff;
+         font-size: 36px;
+         text-align: center;
+         font-weight: 700;
+         line-height: 110%;
+         margin-bottom: 20px;
+    }
+    .start-pack__description{
+        font-family: "Manrope", sans-serif !important;
+        color: #fff;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+     .start-pack__inner .button{
+        color:  {{ section.settings.background_color }};
+        background: #fff;
+        margin: 0 auto;
+        font-weight: 600 !important;
+              border-radius: 100px;
+       font-family: "Manrope", sans-serif !important;
+       font-size: 16px;
+       overflow: hidden;
+    }
+    .start-pack__form{
+        display: flex;
+        justify-content: center;
+    }
+    .start-pack__bottom{
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+    }
+    .start-pack__bottom-icon{
+      display: flex;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+    }
+    .start-pack__bottom-icon img{
+        width: 100%;
+    }
+    .start-pack__bottom-text{
+         font-family: "Manrope", sans-serif !important;
+         text-align: center;
+    }
+
+    @media(max-width: 750px){
+      .start-pack__inner{
+        padding: 60px 0;
+      }
+    }
+</style>
+
+<div class="start-pack__inner">
+  <div class="page-width">
+
+    <div class="start-pack__wrapper">
+
+      {% if section.settings.title != blank %}
+        <div class="start-pack__title">
+          {{ section.settings.title }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="start-pack__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+
+      {% assign package_products = product.metafields.custom.package_products.value %}
+      {% assign product_form_id = 'start-pack-form-' | append: section.id %}
+
+      {%- form 'product', product, id: product_form_id, class: 'start-pack__form' -%}
+
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+        >
+
+        {% for item in package_products %}
+          {% assign p = item.product.value %}      
+
+          <input
+            type="hidden"
+            name="properties[Item {{ forloop.index }}]"
+            value="{{ item.quantity }}x {{ p.title }}"
+          >
+        {% endfor %}
+
+        <button
+          type="button"
+          class="button js-start-pack"
+          data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+        >
+          {{ section.settings.button_text }}
+        </button>
+
+      {%- endform -%}
+
+    </div>
+
+    <div class="start-pack__bottom">
+
+      <div class="start-pack__bottom-icon">
+        {% if section.settings.bottom_icon != blank %}
+          <img
+            src="{{ section.settings.bottom_icon | image_url: width: 100 }}"
+            alt="icon"
+            loading="lazy"
+          >
+        {% endif %}
+      </div>
+
+      {% if section.settings.bottom_text != blank %}
+        <div class="start-pack__bottom-text">
+          {{ section.settings.bottom_text }}
+        </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+    const button = document.querySelector('.js-start-pack');
+
+    if (!button) return;
+
+    button.addEventListener('click', async function () {
+
+      const variantId = this.dataset.variantId;
+
+      const properties = {};
+
+      {% for item in package_products %}
+        {% assign p = item.product.value %}
+
+        properties["Item {{ forloop.index }}"] = "{{ item.quantity }}x {{ p.title }}";
+
+      {% endfor %}
+
+      try {
+
+        await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            items: [
+              {
+                id: variantId,
+                quantity: 1,
+                properties: properties
+              }
+            ]
+          })
+        });
+
+        window.location.href = '/checkout';
+
+      } catch (error) {
+
+        console.error('Checkout error:', error);
+
+      }
+
+    });
+
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Start Pack",
+  "settings": [
+      {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background Color",
+          "default": "#61155b"
+        },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Start Your Pack"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Build your perfect bundle in seconds"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Add Pack To Checkout"
+    },
+    {
+      "type": "image_picker",
+      "id": "bottom_icon",
+      "label": "Bottom Icon"
+    },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Bottom Text",
+      "default": "Free shipping on packs"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Start Pack"
+    }
+  ]
+}
+{% endschema %}

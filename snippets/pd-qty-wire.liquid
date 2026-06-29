@@ -1,0 +1,40 @@
+{%- comment -%} Product page quantity tiers: sync 5/7/10% display + apply QTY test code at add-to-cart (combines with VIP). Test codes only. {%- endcomment -%}
+<script>
+(function(){
+  var MYTIERS=[1,0.95,0.93,0.90];           /* qty 1/2/3/4+ -> 0/5/7/10% */
+  var QCODES={2:'QTY2TEST',3:'QTY3TEST',4:'QTY4TEST'};
+  var SAVE={'3':'Save 7%','4':'Save 10%'};
+  function money(c){return '$'+(c/100).toFixed(2);}
+  function getQty(){var qi=document.querySelector('#pdAtcForm input[name="quantity"]')||document.querySelector('.pd-qty input');return qi?Math.max(1,parseInt(qi.value,10)||1):1;}
+  function patchPrice(){
+    var base=window.PD_BASE_CENTS||0; if(!base) return;
+    var q=getQty(); var tier=MYTIERS[Math.min(q-1,MYTIERS.length-1)];
+    var total=Math.round(base*q*tier);
+    var el=document.getElementById('pdPriceTotal'); if(el) el.textContent=money(total);
+    var st=document.getElementById('pdStickyPrice'); if(st) st.textContent=money(total);
+    var saveEl=document.getElementById('pdSaveTag'); if(saveEl && q>1){ saveEl.textContent='Save '+Math.round((1-tier)*100)+'%'; }
+  }
+  function init(){
+    document.querySelectorAll('.pd-mb-cell').forEach(function(cell){var t=cell.getAttribute('data-tier');var s=cell.querySelector('.pd-mb-save');if(s&&SAVE[t])s.textContent=SAVE[t];});
+    document.addEventListener('click',function(e){ if(e.target.closest('.pd-qty')||e.target.closest('.pd-mb-cell')){ setTimeout(patchPrice,0); } });
+    document.addEventListener('input',function(e){ if(e.target.closest('.pd-qty')){ setTimeout(patchPrice,0); } });
+    setTimeout(patchPrice,200);
+    var form=document.getElementById('pdAtcForm');
+    if(form){
+      form.addEventListener('submit',function(e){
+        e.preventDefault(); e.stopImmediatePropagation();
+        var q=getQty();
+        var idInput=form.querySelector('input[name="id"]'); var vid=idInput?idInput.value:null;
+        if(!vid){ form.submit(); return; }
+        var code=q>=4?'QTY4TEST':(QCODES[q]||'');
+        var btn=form.querySelector('.pd-atc--full'); if(btn) btn.disabled=true;
+        fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:[{id:parseInt(vid,10),quantity:q}]})})
+          .then(function(r){return r.json();})
+          .then(function(){ window.location.href=code?('/discount/'+encodeURIComponent(code)+'?redirect=/cart'):'/cart'; })
+          .catch(function(){ if(btn) btn.disabled=false; window.location.href='/cart'; });
+      }, true);
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>

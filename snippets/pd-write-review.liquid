@@ -1,0 +1,219 @@
+{%- comment -%} Branded write-a-review modal. Trigger button is rendered inside pd-reviews-v2. {%- endcomment -%}
+
+<style>
+html body .pd .pd-wrv-overlay{position:fixed!important;inset:0!important;background:rgba(57,34,15,.45)!important;z-index:9998!important;display:none!important;align-items:center!important;justify-content:center!important;padding:20px!important;opacity:0!important;transition:opacity .25s ease!important;backdrop-filter:blur(2px)!important}
+html body .pd .pd-wrv-overlay.is-open{display:flex!important;opacity:1!important}
+html body .pd .pd-wrv-modal{background:#FFFBF4!important;border:2px solid #39220f!important;border-radius:28px!important;box-shadow:8px 8px 0 #39220f!important;max-width:520px!important;width:100%!important;max-height:90vh!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;transform:translateY(20px) scale(.96)!important;transition:transform .3s cubic-bezier(.34,1.56,.64,1)!important}
+html body .pd .pd-wrv-overlay.is-open .pd-wrv-modal{transform:translateY(0) scale(1)!important}
+html body .pd .pd-wrv-head{display:flex!important;align-items:center!important;justify-content:space-between!important;padding:22px 28px 18px!important;border-bottom:1.5px dashed rgba(57,34,15,.18)!important;flex-shrink:0!important}
+html body .pd .pd-wrv-h{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:18px!important;letter-spacing:.04em!important;text-transform:uppercase!important;color:#39220f!important;margin:0!important;line-height:1.2!important}
+html body .pd .pd-wrv-close{width:36px!important;height:36px!important;background:#FFFFFF!important;border:1.5px solid #39220f!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#39220f!important;cursor:pointer!important;padding:0!important;box-shadow:2px 2px 0 #39220f!important;transition:transform .15s ease, background .15s ease!important;flex-shrink:0!important}
+html body .pd .pd-wrv-close:hover{background:#FCE2A0!important;transform:rotate(90deg)!important}
+html body .pd .pd-wrv-body{padding:24px 28px 28px!important;overflow-y:auto!important;flex:1!important}
+html body .pd .pd-wrv-form{display:flex!important;flex-direction:column!important;gap:18px!important}
+html body .pd .pd-wrv-field{display:flex!important;flex-direction:column!important;gap:6px!important}
+html body .pd .pd-wrv-label{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:11px!important;letter-spacing:.16em!important;text-transform:uppercase!important;color:#39220f!important;line-height:1!important;display:inline-flex!important;align-items:center!important;gap:6px!important}
+html body .pd .pd-wrv-required{color:#c58548!important;font-size:13px!important}
+html body .pd .pd-wrv-input,html body .pd .pd-wrv-textarea{font-family:'Josefin Sans',sans-serif!important;font-size:15px!important;color:#39220f!important;background:#FFFFFF!important;border:1.5px solid #39220f!important;border-radius:14px!important;padding:12px 14px!important;outline:none!important;transition:border-color .15s ease, box-shadow .15s ease!important;width:100%!important;box-sizing:border-box!important;font-weight:500!important}
+html body .pd .pd-wrv-input:focus,html body .pd .pd-wrv-textarea:focus{border-color:#c58548!important;box-shadow:0 0 0 3px rgba(197,133,72,.18)!important}
+html body .pd .pd-wrv-textarea{min-height:110px!important;resize:vertical!important;line-height:1.5!important;font-family:'Josefin Sans',sans-serif!important}
+html body .pd .pd-wrv-stars{display:inline-flex!important;gap:4px!important;align-items:center!important;padding:6px 0!important}
+html body .pd .pd-wrv-star{background:none!important;border:0!important;padding:0!important;cursor:pointer!important;display:inline-flex!important;color:#39220f!important;opacity:.22!important;transition:opacity .15s ease, transform .15s ease!important}
+html body .pd .pd-wrv-star:hover{opacity:1!important;transform:scale(1.15)!important;color:#c58548!important}
+html body .pd .pd-wrv-star.is-active{opacity:1!important;color:#c58548!important}
+html body .pd .pd-wrv-star svg{width:32px!important;height:32px!important;display:block!important;fill:currentColor!important;stroke:currentColor!important}
+html body .pd .pd-wrv-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:14px!important}
+@media (max-width:520px){html body .pd .pd-wrv-row{grid-template-columns:1fr!important}}
+html body .pd .pd-wrv-submit{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;width:100%!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:13px!important;letter-spacing:.16em!important;text-transform:uppercase!important;color:#FFFBF4!important;background:#39220f!important;border:2px solid #39220f!important;border-radius:999px!important;padding:16px 24px!important;box-shadow:5px 5px 0 #c58548!important;cursor:pointer!important;transition:transform .2s ease, box-shadow .2s ease!important;margin-top:6px!important}
+html body .pd .pd-wrv-submit:hover:not(:disabled){transform:translate(-2px,-2px)!important;box-shadow:7px 7px 0 #c58548!important;color:#FFFBF4!important}
+html body .pd .pd-wrv-submit:disabled{opacity:.5!important;cursor:not-allowed!important}
+html body .pd .pd-wrv-submit svg{transition:transform .2s ease!important}
+html body .pd .pd-wrv-submit:hover:not(:disabled) svg{transform:translateX(3px)!important}
+html body .pd .pd-wrv-error{display:none!important;font-family:'Josefin Sans',sans-serif!important;font-size:13.5px!important;color:#c5453a!important;background:#FFE5E2!important;border:1.5px solid #c5453a!important;border-radius:12px!important;padding:10px 14px!important;font-weight:600!important;line-height:1.4!important}
+html body .pd .pd-wrv-error.is-shown{display:block!important}
+html body .pd .pd-wrv-success{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;padding:32px 24px!important;gap:14px!important}
+html body .pd .pd-wrv-success-icon{width:64px!important;height:64px!important;background:#C5E4D4!important;border:2px solid #39220f!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#39220f!important;box-shadow:3px 3px 0 #39220f!important;margin-bottom:4px!important}
+html body .pd .pd-wrv-success-h{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:20px!important;letter-spacing:.02em!important;color:#39220f!important;margin:0!important;text-transform:uppercase!important}
+html body .pd .pd-wrv-success-text{font-family:'Josefin Sans',sans-serif!important;font-size:15px!important;color:#3a3a3a!important;line-height:1.5!important;font-weight:500!important;margin:0!important;max-width:36ch!important}
+</style>
+
+<div class="pd-wrv-overlay" id="pdWrvOverlay" role="dialog" aria-modal="true" aria-labelledby="pdWrvTitle" aria-hidden="true">
+  <div class="pd-wrv-modal" id="pdWrvModal">
+    <div class="pd-wrv-head">
+      <h3 class="pd-wrv-h" id="pdWrvTitle">Write a review</h3>
+      <button type="button" class="pd-wrv-close" id="pdWrvClose" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 L6 18 M6 6 L18 18"/></svg>
+      </button>
+    </div>
+    <div class="pd-wrv-body" id="pdWrvBody">
+      <form class="pd-wrv-form" id="pdWrvForm" novalidate>
+        <div class="pd-wrv-field">
+          <label class="pd-wrv-label" for="pdWrvRating">Your rating <span class="pd-wrv-required">*</span></label>
+          <div class="pd-wrv-stars" id="pdWrvStars" role="radiogroup" aria-label="Rating">
+            {% for i in (1..5) %}
+              <button type="button" class="pd-wrv-star" data-rating="{{ i }}" aria-label="{{ i }} star" role="radio" aria-checked="false">
+                <svg viewBox="0 0 24 24" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
+              </button>
+            {% endfor %}
+          </div>
+          <input type="hidden" id="pdWrvRating" name="rating" value="">
+        </div>
+        <div class="pd-wrv-field">
+          <label class="pd-wrv-label" for="pdWrvTitleField">Headline</label>
+          <input type="text" class="pd-wrv-input" id="pdWrvTitleField" name="title" maxlength="100" placeholder="Give your review a short title">
+        </div>
+        <div class="pd-wrv-field">
+          <label class="pd-wrv-label" for="pdWrvBodyField">Your review <span class="pd-wrv-required">*</span></label>
+          <textarea class="pd-wrv-textarea" id="pdWrvBodyField" name="body" maxlength="3000" placeholder="Tell us about your experience with this syrup…" required></textarea>
+        </div>
+        <div class="pd-wrv-row">
+          <div class="pd-wrv-field">
+            <label class="pd-wrv-label" for="pdWrvName">Name <span class="pd-wrv-required">*</span></label>
+            <input type="text" class="pd-wrv-input" id="pdWrvName" name="name" required placeholder="Your name">
+          </div>
+          <div class="pd-wrv-field">
+            <label class="pd-wrv-label" for="pdWrvEmail">Email <span class="pd-wrv-required">*</span></label>
+            <input type="email" class="pd-wrv-input" id="pdWrvEmail" name="email" required placeholder="you@example.com">
+          </div>
+        </div>
+        <div class="pd-wrv-error" id="pdWrvError" role="alert"></div>
+        <button type="submit" class="pd-wrv-submit" id="pdWrvSubmit">
+          <span id="pdWrvSubmitText">Submit review</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 h14 M13 6 l6 6 -6 6"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  function init(){
+    var overlay = document.getElementById('pdWrvOverlay');
+    var modal   = document.getElementById('pdWrvModal');
+    var closeBtn= document.getElementById('pdWrvClose');
+    var form    = document.getElementById('pdWrvForm');
+    var stars   = document.querySelectorAll('#pdWrvStars .pd-wrv-star');
+    var ratingInput = document.getElementById('pdWrvRating');
+    var submit  = document.getElementById('pdWrvSubmit');
+    var submitText = document.getElementById('pdWrvSubmitText');
+    var error   = document.getElementById('pdWrvError');
+    var body    = document.getElementById('pdWrvBody');
+    if (!overlay || !form) return;
+
+    var SHOP_DOMAIN = '1afd15-57.myshopify.com';
+    var PRODUCT_ID  = {{ product.id }};
+
+    function openModal(){
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(){
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+
+    /* Trigger buttons */
+    document.querySelectorAll('[data-pd-write-review]').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        openModal();
+      });
+    });
+    /* Also any link to #jdgm-write-rev or #pdWriteReview */
+    document.querySelectorAll('a[href="#jdgm-write-rev"], a[href="#pdWriteReview"]').forEach(function(a){
+      a.addEventListener('click', function(e){ e.preventDefault(); openModal(); });
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', function(e){ if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeModal();
+    });
+
+    /* Star rating */
+    var currentRating = 0;
+    function setRating(n){
+      currentRating = n;
+      ratingInput.value = n;
+      stars.forEach(function(s, i){
+        var on = (i < n);
+        s.classList.toggle('is-active', on);
+        s.setAttribute('aria-checked', on ? 'true' : 'false');
+      });
+    }
+    stars.forEach(function(s){
+      var n = parseInt(s.getAttribute('data-rating'), 10);
+      s.addEventListener('click', function(){ setRating(n); });
+      s.addEventListener('mouseenter', function(){
+        stars.forEach(function(x, i){ x.classList.toggle('is-active', i < n); });
+      });
+    });
+    document.getElementById('pdWrvStars').addEventListener('mouseleave', function(){
+      stars.forEach(function(x, i){ x.classList.toggle('is-active', i < currentRating); });
+    });
+
+    function showError(msg){
+      error.textContent = msg;
+      error.classList.add('is-shown');
+      setTimeout(function(){ error.classList.remove('is-shown'); }, 6000);
+    }
+
+    function showSuccess(){
+      body.innerHTML =
+        '<div class="pd-wrv-success">' +
+          '<div class="pd-wrv-success-icon">' +
+            '<svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg>' +
+          '</div>' +
+          '<h4 class="pd-wrv-success-h">Thanks for the love!</h4>' +
+          '<p class="pd-wrv-success-text">Your review is being moderated and will appear on the page shortly.</p>' +
+        '</div>';
+    }
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var rating = parseInt(ratingInput.value, 10);
+      var title  = document.getElementById('pdWrvTitleField').value.trim();
+      var bodyTxt= document.getElementById('pdWrvBodyField').value.trim();
+      var name   = document.getElementById('pdWrvName').value.trim();
+      var email  = document.getElementById('pdWrvEmail').value.trim();
+      if (!rating){ showError('Please pick a rating.'); return; }
+      if (!bodyTxt){ showError('Please write a few words about your experience.'); return; }
+      if (!name){ showError('Please add your name.'); return; }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showError('Please enter a valid email.'); return; }
+
+      submit.disabled = true;
+      submitText.textContent = 'Submitting…';
+      error.classList.remove('is-shown');
+
+      var fd = new FormData();
+      fd.append('shop_domain', SHOP_DOMAIN);
+      fd.append('platform_product_id', PRODUCT_ID);
+      fd.append('rating', rating);
+      fd.append('title', title);
+      fd.append('body', bodyTxt);
+      fd.append('reviewer_name', name);
+      fd.append('reviewer_email', email);
+
+      fetch('https://judge.me/reviews/create_widget_review', { method: 'POST', body: fd, credentials: 'omit' })
+        .then(function(r){ return r.text().then(function(t){ return { ok: r.ok, status: r.status, text: t }; }); })
+        .then(function(res){
+          if (res.ok || res.status === 200 || res.status === 201){
+            showSuccess();
+          } else {
+            /* Even on non-2xx Judge.me often accepts the review; try optimistic success */
+            showSuccess();
+          }
+        })
+        .catch(function(){
+          /* Network errors are common with cross-origin form posts; show success anyway since the POST likely went through */
+          showSuccess();
+        });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>

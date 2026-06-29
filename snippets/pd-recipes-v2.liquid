@@ -1,0 +1,248 @@
+{%- comment -%} Recipes v2 — featured signature + text-only quick sips carousel with scroll affordances. {%- endcomment -%}
+
+{%- assign sig_image_ref = product.metafields.custom.product_summary_image.value -%}
+{%- assign sig_recipe    = product.metafields.custom.product_summary -%}
+{%- assign t_clean = product.title | replace: ' Syrup', '' | replace: ' syrup', '' -%}
+{%- if t_clean == blank -%}{%- assign t_clean = product.title -%}{%- endif -%}
+
+{%- assign sig_image_url = '' -%}
+{%- if sig_image_ref.image -%}
+  {%- assign sig_image_url = sig_image_ref.image | image_url: width: 1200 -%}
+{%- elsif sig_image_ref.preview_image -%}
+  {%- assign sig_image_url = sig_image_ref.preview_image | image_url: width: 1200 -%}
+{%- elsif sig_image_ref.src -%}
+  {%- assign sig_image_url = sig_image_ref.src -%}
+{%- elsif sig_image_ref -%}
+  {%- assign sig_image_url = sig_image_ref | image_url: width: 1200 -%}
+{%- endif -%}
+
+<section class="pd-recipes-v2">
+  <div class="pd-wrap pd-rv2-head">
+    <span class="pd-eyebrow">Featured recipe</span>
+    <h2 class="pd-h2">Pour <em>like this</em>.</h2>
+    <p class="pd-rv2-lede">The signature pour, plus four quick sips to mix things up.</p>
+  </div>
+
+  {%- if sig_image_url != '' and sig_recipe != blank -%}
+    <div class="pd-wrap">
+      <article class="pd-rv2-feature">
+        <div class="pd-rv2-feature-img">
+          <img src="{{ sig_image_url }}" alt="{{ product.title | escape }} signature recipe" loading="lazy">
+          <span class="pd-rv2-feature-tag">Signature recipe</span>
+        </div>
+        <div class="pd-rv2-feature-body">
+          <div class="pd-rv2-feature-content" id="pdRv2FeatureContent">
+            {{ sig_recipe | metafield_tag }}
+          </div>
+          <span class="pd-rv2-feature-time">5 min</span>
+        </div>
+      </article>
+    </div>
+  {%- endif -%}
+
+  <div class="pd-wrap pd-rv2-sub">
+    <span class="pd-eyebrow">More ways to pour</span>
+    <h3 class="pd-h3">Quick <em>sips</em>.</h3>
+    <span class="pd-rv2-swipe-hint" aria-hidden="true">Swipe to explore
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 H19 M13 6 l6 6 -6 6"/></svg>
+    </span>
+  </div>
+
+  <div class="pd-rv2-scroll">
+    <button type="button" class="pd-rv2-nav pd-rv2-nav--prev" id="pdRecipesPrev" aria-label="Previous recipe">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6 l-6 6 6 6"/></svg>
+    </button>
+    <button type="button" class="pd-rv2-nav pd-rv2-nav--next" id="pdRecipesNext" aria-label="Next recipe">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 l6 6 -6 6"/></svg>
+    </button>
+
+    <div class="pd-rv2-marquee" id="pdRecipesMarquee">
+      <div class="pd-rv2-track" id="pdRecipesTrack">
+
+        <article class="pd-rv2-card">
+          <div class="pd-rv2-card-body">
+            <div class="pd-rv2-card-toprow">
+              <span class="pd-rv2-card-tag pd-rv2-card-tag--peach">Most Popular</span>
+              <span class="pd-rv2-card-time">60 sec</span>
+            </div>
+            <h4 class="pd-rv2-card-name">Iced {{ t_clean }} Latte</h4>
+            <ul class="pd-rv2-card-ings">
+              <li>1 pump {{ t_clean }}</li>
+              <li>1 shot espresso (or 4 oz cold brew)</li>
+              <li>8 oz cold milk of choice</li>
+              <li>Ice, to fill</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="pd-rv2-card">
+          <div class="pd-rv2-card-body">
+            <div class="pd-rv2-card-toprow">
+              <span class="pd-rv2-card-tag pd-rv2-card-tag--mint">Quick Sip</span>
+              <span class="pd-rv2-card-time">30 sec</span>
+            </div>
+            <h4 class="pd-rv2-card-name">Sparkling {{ t_clean }} Soda</h4>
+            <ul class="pd-rv2-card-ings">
+              <li>1 pump {{ t_clean }}</li>
+              <li>12 oz cold sparkling water</li>
+              <li>Squeeze of lemon</li>
+              <li>Ice, to fill</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="pd-rv2-card">
+          <div class="pd-rv2-card-body">
+            <div class="pd-rv2-card-toprow">
+              <span class="pd-rv2-card-tag pd-rv2-card-tag--butter">Afternoon</span>
+              <span class="pd-rv2-card-time">45 sec</span>
+            </div>
+            <h4 class="pd-rv2-card-name">{{ t_clean }} Cold Brew</h4>
+            <ul class="pd-rv2-card-ings">
+              <li>1 pump {{ t_clean }}</li>
+              <li>12 oz cold brew coffee</li>
+              <li>Splash of milk or cream</li>
+              <li>Ice, to fill</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="pd-rv2-card">
+          <div class="pd-rv2-card-body">
+            <div class="pd-rv2-card-toprow">
+              <span class="pd-rv2-card-tag pd-rv2-card-tag--blush">Cozy Up</span>
+              <span class="pd-rv2-card-time">90 sec</span>
+            </div>
+            <h4 class="pd-rv2-card-name">{{ t_clean }} Steamer</h4>
+            <ul class="pd-rv2-card-ings">
+              <li>1 pump {{ t_clean }}</li>
+              <li>12 oz steamed milk</li>
+              <li>Dash of cinnamon</li>
+              <li>Optional whipped cream</li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <div class="pd-rv2-dots" id="pdRecipesDots" aria-hidden="true"></div>
+  </div>
+</section>
+
+<script>
+(function(){
+  function trim(){
+    var root = document.getElementById('pdRv2FeatureContent');
+    if (!root) return;
+    var firstP = root.querySelector('p');
+    if (firstP){
+      var strong = firstP.querySelector('strong');
+      if (strong){
+        var name = strong.textContent;
+        var h3 = document.createElement('h3');
+        h3.className = 'pd-rv2-feature-name';
+        h3.textContent = name;
+        firstP.replaceWith(h3);
+      }
+    }
+    var kids = Array.prototype.slice.call(root.children);
+    var dropping = false;
+    kids.forEach(function(el){
+      if (dropping){ el.remove(); return; }
+      var txt = (el.textContent || '').trim().toUpperCase();
+      if (txt === 'INSTRUCTIONS' || txt.indexOf('INSTRUCTIONS') === 0){
+        dropping = true; el.remove(); return;
+      }
+      if (el.tagName === 'OL'){ dropping = true; el.remove(); return; }
+    });
+    Array.prototype.slice.call(root.querySelectorAll('p')).forEach(function(p){
+      var s = p.querySelector('strong');
+      if (s && (s.textContent || '').trim().toUpperCase() === 'INGREDIENTS'){
+        p.classList.add('pd-rv2-feature-ing-head');
+      }
+    });
+    root.classList.add('is-trimmed');
+  }
+
+  function initRecipesCarousel(){
+    var marquee = document.getElementById('pdRecipesMarquee');
+    var track   = document.getElementById('pdRecipesTrack');
+    var prev    = document.getElementById('pdRecipesPrev');
+    var next    = document.getElementById('pdRecipesNext');
+    var dots    = document.getElementById('pdRecipesDots');
+    if (!marquee || !track) return;
+
+    var cards = track.querySelectorAll('.pd-rv2-card');
+    if (!cards.length) return;
+
+    // Force initial scroll position to 0 so the first card is fully visible
+    try { marquee.scrollLeft = 0; } catch(e){}
+
+    function step(){
+      var rect = cards[0].getBoundingClientRect();
+      return rect.width + 18;
+    }
+    function scrollByCards(dir){
+      marquee.scrollBy({ left: step() * dir, behavior: 'smooth' });
+    }
+    if (prev) prev.addEventListener('click', function(){ scrollByCards(-1); });
+    if (next) next.addEventListener('click', function(){ scrollByCards(1); });
+
+    if (dots){
+      dots.innerHTML = '';
+      for (var i = 0; i < cards.length; i++){
+        var d = document.createElement('button');
+        d.type = 'button';
+        d.className = 'pd-rv2-dot';
+        d.setAttribute('aria-label', 'Recipe ' + (i+1));
+        d.dataset.idx = i;
+        if (i === 0) d.classList.add('is-active');
+        d.addEventListener('click', function(e){
+          var idx = parseInt(e.currentTarget.dataset.idx, 10) || 0;
+          marquee.scrollTo({ left: idx * step(), behavior: 'smooth' });
+        });
+        dots.appendChild(d);
+      }
+      function syncActive(){
+        var idx = Math.round(marquee.scrollLeft / step());
+        Array.prototype.forEach.call(dots.children, function(el, i){
+          el.classList.toggle('is-active', i === idx);
+        });
+      }
+      var raf = null;
+      marquee.addEventListener('scroll', function(){
+        if (raf) return;
+        raf = requestAnimationFrame(function(){ raf = null; syncActive(); });
+      }, { passive: true });
+    }
+
+    // One-time peek: nudge right, then snap reliably back to 0
+    if ('IntersectionObserver' in window){
+      var peeked = false;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting && !peeked){
+            peeked = true;
+            var w = step();
+            setTimeout(function(){ marquee.scrollBy({ left: w * 0.18, behavior: 'smooth' }); }, 450);
+            setTimeout(function(){ marquee.scrollTo({ left: 0, behavior: 'smooth' }); }, 1100);
+          }
+        });
+      }, { threshold: 0.35 });
+      io.observe(marquee);
+    }
+  }
+
+  function init(){
+    trim();
+    initRecipesCarousel();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>

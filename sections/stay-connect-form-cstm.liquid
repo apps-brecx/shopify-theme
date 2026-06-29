@@ -1,0 +1,222 @@
+<div class="form-heading-cstm">
+    <h2>Sign Up for Exclusive Updates</h2>
+    <p>Sign up for exclusive updates, new flavors, and special offers</p>
+  </div>
+<div
+  class="stay-connect-cstm-form page-width color-{{ section.settings.color_scheme }} gradient grid-class {{ section.settings.custom_class }}"
+  style="margin-top: 6rem;"
+>
+  <div
+  class="inner-formcstm"
+>
+
+
+  <div class="right-grid">
+    <div class="content">
+      <h2>{{ section.settings.main_heading }}</h2>
+      <p>{{ section.settings.description }}</p>
+      
+      <h5>{{ section.settings.feature_1_title }}</h5>
+      <p>{{ section.settings.feature_1_description }}</p>
+
+      <h5>{{ section.settings.feature_2_title }}</h5>
+      <p>{{ section.settings.feature_2_description }}</p>
+
+      <h5>{{ section.settings.feature_3_title }}</h5>
+      <p>{{ section.settings.feature_3_description }}</p>
+
+      <h5>{{ section.settings.feature_4_title }}</h5>
+      <p>{{ section.settings.feature_4_description }}</p>
+    </div>
+  </div>
+</div>
+  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding form-class">
+    {%- if section.settings.heading != blank -%}
+      <span class="cst-leaf-image">
+        <img src="{{ section.settings.leaf_image | img_url: 'master' }}">
+      </span>
+      <h2 class="title title-wrapper--no-top-margin inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+        {{ section.settings.heading }}
+      </h2>
+    {%- else -%}
+      <h2 class="visually-hidden">{{ 'templates.contact.form.title' | t }}</h2>
+      <h2 class="stay-connect-form-heading-cstm">Newsletter Sign-Up</h2>
+    {%- endif -%}
+
+    {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div class="newsletter-form__field-wrapper">
+        
+        <!-- Name Field -->
+        <div class="stay-connect field name-field">
+          <input
+            id="NewsletterFormName--{{ section.id }}"
+            type="text"
+            name="contact[first_name]"
+            class="field__input"
+            value="{{ form.first_name }}"
+            autocorrect="off"
+            autocapitalize="words"
+            placeholder="Your Name (optional)"
+            aria-required="true"
+            required
+          >
+         
+        </div>
+        
+        <!-- Email Field -->
+        <div class="field email-field">
+          <input
+            id="NewsletterForm--{{ section.id }}"
+            type="email"
+            name="contact[email]"
+            class="field__input"
+            value="{{ form.email }}"
+            aria-required="true"
+            autocorrect="off"
+            autocapitalize="off"
+            autocomplete="email"
+            {% if form.errors %}
+              autofocus
+              aria-invalid="true"
+              aria-describedby="ContactFooter-error"
+            {% elsif form.posted_successfully? %}
+              aria-describedby="ContactFooter-success"
+            {% endif %}
+            placeholder="Email Address (required)"
+            required
+          >
+          
+        </div>
+        <button
+            type="submit"
+            class="newsletter-form__button field__button button"
+            name="commit"
+            id="Subscribe"
+            aria-label="{{ 'newsletter.button_label' | t }}"
+          >
+            {{ section.settings.button_label }}
+            <img src="{{ section.settings.button_image | img_url: 'master' }}">
+          </button>
+        <p>{{ section.settings.privacy_note }}</p>
+        
+        <!-- Error Message -->
+        {%- if form.errors -%}
+          <small class="newsletter-form__message form__message" id="ContactFooter-error">
+            {%- render 'icon-error' -%}
+            {{- form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email -}}
+          </small>
+        {%- endif -%}
+      </div>
+      
+      <!-- Success Message -->
+      {%- if form.posted_successfully? -%}
+        <h3
+          class="newsletter-form__message newsletter-form__message--success form__message"
+          id="ContactFooter-success"
+          tabindex="-1"
+          autofocus
+        >
+          {% render 'icon-success' -%}
+          {{- 'newsletter.success' | t }}
+        </h3>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</div>
+</div>
+{% schema %}
+{
+  "name": "Stay Connect form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "main_heading",
+      "label": "Main Heading",
+      "default": "Be the First to Know!"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Join our Syruvia community and never miss a moment of flavor inspiration!"
+    },
+    {
+      "type": "text",
+      "id": "feature_1_title",
+      "label": "Feature 1 Title",
+      "default": "New Flavor Releases"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_1_description",
+      "label": "Feature 1 Description",
+      "default": "Get early access to seasonal and limited-edition syrups."
+    },
+    {
+      "type": "text",
+      "id": "feature_2_title",
+      "label": "Feature 2 Title",
+      "default": "Exclusive Discounts"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_2_description",
+      "label": "Feature 2 Description",
+      "default": "Enjoy special offers and discounts, just for our subscribers."
+    },
+    {
+      "type": "text",
+      "id": "feature_3_title",
+      "label": "Feature 3 Title",
+      "default": "Recipe Inspiration"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_3_description",
+      "label": "Feature 3 Description",
+      "default": "Discover fresh ideas and tips to elevate your drinks and desserts."
+    },
+    {
+      "type": "text",
+      "id": "feature_4_title",
+      "label": "Feature 4 Title",
+      "default": "Behind-the-Scenes Content"
+    },
+    {
+      "type": "textarea",
+      "id": "feature_4_description",
+      "label": "Feature 4 Description",
+      "default": "Go behind the scenes with us and see the craftsmanship that goes into every bottle."
+    },
+    {
+      "type": "image_picker",
+      "id": "leaf_image",
+      "label": "Leaf Image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "I’M IN"
+    },
+    {
+      "type": "image_picker",
+      "id": "button_image",
+      "label": "Button Image"
+    },
+    {
+      "type": "textarea",
+      "id": "privacy_note",
+      "label": "Privacy Note",
+      "default": "We respect your privacy. Your information is safe with us, and we’ll only send you the best of Syruvia."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stay Connect form"
+    }
+  ]
+}
+{% endschema %}

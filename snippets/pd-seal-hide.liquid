@@ -1,0 +1,53 @@
+{%- comment -%} Hide Seal Subscriptions purchase-options widget everywhere on PDP (storewide via app-embed too). {%- endcomment -%}
+<style id="pd-seal-hide-css">
+/* Hide Seal Subscriptions third-party widget on product pages */
+html body [class*="sealsubs" i],
+html body [id*="sealsubs" i],
+html body [class*="seal-subs" i],
+html body [id*="seal-subs" i],
+html body [class*="seal_subscriptions" i],
+html body [id*="seal_subscriptions" i],
+html body [class*="seal-subscriptions" i],
+html body [id*="seal-subscriptions" i],
+html body [data-seal-subscriptions],
+html body [data-sealapps],
+html body div[data-app="seal-subscriptions"],
+html body .pd .seal-subscriptions-widget,
+html body .pd #seal-subscriptions-widget,
+html body .pd .sealsubs-product-page-widget,
+html body .pd .sealsubs-widget,
+html body .pd .sealsubs-container,
+html body .pd .seal-subscriptions-product-block{
+  display:none!important;
+  visibility:hidden!important;
+  height:0!important;
+  width:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important
+}
+/* Also hide any anchor/footer that says "Powered by Seal Subscriptions" */
+html body .pd a[href*="sealsubscriptions" i],
+html body .pd a[href*="seal-subscriptions" i]{display:none!important}
+</style>
+<script>
+(function(){
+  function nuke(){
+    var sels = ['[class*="sealsubs"]','[id*="sealsubs"]','[class*="seal-subs"]','[id*="seal-subs"]','[class*="seal_subscriptions"]','[id*="seal_subscriptions"]','[class*="seal-subscriptions"]','[id*="seal-subscriptions"]'];
+    sels.forEach(function(s){
+      document.querySelectorAll(s).forEach(function(n){
+        if(!n.dataset.pdSealNuked){n.dataset.pdSealNuked='1';n.style.display='none';n.style.visibility='hidden';n.style.height='0';n.style.overflow='hidden';try{n.remove();}catch(e){}}
+      });
+    });
+    /* Also catch any node that contains the powered-by text */
+    document.querySelectorAll('.pd a,.pd small,.pd span,.pd div').forEach(function(n){
+      var t = (n.textContent||'').toLowerCase();
+      if(t.indexOf('powered by seal subscriptions')>-1 && t.length<60){try{n.closest('div')?n.closest('div').remove():n.remove();}catch(e){}}
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nuke);else nuke();
+  var mo = new MutationObserver(function(){nuke();});
+  try{mo.observe(document.body||document.documentElement,{childList:true,subtree:true});}catch(e){}
+  setTimeout(nuke,500); setTimeout(nuke,1500); setTimeout(nuke,3000);
+})();
+</script>

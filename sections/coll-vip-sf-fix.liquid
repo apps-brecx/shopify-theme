@@ -1,0 +1,34 @@
+{%- comment -%} Collection: live flavor search (filters .pcard by name/family/desc). VIP card logic lives in snippets/meta-tags.liquid. {%- endcomment -%}
+<style id="scol-search-css">
+.pgrid.scol-q .pcard[data-scm="0"]{ display:none !important; }
+.scol-noresults{ grid-column:1 / -1; text-align:center; padding:40px 20px; font-family:'Josefin Sans',sans-serif; color:#5a4632; font-size:16px; line-height:1.5; }
+.scol-noresults .scol-clear{ display:inline-block; margin-top:12px; background:#c58548; color:#fff; border:0; border-radius:999px; padding:9px 18px; font-family:'Archivo',sans-serif; font-weight:700; font-size:12px; letter-spacing:.04em; text-transform:uppercase; cursor:pointer; }
+</style>
+<script>
+(function(){
+  if(window.__syrColSearch) return; window.__syrColSearch=1;
+  var SEL='.scol-search input[data-search]';
+  var engaged=false;
+  function input(){ return document.querySelector(SEL); }
+  function term(){ var i=input(); return i?(i.value||'').trim().toLowerCase():''; }
+  function visibleCards(){ var out=[],c=document.querySelectorAll('.pgrid .pcard'); for(var i=0;i<c.length;i++){ if(c[i].offsetParent!==null) out.push(c[i]); } return out; }
+  function setCount(){ var ce=document.querySelector('.result-count'); if(!ce||!engaged) return; var n=visibleCards().length; ce.textContent=n+' flavor'+(n===1?'':'s'); }
+  function toggleNoResults(){ var grid=document.querySelector('.pgrid'); if(!grid) return; var q=term(); var nr=document.querySelector('.scol-noresults'); var n=visibleCards().length;
+    if(q && n===0){ if(!nr){ nr=document.createElement('div'); nr.className='scol-noresults'; grid.appendChild(nr); } nr.innerHTML='No flavors match your search. <button type="button" class="scol-clear">Clear search</button>'; nr.style.display=''; }
+    else if(nr){ nr.style.display='none'; } }
+  function apply(){ var q=term(); var grids=document.querySelectorAll('.pgrid'); for(var g=0;g<grids.length;g++){ grids[g].classList.toggle('scol-q', q.length>0); }
+    var cards=document.querySelectorAll('.pgrid .pcard'); for(var i=0;i<cards.length;i++){ var c=cards[i]; if(!q){ c.removeAttribute('data-scm'); continue; } var hay=((c.getAttribute('data-name')||'')+' '+(c.getAttribute('data-family')||'')+' '+(c.getAttribute('data-desc')||'')).toLowerCase(); c.setAttribute('data-scm', hay.indexOf(q)!==-1?'1':'0'); }
+    setCount(); toggleNoResults(); setTimeout(setCount,200); }
+  var t; function deb(){ engaged=true; clearTimeout(t); t=setTimeout(apply,110); }
+  document.addEventListener('input', function(e){ if(e.target && e.target.matches && e.target.matches(SEL)) deb(); });
+  document.addEventListener('search', function(e){ if(e.target && e.target.matches && e.target.matches(SEL)){ engaged=true; apply(); } });
+  document.addEventListener('click', function(e){ var cl=e.target.closest && e.target.closest('.scol-clear'); if(cl){ var i=input(); if(i){ i.value=''; engaged=true; apply(); i.focus(); } return; } if(e.target.closest && (e.target.closest('.fchip')||e.target.closest('[data-sort]')||e.target.closest('.scol-sort'))){ setTimeout(apply,90); } });
+  function watch(){ try{ var grid=document.querySelector('.pgrid'); if(grid && !grid.__scolW){ grid.__scolW=1; new MutationObserver(function(){ if(term()) deb(); }).observe(grid,{childList:true}); } }catch(e){} }
+  function init(){ if(!input()) return; watch(); if(term()){ engaged=true; apply(); } }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', init); } else { init(); }
+  window.addEventListener('load', init);
+})();
+</script>
+{% schema %}
+{ "name": "VIP SF Card Fix", "settings": [] }
+{% endschema %}

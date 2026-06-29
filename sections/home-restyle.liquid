@@ -1,0 +1,123 @@
+{%- comment -%} Syruvia — Home restyle layer (non-destructive). Scoped to body.index only.
+  Loaded from footer-group so it renders site-wide but only styles the homepage.
+  Toggle off with the section's "Enable" setting to fully revert. {%- endcomment -%}
+{%- if section.settings.enabled -%}
+{%- assign ink = section.settings.ink_color | default: '#39220f' -%}
+{%- assign accent = section.settings.accent_color | default: '#c58548' -%}
+{%- assign cream = section.settings.bg_color | default: '#FFFBF4' -%}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700;800&family=Josefin+Sans:ital,wght@0,300..700;1,300..600&display=swap');
+
+  body.index #MainContent{ font-family:'Josefin Sans',sans-serif !important; background:{{ cream }}; }
+  body.index #MainContent p,
+  body.index #MainContent li,
+  body.index #MainContent .cst-custom-product-content,
+  body.index #MainContent .price,
+  body.index #MainContent .rte{ font-family:'Josefin Sans',sans-serif !important; }
+
+  body.index #MainContent h1,
+  body.index #MainContent h2,
+  body.index #MainContent h3,
+  body.index #MainContent h4,
+  body.index #MainContent .cst-custom-section-heading,
+  body.index #MainContent [class*="section-heading"],
+  body.index #MainContent [class*="title-wrapper"] > *,
+  body.index #MainContent .product-card .cst-custom-product-content > a{
+    font-family:'Archivo Black',sans-serif !important;
+    letter-spacing:-.01em;
+  }
+  body.index #MainContent h1 a,
+  body.index #MainContent h2 a,
+  body.index #MainContent h3 a{ font-family:'Archivo Black',sans-serif !important; color:inherit !important; }
+
+  body.index #MainContent .cst-custom-section-heading,
+  body.index #MainContent .title-wrapper h2,
+  body.index #MainContent .title-wrapper-with-link h2,
+  body.index #MainContent h2.title{ text-transform:uppercase; }
+
+  body.index #MainContent .button,
+  body.index #MainContent .button-link.button,
+  body.index #MainContent a.button,
+  body.index #MainContent button.button,
+  body.index #MainContent .cst-btn,
+  body.index #MainContent .quick-add__submit{
+    background:{{ ink }} !important;
+    color:{{ cream }} !important;
+    border:2px solid {{ ink }} !important;
+    border-radius:999px !important;
+    font-family:'Archivo Black',sans-serif !important;
+    font-weight:400 !important;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    box-shadow:3px 3px 0 {{ accent }};
+    transition:transform .15s ease, box-shadow .15s ease, background .2s ease, color .2s ease;
+  }
+  body.index #MainContent .button:hover,
+  body.index #MainContent .button-link.button:hover,
+  body.index #MainContent a.button:hover,
+  body.index #MainContent button.button:hover,
+  body.index #MainContent .cst-btn:hover,
+  body.index #MainContent .quick-add__submit:hover{
+    background:{{ accent }} !important;
+    color:{{ ink }} !important;
+    transform:translate(-2px,-2px);
+    box-shadow:5px 5px 0 {{ ink }};
+  }
+
+  body.index #MainContent .product-card{
+    background:#ffffff !important;
+    border:2px solid {{ ink }} !important;
+    border-radius:18px !important;
+    box-shadow:4px 4px 0 {{ ink }} !important;
+    overflow:hidden;
+    transition:transform .2s cubic-bezier(.3,1,.5,1), box-shadow .2s ease;
+  }
+  body.index #MainContent .product-card:hover{
+    transform:translate(-3px,-3px);
+    box-shadow:7px 7px 0 {{ ink }} !important;
+  }
+  body.index #MainContent .product-card .cst-custom-product-content > a,
+  body.index #MainContent .product-card .product-title{
+    color:{{ ink }} !important;
+    text-transform:none;
+    letter-spacing:-.01em;
+  }
+
+  body.index #MainContent .multicolumn-card,
+  body.index #MainContent .multicolumn-list__item .multicolumn-card__info{
+    background:#ffffff !important;
+    border:2px solid {{ ink }} !important;
+    border-radius:18px !important;
+    box-shadow:4px 4px 0 {{ ink }} !important;
+    overflow:hidden;
+    transition:transform .2s cubic-bezier(.3,1,.5,1), box-shadow .2s ease;
+  }
+  body.index #MainContent .multicolumn-card:hover{
+    transform:translate(-3px,-3px);
+    box-shadow:7px 7px 0 {{ ink }} !important;
+  }
+
+  body.index #MainContent .cst-collection-titles li,
+  body.index #MainContent .cstcustom-collection-title-wrap a{
+    font-family:'Archivo',sans-serif !important;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+  }
+  body.index #MainContent .cst-collection-titles li.active a,
+  body.index #MainContent .cst-collection-titles li.active{
+    color:{{ accent }} !important;
+  }
+</style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Home Restyle",
+  "settings": [
+    { "type": "checkbox", "id": "enabled", "label": "Enable homepage restyle", "default": true },
+    { "type": "color", "id": "ink_color", "label": "Ink / text", "default": "#39220f" },
+    { "type": "color", "id": "accent_color", "label": "Copper accent", "default": "#c58548" },
+    { "type": "color", "id": "bg_color", "label": "Page background", "default": "#FFFBF4" }
+  ]
+}
+{% endschema %}

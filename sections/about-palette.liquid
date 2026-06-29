@@ -1,0 +1,260 @@
+<style>
+    .about-palette__inner{
+    
+       padding: 0 0 70px;
+    }
+    .about-palette__wrapper{
+          overflow: hidden;
+       padding: 50px 20px 60px;
+       border-radius: 20px;  
+    
+    }
+       .about-palette__title h2{
+       font-size: 45px;
+        color: #4a3827;
+        margin: 0;
+        line-height: 50px;
+        text-align: center;
+   }
+       .about-palette__title h3{
+                  font-family: "Manrope", sans-serif !important;
+       font-size: 45px;
+        color: #bb2a56;
+        margin: 0;
+        line-height: 50px;
+        text-align: center;
+        margin-bottom: 10px;
+        font-weight: 700;
+   }
+   .about-palette__subtitle{
+              font-family: "Manrope", sans-serif !important;
+              font-weight: 600;
+        text-align: center;
+          color: #4a3827;
+        font-size: 20px;
+        margin: 0;
+        line-height: 30px;
+}
+.about-palette__heading{
+    margin-bottom: 50px;
+}
+.about-palette__items{
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+.about-palette__item{
+    flex: 1 0 18%;
+    max-width: calc(100% / 5 - 24px);
+}
+.about-palette__item a{
+    text-decoration: none;
+}
+.about-palette__item:nth-child(even){
+    padding-top: 40px;
+}
+.about-palette__item-image{
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 20px;
+}
+.about-palette__item-image img{
+       width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: all 0.3s ease;
+ }
+ .about-palette__item-title{
+    text-align: center;
+    color: #4a3827;
+    font-size: 20px;
+    line-height: 30px;
+    font-family: Inter24pt !important;
+}
+.about-palette__item:hover .about-palette__item-image img{
+    transform: scale(1.1);
+}
+.about-palette__button{
+            font-family: "Manrope", sans-serif !important;
+      display: block;
+    text-decoration: none;
+    border: 2px solid #bb2a56;
+    color: #bb2a56;
+    width: fit-content;
+    margin: 60px auto 0;
+    padding: 10px 20px;
+    border-radius: 99999px;
+    transition: all 0.3s ease;
+}
+.about-palette__button:hover{
+  background: #bb2a56;
+  color: #fff;
+}
+@media(max-width: 768px){
+  .about-palette__wrapper{
+    padding: 40px 20px;
+  }
+  .about-palette__title h3{
+    font-size: 34px;
+    line-height: normal;
+  }
+  .about-palette__item-title{
+    line-height: normal;
+    font-size: 15px;
+  }
+  .about-palette__subtitle{
+    line-height: normal;
+  }
+     .about-palette__inner{
+       padding: 0 0 50px;
+    }
+    .about-palette__item-image{
+      margin-bottom: 10px;
+    }
+  .palette__heading {
+    margin-bottom: 30px;
+  }
+    .about-palette__title h2{
+       font-size: 36px;
+      
+   }
+   .about-palette__item{
+    flex: 1 0 45%;
+    max-width: calc(100% / 2 - 15px);
+}
+ .about-palette__item:last-child{
+    flex: 1 0 100%;
+    max-width: 100%;
+}
+.about-palette__item:last-child .about-palette__item-image{
+    aspect-ratio: 16 / 9;
+}
+.about-palette__item:nth-child(even){
+    padding-top: 0;
+}
+
+}
+</style>
+
+<div class="about-palette__inner  scroll-trigger animate--slide-in" style="background-color: {{ section.settings.bg_color }};">
+  <div class="page-width">
+    <div class="about-palette__wrapper" style="background-color: {{ section.settings.container_color }};">
+      
+      <div class="about-palette__heading">
+        <div class="about-palette__title">
+          {{ section.settings.title }}
+        </div>
+        <div class="about-palette__subtitle">
+          {{ section.settings.subtitle }}
+        </div>
+      </div>
+
+      <div class="about-palette__items">
+        {% for block in section.blocks %}
+          <div class="about-palette__item" {{ block.shopify_attributes }}>
+            <a href="{{ block.settings.link }}">              
+              <div class="about-palette__item-image">
+                {% if block.settings.image != blank %}
+                  {{
+                    block.settings.image
+                    | image_url: width: 600
+                    | image_tag: loading: 'lazy', alt: block.settings.title
+                  }}
+                {% endif %}
+              </div>
+              <div class="about-palette__item-title">
+                {{ block.settings.title }}
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+
+    {% if section.settings.button_text != blank %}
+      <a class="about-palette__button" href="{{ section.settings.button_url }}">
+        {{ section.settings.button_text }}
+      </a>
+    {% endif %}
+
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "About Palette",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "title",
+      "label": "Section Title"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle"
+    },
+    {
+      "type" : "text",
+      "id": "button_text",
+      "label" : "Button Text"
+    },
+    {
+      "type" : "url",
+      "id": "button_url",
+      "label" : "Button Url"
+    },
+    {
+    "type": "color",
+    "id": "bg_color",
+    "label": "Background Color",
+    "default": "#fff6ee"
+  },
+  {
+    "type": "color",
+    "id": "container_color",
+    "label": "Container Color",
+    "default": "#fff9f4"
+  }
+  ],
+  "blocks": [
+    {
+      "type": "palette_item",
+      "name": "Palette Item",
+      "settings": [
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Item Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Item Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Item Title"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Palette",
+      "blocks": [
+        {
+          "type": "palette_item"
+        },
+        {
+          "type": "palette_item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

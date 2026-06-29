@@ -1,0 +1,36 @@
+<div class="bss-bcp-hyper-link-app-block"></div>
+<script>
+let isShowHyperLink = false;
+if (BSS_BCP.hyperLink.applyTo === 0) {
+    isShowHyperLink = true;
+} else if (BSS_BCP.hyperLink.applyTo === 1) {
+    const customerId = "{{ customer.id | append: "" | downcase }}";
+    BSS_BCP.hyperLink.customerId.forEach(item => {
+        if (+item === +customerId) {
+            isShowHyperLink = true;
+            return;
+        }
+    })
+} else if (BSS_BCP.hyperLink.applyTo === 2) {
+    const customerTags = "{{ customer.tags | join: ', ' | downcase }}".split(',');
+    BSS_BCP.hyperLink.customerTag.forEach(item => {
+        if (customerTags.includes(item)) {
+            isShowHyperLink = true;
+            return;
+        }
+    })
+}
+
+if (isShowHyperLink) {
+    const elementHyperLink = document.querySelector('.bss-bcp-hyper-link-app-block');
+    if (elementHyperLink) {
+        elementHyperLink.insertAdjacentHTML(`beforeend`,
+            `
+                <h3 class="bss-bcp-link-wrapper" style="text-align: center;">
+                    <a href="/apps/customer-portal" target="_blank" class="bss-bcp-link">${BSS_BCP.hyperLink.text}</a>
+                </h3>
+            `
+        );
+    }
+}
+</script>

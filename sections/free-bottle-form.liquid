@@ -1,0 +1,664 @@
+{% comment %}
+  Claim Your Free Bottle Form
+{% endcomment %}
+<div class="iced-rty-free-bottle">
+  <div class="page-width free-bottle-form">
+    <h2>Claim Your Free Bottle</h2>
+    <p>Fill out your details below and we’ll send you a free bottle, no strings attached!</p>
+
+    <!-- Form -->
+    <form id="free-bottle-claim-form" method="post">
+      <div class="form-wrapper-gt">
+        <div class="name-field">
+          <input type="text" name="name" id="name" placeholder="Name" required>
+        </div>
+        <div class="email-field">
+          <input type="email" name="email" id="email" placeholder="Email" required>
+        </div>
+      </div>
+      <button type="submit">Get My Free Bottle</button>
+    </form>
+
+    <!-- Already Claimed Message -->
+    <div id="claimed-message" style="display:none;">
+      <p>🎉 You have already claimed your free bottle!</p>
+    </div>
+  </div>
+</div>
+
+<!-- Success Popup -->
+<div id="success-popup" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span id="close-popup" class="close">&times;</span>
+    <h3>Thank you for Claiming Your Free Bottle!</h3>
+    <div id="persistent-add-to-cart" class="product-details" style="display:none;">
+      <img src="https://syruvia.com/cdn/shop/files/iced_coffee_syrup.png?v=1727438159" alt="Iced Coffee Syrup">
+      <p style="font-weight:800;font-size:20px;">Code is: ICEDCOFFEEFORU</p>
+      <button onclick="addToCart()">Add to Cart</button>
+    </div>
+  </div>
+</div>
+
+<!-- Already Claimed Popup -->
+<div id="already-claimed-popup" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span id="close-claimed-popup" class="close">&times;</span>
+    <h3>You have already claimed your free bottle!</h3>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Form submission event handler
+    document.getElementById('free-bottle-claim-form').onsubmit = function (event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const email = document.getElementById('email').value.trim();
+
+      // Check the email using the PHP backend
+      fetch('https://poojas.sg-host.com/freebottle/proxy.php', {  // Path to your PHP script
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.exists) {
+          // If the email is found in the Shopify segment, show the message
+          alert(data.message);
+          document.getElementById('claimed-message').style.display = 'block';
+          document.getElementById('already-claimed-popup').style.display = 'block';
+        } else {
+          // If the email is not found, process the claim and display success
+          alert("Claim successful! You can now enjoy your free bottle.");
+          document.getElementById('success-popup').style.display = 'block';
+          showPersistentAddToCart();
+          document.getElementById('free-bottle-claim-form').style.display = 'none';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      });
+
+      // Clear the form fields after submission
+      this.reset();
+    };
+
+    // Function to show the "Add to Cart" button
+    function showPersistentAddToCart() {
+      document.getElementById('persistent-add-to-cart').style.display = 'block';
+    }
+
+    // Close the success popup when the close button is clicked
+    document.getElementById('close-popup').onclick = function () {
+      document.getElementById('success-popup').style.display = 'none';
+    };
+
+    // Close the already claimed popup when the close button is clicked
+    document.getElementById('close-claimed-popup').onclick = function () {
+      document.getElementById('already-claimed-popup').style.display = 'none';
+    };
+
+    // Close the modal if clicked outside the modal content
+    window.onclick = function(event) {
+      if (event.target === document.getElementById('success-popup')) {
+        document.getElementById('success-popup').style.display = 'none';
+      }
+      if (event.target === document.getElementById('already-claimed-popup')) {
+        document.getElementById('already-claimed-popup').style.display = 'none';
+      }
+    };
+  });
+</script>
+
+<style>
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+      .free-bottle-form {
+        /* Add your styles here */
+      }
+
+      #success-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        z-index: 1000;
+      }
+
+      #close-popup {
+        font-size: 24px;
+        border: none;
+        background: none;
+        color: #000; /* Adjust the color as needed */
+        margin-bottom: 10px;
+      }
+
+      #close-popup:hover {
+        color: red; /* Change color on hover for better UX */
+      }
+      .page-width.free-bottle-form {
+    padding: 36px 15px 100px;
+    }
+    div#shopify-section-sections--22148954554652__header {
+    margin-bottom: 0;
+    }
+    .page-width.free-bottle-form h2 {
+    font-size: 48px;
+    font-weight: 700;
+    background: repeat padding-box border-box 0% 0% / auto auto scroll linear-gradient(180deg,#d76a52 2%,#dc915b),#3f765200;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    text-align: center;
+    margin: 0;
+    }
+    .utility-bar {
+        z-index: 2;
+        position: relative;
+    }
+    .form-wrapper-gt {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 2rem;
+    }
+    .page-width.free-bottle-form {
+    text-align: center;
+    }
+    form#free-bottle-claim-form input
+    {
+    background: transparent;
+    border: none;
+    box-shadow: none !important;
+    outline: none !important;
+    opacity: .502;
+        font-size: 1.6rem;
+    color: #4a3827;
+    visibility: visible !important;
+    height: auto;
+    padding: 20px 17px 20px;
+    border-bottom: 1px solid;
+    width: 100%;
+    line-height:0;
+    }
+    .form-wrapper-gt {
+    margin-bottom: 2rem;
+    }
+    .address-field {
+    margin-bottom: 2rem;
+    }
+    .section-header {
+    margin-bottom: 0;
+    }
+    form#free-bottle-claim-form button {
+    display: flex;
+    align-items: center;
+    border-radius: 23px;
+    margin: 0px auto;
+    background: #b85423;
+    font-size: 1.5rem;
+    color: #ffff;
+    padding: 0 3rem;
+    height: 45px;
+    border: 1px solid #b85423;
+    margin-top: 4rem;
+    cursor:pointer;
+    }
+    textarea#shipping-address {
+    background: transparent;
+    border: none;
+    box-shadow: none !important;
+    outline: none !important;
+    opacity: .502;
+    font-size: 1.6rem;color: #4a3827;
+    visibility: visible !important;
+    border-bottom: 1px solid;
+    width: 100%;
+    padding: 20px;
+    height: 68px !important;
+    resize: none;
+    }
+
+
+    div#success-popup {
+    background: rgb(255, 220, 189);
+    text-align:center;
+    width:50%;
+    }
+    .product-details img {
+    width: 100%;
+    max-width: 250px;
+    margin: 0 auto;
+    }
+
+    .product-details {
+    text-align: center;
+    }
+    .product-details button {
+    width: 100%;
+    box-sizing: border-box;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 2px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    user-select: none;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 20px;
+    padding: 0 10px;
+    overflow-x: clip;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(18, 18, 18);
+    color: rgb(255, 255, 255);
+    }
+    .product-details button:hover{
+    background-color:#121212 !important;
+    }
+    .title-wrapper-with-link.title-wrapper--self-padded-mobile.title-wrapper--no-top-margin {
+    justify-content: center;
+    }
+
+    .iced-coffee-banner-gt h2 {
+    font-size: 139px;
+    font-family: "JosefinSans";
+    color: rgb(172, 88, 49);
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1.045;
+    text-align: center;
+    text-shadow: 6.303px 11.37px 20.58px rgba(0, 0, 0, 0.24);
+    max-width: 800px;
+    }
+
+    #shopify-section-template--23447529062684__image_banner_NDCzWQ p {
+    font-size: 20px;
+    font-family: "JosefinSans";
+    color: rgb(0, 0, 0);
+    text-align: center;
+    line-height: normal;
+    }
+
+    .iced-coffee-banner-gt .banner__text.rte.subtitle {
+    margin: 0!important;
+    }
+
+
+    .iced-coffee-banner-gt .banner__media.media.scroll-trigger.animate--fade-in {
+    margin-top: -985px;
+    position: static;
+    object-position: bottom;
+    }
+
+    div#shopify-section-template--23447529062684__free_bottle_form_qK9WrG {
+    border-radius: 27px;
+    background-color: #db833c;
+    /* width: calc(100% - 50px); */
+    margin: 50px auto 60px;
+    padding: 83px 79px;
+    max-width: 1400px;
+    }
+
+    .page-width.free-bottle-form {
+    max-width: 100%;
+    background: #fff;
+    padding: 37px 96px 84px;
+          border-radius: 12px;
+    }
+
+    .page-width.free-bottle-form p {
+    font-size: 18px;
+    color: #000;
+    text-align: center;
+    line-height: normal;
+    }
+
+    .free-bottle-form form#free-bottle-claim-form {
+    margin-top: 50px;
+    }
+
+
+
+    .iced-coffee-banner-gt .banner__media.media.scroll-trigger.animate--fade-in img {
+        position: static;
+        object-position: bottom;
+        min-height: 1020px;
+    }
+
+    .iced-coffee-banner-gt {
+    display: flex;
+    flex-direction: column-reverse!important;
+    }
+
+    div#Banner-template--23447529062684__image_banner_NDCzWQ:before {
+    display: none;
+    }
+
+    div#Banner-template--23447529062684__image_banner_NDCzWQ:after {
+    display: none;
+    }
+
+    .iced-coffee-banner-gt .banner__media.media.scroll-trigger.animate--fade-in:before {
+    display: none;
+    }
+
+
+    .iced-coffee-banner-gt .banner__media.media.scroll-trigger.animate--fade-in:before {
+    display: none !important;
+    }
+
+    .iced-coffee-banner-gt .banner__content.banner__content--top-center.page-width.scroll-trigger.animate--slide-in {
+    position: relative;
+    }
+
+
+
+
+    .iced-coffee-banner-gt .banner__content.banner__content--top-center.page-width.scroll-trigger.animate--slide-in {
+    padding: 0;
+    max-width: 100%;
+    background: transparent !important;
+    }
+
+
+    ._1mrl40q0._1fragemlj._1fragem3c._1fragem55._1fragemm8._1fragemmc._1fragem2s._1fragemly._16s97g7f._16s97g7p._16s97g71j._16s97g71t {
+    display: none;
+    }
+    .icon-with-text {
+    display: grid;
+    grid-template-columns: 1fr 186px 1fr;
+    margin-top: 40px!important;
+    opacity: 0;
+
+    }
+
+
+    .icon-with-text ul.cstm-list-icons-right img {
+    width: 72px;
+    }
+
+    .icon-with-text ul.cstm-list-icons-left img {
+    width: 72px;
+    }
+
+    .icon-with-text ul {
+    padding: 0;
+    }
+
+    .icon-with-text ul li {
+    list-style: none;
+    font-size: 28px;
+    letter-spacing: -2px;
+    color: #000;
+    font-weight: 400;
+    text-align: right;
+    display: flex;
+    line-height: normal;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    }
+    .icon-with-text ul.cstm-list-icons-left li {
+    text-align: left;
+    }
+
+    ul.cstm-image-center img {
+        max-width: 206px;
+        max-height: 573px;
+        opacity: 0;
+    }
+
+    ul.cstm-image-center li {
+    display: block;
+    }
+
+    ul.cstm-image-center li span {
+    display: flex;
+    justify-content: center;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*responsiove*/
+
+
+    @media(max-width:1400px){
+    div#shopify-section-template--23447529062684__free_bottle_form_qK9WrG {
+    max-width: 1137px;
+    }
+    }
+
+
+    @media(max-width:1200px){
+    .page-width.free-bottle-form {
+    padding: 37px 38px 84px;
+    }
+    div#shopify-section-template--23447529062684__free_bottle_form_qK9WrG {
+    margin: 50px 30px 60px;
+    width: calc(100% - 60px);
+    }
+    }
+    @media(max-width:989px){
+    #shopify-section-sections--22148954554652__header h1, #shopify-section-sections--22148954554652__header a {
+    grid-area: auto!important;
+    }
+    }
+
+    @media(max-width:991px){
+    .page-width.free-bottle-form {
+    padding: 37px 38px 84px;
+    }
+    div#shopify-section-template--23447529062684__free_bottle_form_qK9WrG {
+    margin: 50px 25px 60px;
+    padding: 40px 40px;
+    }
+    .icon-with-text ul li {
+    font-size: 21px;
+    }
+    .icon-with-text ul li line {
+    max-width: 156px;
+    }
+
+    ul.cstm-list-icons-right li {
+    justify-content: right;
+    }
+    }
+
+
+
+    @media(max-width:767px){
+    #shopify-section-template--23447529062684__image_banner_NDCzWQ h2 {
+    font-size: 29px!important;
+    }
+    div#success-popup {
+    width: 80%;
+    }
+    .page-width.free-bottle-form h2 {
+    font-size: 34px !important;
+    }
+
+
+    .page-width.free-bottle-form h2 {
+    font-size: 40px;
+    }
+
+    .icon-with-text ul li {
+    font-size: 18px;
+    max-width: 90%;
+    }
+    ul.cstm-image-center img {
+    max-width: 103px;
+    max-height: 354px;
+    }
+    .iced-coffee-banner-gt .banner__media.media.scroll-trigger.animate--fade-in img {
+    min-height: 703px;
+    }
+    .iced-coffee-banner-gt .banner__media.media.scroll-trigger.animate--fade-in {
+    margin-top: -643px;
+    }
+    .icon-with-text ul li line {
+    max-width: 130px;
+    }
+    }
+
+
+
+
+    @media screen and (max-width: 749px) {
+    body .banner__media.media.scroll-trigger.animate--fade-in {
+     height: auto !important;
+    }
+    .icon-with-text ul.cstm-list-icons-right img, .icon-with-text ul.cstm-list-icons-left img {
+    width: 45px;
+    }
+    .icon-with-text {
+    grid-template-columns: 1fr 96px 1fr;
+    }
+    }
+
+
+
+    @media(max-width:575px){
+
+    .form-wrapper-gt {
+    grid-template-columns: 1fr;
+    }
+    .page-width.free-bottle-form {
+    padding: 37px 11px 84px;
+    }
+    .page-width.free-bottle-form p {
+    font-size: 16px;
+    }
+    div#shopify-section-template--23447529062684__free_bottle_form_qK9WrG {
+    width: calc(100% - 30px);
+    margin: 50px 15px 60px;
+    }
+    .icon-with-text ul li {
+    max-width: 100%;
+    }
+    .iced-coffee-banner-gt .banner__media.media.scroll-trigger.animate--fade-in img {
+    min-height: 724px;
+    }
+    ul.cstm-image-center img {
+    max-width: 97px;
+    max-height: 324px;
+    }
+    .icon-with-text ul li line {
+    max-width: 117px;
+    }
+    .iced-coffee-banner-gt .banner__media.media.scroll-trigger.animate--fade-in {
+    margin-top: -625px;
+    }
+    .icon-with-text ul li {
+    font-size: 16px;
+    }
+    }
+
+
+    @media(max-width:480px){
+    .icon-with-text ul.cstm-list-icons-right img, .icon-with-text ul.cstm-list-icons-left img {
+    width: 36px;
+    }
+    .icon-with-text ul li {
+    gap: 6px;
+    }
+    .icon-with-text ul li line {
+    max-width: 121px;
+    }
+
+    .iced-coffee-banner-gt .banner__media.media.scroll-trigger.animate--fade-in {
+    margin-top: -590px;
+    }
+    .iced-coffee-banner-gt .banner__media.media.scroll-trigger.animate--fade-in img {
+    min-height: 622px;
+    }
+    #shopify-section-template--23447529062684__image_banner_NDCzWQ h2 {
+        font-size: 27px!important;
+    }
+    .iced-coffee-banner-gt {
+    background: #e9e2e1;
+    background: linear-gradient(90deg, rgb(253 253 253 / 52%) 0%, rgb(233 226 225 / 81%) 35%);
+    }
+    }
+
+    @media(max-width:410px){
+    .icon-with-text ul li {
+    font-size: 14px;
+    }
+    .icon-with-text ul li line {
+    max-width: 92px;
+    }
+    #shopify-section-template--23447529062684__image_banner_NDCzWQ h2 {
+    font-size: 22px!important;
+    }
+    #shopify-section-template--23447529062684__image_banner_NDCzWQ p {
+    font-size: 17px;
+    }
+    }
+</style>
+
+{% schema %}
+{
+  "name": "Free Bottle form",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Free Bottle form"
+    }
+  ]
+}
+{% endschema %}

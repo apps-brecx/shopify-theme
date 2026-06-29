@@ -1,0 +1,104 @@
+{%- comment -%} Homepage polish: scroll-grow on every H2 + EYEBROW CHIPS too {%- endcomment -%}
+<style id="syr-home-polish-css">
+  /* Scroll-grow on section headings */
+  html body [id^="syr-cats-"] .syr-cats-head h2,
+  html body [id^="syr-new-"] .syr-new-h2,
+  html body [id^="syr-rev-"] h2,
+  html body [id^="syr-vip-"] h2,
+  html body [id^="syr-mail-"] h2,
+  html body [id^="syr-vid-"] h2{
+    transform-origin:center bottom;
+    transform:scale(.72);
+    opacity:.4;
+    transition:transform .8s cubic-bezier(.2,.6,.25,1), opacity .6s ease;
+    will-change:transform, opacity;
+  }
+  html body [id^="syr-cats-"] .syr-cats-head h2.scroll-grown,
+  html body [id^="syr-new-"] .syr-new-h2.scroll-grown,
+  html body [id^="syr-rev-"] h2.scroll-grown,
+  html body [id^="syr-vip-"] h2.scroll-grown,
+  html body [id^="syr-mail-"] h2.scroll-grown,
+  html body [id^="syr-vid-"] h2.scroll-grown{
+    transform:scale(1);
+    opacity:1;
+  }
+
+  /* Scroll-grow on EYEBROW chips (SHOP BY CATEGORY, JUST DROPPED, etc.) */
+  html body [id^="syr-cats-"] .syr-cats-eyebrow,
+  html body [id^="syr-new-"] .syr-new-eyebrow,
+  html body [id^="syr-rev-"] .syr-rev-eyebrow,
+  html body [id^="syr-vip-"] .syr-vip-eyebrow,
+  html body [id^="syr-mail-"] .syr-mail-eyebrow,
+  html body [id^="syr-vid-"] .syr-vid-eyebrow{
+    transform-origin:center;
+    transform:scale(.55);
+    opacity:.3;
+    transition:transform .8s cubic-bezier(.2,.6,.25,1), opacity .6s ease;
+    will-change:transform, opacity;
+  }
+  html body [id^="syr-cats-"] .syr-cats-eyebrow.scroll-grown,
+  html body [id^="syr-new-"] .syr-new-eyebrow.scroll-grown,
+  html body [id^="syr-rev-"] .syr-rev-eyebrow.scroll-grown,
+  html body [id^="syr-vip-"] .syr-vip-eyebrow.scroll-grown,
+  html body [id^="syr-mail-"] .syr-mail-eyebrow.scroll-grown,
+  html body [id^="syr-vid-"] .syr-vid-eyebrow.scroll-grown{
+    transform:scale(1);
+    opacity:1;
+  }
+
+  /* Mobile fixes for existing sections */
+  @media (max-width:760px){
+    html body [id^="syr-new-"] .syr-new-head{ text-align:center !important; }
+    html body [id^="syr-new-"] .syr-new-head > div{ margin:0 auto !important; }
+    html body [id^="syr-new-"] .syr-new-eyebrow{ margin:0 auto 12px !important; }
+    html body [id^="syr-new-"] .syr-new-h2{ text-align:center !important; }
+    html body [id^="syr-new-"] .syr-new-sub{ text-align:center !important; margin:0 auto !important; max-width:34ch !important; }
+    html body [id^="syr-new-"] .syr-new-foot{ justify-content:center !important; }
+    html body [id^="syr-new-"] .syr-new-grid{
+      padding:8px 16px 24px !important;
+      scroll-padding-left:16px !important;
+      scroll-padding-right:16px !important;
+    }
+    html body [id^="syr-new-"] .syr-new-card{
+      flex:0 0 78vw !important;
+      max-width:300px !important;
+      scroll-snap-align:center !important;
+    }
+  }
+
+  html body section[id^="syr-"]{ contain:layout style; }
+</style>
+
+<script id="syr-home-polish-js">
+(function(){
+  if (window.__syrHomePolishInit) return; window.__syrHomePolishInit = true;
+  function setup(){
+    var sel = '[id^="syr-cats-"] .syr-cats-head h2, [id^="syr-new-"] .syr-new-h2, [id^="syr-rev-"] h2, [id^="syr-vip-"] h2, [id^="syr-mail-"] h2, [id^="syr-vid-"] h2, [id^="syr-cats-"] .syr-cats-eyebrow, [id^="syr-new-"] .syr-new-eyebrow, [id^="syr-rev-"] .syr-rev-eyebrow, [id^="syr-vip-"] .syr-vip-eyebrow, [id^="syr-mail-"] .syr-mail-eyebrow, [id^="syr-vid-"] .syr-vid-eyebrow';
+    var items = document.querySelectorAll(sel);
+    if (!items.length) return;
+    if (!('IntersectionObserver' in window)){
+      items.forEach(function(h){ h.classList.add('scroll-grown'); });
+      return;
+    }
+    if (!window.__syrGrowObs){
+      window.__syrGrowObs = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting){ e.target.classList.add('scroll-grown'); window.__syrGrowObs.unobserve(e.target); }
+        });
+      }, { threshold:.2, rootMargin:'0px 0px -5% 0px' });
+    }
+    items.forEach(function(h){
+      if (h.dataset.growBound) return;
+      h.dataset.growBound = '1';
+      window.__syrGrowObs.observe(h);
+    });
+  }
+  setup();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
+  window.addEventListener('load', setup);
+  if ('MutationObserver' in window){ new MutationObserver(setup).observe(document.body, {childList:true, subtree:true}); }
+  setTimeout(function(){
+    document.querySelectorAll('[id^="syr-cats-"] .syr-cats-head h2, [id^="syr-new-"] .syr-new-h2, [id^="syr-rev-"] h2, [id^="syr-vip-"] h2, [id^="syr-mail-"] h2, [id^="syr-vid-"] h2, [id^="syr-cats-"] .syr-cats-eyebrow, [id^="syr-new-"] .syr-new-eyebrow, [id^="syr-rev-"] .syr-rev-eyebrow, [id^="syr-vip-"] .syr-vip-eyebrow, [id^="syr-mail-"] .syr-mail-eyebrow, [id^="syr-vid-"] .syr-vid-eyebrow').forEach(function(h){ if (!h.classList.contains('scroll-grown')) h.classList.add('scroll-grown'); });
+  }, 3000);
+})();
+</script>

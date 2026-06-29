@@ -1,0 +1,35 @@
+{%- comment -%}
+  Renders an inline SVG icon based on the icon name.
+  Used by hero_chip and why_card blocks in brand-page section.
+
+  Usage: {% render 'pd-block-icon', icon: block.settings.icon %}
+{%- endcomment -%}
+
+{%- case icon -%}
+  {%- when 'circle_slash' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M5 5l14 14"/></svg>
+  {%- when 'droplet' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 C 7 6, 7 14, 12 22 C 17 14, 17 6, 12 2 Z M12 7 V 18"/></svg>
+  {%- when 'leaf' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 C 7 9, 5 13, 5 16 a 7 7 0 0 0 14 0 c 0 -3 -2 -7 -7 -13 Z"/></svg>
+  {%- when 'check' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg>
+  {%- when 'flag' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22 V 4 l 6 2 l 6 -2 l 4 2 v 14 l -4 -2 l -6 2 l -6 -2 Z"/></svg>
+  {%- when 'flag_solid' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 9 H 21 M3 13 H 21 M3 17 H 21"/><rect x="3" y="5" width="9" height="6" fill="currentColor" stroke="none"/></svg>
+  {%- when 'shield' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L20 6 V12 C20 16.5 16.4 20.5 12 22 C7.6 20.5 4 16.5 4 12 V6 L12 3 Z"/><path d="M8.5 12 L11 14.5 L15.5 9.5"/></svg>
+  {%- when 'feather' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4 C 12 4, 5 11, 5 18 C 5 19.2, 5.8 20, 7 20 C 14 20, 21 13, 21 5 C 21 4.4, 20.6 4, 20 4 Z"/><path d="M5 20 L11 14"/></svg>
+  {%- when 'square_split' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="4.5" width="15" height="15" rx="2"/><path d="M4.5 12 H 19.5 M12 4.5 V 19.5"/></svg>
+  {%- when 'star' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
+  {%- when 'heart' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+  {%- when 'bottle' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2 H 15 V 6 L 17 9 V 20 a 2 2 0 0 1 -2 2 H 9 a 2 2 0 0 1 -2 -2 V 9 L 9 6 Z"/></svg>
+  {%- when 'sparkle' -%}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L13.5 9 L19.5 10.5 L13.5 12 L12 18 L10.5 12 L4.5 10.5 L10.5 9 Z"/><path d="M19 4 L20 6 L22 7 L20 8 L19 10 L18 8 L16 7 L18 6 Z"/></svg>
+{%- endcase -%}

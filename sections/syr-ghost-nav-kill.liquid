@@ -1,0 +1,329 @@
+{%- comment -%}
+  Site-wide cleanup (footer group, every page):
+  1) Removes orphaned duplicate bottom nav (nav.pd-snav-v4).
+  2) De-duplicates the cart drawer (#SyrCD).
+  3) Restores cart-drawer overlay (full-viewport translucent scrim).
+  4) Enforces brand fonts on the cart drawer.
+  5) Fixes collection-card star ratings (proportional last star).
+  6) Sets the product-page marquee strip words per product type.
+  7) "More" menu: adds Blog Posts + Recipes; removes Coffee/Cocktail Recipes on desktop.
+  8) Cart-drawer upsell: VIP price for syrups only (never packs/boba/pumps).
+  9) Cart-drawer VIP savings teaser: counts syrups only (matches the cart page).
+  10) Cart page (.scart): force brand fonts (Archivo Black headings) over theme base CSS.
+{%- endcomment -%}
+<style>
+  html body nav.pd-snav-v4,
+  html body nav.pd-snav-v4[role],
+  html body nav.pd-snav-v4.is-revealed,
+  html body nav.pd-snav-v4.is-revealed[role],
+  html body nav.pd-snav-v4 *{
+    display:none !important; pointer-events:none !important; visibility:hidden !important; opacity:0 !important;
+  }
+  html body #SyrCD{
+    position:fixed !important; inset:0 !important;
+    top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
+    width:100% !important; min-width:100% !important; max-width:none !important; height:100% !important;
+  }
+  html body #SyrCD .scd-bd,
+  html body #SyrCD .scd-bd[data-syr-close]{
+    position:absolute !important; inset:0 !important;
+    top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
+    width:100% !important; min-width:100% !important; max-width:none !important; height:100% !important;
+    background:rgba(40,24,10,.46) !important; border:0 !important; border-radius:0 !important; box-shadow:none !important;
+  }
+  html body #SyrCD,
+  html body #SyrCD .scd-panel,
+  html body #SyrCD .dh-sub,
+  html body #SyrCD .d-line-sub,
+  html body #SyrCD .d-vip-copy .s,
+  html body #SyrCD .d-ship-top,
+  html body #SyrCD .added-txt .mt{ font-family:'Josefin Sans','Josefin',sans-serif !important; }
+  html body #SyrCD .dh-title,
+  html body #SyrCD .added-txt .nm,
+  html body #SyrCD .d-line-name,
+  html body #SyrCD .up-name,
+  html body #SyrCD .d-vip-copy .h,
+  html body #SyrCD .d-sub .v,
+  html body #SyrCD .d-line-price,
+  html body #SyrCD .up-price,
+  html body #SyrCD .d-empty h3,
+  html body #SyrCD .scd-checkout,
+  html body #SyrCD .scd-continue,
+  html body #SyrCD .d-empty .cta,
+  html body #SyrCD .d-qty span,
+  html body #SyrCD .d-ship-top b,
+  html body #SyrCD .d-upsell-h .t{ font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important; }
+  html body #SyrCD .up-vip{ display:inline-block; align-self:flex-start; margin-top:4px; background:#dcebf2; color:#1f5a85; border:1px solid #2f7bb0; border-radius:999px; font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400; font-size:8.5px; letter-spacing:.04em; text-transform:uppercase; padding:3px 8px; line-height:1.2; }
+  html body #SyrCD .up-vipnow{ display:inline-block; background:#c5e4d4; color:#2f6b4a; border-radius:999px; font-family:'Archivo Black','Archivo',sans-serif !important; font-size:8.5px; letter-spacing:.04em; text-transform:uppercase; padding:1px 6px; margin-left:4px; vertical-align:middle; }
+  /* Cart page (.scart): brand display font on headings/prices/totals, body font on copy — beats theme base CSS */
+  html body .scart .cart-title,
+  html body .scart .line-name,
+  html body .scart .line-price,
+  html body .scart .line-tag,
+  html body .scart .vip-tag,
+  html body .scart .vip-tag .vp,
+  html body .scart .qty span,
+  html body .scart .sum-h,
+  html body .scart .sum-row .v,
+  html body .scart .sum-total .lab,
+  html body .scart .sum-total .val,
+  html body .scart .sum-vip-l,
+  html body .scart .sum-vip-v,
+  html body .scart .vipb-copy h3,
+  html body .scart .vipb-cta,
+  html body .scart .checkout,
+  html body .scart .empty h2,
+  html body .scart .empty-cta,
+  html body .scart .modal-top h2,
+  html body .scart .modal-primary,
+  html body .scart .ctoast,
+  html body .scart h1, html body .scart h2, html body .scart h3, html body .scart h4{ font-family:'Archivo Black','Archivo',sans-serif !important; }
+  html body .scart,
+  html body .scart p,
+  html body .scart .line-sub,
+  html body .scart .sum-row span,
+  html body .scart .vipb-copy p,
+  html body .scart .sum-note,
+  html body .scart .modal-top p,
+  html body .scart .modal-perk,
+  html body .scart .modal-signin{ font-family:'Josefin Sans','Josefin',sans-serif !important; }
+  html body .scart .sum-row .v{ font-family:'Archivo Black','Archivo',sans-serif !important; }
+</style>
+<script>
+(function(){
+  var STAR_FULL = '#c58548';
+  var STAR_EMPTY = '#e7d8c4';
+  var gidCounter = 0;
+  var RECIPES_URL = '/pages/recipe';
+  var BLOG_URL = '/blogs/blog-posts';
+  var CART_VIP = {% if customer and customer.tags contains 'VIP' %}true{% else %}false{% endif %};
+  function killGhostNav(){
+    var g = document.querySelectorAll('nav.pd-snav-v4');
+    for (var i=0;i<g.length;i++){ try { g[i].remove(); } catch(e){} }
+  }
+  function dedupeCartDrawer(){
+    var d = document.querySelectorAll('#SyrCD');
+    for (var i=1;i<d.length;i++){ try { d[i].remove(); } catch(e){} }
+  }
+  function cents(t){ var m=(t||'').replace(/[^0-9.]/g,''); var f=parseFloat(m); return isNaN(f)?0:Math.round(f*100); }
+  function money2(c){ return '$'+(c/100).toFixed(2); }
+  function isNonSyrup(nm){
+    nm = (nm || '').toLowerCase();
+    var bad = ['boba','bursting','pearl','topping','bundle','jelly','variety','sampler','combo','sticker','tote','pack'];
+    for (var i=0;i<bad.length;i++){ if (nm.indexOf(bad[i]) !== -1) return true; }
+    if (nm.indexOf('pump') !== -1 && nm.indexOf('pumpkin') === -1) return true;
+    return false;
+  }
+  function lineFinalCents(line){
+    var el = line.querySelector('.d-line-price'); if(!el) return 0;
+    var clone = el.cloneNode(true);
+    var was = clone.querySelector('.was'); if (was && was.parentNode) was.parentNode.removeChild(was);
+    return cents(clone.textContent);
+  }
+  function fixCartUpsell(){
+    var ups = document.querySelectorAll('#SyrCD .up');
+    for (var i=0;i<ups.length;i++){
+      var up = ups[i];
+      if (up.getAttribute('data-syrvip')) continue;
+      var nameEl = up.querySelector('.up-name'); var priceEl = up.querySelector('.up-price');
+      if (!nameEl || !priceEl){ continue; }
+      var nm = nameEl.textContent || '';
+      if (isNonSyrup(nm)){ up.setAttribute('data-syrvip','skip'); continue; }
+      var reg = cents(priceEl.textContent);
+      if (!(reg > 799)){ up.setAttribute('data-syrvip','skip'); continue; }
+      up.setAttribute('data-syrvip','1');
+      if (CART_VIP){
+        priceEl.innerHTML = '$7.99 <span class="up-vipnow">VIP</span>';
+      } else {
+        var body = up.querySelector('.up-body') || priceEl.parentNode;
+        if (body && !body.querySelector('.up-vip')){
+          var b = document.createElement('span'); b.className = 'up-vip'; b.textContent = 'Unlock VIP $7.99';
+          body.appendChild(b);
+        }
+      }
+    }
+  }
+  function fixDrawerSavings(){
+    var root = document.getElementById('SyrCD'); if(!root) return;
+    if(CART_VIP) return;
+    var lines = root.querySelectorAll('.d-line'); if(!lines.length) return;
+    var save = 0;
+    for (var i=0;i<lines.length;i++){
+      var nmEl = lines[i].querySelector('.d-line-name');
+      var nm = nmEl ? nmEl.textContent : '';
+      if (isNonSyrup(nm)) continue;
+      var qEl = lines[i].querySelector('[data-syr-q]'); var q = qEl ? (parseInt(qEl.textContent,10)||1) : 1;
+      var fc = lineFinalCents(lines[i]);
+      if (fc > 0){ var d = fc - (799*q); if (d > 0) save += d; }
+    }
+    var amt = root.querySelector('.d-vip:not(.active) .d-vip-copy .amt');
+    if (amt) amt.textContent = money2(save);
+    var tease = root.querySelector('.d-vsave.tease');
+    if (tease){ var v = tease.querySelector('span:last-child'); if (v) v.textContent = '−' + money2(save); }
+    if (save <= 0){
+      var banner = root.querySelector('.d-vip:not(.active)'); if (banner) banner.style.display = 'none';
+      if (tease) tease.style.display = 'none';
+    }
+  }
+  function setLinkText(a, txt){
+    var span = a.querySelector('span');
+    if (span && /\\S/.test(span.textContent) && !/^\\s*[\\u2192\\u203a>]/.test(span.textContent)){ span.textContent = txt; return; }
+    var done = false, kids = a.childNodes;
+    for (var i=0;i<kids.length;i++){ if (kids[i].nodeType === 3 && kids[i].textContent.trim()){ kids[i].textContent = txt; done = true; break; } }
+    if (!done) a.textContent = txt;
+  }
+  function insertNavItem(refAnchor, label, href, where){
+    var li = refAnchor.closest('li');
+    var src = li || refAnchor;
+    if (!src.parentNode) return;
+    var clone = src.cloneNode(true);
+    var a = (clone.tagName === 'A') ? clone : clone.querySelector('a');
+    if (a){ setLinkText(a, label); a.setAttribute('href', href); a.setAttribute('data-syr-recipe-link','1'); }
+    if (where === 'after'){ src.parentNode.insertBefore(clone, src.nextSibling); }
+    else { src.parentNode.insertBefore(clone, src); }
+  }
+  function addRecipesToSyrnav(){
+    var cols = document.querySelectorAll('.syrnav-col, .syrnav-dwr-col');
+    for (var c=0;c<cols.length;c++){
+      var col = cols[c];
+      if (col.getAttribute('data-syr-recipes') === '1') continue;
+      var links = col.querySelectorAll('a');
+      var blog = null, hasRecipe = false;
+      for (var i=0;i<links.length;i++){
+        var t = (links[i].textContent || '').toLowerCase();
+        if (!blog && t.indexOf('blog') !== -1){ blog = links[i]; }
+        if (t.indexOf('recipe') !== -1){ hasRecipe = true; }
+      }
+      if (!blog){ continue; }
+      if (!hasRecipe){ insertNavItem(blog, 'Recipes', RECIPES_URL, 'after'); }
+      col.setAttribute('data-syr-recipes','1');
+    }
+  }
+  function addToSyrnMore(){
+    var cols = document.querySelectorAll('.syrn-mega-col');
+    for (var c=0;c<cols.length;c++){
+      var col = cols[c];
+      if (col.getAttribute('data-syr-br') === '1') continue;
+      var lc = col.textContent.toLowerCase();
+      if (lc.indexOf('coffee recipe') === -1 && lc.indexOf('cocktail recipe') === -1) continue;
+      var anchors = col.querySelectorAll('a');
+      if (!anchors.length) continue;
+      var hasBlog = false, hasAll = false;
+      for (var i=0;i<anchors.length;i++){
+        var t = (anchors[i].textContent || '').toLowerCase();
+        if (t.indexOf('blog') !== -1){ hasBlog = true; }
+        if (t === 'recipes' || t.indexOf('all recipe') !== -1){ hasAll = true; }
+      }
+      var firstA = anchors[0];
+      if (!hasBlog){ insertNavItem(firstA, 'Blog Posts', BLOG_URL, 'before'); }
+      if (!hasAll){ insertNavItem(firstA, 'Recipes', RECIPES_URL, 'before'); }
+      for (var r=0;r<anchors.length;r++){
+        var tr = (anchors[r].textContent || '').toLowerCase();
+        if (tr.indexOf('coffee recipe') !== -1 || tr.indexOf('cocktail recipe') !== -1){
+          var li = anchors[r].closest('li') || anchors[r];
+          if (li.parentNode){ li.parentNode.removeChild(li); }
+        }
+      }
+      col.setAttribute('data-syr-br','1');
+    }
+  }
+  function fixCardStars(){
+    var wraps = document.querySelectorAll('.pcard .stars');
+    for (var w=0; w<wraps.length; w++){
+      var wrap = wraps[w];
+      var card = wrap.closest('[data-rdisp], [data-rt], .pcard');
+      if (!card) continue;
+      var rt = parseFloat(card.getAttribute('data-rdisp'));
+      if (isNaN(rt)){ var rtt = parseFloat(card.getAttribute('data-rt')); if(!isNaN(rtt)) rt = rtt/10; }
+      if (isNaN(rt) || rt <= 0) continue;
+      if (wrap.getAttribute('data-frac') === String(rt)) continue;
+      var stars = wrap.querySelectorAll('.str');
+      if (stars.length < 5) continue;
+      var full = Math.floor(rt + 0.001);
+      var frac = rt - full;
+      for (var i=0;i<stars.length;i++){
+        var svg = stars[i]; var path = svg.querySelector('path'); if (!path) continue;
+        var oldDefs = svg.querySelector('defs'); if (oldDefs) oldDefs.remove();
+        if (i < full){ path.setAttribute('fill', STAR_FULL); }
+        else if (i === full && frac > 0.05){
+          var pct = Math.round(frac * 100); var gid = 'syrstar-' + (gidCounter++);
+          var ns = 'http://www.w3.org/2000/svg';
+          var defs = document.createElementNS(ns, 'defs');
+          var lg = document.createElementNS(ns, 'linearGradient');
+          lg.setAttribute('id', gid); lg.setAttribute('x1','0'); lg.setAttribute('y1','0'); lg.setAttribute('x2','1'); lg.setAttribute('y2','0');
+          var s1 = document.createElementNS(ns,'stop'); s1.setAttribute('offset', pct+'%'); s1.setAttribute('stop-color', STAR_FULL);
+          var s2 = document.createElementNS(ns,'stop'); s2.setAttribute('offset', pct+'%'); s2.setAttribute('stop-color', STAR_EMPTY);
+          lg.appendChild(s1); lg.appendChild(s2); defs.appendChild(lg); svg.insertBefore(defs, svg.firstChild);
+          path.setAttribute('fill', 'url(#' + gid + ')');
+        } else { path.setAttribute('fill', STAR_EMPTY); }
+      }
+      wrap.setAttribute('data-frac', String(rt));
+    }
+  }
+  function sweep(){ killGhostNav(); dedupeCartDrawer(); addRecipesToSyrnav(); addToSyrnMore(); fixCartUpsell(); fixDrawerSavings(); fixCardStars(); }
+  sweep();
+  if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', sweep); }
+  window.addEventListener('load', sweep);
+  var t = null;
+  function debouncedSweep(){ if (t) clearTimeout(t); t = setTimeout(sweep, 180); }
+  try {
+    var mo = new MutationObserver(function(muts){
+      for (var i=0;i<muts.length;i++){
+        var added = muts[i].addedNodes;
+        for (var j=0;j<added.length;j++){
+          var n = added[j]; if (n.nodeType !== 1) continue;
+          if (n.classList && n.classList.contains('pd-snav-v4')){ try { n.remove(); } catch(e){} }
+          else if (n.id === 'SyrCD'){ dedupeCartDrawer(); fixCartUpsell(); fixDrawerSavings(); }
+          else { debouncedSweep(); }
+        }
+      }
+    });
+    mo.observe(document.documentElement, { childList:true, subtree:true });
+  } catch(e){}
+})();
+</script>
+
+{%- if request.page_type == 'product' -%}
+  {%- assign sfx = product.template_suffix -%}
+  {%- assign tl = product.title | downcase -%}
+  {%- assign ty = product.type | downcase -%}
+  {%- assign tg = product.tags | join: ',' | downcase -%}
+  {%- assign mwords = 'Pure Cane Sweet,Real Flavor,50+ Servings,Gluten-Free,Kosher Certified,Made in the USA' -%}
+  {%- if ty contains 'boba' or tl contains 'boba' or tl contains 'bursting' or tg contains 'boba' or sfx contains 'boba' or sfx contains 'bursting' -%}
+    {%- assign mwords = 'Popping Boba,Bursting With Flavor,Real Fruit Taste,Fun in Every Sip,Gluten-Free,Made in the USA' -%}
+  {%- elsif tl contains 'pump' or ty contains 'pump' -%}
+    {%- assign mwords = 'Mess-Free Pours,Fits Most Bottles,Easy & Reusable,Built to Last,Made for Syruvia' -%}
+  {%- elsif sfx == 'variety-pack' -%}
+    {%- assign mwords = 'Best Value,Mix & Match,Bundle & Save,Real Flavor,Gluten-Free,Made in the USA' -%}
+  {%- elsif sfx == 'shaved-ice' -%}
+    {%- assign mwords = 'Real Flavor,Vibrant Color,Snow-Cone Ready,Gluten-Free,Kosher Certified,Made in the USA' -%}
+  {%- elsif sfx == 'shakable-toppings' -%}
+    {%- assign mwords = 'Real Flavor,Shake It On,Fun Topping,Gluten-Free,Kosher Certified,Made in the USA' -%}
+  {%- elsif tl contains 'sugar free' or tl contains 'sugar-free' or tg contains 'sugar-free' or tg contains 'sugar free' or tg contains 'sugarfree' -%}
+    {%- assign mwords = 'Zero Sugar,Zero Calories,Real Flavor,Gluten-Free,Kosher Certified,Made in the USA' -%}
+  {%- endif -%}
+  <script>
+  (function(){
+    var words = {{ mwords | split: ',' | json }};
+    function applyMarquee(){
+      var track = document.querySelector('.pd-marquee-track');
+      if(!track || !words.length) return false;
+      if(track.getAttribute('data-syrwords') === words.join('|')) return true;
+      var html='';
+      for(var r=0;r<2;r++){ for(var i=0;i<words.length;i++){ html += '<span>'+words[i]+'</span>'; } }
+      track.innerHTML = html;
+      track.setAttribute('data-syrwords', words.join('|'));
+      return true;
+    }
+    if(!applyMarquee()){ document.addEventListener('DOMContentLoaded', applyMarquee); }
+  })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Ghost Nav Cleanup",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

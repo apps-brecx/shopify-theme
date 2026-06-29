@@ -1,0 +1,269 @@
+{%- comment -%} Announcement Bar — fully customizable, multi-block, marquee or static {%- endcomment -%}
+{%- if section.settings.show -%}
+<style id="syr-ann-{{ section.id }}-css">
+  #syr-ann-{{ section.id }}{
+    background:{{ section.settings.bg_color | default: '#1F1813' }};
+    color:{{ section.settings.text_color | default: '#FAF3E9' }};
+    padding:{{ section.settings.padding_y | default: 9 }}px 12px;
+    {%- case section.settings.font -%}
+    {%- when 'display' -%}font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important;
+    {%- when 'sans' -%}font-family:'Archivo',sans-serif;
+    {%- when 'body' -%}font-family:'Josefin Sans','Josefin',sans-serif;
+    {%- endcase -%}
+    font-weight:{{ section.settings.font_weight | default: 700 }};
+    font-size:{{ section.settings.font_size | default: 11.5 }}px;
+    letter-spacing:{{ section.settings.letter_spacing | default: 14 | divided_by: 100.0 }}em;
+    text-transform:{{ section.settings.text_transform | default: 'uppercase' }};
+    text-align:center;
+    overflow:hidden;
+    {%- if section.settings.border_top_color != blank -%}border-top:1.5px solid {{ section.settings.border_top_color }};{%- endif -%}
+    {%- if section.settings.border_bottom_color != blank -%}border-bottom:1.5px solid {{ section.settings.border_bottom_color }};{%- endif -%}
+    position:relative;
+    touch-action:pan-y;
+  }
+
+  {%- if section.settings.animation == 'scroll' -%}
+  #syr-ann-{{ section.id }} .ann-marquee{
+    overflow:hidden;
+    -webkit-mask-image:linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%);
+            mask-image:linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%);
+  }
+  #syr-ann-{{ section.id }} .ann-track{
+    display:flex; align-items:center; gap:{{ section.settings.gap | default: 24 }}px;
+    animation:annScroll-{{ section.id }} {{ section.settings.scroll_speed | default: 30 }}s linear infinite;
+    width:max-content;
+    will-change:transform;
+  }
+  @keyframes annScroll-{{ section.id }} {
+    from { transform:translateX(0); }
+    to { transform:translateX(-50%); }
+  }
+  {%- if section.settings.pause_on_hover -%}
+  #syr-ann-{{ section.id }}:hover .ann-track,
+  #syr-ann-{{ section.id }} .ann-track.is-touched{ animation-play-state:paused; }
+  {%- endif -%}
+  @media (prefers-reduced-motion: reduce){
+    #syr-ann-{{ section.id }} .ann-track{ animation:none; }
+  }
+  {%- else -%}
+  #syr-ann-{{ section.id }} .ann-track{
+    display:flex; align-items:center; justify-content:center;
+    gap:{{ section.settings.gap | default: 16 }}px;
+    flex-wrap:wrap;
+  }
+  {%- endif -%}
+
+  #syr-ann-{{ section.id }} .ann-seg{
+    display:inline-flex; align-items:center; gap:6px;
+    white-space:nowrap;
+  }
+  #syr-ann-{{ section.id }} .ann-pill{
+    padding:3px 11px;
+    border-radius:999px;
+    font-weight:800;
+  }
+  #syr-ann-{{ section.id }} a.ann-link,
+  #syr-ann-{{ section.id }} a.ann-btn{
+    text-decoration:none;
+    transition:opacity .15s ease, background .15s ease, color .15s ease, transform .12s ease;
+    cursor:pointer;
+  }
+  #syr-ann-{{ section.id }} a.ann-link:hover{ opacity:0.7; }
+  #syr-ann-{{ section.id }} .ann-btn{
+    padding:4px 13px;
+    border:1.5px solid;
+    border-radius:999px;
+    font-weight:800;
+  }
+  #syr-ann-{{ section.id }} a.ann-btn:hover{ transform:translateY(-1px); filter:brightness(1.08); }
+  #syr-ann-{{ section.id }} .ann-sep{
+    opacity:0.5;
+    font-weight:400;
+  }
+
+  @media (max-width:480px){
+    #syr-ann-{{ section.id }}{
+      font-size:{{ section.settings.font_size_mobile | default: 10.5 }}px;
+      padding:{{ section.settings.padding_y | default: 9 | minus: 2 }}px 8px;
+    }
+  }
+</style>
+
+<section id="syr-ann-{{ section.id }}" class="syr-ann" data-ann>
+  {%- if section.settings.animation == 'scroll' -%}
+    <div class="ann-marquee" data-ann-marquee>
+      <div class="ann-track" data-ann-track>
+        {%- for round in (1..2) -%}
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'text' -%}
+                <span class="ann-seg" {{ block.shopify_attributes }} style="{% if block.settings.color != blank %}color:{{ block.settings.color }};{% endif %}{% if block.settings.bold %}font-weight:800;{% endif %}{% if block.settings.italic %}font-style:italic;{% endif %}">{{ block.settings.text }}</span>
+              {%- when 'highlight' -%}
+                <span class="ann-seg ann-pill" {{ block.shopify_attributes }} style="background:{{ block.settings.bg_color }};color:{{ block.settings.text_color }};{% if block.settings.bold %}font-weight:800;{% endif %}">{{ block.settings.text }}</span>
+              {%- when 'link' -%}
+                <a class="ann-seg ann-link" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }} style="{% if block.settings.color != blank %}color:{{ block.settings.color }};{% endif %}{% if block.settings.underline %}text-decoration:underline;{% endif %}{% if block.settings.bold %}font-weight:800;{% endif %}">{{ block.settings.text }}</a>
+              {%- when 'button' -%}
+                <a class="ann-seg ann-btn" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }} style="background:{{ block.settings.bg_color }};color:{{ block.settings.text_color }};border-color:{{ block.settings.border_color }};">{{ block.settings.text }}</a>
+              {%- when 'separator' -%}
+                <span class="ann-seg ann-sep" {{ block.shopify_attributes }} style="{% if block.settings.color != blank %}color:{{ block.settings.color }};{% endif %}">{%- case block.settings.style -%}{%- when 'dot' -%}·{%- when 'bullet' -%}•{%- when 'star' -%}★{%- when 'sparkle' -%}✦{%- when 'pipe' -%}|{%- when 'arrow' -%}→{%- when 'slash' -%}/{%- endcase -%}</span>
+            {%- endcase -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- else -%}
+    <div class="ann-track">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'text' -%}
+            <span class="ann-seg" {{ block.shopify_attributes }} style="{% if block.settings.color != blank %}color:{{ block.settings.color }};{% endif %}{% if block.settings.bold %}font-weight:800;{% endif %}{% if block.settings.italic %}font-style:italic;{% endif %}">{{ block.settings.text }}</span>
+          {%- when 'highlight' -%}
+            <span class="ann-seg ann-pill" {{ block.shopify_attributes }} style="background:{{ block.settings.bg_color }};color:{{ block.settings.text_color }};{% if block.settings.bold %}font-weight:800;{% endif %}">{{ block.settings.text }}</span>
+          {%- when 'link' -%}
+            <a class="ann-seg ann-link" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }} style="{% if block.settings.color != blank %}color:{{ block.settings.color }};{% endif %}{% if block.settings.underline %}text-decoration:underline;{% endif %}{% if block.settings.bold %}font-weight:800;{% endif %}">{{ block.settings.text }}</a>
+          {%- when 'button' -%}
+            <a class="ann-seg ann-btn" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }} style="background:{{ block.settings.bg_color }};color:{{ block.settings.text_color }};border-color:{{ block.settings.border_color }};">{{ block.settings.text }}</a>
+          {%- when 'separator' -%}
+            <span class="ann-seg ann-sep" {{ block.shopify_attributes }} style="{% if block.settings.color != blank %}color:{{ block.settings.color }};{% endif %}">{%- case block.settings.style -%}{%- when 'dot' -%}·{%- when 'bullet' -%}•{%- when 'star' -%}★{%- when 'sparkle' -%}✦{%- when 'pipe' -%}|{%- when 'arrow' -%}→{%- when 'slash' -%}/{%- endcase -%}</span>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</section>
+
+{%- if section.settings.animation == 'scroll' and section.settings.pause_on_hover -%}
+<script>
+(function(){
+  var root = document.getElementById('syr-ann-{{ section.id }}');
+  if (!root) return;
+  var track = root.querySelector('[data-ann-track]');
+  var marquee = root.querySelector('[data-ann-marquee]');
+  if (!track || !marquee) return;
+  function pause(){ track.classList.add('is-touched'); }
+  function resume(){ track.classList.remove('is-touched'); }
+  marquee.addEventListener('touchstart', pause, { passive:true });
+  marquee.addEventListener('touchend', resume, { passive:true });
+  marquee.addEventListener('touchcancel', resume, { passive:true });
+  marquee.addEventListener('pointerdown', pause);
+  marquee.addEventListener('pointerup', resume);
+  marquee.addEventListener('pointercancel', resume);
+  marquee.addEventListener('pointerleave', resume);
+})();
+</script>
+{%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "class": "section-header syr-ann-section",
+  "max_blocks": 20,
+  "settings": [
+    { "type": "checkbox", "id": "show", "label": "Show announcement bar", "default": true },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#1F1813" },
+    { "type": "color", "id": "text_color", "label": "Default text color", "default": "#FAF3E9" },
+    { "type": "color", "id": "border_top_color", "label": "Top border (optional)" },
+    { "type": "color", "id": "border_bottom_color", "label": "Bottom border (optional)" },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "select", "id": "font", "label": "Font", "default": "sans", "options": [
+      { "value": "display", "label": "Archivo Black (bold display)" },
+      { "value": "sans", "label": "Archivo (sans)" },
+      { "value": "body", "label": "Josefin Sans (body)" }
+    ]},
+    { "type": "range", "id": "font_size", "label": "Font size (desktop)", "min": 9, "max": 20, "step": 0.5, "default": 11.5, "unit": "px" },
+    { "type": "range", "id": "font_size_mobile", "label": "Font size (mobile)", "min": 9, "max": 18, "step": 0.5, "default": 10.5, "unit": "px" },
+    { "type": "range", "id": "font_weight", "label": "Font weight", "min": 400, "max": 900, "step": 100, "default": 700 },
+    { "type": "range", "id": "letter_spacing", "label": "Letter spacing (×0.01em)", "min": 0, "max": 30, "step": 1, "default": 14, "unit": "em" },
+    { "type": "select", "id": "text_transform", "label": "Text case", "default": "uppercase", "options": [
+      { "value": "none", "label": "Normal" },
+      { "value": "uppercase", "label": "UPPERCASE" },
+      { "value": "lowercase", "label": "lowercase" },
+      { "value": "capitalize", "label": "Capitalize" }
+    ]},
+    { "type": "range", "id": "padding_y", "label": "Vertical padding", "min": 4, "max": 24, "step": 1, "default": 9, "unit": "px" },
+    { "type": "range", "id": "gap", "label": "Gap between items", "min": 4, "max": 60, "step": 2, "default": 16, "unit": "px" },
+
+    { "type": "header", "content": "Animation" },
+    { "type": "select", "id": "animation", "label": "Animation", "default": "static", "options": [
+      { "value": "static", "label": "Static (centered, wraps to multiple lines if long)" },
+      { "value": "scroll", "label": "Scrolling marquee" }
+    ]},
+    { "type": "range", "id": "scroll_speed", "label": "Marquee speed (lower = faster)", "min": 10, "max": 120, "step": 2, "default": 30, "unit": "s" },
+    { "type": "checkbox", "id": "pause_on_hover", "label": "Pause on hover/touch", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Free shipping on $25+" },
+        { "type": "color", "id": "color", "label": "Color (leave blank for section default)" },
+        { "type": "checkbox", "id": "bold", "label": "Bold", "default": false },
+        { "type": "checkbox", "id": "italic", "label": "Italic", "default": false }
+      ]
+    },
+    {
+      "type": "highlight",
+      "name": "Highlight pill",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "MONDAY40" },
+        { "type": "color", "id": "bg_color", "label": "Pill background", "default": "#FCE2A0" },
+        { "type": "color", "id": "text_color", "label": "Pill text color", "default": "#1F1813" },
+        { "type": "checkbox", "id": "bold", "label": "Bold", "default": true }
+      ]
+    },
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Link text", "default": "Shop now" },
+        { "type": "url", "id": "url", "label": "Link URL" },
+        { "type": "color", "id": "color", "label": "Color (leave blank for section default)" },
+        { "type": "checkbox", "id": "underline", "label": "Underline", "default": false },
+        { "type": "checkbox", "id": "bold", "label": "Bold", "default": false }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Button text", "default": "Shop now" },
+        { "type": "url", "id": "url", "label": "Button link" },
+        { "type": "color", "id": "bg_color", "label": "Background", "default": "#FCE2A0" },
+        { "type": "color", "id": "text_color", "label": "Text color", "default": "#1F1813" },
+        { "type": "color", "id": "border_color", "label": "Border color", "default": "#1F1813" }
+      ]
+    },
+    {
+      "type": "separator",
+      "name": "Separator",
+      "settings": [
+        { "type": "select", "id": "style", "label": "Style", "default": "dot", "options": [
+          { "value": "dot", "label": "Middle dot ·" },
+          { "value": "bullet", "label": "Bullet •" },
+          { "value": "star", "label": "Star ★" },
+          { "value": "sparkle", "label": "Sparkle ✦" },
+          { "value": "pipe", "label": "Pipe |" },
+          { "value": "arrow", "label": "Arrow →" },
+          { "value": "slash", "label": "Slash /" }
+        ]},
+        { "type": "color", "id": "color", "label": "Color (leave blank for section default)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar",
+      "blocks": [
+        { "type": "text", "settings": { "text": "40% OFF ENTIRE SITE" } },
+        { "type": "separator", "settings": { "style": "dot" } },
+        { "type": "text", "settings": { "text": "USE CODE" } },
+        { "type": "highlight", "settings": { "text": "MONDAY40", "bg_color": "#FCE2A0", "text_color": "#1F1813" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

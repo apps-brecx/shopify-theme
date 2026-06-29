@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "syr-recipes",
+      "settings": {
+        "blog_handle": "recipe-blogs",
+        "eyebrow": "Syruvia Sips",
+        "title": "Make it <em>at home</em>.",
+        "sub": "Easy, delicious recipes for coffee, cocktails, shaved ice and more — powered by Syruvia syrups."
+      }
+    }
+  },
+  "order": ["main"]
+}
