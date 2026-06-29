@@ -1,0 +1,2 @@
+# shopify-theme
+New Theme
