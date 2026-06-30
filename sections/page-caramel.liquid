@@ -1,0 +1,471 @@
+{%- comment -%} Caramel landing page — 50% OFF promo. Original neo-brutalist Syruvia layout: split hero with offer card + sticky promo code, caramel marquee, count-up stats, JS-pinned scaling caramel-bottle trio, live caramel collection grid, drizzle bands, sugar-free band, VIP band. Sibling in style to page-fancyfood but its own caramel identity. {%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign hcol = s.collection_handle | default: 'caramel' -%}
+{%- assign csf = s.collection_sugarfree | default: 'sugar-free-caramel' -%}
+{%- assign cl = collections[hcol] -%}
+{%- assign sf = collections[csf] -%}
+{%- assign code = s.promo_code | default: 'CARAMEL50' -%}
+{%- assign vip_url = s.vip_url | default: '/account/login' -%}
+{%- assign shop_url = s.shop_url | default: '/collections/caramel' -%}
+{%- assign hero_src = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Caramel_Coffee_Syrup.webp?v=1776790313' -%}
+{%- if s.hero_image != blank -%}{%- assign hero_src = s.hero_image | image_url: width: 1000 -%}{%- endif -%}
+{%- assign t1 = s.trio_1 | default: 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Caramel_Coffee_Syrup.webp?v=1776790313' -%}
+{%- if s.trio_1_img != blank -%}{%- assign t1 = s.trio_1_img | image_url: width: 760 -%}{%- endif -%}
+{%- assign t2 = s.trio_2 | default: 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Salted_Caramel_Syrup.webp?v=1776793868' -%}
+{%- if s.trio_2_img != blank -%}{%- assign t2 = s.trio_2_img | image_url: width: 760 -%}{%- endif -%}
+{%- assign t3 = s.trio_3 | default: 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Caramel_Chocolate_Syrup.webp?v=1776707088' -%}
+{%- if s.trio_3_img != blank -%}{%- assign t3 = s.trio_3_img | image_url: width: 760 -%}{%- endif -%}
+
+<style id="cm-{{ section.id }}-css">
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+  #cm-{{ section.id }}{
+    --ink:#34200f;--ink-2:#6e4a2a;--cream:#fbf1e1;--paper:#fff8ee;--white:#fff;
+    --caramel:#c87a2c;--caramel-2:#e0a14e;--gold:#f3c466;--toffee:#a85e1f;--cocoa:#5a3413;
+    --milk:#f6e3c6;--blush:#f7d9b0;--deep:#7a3d12;--berry:#b23a48;
+    --fh:'Fredoka','Baloo 2','Arial Black',sans-serif;--fb:'Source Sans 3','Myriad Pro',system-ui,sans-serif;
+    background:var(--cream);color:var(--ink);font-family:var(--fb);position:relative;overflow:visible;
+  }
+  #cm-{{ section.id }} *{box-sizing:border-box;}
+  #cm-{{ section.id }} .cm-wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  #cm-{{ section.id }} .cm-eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--white);color:var(--ink);border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-family:var(--fh);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:8px 18px;line-height:1;}
+  #cm-{{ section.id }} .cm-h2{font-family:var(--fh);font-weight:700;font-size:clamp(30px,6vw,52px);line-height:1.0;letter-spacing:-.01em;margin:14px 0 0;color:var(--ink);}
+  #cm-{{ section.id }} .cm-h2 em{font-style:normal;color:var(--caramel);}
+  #cm-{{ section.id }} .cm-rev{opacity:0;transform:translateY(28px) scale(.92);transition:opacity .55s ease, transform .75s cubic-bezier(.2,.8,.2,1.4);}
+  #cm-{{ section.id }} .cm-rev.in{opacity:1;transform:none;}
+  #cm-{{ section.id }} .cm-pop{opacity:0;will-change:transform,opacity;}
+  #cm-{{ section.id }} .cm-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;font-family:var(--fh);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;padding:16px 26px;border:2.5px solid var(--ink);cursor:pointer;transition:transform .16s ease, box-shadow .16s ease;}
+  #cm-{{ section.id }} .cm-btn--caramel{background:var(--caramel);color:#fff;box-shadow:4px 4px 0 var(--ink);}
+  #cm-{{ section.id }} .cm-btn--caramel:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
+  #cm-{{ section.id }} .cm-btn--gold{background:var(--gold);color:var(--ink);box-shadow:4px 4px 0 var(--ink);}
+  #cm-{{ section.id }} .cm-btn--gold:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
+  #cm-{{ section.id }} .cm-btn--ghost{background:var(--white);color:var(--ink);box-shadow:4px 4px 0 var(--ink);}
+  #cm-{{ section.id }} .cm-btn--ghost:hover{background:var(--milk);transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
+  #cm-{{ section.id }} .cm-btnrow{display:flex;gap:12px;flex-wrap:wrap;}
+  #cm-{{ section.id }} .cm-drip{position:absolute;inset:0;background-image:radial-gradient(var(--blush) 7px, transparent 8px),radial-gradient(var(--gold) 6px, transparent 7px),radial-gradient(var(--milk) 9px, transparent 10px);background-size:240px 240px,300px 300px,200px 200px;background-position:0 0,120px 70px,60px 160px;opacity:.45;pointer-events:none;z-index:0;}
+
+  /* HERO */
+  #cm-{{ section.id }} .cm-hero{padding:54px 0 46px;position:relative;z-index:2;}
+  #cm-{{ section.id }} .cm-hero .cm-wrap{position:relative;display:grid;grid-template-columns:minmax(0,1fr) min(460px,42%);align-items:center;column-gap:clamp(24px,4vw,54px);row-gap:26px;}
+  #cm-{{ section.id }} .cm-hero-copy{max-width:600px;position:relative;z-index:3;}
+  #cm-{{ section.id }} .cm-flash{display:inline-flex;align-items:center;gap:8px;background:var(--berry);color:#fff;border:2.5px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-family:var(--fh);font-weight:700;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;padding:9px 18px;line-height:1;}
+  #cm-{{ section.id }} .cm-flash .pulse{width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(243,196,102,.7);animation:cmpulse{{ section.id }} 1.6s infinite;}
+  @keyframes cmpulse{{ section.id }}{0%{box-shadow:0 0 0 0 rgba(243,196,102,.7)}70%{box-shadow:0 0 0 9px rgba(243,196,102,0)}100%{box-shadow:0 0 0 0 rgba(243,196,102,0)}}
+  #cm-{{ section.id }} .cm-hero h1{font-family:var(--fh);font-weight:700;font-size:clamp(44px,9vw,82px);line-height:.92;letter-spacing:-.025em;margin:18px 0 0;color:var(--ink);}
+  #cm-{{ section.id }} .cm-hero h1 em{font-style:normal;color:var(--caramel);}
+  #cm-{{ section.id }} .cm-hero h1 .off{display:inline-block;color:var(--berry);}
+  #cm-{{ section.id }} .cm-hero .cm-sub{font-size:clamp(17px,2.1vw,21px);color:var(--ink-2);font-weight:600;margin:18px 0 0;max-width:46ch;line-height:1.55;}
+  #cm-{{ section.id }} .cm-hero .cm-btnrow{margin-top:26px;}
+  /* offer card */
+  #cm-{{ section.id }} .cm-offer{position:relative;z-index:3;background:var(--white);border:3px solid var(--ink);border-radius:26px;box-shadow:9px 9px 0 var(--ink);padding:26px 24px 24px;text-align:center;}
+  #cm-{{ section.id }} .cm-offer .fig{display:block;width:100%;max-width:240px;margin:0 auto 6px;}
+  #cm-{{ section.id }} .cm-offer .fig img{display:block;width:100%;height:auto;}
+  #cm-{{ section.id }} .cm-offer .big{font-family:var(--fh);font-weight:700;font-size:clamp(46px,9vw,66px);line-height:.9;color:var(--berry);}
+  #cm-{{ section.id }} .cm-offer .big span{color:var(--ink);font-size:.42em;display:block;letter-spacing:.04em;text-transform:uppercase;margin-top:6px;}
+  #cm-{{ section.id }} .cm-code{margin-top:16px;border:2.5px dashed var(--ink);border-radius:14px;background:var(--milk);padding:12px 10px;display:flex;flex-direction:column;gap:3px;}
+  #cm-{{ section.id }} .cm-code .lbl{font-family:var(--fh);font-weight:600;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);}
+  #cm-{{ section.id }} .cm-code button{font-family:var(--fh);font-weight:700;font-size:clamp(20px,4vw,26px);letter-spacing:.06em;color:var(--ink);background:none;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:9px;}
+  #cm-{{ section.id }} .cm-code button svg{width:17px;height:17px;color:var(--caramel);}
+  #cm-{{ section.id }} .cm-code .copied{font-size:11px;color:var(--toffee);font-weight:700;min-height:14px;}
+  #cm-{{ section.id }} .cm-offer .fine{font-size:12px;color:var(--ink-2);margin-top:12px;line-height:1.45;}
+  @media (max-width:860px){
+    #cm-{{ section.id }} .cm-hero .cm-wrap{grid-template-columns:1fr;justify-items:center;text-align:center;}
+    #cm-{{ section.id }} .cm-hero-copy{max-width:none;}
+    #cm-{{ section.id }} .cm-hero .cm-sub{margin-left:auto;margin-right:auto;}
+    #cm-{{ section.id }} .cm-hero .cm-btnrow{justify-content:center;}
+    #cm-{{ section.id }} .cm-offer{width:100%;max-width:420px;}
+  }
+
+  /* MARQUEE */
+  #cm-{{ section.id }} .cm-marquee{position:relative;z-index:3;border-top:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);background:var(--caramel);overflow:hidden;}
+  #cm-{{ section.id }} .cm-marquee-track{display:flex;width:max-content;white-space:nowrap;animation:cmmarq{{ section.id }} 22s linear infinite;}
+  #cm-{{ section.id }} .cm-marquee:hover .cm-marquee-track{animation-play-state:paused;}
+  #cm-{{ section.id }} .cm-marquee-track span{display:inline-flex;align-items:center;font-family:var(--fh);font-weight:700;font-size:clamp(15px,2.6vw,24px);text-transform:uppercase;letter-spacing:.05em;color:#fff;padding:13px 0;}
+  #cm-{{ section.id }} .cm-marquee-track span::after{content:'\1F36F';margin:0 18px;font-size:.9em;}
+  @keyframes cmmarq{{ section.id }}{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* STATS */
+  #cm-{{ section.id }} .cm-stats{padding:34px 0 30px;position:relative;z-index:2;}
+  #cm-{{ section.id }} .cm-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  #cm-{{ section.id }} .cm-scard{border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);padding:24px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  #cm-{{ section.id }} .cm-stats-grid .cm-scard:nth-child(1){background:var(--white);}
+  #cm-{{ section.id }} .cm-stats-grid .cm-scard:nth-child(2){background:var(--milk);}
+  #cm-{{ section.id }} .cm-stats-grid .cm-scard:nth-child(3){background:var(--blush);}
+  #cm-{{ section.id }} .cm-stats-grid .cm-scard:nth-child(4){background:var(--gold);}
+  #cm-{{ section.id }} .cm-scard .n{font-family:var(--fh);font-weight:700;font-size:clamp(28px,4vw,38px);line-height:1;color:var(--ink);}
+  #cm-{{ section.id }} .cm-scard .l{font-family:var(--fh);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.02em;}
+  #cm-{{ section.id }} .cm-scard .d{font-size:12.5px;color:var(--ink-2);line-height:1.4;font-weight:500;}
+
+  /* TRIO pinned scaling cards */
+  #cm-{{ section.id }} .cm-trio{position:relative;z-index:2;height:330vh;}
+  #cm-{{ section.id }} .cm-trio-sticky{position:absolute;top:0;left:0;width:100%;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  #cm-{{ section.id }} .cm-trio-head{position:absolute;top:clamp(48px,8vh,116px);left:0;right:0;text-align:center;z-index:5;padding:0 20px;pointer-events:none;}
+  #cm-{{ section.id }} .cm-trio-head .cm-h2{font-size:clamp(34px,7vw,64px);max-width:15ch;margin-left:auto;margin-right:auto;}
+  #cm-{{ section.id }} .cm-trio-stage{position:absolute;inset:0;}
+  #cm-{{ section.id }} .cm-trio-item{position:absolute;left:50%;top:60%;opacity:0;will-change:transform,opacity;transform:translate(-50%,-50%) scale(.5);}
+  #cm-{{ section.id }} .cm-trio-card{width:clamp(220px,42vw,360px);background:var(--white);border:3px solid var(--ink);border-radius:26px;box-shadow:10px 12px 0 rgba(52,32,15,.22);overflow:hidden;}
+  #cm-{{ section.id }} .cm-trio-card .ph{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:var(--milk);border-bottom:3px solid var(--ink);}
+  #cm-{{ section.id }} .cm-trio-card:nth-child(odd) .ph{background:var(--blush);}
+  #cm-{{ section.id }} .cm-trio-card .ph img{width:100%;height:100%;object-fit:cover;}
+  #cm-{{ section.id }} .cm-trio-card .cap{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 16px;}
+  #cm-{{ section.id }} .cm-trio-card .cap b{font-family:var(--fh);font-weight:600;font-size:15px;}
+  #cm-{{ section.id }} .cm-trio-card .cap .tag{font-family:var(--fh);font-weight:700;font-size:11px;color:#fff;background:var(--berry);border:2px solid var(--ink);border-radius:8px;padding:4px 8px;letter-spacing:.04em;}
+  #cm-{{ section.id }} .cm-trio-dots{position:absolute;left:50%;bottom:clamp(30px,6vh,68px);transform:translateX(-50%);display:flex;gap:10px;z-index:5;}
+  #cm-{{ section.id }} .cm-trio-dots span{width:11px;height:11px;border-radius:50%;background:#fff;border:2.5px solid var(--ink);transition:background .25s ease, transform .25s ease;}
+  #cm-{{ section.id }} .cm-trio-dots span.on{background:var(--caramel);transform:scale(1.3);}
+
+  /* PRODUCT GRID */
+  #cm-{{ section.id }} .cm-shelf{padding:44px 0;position:relative;z-index:2;}
+  #cm-{{ section.id }} .cm-shelf-head{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
+  #cm-{{ section.id }} .cm-shelf-head .cm-link{font-family:var(--fh);font-weight:600;font-size:13px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);text-decoration:none;border-bottom:2.5px solid var(--ink);padding-bottom:1px;}
+  #cm-{{ section.id }} .cm-pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px;}
+  #cm-{{ section.id }} .cm-pcard{display:flex;flex-direction:column;background:var(--white);border:2.5px solid var(--ink);border-radius:20px;box-shadow:6px 6px 0 var(--ink);overflow:hidden;text-decoration:none;color:var(--ink);transition:transform .2s ease, box-shadow .2s ease, opacity .6s ease;}
+  #cm-{{ section.id }} .cm-pcard:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink);}
+  #cm-{{ section.id }} .cm-pcard-img{position:relative;aspect-ratio:1/1;border-bottom:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;padding:14px;}
+  #cm-{{ section.id }} .cm-pgrid .cm-pcard:nth-child(4n+1) .cm-pcard-img{background:var(--milk);}
+  #cm-{{ section.id }} .cm-pgrid .cm-pcard:nth-child(4n+2) .cm-pcard-img{background:var(--blush);}
+  #cm-{{ section.id }} .cm-pgrid .cm-pcard:nth-child(4n+3) .cm-pcard-img{background:var(--gold);}
+  #cm-{{ section.id }} .cm-pgrid .cm-pcard:nth-child(4n+4) .cm-pcard-img{background:var(--cream);}
+  #cm-{{ section.id }} .cm-pcard-img img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;}
+  #cm-{{ section.id }} .cm-deal{position:absolute;top:10px;left:10px;background:var(--berry);color:#fff;border:2px solid var(--ink);border-radius:8px;font-family:var(--fh);font-weight:700;font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:5px 9px;box-shadow:2px 2px 0 var(--ink);}
+  #cm-{{ section.id }} .cm-pcard-b{padding:16px 15px 18px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;flex:1;}
+  #cm-{{ section.id }} .cm-pcard-t{font-family:var(--fh);font-weight:600;font-size:14px;line-height:1.15;}
+  #cm-{{ section.id }} .cm-pcard-p{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:5px;}
+  #cm-{{ section.id }} .cm-pcard-p .now{font-family:var(--fh);font-weight:700;font-size:17px;color:var(--ink);}
+  #cm-{{ section.id }} .cm-pcard-p .with{font-family:var(--fb);font-weight:700;font-size:11.5px;color:var(--toffee);}
+  #cm-{{ section.id }} .cm-empty{text-align:center;border:2.5px dashed var(--ink);border-radius:18px;padding:34px 20px;background:var(--white);margin-top:30px;font-weight:600;color:var(--ink-2);}
+
+  /* DRIZZLE / VALUE BAND */
+  #cm-{{ section.id }} .cm-why{padding:30px 0;position:relative;z-index:2;}
+  #cm-{{ section.id }} .cm-why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  #cm-{{ section.id }} .cm-why-card{background:var(--white);border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);padding:24px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
+  #cm-{{ section.id }} .cm-why-card .ic{width:52px;height:52px;border-radius:50%;background:var(--gold);border:2.5px solid var(--ink);display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 var(--ink);}
+  #cm-{{ section.id }} .cm-why-card .ic svg{width:26px;height:26px;color:var(--ink);}
+  #cm-{{ section.id }} .cm-why-card h3{font-family:var(--fh);font-weight:600;font-size:16px;margin:0;}
+  #cm-{{ section.id }} .cm-why-card p{font-size:13.5px;color:var(--ink-2);line-height:1.5;font-weight:500;margin:0;}
+
+  /* SUGAR-FREE BAND */
+  #cm-{{ section.id }} .cm-band{padding:30px 0;position:relative;z-index:2;}
+  #cm-{{ section.id }} .cm-band-card{position:relative;overflow:hidden;background:var(--cocoa);color:#fff;border:3px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--ink);padding:48px clamp(26px,5vw,60px);text-align:center;}
+  #cm-{{ section.id }} .cm-band-card .cm-eyebrow{background:var(--gold);}
+  #cm-{{ section.id }} .cm-band-card .cm-h2{color:#fff;}
+  #cm-{{ section.id }} .cm-band-card .cm-h2 em{color:var(--gold);}
+  #cm-{{ section.id }} .cm-band-card p{color:rgba(255,255,255,.92);font-size:15.5px;line-height:1.6;font-weight:500;max-width:54ch;margin:15px auto 0;}
+  #cm-{{ section.id }} .cm-band-card .cm-btnrow{justify-content:center;margin-top:24px;}
+
+  /* VIP */
+  #cm-{{ section.id }} .cm-vip{padding:24px 0 64px;position:relative;z-index:2;}
+  #cm-{{ section.id }} .cm-vip-card{position:relative;overflow:hidden;background:var(--caramel);color:#fff;border:3px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--ink);padding:50px clamp(26px,5vw,64px);text-align:center;}
+  #cm-{{ section.id }} .cm-vip-card .cm-eyebrow{background:var(--white);}
+  #cm-{{ section.id }} .cm-vip-card .cm-h2{color:#fff;}
+  #cm-{{ section.id }} .cm-vip-card .cm-h2 em{color:var(--ink);}
+  #cm-{{ section.id }} .cm-vip-card p{color:rgba(255,255,255,.95);font-size:16px;line-height:1.65;font-weight:500;max-width:54ch;margin:16px auto 0;}
+  #cm-{{ section.id }} .cm-vip-card .cm-btnrow{justify-content:center;margin-top:26px;}
+
+  @media (max-width:860px){
+    #cm-{{ section.id }} .cm-stats-grid{grid-template-columns:repeat(2,1fr);}
+    #cm-{{ section.id }} .cm-pgrid{grid-template-columns:repeat(2,1fr);}
+    #cm-{{ section.id }} .cm-why-grid{grid-template-columns:1fr;}
+    #cm-{{ section.id }} .cm-pgrid .cm-pcard:nth-child(2n+1) .cm-pcard-img{background:var(--milk);}
+    #cm-{{ section.id }} .cm-pgrid .cm-pcard:nth-child(2n+2) .cm-pcard-img{background:var(--gold);}
+  }
+  @media (max-width:767px){
+    #cm-{{ section.id }} .cm-trio-head{top:clamp(30px,4.5vh,68px);}
+    #cm-{{ section.id }} .cm-trio-item{top:55%;}
+  }
+  @media (max-width:680px){
+    #cm-{{ section.id }} .cm-btnrow{flex-direction:column;align-items:stretch;width:100%;}
+    #cm-{{ section.id }} .cm-btnrow .cm-btn{width:100%;}
+  }
+  @media (max-width:540px){
+    #cm-{{ section.id }} .cm-stats-grid{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    #cm-{{ section.id }} .cm-rev{opacity:1;transform:none;}
+    #cm-{{ section.id }} .cm-pop{opacity:1 !important;transform:none !important;}
+    #cm-{{ section.id }} .cm-marquee-track{animation:none;}
+    #cm-{{ section.id }} .cm-flash .pulse{animation:none;}
+    #cm-{{ section.id }} .cm-trio{height:auto !important;}
+    #cm-{{ section.id }} .cm-trio-sticky{position:static !important;height:auto !important;display:block !important;padding:40px 0 56px;}
+    #cm-{{ section.id }} .cm-trio-head{position:static !important;}
+    #cm-{{ section.id }} .cm-trio-stage{position:static !important;display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:clamp(10px,3vw,26px);margin-top:24px;}
+    #cm-{{ section.id }} .cm-trio-item{position:static !important;transform:none !important;opacity:1 !important;}
+    #cm-{{ section.id }} .cm-trio-card{width:clamp(150px,40vw,260px);}
+    #cm-{{ section.id }} .cm-trio-dots{display:none !important;}
+  }
+</style>
+
+<section id="cm-{{ section.id }}">
+  <span class="cm-drip" aria-hidden="true"></span>
+
+  <div class="cm-hero">
+    <div class="cm-wrap">
+      <div class="cm-hero-copy">
+        <span class="cm-flash cm-rev"><span class="pulse" aria-hidden="true"></span>{{ s.flash_text | default: 'Limited time · Caramel event' }}</span>
+        <h1 class="cm-rev">{{ s.hero_title | default: 'Caramel,<br>now <span class="off">50% off</span>.' }}</h1>
+        <p class="cm-sub cm-rev">{{ s.hero_sub | default: 'Buttery, café-quality caramel in every pour — classic, salted, chocolate, pecan and the full sugar-free range. The whole caramel family, half price, for a limited time.' }}</p>
+        <div class="cm-btnrow cm-rev">
+          <a class="cm-btn cm-btn--caramel" href="{{ shop_url }}">Shop caramel · 50% off</a>
+          <a class="cm-btn cm-btn--ghost" href="#cm-deals">See the deals</a>
+        </div>
+      </div>
+      <div class="cm-offer cm-rev">
+        <span class="fig"><img src="{{ hero_src }}" alt="Syruvia caramel syrup" width="240" height="240" loading="eager"></span>
+        <div class="big">50%<span>off all caramel</span></div>
+        <div class="cm-code">
+          <span class="lbl">Use code at checkout</span>
+          <button type="button" class="cm-copy" data-code="{{ code }}" aria-label="Copy discount code {{ code }}">
+            <span class="codetext">{{ code }}</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          </button>
+          <span class="copied" data-copied-label aria-live="polite"></span>
+        </div>
+        <p class="fine">{{ s.offer_fine | default: 'Discount applies at checkout with the code. While stocks last.' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cm-marquee" aria-hidden="true">
+    <div class="cm-marquee-track">
+      <span>50% Off Caramel</span><span>Salted Caramel</span><span>Caramel Chocolate</span><span>Caramel Pecan</span><span>Sugar-Free Caramel</span><span>Made in the USA</span>
+      <span>50% Off Caramel</span><span>Salted Caramel</span><span>Caramel Chocolate</span><span>Caramel Pecan</span><span>Sugar-Free Caramel</span><span>Made in the USA</span>
+    </div>
+  </div>
+
+  <div class="cm-stats">
+    <div class="cm-wrap">
+      <div class="cm-stats-grid">
+        <div class="cm-scard cm-pop"><span class="n">50%</span><span class="l">Off</span><span class="d">Every caramel flavor</span></div>
+        <div class="cm-scard cm-pop"><span class="n cm-count" data-count="{{ cl.products_count | default: 7 }}" data-suffix="">{{ cl.products_count | default: 7 }}</span><span class="l">Caramel flavors</span><span class="d">Classic to limited edition</span></div>
+        <div class="cm-scard cm-pop"><span class="n">0g</span><span class="l">Sugar option</span><span class="d">Full sugar-free range</span></div>
+        <div class="cm-scard cm-pop"><span class="n cm-count" data-count="50" data-suffix="+">50+</span><span class="l">Servings</span><span class="d">Per 750 ml bottle</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cm-trio">
+    <div class="cm-trio-sticky">
+      <div class="cm-trio-head">
+        <span class="cm-eyebrow" style="background:var(--gold);">The caramel family</span>
+        <h2 class="cm-h2">{{ s.trio_title | default: 'One flavor, <em>many ways</em>.' }}</h2>
+      </div>
+      <div class="cm-trio-stage">
+        <div class="cm-trio-item"><div class="cm-trio-card"><div class="ph"><img src="{{ t1 }}" alt="{{ s.trio_1_name | default: 'Classic Caramel' }}" loading="lazy"></div><div class="cap"><b>{{ s.trio_1_name | default: 'Classic Caramel' }}</b><span class="tag">50% off</span></div></div></div>
+        <div class="cm-trio-item"><div class="cm-trio-card"><div class="ph"><img src="{{ t2 }}" alt="{{ s.trio_2_name | default: 'Salted Caramel' }}" loading="lazy"></div><div class="cap"><b>{{ s.trio_2_name | default: 'Salted Caramel' }}</b><span class="tag">50% off</span></div></div></div>
+        <div class="cm-trio-item"><div class="cm-trio-card"><div class="ph"><img src="{{ t3 }}" alt="{{ s.trio_3_name | default: 'Caramel Chocolate' }}" loading="lazy"></div><div class="cap"><b>{{ s.trio_3_name | default: 'Caramel Chocolate' }}</b><span class="tag">50% off</span></div></div></div>
+      </div>
+      <div class="cm-trio-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+
+  <div class="cm-shelf" id="cm-deals">
+    <div class="cm-wrap">
+      <div class="cm-shelf-head">
+        <span class="cm-eyebrow cm-rev" style="background:var(--blush);">{{ s.grid_eyebrow | default: 'Half-price caramel' }}</span>
+        <h2 class="cm-h2 cm-rev">{{ s.grid_title | default: 'Every caramel, <em>50% off</em>.' }}</h2>
+        {%- if cl != blank -%}<a class="cm-link cm-rev" href="{{ cl.url | default: shop_url }}">Shop the full collection →</a>{%- endif -%}
+      </div>
+      {%- if cl != blank and cl.products.size > 0 -%}
+      <div class="cm-pgrid">
+        {%- for pr in cl.products limit: 12 -%}
+          {%- assign half = pr.price | times: 0.5 -%}
+          <a class="cm-pcard cm-rev" href="{{ pr.url }}">
+            <div class="cm-pcard-img"><span class="cm-deal">50% off</span>{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 500 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- endif -%}</div>
+            <div class="cm-pcard-b">
+              <h3 class="cm-pcard-t">{{ pr.title | replace: '(USA)', '' | strip }}</h3>
+              <div class="cm-pcard-p">
+                <span class="now">{{ pr.price | money }}</span>
+                <span class="with">≈ {{ half | money }} with {{ code }}</span>
+              </div>
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+      {%- else -%}
+      <div class="cm-empty">No products found in the “{{ hcol }}” collection yet. Set the collection handle in the section settings to show your caramel syrups here.</div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <div class="cm-why">
+    <div class="cm-wrap">
+      <div class="cm-why-grid">
+        <div class="cm-why-card cm-rev">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 4 6 7 6 10a6 6 0 0 1-12 0c0-3 2-6 6-10z"/></svg></span>
+          <h3>{{ s.why1_t | default: 'Real, buttery caramel' }}</h3>
+          <p>{{ s.why1_p | default: 'Smooth, true-to-source caramel taste — no high-fructose corn syrup, no artificial dyes.' }}</p>
+        </div>
+        <div class="cm-why-card cm-rev">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg></span>
+          <h3>{{ s.why2_t | default: 'Sugar-free options' }}</h3>
+          <p>{{ s.why2_p | default: 'Love caramel without the sugar? The whole caramel range comes in zero-sugar, zero-calorie too.' }}</p>
+        </div>
+        <div class="cm-why-card cm-rev">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16M6 19V9l6-4 6 4v10"/><path d="M10 19v-5h4v5"/></svg></span>
+          <h3>{{ s.why3_t | default: 'Made in the USA' }}</h3>
+          <p>{{ s.why3_p | default: 'Crafted, bottled and quality-checked in the USA — kosher and gluten-free, with 50+ servings a bottle.' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- if sf != blank and sf.products.size > 0 -%}
+  <div class="cm-band">
+    <div class="cm-wrap">
+      <div class="cm-band-card cm-rev">
+        <span class="cm-eyebrow">{{ s.sf_eyebrow | default: 'Zero sugar, all flavor' }}</span>
+        <h2 class="cm-h2">{{ s.sf_title | default: 'Sugar-free caramel, <em>half price</em>.' }}</h2>
+        <p>{{ s.sf_sub | default: 'All the buttery caramel taste with zero sugar and zero calories — and it’s 50% off too. The guilt-free way to upgrade your coffee.' }}</p>
+        <div class="cm-btnrow">
+          <a class="cm-btn cm-btn--gold" href="{{ sf.url }}">Shop sugar-free caramel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  <div class="cm-vip">
+    <div class="cm-wrap">
+      <div class="cm-vip-card cm-rev">
+        <span class="cm-eyebrow">{{ s.vip_eyebrow | default: 'Syruvia VIP' }}</span>
+        <h2 class="cm-h2">{{ s.vip_title | default: 'Stack it with <em>VIP</em>.' }}</h2>
+        <p>{{ s.vip_sub | default: 'Join VIP free for our everyday best price on full-size syrups. New here? Grab the caramel event at 50% off now — then sign in for VIP pricing on everything else.' }}</p>
+        <div class="cm-btnrow">
+          <a class="cm-btn cm-btn--gold" href="{{ vip_url }}">Join VIP — it’s free</a>
+          <a class="cm-btn cm-btn--ghost" href="{{ shop_url }}">Shop caramel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('cm-{{ section.id }}');
+  if(!root) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* copy code */
+  root.querySelectorAll('.cm-copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var code = btn.getAttribute('data-code')||'';
+      var note = btn.parentNode.querySelector('[data-copied-label]');
+      function flash(msg){ if(note){ note.textContent=msg; setTimeout(function(){ note.textContent=''; }, 2200); } }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(code).then(function(){ flash('Copied “'+code+'” ✓'); }).catch(function(){ flash('Code: '+code); });
+      } else { flash('Code: '+code); }
+    });
+  });
+
+  function countUp(el){
+    if(el.__c) return; el.__c=1;
+    var target=parseInt(el.getAttribute('data-count'),10)||0, suf=el.getAttribute('data-suffix')||'';
+    var start=null, dur=1100;
+    function step(ts){ if(!start) start=ts; var p=Math.min((ts-start)/dur,1); var e=1-Math.pow(1-p,3); el.textContent=Math.round(e*target)+suf; if(p<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); var c=e.target.querySelector('.cm-count'); if(c) countUp(c); if(e.target.classList.contains('cm-count')) countUp(e.target); io.unobserve(e.target); } });},{threshold:.12});
+    root.querySelectorAll('.cm-rev').forEach(function(el){io.observe(el);});
+    root.querySelectorAll('.cm-count').forEach(function(el){io.observe(el);});
+    setTimeout(function(){root.querySelectorAll('.cm-rev:not(.in)').forEach(function(el){el.classList.add('in');});},3000);
+  } else {
+    root.querySelectorAll('.cm-rev').forEach(function(el){el.classList.add('in');});
+    root.querySelectorAll('.cm-count').forEach(function(el){ el.textContent=el.getAttribute('data-count')+(el.getAttribute('data-suffix')||''); });
+  }
+
+  var pops=[].slice.call(root.querySelectorAll('.cm-pop'));
+  var track=root.querySelector('.cm-trio');
+  var stage=root.querySelector('.cm-trio-sticky');
+  var items=[].slice.call(root.querySelectorAll('.cm-trio-item'));
+  var dots=[].slice.call(root.querySelectorAll('.cm-trio-dots span'));
+  if(reduce){ pops.forEach(function(el){el.style.opacity='1';}); items.forEach(function(el){el.style.opacity='1';}); return; }
+  var ticking=false;
+  function update(){
+    ticking=false;
+    var vh=window.innerHeight||document.documentElement.clientHeight, vc=vh/2;
+    for(var i=0;i<pops.length;i++){
+      var el=pops[i], r=el.getBoundingClientRect();
+      if(r.bottom<-160||r.top>vh+160){ continue; }
+      var c=r.top+r.height/2, d=(c-vc)/vc, ad=Math.abs(d); if(ad>1) ad=1;
+      var scale=1.05-ad*0.17, op=1-ad*0.55; if(op<0.2) op=0.2;
+      el.style.opacity=op.toFixed(2); el.style.transform='scale('+scale.toFixed(3)+')';
+    }
+    if(track && stage && items.length){
+      var trk=track.getBoundingClientRect();
+      var span=track.offsetHeight-vh; if(span<1) span=1;
+      if(trk.top>=0){ stage.style.position='absolute'; stage.style.top='0'; stage.style.bottom='auto'; }
+      else if(trk.bottom<=vh){ stage.style.position='absolute'; stage.style.top='auto'; stage.style.bottom='0'; }
+      else { stage.style.position='fixed'; stage.style.top='0'; stage.style.bottom='auto'; }
+      var p=(-trk.top)/span; if(p<0) p=0; if(p>1) p=1;
+      var n=items.length, active=Math.floor(p*n); if(active>n-1) active=n-1; if(active<0) active=0;
+      for(var k=0;k<n;k++){
+        var center=(k+0.5)/n;
+        var dd=Math.abs(p-center)*n; var pres=1-dd; if(pres<0) pres=0;
+        var ease=pres*pres*(3-2*pres);
+        var sc=0.6+ease*0.45;
+        var ty=(p-center)*-120;
+        var it=items[k];
+        it.style.opacity=ease.toFixed(3);
+        it.style.transform='translate(-50%,calc(-50% + '+ty.toFixed(1)+'px)) scale('+sc.toFixed(3)+')';
+        it.style.zIndex=(pres>0.5?'4':'2');
+      }
+      for(var j=0;j<dots.length;j++){ if(j===active){ dots[j].classList.add('on'); } else { dots[j].classList.remove('on'); } }
+    }
+  }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  window.addEventListener('load', update);
+  update();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Caramel 50% Off",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Collections" },
+    { "type": "text", "id": "collection_handle", "label": "Caramel collection handle", "default": "caramel" },
+    { "type": "text", "id": "collection_sugarfree", "label": "Sugar-free caramel collection handle", "default": "sugar-free-caramel" },
+    { "type": "header", "content": "Promo" },
+    { "type": "text", "id": "promo_code", "label": "Discount code", "default": "CARAMEL50" },
+    { "type": "text", "id": "flash_text", "label": "Flash badge text", "default": "Limited time · Caramel event" },
+    { "type": "text", "id": "shop_url", "label": "Primary shop link", "default": "/collections/caramel" },
+    { "type": "text", "id": "offer_fine", "label": "Offer fine print", "default": "Discount applies at checkout with the code. While stocks last." },
+    { "type": "header", "content": "Hero" },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero / offer image (overrides default)" },
+    { "type": "html", "id": "hero_title", "label": "Hero title (HTML allowed)", "default": "Caramel,<br>now <span class=\"off\">50% off</span>." },
+    { "type": "textarea", "id": "hero_sub", "label": "Hero subtitle", "default": "Buttery, café-quality caramel in every pour — classic, salted, chocolate, pecan and the full sugar-free range. The whole caramel family, half price, for a limited time." },
+    { "type": "header", "content": "Pinned trio (scroll-scaling cards)" },
+    { "type": "text", "id": "trio_title", "label": "Trio heading", "default": "One flavor, <em>many ways</em>." },
+    { "type": "image_picker", "id": "trio_1_img", "label": "Card 1 image (override)" },
+    { "type": "text", "id": "trio_1_name", "label": "Card 1 name", "default": "Classic Caramel" },
+    { "type": "image_picker", "id": "trio_2_img", "label": "Card 2 image (override)" },
+    { "type": "text", "id": "trio_2_name", "label": "Card 2 name", "default": "Salted Caramel" },
+    { "type": "image_picker", "id": "trio_3_img", "label": "Card 3 image (override)" },
+    { "type": "text", "id": "trio_3_name", "label": "Card 3 name", "default": "Caramel Chocolate" },
+    { "type": "header", "content": "Product grid" },
+    { "type": "text", "id": "grid_eyebrow", "label": "Eyebrow", "default": "Half-price caramel" },
+    { "type": "text", "id": "grid_title", "label": "Heading", "default": "Every caramel, <em>50% off</em>." },
+    { "type": "header", "content": "Why caramel (3 cards)" },
+    { "type": "text", "id": "why1_t", "label": "Card 1 title", "default": "Real, buttery caramel" },
+    { "type": "textarea", "id": "why1_p", "label": "Card 1 text", "default": "Smooth, true-to-source caramel taste — no high-fructose corn syrup, no artificial dyes." },
+    { "type": "text", "id": "why2_t", "label": "Card 2 title", "default": "Sugar-free options" },
+    { "type": "textarea", "id": "why2_p", "label": "Card 2 text", "default": "Love caramel without the sugar? The whole caramel range comes in zero-sugar, zero-calorie too." },
+    { "type": "text", "id": "why3_t", "label": "Card 3 title", "default": "Made in the USA" },
+    { "type": "textarea", "id": "why3_p", "label": "Card 3 text", "default": "Crafted, bottled and quality-checked in the USA — kosher and gluten-free, with 50+ servings a bottle." },
+    { "type": "header", "content": "Sugar-free band" },
+    { "type": "text", "id": "sf_eyebrow", "label": "Eyebrow", "default": "Zero sugar, all flavor" },
+    { "type": "text", "id": "sf_title", "label": "Heading", "default": "Sugar-free caramel, <em>half price</em>." },
+    { "type": "textarea", "id": "sf_sub", "label": "Text", "default": "All the buttery caramel taste with zero sugar and zero calories — and it’s 50% off too." },
+    { "type": "header", "content": "VIP band" },
+    { "type": "text", "id": "vip_eyebrow", "label": "Eyebrow", "default": "Syruvia VIP" },
+    { "type": "text", "id": "vip_title", "label": "Heading", "default": "Stack it with <em>VIP</em>." },
+    { "type": "textarea", "id": "vip_sub", "label": "Text", "default": "Join VIP free for our everyday best price on full-size syrups." },
+    { "type": "text", "id": "vip_url", "label": "VIP / login link", "default": "/account/login" }
+  ],
+  "presets": [ { "name": "Caramel 50% Off" } ]
+}
+{% endschema %}

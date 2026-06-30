@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-caramel",
+      "settings": {
+        "collection_handle": "caramel",
+        "collection_sugarfree": "sugar-free-caramel",
+        "promo_code": "CARAMEL50",
+        "shop_url": "/collections/caramel"
+      }
+    }
+  },
+  "order": ["main"]
+}
