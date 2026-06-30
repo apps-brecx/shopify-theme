@@ -586,10 +586,13 @@
         "text_WbBjqB"
       ],
       "custom_css": [
+        ".page-cst-about-page-sec,.page-cst-mission-page-sec,.line-left,.line-right {display: none;}",
         ".mobile-pad {padding-bottom: 40px !important;}",
         ".rich-text__heading strong {font-family: \"Epilogue\", sans-serif !important;}",
+        ".rich-text__heading em {font-style: normal; color: #61155b;}",
         ".rich-text__text p {font-family: \"Manrope\", sans-serif !important;}",
-        "@media (max-width: 768px) {.head {font-size: 34px !important; }}"
+        "@media (max-width: 768px) {.head {font-size: 32px !important; }}",
+        "@media (max-width: 400px) {.rich-text__text p {font-size: 14px !important; line-height: normal !important; }}"
       ],
       "name": "t:sections.rich-text.presets.name",
       "settings": {
