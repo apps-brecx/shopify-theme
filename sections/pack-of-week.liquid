@@ -4,179 +4,245 @@
 <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
 
 <style>
-  .loading__spinner.hidden, .unit-price.hidden{
-    display: none;
+    .cst-custom-heading {
+      text-align: center;
+      width: 100%;
+  }
+    .cst-custom-heading h2 {
+      padding: 0;
+      font-size: 54px;
+      line-height: 56px;
+      color: #341c02;
+      text-align: center;
+      font-weight: 500;
+      position: relative;
+      display: inline-block;
   }
     .pack-of-the-week__multicolumn .cst-custom-heading h2{
-  margin-bottom: 10px !important;
-    line-height: normal;
-}
-.pack-of-the-week__multicolumn .cst-custom-heading h2 strong{
-  color: #000;
-
-    font-family: "Epilogue", sans-serif !important;
-}
-.pack-of-the-week__multicolumn  .cst-custom-heading h2:before {
-  display: none;
-}
-
-  .pack-of-the-week__multicolumn .cst-custom-heading h2{
-  margin-bottom: 10px !important;
-    line-height: normal;
-}
-.pack-of-the-week__multicolumn .cst-custom-heading h2 strong{
-  color: #000;
-
-    font-family: "Epilogue", sans-serif !important;
-}
-
-  .pack-of-week__inner{
-    padding: 40px 0;
-    background-size: cover;
-    background-position: center;
-  }
-  .pack-of-week__wrapper{
-    position: relative;
-    min-height: 80vh;
-    align-items: center;
-    display: flex;
-  }
-  .pack-of-week__image{
-    position: absolute;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    overflow: hidden;
-    top: 0;
-    bottom: 0;
-    width: 60%;
-  }
-  .pack-of-week__image img{
-    object-fit: cover;
-    height: 100%;
-    width: 100%;
-  }
-  .pack-of-week__content-wrapper{
-    margin-left: auto;
-    padding-top: 40px;
-    max-width: 40%;
-  }
-  .pack-of-week__title h1{
-    font-weight: 700;
-    margin: 0;
-    font-family: "Epilogue", sans-serif !important;
-    font-size: 70px;
+    margin-bottom: 10px !important;
       line-height: normal;
   }
-  .product span.price-item.price-item--sale.price-item--last{
-     color: {{ section.settings.background_color }};
+
+  .pack-of-the-week__multicolumn .cst-custom-heading h2 strong{
+    color: #000;
+
+      font-family: "Epilogue", sans-serif !important;
   }
-  .pack-of-week__price{
-    margin-bottom: 20px;
-  }
-  .pack-of-week__inner .quantity:before{
-      background: none;
-  }
-  .product-form__submit{
-    width: fit-content;
-    border-radius: 1000px;
-    background:  {{ section.settings.background_color }};
-    color: #fff;
-    overflow: hidden;
-  }
-    .product-form__submit img{
+  .product .hidden {
       display: none;
-    }
-    .pack-of-week__inner .product-form__quantity{
-    position: unset !important;
-    width: auto !important;
   }
-  .product-form form{
-    display: flex;
-    align-items: center;
-    gap: 20px;
+  .pack-of-the-week__multicolumn .multicolumn {
+    background: #fef8f1;
   }
-  .quantity__label{
+  .pack-of-the-week__multicolumn .cst-custom-heading h2:before {
     display: none;
   }
-  .pack-of-week__inner   .quantity__button{
-    height: 54px;
-    background: transparent;
-  }
-    .pack-of-week__inner .quantity:after{
-    border-radius: 1000px;
-  }
-  .pack-of-week__description{
-   line-height: 30px;
-  }
-  .pack-of-week__description h2{
-    font-weight: 500;
-    font-family: "Manrope", sans-serif !important;
-    color:   {{ section.settings.background_color }};
-    font-size: 36px;
-    margin: 0;
-  }
-  .pack-of-week__description p{
-    font-size: 24px;
-      font-family: "Manrope", sans-serif !important;
-  }
-
-  @media(max-width: 1440px){
-      .pack-of-week__image{
-        width: 50%;
-      }
-      .pack-of-week__wrapper{
-        min-height: auto;
-
-      }
-      .pack-of-week__content-wrapper{
-        max-width: 50%;
-      }
-  }
-  @media(max-width: 991px){
-    .pack-of-week__content{
-      text-align: center;
+    .pack-of-week__inner{
+     padding: 40px 0;
+      background-size: cover;
+      background-position: center;
     }
-
-    .product-form form{
-
-      justify-content: center;
-    }
-
     .pack-of-week__wrapper{
-      flex-direction: column;
+      position: relative;
+      min-height: 80vh;
+      align-items: center;
+      display: flex;
     }
     .pack-of-week__image{
-      position: unset;
+      position: absolute;
+      border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px;
+      overflow: hidden;
+      top: 0;
+      bottom: 0;
+      width: 60%;
+    }
+    .pack-of-week__image img{
+      object-fit: cover;
+      height: 100%;
       width: 100%;
-          border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
     }
     .pack-of-week__content-wrapper{
-        max-width: 100%;
-   }
-   .pack-of-week__content-wrapper{
-    padding-top: 20px;
-  }
-  .pack-of-week__title h1 {
-    font-size: 54px;
-  
-  }
-  .pack-of-week__description h2 {
-    font-size: 28px;
-  }
-  .pack-of-week__description p {
-
-    font-size: 20px;
-  }
-  }
-  @media (max-width: 767px) {
- 
-     .pack-of-week__inner .pack-of-week__add-to-cart .product-form__submit,     .pack-of-week__inner .product-form__quantity {
-      display: block !important;
+      margin-left: auto;
+      padding-top: 40px;
+      max-width: 40%;
     }
-    .sticky-add-to-cart{
+    .pack-of-week__title h1{
+      font-weight: 700;
+      margin: 0;
+      font-family: "Epilogue", sans-serif !important;
+      font-size: 70px;
+        line-height: normal;
+    }
+  .product span.price-item.price-item--sale.price-item--last {
+      font-size: 24px !important;
+     color: {{ section.settings.accent_color }};
+      font-family: Redrains !important;
+      font-weight: 500;
+  }
+    .pack-of-week__price{
+      margin-bottom: 20px;
+    }
+    .pack-of-week__inner .quantity:before{
+        background: none;
+    }
+    .product-form__submit{
+      width: fit-content;
+      border-radius: 1000px;
+      background: {{ section.settings.accent_color }};
+      color: #fff;
+      overflow: hidden;
+    }
+      .product-form__submit img{
+        display: none;
+      }
+      .pack-of-week__inner .product-form__quantity{
+      position: unset !important;
+      width: auto !important;
+    }
+    .product-form form{
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .quantity__label{
       display: none;
     }
+    .pack-of-week__inner   .quantity__button{
+      height: 54px;
+      background: transparent;
+    }
+      .pack-of-week__inner .quantity:after{
+      border-radius: 1000px;
+    }
+    .pack-of-week__description{
+     line-height: 30px;
+    }
+    .pack-of-week__description h2{
+      font-weight: 500;
+      font-family: "Manrope", sans-serif !important;
+     color: {{ section.settings.accent_color }};
+      font-size: 36px;
+      margin: 0;
+    }
+    .pack-of-week__description p{
+      font-size: 24px;
+        font-family: "Manrope", sans-serif !important;
+    }
+  .pack-of-week__secondary-button{
+    margin-top: 20px;
+  }
+
+  .pack-of-week__secondary-button .button{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px;
+    border-radius: 1000px;
+    text-decoration: none;
+    background: transparent;
+     color: {{ section.settings.accent_color }};
+    border: 2px solid {{ section.settings.accent_color }};
+    transition: .3s ease;
+  }
+
+  .pack-of-week__secondary-button .button:hover{
+    background:  {{ section.settings.accent_color }};
+    color: #fff;
+  }
+  .pack-of-week__secondary-button .button:after{
+    display: none;
+  }
+  .custom-price-sale{
+    margin-bottom: 30px;
+  }
+  .product .custom-price-regular {
+    font-size: 24px !important;
+    font-family: Redrains !important;
+    text-decoration: line-through;
+    color: rgba(var(--color-foreground), .75);
+    font-weight: 500;
+    display: inline-block;
+    margin: 0 1rem 0 0;
+    line-height: calc(1 + .5 / var(--font-body-scale));
+    letter-spacing: .13rem;
+}
+
+.product .custom-price-current {
+    font-size: 24px !important;
+    color: #d21625;
+    font-family: Redrains !important;
+    font-weight: 500;
+}
+  @media(max-width: 991px){
+    .pack-of-week__secondary-button{
+      text-align: center;
+    }
+  }
+
+
+    @media(max-width: 1440px){
+        .pack-of-week__image{
+          width: 50%;
+        }
+        .pack-of-week__wrapper{
+          min-height: auto;
+
+        }
+        .pack-of-week__content-wrapper{
+          max-width: 50%;
+        }
+    }
+    @media(max-width: 991px){
+      .pack-of-week__content{
+        text-align: center;
+      }
+
+      .product-form form{
+
+        justify-content: center;
+      }
+
+      .pack-of-week__wrapper{
+        flex-direction: column;
+      }
+      .pack-of-week__image{
+        position: unset;
+        width: 100%;
+            border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      }
+      .pack-of-week__content-wrapper{
+          max-width: 100%;
+     }
+     .pack-of-week__content-wrapper{
+      padding-top: 20px;
+    }
+    .pack-of-week__title h1 {
+      font-size: 54px;
+
+    }
+    .pack-of-week__description h2 {
+      font-size: 28px;
+    }
+    .pack-of-week__description p {
+
+      font-size: 20px;
+    }
+    }
+    @media (max-width: 767px) {
+
+       .pack-of-week__inner .pack-of-week__add-to-cart .product-form__submit,     .pack-of-week__inner .product-form__quantity {
+        display: block !important;
+      }
+      .sticky-add-to-cart{
+        display: none;
+      }
+    }
+    @media (max-width: 575px) {
+      .cst-custom-heading h2 {
+          font-size: 32px;
+      }
   }
 </style>
 {% assign package_products = product.metafields.custom.package_products.value %}
@@ -208,13 +274,24 @@
 
           <div class="pack-of-week__actions">
             <div class="pack-of-week__price">
-              {%- render 'price',
-                product: product,
-                use_variant: true,
-                show_badges: true,
-                price_class: 'price--large'
-              -%}
-            </div>
+                   
+        {% if product.compare_at_price > product.price %}
+  <div class="custom-price-sale">
+    <span>
+      <s class="custom-price-regular">
+        {{ product.compare_at_price | money }}
+      </s>
+    </span>
+
+    <span class="custom-price-current">
+      {{ product.price | money }}
+    </span>
+  </div>
+{% else %}
+  <span class="custom-price-current">
+    {{ product.price | money }}
+  </span>
+{% endif %}
 
             <div class="pack-of-week__add-to-cart">
               <div {{ block.shopify_attributes }} class="responsive">
@@ -269,7 +346,6 @@
                       >
                       {% for item in package_products %}
                         {% assign p = item.product.value %}
-                    
 
                         <input
                           type="hidden"
@@ -426,6 +502,18 @@
                     </div>
                   </div>
                 {%- endif -%}
+                {% if section.settings.secondary_button_text != blank
+                  and section.settings.secondary_button_url_sf != blank
+                %}
+                  <div class="pack-of-week__secondary-button">
+                    <a
+                      href="{{ section.settings.secondary_button_url_sf }}"
+                      class="button button--secondary"
+                    >
+                      {{ section.settings.secondary_button_text }}
+                    </a>
+                  </div>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -447,11 +535,22 @@
       "id": "bg_img"
     },
     {
-  "type": "color",
-  "id": "background_color",
-  "label": "Background Color",
-  "default": "#61155b"
-}
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Secondary Button Text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_url_sf",
+      "label": "Secondary Button URL"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#61155b"
+    }
   ],
   "presets": [
     {

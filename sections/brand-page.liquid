@@ -36,7 +36,7 @@
   /* Apply variables to page elements */
   #shopify-section-{{ section.id }} .pd {
     background: var(--pd-bg);
-    color: var(--pd-text);
+    color: var(--pd-text) !important;
   }
   #shopify-section-{{ section.id }} .pd-wrap {
     max-width: var(--pd-wrap);
@@ -44,8 +44,8 @@
 
   /* Hero spacing */
   #shopify-section-{{ section.id }} .pd-hero {
-    padding-top: var(--pd-hero-pad-top);
-    padding-bottom: var(--pd-hero-pad-bottom);
+    padding-top: var(--pd-hero-pad-top) !important;;
+    padding-bottom: var(--pd-hero-pad-bottom) !important;;
   }
 
   /* Section spacing (description, why, ugc) */
@@ -53,33 +53,33 @@
   #shopify-section-{{ section.id }} .pd-why,
   #shopify-section-{{ section.id }} .pd-ugc {
     padding-top: var(--pd-sec-pad-top);
-    padding-bottom: var(--pd-sec-pad-bottom);
+    padding-bottom: var(--pd-sec-pad-bottom) !important;;
   }
 
   /* Typography */
   #shopify-section-{{ section.id }} .pd-h1 {
-    font-size: clamp(28px, 8vw, var(--pd-h1-max));
-    color: var(--pd-brand);
+    font-size: clamp(28px, 8vw, var(--pd-h1-max)) !important;;
+    color: var(--pd-brand) !important;;
   }
   #shopify-section-{{ section.id }} .pd-h2 {
-    font-size: var(--pd-h2);
-    color: var(--pd-brand);
+    font-size: var(--pd-h2) !important;;
+    color: var(--pd-brand) !important;;
   }
   #shopify-section-{{ section.id }} .pd-eyebrow {
-    font-size: var(--pd-eyebrow-size);
+    font-size: var(--pd-eyebrow-size) !important;;
   }
 
   /* Stars */
   #shopify-section-{{ section.id }} .pd-stars svg {
-    fill: var(--pd-star);
-    stroke: var(--pd-star);
+    fill: var(--pd-star) !important;;
+    stroke: var(--pd-star) !important;;
   }
 
   /* Add to cart button */
   #shopify-section-{{ section.id }} .pd-atc,
   #shopify-section-{{ section.id }} .pd-stickybar .pd-atc {
-    background: var(--pd-cta-bg);
-    color: var(--pd-cta-text);
+    background: var(--pd-cta-bg) !important;;
+    color: var(--pd-cta-text) !important;;
   }
   #shopify-section-{{ section.id }} .pd-atc:hover {
     filter: brightness(0.92);
@@ -88,7 +88,7 @@
   /* Accent color usage (Read more, links) */
   #shopify-section-{{ section.id }} .pd-blurb-more,
   #shopify-section-{{ section.id }} .pd-variant-link strong {
-    color: var(--pd-accent);
+    color: var(--pd-accent) !important;;
   }
 
   /* Mobile-only slider (preserved from original) */
@@ -100,11 +100,11 @@
     #shopify-section-{{ section.id }} .pd-slider-mobile {
       display: block !important;
       position: relative;
-      background: var(--pd-bg);
-      border: 2px solid var(--pd-brand);
+      background: var(--pd-bg) !important;;
+      border: 2px solid var(--pd-brand) !important;;
       border-radius: 20px;
       padding: 0;
-      box-shadow: 4px 4px 0 var(--pd-brand);
+      box-shadow: 4px 4px 0 var(--pd-brand) !important;;
       overflow: hidden;
       max-width: 340px;
       margin: 0 auto;
