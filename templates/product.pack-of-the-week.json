@@ -1,1 +1,871 @@
-{"sections":{"pack_of_week_6CMQU7":{"type":"pack-of-week","name":"Product Hero","settings":{"bg_img":"shopify:\/\/shop_images\/Rectangle_2272_2.png","background_color":"#d35605"}},"main":{"type":"main-product","blocks":{"wishlist_plus_wishlist_pdp_button_pQRHQJ":{"type":"shopify:\/\/apps\/wishlist-plus\/blocks\/wishlist-pdp-button\/80c3b1fc-3a8f-407e-8367-ffdeebb8b612","settings":{"swym_atw_button_icon":"heart","swym_atw_icon_thickness":1.7,"swym_atw_display_btn_text":false,"swym_button_position":"default","swym_atw_button_vertical_offset":0,"swym_atw_full_width":true,"swym_atw_button_alignment":"center","swym_add_to_wishlist_color":"#341c02","swym_added_to_wishlist_color":"#341c02","swym_button_text_color":"#ffffff","swym_atw_border_color":"#000000","swym_atw_border_thickness":0,"swym_atw_button_border_radius":0,"swym_enable_hover_customization":false,"swym_hover_add_to_wishlist_color":"#000000","swym_hover_added_to_wishlist_color":"#222222","swym_hover_button_text_color":"#ffffff","swym_hover_atw_border_color":"#000000","swym_hover_atw_border_thickness":0,"swym_hover_atw_button_border_radius":0,"swym_custom_css":""}},"vendor":{"type":"text","disabled":true,"settings":{"text":"{{ product.vendor }}","text_style":"uppercase"}},"title":{"type":"title","settings":{}},"areviews_reviews_importer_areviews_title_rating_0C0671":{"type":"shopify:\/\/apps\/areviews-reviews-importer\/blocks\/AreviewsTitleRating\/ab0ec5fe-c95b-4fd6-bfb8-db2a30d0756f","disabled":true,"settings":{}},"flat_shipping_xXJakw":{"type":"flat-shipping","settings":{"flat_shipping_image":"shopify:\/\/shop_images\/New_Project_49f650c3-d837-437c-ad2f-1773f97fc9bd.png","flat_shipping_text":"<p>Special Offer: Receive a Free Syrup Pump with Every Order! <\/p><p><strong>  Limited Time Only<\/strong><\/p>"}},"custom_liquid_jYgNcr":{"type":"custom_liquid","disabled":true,"settings":{"custom_liquid":"{% style %}\np {\nfont-size:15px\n}\n\n{% endstyle %}\n{% if product.metafields.custom.additionalfield != blank %}\n{{ product.metafields.custom.additionalfield | metafield_tag }}\n{% endif %}"}},"variant_picker":{"type":"variant_picker","settings":{"picker_type":"button","swatch_shape":"circle"}},"quantity_selector":{"type":"quantity_selector","settings":{}},"price":{"type":"price","settings":{}},"buy_buttons":{"type":"buy_buttons","settings":{"show_dynamic_checkout":false,"show_gift_card_recipient":true}},"custom_liquid_KhgeEh":{"type":"custom_liquid","settings":{"custom_liquid":"{% assign timer_class = product.metafields.custom.gsc_timer_widget_class.value %}\n\n{% if timer_class != blank %}\n  <div class=\"gta-block__root {{ timer_class }}\"><\/div>\n  <script>\n    setTimeout(() => window.dispatchEvent(new Event('resize')), 300);\n    setTimeout(() => window.dispatchEvent(new Event('resize')), 1000);\n  <\/script>\n{% endif %}"}},"custom_liquid_tiU8yq":{"type":"custom_liquid","disabled":true,"settings":{"custom_liquid":"{% if product.metafields.custom.regular %}\n  {% assign related_product = all_products[product.metafields.custom.regular] %}\n  {% if related_product %}\n    <a href=\"{{ related_product.url }}\" class=\" button button--full-width \">View Regular Option<\/a>\n  {% else %}\n    <p>Related product not found. Please check the metafield value.<\/p>\n  {% endif %}\n{% elsif product.metafields.custom.sugar_free %}\n  {% assign related_product = all_products[product.metafields.custom.sugar_free] %}\n  {% if related_product %}\n    <a href=\"{{ related_product.url }}\" class=\" button button--full-width \">View Sugar-Free Option<\/a>\n  {% else %}\n    <p>Related product not found. Please check the metafield value.<\/p>\n  {% endif %}\n{% endif %}"}},"collapsible_tab_NX8CY6":{"type":"collapsible_tab","settings":{"heading":"Product detail","icon":"none","show_ingredient":false,"show_description":true,"content":"","page":""}},"collapsible_tab_7rKHqV":{"type":"collapsible_tab","settings":{"heading":"Ingredients","icon":"none","show_ingredient":false,"show_description":false,"content":"{{ product.metafields.custom.additionalfield | metafield_tag }}","page":""}},"collapsible_tab_7b6n4w":{"type":"collapsible_tab","settings":{"heading":"Nutrition fact","icon":"none","show_ingredient":true,"show_description":false,"content":"","page":""}},"custom_liquid_xCNUPY":{"type":"custom_liquid","disabled":true,"settings":{"custom_liquid":"{% if product.metafields.custom.amazon_link != blank %}\n<button class=\"roduct-form__submit button button--full-width button--primary\" \nstyle=\" background: white ;\n  max-width: none;font-family: 'Josefin Sans'; font-weight: 400;font-size: 19px;color:black; border: 1px solid black;\"\nonclick=\"window.location.href='{{ product.metafields.custom.amazon_link }}'\">Buy on Amazon<\/button>\n{% endif %}"}},"description":{"type":"description","disabled":true,"settings":{}},"custom_liquid_3BftDx":{"type":"custom_liquid","disabled":true,"settings":{"custom_liquid":"{% if product.metafields.custom.ingredients != blank %}\n{{ product.metafields.custom.ingredients | image_url: width:\n'399×599' | image_tag }}\n{% endif %}"}},"share":{"type":"share","disabled":true,"settings":{"share_label":"Share"}},"firework_shoppable_video_ugc_firework_embed_product_MfkzbR":{"type":"shopify:\/\/apps\/firework-shoppable-video-ugc\/blocks\/firework-embed-product\/347a2e4c-f5cb-410d-8354-490d1e80558c","settings":{"channel":"syruvia","video_option":"match_videos","playlist":"","layout":"carousel","product_cards":"true","embedtitle":"","titlealignment":"center","embedtitlesize":20,"size":"medium","player_placement":"bottom-right","hashtag":"","pip":true,"enable_seo":true}},"judge_me_reviews_preview_badge_NnUkVe":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/preview_badge\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","disabled":true,"settings":{}}},"block_order":["wishlist_plus_wishlist_pdp_button_pQRHQJ","vendor","title","areviews_reviews_importer_areviews_title_rating_0C0671","flat_shipping_xXJakw","custom_liquid_jYgNcr","variant_picker","quantity_selector","price","buy_buttons","custom_liquid_KhgeEh","custom_liquid_tiU8yq","collapsible_tab_NX8CY6","collapsible_tab_7rKHqV","collapsible_tab_7b6n4w","custom_liquid_xCNUPY","description","custom_liquid_3BftDx","share","firework_shoppable_video_ugc_firework_embed_product_MfkzbR","judge_me_reviews_preview_badge_NnUkVe"],"disabled":true,"custom_css":["h1,h2,p,h3,h5,div {color: black;}","#ProductSubmitButton-template--22148954226972__main {background: #b85423; font-size: 19px; color: white; max-width: none;}","#ProductSubmitButton-template--22148954226972__main:after {opacity: 0;}",".product-form__buttons {max-width: none;}",".price-item.price-item--regular {font-size: 25px;}"],"settings":{"enable_sticky_info":false,"color_scheme":"scheme-1","media_size":"medium","constrain_to_viewport":true,"media_fit":"contain","gallery_layout":"thumbnail","media_position":"left","image_zoom":"hover","mobile_thumbnails":"hide","hide_variants":true,"enable_video_looping":false,"padding_top":36,"padding_bottom":12,"flavour_info":"{{ product.metafields.custom.flavor_inspo.value }}","syruvia_info":"Syruvia Sips","syruvia_info_sub":"Easy, delicious recipes to make at home"}},"17309639327851142b":{"type":"apps","blocks":{"firework_shoppable_video_ugc_firework_embed_product_nCjaMK":{"type":"shopify:\/\/apps\/firework-shoppable-video-ugc\/blocks\/firework-embed-product\/347a2e4c-f5cb-410d-8354-490d1e80558c","settings":{"channel":"syruvia","video_option":"match_videos","playlist":"","layout":"carousel","product_cards":"true","embedtitle":"","titlealignment":"center","embedtitlesize":20,"size":"medium","player_placement":"bottom-right","hashtag":"","pip":true,"enable_seo":true}}},"block_order":["firework_shoppable_video_ugc_firework_embed_product_nCjaMK"],"disabled":true,"settings":{"include_margins":true}},"17630381970c47d7f2":{"type":"apps","blocks":{"judge_me_reviews_review_widget_8PYFER":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/review_widget\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","settings":{"review_data":"real_data","max_width":1200,"show_shop_reviews":false,"empty_state":"empty_widget"}}},"block_order":["judge_me_reviews_review_widget_8PYFER"],"disabled":true,"settings":{"include_margins":true}},"custom_collapse_mxDhUB":{"type":"custom-collapse","blocks":{"collapsible_row_QAcjXF":{"type":"collapsible_row","settings":{"heading":"Ingredients","icon":"none","row_content":"","page":""}},"collapsible_row_F4jpJn":{"type":"collapsible_row","settings":{"heading":"Description","icon":"none","row_content":"","page":""}},"collapsible_row_HTUQqU":{"type":"collapsible_row","settings":{"heading":"Nutrition Facts","icon":"none","row_content":"","page":""}},"collapsible_row_eWdRLk":{"type":"collapsible_row","settings":{"heading":"Reviews","icon":"none","row_content":"","page":""}}},"block_order":["collapsible_row_QAcjXF","collapsible_row_F4jpJn","collapsible_row_HTUQqU","collapsible_row_eWdRLk"],"disabled":true,"custom_css":[".collapsible-content-wrapper-narrow {max-width: 71%;}","h3 {font-weight: 500;}","li {font-weight: 400;}",".accordion__content {font-weight: 300;}",".accordion svg {position: absolute !important;}"],"settings":{"caption":"","heading":"","heading_size":"h1","heading_alignment":"left","layout":"none","color_scheme":"","container_color_scheme":"scheme-1","open_first_collapsible_row":false,"image_ratio":"adapt","desktop_layout":"image_second","padding_top":36,"padding_bottom":36}},"1629746450643786911":{"type":"areviews-section","disabled":true,"settings":{"hide_areviews_title_rating":false,"areviews_theme_font":"inherit","areviews_stars_colors":"#f3c621","areviews_write_reviews_botton_color":"#373737"}},"related-products":{"type":"related-products","disabled":true,"custom_css":[],"settings":{"heading":"You may also like","heading_size":"h1","products_to_show":8,"columns_desktop":4,"color_scheme":"","image_ratio":"portrait","image_shape":"default","show_secondary_image":true,"show_vendor":false,"show_rating":false,"columns_mobile":"2","padding_top":36,"padding_bottom":0}},"favorite_new_g4pRrr":{"type":"favorite-new","disabled":true,"settings":{"heading":"You Might Enjoy","collection_list":"{{ product.collections }}","button_text":"","button_link":""}},"custom_liquid_Mqiy6C":{"type":"custom-liquid","disabled":true,"custom_css":[".color-scheme-1.gradient {background-color: #fff6ee;}"],"settings":{"custom_liquid":"<div class=\"cst-custom-tabs recipe-detail-btn\">\n  <div class=\"rich-text__blocks center\" style=\"margin:auto !important;\">\n    {% assign related_products_json = product.metafields.custom.you_might_enjoy_products.value %}\n    {% if related_products_json %}\n      {% assign related_products = related_products_json | parse_json %}\n\n      <div class=\"banner__top-image\">\n        <img src=\"\/\/syruvia.com\/cdn\/shop\/files\/Blogfdzg-Page_small.png?v=1729753769\" alt=\"Top Image\">\n      <\/div>\n      <div class=\"cst-custom-section-heading\">\n    <h2>You Might Enjoy<\/h2>\n  <\/div>\n      <div class=\"content\">\n        <div class=\"product-grid-section\">\n          {% for related_product in related_products %}\n            <div class=\"product-card \n              {% assign colorIndex = forloop.index0 | modulo: 4 %}\n              {% case colorIndex %}\n              {% when 0 %}colorone\n              {% when 1 %}colortwo\n              {% when 2 %}colorthree\n              {% when 3 %}colorfour\n              {% endcase %}\">\n              <!-- Product Image -->\n              <div class=\"cst-custom-product-featured-image\">\n                <a href=\"{{ related_product.url }}\">\n                  <img src=\"{{ related_product.featured_image | img_url: 'large' }}\" alt=\"{{ related_product.title }}\">\n                <\/a>\n              <\/div>\n\n              <!-- Product Content -->\n              <div class=\"cst-custom-product-content\">\n                <!-- Review Stars -->\n                <div class=\"areviews_product_item areviews_stars{{ related_product.id }}\" data-product-id=\"{{ related_product.id }}\"><\/div>\n\n                <!-- Product Title -->\n                <h3>{{ related_product.title }}<\/h3>\n                <p>{{ related_product.price | money }}<\/p>\n\n                <!-- Add to Cart Button -->\n                <form action=\"\/cart\/add\" method=\"post\" enctype=\"multipart\/form-data\">\n                  <input type=\"hidden\" name=\"id\" value=\"{{ related_product.variants.first.id }}\">\n                  <button class=\"quick-add__submit button\" type=\"submit\">Add to Cart<\/button>\n                <\/form>\n              <\/div>\n            <\/div>\n          {% endfor %}\n        <\/div>\n      <\/div>\n    {% else %}\n      {% assign product_collections = product.collections %}\n      {% if product_collections.size > 0 %}\n        <div class=\"banner__top-image\">\n          <img src=\"\/\/syruvia.com\/cdn\/shop\/files\/Blogfdzg-Page_small.png?v=1729753769\" alt=\"Top Image\">\n        <\/div>\n        <div class=\"cst-custom-section-heading \">\n    <h2>You Might Enjoy<\/h2>\n  <\/div>\n        <div class=\"content\">\n          <div class=\"product-grid-section\">\n            {% assign collection = product_collections.first %}\n            {% for related_product in collection.products limit:8 %}\n              {% if related_product.id != product.id %}\n                <div class=\"product-card \n                  {% assign colorIndex = forloop.index0 | modulo: 4 %}\n                  {% case colorIndex %}\n                  {% when 0 %}colorone\n                  {% when 1 %}colortwo\n                  {% when 2 %}colorthree\n                  {% when 3 %}colorfour\n                  {% endcase %}\">\n                  <!-- Product Image -->\n                  <div class=\"cst-custom-product-featured-image\">\n                    <a href=\"{{ related_product.url }}\">\n                      <img src=\"{{ related_product.featured_image | img_url: 'large' }}\" alt=\"{{ related_product.title }}\">\n                    <\/a>\n                  <\/div>\n\n                  <!-- Product Content -->\n                  <div class=\"cst-custom-product-content\">\n                    <!-- Review Stars -->\n                    <div class=\"areviews_product_item areviews_stars{{ related_product.id }}\" data-product-id=\"{{ related_product.id }}\"><\/div>\n\n                    <!-- Product Title -->\n                    <h3>{{ related_product.title }}<\/h3>\n                    <p>{{ related_product.price | money }}<\/p>\n\n                    <!-- Add to Cart Button -->\n                    <form action=\"\/cart\/add\" method=\"post\" enctype=\"multipart\/form-data\">\n                      <input type=\"hidden\" name=\"id\" value=\"{{ related_product.variants.first.id }}\">\n                      <button class=\"quick-add__submit button\" type=\"submit\">Add to Cart<\/button>\n                    <\/form>\n                  <\/div>\n                <\/div>\n              {% endif %}\n            {% endfor %}\n          <\/div>\n        <\/div>\n      {% endif %}\n    {% endif %}\n  <\/div>\n<\/div>\n\n<!-- Add Styles and Scripts for Slick Slider -->\n<link rel=\"stylesheet\" href=\"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/slick-carousel\/1.8.1\/slick.min.css\">\n<link rel=\"stylesheet\" href=\"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/slick-carousel\/1.8.1\/slick-theme.min.css\">\n<script src=\"https:\/\/code.jquery.com\/jquery-3.7.1.min.js\"><\/script>\n<script src=\"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/slick-carousel\/1.8.1\/slick.min.js\"><\/script>\n\n<script>\n  $('.product-grid-section').slick({\n    centerMode: false,\n    slidesToShow: 4,\n    responsive: [\n      {\n        breakpoint: 1300,\n        settings: {\n          arrows: true,\n          slidesToShow: 3\n        }\n      },\n      {\n        breakpoint: 991,\n        settings: {\n          arrows: true,\n          slidesToShow: 2\n        }\n      },\n      {\n        breakpoint: 768,\n        settings: {\n          arrows: true,\n          centerPadding: '100px',\n          slidesToShow: 2\n        }\n      },\n      {\n        breakpoint: 480,\n        settings: {\n          arrows: true,\n          centerPadding: '70px',\n          slidesToShow: 2\n        }\n      }\n    ]\n  });\n<\/script>","color_scheme":"","padding_top":40,"padding_bottom":52}},"custom_liquid_nUifaq":{"type":"custom-liquid","disabled":true,"settings":{"custom_liquid":"<div class=\"cst-custom-tabs recipe-detail-btn\">\n  <div class=\"rich-text__blocks center\" style=\"margin:auto !important;\">\n    {% assign related_products_json = product.metafields.custom.you_might_enjoy_products.value %}\n    {% if related_products_json %}\n      {% assign related_products = related_products_json | parse_json %}\n\n      <div class=\"banner__top-image\">\n        <img src=\"\/\/syruvia.com\/cdn\/shop\/files\/Blogfdzg-Page_small.png?v=1729753769\" alt=\"Top Image\">\n      <\/div>\n      <h2\n        class=\"rich-text__heading rte head inline-richtext hxl scroll-trigger animate--slide-in\"\n        style=\"--animation-order: 0; font-size: 50px !important;\"\n      >\n        You Might Enjoy\n      <\/h2>\n      <div class=\"content\">\n        <div class=\"product-grid-section slick-slider\">\n          <!-- Added slick-slider class here -->\n          {% for related_product in related_products %}\n            <div class=\"product-card {% assign colorIndex = forloop.index0 | modulo: 4 %} {% if colorIndex == 0 %}colorone{% elsif colorIndex == 1 %}colortwo{% elsif colorIndex == 2 %}colorthree{% elsif colorIndex == 3 %}colorfour{% endif %}\">\n              <!-- Product Image -->\n              <div class=\"cst-custom-product-featured-image\">\n                <a href=\"{{ related_product.url }}\">\n                  <img src=\"{{ related_product.featured_image | img_url: 'large' }}\" alt=\"{{ related_product.title }}\">\n                <\/a>\n              <\/div>\n\n              <!-- Product Content -->\n              <div class=\"cst-custom-product-content\">\n                <!-- Review Stars -->\n                <div\n                  class=\"areviews_product_item areviews_stars{{ related_product.id }}\"\n                  data-product-id=\"{{ related_product.id }}\"\n                ><\/div>\n\n                <!-- Product Title -->\n                <h3>{{ related_product.title }}<\/h3>\n                <p>{{ related_product.price | money }}<\/p>\n\n                <!-- Add to Cart Button -->\n                <form action=\"\/cart\/add\" method=\"post\" enctype=\"multipart\/form-data\">\n                  <input type=\"hidden\" name=\"id\" value=\"{{ related_product.variants.first.id }}\">\n                  <button class=\"quick-add__submit button\" type=\"submit\">Add to Cart<\/button>\n                <\/form>\n              <\/div>\n            <\/div>\n          {% endfor %}\n        <\/div>\n      <\/div>\n    {% else %}\n      <div\n        class=\"related-products page-width section-{{ section.id }}-padding isolate{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}\"\n        data-url=\"{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}\"\n      >\n        {% assign product_collections = product.collections %}\n        {% if product_collections.size > 0 %}\n          <div class=\"cst-custom-tabs\">\n            <div class=\"rich-text__blocks center\" style=\"margin:auto !important;\">\n              <div class=\"banner__top-image\">\n                <img src=\"\/\/syruvia.com\/cdn\/shop\/files\/Blogfdzg-Page_small.png?v=1729753769\" alt=\"Top Image\">\n              <\/div>\n              <h2\n                class=\"rich-text__heading rte head inline-richtext hxl scroll-trigger animate--slide-in\"\n                style=\"--animation-order: 0; font-size: 50px !important;\"\n              >\n                You Might Enjoy\n              <\/h2>\n              <div class=\"content\">\n                <div class=\"product-grid-section slick-slider\">\n                  <!-- Added slick-slider class here -->\n                  {% for recommendation in recommendations.products %}\n                    <div class=\"product-card {% assign colorIndex = forloop.index0 | modulo: 4 %} {% if colorIndex == 0 %}colorone{% elsif colorIndex == 1 %}colortwo{% elsif colorIndex == 2 %}colorthree{% elsif colorIndex == 3 %}colorfour{% endif %}\">\n                      <!-- Product Image -->\n                      <div class=\"cst-custom-product-featured-image\">\n                        <a href=\"{{ recommendation.url }}\">\n                          <img\n                            src=\"{{ recommendation.featured_image | img_url: 'large' }}\"\n                            alt=\"{{ recommendation.title }}\"\n                          >\n                        <\/a>\n                      <\/div>\n\n                      <!-- Product Content -->\n                      <div class=\"cst-custom-product-content\">\n                        <!-- Review Stars -->\n                        <div\n                          class=\"areviews_product_item areviews_stars{{ recommendation.id }}\"\n                          data-product-id=\"{{ recommendation.id }}\"\n                        ><\/div>\n\n                        <!-- Product Title -->\n                        <h3>{{ recommendation.title }}<\/h3>\n                        <p>{{ recommendation.price | money }}<\/p>\n\n                        <!-- Add to Cart Button -->\n                        <form action=\"\/cart\/add\" method=\"post\" enctype=\"multipart\/form-data\">\n                          <input type=\"hidden\" name=\"id\" value=\"{{ recommendation.variants.first.id }}\">\n                          <button class=\"quick-add__submit button\" type=\"submit\">Add to Cart<\/button>\n                        <\/form>\n                      <\/div>\n                    <\/div>\n                  {% endfor %}\n                <\/div>\n              <\/div>\n            <\/div>\n          <\/div>\n        {% endif %}\n      <\/div>\n    {% endif %}\n  <\/div>\n<\/div>\n\n<!-- Slick Slider Styles and Scripts -->\n<link rel=\"stylesheet\" href=\"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/slick-carousel\/1.8.1\/slick.min.css\">\n<link rel=\"stylesheet\" href=\"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/slick-carousel\/1.8.1\/slick-theme.min.css\">\n<script src=\"https:\/\/code.jquery.com\/jquery-3.7.1.min.js\"><\/script>\n<script src=\"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/slick-carousel\/1.8.1\/slick.min.js\"><\/script>\n\n<script>\n  $(document).ready(function() {\n    $('.slick-slider').slick({\n      centerMode: false,\n      slidesToShow: 4,\n      arrows: true,\n      responsive: [\n        {\n          breakpoint: 1300,\n          settings: {\n            slidesToShow: 3\n          }\n        },\n        {\n          breakpoint: 991,\n          settings: {\n            slidesToShow: 2\n          }\n        },\n        {\n          breakpoint: 768,\n          settings: {\n            slidesToShow: 2,\n            centerPadding: '50px'\n          }\n        },\n        {\n          breakpoint: 480,\n          settings: {\n            slidesToShow: 1,\n            centerPadding: '30px'\n          }\n        }\n      ]\n    });\n  });\n<\/script>","color_scheme":"","padding_top":40,"padding_bottom":52}},"1740158290c175068a":{"type":"apps","blocks":{"judge_me_reviews_review_widget_YEwiPr":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/review_widget\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","disabled":true,"settings":{"review_data":"sample_data","max_width":1200,"show_shop_reviews":false,"empty_state":"empty_widget"}}},"block_order":["judge_me_reviews_review_widget_YEwiPr"],"disabled":true,"settings":{"include_margins":true}},"areviews_1770916367_30db11":{"type":"apps","blocks":{"areviews_reviews_importer_areviews_display_reviews_C43DBB":{"type":"shopify:\/\/apps\/areviews-reviews-importer\/blocks\/AreviewsDisplayReviews\/ab0ec5fe-c95b-4fd6-bfb8-db2a30d0756f","settings":{"hide_areviews_title_rating":false,"areviews_theme_font":"inherit","areviews_stars_colors":"#f3c621","areviews_write_reviews_botton_color":"#373737"}}},"block_order":["areviews_reviews_importer_areviews_display_reviews_C43DBB"],"disabled":true,"settings":{"include_margins":true}},"multicolumn_RKBVFY":{"type":"multicolumn","blocks":{"column_WtABe3":{"type":"column","settings":{"image":"shopify:\/\/shop_images\/iced-tea_2.png","column_link":"","title":"<strong>Mixes in Seconds<\/strong>","text":"","link_label":"","link":""}},"column_k7Ua7t":{"type":"column","settings":{"image":"shopify:\/\/shop_images\/lemonade_2.png","column_link":"","title":"<strong>Built for Iced Drinks<\/strong>","text":"","link_label":"","link":""}},"column_UrhpMn":{"type":"column","settings":{"image":"shopify:\/\/shop_images\/drink_4.png","column_link":"","title":"<strong>Summer-Ready Pack<\/strong>","text":"","link_label":"","link":""}}},"block_order":["column_WtABe3","column_k7Ua7t","column_UrhpMn"],"custom_css":[".multicolumn {background: #fef8f1;}",".about-page-custom-cst-multi-sec {display: none;}",".multicolumn-list {justify-content: center;}",".grid--3-col-desktop .grid__item {width: 20%; max-width: 20%;}",".media {padding: 0 !important;}","img {object-fit: contain; margin: 0 auto; position: unset; width: 60px; height: 60px;}",".inline-richtext {text-align: center; font-family: \"Manrope\", sans-serif !important;}","@media screen and (max-width: 989px) {.grid--1-col-tablet-down .grid__item {flex: 1 0 40%; max-width: calc(100% \/ 2 - 2px); }}"],"name":"t:sections.multicolumn.presets.name","settings":{"custom_class":"pack-of-the-week__multicolumn","custom_classmobbg":"","custom_class1":"","custom_class11":"","custom_class12":"","title":"","image_alt_text":"","content":"","additional_text":"","heading_size":"h1","image_width":"full","image_ratio":"adapt","columns_desktop":3,"column_alignment":"left","background_style":"none","button_label":"","button_link":"","color_scheme":"","columns_mobile":"1","swipe_on_mobile":false,"padding_top":36,"padding_bottom":36,"ever_drop_image_alt_text":"Description of the ever drop image","ever_drop_image_alt_text11":"Description of the ever drop image","ever_drop_image_alt_text12":"Description of the ever drop image","mob_bg_image_alt_text":"Description of the ever drop image","mob_bg_image_alt_text1":"Description of the ever drop image","mob_bg_image_alt_text2":"Description of the ever drop image"}},"inside_package_y9eETx":{"type":"inside-package","name":"Inside Package","settings":{"title":"Inside the Pack"}},"rich_text_qTtW4R":{"type":"rich-text","blocks":{"heading_FiYMra":{"type":"heading","settings":{"show_image":false,"heading":"<strong>What is Pack of the Week?<\/strong>","heading_size":"h1"}},"text_WbBjqB":{"type":"text","settings":{"text":"<p>Each week, we highlight one pack we think is worth trying. Same premium products, just an easier place for you to start your flavor journey without the decision fatigue.<\/p>"}}},"block_order":["heading_FiYMra","text_WbBjqB"],"custom_css":[".page-cst-about-page-sec,.page-cst-mission-page-sec,.line-left,.line-right {display: none;}",".mobile-pad {padding-bottom: 40px !important;}",".rich-text__heading strong {font-family: \"Epilogue\", sans-serif !important;}",".rich-text__heading em {font-style: normal; color: #61155b;}",".rich-text__text p {font-family: \"Manrope\", sans-serif !important;}","@media (max-width: 768px) {.head {font-size: 32px !important; }}","@media (max-width: 400px) {.rich-text__text p {font-size: 14px !important; line-height: normal !important; }}"],"name":"t:sections.rich-text.presets.name","settings":{"custom_class":"","custom_id":"","custom_imgclass":"","custom_class_bg_gtr":"","custom_class1":"","custom_class11":"","custom_class12":"","desktop_content_position":"center","content_alignment":"center","color_scheme":"","full_width":true,"padding_top":40,"padding_bottom":36,"ever_drop_image_alt_text":"Description of the ever drop image","ever_drop_image_alt_text11":"Description of the ever drop image","ever_drop_image_alt_text12":"Description of the ever drop image"}},"try_pack_D8RHMx":{"type":"try-pack","name":"Try Pack Section","settings":{"background_color":"#d35605"}},"pack_steps_AbyNtH":{"type":"pack-steps","blocks":{"step_Lf8EaQ":{"type":"step","settings":{"title":"Try multiple flavors","description":"Discover your favorite without the\ncommitment of full-size bulk."}},"step_TNaYFj":{"type":"step","settings":{"title":"Rotate flavors easily","description":"Keep your morning routine exciting with fresh weekly picks."}},"step_3TXR63":{"type":"step","settings":{"title":"Avoid unused Flavors","description":"Optimized sizes meant for high-rotation use at home."}}},"block_order":["step_Lf8EaQ","step_TNaYFj","step_3TXR63"],"name":"Pack Steps","settings":{"background_color":"#D35605","heading":"<h2>A smarter way to<br\/><em>Choose<\/em><\/h2>"}},"trusted_pack_jggqKc":{"type":"trusted-pack","blocks":{"item_XgLWHj":{"type":"item","settings":{"icon":"shopify:\/\/shop_images\/U.png","text":"Kosher"}},"item_X9cE6d":{"type":"item","settings":{"icon":"shopify:\/\/shop_images\/leaf_2.png","text":"Vegan"}},"item_LWQDPF":{"type":"item","settings":{"icon":"shopify:\/\/shop_images\/gluten-free.png","text":"Fluten Free"}},"item_Fd6MBH":{"type":"item","settings":{"icon":"shopify:\/\/shop_images\/united-states.png","text":"Made in USA"}}},"block_order":["item_XgLWHj","item_X9cE6d","item_LWQDPF","item_Fd6MBH"],"name":"Trusted Pack","settings":{"title":"<h2>Trusted Quality <\/h2>","description":"<p>Carefully made to meet everyday standards you can rely on.<\/p>","button_text":"Shop The Pack Now","button_link":""}},"1778574702613bcc03":{"type":"apps","blocks":{"judge_me_reviews_cards_carousel_L4h8Uf":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/cards_carousel\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","settings":{"show_sample_reviews":true,"reviews_selection":"current_product","products":[],"star_rating":"all","show_review_media":true,"display_order":"media_first","no_image_fallback":"review_text_only","max_reviews":20,"review_length":"medium","text_size":"medium","image_ratio":"1","reviews_shown":4,"show_reviewer_name":true,"show_product_name":true,"hide_arrows_mobile":true,"arrows_position":"sides","max_width":1100,"corner_styling":"soft","header_text_color":"#000000","text_color":"#000000","card_color":"#f9f9f9","stars_color":"","arrows_color":"#000000","transition_speed":5,"header_text":"Customers are saying","show_average_rating":true,"rating_display":"default"}}},"block_order":["judge_me_reviews_cards_carousel_L4h8Uf"],"settings":{"include_margins":true}},"pack_testimonial_btMyHt":{"type":"pack-testimonial","blocks":{"testimonial_RVrkPA":{"type":"testimonial","settings":{"rating":5,"quote":"Salted Caramel is a game changer for my morning cold brew, saving over $150 a month and my drinks taste better than the coffee shop.","reviewer_initials":"SJ","reviewer_name":"Sarah J.","reviewer_role":"VERIFIED BUYER"}},"testimonial_w7H38p":{"type":"testimonial","settings":{"rating":5,"quote":"Finally, a sugar-free vanilla that doesn't have that weird aftertaste. Perfect for my keto lattes. The concentration is insane, one bottle lasts forever!","reviewer_initials":"MR","reviewer_name":"Michael R.","reviewer_role":"COFFEE ENTHUSIAST"}},"testimonial_grwGng":{"type":"testimonial","settings":{"rating":5,"quote":"I use the fruit refreshers for my sparkling water every afternoon. It's so crisp and light. My kids even love making their own healthy 'sodas' with them.","reviewer_initials":"EG","reviewer_name":"Elena G.","reviewer_role":"HAPPY MOTHER"}},"testimonial_cdT8rN":{"type":"testimonial","settings":{"rating":5,"quote":"I use the fruit refreshers for my sparkling water every afternoon. It's so crisp and light. My kids even love making their own healthy 'sodas' with them.","reviewer_initials":"EG","reviewer_name":"Elena G.","reviewer_role":"HAPPY MOTHER"}},"testimonial_ExpYLN":{"type":"testimonial","settings":{"rating":5,"quote":"Finally, a sugar-free vanilla that doesn't have that weird aftertaste. Perfect for my keto lattes. The concentration is insane, one bottle lasts forever!","reviewer_initials":"MR","reviewer_name":"Michael R.","reviewer_role":"COFFEE ENTHUSIAST"}}},"block_order":["testimonial_RVrkPA","testimonial_w7H38p","testimonial_grwGng","testimonial_cdT8rN","testimonial_ExpYLN"],"name":"People Love This Combo","settings":{"heading":"People\nLove this Combo","show_average_rating":true,"average_rating":"4.9","slides_desktop":4,"slides_tablet":2,"slides_mobile":1,"show_arrows":false,"show_dots":false,"autoplay":true,"autoplay_speed":5,"color_scheme":"","background_color":"#ffffff","card_background":"#f5e6f0","heading_color":"#2a2a2a","text_color":"#5a4a4a","star_color":"#b85423","avatar_background":"#d9b8c8","padding_top":60,"padding_bottom":60}},"start_pack_nUrTze":{"type":"start-pack","name":"Start Pack","settings":{"background_color":"#D35605","title":"Start with this one","description":"The Coffeehouse Clasic is our most-loved collection for a reason, Join thousands of happy brewers.","button_text":"Shop This Pack","bottom_icon":"shopify:\/\/shop_images\/Icontruck.png","bottom_text":"FREE SHIPPING ON ORDERS OVER $34"}}},"order":["pack_of_week_6CMQU7","main","17309639327851142b","17630381970c47d7f2","custom_collapse_mxDhUB","1629746450643786911","related-products","favorite_new_g4pRrr","custom_liquid_Mqiy6C","custom_liquid_nUifaq","1740158290c175068a","areviews_1770916367_30db11","multicolumn_RKBVFY","inside_package_y9eETx","rich_text_qTtW4R","try_pack_D8RHMx","pack_steps_AbyNtH","trusted_pack_jggqKc","1778574702613bcc03","pack_testimonial_btMyHt","start_pack_nUrTze"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "pack_of_week_6CMQU7": {
+      "type": "pack-of-week",
+      "name": "Product Hero",
+      "settings": {
+        "bg_img": "shopify://shop_images/Rectangle_2272_2.png",
+        "secondary_button_text": "View Sugar Free",
+        "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
+        "accent_color": "#C6631E"
+      }
+    },
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "wishlist_plus_wishlist_pdp_button_pQRHQJ": {
+          "type": "shopify://apps/wishlist-plus/blocks/wishlist-pdp-button/80c3b1fc-3a8f-407e-8367-ffdeebb8b612",
+          "settings": {
+            "swym_atw_button_icon": "heart",
+            "swym_atw_icon_thickness": 1.7,
+            "swym_atw_display_btn_text": false,
+            "swym_button_position": "default",
+            "swym_atw_button_vertical_offset": 0,
+            "swym_atw_full_width": true,
+            "swym_atw_button_alignment": "center",
+            "swym_add_to_wishlist_color": "#341c02",
+            "swym_added_to_wishlist_color": "#341c02",
+            "swym_button_text_color": "#ffffff",
+            "swym_atw_border_color": "#000000",
+            "swym_atw_border_thickness": 0,
+            "swym_atw_button_border_radius": 0,
+            "swym_enable_hover_customization": false,
+            "swym_hover_add_to_wishlist_color": "#000000",
+            "swym_hover_added_to_wishlist_color": "#222222",
+            "swym_hover_button_text_color": "#ffffff",
+            "swym_hover_atw_border_color": "#000000",
+            "swym_hover_atw_border_thickness": 0,
+            "swym_hover_atw_button_border_radius": 0,
+            "swym_custom_css": ""
+          }
+        },
+        "vendor": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "areviews_reviews_importer_areviews_title_rating_0C0671": {
+          "type": "shopify://apps/areviews-reviews-importer/blocks/AreviewsTitleRating/ab0ec5fe-c95b-4fd6-bfb8-db2a30d0756f",
+          "disabled": true,
+          "settings": {}
+        },
+        "flat_shipping_xXJakw": {
+          "type": "flat-shipping",
+          "settings": {
+            "flat_shipping_image": "shopify://shop_images/New_Project_49f650c3-d837-437c-ad2f-1773f97fc9bd.png",
+            "flat_shipping_text": "<p>Special Offer: Receive a Free Syrup Pump with Every Order! </p><p><strong>  Limited Time Only</strong></p>"
+          }
+        },
+        "custom_liquid_jYgNcr": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "{% style %}\np {\nfont-size:15px\n}\n\n{% endstyle %}\n{% if product.metafields.custom.additionalfield != blank %}\n{{ product.metafields.custom.additionalfield | metafield_tag }}\n{% endif %}"
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": true
+          }
+        },
+        "custom_liquid_KhgeEh": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% assign timer_class = product.metafields.custom.gsc_timer_widget_class.value %}\n\n{% if timer_class != blank %}\n  <div class=\"gta-block__root {{ timer_class }}\"></div>\n  <script>\n    setTimeout(() => window.dispatchEvent(new Event('resize')), 300);\n    setTimeout(() => window.dispatchEvent(new Event('resize')), 1000);\n  </script>\n{% endif %}"
+          }
+        },
+        "custom_liquid_tiU8yq": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "{% if product.metafields.custom.regular %}\n  {% assign related_product = all_products[product.metafields.custom.regular] %}\n  {% if related_product %}\n    <a href=\"{{ related_product.url }}\" class=\" button button--full-width \">View Regular Option</a>\n  {% else %}\n    <p>Related product not found. Please check the metafield value.</p>\n  {% endif %}\n{% elsif product.metafields.custom.sugar_free %}\n  {% assign related_product = all_products[product.metafields.custom.sugar_free] %}\n  {% if related_product %}\n    <a href=\"{{ related_product.url }}\" class=\" button button--full-width \">View Sugar-Free Option</a>\n  {% else %}\n    <p>Related product not found. Please check the metafield value.</p>\n  {% endif %}\n{% endif %}"
+          }
+        },
+        "collapsible_tab_NX8CY6": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Product detail",
+            "icon": "none",
+            "show_ingredient": false,
+            "show_description": true,
+            "content": "",
+            "page": ""
+          }
+        },
+        "collapsible_tab_7rKHqV": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Ingredients",
+            "icon": "none",
+            "show_ingredient": false,
+            "show_description": false,
+            "content": "{{ product.metafields.custom.additionalfield | metafield_tag }}",
+            "page": ""
+          }
+        },
+        "collapsible_tab_7b6n4w": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Nutrition fact",
+            "icon": "none",
+            "show_ingredient": true,
+            "show_description": false,
+            "content": "",
+            "page": ""
+          }
+        },
+        "custom_liquid_xCNUPY": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "{% if product.metafields.custom.amazon_link != blank %}\n<button class=\"roduct-form__submit button button--full-width button--primary\" \nstyle=\" background: white ;\n  max-width: none;font-family: 'Josefin Sans'; font-weight: 400;font-size: 19px;color:black; border: 1px solid black;\"\nonclick=\"window.location.href='{{ product.metafields.custom.amazon_link }}'\">Buy on Amazon</button>\n{% endif %}"
+          }
+        },
+        "description": {
+          "type": "description",
+          "disabled": true,
+          "settings": {}
+        },
+        "custom_liquid_3BftDx": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "{% if product.metafields.custom.ingredients != blank %}\n{{ product.metafields.custom.ingredients | image_url: width:\n'399×599' | image_tag }}\n{% endif %}"
+          }
+        },
+        "share": {
+          "type": "share",
+          "disabled": true,
+          "settings": {
+            "share_label": "Share"
+          }
+        },
+        "firework_shoppable_video_ugc_firework_embed_product_MfkzbR": {
+          "type": "shopify://apps/firework-shoppable-video-ugc/blocks/firework-embed-product/347a2e4c-f5cb-410d-8354-490d1e80558c",
+          "settings": {
+            "channel": "syruvia",
+            "video_option": "match_videos",
+            "playlist": "",
+            "layout": "carousel",
+            "product_cards": "true",
+            "embedtitle": "",
+            "titlealignment": "center",
+            "embedtitlesize": 20,
+            "size": "medium",
+            "player_placement": "bottom-right",
+            "hashtag": "",
+            "pip": true,
+            "enable_seo": true
+          }
+        },
+        "judge_me_reviews_preview_badge_NnUkVe": {
+          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "disabled": true,
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "wishlist_plus_wishlist_pdp_button_pQRHQJ",
+        "vendor",
+        "title",
+        "areviews_reviews_importer_areviews_title_rating_0C0671",
+        "flat_shipping_xXJakw",
+        "custom_liquid_jYgNcr",
+        "variant_picker",
+        "quantity_selector",
+        "price",
+        "buy_buttons",
+        "custom_liquid_KhgeEh",
+        "custom_liquid_tiU8yq",
+        "collapsible_tab_NX8CY6",
+        "collapsible_tab_7rKHqV",
+        "collapsible_tab_7b6n4w",
+        "custom_liquid_xCNUPY",
+        "description",
+        "custom_liquid_3BftDx",
+        "share",
+        "firework_shoppable_video_ugc_firework_embed_product_MfkzbR",
+        "judge_me_reviews_preview_badge_NnUkVe"
+      ],
+      "disabled": true,
+      "custom_css": [
+        "h1,h2,p,h3,h5,div {color: black;}",
+        "#ProductSubmitButton-template--22148954226972__main {background: #b85423; font-size: 19px; color: white; max-width: none;}",
+        "#ProductSubmitButton-template--22148954226972__main:after {opacity: 0;}",
+        ".product-form__buttons {max-width: none;}",
+        ".price-item.price-item--regular {font-size: 25px;}"
+      ],
+      "settings": {
+        "enable_sticky_info": false,
+        "color_scheme": "scheme-1",
+        "media_size": "medium",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "thumbnail",
+        "media_position": "left",
+        "image_zoom": "hover",
+        "mobile_thumbnails": "hide",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12,
+        "flavour_info": "{{ product.metafields.custom.flavor_inspo.value }}",
+        "syruvia_info": "Syruvia Sips",
+        "syruvia_info_sub": "Easy, delicious recipes to make at home"
+      }
+    },
+    "17309639327851142b": {
+      "type": "apps",
+      "blocks": {
+        "firework_shoppable_video_ugc_firework_embed_product_nCjaMK": {
+          "type": "shopify://apps/firework-shoppable-video-ugc/blocks/firework-embed-product/347a2e4c-f5cb-410d-8354-490d1e80558c",
+          "settings": {
+            "channel": "syruvia",
+            "video_option": "match_videos",
+            "playlist": "",
+            "layout": "carousel",
+            "product_cards": "true",
+            "embedtitle": "",
+            "titlealignment": "center",
+            "embedtitlesize": 20,
+            "size": "medium",
+            "player_placement": "bottom-right",
+            "hashtag": "",
+            "pip": true,
+            "enable_seo": true
+          }
+        }
+      },
+      "block_order": [
+        "firework_shoppable_video_ugc_firework_embed_product_nCjaMK"
+      ],
+      "disabled": true,
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "17630381970c47d7f2": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_8PYFER": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "real_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_8PYFER"
+      ],
+      "disabled": true,
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "custom_collapse_mxDhUB": {
+      "type": "custom-collapse",
+      "blocks": {
+        "collapsible_row_QAcjXF": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Ingredients",
+            "icon": "none",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_F4jpJn": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Description",
+            "icon": "none",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_HTUQqU": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Nutrition Facts",
+            "icon": "none",
+            "row_content": "",
+            "page": ""
+          }
+        },
+        "collapsible_row_eWdRLk": {
+          "type": "collapsible_row",
+          "settings": {
+            "heading": "Reviews",
+            "icon": "none",
+            "row_content": "",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "collapsible_row_QAcjXF",
+        "collapsible_row_F4jpJn",
+        "collapsible_row_HTUQqU",
+        "collapsible_row_eWdRLk"
+      ],
+      "disabled": true,
+      "custom_css": [
+        ".collapsible-content-wrapper-narrow {max-width: 71%;}",
+        "h3 {font-weight: 500;}",
+        "li {font-weight: 400;}",
+        ".accordion__content {font-weight: 300;}",
+        ".accordion svg {position: absolute !important;}"
+      ],
+      "settings": {
+        "caption": "",
+        "heading": "",
+        "heading_size": "h1",
+        "heading_alignment": "left",
+        "layout": "none",
+        "color_scheme": "",
+        "container_color_scheme": "scheme-1",
+        "open_first_collapsible_row": false,
+        "image_ratio": "adapt",
+        "desktop_layout": "image_second",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "1629746450643786911": {
+      "type": "areviews-section",
+      "disabled": true,
+      "settings": {
+        "hide_areviews_title_rating": false,
+        "areviews_theme_font": "inherit",
+        "areviews_stars_colors": "#f3c621",
+        "areviews_write_reviews_botton_color": "#373737"
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "disabled": true,
+      "custom_css": [],
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h1",
+        "products_to_show": 8,
+        "columns_desktop": 4,
+        "color_scheme": "",
+        "image_ratio": "portrait",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 0
+      }
+    },
+    "favorite_new_g4pRrr": {
+      "type": "favorite-new",
+      "disabled": true,
+      "settings": {
+        "heading": "You Might Enjoy",
+        "collection_list": "{{ product.collections }}",
+        "button_text": "",
+        "button_link": ""
+      }
+    },
+    "custom_liquid_Mqiy6C": {
+      "type": "custom-liquid",
+      "disabled": true,
+      "custom_css": [
+        ".color-scheme-1.gradient {background-color: #fff6ee;}"
+      ],
+      "settings": {
+        "custom_liquid": "<div class=\"cst-custom-tabs recipe-detail-btn\">\n  <div class=\"rich-text__blocks center\" style=\"margin:auto !important;\">\n    {% assign related_products_json = product.metafields.custom.you_might_enjoy_products.value %}\n    {% if related_products_json %}\n      {% assign related_products = related_products_json | parse_json %}\n\n      <div class=\"banner__top-image\">\n        <img src=\"//syruvia.com/cdn/shop/files/Blogfdzg-Page_small.png?v=1729753769\" alt=\"Top Image\">\n      </div>\n      <div class=\"cst-custom-section-heading\">\n    <h2>You Might Enjoy</h2>\n  </div>\n      <div class=\"content\">\n        <div class=\"product-grid-section\">\n          {% for related_product in related_products %}\n            <div class=\"product-card \n              {% assign colorIndex = forloop.index0 | modulo: 4 %}\n              {% case colorIndex %}\n              {% when 0 %}colorone\n              {% when 1 %}colortwo\n              {% when 2 %}colorthree\n              {% when 3 %}colorfour\n              {% endcase %}\">\n              <!-- Product Image -->\n              <div class=\"cst-custom-product-featured-image\">\n                <a href=\"{{ related_product.url }}\">\n                  <img src=\"{{ related_product.featured_image | img_url: 'large' }}\" alt=\"{{ related_product.title }}\">\n                </a>\n              </div>\n\n              <!-- Product Content -->\n              <div class=\"cst-custom-product-content\">\n                <!-- Review Stars -->\n                <div class=\"areviews_product_item areviews_stars{{ related_product.id }}\" data-product-id=\"{{ related_product.id }}\"></div>\n\n                <!-- Product Title -->\n                <h3>{{ related_product.title }}</h3>\n                <p>{{ related_product.price | money }}</p>\n\n                <!-- Add to Cart Button -->\n                <form action=\"/cart/add\" method=\"post\" enctype=\"multipart/form-data\">\n                  <input type=\"hidden\" name=\"id\" value=\"{{ related_product.variants.first.id }}\">\n                  <button class=\"quick-add__submit button\" type=\"submit\">Add to Cart</button>\n                </form>\n              </div>\n            </div>\n          {% endfor %}\n        </div>\n      </div>\n    {% else %}\n      {% assign product_collections = product.collections %}\n      {% if product_collections.size > 0 %}\n        <div class=\"banner__top-image\">\n          <img src=\"//syruvia.com/cdn/shop/files/Blogfdzg-Page_small.png?v=1729753769\" alt=\"Top Image\">\n        </div>\n        <div class=\"cst-custom-section-heading \">\n    <h2>You Might Enjoy</h2>\n  </div>\n        <div class=\"content\">\n          <div class=\"product-grid-section\">\n            {% assign collection = product_collections.first %}\n            {% for related_product in collection.products limit:8 %}\n              {% if related_product.id != product.id %}\n                <div class=\"product-card \n                  {% assign colorIndex = forloop.index0 | modulo: 4 %}\n                  {% case colorIndex %}\n                  {% when 0 %}colorone\n                  {% when 1 %}colortwo\n                  {% when 2 %}colorthree\n                  {% when 3 %}colorfour\n                  {% endcase %}\">\n                  <!-- Product Image -->\n                  <div class=\"cst-custom-product-featured-image\">\n                    <a href=\"{{ related_product.url }}\">\n                      <img src=\"{{ related_product.featured_image | img_url: 'large' }}\" alt=\"{{ related_product.title }}\">\n                    </a>\n                  </div>\n\n                  <!-- Product Content -->\n                  <div class=\"cst-custom-product-content\">\n                    <!-- Review Stars -->\n                    <div class=\"areviews_product_item areviews_stars{{ related_product.id }}\" data-product-id=\"{{ related_product.id }}\"></div>\n\n                    <!-- Product Title -->\n                    <h3>{{ related_product.title }}</h3>\n                    <p>{{ related_product.price | money }}</p>\n\n                    <!-- Add to Cart Button -->\n                    <form action=\"/cart/add\" method=\"post\" enctype=\"multipart/form-data\">\n                      <input type=\"hidden\" name=\"id\" value=\"{{ related_product.variants.first.id }}\">\n                      <button class=\"quick-add__submit button\" type=\"submit\">Add to Cart</button>\n                    </form>\n                  </div>\n                </div>\n              {% endif %}\n            {% endfor %}\n          </div>\n        </div>\n      {% endif %}\n    {% endif %}\n  </div>\n</div>\n\n<!-- Add Styles and Scripts for Slick Slider -->\n<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css\">\n<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css\">\n<script src=\"https://code.jquery.com/jquery-3.7.1.min.js\"></script>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js\"></script>\n\n<script>\n  $('.product-grid-section').slick({\n    centerMode: false,\n    slidesToShow: 4,\n    responsive: [\n      {\n        breakpoint: 1300,\n        settings: {\n          arrows: true,\n          slidesToShow: 3\n        }\n      },\n      {\n        breakpoint: 991,\n        settings: {\n          arrows: true,\n          slidesToShow: 2\n        }\n      },\n      {\n        breakpoint: 768,\n        settings: {\n          arrows: true,\n          centerPadding: '100px',\n          slidesToShow: 2\n        }\n      },\n      {\n        breakpoint: 480,\n        settings: {\n          arrows: true,\n          centerPadding: '70px',\n          slidesToShow: 2\n        }\n      }\n    ]\n  });\n</script>",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "custom_liquid_nUifaq": {
+      "type": "custom-liquid",
+      "disabled": true,
+      "settings": {
+        "custom_liquid": "<div class=\"cst-custom-tabs recipe-detail-btn\">\n  <div class=\"rich-text__blocks center\" style=\"margin:auto !important;\">\n    {% assign related_products_json = product.metafields.custom.you_might_enjoy_products.value %}\n    {% if related_products_json %}\n      {% assign related_products = related_products_json | parse_json %}\n\n      <div class=\"banner__top-image\">\n        <img src=\"//syruvia.com/cdn/shop/files/Blogfdzg-Page_small.png?v=1729753769\" alt=\"Top Image\">\n      </div>\n      <h2\n        class=\"rich-text__heading rte head inline-richtext hxl scroll-trigger animate--slide-in\"\n        style=\"--animation-order: 0; font-size: 50px !important;\"\n      >\n        You Might Enjoy\n      </h2>\n      <div class=\"content\">\n        <div class=\"product-grid-section slick-slider\">\n          <!-- Added slick-slider class here -->\n          {% for related_product in related_products %}\n            <div class=\"product-card {% assign colorIndex = forloop.index0 | modulo: 4 %} {% if colorIndex == 0 %}colorone{% elsif colorIndex == 1 %}colortwo{% elsif colorIndex == 2 %}colorthree{% elsif colorIndex == 3 %}colorfour{% endif %}\">\n              <!-- Product Image -->\n              <div class=\"cst-custom-product-featured-image\">\n                <a href=\"{{ related_product.url }}\">\n                  <img src=\"{{ related_product.featured_image | img_url: 'large' }}\" alt=\"{{ related_product.title }}\">\n                </a>\n              </div>\n\n              <!-- Product Content -->\n              <div class=\"cst-custom-product-content\">\n                <!-- Review Stars -->\n                <div\n                  class=\"areviews_product_item areviews_stars{{ related_product.id }}\"\n                  data-product-id=\"{{ related_product.id }}\"\n                ></div>\n\n                <!-- Product Title -->\n                <h3>{{ related_product.title }}</h3>\n                <p>{{ related_product.price | money }}</p>\n\n                <!-- Add to Cart Button -->\n                <form action=\"/cart/add\" method=\"post\" enctype=\"multipart/form-data\">\n                  <input type=\"hidden\" name=\"id\" value=\"{{ related_product.variants.first.id }}\">\n                  <button class=\"quick-add__submit button\" type=\"submit\">Add to Cart</button>\n                </form>\n              </div>\n            </div>\n          {% endfor %}\n        </div>\n      </div>\n    {% else %}\n      <div\n        class=\"related-products page-width section-{{ section.id }}-padding isolate{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}\"\n        data-url=\"{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}\"\n      >\n        {% assign product_collections = product.collections %}\n        {% if product_collections.size > 0 %}\n          <div class=\"cst-custom-tabs\">\n            <div class=\"rich-text__blocks center\" style=\"margin:auto !important;\">\n              <div class=\"banner__top-image\">\n                <img src=\"//syruvia.com/cdn/shop/files/Blogfdzg-Page_small.png?v=1729753769\" alt=\"Top Image\">\n              </div>\n              <h2\n                class=\"rich-text__heading rte head inline-richtext hxl scroll-trigger animate--slide-in\"\n                style=\"--animation-order: 0; font-size: 50px !important;\"\n              >\n                You Might Enjoy\n              </h2>\n              <div class=\"content\">\n                <div class=\"product-grid-section slick-slider\">\n                  <!-- Added slick-slider class here -->\n                  {% for recommendation in recommendations.products %}\n                    <div class=\"product-card {% assign colorIndex = forloop.index0 | modulo: 4 %} {% if colorIndex == 0 %}colorone{% elsif colorIndex == 1 %}colortwo{% elsif colorIndex == 2 %}colorthree{% elsif colorIndex == 3 %}colorfour{% endif %}\">\n                      <!-- Product Image -->\n                      <div class=\"cst-custom-product-featured-image\">\n                        <a href=\"{{ recommendation.url }}\">\n                          <img\n                            src=\"{{ recommendation.featured_image | img_url: 'large' }}\"\n                            alt=\"{{ recommendation.title }}\"\n                          >\n                        </a>\n                      </div>\n\n                      <!-- Product Content -->\n                      <div class=\"cst-custom-product-content\">\n                        <!-- Review Stars -->\n                        <div\n                          class=\"areviews_product_item areviews_stars{{ recommendation.id }}\"\n                          data-product-id=\"{{ recommendation.id }}\"\n                        ></div>\n\n                        <!-- Product Title -->\n                        <h3>{{ recommendation.title }}</h3>\n                        <p>{{ recommendation.price | money }}</p>\n\n                        <!-- Add to Cart Button -->\n                        <form action=\"/cart/add\" method=\"post\" enctype=\"multipart/form-data\">\n                          <input type=\"hidden\" name=\"id\" value=\"{{ recommendation.variants.first.id }}\">\n                          <button class=\"quick-add__submit button\" type=\"submit\">Add to Cart</button>\n                        </form>\n                      </div>\n                    </div>\n                  {% endfor %}\n                </div>\n              </div>\n            </div>\n          </div>\n        {% endif %}\n      </div>\n    {% endif %}\n  </div>\n</div>\n\n<!-- Slick Slider Styles and Scripts -->\n<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css\">\n<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css\">\n<script src=\"https://code.jquery.com/jquery-3.7.1.min.js\"></script>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js\"></script>\n\n<script>\n  $(document).ready(function() {\n    $('.slick-slider').slick({\n      centerMode: false,\n      slidesToShow: 4,\n      arrows: true,\n      responsive: [\n        {\n          breakpoint: 1300,\n          settings: {\n            slidesToShow: 3\n          }\n        },\n        {\n          breakpoint: 991,\n          settings: {\n            slidesToShow: 2\n          }\n        },\n        {\n          breakpoint: 768,\n          settings: {\n            slidesToShow: 2,\n            centerPadding: '50px'\n          }\n        },\n        {\n          breakpoint: 480,\n          settings: {\n            slidesToShow: 1,\n            centerPadding: '30px'\n          }\n        }\n      ]\n    });\n  });\n</script>",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "1740158290c175068a": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_YEwiPr": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "disabled": true,
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_YEwiPr"
+      ],
+      "disabled": true,
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "areviews_1770916367_30db11": {
+      "type": "apps",
+      "blocks": {
+        "areviews_reviews_importer_areviews_display_reviews_C43DBB": {
+          "type": "shopify://apps/areviews-reviews-importer/blocks/AreviewsDisplayReviews/ab0ec5fe-c95b-4fd6-bfb8-db2a30d0756f",
+          "settings": {
+            "hide_areviews_title_rating": false,
+            "areviews_theme_font": "inherit",
+            "areviews_stars_colors": "#f3c621",
+            "areviews_write_reviews_botton_color": "#373737"
+          }
+        }
+      },
+      "block_order": [
+        "areviews_reviews_importer_areviews_display_reviews_C43DBB"
+      ],
+      "disabled": true,
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "multicolumn_RKBVFY": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_WtABe3": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/iced-tea_2.png",
+            "column_link": "",
+            "title": "<strong>Mixes in Seconds</strong>",
+            "text": "",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_k7Ua7t": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/lemonade_2.png",
+            "column_link": "",
+            "title": "<strong>Built for Iced Drinks</strong>",
+            "text": "",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_UrhpMn": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/drink_4.png",
+            "column_link": "",
+            "title": "<strong>Summer-Ready Pack</strong>",
+            "text": "",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_WtABe3",
+        "column_k7Ua7t",
+        "column_UrhpMn"
+      ],
+      "custom_css": [
+        ".multicolumn {background: #fef8f1;}",
+        ".about-page-custom-cst-multi-sec {display: none;}",
+        ".multicolumn-list {justify-content: center;}",
+        ".grid--3-col-desktop .grid__item {width: 20%; max-width: 20%;}",
+        ".media {padding: 0 !important;}",
+        "img {object-fit: contain; margin: 0 auto; position: unset; width: 60px; height: 60px;}",
+        ".inline-richtext {text-align: center; font-family: \"Manrope\", sans-serif !important;}",
+        "@media screen and (max-width: 989px) {.grid--1-col-tablet-down .grid__item {flex: 1 0 40%; max-width: calc(100% / 2 - 2px); }}"
+      ],
+      "name": "t:sections.multicolumn.presets.name",
+      "settings": {
+        "custom_class": "pack-of-the-week__multicolumn",
+        "custom_classmobbg": "",
+        "custom_class1": "",
+        "custom_class11": "",
+        "custom_class12": "",
+        "title": "",
+        "image_alt_text": "",
+        "content": "",
+        "additional_text": "",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "columns_desktop": 3,
+        "column_alignment": "left",
+        "background_style": "none",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "ever_drop_image_alt_text": "Description of the ever drop image",
+        "ever_drop_image_alt_text11": "Description of the ever drop image",
+        "ever_drop_image_alt_text12": "Description of the ever drop image",
+        "mob_bg_image_alt_text": "Description of the ever drop image",
+        "mob_bg_image_alt_text1": "Description of the ever drop image",
+        "mob_bg_image_alt_text2": "Description of the ever drop image"
+      }
+    },
+    "inside_package_y9eETx": {
+      "type": "inside-package",
+      "name": "Inside Package",
+      "settings": {
+        "title": "Inside the Pack"
+      }
+    },
+    "rich_text_qTtW4R": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_FiYMra": {
+          "type": "heading",
+          "settings": {
+            "show_image": false,
+            "heading": "<strong>What is Pack of the Week?</strong>",
+            "heading_size": "h1"
+          }
+        },
+        "text_WbBjqB": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Each week, we highlight one pack we think is worth trying. Same premium products, just an easier place for you to start your flavor journey without the decision fatigue.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_FiYMra",
+        "text_WbBjqB"
+      ],
+      "custom_css": [
+        ".page-cst-about-page-sec,.page-cst-mission-page-sec,.line-left,.line-right {display: none;}",
+        ".mobile-pad {padding-bottom: 40px !important;}",
+        ".rich-text__heading strong {font-family: \"Epilogue\", sans-serif !important;}",
+        ".rich-text__heading em {font-style: normal; color: #61155b;}",
+        ".rich-text__text p {font-family: \"Manrope\", sans-serif !important;}",
+        "@media (max-width: 768px) {.head {font-size: 32px !important; }}",
+        "@media (max-width: 400px) {.rich-text__text p {font-size: 14px !important; line-height: normal !important; }}"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "custom_class": "",
+        "custom_id": "",
+        "custom_imgclass": "",
+        "custom_class_bg_gtr": "",
+        "custom_class1": "",
+        "custom_class11": "",
+        "custom_class12": "",
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 36,
+        "ever_drop_image_alt_text": "Description of the ever drop image",
+        "ever_drop_image_alt_text11": "Description of the ever drop image",
+        "ever_drop_image_alt_text12": "Description of the ever drop image"
+      }
+    },
+    "try_pack_D8RHMx": {
+      "type": "try-pack",
+      "name": "Try Pack Section",
+      "settings": {
+        "background_color": "#d35605"
+      }
+    },
+    "pack_steps_AbyNtH": {
+      "type": "pack-steps",
+      "blocks": {
+        "step_Lf8EaQ": {
+          "type": "step",
+          "settings": {
+            "title": "Try multiple flavors",
+            "description": "Discover your favorite without the\ncommitment of full-size bulk."
+          }
+        },
+        "step_TNaYFj": {
+          "type": "step",
+          "settings": {
+            "title": "Rotate flavors easily",
+            "description": "Keep your morning routine exciting with fresh weekly picks."
+          }
+        },
+        "step_3TXR63": {
+          "type": "step",
+          "settings": {
+            "title": "Avoid unused Flavors",
+            "description": "Optimized sizes meant for high-rotation use at home."
+          }
+        }
+      },
+      "block_order": [
+        "step_Lf8EaQ",
+        "step_TNaYFj",
+        "step_3TXR63"
+      ],
+      "name": "Pack Steps",
+      "settings": {
+        "background_color": "#d35605",
+        "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
+      }
+    },
+    "trusted_pack_jggqKc": {
+      "type": "trusted-pack",
+      "blocks": {
+        "item_XgLWHj": {
+          "type": "item",
+          "settings": {
+            "icon": "shopify://shop_images/U.png",
+            "text": "Kosher"
+          }
+        },
+        "item_X9cE6d": {
+          "type": "item",
+          "settings": {
+            "icon": "shopify://shop_images/leaf_2.png",
+            "text": "Vegan"
+          }
+        },
+        "item_LWQDPF": {
+          "type": "item",
+          "settings": {
+            "icon": "shopify://shop_images/gluten-free.png",
+            "text": "Fluten Free"
+          }
+        },
+        "item_Fd6MBH": {
+          "type": "item",
+          "settings": {
+            "icon": "shopify://shop_images/united-states.png",
+            "text": "Made in USA"
+          }
+        }
+      },
+      "block_order": [
+        "item_XgLWHj",
+        "item_X9cE6d",
+        "item_LWQDPF",
+        "item_Fd6MBH"
+      ],
+      "name": "Trusted Pack",
+      "settings": {
+        "background_color": "#C6631E",
+        "title": "<h2>Trusted Quality </h2>",
+        "description": "<p>Carefully made to meet everyday standards you can rely on.</p>",
+        "button_text": "Shop The Pack",
+        "button_link": ""
+      }
+    },
+    "1778574702613bcc03": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_cards_carousel_L4h8Uf": {
+          "type": "shopify://apps/judge-me-reviews/blocks/cards_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "show_sample_reviews": true,
+            "reviews_selection": "current_product",
+            "products": [],
+            "star_rating": "all",
+            "show_review_media": true,
+            "display_order": "media_first",
+            "no_image_fallback": "review_text_only",
+            "max_reviews": 20,
+            "review_length": "medium",
+            "text_size": "medium",
+            "image_ratio": "1",
+            "reviews_shown": 4,
+            "show_reviewer_name": true,
+            "show_product_name": true,
+            "hide_arrows_mobile": true,
+            "arrows_position": "sides",
+            "max_width": 1100,
+            "corner_styling": "soft",
+            "header_text_color": "#000000",
+            "text_color": "#000000",
+            "card_color": "#f9f9f9",
+            "stars_color": "",
+            "arrows_color": "#000000",
+            "transition_speed": 5,
+            "header_text": "Customers are saying",
+            "show_average_rating": true,
+            "rating_display": "default"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_cards_carousel_L4h8Uf"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "pack_testimonial_btMyHt": {
+      "type": "pack-testimonial",
+      "blocks": {
+        "testimonial_RVrkPA": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Salted Caramel is a game changer for my morning cold brew, saving over $150 a month and my drinks taste better than the coffee shop.",
+            "reviewer_initials": "SJ",
+            "reviewer_name": "Sarah J.",
+            "reviewer_role": "VERIFIED BUYER"
+          }
+        },
+        "testimonial_w7H38p": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Finally, a sugar-free vanilla that doesn't have that weird aftertaste. Perfect for my keto lattes. The concentration is insane, one bottle lasts forever!",
+            "reviewer_initials": "MR",
+            "reviewer_name": "Michael R.",
+            "reviewer_role": "COFFEE ENTHUSIAST"
+          }
+        },
+        "testimonial_grwGng": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "I use the fruit refreshers for my sparkling water every afternoon. It's so crisp and light. My kids even love making their own healthy 'sodas' with them.",
+            "reviewer_initials": "EG",
+            "reviewer_name": "Elena G.",
+            "reviewer_role": "HAPPY MOTHER"
+          }
+        },
+        "testimonial_cdT8rN": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "I use the fruit refreshers for my sparkling water every afternoon. It's so crisp and light. My kids even love making their own healthy 'sodas' with them.",
+            "reviewer_initials": "EG",
+            "reviewer_name": "Elena G.",
+            "reviewer_role": "HAPPY MOTHER"
+          }
+        },
+        "testimonial_ExpYLN": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Finally, a sugar-free vanilla that doesn't have that weird aftertaste. Perfect for my keto lattes. The concentration is insane, one bottle lasts forever!",
+            "reviewer_initials": "MR",
+            "reviewer_name": "Michael R.",
+            "reviewer_role": "COFFEE ENTHUSIAST"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_RVrkPA",
+        "testimonial_w7H38p",
+        "testimonial_grwGng",
+        "testimonial_cdT8rN",
+        "testimonial_ExpYLN"
+      ],
+      "name": "People Love This Combo",
+      "settings": {
+        "heading": "People\nLove this Combo",
+        "show_average_rating": true,
+        "average_rating": "4.9",
+        "slides_desktop": 4,
+        "slides_tablet": 2,
+        "slides_mobile": 1,
+        "show_arrows": false,
+        "show_dots": false,
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "color_scheme": "",
+        "background_color": "#ffffff",
+        "card_background": "#f5e6f0",
+        "heading_color": "#2a2a2a",
+        "text_color": "#5a4a4a",
+        "star_color": "#b85423",
+        "avatar_background": "#d9b8c8",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "start_pack_nUrTze": {
+      "type": "start-pack",
+      "name": "Start Pack",
+      "settings": {
+        "background_color": "#d35605",
+        "title": "Start with this one",
+        "description": "The Coffeehouse Clasic is our most-loved collection for a reason, Join thousands of happy brewers.",
+        "button_text": "Shop This Pack",
+        "bottom_icon": "shopify://shop_images/Icontruck.png",
+        "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"
+      }
+    }
+  },
+  "order": [
+    "pack_of_week_6CMQU7",
+    "main",
+    "17309639327851142b",
+    "17630381970c47d7f2",
+    "custom_collapse_mxDhUB",
+    "1629746450643786911",
+    "related-products",
+    "favorite_new_g4pRrr",
+    "custom_liquid_Mqiy6C",
+    "custom_liquid_nUifaq",
+    "1740158290c175068a",
+    "areviews_1770916367_30db11",
+    "multicolumn_RKBVFY",
+    "inside_package_y9eETx",
+    "rich_text_qTtW4R",
+    "try_pack_D8RHMx",
+    "pack_steps_AbyNtH",
+    "trusted_pack_jggqKc",
+    "1778574702613bcc03",
+    "pack_testimonial_btMyHt",
+    "start_pack_nUrTze"
+  ]
+}
