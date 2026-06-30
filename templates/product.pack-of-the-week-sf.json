@@ -517,16 +517,17 @@
       ],
       "custom_css": [
         ".multicolumn {background: #fef8f1;}",
+        ".about-page-custom-cst-multi-sec {display: none;}",
         ".multicolumn-list {justify-content: center;}",
         ".grid--3-col-desktop .grid__item {width: 20%; max-width: 20%;}",
         ".media {padding: 0 !important;}",
-        "img {object-fit: contain; margin: 0 auto; position: unset; width: 30px; height: 30px;}",
+        "img {object-fit: contain; margin: 0 auto; position: unset; width: 60px; height: 60px;}",
         ".inline-richtext {text-align: center; font-family: \"Manrope\", sans-serif !important;}",
-        "@media screen and (max-width: 989px) {.grid--1-col-tablet-down .grid__item {width: 100%; max-width: 100%; }}"
+        "@media screen and (max-width: 989px) {.grid--1-col-tablet-down .grid__item {flex: 1 0 40%; max-width: calc(100% / 2 - 2px); }}"
       ],
       "name": "t:sections.multicolumn.presets.name",
       "settings": {
-        "custom_class": "",
+        "custom_class": "pack-of-the-week__multicolumn",
         "custom_classmobbg": "",
         "custom_class1": "",
         "custom_class11": "",
