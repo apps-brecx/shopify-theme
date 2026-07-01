@@ -16,7 +16,7 @@
         "bg_img": "shopify://shop_images/Rectangle_2272_2.png",
         "secondary_button_text": "View Regular",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week",
-        "accent_color": "#C6631E"
+        "accent_color": "#c6631e"
       }
     },
     "main": {
@@ -479,31 +479,31 @@
         "column_WtABe3": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Icon_6.png",
+            "image": "shopify://shop_images/0_e0d6a17e-4685-4d78-b8d9-e76d43387100.png",
             "column_link": "",
-            "title": "Effortless to use",
+            "title": "SUGAR",
             "text": "",
             "link_label": "",
             "link": ""
           }
         },
-        "column_k7Ua7t": {
+        "column_yPwRCQ": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Icon_7.png",
+            "image": "shopify://shop_images/0_e0d6a17e-4685-4d78-b8d9-e76d43387100.png",
             "column_link": "",
-            "title": "Made for daily drinks",
+            "title": "CALORIES",
             "text": "",
             "link_label": "",
             "link": ""
           }
         },
-        "column_UrhpMn": {
+        "column_gVATQQ": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Icon_8.png",
+            "image": "shopify://shop_images/0_e0d6a17e-4685-4d78-b8d9-e76d43387100.png",
             "column_link": "",
-            "title": "Flavors you’ll actually love",
+            "title": "CARB",
             "text": "",
             "link_label": "",
             "link": ""
@@ -512,8 +512,8 @@
       },
       "block_order": [
         "column_WtABe3",
-        "column_k7Ua7t",
-        "column_UrhpMn"
+        "column_yPwRCQ",
+        "column_gVATQQ"
       ],
       "custom_css": [
         ".multicolumn {background: #fef8f1;}",
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#C6631E",
+        "background_color": "#c6631e",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -698,7 +698,7 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#C6631E",
+        "background_color": "#c6631e",
         "title": "<h2>Trusted Quality </h2>",
         "description": "<p>Carefully made to meet everyday standards you can rely on.</p>",
         "button_text": "Shop The Pack",
@@ -836,7 +836,7 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#C6631E",
+        "background_color": "#c6631e",
         "title": "Start with this one",
         "description": "The Coffeehouse Clasic is our most-loved collection for a reason, Join thousands of happy brewers.",
         "button_text": "Shop This Pack",
