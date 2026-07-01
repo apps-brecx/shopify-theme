@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": { "type": "pd-hero", "settings": {} },
@@ -6,7 +15,6 @@
     "pd_mm": { "type": "pd-mm-section", "settings": {} },
     "pd_nutrition": { "type": "pd-nutrition-wrap", "settings": {} },
     "pd_why": { "type": "pd-why", "settings": {} },
-    "pd_recipes": { "type": "pd-recipes", "settings": {} },
     "pd_ugc": { "type": "pd-ugc", "settings": {} },
     "pd_reviews": { "type": "pd-reviews", "settings": {} },
     "pd_write_review": { "type": "pd-write-review", "settings": {} },
@@ -38,7 +46,6 @@
     "pd_mm",
     "pd_nutrition",
     "pd_why",
-    "pd_recipes",
     "pd_ugc",
     "pd_reviews",
     "pd_write_review",
