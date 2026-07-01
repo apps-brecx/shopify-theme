@@ -1,0 +1,589 @@
+{%- comment -%}
+  Caramel landing page (Syruvia) — editorial style matching the product page:
+  Archivo Black display + Josefin Sans italic accents, cream/espresso/caramel/coral palette.
+  Everything is editable in the theme editor:
+    • Global colors, type sizes, spacing → top-level settings (injected as CSS vars)
+    • Repeatable elements (flavor cards, stats, feature cards) → blocks (add / remove / reorder / recolor)
+  Signature motion: scroll reveal, count-up, and a JS-pinned scroll-scaling flavor stack.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign cl = collections[s.collection_handle] -%}
+{%- assign sf = collections[s.collection_sugarfree] -%}
+{%- assign code = s.promo_code | default: 'CARAMEL50' -%}
+{%- assign rad = s.card_radius | default: 18 -%}
+{%- comment -%} Default caramel imagery (used until an image is picked in the editor) {%- endcomment -%}
+{%- assign cdn = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/' -%}
+{%- assign def_imgs = 'Caramel_Coffee_Syrup.webp?v=1776790313,Salted_Caramel_Syrup.webp?v=1776793868,Caramel_Chocolate_Syrup.webp?v=1776707088,Caramel_Pecan_Syrup.webp?v=1776789531' | split: ',' -%}
+
+<style>
+  #cm-{{ section.id }}{
+    --ink:{{ s.color_ink | default: '#1a1a1a' }};
+    --brand:{{ s.color_brand | default: '#39220f' }};
+    --bg:{{ s.color_bg | default: '#FFFBF4' }};
+    --paper:{{ s.color_paper | default: '#ffffff' }};
+    --accent:{{ s.color_accent | default: '#c58548' }};
+    --coral:{{ s.color_coral | default: '#FF6B5C' }};
+    --rule-c:{{ s.color_rule | default: '#39220f' }};
+    --h1max:{{ s.h1_max | default: 84 }}px;
+    --h2:{{ s.h2_size | default: 52 }}px;
+    --eyebrow:{{ s.eyebrow_size | default: 12 }}px;
+    --body:{{ s.body_size | default: 17 }}px;
+    --wrap:{{ s.wrap_max | default: 1200 }}px;
+    --pad:{{ s.section_pad | default: 64 }}px;
+    --rad:{{ rad }}px;
+    --display:'Archivo Black','Josefin Sans',system-ui,sans-serif;
+    --serif:'Josefin Sans',system-ui,sans-serif;
+    --rule:2px solid var(--rule-c);
+    background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:var(--body);position:relative;overflow:visible;
+  }
+  #cm-{{ section.id }} *{box-sizing:border-box;}
+  #cm-{{ section.id }} .cm-wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px;}
+  #cm-{{ section.id }} .cm-eyebrow{font-family:var(--display);font-size:var(--eyebrow);letter-spacing:.18em;text-transform:uppercase;display:inline-block;padding:7px 15px;border:var(--rule);border-radius:999px;background:var(--paper);color:var(--brand);}
+  #cm-{{ section.id }} .cm-h1{font-family:var(--display);font-weight:900;font-size:clamp(40px,9vw,var(--h1max));line-height:.9;letter-spacing:-.01em;text-transform:uppercase;margin:14px 0 0;color:var(--brand);text-wrap:balance;overflow-wrap:break-word;}
+  #cm-{{ section.id }} .cm-h2{font-family:var(--display);font-weight:900;font-size:clamp(28px,5.6vw,var(--h2));line-height:.95;letter-spacing:-.01em;text-transform:uppercase;margin:12px 0 0;color:var(--brand);text-wrap:balance;}
+  #cm-{{ section.id }} .cm-h1 em,#cm-{{ section.id }} .cm-h2 em{font-family:var(--serif);font-weight:300;font-style:italic;text-transform:none;letter-spacing:0;color:var(--coral);}
+  #cm-{{ section.id }} .cm-rev{opacity:0;transform:translateY(26px);transition:opacity .6s ease, transform .7s cubic-bezier(.2,.7,.2,1);}
+  #cm-{{ section.id }} .cm-rev.in{opacity:1;transform:none;}
+  #cm-{{ section.id }} .cm-pop{opacity:0;will-change:transform,opacity;}
+  #cm-{{ section.id }} .cm-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--display);font-size:14px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:15px 26px;border:var(--rule);border-radius:999px;cursor:pointer;transition:transform .14s ease, box-shadow .14s ease;}
+  #cm-{{ section.id }} .cm-btn--solid{background:var(--brand);color:var(--bg);box-shadow:3px 3px 0 var(--rule-c);}
+  #cm-{{ section.id }} .cm-btn--solid:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--rule-c);}
+  #cm-{{ section.id }} .cm-btn--accent{background:var(--accent);color:#fff;box-shadow:3px 3px 0 var(--rule-c);}
+  #cm-{{ section.id }} .cm-btn--accent:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--rule-c);}
+  #cm-{{ section.id }} .cm-btn--ghost{background:var(--paper);color:var(--brand);}
+  #cm-{{ section.id }} .cm-btn--ghost:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--rule-c);}
+  #cm-{{ section.id }} .cm-btnrow{display:flex;gap:12px;flex-wrap:wrap;}
+
+  /* HERO — editorial split */
+  #cm-{{ section.id }} .cm-hero{padding:clamp(34px,6vw,56px) 0 var(--pad);position:relative;}
+  #cm-{{ section.id }} .cm-hero .cm-wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr);align-items:center;column-gap:clamp(24px,4vw,56px);row-gap:28px;}
+  #cm-{{ section.id }} .cm-hero-copy{max-width:620px;}
+  #cm-{{ section.id }} .cm-flash{display:inline-flex;align-items:center;gap:8px;background:var(--coral);color:#fff;border:var(--rule);border-radius:999px;font-family:var(--display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:8px 16px;}
+  #cm-{{ section.id }} .cm-flash .pulse{width:8px;height:8px;border-radius:50%;background:#fff;animation:cmpulse{{ section.id }} 1.6s infinite;}
+  @keyframes cmpulse{{ section.id }}{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}70%{box-shadow:0 0 0 8px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+  #cm-{{ section.id }} .cm-hero .cm-sub{font-size:clamp(16px,2vw,20px);color:var(--ink);font-weight:400;margin:20px 0 0;max-width:46ch;line-height:1.6;}
+  #cm-{{ section.id }} .cm-hero .cm-btnrow{margin-top:28px;}
+  #cm-{{ section.id }} .cm-ticket{position:relative;background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 8px);box-shadow:8px 8px 0 var(--rule-c);padding:26px 24px 22px;text-align:center;}
+  #cm-{{ section.id }} .cm-ticket .fig{display:block;width:100%;max-width:220px;margin:0 auto 4px;}
+  #cm-{{ section.id }} .cm-ticket .fig img{display:block;width:100%;height:auto;}
+  #cm-{{ section.id }} .cm-ticket .big{font-family:var(--display);font-weight:900;font-size:clamp(52px,10vw,76px);line-height:.85;color:var(--coral);}
+  #cm-{{ section.id }} .cm-ticket .big span{display:block;color:var(--brand);font-size:.26em;letter-spacing:.16em;text-transform:uppercase;margin-top:10px;}
+  #cm-{{ section.id }} .cm-code{margin-top:18px;border:2px dashed var(--rule-c);border-radius:14px;padding:11px 10px;display:flex;flex-direction:column;gap:3px;}
+  #cm-{{ section.id }} .cm-code .lbl{font-family:var(--display);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);}
+  #cm-{{ section.id }} .cm-code button{font-family:var(--display);font-size:clamp(20px,4vw,26px);letter-spacing:.1em;color:var(--brand);background:none;border:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-transform:uppercase;}
+  #cm-{{ section.id }} .cm-code button svg{width:17px;height:17px;color:var(--accent);}
+  #cm-{{ section.id }} .cm-code .copied{font-size:11px;color:var(--accent);font-weight:600;min-height:14px;font-family:var(--serif);}
+  #cm-{{ section.id }} .cm-ticket .fine{font-size:12.5px;color:var(--ink);opacity:.72;margin-top:12px;line-height:1.45;}
+  @media (max-width:860px){
+    #cm-{{ section.id }} .cm-hero .cm-wrap{grid-template-columns:1fr;justify-items:center;text-align:center;}
+    #cm-{{ section.id }} .cm-hero-copy{max-width:none;}
+    #cm-{{ section.id }} .cm-hero .cm-sub{margin-left:auto;margin-right:auto;}
+    #cm-{{ section.id }} .cm-hero .cm-btnrow{justify-content:center;}
+    #cm-{{ section.id }} .cm-ticket{width:100%;max-width:400px;}
+  }
+
+  /* MARQUEE */
+  #cm-{{ section.id }} .cm-marquee{border-top:var(--rule);border-bottom:var(--rule);overflow:hidden;}
+  #cm-{{ section.id }} .cm-marquee-track{display:flex;width:max-content;white-space:nowrap;animation:cmmarq{{ section.id }} 24s linear infinite;}
+  #cm-{{ section.id }} .cm-marquee:hover .cm-marquee-track{animation-play-state:paused;}
+  #cm-{{ section.id }} .cm-marquee-track span{font-family:var(--display);font-size:clamp(15px,2.4vw,22px);text-transform:uppercase;letter-spacing:.08em;padding:14px 0;display:inline-flex;align-items:center;}
+  #cm-{{ section.id }} .cm-marquee-track span::after{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;margin:0 22px;background:currentColor;opacity:.5;}
+  @keyframes cmmarq{{ section.id }}{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* STATS */
+  #cm-{{ section.id }} .cm-stats{padding:var(--pad) 0;}
+  #cm-{{ section.id }} .cm-stats-grid{display:grid;grid-template-columns:repeat({{ section.blocks | where: 'type','stat' | size | at_least: 1 }},1fr);gap:16px;}
+  #cm-{{ section.id }} .cm-scard{border:var(--rule);border-radius:var(--rad);box-shadow:5px 5px 0 var(--rule-c);padding:26px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  #cm-{{ section.id }} .cm-scard .n{font-family:var(--display);font-weight:900;font-size:clamp(30px,4.4vw,42px);line-height:1;color:var(--brand);}
+  #cm-{{ section.id }} .cm-scard .l{font-family:var(--display);font-size:12px;text-transform:uppercase;letter-spacing:.12em;}
+  #cm-{{ section.id }} .cm-scard .d{font-size:13.5px;line-height:1.4;opacity:.78;}
+  @media (max-width:760px){#cm-{{ section.id }} .cm-stats-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:460px){#cm-{{ section.id }} .cm-stats-grid{grid-template-columns:1fr;}}
+
+  /* FLAVOR STACK — pinned scroll-scaling */
+  #cm-{{ section.id }} .cm-stack{position:relative;height:calc(110vh * {{ section.blocks | where: 'type','flavor' | size | at_least: 1 }});}
+  #cm-{{ section.id }} .cm-stack-sticky{position:absolute;top:0;left:0;width:100%;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+  #cm-{{ section.id }} .cm-stack-head{position:absolute;top:clamp(44px,8vh,110px);left:0;right:0;text-align:center;z-index:5;padding:0 20px;pointer-events:none;}
+  #cm-{{ section.id }} .cm-stack-head .cm-h2{max-width:16ch;margin-left:auto;margin-right:auto;}
+  #cm-{{ section.id }} .cm-stack-stage{position:absolute;inset:0;}
+  #cm-{{ section.id }} .cm-stack-item{position:absolute;left:50%;top:60%;opacity:0;will-change:transform,opacity;transform:translate(-50%,-50%) scale(.55);}
+  #cm-{{ section.id }} .cm-fcard{width:clamp(220px,42vw,360px);border:var(--rule);border-radius:calc(var(--rad) + 6px);box-shadow:10px 12px 0 rgba(0,0,0,.16);overflow:hidden;background:var(--paper);}
+  #cm-{{ section.id }} .cm-fcard .ph{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;border-bottom:var(--rule);}
+  #cm-{{ section.id }} .cm-fcard .ph img{width:100%;height:100%;object-fit:cover;}
+  #cm-{{ section.id }} .cm-fcard .cap{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px;}
+  #cm-{{ section.id }} .cm-fcard .cap b{font-family:var(--display);font-size:15px;text-transform:uppercase;letter-spacing:.04em;color:var(--brand);}
+  #cm-{{ section.id }} .cm-fcard .cap .tag{font-family:var(--display);font-size:11px;color:#fff;background:var(--coral);border:var(--rule);border-radius:999px;padding:4px 9px;letter-spacing:.06em;text-transform:uppercase;}
+  #cm-{{ section.id }} .cm-stack-dots{position:absolute;left:50%;bottom:clamp(28px,6vh,64px);transform:translateX(-50%);display:flex;gap:10px;z-index:5;}
+  #cm-{{ section.id }} .cm-stack-dots span{width:10px;height:10px;border-radius:50%;background:var(--paper);border:var(--rule);transition:background .25s ease, transform .25s ease;}
+  #cm-{{ section.id }} .cm-stack-dots span.on{background:var(--coral);transform:scale(1.3);}
+
+  /* PRODUCT GRID */
+  #cm-{{ section.id }} .cm-shelf{padding:var(--pad) 0;}
+  #cm-{{ section.id }} .cm-shelf-head{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
+  #cm-{{ section.id }} .cm-shelf-head .cm-link{font-family:var(--display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);text-decoration:none;border-bottom:var(--rule);padding-bottom:2px;}
+  #cm-{{ section.id }} .cm-pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:32px;}
+  #cm-{{ section.id }} .cm-pcard{display:flex;flex-direction:column;background:var(--paper);border:var(--rule);border-radius:var(--rad);box-shadow:5px 5px 0 var(--rule-c);overflow:hidden;text-decoration:none;color:var(--ink);transition:transform .2s ease, box-shadow .2s ease, opacity .6s ease;}
+  #cm-{{ section.id }} .cm-pcard:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--rule-c);}
+  #cm-{{ section.id }} .cm-pcard-img{position:relative;aspect-ratio:1/1;border-bottom:var(--rule);display:flex;align-items:center;justify-content:center;padding:14px;background:var(--bg);}
+  #cm-{{ section.id }} .cm-pcard-img img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;}
+  #cm-{{ section.id }} .cm-deal{position:absolute;top:10px;left:10px;background:var(--coral);color:#fff;border:var(--rule);border-radius:999px;font-family:var(--display);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;}
+  #cm-{{ section.id }} .cm-pcard-b{padding:16px 15px 18px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;flex:1;}
+  #cm-{{ section.id }} .cm-pcard-t{font-family:var(--display);font-size:13.5px;line-height:1.18;text-transform:uppercase;letter-spacing:.02em;color:var(--brand);}
+  #cm-{{ section.id }} .cm-pcard-p{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  #cm-{{ section.id }} .cm-pcard-p .now{font-family:var(--display);font-size:18px;color:var(--brand);}
+  #cm-{{ section.id }} .cm-pcard-p .with{font-size:11.5px;color:var(--accent);font-weight:600;}
+  #cm-{{ section.id }} .cm-empty{text-align:center;border:2px dashed var(--rule-c);border-radius:var(--rad);padding:34px 20px;background:var(--paper);margin-top:30px;opacity:.85;}
+
+  /* FEATURES */
+  #cm-{{ section.id }} .cm-feat{padding:var(--pad) 0;}
+  #cm-{{ section.id }} .cm-feat-grid{display:grid;grid-template-columns:repeat({{ section.blocks | where: 'type','feature' | size | at_least: 1 }},minmax(0,1fr));gap:16px;margin-top:30px;}
+  #cm-{{ section.id }} .cm-fc{background:var(--paper);border:var(--rule);border-radius:var(--rad);box-shadow:5px 5px 0 var(--rule-c);padding:26px 22px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:11px;}
+  #cm-{{ section.id }} .cm-fc .ic{width:54px;height:54px;border-radius:50%;border:var(--rule);display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 var(--rule-c);}
+  #cm-{{ section.id }} .cm-fc .ic svg{width:26px;height:26px;color:var(--brand);}
+  #cm-{{ section.id }} .cm-fc h3{font-family:var(--display);font-size:16px;text-transform:uppercase;letter-spacing:.04em;margin:0;color:var(--brand);}
+  #cm-{{ section.id }} .cm-fc p{font-size:14px;line-height:1.55;opacity:.82;margin:0;}
+  @media (max-width:760px){#cm-{{ section.id }} .cm-feat-grid{grid-template-columns:1fr;}}
+
+  /* BANDS */
+  #cm-{{ section.id }} .cm-band{padding:calc(var(--pad) / 1.6) 0;}
+  #cm-{{ section.id }} .cm-band-card{border:var(--rule);border-radius:calc(var(--rad) + 10px);box-shadow:8px 8px 0 var(--rule-c);padding:clamp(40px,6vw,60px) clamp(26px,5vw,60px);text-align:center;}
+  #cm-{{ section.id }} .cm-band-card .cm-h2{margin-top:10px;}
+  #cm-{{ section.id }} .cm-band-card p{font-size:16px;line-height:1.6;max-width:54ch;margin:16px auto 0;}
+  #cm-{{ section.id }} .cm-band-card .cm-btnrow{justify-content:center;margin-top:26px;}
+
+  @media (max-width:860px){
+    #cm-{{ section.id }} .cm-pgrid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:680px){
+    #cm-{{ section.id }} .cm-btnrow{flex-direction:column;align-items:stretch;width:100%;}
+    #cm-{{ section.id }} .cm-btnrow .cm-btn{width:100%;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    #cm-{{ section.id }} .cm-rev{opacity:1;transform:none;}
+    #cm-{{ section.id }} .cm-pop{opacity:1 !important;transform:none !important;}
+    #cm-{{ section.id }} .cm-marquee-track{animation:none;}
+    #cm-{{ section.id }} .cm-flash .pulse{animation:none;}
+    #cm-{{ section.id }} .cm-stack{height:auto !important;}
+    #cm-{{ section.id }} .cm-stack-sticky{position:static !important;height:auto !important;display:block !important;padding:40px 0 56px;}
+    #cm-{{ section.id }} .cm-stack-head{position:static !important;}
+    #cm-{{ section.id }} .cm-stack-stage{position:static !important;display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:clamp(10px,3vw,26px);margin-top:24px;}
+    #cm-{{ section.id }} .cm-stack-item{position:static !important;transform:none !important;opacity:1 !important;}
+    #cm-{{ section.id }} .cm-fcard{width:clamp(150px,40vw,260px);}
+    #cm-{{ section.id }} .cm-stack-dots{display:none !important;}
+  }
+</style>
+
+<section id="cm-{{ section.id }}">
+
+  {%- if s.show_hero -%}
+  <div class="cm-hero">
+    <div class="cm-wrap">
+      <div class="cm-hero-copy">
+        {%- if s.hero_flash != blank -%}<span class="cm-flash cm-rev"><span class="pulse" aria-hidden="true"></span>{{ s.hero_flash }}</span>{%- endif -%}
+        {%- if s.hero_eyebrow != blank -%}<br><span class="cm-eyebrow cm-rev" style="margin-top:14px;">{{ s.hero_eyebrow }}</span>{%- endif -%}
+        <h1 class="cm-h1 cm-rev">{{ s.hero_title }}</h1>
+        {%- if s.hero_sub != blank -%}<p class="cm-sub cm-rev">{{ s.hero_sub }}</p>{%- endif -%}
+        <div class="cm-btnrow cm-rev">
+          {%- if s.hero_cta_text != blank -%}<a class="cm-btn cm-btn--solid" href="{{ s.hero_cta_link | default: '#cm-deals' }}">{{ s.hero_cta_text }}</a>{%- endif -%}
+          {%- if s.hero_cta2_text != blank -%}<a class="cm-btn cm-btn--ghost" href="{{ s.hero_cta2_link | default: '#cm-deals' }}">{{ s.hero_cta2_text }}</a>{%- endif -%}
+        </div>
+      </div>
+      <div class="cm-ticket cm-rev" {% if s.hero_offer_bg != blank %}style="background:{{ s.hero_offer_bg }};"{% endif %}>
+        {%- if s.hero_image != blank -%}{%- assign hero_fig = s.hero_image | image_url: width: 480 -%}{%- else -%}{%- assign hero_fig = cdn | append: def_imgs[0] -%}{%- endif -%}
+        <span class="fig"><img src="{{ hero_fig }}" alt="{{ s.hero_image.alt | default: 'Syruvia caramel syrup' | escape }}" width="220" loading="eager"></span>
+        {%- if s.offer_big != blank -%}<div class="big">{{ s.offer_big }}{%- if s.offer_big_sub != blank -%}<span>{{ s.offer_big_sub }}</span>{%- endif -%}</div>{%- endif -%}
+        {%- if code != blank -%}
+        <div class="cm-code">
+          <span class="lbl">{{ s.code_label | default: 'Use code at checkout' }}</span>
+          <button type="button" class="cm-copy" data-code="{{ code }}" aria-label="Copy discount code {{ code }}">
+            <span class="codetext">{{ code }}</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          </button>
+          <span class="copied" data-copied-label aria-live="polite"></span>
+        </div>
+        {%- endif -%}
+        {%- if s.offer_fine != blank -%}<p class="fine">{{ s.offer_fine }}</p>{%- endif -%}
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if s.show_marquee and s.marquee_items != blank -%}
+  <div class="cm-marquee" aria-hidden="true" style="background:{{ s.marquee_bg | default: '#c58548' }};color:{{ s.marquee_text | default: '#ffffff' }};">
+    <div class="cm-marquee-track">
+      {%- assign mq = s.marquee_items | newline_to_br | split: '<br />' -%}
+      {%- for n in (1..2) -%}{%- for it in mq -%}{%- assign t = it | strip -%}{%- if t != blank -%}<span>{{ t }}</span>{%- endif -%}{%- endfor -%}{%- endfor -%}
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- assign stats = section.blocks | where: 'type', 'stat' -%}
+  {%- if s.show_stats and stats.size > 0 -%}
+  <div class="cm-stats">
+    <div class="cm-wrap">
+      <div class="cm-stats-grid">
+        {%- for b in stats -%}
+        <div class="cm-scard cm-pop" style="background:{{ b.settings.bg | default: '#ffffff' }};" {{ b.shopify_attributes }}>
+          <span class="n cm-count">{{ b.settings.number }}</span>
+          {%- if b.settings.label != blank -%}<span class="l">{{ b.settings.label }}</span>{%- endif -%}
+          {%- if b.settings.desc != blank -%}<span class="d">{{ b.settings.desc }}</span>{%- endif -%}
+        </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- assign flavors = section.blocks | where: 'type', 'flavor' -%}
+  {%- if s.show_stack and flavors.size > 0 -%}
+  <div class="cm-stack">
+    <div class="cm-stack-sticky">
+      <div class="cm-stack-head">
+        {%- if s.stack_eyebrow != blank -%}<span class="cm-eyebrow" style="background:var(--accent);color:#fff;">{{ s.stack_eyebrow }}</span>{%- endif -%}
+        <h2 class="cm-h2">{{ s.stack_title }}</h2>
+      </div>
+      <div class="cm-stack-stage">
+        {%- for b in flavors -%}
+        <div class="cm-stack-item" {{ b.shopify_attributes }}>
+          <div class="cm-fcard">
+            <div class="ph" style="background:{{ b.settings.bg | default: '#f6e3c6' }};">
+              {%- if b.settings.image != blank -%}{%- assign fimg = b.settings.image | image_url: width: 720 -%}{%- else -%}{%- assign idx = forloop.index0 | modulo: 4 -%}{%- assign fimg = cdn | append: def_imgs[idx] -%}{%- endif -%}
+              <img src="{{ fimg }}" alt="{{ b.settings.name | escape }}" loading="lazy">
+            </div>
+            <div class="cap"><b>{{ b.settings.name }}</b>{%- if b.settings.tag != blank -%}<span class="tag">{{ b.settings.tag }}</span>{%- endif -%}</div>
+          </div>
+        </div>
+        {%- endfor -%}
+      </div>
+      <div class="cm-stack-dots" aria-hidden="true">{%- for b in flavors -%}<span></span>{%- endfor -%}</div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if s.show_grid -%}
+  <div class="cm-shelf" id="cm-deals">
+    <div class="cm-wrap">
+      <div class="cm-shelf-head">
+        {%- if s.grid_eyebrow != blank -%}<span class="cm-eyebrow cm-rev">{{ s.grid_eyebrow }}</span>{%- endif -%}
+        {%- if s.grid_title != blank -%}<h2 class="cm-h2 cm-rev">{{ s.grid_title }}</h2>{%- endif -%}
+        {%- if cl != blank and s.grid_link_text != blank -%}<a class="cm-link cm-rev" href="{{ cl.url }}">{{ s.grid_link_text }}</a>{%- endif -%}
+      </div>
+      {%- if cl != blank and cl.products.size > 0 -%}
+      <div class="cm-pgrid">
+        {%- assign lim = s.grid_limit | default: 12 -%}
+        {%- for pr in cl.products limit: lim -%}
+          <a class="cm-pcard cm-rev" href="{{ pr.url }}">
+            <div class="cm-pcard-img">{%- if s.show_deal_badge -%}<span class="cm-deal">{{ s.deal_badge_text | default: '50% off' }}</span>{%- endif -%}{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 500 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- endif -%}</div>
+            <div class="cm-pcard-b">
+              <h3 class="cm-pcard-t">{{ pr.title | replace: '(USA)', '' | strip }}</h3>
+              <div class="cm-pcard-p">
+                <span class="now">{{ pr.price | money }}</span>
+                {%- if s.show_code_hint -%}{%- assign half = pr.price | times: 0.5 -%}<span class="with">≈ {{ half | money }} with {{ code }}</span>{%- endif -%}
+              </div>
+            </div>
+          </a>
+        {%- endfor -%}
+      </div>
+      {%- else -%}
+      <div class="cm-empty">No products found in the “{{ s.collection_handle }}” collection. Set a valid collection handle in this section’s settings.</div>
+      {%- endif -%}
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- assign feats = section.blocks | where: 'type', 'feature' -%}
+  {%- if s.show_features and feats.size > 0 -%}
+  <div class="cm-feat">
+    <div class="cm-wrap">
+      <div class="cm-shelf-head">
+        {%- if s.feat_eyebrow != blank -%}<span class="cm-eyebrow cm-rev">{{ s.feat_eyebrow }}</span>{%- endif -%}
+        {%- if s.feat_title != blank -%}<h2 class="cm-h2 cm-rev">{{ s.feat_title }}</h2>{%- endif -%}
+      </div>
+      <div class="cm-feat-grid">
+        {%- for b in feats -%}
+        <div class="cm-fc cm-rev" {{ b.shopify_attributes }}>
+          <span class="ic" style="background:{{ b.settings.icon_bg | default: '#c58548' }};">
+            {%- case b.settings.icon -%}
+              {%- when 'check' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
+              {%- when 'leaf' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4C12 4 5 11 5 18a6 6 0 0 0 .2 1.6C6 13 11 8 18 7"/><path d="M5 19C5 11 11 5 20 4"/></svg>
+              {%- when 'home' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19h16M6 19V9l6-4 6 4v10"/><path d="M10 19v-5h4v5"/></svg>
+              {%- when 'star' -%}<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.8.8-5 4.6 1.3 6.7L12 17.8 5.9 20.4l1.3-6.7-5-4.6 6.8-.8z"/></svg>
+              {%- when 'heart' -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21C5 18 3 11 7 6c2-2.5 5-2.5 7 0 2-2.5 5-2.5 7 0 4 5 2 12-5 15z"/></svg>
+              {%- when 'bolt' -%}<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg>
+              {%- else -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 4 6 7 6 10a6 6 0 0 1-12 0c0-3 2-6 6-10z"/></svg>
+            {%- endcase -%}
+          </span>
+          {%- if b.settings.title != blank -%}<h3>{{ b.settings.title }}</h3>{%- endif -%}
+          {%- if b.settings.text != blank -%}<p>{{ b.settings.text }}</p>{%- endif -%}
+        </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if s.show_sf and sf != blank and sf.products.size > 0 -%}
+  <div class="cm-band">
+    <div class="cm-wrap">
+      <div class="cm-band-card cm-rev" style="background:{{ s.sf_bg | default: '#39220f' }};color:{{ s.sf_text | default: '#FFFBF4' }};">
+        {%- if s.sf_eyebrow != blank -%}<span class="cm-eyebrow" style="background:var(--accent);color:#fff;">{{ s.sf_eyebrow }}</span>{%- endif -%}
+        <h2 class="cm-h2" style="color:{{ s.sf_text | default: '#FFFBF4' }};">{{ s.sf_title }}</h2>
+        {%- if s.sf_sub != blank -%}<p>{{ s.sf_sub }}</p>{%- endif -%}
+        {%- if s.sf_btn_text != blank -%}<div class="cm-btnrow"><a class="cm-btn cm-btn--accent" href="{{ s.sf_btn_link | default: sf.url }}">{{ s.sf_btn_text }}</a></div>{%- endif -%}
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if s.show_vip -%}
+  <div class="cm-band" style="padding-bottom:var(--pad);">
+    <div class="cm-wrap">
+      <div class="cm-band-card cm-rev" style="background:{{ s.vip_bg | default: '#c58548' }};color:{{ s.vip_text | default: '#ffffff' }};">
+        {%- if s.vip_eyebrow != blank -%}<span class="cm-eyebrow" style="background:var(--paper);color:var(--brand);">{{ s.vip_eyebrow }}</span>{%- endif -%}
+        <h2 class="cm-h2" style="color:{{ s.vip_text | default: '#ffffff' }};">{{ s.vip_title }}</h2>
+        {%- if s.vip_sub != blank -%}<p>{{ s.vip_sub }}</p>{%- endif -%}
+        <div class="cm-btnrow">
+          {%- if s.vip_btn_text != blank -%}<a class="cm-btn cm-btn--solid" href="{{ s.vip_btn_link | default: '/account/login' }}">{{ s.vip_btn_text }}</a>{%- endif -%}
+          {%- if s.vip_btn2_text != blank -%}<a class="cm-btn cm-btn--ghost" href="{{ s.vip_btn2_link | default: '/collections/caramel' }}">{{ s.vip_btn2_text }}</a>{%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('cm-{{ section.id }}');
+  if(!root) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  root.querySelectorAll('.cm-copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var c = btn.getAttribute('data-code')||'';
+      var note = btn.parentNode.querySelector('[data-copied-label]');
+      function flash(m){ if(note){ note.textContent=m; setTimeout(function(){ note.textContent=''; }, 2200); } }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(c).then(function(){ flash('Copied “'+c+'” ✓'); }).catch(function(){ flash('Code: '+c); });
+      } else { flash('Code: '+c); }
+    });
+  });
+
+  function countUp(el){
+    if(el.__c) return;
+    var m=(el.textContent||'').trim().match(/^(\d+)(\D*)$/);
+    if(!m){ return; }
+    el.__c=1;
+    var target=parseInt(m[1],10), suf=m[2]||'', start=null, dur=1100;
+    function step(ts){ if(!start) start=ts; var p=Math.min((ts-start)/dur,1); var e=1-Math.pow(1-p,3); el.textContent=Math.round(e*target)+suf; if(p<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); var c=e.target.querySelector('.cm-count'); if(c) countUp(c); io.unobserve(e.target); } });},{threshold:.12});
+    root.querySelectorAll('.cm-rev').forEach(function(el){io.observe(el);});
+    root.querySelectorAll('.cm-pop').forEach(function(el){io.observe(el);});
+    setTimeout(function(){root.querySelectorAll('.cm-rev:not(.in)').forEach(function(el){el.classList.add('in');});},3000);
+  } else {
+    root.querySelectorAll('.cm-rev').forEach(function(el){el.classList.add('in');});
+  }
+
+  var pops=[].slice.call(root.querySelectorAll('.cm-pop'));
+  var track=root.querySelector('.cm-stack');
+  var stage=root.querySelector('.cm-stack-sticky');
+  var items=[].slice.call(root.querySelectorAll('.cm-stack-item'));
+  var dots=[].slice.call(root.querySelectorAll('.cm-stack-dots span'));
+  if(reduce){ pops.forEach(function(el){el.style.opacity='1';}); items.forEach(function(el){el.style.opacity='1';}); return; }
+  var ticking=false;
+  function update(){
+    ticking=false;
+    var vh=window.innerHeight||document.documentElement.clientHeight, vc=vh/2;
+    for(var i=0;i<pops.length;i++){
+      var el=pops[i], r=el.getBoundingClientRect();
+      if(r.bottom<-160||r.top>vh+160){ continue; }
+      var cc=r.top+r.height/2, d=(cc-vc)/vc, ad=Math.abs(d); if(ad>1) ad=1;
+      el.style.opacity=(1-ad*0.5).toFixed(2); el.style.transform='scale('+(1.04-ad*0.15).toFixed(3)+')';
+    }
+    if(track && stage && items.length){
+      var trk=track.getBoundingClientRect();
+      var span=track.offsetHeight-vh; if(span<1) span=1;
+      if(trk.top>=0){ stage.style.position='absolute'; stage.style.top='0'; stage.style.bottom='auto'; }
+      else if(trk.bottom<=vh){ stage.style.position='absolute'; stage.style.top='auto'; stage.style.bottom='0'; }
+      else { stage.style.position='fixed'; stage.style.top='0'; stage.style.bottom='auto'; }
+      var p=(-trk.top)/span; if(p<0) p=0; if(p>1) p=1;
+      var n=items.length, active=Math.floor(p*n); if(active>n-1) active=n-1; if(active<0) active=0;
+      for(var k=0;k<n;k++){
+        var center=(k+0.5)/n, dd=Math.abs(p-center)*n, pres=1-dd; if(pres<0) pres=0;
+        var ease=pres*pres*(3-2*pres), sc=0.6+ease*0.45, ty=(p-center)*-120, it=items[k];
+        it.style.opacity=ease.toFixed(3);
+        it.style.transform='translate(-50%,calc(-50% + '+ty.toFixed(1)+'px)) scale('+sc.toFixed(3)+')';
+        it.style.zIndex=(pres>0.5?'4':'2');
+      }
+      for(var j=0;j<dots.length;j++){ dots[j].classList.toggle('on', j===active); }
+    }
+  }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  window.addEventListener('load', update);
+  update();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Caramel 50% Off",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Brand colors" },
+    { "type": "color", "id": "color_ink", "label": "Body text", "default": "#1a1a1a" },
+    { "type": "color", "id": "color_brand", "label": "Headings", "default": "#39220f" },
+    { "type": "color", "id": "color_bg", "label": "Page background", "default": "#FFFBF4" },
+    { "type": "color", "id": "color_paper", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "color_accent", "label": "Accent (caramel)", "default": "#c58548" },
+    { "type": "color", "id": "color_coral", "label": "Highlight (italics, sale)", "default": "#FF6B5C" },
+    { "type": "color", "id": "color_rule", "label": "Borders & shadows", "default": "#39220f" },
+    { "type": "header", "content": "Typography & spacing" },
+    { "type": "range", "id": "h1_max", "label": "Hero title max size", "min": 40, "max": 120, "step": 2, "unit": "px", "default": 84 },
+    { "type": "range", "id": "h2_size", "label": "Section heading size", "min": 24, "max": 80, "step": 2, "unit": "px", "default": 52 },
+    { "type": "range", "id": "eyebrow_size", "label": "Eyebrow size", "min": 9, "max": 20, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "body_size", "label": "Body text size", "min": 14, "max": 22, "step": 1, "unit": "px", "default": 17 },
+    { "type": "range", "id": "wrap_max", "label": "Content width", "min": 980, "max": 1440, "step": 10, "unit": "px", "default": 1200 },
+    { "type": "range", "id": "section_pad", "label": "Section spacing", "min": 20, "max": 120, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "card_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 18 },
+
+    { "type": "header", "content": "Hero" },
+    { "type": "checkbox", "id": "show_hero", "label": "Show hero", "default": true },
+    { "type": "text", "id": "hero_flash", "label": "Flash badge", "default": "Limited time · Caramel event" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "The caramel edit" },
+    { "type": "html", "id": "hero_title", "label": "Title (use <em> for italic highlight)", "default": "Caramel, now <em>50% off</em>." },
+    { "type": "textarea", "id": "hero_sub", "label": "Subtitle", "default": "Buttery, café-quality caramel in every pour — classic, salted, chocolate, pecan and the full sugar-free range. The whole caramel family, half price, for a limited time." },
+    { "type": "url", "id": "hero_cta_link", "label": "Button 1 link" },
+    { "type": "text", "id": "hero_cta_text", "label": "Button 1 text", "default": "Shop caramel" },
+    { "type": "url", "id": "hero_cta2_link", "label": "Button 2 link" },
+    { "type": "text", "id": "hero_cta2_text", "label": "Button 2 text", "default": "See the deals" },
+    { "type": "header", "content": "Hero — offer ticket" },
+    { "type": "image_picker", "id": "hero_image", "label": "Bottle image" },
+    { "type": "color", "id": "hero_offer_bg", "label": "Ticket background" },
+    { "type": "text", "id": "offer_big", "label": "Big number", "default": "50%" },
+    { "type": "text", "id": "offer_big_sub", "label": "Big number sub-label", "default": "off all caramel" },
+    { "type": "text", "id": "code_label", "label": "Code label", "default": "Use code at checkout" },
+    { "type": "text", "id": "promo_code", "label": "Discount code", "default": "CARAMEL50" },
+    { "type": "textarea", "id": "offer_fine", "label": "Fine print", "default": "Discount applies at checkout with the code. While stocks last." },
+
+    { "type": "header", "content": "Marquee" },
+    { "type": "checkbox", "id": "show_marquee", "label": "Show marquee", "default": true },
+    { "type": "textarea", "id": "marquee_items", "label": "Marquee items (one per line)", "default": "50% Off Caramel\nSalted Caramel\nCaramel Chocolate\nCaramel Pecan\nSugar-Free Caramel\nMade in the USA" },
+    { "type": "color", "id": "marquee_bg", "label": "Marquee background", "default": "#c58548" },
+    { "type": "color", "id": "marquee_text", "label": "Marquee text", "default": "#ffffff" },
+
+    { "type": "header", "content": "Stats strip" },
+    { "type": "checkbox", "id": "show_stats", "label": "Show stats", "default": true },
+    { "type": "paragraph", "content": "Add / edit each stat with the “Stat” blocks below." },
+
+    { "type": "header", "content": "Flavor stack (pinned scroll)" },
+    { "type": "checkbox", "id": "show_stack", "label": "Show flavor stack", "default": true },
+    { "type": "text", "id": "stack_eyebrow", "label": "Eyebrow", "default": "The caramel family" },
+    { "type": "text", "id": "stack_title", "label": "Heading", "default": "One flavor, <em>many ways</em>." },
+    { "type": "paragraph", "content": "Add / edit each card with the “Flavor card” blocks below." },
+
+    { "type": "header", "content": "Product grid" },
+    { "type": "checkbox", "id": "show_grid", "label": "Show product grid", "default": true },
+    { "type": "text", "id": "collection_handle", "label": "Collection handle", "default": "caramel" },
+    { "type": "range", "id": "grid_limit", "label": "Max products", "min": 4, "max": 24, "step": 1, "default": 12 },
+    { "type": "text", "id": "grid_eyebrow", "label": "Eyebrow", "default": "Half-price caramel" },
+    { "type": "text", "id": "grid_title", "label": "Heading", "default": "Every caramel, <em>50% off</em>." },
+    { "type": "text", "id": "grid_link_text", "label": "Link text", "default": "Shop the full collection →" },
+    { "type": "checkbox", "id": "show_deal_badge", "label": "Show deal badge on cards", "default": true },
+    { "type": "text", "id": "deal_badge_text", "label": "Deal badge text", "default": "50% off" },
+    { "type": "checkbox", "id": "show_code_hint", "label": "Show “≈ price with code” hint", "default": true },
+
+    { "type": "header", "content": "Feature cards" },
+    { "type": "checkbox", "id": "show_features", "label": "Show feature cards", "default": true },
+    { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "Why Syruvia" },
+    { "type": "text", "id": "feat_title", "label": "Heading", "default": "A better way to <em>pour</em>." },
+    { "type": "paragraph", "content": "Add / edit each card with the “Feature card” blocks below." },
+
+    { "type": "header", "content": "Sugar-free band" },
+    { "type": "checkbox", "id": "show_sf", "label": "Show sugar-free band", "default": true },
+    { "type": "text", "id": "collection_sugarfree", "label": "Sugar-free collection handle", "default": "sugar-free-caramel" },
+    { "type": "text", "id": "sf_eyebrow", "label": "Eyebrow", "default": "Zero sugar, all flavor" },
+    { "type": "text", "id": "sf_title", "label": "Heading", "default": "Sugar-free caramel, <em>half price</em>." },
+    { "type": "textarea", "id": "sf_sub", "label": "Text", "default": "All the buttery caramel taste with zero sugar and zero calories — and it’s 50% off too. The guilt-free way to upgrade your coffee." },
+    { "type": "text", "id": "sf_btn_text", "label": "Button text", "default": "Shop sugar-free caramel" },
+    { "type": "url", "id": "sf_btn_link", "label": "Button link" },
+    { "type": "color", "id": "sf_bg", "label": "Band background", "default": "#39220f" },
+    { "type": "color", "id": "sf_text", "label": "Band text", "default": "#FFFBF4" },
+
+    { "type": "header", "content": "VIP band" },
+    { "type": "checkbox", "id": "show_vip", "label": "Show VIP band", "default": true },
+    { "type": "text", "id": "vip_eyebrow", "label": "Eyebrow", "default": "Syruvia VIP" },
+    { "type": "text", "id": "vip_title", "label": "Heading", "default": "Stack it with <em>VIP</em>." },
+    { "type": "textarea", "id": "vip_sub", "label": "Text", "default": "Join VIP free for our everyday best price on full-size syrups. New here? Grab the caramel event at 50% off now — then sign in for VIP pricing on everything else." },
+    { "type": "text", "id": "vip_btn_text", "label": "Button 1 text", "default": "Join VIP — it’s free" },
+    { "type": "url", "id": "vip_btn_link", "label": "Button 1 link" },
+    { "type": "text", "id": "vip_btn2_text", "label": "Button 2 text", "default": "Shop caramel" },
+    { "type": "url", "id": "vip_btn2_link", "label": "Button 2 link" },
+    { "type": "color", "id": "vip_bg", "label": "Band background", "default": "#c58548" },
+    { "type": "color", "id": "vip_text", "label": "Band text", "default": "#ffffff" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number", "default": "50%" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Off" },
+        { "type": "text", "id": "desc", "label": "Description", "default": "Every caramel flavor" },
+        { "type": "color", "id": "bg", "label": "Background", "default": "#ffffff" }
+      ]
+    },
+    {
+      "type": "flavor",
+      "name": "Flavor card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Classic Caramel" },
+        { "type": "text", "id": "tag", "label": "Tag", "default": "50% off" },
+        { "type": "color", "id": "bg", "label": "Image background", "default": "#f6e3c6" }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Feature card",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "default": "drop",
+          "options": [
+            { "value": "drop", "label": "Drop" },
+            { "value": "check", "label": "Check" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "home", "label": "Home" },
+            { "value": "star", "label": "Star" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "bolt", "label": "Bolt" }
+          ] },
+        { "type": "text", "id": "title", "label": "Title", "default": "Real, buttery caramel" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Smooth, true-to-source caramel taste — no high-fructose corn syrup, no artificial dyes." },
+        { "type": "color", "id": "icon_bg", "label": "Icon background", "default": "#c58548" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Caramel 50% Off",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "50%", "label": "Off", "desc": "Every caramel flavor", "bg": "#ffffff" } },
+        { "type": "stat", "settings": { "number": "7", "label": "Caramel flavors", "desc": "Classic to limited edition", "bg": "#f6e3c6" } },
+        { "type": "stat", "settings": { "number": "0g", "label": "Sugar option", "desc": "Full sugar-free range", "bg": "#f7d9b0" } },
+        { "type": "stat", "settings": { "number": "50+", "label": "Servings", "desc": "Per 750 ml bottle", "bg": "#f3c466" } },
+        { "type": "flavor", "settings": { "name": "Classic Caramel", "tag": "50% off", "bg": "#f6e3c6" } },
+        { "type": "flavor", "settings": { "name": "Salted Caramel", "tag": "50% off", "bg": "#f7d9b0" } },
+        { "type": "flavor", "settings": { "name": "Caramel Chocolate", "tag": "50% off", "bg": "#e8c79a" } },
+        { "type": "feature", "settings": { "icon": "drop", "title": "Real, buttery caramel", "text": "Smooth, true-to-source caramel taste — no high-fructose corn syrup, no artificial dyes." } },
+        { "type": "feature", "settings": { "icon": "check", "title": "Sugar-free options", "text": "Love caramel without the sugar? The whole caramel range comes in zero-sugar, zero-calorie too." } },
+        { "type": "feature", "settings": { "icon": "home", "title": "Made in the USA", "text": "Crafted, bottled and quality-checked in the USA — kosher and gluten-free, with 50+ servings a bottle." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
