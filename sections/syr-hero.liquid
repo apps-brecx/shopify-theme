@@ -65,6 +65,28 @@
   #syr-hero-{{ section.id }} .syr-slide-cta:hover{ transform:translateX(-50%) translateY(-2px); box-shadow:0 6px 0 rgba(0,0,0,.25), 0 10px 18px rgba(0,0,0,.18); }
   #syr-hero-{{ section.id }} .syr-slide-cta:active{ transform:translateX(-50%) translateY(2px); box-shadow:0 2px 0 rgba(0,0,0,.25), 0 4px 8px rgba(0,0,0,.1); transition-duration:.08s; }
 
+  /* Overlay text (on top of image / video) */
+  #syr-hero-{{ section.id }} .syr-slide-text{
+    position:absolute; inset:0; z-index:2;
+    display:flex; flex-direction:column; gap:.35em;
+    padding:6% 8%; pointer-events:none;
+  }
+  #syr-hero-{{ section.id }} .syr-slide-text.pos-top{ justify-content:flex-start; }
+  #syr-hero-{{ section.id }} .syr-slide-text.pos-center{ justify-content:center; }
+  #syr-hero-{{ section.id }} .syr-slide-text.pos-bottom{ justify-content:flex-end; }
+  #syr-hero-{{ section.id }} .syr-slide-text.al-left{ align-items:flex-start; text-align:left; }
+  #syr-hero-{{ section.id }} .syr-slide-text.al-center{ align-items:center; text-align:center; }
+  #syr-hero-{{ section.id }} .syr-slide-text.al-right{ align-items:flex-end; text-align:right; }
+  #syr-hero-{{ section.id }} .syr-slide-text .h{ font-size:var(--hd); line-height:1.06; margin:0; }
+  #syr-hero-{{ section.id }} .syr-slide-text .s{ font-size:var(--sd); line-height:1.35; margin:0; opacity:.96; }
+  #syr-hero-{{ section.id }} .syr-slide-text.has-shadow .h,
+  #syr-hero-{{ section.id }} .syr-slide-text.has-shadow .s{ text-shadow:0 2px 14px rgba(0,0,0,.55), 0 1px 3px rgba(0,0,0,.5); }
+  @media (max-width:760px){
+    #syr-hero-{{ section.id }} .syr-slide-text{ padding:8% 7%; }
+    #syr-hero-{{ section.id }} .syr-slide-text .h{ font-size:var(--hm); }
+    #syr-hero-{{ section.id }} .syr-slide-text .s{ font-size:var(--sm); }
+  }
+
   /* DOTS */
   #syr-hero-{{ section.id }} .syr-dots{
     position:absolute; left:50%; bottom:18px; transform:translateX(-50%);
@@ -122,6 +144,7 @@
           {%- if block.settings.image_desktop != blank -%}{%- assign poster_d = block.settings.image_desktop | image_url: width: 2400 -%}{%- elsif vid_d.preview_image != blank -%}{%- assign poster_d = vid_d.preview_image | image_url: width: 2400 -%}{%- endif -%}
           {%- assign poster_m = '' -%}
           {%- if block.settings.image_mobile != blank -%}{%- assign poster_m = block.settings.image_mobile | image_url: width: 1200 -%}{%- elsif block.settings.image_desktop != blank -%}{%- assign poster_m = block.settings.image_desktop | image_url: width: 1200 -%}{%- elsif vid_m.preview_image != blank -%}{%- assign poster_m = vid_m.preview_image | image_url: width: 1200 -%}{%- elsif vid_d.preview_image != blank -%}{%- assign poster_m = vid_d.preview_image | image_url: width: 1200 -%}{%- endif -%}
+          {%- if block.settings.show_text and block.settings.text_font != blank -%}{{ block.settings.text_font | font_face: font_display: 'swap' | prepend: '<style>' | append: '</style>' }}{%- endif -%}
           <a class="syr-slide-link {% unless show_button %}is-clickable{% endunless %}" href="{{ link }}" aria-label="{{ alt_txt }}">
             {%- comment -%} ── Desktop media: video wins, else image ── {%- endcomment -%}
             {%- if vid_d != blank -%}
@@ -149,6 +172,14 @@
               <div class="syr-slide-img-d"><div class="syr-slide-img-fb">Upload banner image</div></div>
               <div class="syr-slide-img-m"><div class="syr-slide-img-fb">Upload mobile banner</div></div>
             {%- endunless -%}
+            {%- if block.settings.show_text and block.settings.text_heading != blank or block.settings.show_text and block.settings.text_sub != blank -%}
+              {%- assign ofont = block.settings.text_font -%}
+              <div class="syr-slide-text pos-{{ block.settings.text_position | default: 'center' }} al-{{ block.settings.text_align | default: 'center' }}{% if block.settings.text_shadow %} has-shadow{% endif %}"
+                   style="color:{{ block.settings.text_color | default: '#ffffff' }};{% if ofont != blank %}font-family:{{ ofont.family }}, {{ ofont.fallback_families }};font-weight:{{ ofont.weight | default: 400 }};font-style:{{ ofont.style | default: 'normal' }};{% endif %}--hd:{{ block.settings.heading_size_d | default: 48 }}px;--hm:{{ block.settings.heading_size_m | default: 30 }}px;--sd:{{ block.settings.sub_size_d | default: 20 }}px;--sm:{{ block.settings.sub_size_m | default: 15 }}px;">
+                {%- if block.settings.text_heading != blank -%}<div class="h">{{ block.settings.text_heading }}</div>{%- endif -%}
+                {%- if block.settings.text_sub != blank -%}<div class="s">{{ block.settings.text_sub }}</div>{%- endif -%}
+              </div>
+            {%- endif -%}
             {%- if show_button and block.settings.btn_text != blank -%}
               <span class="syr-slide-cta" style="background:{{ btn_bg }};color:{{ btn_color }};">{{ block.settings.btn_text }}</span>
             {%- endif -%}
@@ -238,7 +269,20 @@
         { "type": "checkbox", "id": "show_button", "label": "Show overlay button", "default": true, "info": "Turn off if your banner image already has a button. The whole image stays clickable." },
         { "type": "text", "id": "btn_text", "label": "Button text", "default": "Shop Now" },
         { "type": "color", "id": "btn_bg", "label": "Button background", "default": "#C8252B" },
-        { "type": "color", "id": "btn_color", "label": "Button text color", "default": "#FFFFFF" }
+        { "type": "color", "id": "btn_color", "label": "Button text color", "default": "#FFFFFF" },
+        { "type": "header", "content": "Overlay text (on top of image / video)" },
+        { "type": "checkbox", "id": "show_text", "label": "Show overlay text", "default": false },
+        { "type": "text", "id": "text_heading", "label": "Heading" },
+        { "type": "text", "id": "text_sub", "label": "Subheading" },
+        { "type": "font_picker", "id": "text_font", "label": "Font", "default": "josefin_sans_n4" },
+        { "type": "color", "id": "text_color", "label": "Text color", "default": "#FFFFFF" },
+        { "type": "checkbox", "id": "text_shadow", "label": "Shadow for readability", "default": true },
+        { "type": "select", "id": "text_position", "label": "Vertical position", "default": "center", "options": [ { "value": "top", "label": "Top" }, { "value": "center", "label": "Center" }, { "value": "bottom", "label": "Bottom" } ] },
+        { "type": "select", "id": "text_align", "label": "Alignment", "default": "center", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ] },
+        { "type": "range", "id": "heading_size_d", "label": "Heading size — desktop", "min": 16, "max": 120, "step": 2, "unit": "px", "default": 48 },
+        { "type": "range", "id": "heading_size_m", "label": "Heading size — mobile", "min": 12, "max": 80, "step": 1, "unit": "px", "default": 30 },
+        { "type": "range", "id": "sub_size_d", "label": "Subheading size — desktop", "min": 10, "max": 48, "step": 1, "unit": "px", "default": 20 },
+        { "type": "range", "id": "sub_size_m", "label": "Subheading size — mobile", "min": 8, "max": 36, "step": 1, "unit": "px", "default": 15 }
       ]
     }
   ],
