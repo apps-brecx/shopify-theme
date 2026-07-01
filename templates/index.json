@@ -1,1 +1,930 @@
-{"sections":{"hero":{"type":"syr-hero","blocks":{"slide_tw9mi8":{"type":"slide","settings":{"image_desktop":"shopify:\/\/shop_images\/Fruit_Pack.png","image_mobile":"shopify:\/\/shop_images\/Mobile_4ff1ea90-bd14-4164-a49b-3d61dfb87334.png","alt":"","link":"shopify:\/\/pages\/july-4","show_button":false,"btn_text":"Shop Now","btn_bg":"#c8252b","btn_color":"#ffffff"}},"slide_3L9aTR":{"type":"slide","disabled":true,"settings":{"image_desktop":"shopify:\/\/shop_images\/Desktop.jpg","image_mobile":"shopify:\/\/shop_images\/Mobile.jpg","alt":"","link":"shopify:\/\/collections\/coffee-house-sets","show_button":false,"btn_text":"Shop Now","btn_bg":"#0b0001","btn_color":"#ffffff"}}},"block_order":["slide_tw9mi8","slide_3L9aTR"],"settings":{"autoplay_s":6}},"ticker":{"type":"syr-ticker","blocks":{"flavor_GrLxDd":{"type":"flavor","settings":{"name":"VIP $7.99","link":"","bg":"#dc0e42","txt":"#000000"}},"f01":{"type":"flavor","name":"Flavor vamilla","settings":{"name":"Vanilla","link":"\/collections\/vanilla","bg":"#fffbf4","txt":"#39220f"}},"f02":{"type":"flavor","name":"Flavor Salted Caramel","settings":{"name":"Salted Caramel","link":"\/collections\/caramel","bg":"#c58548","txt":"#fffbf4"}},"f03":{"type":"flavor","name":"Flavor Cotton Candy","settings":{"name":"Cotton Candy","link":"\/search?q=cotton+candy&type=product","bg":"#ffb6d9","txt":"#39220f"}},"f04":{"type":"flavor","name":"Flavor Banana Nut","settings":{"name":"Banana Nut","link":"\/search?q=banana+nut&type=product","bg":"#fce2a0","txt":"#39220f"}},"f05":{"type":"flavor","name":"Flavor Cookie Butter","settings":{"name":"Cookie Butter","link":"\/search?q=cookie+butter&type=product","bg":"#8b5a2b","txt":"#fffbf4"}},"f06":{"type":"flavor","name":"Flavor Ube","settings":{"name":"Ube","link":"\/search?q=ube&type=product","bg":"#9b7bc7","txt":"#fffbf4"}},"f07":{"type":"flavor","name":"Flavor Blackberry","settings":{"name":"Blackberry","link":"\/collections\/blackberry","bg":"#4b2e5c","txt":"#fffbf4"}},"f08":{"type":"flavor","name":"Flavor Mango","settings":{"name":"Mango","link":"\/search?q=mango&type=product","bg":"#ffb347","txt":"#39220f"}},"f09":{"type":"flavor","name":"Flavor Peach","settings":{"name":"Peach","link":"\/search?q=peach&type=product","bg":"#ffd4b8","txt":"#39220f"}},"f10":{"type":"flavor","name":"Flavor Apple Crisp","settings":{"name":"Apple Crisp","link":"\/search?q=apple+crisp&type=product","bg":"#c5e4d4","txt":"#39220f"}},"f11":{"type":"flavor","name":"Flavor Blueberry","settings":{"name":"Blueberry","link":"\/collections\/blueberry","bg":"#5ba3d0","txt":"#fffbf4"}},"f12":{"type":"flavor","name":"Flavor Strawberry","settings":{"name":"Strawberry","link":"\/search?q=strawberry&type=product","bg":"#e85541","txt":"#fffbf4"}},"f13":{"type":"flavor","name":"Flavor Chocolate","settings":{"name":"Chocolate","link":"\/search?q=chocolate&type=product","bg":"#5c3317","txt":"#fffbf4"}},"f14":{"type":"flavor","name":"Flavor Hazelnut","settings":{"name":"Hazelnut","link":"\/search?q=hazelnut&type=product","bg":"#d2a679","txt":"#39220f"}},"f15":{"type":"flavor","name":"Flavor Sugar-Free","settings":{"name":"Sugar-Free","link":"\/collections\/sugar-free","bg":"#117ad0","txt":"#ffffff"}}},"block_order":["flavor_GrLxDd","f01","f02","f03","f04","f05","f06","f07","f08","f09","f10","f11","f12","f13","f14","f15"],"settings":{"bg_color":"#39220f","speed":38,"speed_mobile":32,"padding":8}},"categories":{"type":"syr-categories","settings":{"headline":"Pick your syrup","sub":"Over 250+ Flavors for you to pick from","c1_coll":"coffee","c1_name":"Coffee","c1_cta":"Shop Coffee","c1_bot_shadow":true,"c1_chip_show":true,"c1_chip_text":"","c1_count":"","c1_chip_suffix":"flavors","c1_chip_bg":"#39220f","c1_chip_color":"#fffbf4","c1_img_left":"shopify:\/\/shop_images\/SF_Vanilla.png","c1_img_center":"shopify:\/\/shop_images\/Salted_Cookie_Butter_1.png","c1_img_right":"shopify:\/\/shop_images\/SF_Ube.png","c1_bg":"#fce2a0","c1_btn_bg":"#39220f","c1_btn_color":"#fffbf4","c2_coll":"fruit","c2_name":"Fruit","c2_cta":"Shop Fruit","c2_bot_shadow":true,"c2_chip_show":true,"c2_chip_text":"","c2_count":"","c2_chip_suffix":"flavors","c2_chip_bg":"#39220f","c2_chip_color":"#fffbf4","c2_img_left":"shopify:\/\/shop_images\/SF_Coconut.png","c2_img_center":"shopify:\/\/shop_images\/SF_Mango.png","c2_img_right":"shopify:\/\/shop_images\/SF_Strawberry.png","c2_bg":"#ffd4b8","c2_btn_bg":"#c58548","c2_btn_color":"#fffbf4","c3_coll":"sugar-free","c3_name":"Sugar Free","c3_cta":"Shop Sugar-Free","c3_bot_shadow":true,"c3_chip_show":true,"c3_chip_text":"","c3_count":"","c3_chip_suffix":"flavors","c3_chip_bg":"#39220f","c3_chip_color":"#fffbf4","c3_img_left":"shopify:\/\/shop_images\/SF_Salted_Caramel.png","c3_img_center":"shopify:\/\/shop_images\/SF_Pink_Splash.png","c3_img_right":"shopify:\/\/shop_images\/SF_Pumpkin_Spice.png","c3_bg":"#c5e4d4","c3_btn_bg":"#5ba3d0","c3_btn_color":"#fffbf4","c4_coll":"","c4_name":"Cocktail","c4_cta":"Shop Cocktails","c4_bot_shadow":true,"c4_chip_show":true,"c4_chip_text":"","c4_count":"","c4_chip_suffix":"flavors","c4_chip_bg":"#39220f","c4_chip_color":"#fffbf4","c4_bg":"#b8dceb","c4_btn_bg":"#2f7bb0","c4_btn_color":"#fffbf4","c5_coll":"new-arrivals","c5_name":"New Flavors","c5_cta":"Shop New","c5_bot_shadow":true,"c5_chip_show":true,"c5_chip_text":"","c5_count":"","c5_chip_suffix":"flavors","c5_chip_bg":"#39220f","c5_chip_color":"#fffbf4","c5_img_left":"shopify:\/\/shop_images\/Caramel_Chocolate.png","c5_img_center":"shopify:\/\/shop_images\/SF_Sour_Gummy.png","c5_img_right":"shopify:\/\/shop_images\/SF_Banana_Nut.png","c5_bg":"#fce2a0","c5_btn_bg":"#c58548","c5_btn_color":"#fffbf4","c6_coll":"trending-flavors","c6_name":"Trending","c6_cta":"Shop Trending","c6_bot_shadow":true,"c6_chip_show":true,"c6_chip_text":"","c6_count":"","c6_chip_suffix":"flavors","c6_chip_bg":"#39220f","c6_chip_color":"#fffbf4","c6_img_left":"shopify:\/\/shop_images\/Passion_Fruit_56dcb80d-3ba1-4f92-b72f-6f151ebf0f70.png","c6_img_center":"shopify:\/\/shop_images\/SF_Vanilla_f8c69f88-5a05-4732-a4f2-1ec356379138.png","c6_img_right":"shopify:\/\/shop_images\/Pink_Splash.png","c6_bg":"#ffd4b8","c6_btn_bg":"#39220f","c6_btn_color":"#fffbf4"}},"new_arrivals":{"type":"syr-new-arrivals","blocks":{"product_pYejfC":{"type":"product","settings":{"product":"","btn_text":"Add to cart","btn_bg":"#39220f","btn_color":"#fffbf4","btn_shadow":"#c58548","shadow_color":"#39220f"}}},"block_order":["product_pYejfC"],"settings":{"eyebrow":"Best sellers","headline":"Best sellers","sub":"The flavors customers keep reordering.","show_ratings":true,"collection_handle":"trending-flavors","limit":8,"default_btn_text":"Add to cart","default_btn_bg":"#bc6a2a","default_btn_color":"#ffffff","default_btn_shadow":"#000000","default_shadow":"#000000","cta_text":"Shop all best sellers","cta_link":"","cta_bg":"#bc6a2a","cta_color":"#fffbf4","cta_shadow":"#000000"}},"mixmatch":{"type":"syr-mixmatch","settings":{"badge_text":"Save up to 14%","eyebrow":"Bundle & Save","headline":"MIX FLAVORS. Save bigger.","lead":"Build a bundle of any flavors and any sizes. The more bottles you stack, the more you save. Up to 48% off when you go big.","badge_font_size":14,"badge_min_scale_pct":80,"badge_max_scale_pct":130,"badge_min_rot":-6,"badge_max_rot":2,"t1_num":"2","t1_label":"Bottles","t1_save":"Save 4%","t1_flag":"","t2_num":"6","t2_label":"Bottles","t2_save":"Save 8%","t2_flag":"","t3_num":"12","t3_label":"Bottles","t3_save":"Save14%","t3_flag":"Best Value","cta_text":"Build your bundle","cta_link":"","bg_color":"#fffbf4","card_bg":"#ffffff","card_shadow":"#39220f","badge_bg":"#fce2a0","badge_color":"#39220f","accent_color":"#c58548","save_pill_bg":"#a8d5ba","best_bg":"#c58548","best_color":"#fffbf4","cta_bg":"#39220f","cta_color":"#fffbf4","cta_shadow":"#b88659"}},"points":{"type":"syr-points","blocks":{"pt_flavors":{"type":"point","settings":{"icon":"✨","num":"250+","heading":"Flavors","description":"From classic vanilla to cotton candy, Syruvia offers over 250 craft syrup flavors. One bottle is never enough — try a different flavor every week.","bg_color":"#ffd4b8","text_color":"#39220f","icon_bg":"#fffbf4","icon_color":"#39220f","shadow_color":"#39220f"}},"pt_rev":{"type":"point","settings":{"icon":"★","num":"4.9★","heading":"Sippers obsessed","description":"Over 5 million happy customers and a 4.9-star average across thousands of verified reviews. Real people, real flavor, real obsession.","bg_color":"#b8dceb","text_color":"#39220f","icon_bg":"#fffbf4","icon_color":"#39220f","shadow_color":"#39220f"}},"pt_usa":{"type":"point","settings":{"icon":"🇺🇸","num":"USA","heading":"Made here","description":"Small-batch crafted in the United States with real ingredients you can actually pronounce. Every bottle is family-owned and proudly American-made.","bg_color":"#fce2a0","text_color":"#39220f","icon_bg":"#fffbf4","icon_color":"#39220f","shadow_color":"#39220f"}},"pt_sf":{"type":"point","settings":{"icon":"☕","num":"0g","heading":"Sugar-free","description":"Every flavor available in a sugar-free version with the same rich, craft taste. Zero sugar, zero compromise. Perfect for keto, diabetic-friendly, and low-carb routines.","bg_color":"#c5e4d4","text_color":"#39220f","icon_bg":"#fffbf4","icon_color":"#39220f","shadow_color":"#39220f"}}},"block_order":["pt_flavors","pt_rev","pt_usa","pt_sf"],"settings":{"eyebrow_text":"Why Syruvia","headline":"A better way to pour.","bg_color":"#fffbf4","eyebrow_bg":"#fce2a0","eyebrow_color":"#39220f"}},"videos":{"type":"syr-videos","blocks":{"v_strawberry":{"type":"video","settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/e8c5698a0a38444e9204597f21abf5c8\/e8c5698a0a38444e9204597f21abf5c8.HD-720p-1.6Mbps-37353311.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/e8c5698a0a38444e9204597f21abf5c8.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Strawberry","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}},"v_vanilla":{"type":"video","settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/922242a0a616441b8823e7ec8ad9d8c5\/922242a0a616441b8823e7ec8ad9d8c5.HD-720p-1.6Mbps-37353314.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/922242a0a616441b8823e7ec8ad9d8c5.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Vanilla","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}},"v_caramel":{"type":"video","settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/97d5785f2f1e4eb885d2519f5e845679\/97d5785f2f1e4eb885d2519f5e845679.HD-720p-1.6Mbps-37353317.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/97d5785f2f1e4eb885d2519f5e845679.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Caramel","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}},"v_hazelnut":{"type":"video","disabled":true,"settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/da6127b78f30417ea44e22505d70e0c4\/da6127b78f30417ea44e22505d70e0c4.HD-720p-1.6Mbps-37353320.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/da6127b78f30417ea44e22505d70e0c4.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Hazelnut","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}},"v_mango":{"type":"video","settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/6b236213f0564257a7eaca77b52ae285\/6b236213f0564257a7eaca77b52ae285.HD-720p-1.6Mbps-37353321.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/6b236213f0564257a7eaca77b52ae285.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Mango","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}},"v_peach":{"type":"video","settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/440b593a1e454d0dbcc238f2f1eebb15\/440b593a1e454d0dbcc238f2f1eebb15.HD-720p-1.6Mbps-37354101.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/440b593a1e454d0dbcc238f2f1eebb15.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Peach","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}},"v_blueberry":{"type":"video","disabled":true,"settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/80bf19b8c43e46c4b0041358dd951f66\/80bf19b8c43e46c4b0041358dd951f66.HD-720p-1.6Mbps-37354127.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/80bf19b8c43e46c4b0041358dd951f66.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Blueberry","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}},"v_cotton_candy":{"type":"video","settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/16a070f2e2714b14af52161f123586ec\/16a070f2e2714b14af52161f123586ec.HD-720p-1.6Mbps-37801303.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/16a070f2e2714b14af52161f123586ec.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Cotton Candy","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}},"v_salted_caramel":{"type":"video","settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/2f180f1fdc5d463e88d3a21b5884b86f\/2f180f1fdc5d463e88d3a21b5884b86f.HD-720p-1.6Mbps-38476833.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/2f180f1fdc5d463e88d3a21b5884b86f.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Salted Caramel","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}},"v_banana_nut":{"type":"video","settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/709be99dc11f42a3b1310e39f2928be2\/709be99dc11f42a3b1310e39f2928be2.HD-720p-4.5Mbps-38476837.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/709be99dc11f42a3b1310e39f2928be2.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Banana Nut","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}},"v_cookie_butter":{"type":"video","settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/40236e72322c4b8f8887c3274bd6b7e8\/40236e72322c4b8f8887c3274bd6b7e8.HD-720p-4.5Mbps-38476835.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/40236e72322c4b8f8887c3274bd6b7e8.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Cookie Butter","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}},"v_pumpkin_spice":{"type":"video","settings":{"video_url":"https:\/\/cdn.shopify.com\/videos\/c\/vp\/c75067903311468bad5e6236c8849ce1\/c75067903311468bad5e6236c8849ce1.HD-720p-4.5Mbps-38476836.mp4","video_poster":"https:\/\/cdn.shopify.com\/s\/files\/1\/0861\/1106\/0252\/files\/preview_images\/c75067903311468bad5e6236c8849ce1.thumbnail.0000000000.jpg","video_link":"","show_tag":true,"tag_text":"Pumpkin Spice","tag_bg":"#fce2a0","tag_color":"#39220f","tag_border":"#39220f"}}},"block_order":["v_strawberry","v_vanilla","v_caramel","v_hazelnut","v_mango","v_peach","v_blueberry","v_cotton_candy","v_salted_caramel","v_banana_nut","v_cookie_butter","v_pumpkin_spice"],"settings":{"eyebrow_text":"Real sips","headline":"See it in action","sub":"Real recipes. Real sips. Loved by 5M+.","bg_color":"#fffbf4","eyebrow_bg":"#fce2a0","eyebrow_color":"#39220f","scroll_speed":75,"show_all_tags":true,"show_follow_button":true,"follow_text":"Follow @syruvia_official","follow_link":"","follow_icon":"instagram","follow_bg":"#39220f","follow_color":"#fffbf4","follow_shadow":"#c58548"}},"vip":{"type":"syr-vip-banner","settings":{"eyebrow_text":"Syruvia VIP","eyebrow_drop":40,"eyebrow_bg":"#fce2a0","eyebrow_color":"#39220f","eyebrow_border":"#39220f","eyebrow_shadow":"#39220f","discount_pct":"$7.99","discount_label":"flat member price","headline":"Every syrup. Every time.","perk_1":"Flat $7.99 on all 250+ syrups","perk_2":"Special VIP rates on boba & toppings","perk_3":"Auto-applied at checkout · no codes","show_savings":true,"savings_amount":"You save up to $5","savings_eyebrow":"","savings_sub":"on every syrup bottle","free_chip_text":"100% Free · No card needed","cta_text":"Create free account","cta_link":"","cta_sub_text":"Just sign up · Price drops instantly when you log in","signin_text":"Sign in","signin_link":"","already_member_text":"Already a member?","already_member_link":"Sign in to activate VIP pricing.","show_trust":false,"trust_count":"12,847","trust_text":"members already saving","card_bg":"#2f7bb0","card_bg2":"#1f5a85","hi_color":"#fce2a0","hi_color2":"#fffbf4"}},"reviews":{"type":"syr-reviews","blocks":{"rev_sarah":{"type":"review","settings":{"product":"brown-sugar-cinnamon-syrup","override_link":"","auto_pull":true,"review_index":4,"rating":5,"quote":"I put this in everything. My iced coffee has not been the same since.","name":"Sarah M.","show_verified":true,"show_product_tag":true,"auto_use_product_name":true,"product_tag_label":"Iced Coffee","bg_color":"#fffbf4","text_color":"#39220f","stars_color":"#e8a93c","tag_bg":"#fce2a0","tag_color":"#39220f","shadow_color":"#39220f"}},"rev_jess":{"type":"review","settings":{"product":"1-lb-strawberry-flavored-boba-balls-for-a-bursting-and-popping-boba-experience","override_link":"","auto_pull":true,"review_index":1,"rating":5,"quote":"Finally a sugar-free syrup that actually tastes good.","name":"Jess R.","show_verified":true,"show_product_tag":true,"auto_use_product_name":true,"product_tag_label":"Sugar-Free","bg_color":"#fffbf4","text_color":"#39220f","stars_color":"#e8a93c","tag_bg":"#d17d87","tag_color":"#39220f","shadow_color":"#39220f"}},"rev_amanda":{"type":"review","settings":{"product":"sugar-free-salted-cookie-butter-syrup","override_link":"","auto_pull":true,"review_index":1,"rating":5,"quote":"The Cotton Candy one is unreal. My kids are obsessed.","name":"Amanda L.","show_verified":true,"show_product_tag":true,"auto_use_product_name":true,"product_tag_label":"Cotton Candy","bg_color":"#fffbf4","text_color":"#39220f","stars_color":"#e8a93c","tag_bg":"#cd8e5c","tag_color":"#39220f","shadow_color":"#39220f"}},"rev_mike":{"type":"review","settings":{"product":"sugar-free-vanilla-syrup","override_link":"","auto_pull":true,"review_index":12,"rating":5,"quote":"Ordered vanilla, came back for 6 more flavors.","name":"Mike T.","show_verified":true,"show_product_tag":true,"auto_use_product_name":true,"product_tag_label":"Vanilla","bg_color":"#fffbf4","text_color":"#39220f","stars_color":"#e8a93c","tag_bg":"#d6cfbe","tag_color":"#39220f","shadow_color":"#39220f"}},"rev_priya":{"type":"review","settings":{"product":"sugar-free-coconut-syrup","override_link":"","auto_pull":true,"review_index":1,"rating":5,"quote":"Best thing I have added to my morning routine.","name":"Priya K.","show_verified":true,"show_product_tag":true,"auto_use_product_name":true,"product_tag_label":"Morning Routine","bg_color":"#fffbf4","text_color":"#39220f","stars_color":"#e8a93c","tag_bg":"#c5e4d4","tag_color":"#39220f","shadow_color":"#39220f"}},"rev_dana":{"type":"review","settings":{"product":"sugar-free-salted-caramel-syrup","override_link":"","auto_pull":true,"review_index":4,"rating":5,"quote":"Salted Cookie Butter in a latte = life changing.","name":"Dana W.","show_verified":true,"show_product_tag":true,"auto_use_product_name":true,"product_tag_label":"Salted Cookie Butter","bg_color":"#fffbf4","text_color":"#39220f","stars_color":"#e8a93c","tag_bg":"#c58548","tag_color":"#fffbf4","shadow_color":"#39220f"}}},"block_order":["rev_sarah","rev_jess","rev_amanda","rev_mike","rev_priya","rev_dana"],"settings":{"eyebrow_text":"Loved by 5M+","headline":"What everyone is saying","bg_color":"#f4e8ce","eyebrow_bg":"#fce2a0","eyebrow_color":"#39220f","scroll_speed":42,"show_all_button":true,"all_text":"View all reviews","all_link":"shopify:\/\/collections\/all-syrups","all_bg":"#39220f","all_color":"#fffbf4","all_shadow":"#c58548","r1_quote":"I put this in everything. My iced coffee has not been the same since.","r1_name":"Sarah M.","r2_quote":"Finally a sugar-free syrup that actually tastes good.","r2_name":"Jess R.","r3_quote":"The Cotton Candy one is unreal. My kids are obsessed.","r3_name":"Amanda L.","r4_quote":"Ordered vanilla, came back for 6 more flavors.","r4_name":"Mike T.","r5_quote":"Best thing I have added to my morning routine.","r5_name":"Priya K.","r6_quote":"Salted Cookie Butter in a latte = life changing.","r6_name":"Dana W."}},"email_capture":{"type":"syr-email-capture","settings":{"eyebrow_text":"Newsletter","headline":"Be the first to know","sub":"New flavors. Exclusive drops. Member-only deals.","fine":"Join 5M+ flavor lovers. Unsubscribe anytime.","success_text":"You are in!","eyebrow_bg":"#fce2a0","eyebrow_color":"#39220f"}}},"order":["hero","ticker","categories","new_arrivals","mixmatch","points","videos","vip","reviews","email_capture"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "syr-hero",
+      "blocks": {
+        "slide_F8daTC": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/website.png",
+            "image_mobile": "shopify://shop_images/mobile_1.png",
+            "alt": "",
+            "link": "shopify://collections/all-products",
+            "show_button": false,
+            "btn_text": "Shop Now",
+            "btn_bg": "#c8252b",
+            "btn_color": "#ffffff"
+          }
+        },
+        "slide_tw9mi8": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Fruit_Pack.png",
+            "image_mobile": "shopify://shop_images/Mobile_4ff1ea90-bd14-4164-a49b-3d61dfb87334.png",
+            "alt": "",
+            "link": "shopify://pages/july-4",
+            "show_button": false,
+            "btn_text": "Shop Now",
+            "btn_bg": "#c8252b",
+            "btn_color": "#ffffff"
+          }
+        },
+        "slide_3L9aTR": {
+          "type": "slide",
+          "disabled": true,
+          "settings": {
+            "image_desktop": "shopify://shop_images/Desktop.jpg",
+            "image_mobile": "shopify://shop_images/Mobile.jpg",
+            "alt": "",
+            "link": "shopify://collections/coffee-house-sets",
+            "show_button": false,
+            "btn_text": "Shop Now",
+            "btn_bg": "#0b0001",
+            "btn_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "slide_F8daTC",
+        "slide_tw9mi8",
+        "slide_3L9aTR"
+      ],
+      "settings": {
+        "autoplay_s": 6
+      }
+    },
+    "ticker": {
+      "type": "syr-ticker",
+      "blocks": {
+        "flavor_GrLxDd": {
+          "type": "flavor",
+          "settings": {
+            "name": "VIP $7.99",
+            "link": "",
+            "bg": "#dc0e42",
+            "txt": "#000000"
+          }
+        },
+        "f01": {
+          "type": "flavor",
+          "name": "Flavor vamilla",
+          "settings": {
+            "name": "Vanilla",
+            "link": "/collections/vanilla",
+            "bg": "#fffbf4",
+            "txt": "#39220f"
+          }
+        },
+        "f02": {
+          "type": "flavor",
+          "name": "Flavor Salted Caramel",
+          "settings": {
+            "name": "Salted Caramel",
+            "link": "/collections/caramel",
+            "bg": "#c58548",
+            "txt": "#fffbf4"
+          }
+        },
+        "f03": {
+          "type": "flavor",
+          "name": "Flavor Cotton Candy",
+          "settings": {
+            "name": "Cotton Candy",
+            "link": "/search?q=cotton+candy&type=product",
+            "bg": "#ffb6d9",
+            "txt": "#39220f"
+          }
+        },
+        "f04": {
+          "type": "flavor",
+          "name": "Flavor Banana Nut",
+          "settings": {
+            "name": "Banana Nut",
+            "link": "/search?q=banana+nut&type=product",
+            "bg": "#fce2a0",
+            "txt": "#39220f"
+          }
+        },
+        "f05": {
+          "type": "flavor",
+          "name": "Flavor Cookie Butter",
+          "settings": {
+            "name": "Cookie Butter",
+            "link": "/search?q=cookie+butter&type=product",
+            "bg": "#8b5a2b",
+            "txt": "#fffbf4"
+          }
+        },
+        "f06": {
+          "type": "flavor",
+          "name": "Flavor Ube",
+          "settings": {
+            "name": "Ube",
+            "link": "/search?q=ube&type=product",
+            "bg": "#9b7bc7",
+            "txt": "#fffbf4"
+          }
+        },
+        "f07": {
+          "type": "flavor",
+          "name": "Flavor Blackberry",
+          "settings": {
+            "name": "Blackberry",
+            "link": "/collections/blackberry",
+            "bg": "#4b2e5c",
+            "txt": "#fffbf4"
+          }
+        },
+        "f08": {
+          "type": "flavor",
+          "name": "Flavor Mango",
+          "settings": {
+            "name": "Mango",
+            "link": "/search?q=mango&type=product",
+            "bg": "#ffb347",
+            "txt": "#39220f"
+          }
+        },
+        "f09": {
+          "type": "flavor",
+          "name": "Flavor Peach",
+          "settings": {
+            "name": "Peach",
+            "link": "/search?q=peach&type=product",
+            "bg": "#ffd4b8",
+            "txt": "#39220f"
+          }
+        },
+        "f10": {
+          "type": "flavor",
+          "name": "Flavor Apple Crisp",
+          "settings": {
+            "name": "Apple Crisp",
+            "link": "/search?q=apple+crisp&type=product",
+            "bg": "#c5e4d4",
+            "txt": "#39220f"
+          }
+        },
+        "f11": {
+          "type": "flavor",
+          "name": "Flavor Blueberry",
+          "settings": {
+            "name": "Blueberry",
+            "link": "/collections/blueberry",
+            "bg": "#5ba3d0",
+            "txt": "#fffbf4"
+          }
+        },
+        "f12": {
+          "type": "flavor",
+          "name": "Flavor Strawberry",
+          "settings": {
+            "name": "Strawberry",
+            "link": "/search?q=strawberry&type=product",
+            "bg": "#e85541",
+            "txt": "#fffbf4"
+          }
+        },
+        "f13": {
+          "type": "flavor",
+          "name": "Flavor Chocolate",
+          "settings": {
+            "name": "Chocolate",
+            "link": "/search?q=chocolate&type=product",
+            "bg": "#5c3317",
+            "txt": "#fffbf4"
+          }
+        },
+        "f14": {
+          "type": "flavor",
+          "name": "Flavor Hazelnut",
+          "settings": {
+            "name": "Hazelnut",
+            "link": "/search?q=hazelnut&type=product",
+            "bg": "#d2a679",
+            "txt": "#39220f"
+          }
+        },
+        "f15": {
+          "type": "flavor",
+          "name": "Flavor Sugar-Free",
+          "settings": {
+            "name": "Sugar-Free",
+            "link": "/collections/sugar-free",
+            "bg": "#117ad0",
+            "txt": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "flavor_GrLxDd",
+        "f01",
+        "f02",
+        "f03",
+        "f04",
+        "f05",
+        "f06",
+        "f07",
+        "f08",
+        "f09",
+        "f10",
+        "f11",
+        "f12",
+        "f13",
+        "f14",
+        "f15"
+      ],
+      "settings": {
+        "bg_color": "#39220f",
+        "speed": 38,
+        "speed_mobile": 32,
+        "padding": 8
+      }
+    },
+    "categories": {
+      "type": "syr-categories",
+      "settings": {
+        "headline": "Pick your syrup",
+        "sub": "Over 250+ Flavors for you to pick from",
+        "c1_coll": "coffee",
+        "c1_name": "Coffee",
+        "c1_cta": "Shop Coffee",
+        "c1_bot_shadow": true,
+        "c1_chip_show": true,
+        "c1_chip_text": "",
+        "c1_count": "",
+        "c1_chip_suffix": "flavors",
+        "c1_chip_bg": "#39220f",
+        "c1_chip_color": "#fffbf4",
+        "c1_img_left": "shopify://shop_images/SF_Vanilla.png",
+        "c1_img_center": "shopify://shop_images/Salted_Cookie_Butter_1.png",
+        "c1_img_right": "shopify://shop_images/SF_Ube.png",
+        "c1_bg": "#fce2a0",
+        "c1_btn_bg": "#39220f",
+        "c1_btn_color": "#fffbf4",
+        "c2_coll": "fruit",
+        "c2_name": "Fruit",
+        "c2_cta": "Shop Fruit",
+        "c2_bot_shadow": true,
+        "c2_chip_show": true,
+        "c2_chip_text": "",
+        "c2_count": "",
+        "c2_chip_suffix": "flavors",
+        "c2_chip_bg": "#39220f",
+        "c2_chip_color": "#fffbf4",
+        "c2_img_left": "shopify://shop_images/SF_Coconut.png",
+        "c2_img_center": "shopify://shop_images/SF_Mango.png",
+        "c2_img_right": "shopify://shop_images/SF_Strawberry.png",
+        "c2_bg": "#ffd4b8",
+        "c2_btn_bg": "#c58548",
+        "c2_btn_color": "#fffbf4",
+        "c3_coll": "sugar-free",
+        "c3_name": "Sugar Free",
+        "c3_cta": "Shop Sugar-Free",
+        "c3_bot_shadow": true,
+        "c3_chip_show": true,
+        "c3_chip_text": "",
+        "c3_count": "",
+        "c3_chip_suffix": "flavors",
+        "c3_chip_bg": "#39220f",
+        "c3_chip_color": "#fffbf4",
+        "c3_img_left": "shopify://shop_images/SF_Salted_Caramel.png",
+        "c3_img_center": "shopify://shop_images/SF_Pink_Splash.png",
+        "c3_img_right": "shopify://shop_images/SF_Pumpkin_Spice.png",
+        "c3_bg": "#c5e4d4",
+        "c3_btn_bg": "#5ba3d0",
+        "c3_btn_color": "#fffbf4",
+        "c4_coll": "",
+        "c4_name": "Cocktail",
+        "c4_cta": "Shop Cocktails",
+        "c4_bot_shadow": true,
+        "c4_chip_show": true,
+        "c4_chip_text": "",
+        "c4_count": "",
+        "c4_chip_suffix": "flavors",
+        "c4_chip_bg": "#39220f",
+        "c4_chip_color": "#fffbf4",
+        "c4_bg": "#b8dceb",
+        "c4_btn_bg": "#2f7bb0",
+        "c4_btn_color": "#fffbf4",
+        "c5_coll": "new-arrivals",
+        "c5_name": "New Flavors",
+        "c5_cta": "Shop New",
+        "c5_bot_shadow": true,
+        "c5_chip_show": true,
+        "c5_chip_text": "",
+        "c5_count": "",
+        "c5_chip_suffix": "flavors",
+        "c5_chip_bg": "#39220f",
+        "c5_chip_color": "#fffbf4",
+        "c5_img_left": "shopify://shop_images/Caramel_Chocolate.png",
+        "c5_img_center": "shopify://shop_images/SF_Sour_Gummy.png",
+        "c5_img_right": "shopify://shop_images/SF_Banana_Nut.png",
+        "c5_bg": "#fce2a0",
+        "c5_btn_bg": "#c58548",
+        "c5_btn_color": "#fffbf4",
+        "c6_coll": "trending-flavors",
+        "c6_name": "Trending",
+        "c6_cta": "Shop Trending",
+        "c6_bot_shadow": true,
+        "c6_chip_show": true,
+        "c6_chip_text": "",
+        "c6_count": "",
+        "c6_chip_suffix": "flavors",
+        "c6_chip_bg": "#39220f",
+        "c6_chip_color": "#fffbf4",
+        "c6_img_left": "shopify://shop_images/Passion_Fruit_56dcb80d-3ba1-4f92-b72f-6f151ebf0f70.png",
+        "c6_img_center": "shopify://shop_images/SF_Vanilla_f8c69f88-5a05-4732-a4f2-1ec356379138.png",
+        "c6_img_right": "shopify://shop_images/Pink_Splash.png",
+        "c6_bg": "#ffd4b8",
+        "c6_btn_bg": "#39220f",
+        "c6_btn_color": "#fffbf4"
+      }
+    },
+    "new_arrivals": {
+      "type": "syr-new-arrivals",
+      "blocks": {
+        "product_pYejfC": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "btn_text": "Add to cart",
+            "btn_bg": "#39220f",
+            "btn_color": "#fffbf4",
+            "btn_shadow": "#c58548",
+            "shadow_color": "#39220f"
+          }
+        }
+      },
+      "block_order": [
+        "product_pYejfC"
+      ],
+      "settings": {
+        "eyebrow": "Best sellers",
+        "headline": "Best sellers",
+        "sub": "The flavors customers keep reordering.",
+        "show_ratings": true,
+        "collection_handle": "trending-flavors",
+        "limit": 8,
+        "default_btn_text": "Add to cart",
+        "default_btn_bg": "#bc6a2a",
+        "default_btn_color": "#ffffff",
+        "default_btn_shadow": "#000000",
+        "default_shadow": "#000000",
+        "cta_text": "Shop all best sellers",
+        "cta_link": "",
+        "cta_bg": "#bc6a2a",
+        "cta_color": "#fffbf4",
+        "cta_shadow": "#000000"
+      }
+    },
+    "mixmatch": {
+      "type": "syr-mixmatch",
+      "settings": {
+        "badge_text": "Save up to 14%",
+        "eyebrow": "Bundle & Save",
+        "headline": "MIX FLAVORS. Save bigger.",
+        "lead": "Build a bundle of any flavors and any sizes. The more bottles you stack, the more you save. Up to 48% off when you go big.",
+        "badge_font_size": 14,
+        "badge_min_scale_pct": 80,
+        "badge_max_scale_pct": 130,
+        "badge_min_rot": -6,
+        "badge_max_rot": 2,
+        "t1_num": "2",
+        "t1_label": "Bottles",
+        "t1_save": "Save 4%",
+        "t1_flag": "",
+        "t2_num": "6",
+        "t2_label": "Bottles",
+        "t2_save": "Save 8%",
+        "t2_flag": "",
+        "t3_num": "12",
+        "t3_label": "Bottles",
+        "t3_save": "Save14%",
+        "t3_flag": "Best Value",
+        "cta_text": "Build your bundle",
+        "cta_link": "",
+        "bg_color": "#fffbf4",
+        "card_bg": "#ffffff",
+        "card_shadow": "#39220f",
+        "badge_bg": "#fce2a0",
+        "badge_color": "#39220f",
+        "accent_color": "#c58548",
+        "save_pill_bg": "#a8d5ba",
+        "best_bg": "#c58548",
+        "best_color": "#fffbf4",
+        "cta_bg": "#39220f",
+        "cta_color": "#fffbf4",
+        "cta_shadow": "#b88659"
+      }
+    },
+    "points": {
+      "type": "syr-points",
+      "blocks": {
+        "pt_flavors": {
+          "type": "point",
+          "settings": {
+            "icon": "✨",
+            "num": "250+",
+            "heading": "Flavors",
+            "description": "From classic vanilla to cotton candy, Syruvia offers over 250 craft syrup flavors. One bottle is never enough — try a different flavor every week.",
+            "bg_color": "#ffd4b8",
+            "text_color": "#39220f",
+            "icon_bg": "#fffbf4",
+            "icon_color": "#39220f",
+            "shadow_color": "#39220f"
+          }
+        },
+        "pt_rev": {
+          "type": "point",
+          "settings": {
+            "icon": "★",
+            "num": "4.9★",
+            "heading": "Sippers obsessed",
+            "description": "Over 5 million happy customers and a 4.9-star average across thousands of verified reviews. Real people, real flavor, real obsession.",
+            "bg_color": "#b8dceb",
+            "text_color": "#39220f",
+            "icon_bg": "#fffbf4",
+            "icon_color": "#39220f",
+            "shadow_color": "#39220f"
+          }
+        },
+        "pt_usa": {
+          "type": "point",
+          "settings": {
+            "icon": "🇺🇸",
+            "num": "USA",
+            "heading": "Made here",
+            "description": "Small-batch crafted in the United States with real ingredients you can actually pronounce. Every bottle is family-owned and proudly American-made.",
+            "bg_color": "#fce2a0",
+            "text_color": "#39220f",
+            "icon_bg": "#fffbf4",
+            "icon_color": "#39220f",
+            "shadow_color": "#39220f"
+          }
+        },
+        "pt_sf": {
+          "type": "point",
+          "settings": {
+            "icon": "☕",
+            "num": "0g",
+            "heading": "Sugar-free",
+            "description": "Every flavor available in a sugar-free version with the same rich, craft taste. Zero sugar, zero compromise. Perfect for keto, diabetic-friendly, and low-carb routines.",
+            "bg_color": "#c5e4d4",
+            "text_color": "#39220f",
+            "icon_bg": "#fffbf4",
+            "icon_color": "#39220f",
+            "shadow_color": "#39220f"
+          }
+        }
+      },
+      "block_order": [
+        "pt_flavors",
+        "pt_rev",
+        "pt_usa",
+        "pt_sf"
+      ],
+      "settings": {
+        "eyebrow_text": "Why Syruvia",
+        "headline": "A better way to pour.",
+        "bg_color": "#fffbf4",
+        "eyebrow_bg": "#fce2a0",
+        "eyebrow_color": "#39220f"
+      }
+    },
+    "videos": {
+      "type": "syr-videos",
+      "blocks": {
+        "v_strawberry": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/e8c5698a0a38444e9204597f21abf5c8/e8c5698a0a38444e9204597f21abf5c8.HD-720p-1.6Mbps-37353311.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/e8c5698a0a38444e9204597f21abf5c8.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Strawberry",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_vanilla": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/922242a0a616441b8823e7ec8ad9d8c5/922242a0a616441b8823e7ec8ad9d8c5.HD-720p-1.6Mbps-37353314.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/922242a0a616441b8823e7ec8ad9d8c5.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Vanilla",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_caramel": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/97d5785f2f1e4eb885d2519f5e845679/97d5785f2f1e4eb885d2519f5e845679.HD-720p-1.6Mbps-37353317.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/97d5785f2f1e4eb885d2519f5e845679.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Caramel",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_hazelnut": {
+          "type": "video",
+          "disabled": true,
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/da6127b78f30417ea44e22505d70e0c4/da6127b78f30417ea44e22505d70e0c4.HD-720p-1.6Mbps-37353320.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/da6127b78f30417ea44e22505d70e0c4.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Hazelnut",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_mango": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/6b236213f0564257a7eaca77b52ae285/6b236213f0564257a7eaca77b52ae285.HD-720p-1.6Mbps-37353321.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/6b236213f0564257a7eaca77b52ae285.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Mango",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_peach": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/440b593a1e454d0dbcc238f2f1eebb15/440b593a1e454d0dbcc238f2f1eebb15.HD-720p-1.6Mbps-37354101.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/440b593a1e454d0dbcc238f2f1eebb15.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Peach",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_blueberry": {
+          "type": "video",
+          "disabled": true,
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/80bf19b8c43e46c4b0041358dd951f66/80bf19b8c43e46c4b0041358dd951f66.HD-720p-1.6Mbps-37354127.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/80bf19b8c43e46c4b0041358dd951f66.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Blueberry",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_cotton_candy": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/16a070f2e2714b14af52161f123586ec/16a070f2e2714b14af52161f123586ec.HD-720p-1.6Mbps-37801303.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/16a070f2e2714b14af52161f123586ec.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Cotton Candy",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_salted_caramel": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/2f180f1fdc5d463e88d3a21b5884b86f/2f180f1fdc5d463e88d3a21b5884b86f.HD-720p-1.6Mbps-38476833.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/2f180f1fdc5d463e88d3a21b5884b86f.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Salted Caramel",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_banana_nut": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/709be99dc11f42a3b1310e39f2928be2/709be99dc11f42a3b1310e39f2928be2.HD-720p-4.5Mbps-38476837.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/709be99dc11f42a3b1310e39f2928be2.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Banana Nut",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_cookie_butter": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/40236e72322c4b8f8887c3274bd6b7e8/40236e72322c4b8f8887c3274bd6b7e8.HD-720p-4.5Mbps-38476835.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/40236e72322c4b8f8887c3274bd6b7e8.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Cookie Butter",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_pumpkin_spice": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/videos/c/vp/c75067903311468bad5e6236c8849ce1/c75067903311468bad5e6236c8849ce1.HD-720p-4.5Mbps-38476836.mp4",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/c75067903311468bad5e6236c8849ce1.thumbnail.0000000000.jpg",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Pumpkin Spice",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        }
+      },
+      "block_order": [
+        "v_strawberry",
+        "v_vanilla",
+        "v_caramel",
+        "v_hazelnut",
+        "v_mango",
+        "v_peach",
+        "v_blueberry",
+        "v_cotton_candy",
+        "v_salted_caramel",
+        "v_banana_nut",
+        "v_cookie_butter",
+        "v_pumpkin_spice"
+      ],
+      "settings": {
+        "eyebrow_text": "Real sips",
+        "headline": "See it in action",
+        "sub": "Real recipes. Real sips. Loved by 5M+.",
+        "bg_color": "#fffbf4",
+        "eyebrow_bg": "#fce2a0",
+        "eyebrow_color": "#39220f",
+        "scroll_speed": 75,
+        "show_all_tags": true,
+        "show_follow_button": true,
+        "follow_text": "Follow @syruvia_official",
+        "follow_link": "",
+        "follow_icon": "instagram",
+        "follow_bg": "#39220f",
+        "follow_color": "#fffbf4",
+        "follow_shadow": "#c58548"
+      }
+    },
+    "vip": {
+      "type": "syr-vip-banner",
+      "settings": {
+        "eyebrow_text": "Syruvia VIP",
+        "eyebrow_drop": 40,
+        "eyebrow_bg": "#fce2a0",
+        "eyebrow_color": "#39220f",
+        "eyebrow_border": "#39220f",
+        "eyebrow_shadow": "#39220f",
+        "discount_pct": "$7.99",
+        "discount_label": "flat member price",
+        "headline": "Every syrup. Every time.",
+        "perk_1": "Flat $7.99 on all 250+ syrups",
+        "perk_2": "Special VIP rates on boba & toppings",
+        "perk_3": "Auto-applied at checkout · no codes",
+        "show_savings": true,
+        "savings_amount": "You save up to $5",
+        "savings_eyebrow": "",
+        "savings_sub": "on every syrup bottle",
+        "free_chip_text": "100% Free · No card needed",
+        "cta_text": "Create free account",
+        "cta_link": "",
+        "cta_sub_text": "Just sign up · Price drops instantly when you log in",
+        "signin_text": "Sign in",
+        "signin_link": "",
+        "already_member_text": "Already a member?",
+        "already_member_link": "Sign in to activate VIP pricing.",
+        "show_trust": false,
+        "trust_count": "12,847",
+        "trust_text": "members already saving",
+        "card_bg": "#2f7bb0",
+        "card_bg2": "#1f5a85",
+        "hi_color": "#fce2a0",
+        "hi_color2": "#fffbf4"
+      }
+    },
+    "reviews": {
+      "type": "syr-reviews",
+      "blocks": {
+        "rev_sarah": {
+          "type": "review",
+          "settings": {
+            "product": "brown-sugar-cinnamon-syrup",
+            "override_link": "",
+            "auto_pull": true,
+            "review_index": 4,
+            "rating": 5,
+            "quote": "I put this in everything. My iced coffee has not been the same since.",
+            "name": "Sarah M.",
+            "show_verified": true,
+            "show_product_tag": true,
+            "auto_use_product_name": true,
+            "product_tag_label": "Iced Coffee",
+            "bg_color": "#fffbf4",
+            "text_color": "#39220f",
+            "stars_color": "#e8a93c",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "shadow_color": "#39220f"
+          }
+        },
+        "rev_jess": {
+          "type": "review",
+          "settings": {
+            "product": "1-lb-strawberry-flavored-boba-balls-for-a-bursting-and-popping-boba-experience",
+            "override_link": "",
+            "auto_pull": true,
+            "review_index": 1,
+            "rating": 5,
+            "quote": "Finally a sugar-free syrup that actually tastes good.",
+            "name": "Jess R.",
+            "show_verified": true,
+            "show_product_tag": true,
+            "auto_use_product_name": true,
+            "product_tag_label": "Sugar-Free",
+            "bg_color": "#fffbf4",
+            "text_color": "#39220f",
+            "stars_color": "#e8a93c",
+            "tag_bg": "#d17d87",
+            "tag_color": "#39220f",
+            "shadow_color": "#39220f"
+          }
+        },
+        "rev_amanda": {
+          "type": "review",
+          "settings": {
+            "product": "sugar-free-salted-cookie-butter-syrup",
+            "override_link": "",
+            "auto_pull": true,
+            "review_index": 1,
+            "rating": 5,
+            "quote": "The Cotton Candy one is unreal. My kids are obsessed.",
+            "name": "Amanda L.",
+            "show_verified": true,
+            "show_product_tag": true,
+            "auto_use_product_name": true,
+            "product_tag_label": "Cotton Candy",
+            "bg_color": "#fffbf4",
+            "text_color": "#39220f",
+            "stars_color": "#e8a93c",
+            "tag_bg": "#cd8e5c",
+            "tag_color": "#39220f",
+            "shadow_color": "#39220f"
+          }
+        },
+        "rev_mike": {
+          "type": "review",
+          "settings": {
+            "product": "sugar-free-vanilla-syrup",
+            "override_link": "",
+            "auto_pull": true,
+            "review_index": 12,
+            "rating": 5,
+            "quote": "Ordered vanilla, came back for 6 more flavors.",
+            "name": "Mike T.",
+            "show_verified": true,
+            "show_product_tag": true,
+            "auto_use_product_name": true,
+            "product_tag_label": "Vanilla",
+            "bg_color": "#fffbf4",
+            "text_color": "#39220f",
+            "stars_color": "#e8a93c",
+            "tag_bg": "#d6cfbe",
+            "tag_color": "#39220f",
+            "shadow_color": "#39220f"
+          }
+        },
+        "rev_priya": {
+          "type": "review",
+          "settings": {
+            "product": "sugar-free-coconut-syrup",
+            "override_link": "",
+            "auto_pull": true,
+            "review_index": 1,
+            "rating": 5,
+            "quote": "Best thing I have added to my morning routine.",
+            "name": "Priya K.",
+            "show_verified": true,
+            "show_product_tag": true,
+            "auto_use_product_name": true,
+            "product_tag_label": "Morning Routine",
+            "bg_color": "#fffbf4",
+            "text_color": "#39220f",
+            "stars_color": "#e8a93c",
+            "tag_bg": "#c5e4d4",
+            "tag_color": "#39220f",
+            "shadow_color": "#39220f"
+          }
+        },
+        "rev_dana": {
+          "type": "review",
+          "settings": {
+            "product": "sugar-free-salted-caramel-syrup",
+            "override_link": "",
+            "auto_pull": true,
+            "review_index": 4,
+            "rating": 5,
+            "quote": "Salted Cookie Butter in a latte = life changing.",
+            "name": "Dana W.",
+            "show_verified": true,
+            "show_product_tag": true,
+            "auto_use_product_name": true,
+            "product_tag_label": "Salted Cookie Butter",
+            "bg_color": "#fffbf4",
+            "text_color": "#39220f",
+            "stars_color": "#e8a93c",
+            "tag_bg": "#c58548",
+            "tag_color": "#fffbf4",
+            "shadow_color": "#39220f"
+          }
+        }
+      },
+      "block_order": [
+        "rev_sarah",
+        "rev_jess",
+        "rev_amanda",
+        "rev_mike",
+        "rev_priya",
+        "rev_dana"
+      ],
+      "settings": {
+        "eyebrow_text": "Loved by 5M+",
+        "headline": "What everyone is saying",
+        "bg_color": "#f4e8ce",
+        "eyebrow_bg": "#fce2a0",
+        "eyebrow_color": "#39220f",
+        "scroll_speed": 42,
+        "show_all_button": true,
+        "all_text": "View all reviews",
+        "all_link": "shopify://collections/all-syrups",
+        "all_bg": "#39220f",
+        "all_color": "#fffbf4",
+        "all_shadow": "#c58548",
+        "r1_quote": "I put this in everything. My iced coffee has not been the same since.",
+        "r1_name": "Sarah M.",
+        "r2_quote": "Finally a sugar-free syrup that actually tastes good.",
+        "r2_name": "Jess R.",
+        "r3_quote": "The Cotton Candy one is unreal. My kids are obsessed.",
+        "r3_name": "Amanda L.",
+        "r4_quote": "Ordered vanilla, came back for 6 more flavors.",
+        "r4_name": "Mike T.",
+        "r5_quote": "Best thing I have added to my morning routine.",
+        "r5_name": "Priya K.",
+        "r6_quote": "Salted Cookie Butter in a latte = life changing.",
+        "r6_name": "Dana W."
+      }
+    },
+    "email_capture": {
+      "type": "syr-email-capture",
+      "settings": {
+        "eyebrow_text": "Newsletter",
+        "headline": "Be the first to know",
+        "sub": "New flavors. Exclusive drops. Member-only deals.",
+        "fine": "Join 5M+ flavor lovers. Unsubscribe anytime.",
+        "success_text": "You are in!",
+        "eyebrow_bg": "#fce2a0",
+        "eyebrow_color": "#39220f"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "ticker",
+    "categories",
+    "new_arrivals",
+    "mixmatch",
+    "points",
+    "videos",
+    "vip",
+    "reviews",
+    "email_capture"
+  ]
+}
