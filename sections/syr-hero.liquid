@@ -25,11 +25,18 @@
   #syr-hero-{{ section.id }} .syr-slide-link.is-clickable:active{ filter:brightness(.97); }
 
   #syr-hero-{{ section.id }} .syr-slide-img-d,
-  #syr-hero-{{ section.id }} .syr-slide-img-m{ display:block; width:100%; height:auto; }
-  #syr-hero-{{ section.id }} .syr-slide-img-m{ display:none; }
+  #syr-hero-{{ section.id }} .syr-slide-img-m,
+  #syr-hero-{{ section.id }} .syr-slide-vid-d,
+  #syr-hero-{{ section.id }} .syr-slide-vid-m{ display:block; width:100%; height:auto; }
+  #syr-hero-{{ section.id }} .syr-slide-vid-d,
+  #syr-hero-{{ section.id }} .syr-slide-vid-m{ object-fit:cover; }
+  #syr-hero-{{ section.id }} .syr-slide-img-m,
+  #syr-hero-{{ section.id }} .syr-slide-vid-m{ display:none; }
   @media (max-width:760px){
-    #syr-hero-{{ section.id }} .syr-slide-img-d{ display:none; }
-    #syr-hero-{{ section.id }} .syr-slide-img-m{ display:block; }
+    #syr-hero-{{ section.id }} .syr-slide-img-d,
+    #syr-hero-{{ section.id }} .syr-slide-vid-d{ display:none; }
+    #syr-hero-{{ section.id }} .syr-slide-img-m,
+    #syr-hero-{{ section.id }} .syr-slide-vid-m{ display:block; }
   }
   #syr-hero-{{ section.id }} .syr-slide-img-fb{
     width:100%; aspect-ratio:21/9; max-height:78vh;
@@ -103,19 +110,45 @@
         {%- assign link = block.settings.link | default: '/collections/all' -%}
         {%- assign show_button = block.settings.show_button -%}
         <div class="syr-slide" data-slide-idx="{{ forloop.index0 }}" role="group" aria-roledescription="slide">
-          <a class="syr-slide-link {% unless show_button %}is-clickable{% endunless %}" href="{{ link }}" aria-label="{{ block.settings.alt | default: block.settings.btn_text | escape }}">
-            {%- if block.settings.image_desktop != blank -%}
-              <img class="syr-slide-img-d" src="{{ block.settings.image_desktop | image_url: width: 2400 }}" alt="{{ block.settings.alt | default: block.settings.btn_text | escape }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
-            {%- endif -%}
-            {%- if block.settings.image_mobile != blank -%}
-              <img class="syr-slide-img-m" src="{{ block.settings.image_mobile | image_url: width: 1200 }}" alt="{{ block.settings.alt | default: block.settings.btn_text | escape }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+          {%- assign alt_txt = block.settings.alt | default: block.settings.btn_text | escape -%}
+          {%- assign vid_d = block.settings.video_desktop -%}
+          {%- assign vid_m = block.settings.video_mobile -%}
+          {%- comment -%} shared <video> attributes: autoplay bg-style, or controls when autoplay is off {%- endcomment -%}
+          {%- capture vid_attrs -%}{% if block.settings.video_autoplay %}autoplay muted loop playsinline preload="metadata"{% else %}controls playsinline preload="metadata"{% endif %}{%- endcapture -%}
+          {%- assign has_media = false -%}
+          {%- if block.settings.image_desktop != blank or block.settings.image_mobile != blank or vid_d != blank or vid_m != blank -%}{%- assign has_media = true -%}{%- endif -%}
+          {%- comment -%} posters / image fallbacks {%- endcomment -%}
+          {%- assign poster_d = '' -%}
+          {%- if block.settings.image_desktop != blank -%}{%- assign poster_d = block.settings.image_desktop | image_url: width: 2400 -%}{%- elsif vid_d.preview_image != blank -%}{%- assign poster_d = vid_d.preview_image | image_url: width: 2400 -%}{%- endif -%}
+          {%- assign poster_m = '' -%}
+          {%- if block.settings.image_mobile != blank -%}{%- assign poster_m = block.settings.image_mobile | image_url: width: 1200 -%}{%- elsif block.settings.image_desktop != blank -%}{%- assign poster_m = block.settings.image_desktop | image_url: width: 1200 -%}{%- elsif vid_m.preview_image != blank -%}{%- assign poster_m = vid_m.preview_image | image_url: width: 1200 -%}{%- elsif vid_d.preview_image != blank -%}{%- assign poster_m = vid_d.preview_image | image_url: width: 1200 -%}{%- endif -%}
+          <a class="syr-slide-link {% unless show_button %}is-clickable{% endunless %}" href="{{ link }}" aria-label="{{ alt_txt }}">
+            {%- comment -%} ── Desktop media: video wins, else image ── {%- endcomment -%}
+            {%- if vid_d != blank -%}
+              <video class="syr-slide-vid-d" {{ vid_attrs }}{% if poster_d != blank %} poster="{{ poster_d }}"{% endif %} aria-label="{{ alt_txt }}">
+                {%- for src in vid_d.sources -%}<source src="{{ src.url }}" type="{{ src.mime_type }}">{%- endfor -%}
+              </video>
             {%- elsif block.settings.image_desktop != blank -%}
-              <img class="syr-slide-img-m" src="{{ block.settings.image_desktop | image_url: width: 1200 }}" alt="{{ block.settings.alt | default: block.settings.btn_text | escape }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+              <img class="syr-slide-img-d" src="{{ block.settings.image_desktop | image_url: width: 2400 }}" alt="{{ alt_txt }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
             {%- endif -%}
-            {%- if block.settings.image_desktop == blank and block.settings.image_mobile == blank -%}
+            {%- comment -%} ── Mobile media: mobile video → mobile image → desktop video → desktop image ── {%- endcomment -%}
+            {%- if vid_m != blank -%}
+              <video class="syr-slide-vid-m" {{ vid_attrs }}{% if poster_m != blank %} poster="{{ poster_m }}"{% endif %} aria-label="{{ alt_txt }}">
+                {%- for src in vid_m.sources -%}<source src="{{ src.url }}" type="{{ src.mime_type }}">{%- endfor -%}
+              </video>
+            {%- elsif block.settings.image_mobile != blank -%}
+              <img class="syr-slide-img-m" src="{{ block.settings.image_mobile | image_url: width: 1200 }}" alt="{{ alt_txt }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+            {%- elsif vid_d != blank -%}
+              <video class="syr-slide-vid-m" {{ vid_attrs }}{% if poster_m != blank %} poster="{{ poster_m }}"{% endif %} aria-label="{{ alt_txt }}">
+                {%- for src in vid_d.sources -%}<source src="{{ src.url }}" type="{{ src.mime_type }}">{%- endfor -%}
+              </video>
+            {%- elsif block.settings.image_desktop != blank -%}
+              <img class="syr-slide-img-m" src="{{ block.settings.image_desktop | image_url: width: 1200 }}" alt="{{ alt_txt }}" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+            {%- endif -%}
+            {%- unless has_media -%}
               <div class="syr-slide-img-d"><div class="syr-slide-img-fb">Upload banner image</div></div>
               <div class="syr-slide-img-m"><div class="syr-slide-img-fb">Upload mobile banner</div></div>
-            {%- endif -%}
+            {%- endunless -%}
             {%- if show_button and block.settings.btn_text != blank -%}
               <span class="syr-slide-cta" style="background:{{ btn_bg }};color:{{ btn_color }};">{{ block.settings.btn_text }}</span>
             {%- endif -%}
@@ -194,7 +227,12 @@
       "settings": [
         { "type": "image_picker", "id": "image_desktop", "label": "Desktop image" },
         { "type": "image_picker", "id": "image_mobile", "label": "Mobile image (optional)" },
-        { "type": "text", "id": "alt", "label": "Image alt text" },
+        { "type": "header", "content": "Video (optional — plays instead of the image)" },
+        { "type": "video", "id": "video_desktop", "label": "Desktop video" },
+        { "type": "video", "id": "video_mobile", "label": "Mobile video (optional)" },
+        { "type": "checkbox", "id": "video_autoplay", "label": "Autoplay video", "default": true, "info": "On: plays automatically, muted and looping. Off: shows the poster image with play controls so visitors tap to play." },
+        { "type": "paragraph", "content": "The desktop/mobile image is used as the poster and fallback — set one for the fastest load." },
+        { "type": "text", "id": "alt", "label": "Image / video alt text" },
         { "type": "url", "id": "link", "label": "Link (where the slide goes)" },
         { "type": "header", "content": "Overlay button" },
         { "type": "checkbox", "id": "show_button", "label": "Show overlay button", "default": true, "info": "Turn off if your banner image already has a button. The whole image stays clickable." },
