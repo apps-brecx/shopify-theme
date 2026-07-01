@@ -16,7 +16,7 @@
         "bg_img": "shopify://shop_images/Rectangle_2272_2.png",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
-        "accent_color": "#C6631E"
+        "accent_color": "#c6631e"
       }
     },
     "main": {
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Try multiple flavors",
-            "description": "Discover your favorite without the\ncommitment of full-size bulk."
+            "title": "Three Fruity Favorites",
+            "description": "Mango, Peach, and Mandarine Orange in one easy summer pack."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Rotate flavors easily",
-            "description": "Keep your morning routine exciting with fresh weekly picks."
+            "title": "Mix Drinks Fast",
+            "description": "Add bright fruit flavor to lemonades, iced teas, sodas, and mocktails."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Avoid unused Flavors",
-            "description": "Optimized sizes meant for high-rotation use at home."
+            "title": "Made for Summer",
+            "description": "Perfect for refreshing drinks, party sips, and everyday cool-downs."
           }
         }
       },
@@ -698,7 +698,7 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#C6631E",
+        "background_color": "#c6631e",
         "title": "<h2>Trusted Quality </h2>",
         "description": "<p>Carefully made to meet everyday standards you can rely on.</p>",
         "button_text": "Shop The Pack",
