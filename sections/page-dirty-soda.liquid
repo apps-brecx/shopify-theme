@@ -1,0 +1,469 @@
+{%- comment -%}
+  Dirty Soda Pack landing page (Syruvia) — built for Meta ad traffic, mobile-first.
+  Brand style (Archivo Black + Josefin Sans, cream/espresso) with fun fizzy soda accents.
+  Conversion touches: sticky mobile buy-bar, fizz hero, scroll-snap flavor carousel,
+  reveal + count-up on scroll. Fonts loaded non-blocking (no render-blocking @import).
+  Every element editable in the theme editor; flavors & reviews are blocks.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign rad = s.card_radius | default: 20 -%}
+{%- assign buy = s.buy_url | default: '/products/sugar-free-dirty-soda-pack' -%}
+{%- assign cdn = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/' -%}
+{%- assign hero_src = cdn | append: 'Main.webp?v=1779627985' -%}
+{%- if s.hero_image != blank -%}{%- assign hero_src = s.hero_image | image_url: width: 900 -%}{%- endif -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Archivo+Black&family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:wght@300;400;600;700&display=swap"></noscript>
+
+<style>
+  #ds-{{ section.id }}{
+    --ink:{{ s.color_ink | default: '#1a1a1a' }};
+    --brand:{{ s.color_brand | default: '#39220f' }};
+    --bg:{{ s.color_bg | default: '#FFFBF4' }};
+    --paper:{{ s.color_paper | default: '#ffffff' }};
+    --accent:{{ s.color_accent | default: '#c58548' }};
+    --pop:{{ s.color_pop | default: '#FF6B5C' }};
+    --straw:{{ s.color_strawberry | default: '#F5567B' }};
+    --coco:{{ s.color_coconut | default: '#E7C79B' }};
+    --blue:{{ s.color_blueras | default: '#3FA9E8' }};
+    --rule-c:{{ s.color_rule | default: '#39220f' }};
+    --wrap:{{ s.wrap_max | default: 1080 }}px;
+    --rad:{{ rad }}px;
+    --display:'Archivo Black','Josefin Sans',system-ui,sans-serif;
+    --serif:'Josefin Sans',system-ui,sans-serif;
+    --rule:2px solid var(--rule-c);
+    background:var(--bg);color:var(--ink);font-family:var(--serif);position:relative;overflow-x:clip;
+    font-size:16px;line-height:1.5;
+  }
+  #ds-{{ section.id }} *{box-sizing:border-box;}
+  #ds-{{ section.id }} .ds-wrap{max-width:var(--wrap);margin:0 auto;padding:0 18px;}
+  #ds-{{ section.id }} .ds-eyebrow{font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;display:inline-block;padding:7px 14px;border:var(--rule);border-radius:999px;background:var(--paper);color:var(--brand);}
+  #ds-{{ section.id }} .ds-h2{font-family:var(--display);font-weight:900;font-size:clamp(26px,7vw,46px);line-height:.98;letter-spacing:-.01em;text-transform:uppercase;margin:12px 0 0;color:var(--brand);text-wrap:balance;}
+  #ds-{{ section.id }} .ds-h2 em,#ds-{{ section.id }} .ds-h1 em{font-family:var(--serif);font-weight:300;font-style:italic;text-transform:none;color:var(--pop);}
+  #ds-{{ section.id }} .ds-rev{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.7,.2,1);}
+  #ds-{{ section.id }} .ds-rev.in{opacity:1;transform:none;}
+  #ds-{{ section.id }} .ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--display);font-size:15px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:17px 26px;border:var(--rule);border-radius:999px;cursor:pointer;transition:transform .14s ease,box-shadow .14s ease;background:var(--pop);color:#fff;box-shadow:4px 4px 0 var(--rule-c);width:100%;max-width:420px;}
+  #ds-{{ section.id }} .ds-btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--rule-c);}
+  @media(hover:hover){#ds-{{ section.id }} .ds-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--rule-c);}}
+
+  /* STICKY MOBILE BUY BAR */
+  #ds-{{ section.id }} .ds-sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--paper);border-top:var(--rule);box-shadow:0 -6px 20px rgba(57,34,15,.12);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px;transform:translateY(120%);transition:transform .3s ease;}
+  #ds-{{ section.id }} .ds-sticky.show{transform:none;}
+  #ds-{{ section.id }} .ds-sticky .p{display:flex;flex-direction:column;line-height:1;flex:0 0 auto;}
+  #ds-{{ section.id }} .ds-sticky .p .now{font-family:var(--display);font-size:20px;color:var(--brand);}
+  #ds-{{ section.id }} .ds-sticky .p .was{font-size:12px;text-decoration:line-through;opacity:.6;}
+  #ds-{{ section.id }} .ds-sticky .ds-btn{margin:0;flex:1;padding:14px 16px;font-size:14px;}
+  @media(min-width:900px){#ds-{{ section.id }} .ds-sticky{display:none;}}
+
+  /* HERO */
+  #ds-{{ section.id }} .ds-hero{position:relative;overflow:hidden;padding:26px 0 34px;}
+  #ds-{{ section.id }} .ds-fizz{position:absolute;inset:0;pointer-events:none;z-index:0;}
+  #ds-{{ section.id }} .ds-fizz i{position:absolute;bottom:-24px;border-radius:50%;background:var(--accent);opacity:.16;animation:dsrise{{ section.id }} linear infinite;}
+  @keyframes dsrise{{ section.id }}{0%{transform:translateY(0) scale(.6);opacity:0}12%{opacity:.22}100%{transform:translateY(-118vh) scale(1);opacity:0}}
+  #ds-{{ section.id }} .ds-hero .ds-wrap{position:relative;z-index:2;text-align:center;}
+  #ds-{{ section.id }} .ds-flag{display:inline-flex;align-items:center;gap:7px;background:var(--pop);color:#fff;border:var(--rule);border-radius:999px;font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:7px 15px;box-shadow:3px 3px 0 var(--rule-c);}
+  #ds-{{ section.id }} .ds-flag .dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:dspulse{{ section.id }} 1.5s infinite;}
+  @keyframes dspulse{{ section.id }}{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}70%{box-shadow:0 0 0 7px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+  #ds-{{ section.id }} .ds-h1{font-family:var(--display);font-weight:900;font-size:clamp(34px,11vw,68px);line-height:.9;letter-spacing:-.02em;text-transform:uppercase;margin:16px 0 0;color:var(--brand);}
+  #ds-{{ section.id }} .ds-h1 .n1{color:var(--straw);}#ds-{{ section.id }} .ds-h1 .n2{color:var(--pop);}
+  #ds-{{ section.id }} .ds-sub{font-size:clamp(16px,4.2vw,20px);margin:14px auto 0;max-width:30ch;color:var(--ink);}
+  #ds-{{ section.id }} .ds-figwrap{position:relative;margin:20px auto 0;max-width:440px;}
+  #ds-{{ section.id }} .ds-fig{position:relative;display:block;width:100%;height:auto;border:var(--rule);border-radius:calc(var(--rad) + 8px);box-shadow:8px 8px 0 var(--rule-c);background:var(--paper);will-change:transform;}
+  #ds-{{ section.id }} .ds-badge{position:absolute;z-index:3;top:-14px;right:-6px;width:clamp(78px,22vw,104px);height:clamp(78px,22vw,104px);border-radius:50%;background:var(--pop);color:#fff;border:var(--rule);box-shadow:4px 4px 0 var(--rule-c);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transform:rotate(-10deg);font-family:var(--display);line-height:.9;}
+  #ds-{{ section.id }} .ds-badge b{font-size:clamp(20px,6vw,28px);}
+  #ds-{{ section.id }} .ds-badge span{font-size:9px;letter-spacing:.08em;margin-top:3px;}
+  #ds-{{ section.id }} .ds-price{display:flex;align-items:baseline;justify-content:center;gap:12px;margin:22px 0 0;}
+  #ds-{{ section.id }} .ds-price .now{font-family:var(--display);font-size:clamp(38px,10vw,56px);color:var(--brand);line-height:1;}
+  #ds-{{ section.id }} .ds-price .was{font-size:clamp(18px,5vw,24px);text-decoration:line-through;opacity:.55;font-weight:700;}
+  #ds-{{ section.id }} .ds-save{display:inline-block;margin-top:8px;font-family:var(--display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--straw);border:var(--rule);border-radius:999px;padding:6px 13px;}
+  #ds-{{ section.id }} .ds-hero .ds-btn{margin:20px auto 0;}
+  #ds-{{ section.id }} .ds-trust{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin:18px auto 0;max-width:460px;}
+  #ds-{{ section.id }} .ds-trust span{font-family:var(--display);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--brand);display:inline-flex;align-items:center;gap:6px;}
+  #ds-{{ section.id }} .ds-trust span::before{content:'';width:16px;height:16px;border-radius:50%;background:var(--coco);border:var(--rule);flex:0 0 auto;}
+
+  /* MARQUEE */
+  #ds-{{ section.id }} .ds-marq{margin-top:26px;border-top:var(--rule);border-bottom:var(--rule);overflow:hidden;background:var(--straw);}
+  #ds-{{ section.id }} .ds-marq-t{display:flex;width:max-content;white-space:nowrap;animation:dsmarq{{ section.id }} 20s linear infinite;}
+  #ds-{{ section.id }} .ds-marq-t span{font-family:var(--display);font-size:clamp(14px,4vw,20px);text-transform:uppercase;letter-spacing:.06em;color:#fff;padding:11px 0;display:inline-flex;align-items:center;}
+  #ds-{{ section.id }} .ds-marq-t span::after{content:'';width:7px;height:7px;border-radius:50%;background:#fff;opacity:.7;margin:0 18px;}
+  @keyframes dsmarq{{ section.id }}{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* STATS */
+  #ds-{{ section.id }} .ds-stats{padding:30px 0 6px;}
+  #ds-{{ section.id }} .ds-stats-g{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  #ds-{{ section.id }} .ds-st{border:var(--rule);border-radius:var(--rad);box-shadow:4px 4px 0 var(--rule-c);padding:18px 8px;text-align:center;background:var(--paper);}
+  #ds-{{ section.id }} .ds-st .n{font-family:var(--display);font-size:clamp(22px,6vw,32px);color:var(--brand);line-height:1;}
+  #ds-{{ section.id }} .ds-st .l{font-family:var(--display);font-size:10px;letter-spacing:.06em;text-transform:uppercase;margin-top:6px;display:block;}
+  @media(max-width:560px){#ds-{{ section.id }} .ds-stats-g{grid-template-columns:repeat(2,1fr);}}
+
+  /* FLAVORS — scroll-snap carousel on mobile */
+  #ds-{{ section.id }} .ds-flav{padding:34px 0;}
+  #ds-{{ section.id }} .ds-head{text-align:center;margin-bottom:22px;}
+  #ds-{{ section.id }} .ds-track{display:grid;grid-auto-flow:column;grid-auto-columns:78%;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 18px 14px;margin:0 -18px;scrollbar-width:none;}
+  #ds-{{ section.id }} .ds-track::-webkit-scrollbar{display:none;}
+  #ds-{{ section.id }} .ds-fcard{scroll-snap-align:center;border:var(--rule);border-radius:calc(var(--rad) + 4px);box-shadow:6px 6px 0 var(--rule-c);overflow:hidden;background:var(--paper);display:flex;flex-direction:column;}
+  #ds-{{ section.id }} .ds-fcard .ph{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;border-bottom:var(--rule);}
+  #ds-{{ section.id }} .ds-fcard .ph img{width:100%;height:100%;object-fit:cover;}
+  #ds-{{ section.id }} .ds-fcard .ph .emoji{font-size:54px;}
+  #ds-{{ section.id }} .ds-fcard .b{padding:16px;text-align:center;}
+  #ds-{{ section.id }} .ds-fcard .b h3{font-family:var(--display);font-size:18px;text-transform:uppercase;margin:0;color:var(--brand);}
+  #ds-{{ section.id }} .ds-fcard .b p{font-size:14px;opacity:.82;margin:8px 0 0;}
+  #ds-{{ section.id }} .ds-dots{display:flex;justify-content:center;gap:8px;margin-top:6px;}
+  #ds-{{ section.id }} .ds-dots span{width:9px;height:9px;border-radius:50%;background:var(--paper);border:var(--rule);transition:transform .2s,background .2s;}
+  #ds-{{ section.id }} .ds-dots span.on{background:var(--pop);transform:scale(1.3);}
+  @media(min-width:760px){
+    #ds-{{ section.id }} .ds-track{grid-auto-flow:row;grid-template-columns:repeat(3,1fr);grid-auto-columns:auto;overflow:visible;margin:0;padding:0;}
+    #ds-{{ section.id }} .ds-dots{display:none;}
+  }
+
+  /* STEPS */
+  #ds-{{ section.id }} .ds-steps{padding:30px 0;}
+  #ds-{{ section.id }} .ds-steps-g{display:grid;grid-template-columns:1fr;gap:14px;margin-top:22px;}
+  #ds-{{ section.id }} .ds-step{display:flex;gap:14px;align-items:flex-start;background:var(--paper);border:var(--rule);border-radius:var(--rad);box-shadow:4px 4px 0 var(--rule-c);padding:18px;}
+  #ds-{{ section.id }} .ds-step .num{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--blue);color:#fff;border:var(--rule);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:19px;box-shadow:2px 2px 0 var(--rule-c);}
+  #ds-{{ section.id }} .ds-step h3{font-family:var(--display);font-size:16px;text-transform:uppercase;margin:2px 0 0;color:var(--brand);}
+  #ds-{{ section.id }} .ds-step p{font-size:14px;opacity:.82;margin:6px 0 0;}
+  @media(min-width:760px){#ds-{{ section.id }} .ds-steps-g{grid-template-columns:repeat(3,1fr);}}
+
+  /* LIFESTYLE */
+  #ds-{{ section.id }} .ds-life{padding:14px 0 30px;}
+  #ds-{{ section.id }} .ds-life-g{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  #ds-{{ section.id }} .ds-life-g img{width:100%;height:100%;aspect-ratio:1/1;object-fit:cover;border:var(--rule);border-radius:var(--rad);box-shadow:5px 5px 0 var(--rule-c);display:block;}
+  #ds-{{ section.id }} .ds-life-g .tall{grid-row:span 2;aspect-ratio:auto;}
+
+  /* REVIEWS */
+  #ds-{{ section.id }} .ds-revs{padding:30px 0;}
+  #ds-{{ section.id }} .ds-revs-g{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px;}
+  #ds-{{ section.id }} .ds-rc{background:var(--paper);border:var(--rule);border-radius:var(--rad);box-shadow:4px 4px 0 var(--rule-c);padding:18px;}
+  #ds-{{ section.id }} .ds-rc .stars{color:var(--pop);font-family:var(--display);letter-spacing:2px;font-size:15px;}
+  #ds-{{ section.id }} .ds-rc p{font-size:15px;margin:8px 0 10px;}
+  #ds-{{ section.id }} .ds-rc .who{font-family:var(--display);font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--brand);}
+  @media(min-width:760px){#ds-{{ section.id }} .ds-revs-g{grid-template-columns:repeat(3,1fr);}}
+
+  /* FINAL CTA */
+  #ds-{{ section.id }} .ds-final{padding:16px 0 60px;}
+  #ds-{{ section.id }} .ds-final-card{position:relative;overflow:hidden;background:var(--brand);color:#fff;border:var(--rule);border-radius:calc(var(--rad) + 10px);box-shadow:8px 8px 0 var(--rule-c);padding:clamp(34px,7vw,56px) 22px;text-align:center;}
+  #ds-{{ section.id }} .ds-final-card .ds-h2{color:#fff;}
+  #ds-{{ section.id }} .ds-final-card .ds-h2 em{color:var(--coco);}
+  #ds-{{ section.id }} .ds-final-card p{max-width:44ch;margin:14px auto 0;opacity:.92;}
+  #ds-{{ section.id }} .ds-final-card .ds-btn{margin:22px auto 0;background:var(--pop);}
+  #ds-{{ section.id }} .ds-final-card .guar{margin-top:14px;font-size:12.5px;opacity:.8;}
+
+  @media (prefers-reduced-motion: reduce){
+    #ds-{{ section.id }} .ds-rev{opacity:1;transform:none;}
+    #ds-{{ section.id }} .ds-fizz,#ds-{{ section.id }} .ds-flag .dot{display:none;animation:none;}
+    #ds-{{ section.id }} .ds-marq-t{animation:none;}
+    #ds-{{ section.id }} .ds-fig{transform:none !important;}
+  }
+</style>
+
+<section id="ds-{{ section.id }}">
+
+  {%- comment -%} ===== Sticky mobile buy bar ===== {%- endcomment -%}
+  <div class="ds-sticky" data-sticky>
+    <div class="p"><span class="now">{{ s.price_now | default: '$9.99' }}</span><span class="was">{{ s.price_was | default: '$14.98' }}</span></div>
+    <a class="ds-btn" href="{{ buy }}">{{ s.cta_text | default: 'Get the pack' }}</a>
+  </div>
+
+  {%- comment -%} ===== Hero ===== {%- endcomment -%}
+  <div class="ds-hero">
+    <div class="ds-fizz" aria-hidden="true" data-fizz></div>
+    <div class="ds-wrap">
+      <span class="ds-flag ds-rev"><span class="dot"></span>{{ s.flash_text | default: 'Limited-time bundle deal' }}</span>
+      <h1 class="ds-h1 ds-rev">{{ s.hero_title | default: '<span class="n1">3</span> Syrups.<br>The price of <span class="n2">1</span>.' }}</h1>
+      <p class="ds-sub ds-rev">{{ s.hero_sub | default: 'The Sugar-Free Dirty Soda Pack — Strawberry, Coconut &amp; Blue Raspberry. Build café-style dirty sodas at home, zero sugar.' }}</p>
+      <div class="ds-figwrap ds-rev">
+        <div class="ds-badge" aria-hidden="true"><b>{{ s.badge_top | default: '3-for-1' }}</b><span>{{ s.badge_sub | default: 'bundle' }}</span></div>
+        <img class="ds-fig" data-parallax src="{{ hero_src }}" alt="{{ s.hero_alt | default: 'Syruvia Sugar-Free Dirty Soda Pack' | escape }}" width="440" loading="eager">
+      </div>
+      <div class="ds-price ds-rev">
+        <span class="now">{{ s.price_now | default: '$9.99' }}</span>
+        <span class="was">{{ s.price_was | default: '$14.98' }}</span>
+      </div>
+      {%- if s.save_text != blank -%}<span class="ds-save ds-rev">{{ s.save_text }}</span>{%- endif -%}
+      <a class="ds-btn ds-rev" href="{{ buy }}" data-hero-cta>{{ s.cta_text | default: 'Get the pack — $9.99' }}</a>
+      <div class="ds-trust ds-rev">
+        {%- assign trust = s.trust_items | default: 'Zero sugar,3 full-size bottles,Free & easy returns,Made in the USA' | split: ',' -%}
+        {%- for t in trust -%}<span>{{ t | strip }}</span>{%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  {%- if s.show_marquee -%}
+  <div class="ds-marq" aria-hidden="true">
+    <div class="ds-marq-t">
+      {%- assign mq = s.marquee_items | default: 'Dirty Soda,Zero Sugar,Strawberry,Coconut,Blue Raspberry,3 for the price of 1' | split: ',' -%}
+      {%- for r in (1..2) -%}{%- for m in mq -%}<span>{{ m | strip }}</span>{%- endfor -%}{%- endfor -%}
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if s.show_stats -%}
+  <div class="ds-stats">
+    <div class="ds-wrap">
+      <div class="ds-stats-g">
+        <div class="ds-st ds-rev"><span class="n ds-count">3</span><span class="l">{{ s.stat1 | default: 'Bottles' }}</span></div>
+        <div class="ds-st ds-rev"><span class="n">0g</span><span class="l">{{ s.stat2 | default: 'Sugar' }}</span></div>
+        <div class="ds-st ds-rev"><span class="n ds-count">750</span><span class="l">{{ s.stat3 | default: 'ml each' }}</span></div>
+        <div class="ds-st ds-rev"><span class="n">{{ s.price_now | default: '$9.99' }}</span><span class="l">{{ s.stat4 | default: 'Today' }}</span></div>
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- assign flavors = section.blocks | where: 'type', 'flavor' -%}
+  {%- if flavors.size > 0 -%}
+  <div class="ds-flav">
+    <div class="ds-wrap">
+      <div class="ds-head ds-rev">
+        <span class="ds-eyebrow">{{ s.flav_eyebrow | default: 'What&rsquo;s inside' }}</span>
+        <h2 class="ds-h2">{{ s.flav_title | default: 'Three flavors, <em>one pour away</em>.' }}</h2>
+      </div>
+      <div class="ds-track" data-track>
+        {%- for b in flavors -%}
+        <div class="ds-fcard ds-rev" {{ b.shopify_attributes }}>
+          <div class="ph" style="background:{{ b.settings.color | default: '#F5567B' }};">
+            {%- if b.settings.image != blank -%}<img src="{{ b.settings.image | image_url: width: 640 }}" alt="{{ b.settings.name | escape }}" loading="lazy">
+            {%- elsif b.settings.emoji != blank -%}<span class="emoji">{{ b.settings.emoji }}</span>{%- endif -%}
+          </div>
+          <div class="b"><h3>{{ b.settings.name }}</h3>{%- if b.settings.note != blank -%}<p>{{ b.settings.note }}</p>{%- endif -%}</div>
+        </div>
+        {%- endfor -%}
+      </div>
+      <div class="ds-dots" data-dots>{%- for b in flavors -%}<span></span>{%- endfor -%}</div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if s.show_steps -%}
+  <div class="ds-steps">
+    <div class="ds-wrap">
+      <div class="ds-head ds-rev">
+        <span class="ds-eyebrow">{{ s.steps_eyebrow | default: 'So easy' }}</span>
+        <h2 class="ds-h2">{{ s.steps_title | default: 'Make a dirty soda in <em>3 steps</em>.' }}</h2>
+      </div>
+      <div class="ds-steps-g">
+        <div class="ds-step ds-rev"><span class="num">1</span><div><h3>{{ s.step1_t | default: 'Pour soda' }}</h3><p>{{ s.step1_p | default: 'Fill a tall glass with ice and your favorite soda or sparkling water.' }}</p></div></div>
+        <div class="ds-step ds-rev"><span class="num">2</span><div><h3>{{ s.step2_t | default: 'Add syrup' }}</h3><p>{{ s.step2_p | default: 'Add a splash of Strawberry, Coconut or Blue Raspberry — mix &amp; match.' }}</p></div></div>
+        <div class="ds-step ds-rev"><span class="num">3</span><div><h3>{{ s.step3_t | default: 'Top with cream' }}</h3><p>{{ s.step3_p | default: 'Finish with a splash of cream, stir, and sip your café-style dirty soda.' }}</p></div></div>
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if s.show_lifestyle -%}
+    {%- if s.life_1 != blank -%}{%- assign l1 = s.life_1 | image_url: width: 700 -%}{%- else -%}{%- assign l1 = cdn | append: 'MixB.webp?v=1779627985' -%}{%- endif -%}
+    {%- if s.life_2 != blank -%}{%- assign l2 = s.life_2 | image_url: width: 700 -%}{%- else -%}{%- assign l2 = cdn | append: '0Sugar.webp?v=1779628340' -%}{%- endif -%}
+    {%- if s.life_3 != blank -%}{%- assign l3 = s.life_3 | image_url: width: 700 -%}{%- else -%}{%- assign l3 = cdn | append: 'SyruviaBrandImageForFrutySugarFreeFlavors.webp?v=1779628340' -%}{%- endif -%}
+  <div class="ds-life">
+    <div class="ds-wrap">
+      <div class="ds-life-g">
+        <img class="tall ds-rev" src="{{ l1 }}" alt="Dirty soda made with Syruvia" loading="lazy">
+        <img class="ds-rev" src="{{ l2 }}" alt="Zero sugar" loading="lazy">
+        <img class="ds-rev" src="{{ l3 }}" alt="Syruvia fruity sugar-free flavors" loading="lazy">
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- assign revs = section.blocks | where: 'type', 'review' -%}
+  {%- if revs.size > 0 -%}
+  <div class="ds-revs">
+    <div class="ds-wrap">
+      <div class="ds-head ds-rev">
+        <span class="ds-eyebrow">{{ s.revs_eyebrow | default: 'Loved by soda fans' }}</span>
+        <h2 class="ds-h2">{{ s.revs_title | default: 'People are <em>obsessed</em>.' }}</h2>
+      </div>
+      <div class="ds-revs-g">
+        {%- for b in revs -%}
+        <div class="ds-rc ds-rev" {{ b.shopify_attributes }}>
+          <div class="stars" aria-hidden="true">{{ b.settings.stars | default: '★★★★★' }}</div>
+          <p>{{ b.settings.text }}</p>
+          <span class="who">{{ b.settings.who }}</span>
+        </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  <div class="ds-final">
+    <div class="ds-wrap">
+      <div class="ds-final-card ds-rev">
+        <span class="ds-eyebrow" style="background:var(--coco);">{{ s.final_eyebrow | default: 'Grab it before it&rsquo;s gone' }}</span>
+        <h2 class="ds-h2">{{ s.final_title | default: '3 syrups. <em>$9.99.</em> Done.' }}</h2>
+        <p>{{ s.final_sub | default: 'Strawberry, Coconut &amp; Blue Raspberry — all sugar-free, all yours for the price of a single bottle. While stocks last.' }}</p>
+        <a class="ds-btn" href="{{ buy }}">{{ s.cta_text | default: 'Get the pack — $9.99' }}</a>
+        {%- if s.guarantee != blank -%}<div class="guar">{{ s.guarantee }}</div>{%- endif -%}
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('ds-{{ section.id }}');
+  if(!root) return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // fizz bubbles (hero) — CSS-animated, generated once
+  var fizz=root.querySelector('[data-fizz]');
+  if(fizz&&!reduce){
+    var n=10, html='';
+    for(var i=0;i<n;i++){
+      var sz=8+((i*7)%26), left=(i*11+5)%100, dur=7+((i*13)%9), delay=-(i*1.3);
+      html+='<i style="left:'+left+'%;width:'+sz+'px;height:'+sz+'px;animation-duration:'+dur+'s;animation-delay:'+delay+'s;"></i>';
+    }
+    fizz.innerHTML=html;
+  }
+
+  // reveal + count-up
+  function countUp(el){
+    if(el.__c) return; var m=(el.textContent||'').trim().match(/^(\d+)(\D*)$/); if(!m) return; el.__c=1;
+    var target=parseInt(m[1],10),suf=m[2]||'',start=null,dur=1000;
+    function step(ts){ if(!start)start=ts; var p=Math.min((ts-start)/dur,1),e=1-Math.pow(1-p,3); el.textContent=Math.round(e*target)+suf; if(p<1)requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); var c=e.target.querySelector('.ds-count'); if(c)countUp(c); io.unobserve(e.target); } });},{threshold:.14});
+    root.querySelectorAll('.ds-rev').forEach(function(el){io.observe(el);});
+  } else { root.querySelectorAll('.ds-rev').forEach(function(el){el.classList.add('in');}); }
+
+  // sticky buy bar: show after hero CTA scrolls out of view
+  var bar=root.querySelector('[data-sticky]'), heroCta=root.querySelector('[data-hero-cta]');
+  if(bar&&heroCta&&'IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ es.forEach(function(e){ bar.classList.toggle('show', !e.isIntersecting && e.boundingClientRect.top<0); }); },{threshold:0}).observe(heroCta);
+  }
+
+  // flavor carousel dots (mobile)
+  var track=root.querySelector('[data-track]'), dots=[].slice.call((root.querySelector('[data-dots]')||root).querySelectorAll('span'));
+  if(track&&dots.length){
+    var cards=[].slice.call(track.children);
+    track.addEventListener('scroll',function(){
+      var c=track.scrollLeft+track.clientWidth/2, best=0, bd=1e9;
+      cards.forEach(function(el,i){ var mid=el.offsetLeft+el.offsetWidth/2, d=Math.abs(mid-c); if(d<bd){bd=d;best=i;} });
+      dots.forEach(function(d,i){ d.classList.toggle('on', i===best); });
+    },{passive:true});
+    if(dots[0]) dots[0].classList.add('on');
+  }
+
+  // light hero parallax (desktop only, rAF-throttled) — kept subtle & disabled on touch/reduced-motion
+  var fig=root.querySelector('[data-parallax]');
+  if(fig&&!reduce&&window.matchMedia('(hover:hover)').matches){
+    var ticking=false;
+    function upd(){ ticking=false; var r=fig.getBoundingClientRect(), vh=window.innerHeight; if(r.bottom<0||r.top>vh) return; var p=(r.top+r.height/2-vh/2)/vh; fig.style.transform='translateY('+(p*-14).toFixed(1)+'px)'; }
+    window.addEventListener('scroll',function(){ if(!ticking){ticking=true;requestAnimationFrame(upd);} },{passive:true});
+    upd();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Dirty Soda Landing",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Offer & buy button" },
+    { "type": "url", "id": "buy_url", "label": "Buy button link (product or /cart/VARIANT:1)" },
+    { "type": "text", "id": "cta_text", "label": "Button text", "default": "Get the pack — $9.99" },
+    { "type": "text", "id": "price_now", "label": "Deal price", "default": "$9.99" },
+    { "type": "text", "id": "price_was", "label": "Compare-at price", "default": "$14.98" },
+    { "type": "text", "id": "save_text", "label": "Save badge", "default": "You save 33% — 3 for the price of 1" },
+    { "type": "header", "content": "Brand colors" },
+    { "type": "color", "id": "color_ink", "label": "Body text", "default": "#1a1a1a" },
+    { "type": "color", "id": "color_brand", "label": "Headings", "default": "#39220f" },
+    { "type": "color", "id": "color_bg", "label": "Page background", "default": "#FFFBF4" },
+    { "type": "color", "id": "color_paper", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "color_accent", "label": "Accent", "default": "#c58548" },
+    { "type": "color", "id": "color_pop", "label": "CTA / highlight", "default": "#FF6B5C" },
+    { "type": "color", "id": "color_strawberry", "label": "Strawberry", "default": "#F5567B" },
+    { "type": "color", "id": "color_coconut", "label": "Coconut", "default": "#E7C79B" },
+    { "type": "color", "id": "color_blueras", "label": "Blue Raspberry", "default": "#3FA9E8" },
+    { "type": "color", "id": "color_rule", "label": "Borders & shadows", "default": "#39220f" },
+    { "type": "range", "id": "wrap_max", "label": "Content width", "min": 900, "max": 1280, "step": 20, "unit": "px", "default": 1080 },
+    { "type": "range", "id": "card_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Hero" },
+    { "type": "image_picker", "id": "hero_image", "label": "Pack image (defaults to product photo)" },
+    { "type": "text", "id": "hero_alt", "label": "Pack image alt text", "default": "Syruvia Sugar-Free Dirty Soda Pack" },
+    { "type": "text", "id": "flash_text", "label": "Flash badge", "default": "Limited-time bundle deal" },
+    { "type": "html", "id": "hero_title", "label": "Hero title (HTML)", "default": "<span class=\"n1\">3</span> Syrups.<br>The price of <span class=\"n2\">1</span>." },
+    { "type": "textarea", "id": "hero_sub", "label": "Hero subtitle", "default": "The Sugar-Free Dirty Soda Pack — Strawberry, Coconut & Blue Raspberry. Build café-style dirty sodas at home, zero sugar." },
+    { "type": "text", "id": "badge_top", "label": "Corner badge top", "default": "3-for-1" },
+    { "type": "text", "id": "badge_sub", "label": "Corner badge sub", "default": "bundle" },
+    { "type": "text", "id": "trust_items", "label": "Trust items (comma separated)", "default": "Zero sugar,3 full-size bottles,Free & easy returns,Made in the USA" },
+    { "type": "header", "content": "Marquee" },
+    { "type": "checkbox", "id": "show_marquee", "label": "Show marquee", "default": true },
+    { "type": "text", "id": "marquee_items", "label": "Items (comma separated)", "default": "Dirty Soda,Zero Sugar,Strawberry,Coconut,Blue Raspberry,3 for the price of 1" },
+    { "type": "header", "content": "Stats strip" },
+    { "type": "checkbox", "id": "show_stats", "label": "Show stats", "default": true },
+    { "type": "text", "id": "stat1", "label": "Stat 1 label", "default": "Bottles" },
+    { "type": "text", "id": "stat2", "label": "Stat 2 label", "default": "Sugar" },
+    { "type": "text", "id": "stat3", "label": "Stat 3 label", "default": "ml each" },
+    { "type": "text", "id": "stat4", "label": "Stat 4 label", "default": "Today" },
+    { "type": "header", "content": "Flavors (add Flavor blocks)" },
+    { "type": "text", "id": "flav_eyebrow", "label": "Eyebrow", "default": "What’s inside" },
+    { "type": "text", "id": "flav_title", "label": "Heading", "default": "Three flavors, <em>one pour away</em>." },
+    { "type": "header", "content": "How-to steps" },
+    { "type": "checkbox", "id": "show_steps", "label": "Show steps", "default": true },
+    { "type": "text", "id": "steps_eyebrow", "label": "Eyebrow", "default": "So easy" },
+    { "type": "text", "id": "steps_title", "label": "Heading", "default": "Make a dirty soda in <em>3 steps</em>." },
+    { "type": "text", "id": "step1_t", "label": "Step 1 title", "default": "Pour soda" },
+    { "type": "textarea", "id": "step1_p", "label": "Step 1 text", "default": "Fill a tall glass with ice and your favorite soda or sparkling water." },
+    { "type": "text", "id": "step2_t", "label": "Step 2 title", "default": "Add syrup" },
+    { "type": "textarea", "id": "step2_p", "label": "Step 2 text", "default": "Add a splash of Strawberry, Coconut or Blue Raspberry — mix & match." },
+    { "type": "text", "id": "step3_t", "label": "Step 3 title", "default": "Top with cream" },
+    { "type": "textarea", "id": "step3_p", "label": "Step 3 text", "default": "Finish with a splash of cream, stir, and sip your café-style dirty soda." },
+    { "type": "header", "content": "Lifestyle photos" },
+    { "type": "checkbox", "id": "show_lifestyle", "label": "Show lifestyle photos", "default": true },
+    { "type": "image_picker", "id": "life_1", "label": "Photo 1 (tall)" },
+    { "type": "image_picker", "id": "life_2", "label": "Photo 2" },
+    { "type": "image_picker", "id": "life_3", "label": "Photo 3" },
+    { "type": "header", "content": "Reviews (add Review blocks)" },
+    { "type": "text", "id": "revs_eyebrow", "label": "Eyebrow", "default": "Loved by soda fans" },
+    { "type": "text", "id": "revs_title", "label": "Heading", "default": "People are <em>obsessed</em>." },
+    { "type": "header", "content": "Final CTA" },
+    { "type": "text", "id": "final_eyebrow", "label": "Eyebrow", "default": "Grab it before it’s gone" },
+    { "type": "text", "id": "final_title", "label": "Heading", "default": "3 syrups. <em>$9.99.</em> Done." },
+    { "type": "textarea", "id": "final_sub", "label": "Text", "default": "Strawberry, Coconut & Blue Raspberry — all sugar-free, all yours for the price of a single bottle. While stocks last." },
+    { "type": "text", "id": "guarantee", "label": "Guarantee line", "default": "Free & easy returns · Ships from the USA" }
+  ],
+  "blocks": [
+    {
+      "type": "flavor",
+      "name": "Flavor",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image (optional)" },
+        { "type": "text", "id": "emoji", "label": "Emoji (if no image)", "default": "🍓" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Strawberry" },
+        { "type": "textarea", "id": "note", "label": "Note", "default": "Juicy, candy-sweet and bright — the classic dirty soda base." },
+        { "type": "color", "id": "color", "label": "Card color", "default": "#F5567B" }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "text", "id": "stars", "label": "Stars", "default": "★★★★★" },
+        { "type": "textarea", "id": "text", "label": "Review", "default": "Tastes just like my favorite soda shop — and no sugar crash!" },
+        { "type": "text", "id": "who", "label": "Name", "default": "Sarah M." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dirty Soda Landing",
+      "blocks": [
+        { "type": "flavor", "settings": { "emoji": "🍓", "name": "Strawberry", "note": "Juicy, candy-sweet and bright — the classic dirty soda base.", "color": "#F5567B" } },
+        { "type": "flavor", "settings": { "emoji": "🥥", "name": "Coconut", "note": "Smooth, creamy and tropical — the “dirty” in your dirty soda.", "color": "#E7C79B" } },
+        { "type": "flavor", "settings": { "emoji": "🫐", "name": "Blue Raspberry", "note": "Bold, candy-like and fun — a vivid blue kick of flavor.", "color": "#3FA9E8" } },
+        { "type": "review", "settings": { "stars": "★★★★★", "text": "Tastes just like my favorite soda shop — and no sugar crash!", "who": "Sarah M." } },
+        { "type": "review", "settings": { "stars": "★★★★★", "text": "Three bottles for the price of one? Grabbed two packs instantly.", "who": "Danielle R." } },
+        { "type": "review", "settings": { "stars": "★★★★★", "text": "My kids love making their own dirty sodas. Zero sugar is a win.", "who": "Marcus T." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
