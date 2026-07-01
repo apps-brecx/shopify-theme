@@ -1,5 +1,3 @@
-{% layout 'theme' %}
-
 {{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
 {% render 'pd-fixes' %}
 {% render 'pd-tweaks' %}
@@ -11,18 +9,53 @@
 {% render 'pd-cat-extras' %}
 {% render 'pd-sale-display' %}
 
-<style>
-.pd-slider-mobile{display:none}.pd-slider-dots{display:none}
-@media (max-width:760px){
-  .pd-hero-frame{display:none!important}.pd-thumbs{display:none!important}
-  .pd-slider-mobile{display:block!important;position:relative;background:#FFFBF4;border:2px solid #1a1a1a;border-radius:20px;padding:0;box-shadow:4px 4px 0 #1a1a1a;overflow:hidden;max-width:340px;margin:0 auto}
-  .pd-slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%;position:relative;z-index:0}
-  .pd-slides::-webkit-scrollbar{display:none}.pd-slide{flex:0 0 100%;scroll-snap-align:start;min-width:100%}
-  .pd-slide img{width:100%;height:auto;display:block;aspect-ratio:1/1;object-fit:cover}
-  .pd-slider-dots{display:flex!important;justify-content:center;gap:5px;margin-top:10px}
-}
-html body .pd .pd-price-row{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important}
-</style>
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pd-text: {{ section.settings.text_primary }};
+    --pd-brand: {{ section.settings.text_brand }};
+    --pd-bg: {{ section.settings.bg_section }};
+    --pd-accent: {{ section.settings.accent_color }};
+    --pd-star: {{ section.settings.star_color }};
+    --pd-cta-bg: {{ section.settings.cta_color_bg }};
+    --pd-cta-text: {{ section.settings.cta_color_text }};
+    --pd-marquee-bg: {{ section.settings.marquee_bg }};
+    --pd-marquee-text: {{ section.settings.marquee_text }};
+    --pd-desc-bg: {{ section.settings.desc_bg }};
+    --pd-why-bg: {{ section.settings.why_bg }};
+    --pd-sale-bg: {{ section.settings.sale_badge_bg }};
+    --pd-sale-text: {{ section.settings.sale_badge_text }};
+    --pd-sticky-bg: {{ section.settings.sticky_bg }};
+    --pd-sticky-text: {{ section.settings.sticky_text }};
+  }
+
+  #shopify-section-{{ section.id }} .pd { background: var(--pd-bg) !important; color: var(--pd-text) !important; }
+
+  #shopify-section-{{ section.id }} .pd-slider-mobile { display: none; }
+  #shopify-section-{{ section.id }} .pd-slider-dots { display: none; }
+  @media (max-width:760px){
+    #shopify-section-{{ section.id }} .pd-hero-frame { display: none !important; }
+    #shopify-section-{{ section.id }} .pd-thumbs { display: none !important; }
+    #shopify-section-{{ section.id }} .pd-slider-mobile { display: block !important; position: relative; background: #FFFBF4; border: 2px solid #1a1a1a; border-radius: 20px; padding: 0; box-shadow: 4px 4px 0 #1a1a1a; overflow: hidden; max-width: 340px; margin: 0 auto; }
+    #shopify-section-{{ section.id }} .pd-slides { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; width: 100%; position: relative; z-index: 0; }
+    #shopify-section-{{ section.id }} .pd-slides::-webkit-scrollbar { display: none; }
+    #shopify-section-{{ section.id }} .pd-slide { flex: 0 0 100%; scroll-snap-align: start; min-width: 100%; }
+    #shopify-section-{{ section.id }} .pd-slide img { width: 100%; height: auto; display: block; aspect-ratio: 1/1; object-fit: cover; }
+    #shopify-section-{{ section.id }} .pd-slider-dots { display: flex !important; justify-content: center; gap: 5px; margin-top: 10px; }
+  }
+  #shopify-section-{{ section.id }} .pd .pd-price-row { display: flex !important; align-items: center !important; gap: 10px !important; flex-wrap: wrap !important; }
+
+  /* Section theming */
+  #shopify-section-{{ section.id }} .pd-h1, #shopify-section-{{ section.id }} .pd-h2 { color: var(--pd-brand) !important; }
+  #shopify-section-{{ section.id }} .pd-stars svg { fill: var(--pd-star) !important; stroke: var(--pd-star) !important; }
+  #shopify-section-{{ section.id }} .pd-atc, #shopify-section-{{ section.id }} .pd-stickybar .pd-atc { background: var(--pd-cta-bg) !important; color: var(--pd-cta-text) !important; }
+  #shopify-section-{{ section.id }} .pd-marquee { background: var(--pd-marquee-bg) !important; color: var(--pd-marquee-text) !important; }
+  #shopify-section-{{ section.id }} .pd-marquee-track span { color: var(--pd-marquee-text) !important; }
+  #shopify-section-{{ section.id }} .pd-description { background: var(--pd-desc-bg) !important; }
+  #shopify-section-{{ section.id }} .pd-why { background: var(--pd-why-bg) !important; }
+  #shopify-section-{{ section.id }} .pd-sale-badge { background: var(--pd-sale-bg) !important; color: var(--pd-sale-text) !important; }
+  #shopify-section-{{ section.id }} .pd-stickybar { background: var(--pd-sticky-bg) !important; }
+  #shopify-section-{{ section.id }} .pd-stickybar .pd-price { color: var(--pd-sticky-text) !important; }
+{% endstyle %}
 
 {%- assign hero_img = product.featured_media.preview_image -%}
 {%- assign hero_src = hero_img | image_url: width: 1400 -%}
@@ -60,9 +93,9 @@ html body .pd .pd-price-row{display:flex!important;align-items:center!important;
   <nav class="pd-breadcrumbs" aria-label="Breadcrumb">
     <div class="pd-wrap">
       <ol>
-        <li><a href="/">Home</a></li>
+        <li><a href="/">{{ section.settings.breadcrumb_home }}</a></li>
         <li class="pd-bc-sep" aria-hidden="true">/</li>
-        <li><a href="/collections/variety-packs">Variety Packs</a></li>
+        <li><a href="/collections/variety-packs">{{ section.settings.breadcrumb_category }}</a></li>
         <li class="pd-bc-sep" aria-hidden="true">/</li>
         <li class="pd-bc-current">{{ product.title }}</li>
       </ol>
@@ -100,7 +133,7 @@ html body .pd .pd-price-row{display:flex!important;align-items:center!important;
         <div class="pd-hero-info">
           <a href="#reviews" class="pd-rating-row">
             <span class="pd-stars" aria-hidden="true">
-              {%- for i in (1..5) -%}<svg viewBox="0 0 24 24" fill="#FF6B5C" stroke="#FF6B5C" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>{%- endfor -%}
+              {%- for i in (1..5) -%}<svg viewBox="0 0 24 24" fill="{{ section.settings.star_color }}" stroke="{{ section.settings.star_color }}" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>{%- endfor -%}
             </span>
             <span class="pd-rating-text">{{ review_count }} reviews</span>
           </a>
@@ -225,22 +258,22 @@ html body .pd .pd-price-row{display:flex!important;align-items:center!important;
       <h2 class="pd-h2 pd-why-h2">A tour of <em>flavor</em>.</h2>
       <div class="pd-why-grid pd-why-grid--spaced">
         <div class="pd-why-card pd-why-card--peach">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10 H21"/><path d="M9 6 V3 a1 1 0 0 1 1 -1 H14 a1 1 0 0 1 1 1 V6"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10 H21"/><path d="M9 6 V3 a1 1 0 0 1 1 -1 H14 a1 1 0 0 1 1 1 V6"/></svg></div>
           <h3 class="pd-why-title">Bestseller Lineup</h3>
           <p class="pd-why-body">Hand-picked flavors that work together. No filler. Every bottle pulls its weight.</p>
         </div>
         <div class="pd-why-card pd-why-card--butter">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L14.5 8 L21 9 L16.5 13.5 L17.5 20 L12 16.5 L6.5 20 L7.5 13.5 L3 9 L9.5 8 Z"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L14.5 8 L21 9 L16.5 13.5 L17.5 20 L12 16.5 L6.5 20 L7.5 13.5 L3 9 L9.5 8 Z"/></svg></div>
           <h3 class="pd-why-title">Save vs Singles</h3>
           <p class="pd-why-body">Bundle price built in. Always less than the same bottles one-by-one.</p>
         </div>
         <div class="pd-why-card pd-why-card--mint">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12 V21 H4 V12 M2 7 H22 V12 H2 Z M12 22 V7 M12 7 C 10 4, 6 4, 6 7 C 6 8, 8 8, 12 7 M12 7 C 14 4, 18 4, 18 7 C 18 8, 16 8, 12 7"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12 V21 H4 V12 M2 7 H22 V12 H2 Z M12 22 V7 M12 7 C 10 4, 6 4, 6 7 C 6 8, 8 8, 12 7 M12 7 C 14 4, 18 4, 18 7 C 18 8, 16 8, 12 7"/></svg></div>
           <h3 class="pd-why-title">Gift-Ready</h3>
           <p class="pd-why-body">Presentable as-is. A great drop for a coffee lover, or split it between friends.</p>
         </div>
         <div class="pd-why-card pd-why-card--sky">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg></div>
           <h3 class="pd-why-title">Café Quality</h3>
           <p class="pd-why-body">Same real-flavor Syruvia recipes inside. Pure cane sugar, no funky aftertaste.</p>
         </div>
@@ -381,3 +414,46 @@ window.PD_TIERS = [1, 0.95, 0.90, 0.85];
   if(mainAtc&&stickyBar&&'IntersectionObserver' in window){const io=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)stickyBar.classList.add('is-hidden');else stickyBar.classList.remove('is-hidden');});},{threshold:0.15}); io.observe(mainAtc);}
 })();
 </script>
+
+{% schema %}
+{
+  "name": "Variety Pack Page",
+  "tag": "section",
+  "class": "section-variety-pack-page",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    { "type": "header", "content": "Core colors" },
+    { "type": "color", "id": "text_primary", "label": "Primary text color", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_brand", "label": "Brand color (headings, icons)", "default": "#1a1a1a" },
+    { "type": "color", "id": "bg_section", "label": "Page background", "default": "#FFF8EE" },
+    { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#c58548" },
+    { "type": "color", "id": "star_color", "label": "Review star color", "default": "#FF6B5C" },
+    { "type": "color", "id": "cta_color_bg", "label": "Add to cart button background", "default": "#1a1a1a" },
+    { "type": "color", "id": "cta_color_text", "label": "Add to cart button text", "default": "#FFFBF4" },
+
+    { "type": "header", "content": "Marquee" },
+    { "type": "color", "id": "marquee_bg", "label": "Marquee background", "default": "#1a1a1a" },
+    { "type": "color", "id": "marquee_text", "label": "Marquee text", "default": "#FFFBF4" },
+
+    { "type": "header", "content": "Description section" },
+    { "type": "color", "id": "desc_bg", "label": "Description background", "default": "#FFF8EE" },
+
+    { "type": "header", "content": "Why section" },
+    { "type": "color", "id": "why_bg", "label": "Why section background", "default": "#FFF8EE" },
+
+    { "type": "header", "content": "Sale badge" },
+    { "type": "color", "id": "sale_badge_bg", "label": "Sale badge background", "default": "#FF6B5C" },
+    { "type": "color", "id": "sale_badge_text", "label": "Sale badge text", "default": "#FFFBF4" },
+
+    { "type": "header", "content": "Sticky bar" },
+    { "type": "color", "id": "sticky_bg", "label": "Sticky bar background", "default": "#FFFBF4" },
+    { "type": "color", "id": "sticky_text", "label": "Sticky bar price text", "default": "#1a1a1a" },
+
+    { "type": "header", "content": "Breadcrumbs" },
+    { "type": "text", "id": "breadcrumb_home", "label": "Home label", "default": "Home" },
+    { "type": "text", "id": "breadcrumb_category", "label": "Category label", "default": "Variety Packs" }
+  ]
+}
+{% endschema %}

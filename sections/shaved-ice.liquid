@@ -1,5 +1,3 @@
-{% layout 'theme' %}
-
 {{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
 {% render 'pd-fixes' %}
 {% render 'pd-tweaks' %}
@@ -10,27 +8,8 @@
 {% render 'pd-cat-styles' %}
 {% render 'pd-cat-extras' %}
 
-<style>
-.pd-slider-mobile{display:none}.pd-slider-dots{display:none}
-@media (max-width:760px){
-  .pd-hero-frame{display:none!important}.pd-thumbs{display:none!important}
-  .pd-slider-mobile{display:block!important;position:relative;background:#FFFBF4;border:2px solid #1a1a1a;border-radius:20px;padding:0;box-shadow:4px 4px 0 #1a1a1a;overflow:hidden;max-width:340px;margin:0 auto}
-  .pd-slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%;position:relative;z-index:0}
-  .pd-slides::-webkit-scrollbar{display:none}.pd-slide{flex:0 0 100%;scroll-snap-align:start;min-width:100%}
-  .pd-slide img{width:100%;height:auto;display:block;aspect-ratio:1/1;object-fit:cover}
-  .pd-slider-dots{display:flex!important;justify-content:center;gap:5px;margin-top:10px}
-}
-html body .pd .pd-price-row{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important}
-
-/* ========= Shaved Ice flavor color theming ========= */
-.pd-si-hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 30% 20%, var(--si-glow,#FFD4B8) 0%, transparent 55%),radial-gradient(ellipse at 75% 80%, var(--si-glow2,#B8DCEB) 0%, transparent 60%);opacity:.65;pointer-events:none}
-html body .pd .pd-si-chip{background:var(--si-chip,#FFD4B8)!important}
-html body .pd .pd-cat-recipes{background:var(--si-band,#FCE2A0)!important}
-</style>
-
 {%- assign hero_img = product.featured_media.preview_image -%}
 {%- assign hero_src = hero_img | image_url: width: 1400 -%}
-<link rel="preload" as="image" href="{{ hero_src }}" imagesrcset="{{ hero_img | image_url: width: 600 }} 600w, {{ hero_img | image_url: width: 1000 }} 1000w, {{ hero_img | image_url: width: 1400 }} 1400w" imagesizes="(max-width: 980px) 100vw, 600px" fetchpriority="high">
 
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 {%- assign price = current_variant.price -%}
@@ -41,7 +20,7 @@ html body .pd .pd-cat-recipes{background:var(--si-band,#FCE2A0)!important}
 {%- assign is_sf = false -%}
 {%- if t_lc contains 'sugar-free' or t_lc contains 'sugar free' -%}{%- assign is_sf = true -%}{%- endif -%}
 
-{%- comment -%} ===== Flavor color theming ===== {%- endcomment -%}
+{%- comment -%} ===== Flavor color theming (auto, based on product title) ===== {%- endcomment -%}
 {%- assign si_main = '#FFD4B8' -%}
 {%- assign si_accent = '#FCE2A0' -%}
 {%- assign si_glow = '#FFD4B8' -%}
@@ -73,18 +52,74 @@ html body .pd .pd-cat-recipes{background:var(--si-band,#FCE2A0)!important}
   {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#E85541' -%}{%- assign si_glow = '#FFD4B8' -%}{%- assign si_glow2 = '#F5C7BE' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'fruit punch' -%}
 {%- endif -%}
 
-<style>
-  :root{--si-main:{{ si_main }};--si-accent:{{ si_accent }};--si-glow:{{ si_glow }};--si-glow2:{{ si_glow2 }};--si-band:{{ si_band }};--si-chip:{{ si_main }}}
-</style>
+{% style %}
+  #shopify-section-{{ section.id }} {
+    /* Editable colors */
+    --pd-text: {{ section.settings.text_primary }};
+    --pd-brand: {{ section.settings.text_brand }};
+    --pd-bg: {{ section.settings.bg_section }};
+    --pd-accent: {{ section.settings.accent_color }};
+    --pd-star: {{ section.settings.star_color }};
+    --pd-cta-bg: {{ section.settings.cta_color_bg }};
+    --pd-cta-text: {{ section.settings.cta_color_text }};
+    --pd-marquee-bg: {{ section.settings.marquee_bg }};
+    --pd-marquee-text: {{ section.settings.marquee_text }};
+    --pd-desc-bg: {{ section.settings.desc_bg }};
+    --pd-why-bg: {{ section.settings.why_bg }};
+    --pd-sticky-bg: {{ section.settings.sticky_bg }};
+    --pd-sticky-text: {{ section.settings.sticky_text }};
+
+    /* Auto flavor palette (set from product title) */
+    --si-main: {{ si_main }};
+    --si-accent: {{ si_accent }};
+    --si-glow: {{ si_glow }};
+    --si-glow2: {{ si_glow2 }};
+    --si-band: {{ si_band }};
+    --si-chip: {{ si_main }};
+  }
+
+  #shopify-section-{{ section.id }} .pd { background: var(--pd-bg) !important; color: var(--pd-text) !important; }
+
+  #shopify-section-{{ section.id }} .pd-slider-mobile { display: none; }
+  #shopify-section-{{ section.id }} .pd-slider-dots { display: none; }
+  @media (max-width:760px){
+    #shopify-section-{{ section.id }} .pd-hero-frame { display: none !important; }
+    #shopify-section-{{ section.id }} .pd-thumbs { display: none !important; }
+    #shopify-section-{{ section.id }} .pd-slider-mobile { display: block !important; position: relative; background: #FFFBF4; border: 2px solid #1a1a1a; border-radius: 20px; padding: 0; box-shadow: 4px 4px 0 #1a1a1a; overflow: hidden; max-width: 340px; margin: 0 auto; }
+    #shopify-section-{{ section.id }} .pd-slides { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; width: 100%; position: relative; z-index: 0; }
+    #shopify-section-{{ section.id }} .pd-slides::-webkit-scrollbar { display: none; }
+    #shopify-section-{{ section.id }} .pd-slide { flex: 0 0 100%; scroll-snap-align: start; min-width: 100%; }
+    #shopify-section-{{ section.id }} .pd-slide img { width: 100%; height: auto; display: block; aspect-ratio: 1/1; object-fit: cover; }
+    #shopify-section-{{ section.id }} .pd-slider-dots { display: flex !important; justify-content: center; gap: 5px; margin-top: 10px; }
+  }
+  #shopify-section-{{ section.id }} .pd .pd-price-row { display: flex !important; align-items: center !important; gap: 10px !important; flex-wrap: wrap !important; }
+
+  /* Auto flavor theming */
+  #shopify-section-{{ section.id }} .pd-si-hero-bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse at 30% 20%, var(--si-glow) 0%, transparent 55%), radial-gradient(ellipse at 75% 80%, var(--si-glow2) 0%, transparent 60%); opacity: .65; pointer-events: none; }
+  #shopify-section-{{ section.id }} .pd .pd-si-chip { background: var(--si-chip) !important; }
+  #shopify-section-{{ section.id }} .pd .pd-cat-recipes { background: var(--si-band) !important; }
+
+  /* Editable section theming */
+  #shopify-section-{{ section.id }} .pd-stars svg { fill: var(--pd-star) !important; stroke: var(--pd-star) !important; }
+  #shopify-section-{{ section.id }} .pd-atc, #shopify-section-{{ section.id }} .pd-stickybar .pd-atc { background: var(--pd-cta-bg) !important; color: var(--pd-cta-text) !important; }
+  #shopify-section-{{ section.id }} .pd-marquee { background: var(--pd-marquee-bg) !important; color: var(--pd-marquee-text) !important; }
+  #shopify-section-{{ section.id }} .pd-marquee-track span { color: var(--pd-marquee-text) !important; }
+  #shopify-section-{{ section.id }} .pd-description { background: var(--pd-desc-bg) !important; }
+  #shopify-section-{{ section.id }} .pd-why { background: var(--pd-why-bg) !important; }
+  #shopify-section-{{ section.id }} .pd-stickybar { background: var(--pd-sticky-bg) !important; }
+  #shopify-section-{{ section.id }} .pd-stickybar .pd-price { color: var(--pd-sticky-text) !important; }
+{% endstyle %}
+
+<link rel="preload" as="image" href="{{ hero_src }}" imagesrcset="{{ hero_img | image_url: width: 600 }} 600w, {{ hero_img | image_url: width: 1000 }} 1000w, {{ hero_img | image_url: width: 1400 }} 1400w" imagesizes="(max-width: 980px) 100vw, 600px" fetchpriority="high">
 
 <div class="pd" data-product-id="{{ product.id }}" data-base-price="{{ display_price }}">
 
   <nav class="pd-breadcrumbs" aria-label="Breadcrumb">
     <div class="pd-wrap">
       <ol>
-        <li><a href="/">Home</a></li>
+        <li><a href="/">{{ section.settings.breadcrumb_home }}</a></li>
         <li class="pd-bc-sep" aria-hidden="true">/</li>
-        <li><a href="/collections/shaved-ice">Shaved Ice</a></li>
+        <li><a href="/collections/shaved-ice">{{ section.settings.breadcrumb_category }}</a></li>
         <li class="pd-bc-sep" aria-hidden="true">/</li>
         <li class="pd-bc-current">{{ product.title }}</li>
       </ol>
@@ -123,7 +158,7 @@ html body .pd .pd-cat-recipes{background:var(--si-band,#FCE2A0)!important}
         <div class="pd-hero-info">
           <a href="#reviews" class="pd-rating-row">
             <span class="pd-stars" aria-hidden="true">
-              {%- for i in (1..5) -%}<svg viewBox="0 0 24 24" fill="#c58548" stroke="#c58548" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>{%- endfor -%}
+              {%- for i in (1..5) -%}<svg viewBox="0 0 24 24" fill="{{ section.settings.star_color }}" stroke="{{ section.settings.star_color }}" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>{%- endfor -%}
             </span>
             <span class="pd-rating-text">{{ review_count }} reviews</span>
           </a>
@@ -246,22 +281,22 @@ html body .pd .pd-cat-recipes{background:var(--si-band,#FCE2A0)!important}
       <h2 class="pd-h2 pd-why-h2">Made for <em>summer days</em>.</h2>
       <div class="pd-why-grid pd-why-grid--spaced">
         <div class="pd-why-card pd-why-card--peach">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="#39220f"/><circle cx="15" cy="10" r="1" fill="#39220f"/><path d="M8 15 Q12 18 16 15"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="{{ section.settings.text_brand }}"/><circle cx="15" cy="10" r="1" fill="{{ section.settings.text_brand }}"/><path d="M8 15 Q12 18 16 15"/></svg></div>
           <h3 class="pd-why-title">Bold Flavor</h3>
           <p class="pd-why-body">Vibrant {{ flavor_name }} taste with eye-catching color in every pour.</p>
         </div>
         <div class="pd-why-card pd-why-card--butter">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg></div>
           <h3 class="pd-why-title">No Mixing Required</h3>
           <p class="pd-why-body">Pour straight from the bottle. Ready to use, ready to serve.</p>
         </div>
         <div class="pd-why-card pd-why-card--mint">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L20 6 V12 C20 16.5 16.4 20.5 12 22 C7.6 20.5 4 16.5 4 12 V6 L12 3 Z"/><path d="M8.5 12 L11 14.5 L15.5 9.5"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L20 6 V12 C20 16.5 16.4 20.5 12 22 C7.6 20.5 4 16.5 4 12 V6 L12 3 Z"/><path d="M8.5 12 L11 14.5 L15.5 9.5"/></svg></div>
           <h3 class="pd-why-title">Kosher &amp; Non-GMO</h3>
           <p class="pd-why-body">Premium ingredients. Kosher certified, dairy-free, long shelf life.</p>
         </div>
         <div class="pd-why-card pd-why-card--sky">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L14 9 L20 9 L15 13 L17 19 L12 16 L7 19 L9 13 L4 9 L10 9 Z"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L14 9 L20 9 L15 13 L17 19 L12 16 L7 19 L9 13 L4 9 L10 9 Z"/></svg></div>
           <h3 class="pd-why-title">Party-Hit</h3>
           <p class="pd-why-body">Pool parties, beach days, birthday bashes — always a crowd favorite.</p>
         </div>
@@ -390,3 +425,43 @@ window.PD_TIERS = [1, 0.95, 0.90, 0.85];
   if(mainAtc&&stickyBar&&'IntersectionObserver' in window){const io=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)stickyBar.classList.add('is-hidden');else stickyBar.classList.remove('is-hidden');});},{threshold:0.15}); io.observe(mainAtc);}
 })();
 </script>
+
+{% schema %}
+{
+  "name": "Shaved Ice Page",
+  "tag": "section",
+  "class": "section-shaved-ice-page",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    { "type": "paragraph", "content": "Chip, hero-glow and recipe-band colors change automatically based on the product's flavor. The settings below control the static colors." },
+    { "type": "header", "content": "Core colors" },
+    { "type": "color", "id": "text_primary", "label": "Primary text color", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_brand", "label": "Icon / accent color", "default": "#39220f" },
+    { "type": "color", "id": "bg_section", "label": "Page background", "default": "#FFF8EE" },
+    { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#c58548" },
+    { "type": "color", "id": "star_color", "label": "Review star color", "default": "#c58548" },
+    { "type": "color", "id": "cta_color_bg", "label": "Add to cart button background", "default": "#1a1a1a" },
+    { "type": "color", "id": "cta_color_text", "label": "Add to cart button text", "default": "#FFFBF4" },
+
+    { "type": "header", "content": "Marquee" },
+    { "type": "color", "id": "marquee_bg", "label": "Marquee background", "default": "#1a1a1a" },
+    { "type": "color", "id": "marquee_text", "label": "Marquee text", "default": "#FFFBF4" },
+
+    { "type": "header", "content": "Description section" },
+    { "type": "color", "id": "desc_bg", "label": "Description background", "default": "#FFF8EE" },
+
+    { "type": "header", "content": "Why section" },
+    { "type": "color", "id": "why_bg", "label": "Why section background", "default": "#FFF8EE" },
+
+    { "type": "header", "content": "Sticky bar" },
+    { "type": "color", "id": "sticky_bg", "label": "Sticky bar background", "default": "#FFFBF4" },
+    { "type": "color", "id": "sticky_text", "label": "Sticky bar price text", "default": "#1a1a1a" },
+
+    { "type": "header", "content": "Breadcrumbs" },
+    { "type": "text", "id": "breadcrumb_home", "label": "Home label", "default": "Home" },
+    { "type": "text", "id": "breadcrumb_category", "label": "Category label", "default": "Shaved Ice" }
+  ]
+}
+{% endschema %}

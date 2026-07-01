@@ -16,7 +16,7 @@
         "bg_img": "shopify://shop_images/Rectangle_2272_2.png",
         "secondary_button_text": "View Regular",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week",
-        "accent_color": "#C6631E"
+        "accent_color": "#c6631e"
       }
     },
     "main": {
@@ -479,31 +479,31 @@
         "column_WtABe3": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Icon_6.png",
+            "image": "shopify://shop_images/0_e0d6a17e-4685-4d78-b8d9-e76d43387100.png",
             "column_link": "",
-            "title": "Effortless to use",
+            "title": "SUGAR",
             "text": "",
             "link_label": "",
             "link": ""
           }
         },
-        "column_k7Ua7t": {
+        "column_yPwRCQ": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Icon_7.png",
+            "image": "shopify://shop_images/0_e0d6a17e-4685-4d78-b8d9-e76d43387100.png",
             "column_link": "",
-            "title": "Made for daily drinks",
+            "title": "CALORIES",
             "text": "",
             "link_label": "",
             "link": ""
           }
         },
-        "column_UrhpMn": {
+        "column_gVATQQ": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Icon_8.png",
+            "image": "shopify://shop_images/0_e0d6a17e-4685-4d78-b8d9-e76d43387100.png",
             "column_link": "",
-            "title": "Flavors you’ll actually love",
+            "title": "CARB",
             "text": "",
             "link_label": "",
             "link": ""
@@ -512,8 +512,8 @@
       },
       "block_order": [
         "column_WtABe3",
-        "column_k7Ua7t",
-        "column_UrhpMn"
+        "column_yPwRCQ",
+        "column_gVATQQ"
       ],
       "custom_css": [
         ".multicolumn {background: #fef8f1;}",
@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>Each week, we highlight one pack we think is worth trying. Same premium products, just an easier place for you to start your flavor journey without the decision fatigue.</p>"
+            "text": "<p>This curated trio gives you the perfect summer refreshers. Sugar-Free Mango, Peach, and Mandarin Orange allow you to make colorful, fruity drinks without sugar iced teas, sparkling water, lemonades, and mocktails.</p>"
           }
         }
       },
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#61155b"
+        "background_color": "#D35605"
       }
     },
     "pack_steps_AbyNtH": {
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Try multiple flavors",
-            "description": "Discover your favorite without the\ncommitment of full-size bulk."
+            "title": "Three Tropical Favorites",
+            "description": "Sugar-Free Mango, Peach, and Mandarin Orange give you bold, refreshing flavors in one versatile pack."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Rotate flavors easily",
-            "description": "Keep your morning routine exciting with fresh weekly picks."
+            "title": "Make Drinks More Refreshing",
+            "description": "Create unique summer drinks every day from iced teas to sparkling lemonades  without repeating the same flavor."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Avoid unused Flavors",
-            "description": "Optimized sizes meant for high-rotation use at home."
+            "title": "Big Flavor, Zero Sugar",
+            "description": "Made for bright summer drinks that taste juicy and refreshing without sugar."
           }
         }
       },
@@ -654,13 +654,20 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#C6631E",
+        "background_color": "#c6631e",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
     "trusted_pack_jggqKc": {
       "type": "trusted-pack",
       "blocks": {
+        "item_X9cE6d": {
+          "type": "item",
+          "settings": {
+            "icon": "shopify://shop_images/sugar-free_d9fecf16-f729-4501-85f1-1350f85167f4.png",
+            "text": "Sugar Free"
+          }
+        },
         "item_XgLWHj": {
           "type": "item",
           "settings": {
@@ -668,18 +675,11 @@
             "text": "Kosher"
           }
         },
-        "item_X9cE6d": {
-          "type": "item",
-          "settings": {
-            "icon": "shopify://shop_images/leaf_2.png",
-            "text": "Vegan"
-          }
-        },
         "item_LWQDPF": {
           "type": "item",
           "settings": {
             "icon": "shopify://shop_images/gluten-free.png",
-            "text": "Fluten Free"
+            "text": "Gluten Free"
           }
         },
         "item_Fd6MBH": {
@@ -691,16 +691,16 @@
         }
       },
       "block_order": [
-        "item_XgLWHj",
         "item_X9cE6d",
+        "item_XgLWHj",
         "item_LWQDPF",
         "item_Fd6MBH"
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#C6631E",
+        "background_color": "#c6631e",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Carefully made to meet everyday standards you can rely on.</p>",
+        "description": "<p>Bright fruit flavor crafted for refreshing drinks you can enjoy all summer.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -755,7 +755,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Salted Caramel is a game changer for my morning cold brew, saving over $150 a month and my drinks taste better than the coffee shop.",
+            "quote": "I love fruity drinks but don’t want the sugar. These flavors are bright, smooth, and super refreshing. Mandarin Orange is my favorite",
             "reviewer_initials": "SJ",
             "reviewer_name": "Sarah J.",
             "reviewer_role": "VERIFIED BUYER"
@@ -765,7 +765,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Finally, a sugar-free vanilla that doesn't have that weird aftertaste. Perfect for my keto lattes. The concentration is insane, one bottle lasts forever!",
+            "quote": "This pack is perfect for summer. I made lemonade with Peach and Mango, and it tasted like something from a café.",
             "reviewer_initials": "MR",
             "reviewer_name": "Michael R.",
             "reviewer_role": "COFFEE ENTHUSIAST"
@@ -775,7 +775,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I use the fruit refreshers for my sparkling water every afternoon. It's so crisp and light. My kids even love making their own healthy 'sodas' with them.",
+            "quote": "This pack is perfect for summer. I made lemonade with Peach and Mango, and it tasted like something from a café.",
             "reviewer_initials": "EG",
             "reviewer_name": "Elena G.",
             "reviewer_role": "HAPPY MOTHER"
@@ -785,7 +785,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I use the fruit refreshers for my sparkling water every afternoon. It's so crisp and light. My kids even love making their own healthy 'sodas' with them.",
+            "quote": "All three flavors mix really well. Peach is sweet, Mango is tropical, and Mandarin Orange adds the perfect citrus kick.",
             "reviewer_initials": "EG",
             "reviewer_name": "Elena G.",
             "reviewer_role": "HAPPY MOTHER"
@@ -795,7 +795,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Finally, a sugar-free vanilla that doesn't have that weird aftertaste. Perfect for my keto lattes. The concentration is insane, one bottle lasts forever!",
+            "quote": "The Mango tastes amazing in sparkling water, and the Peach is perfect for iced tea. This pack makes sugar-free drinks feel fun again.",
             "reviewer_initials": "MR",
             "reviewer_name": "Michael R.",
             "reviewer_role": "COFFEE ENTHUSIAST"
@@ -811,7 +811,7 @@
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "People\nLove this Combo",
+        "heading": "Sugar-Free Sippers\nLove It",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
@@ -836,9 +836,9 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#C6631E",
-        "title": "Start with this one",
-        "description": "The Coffeehouse Clasic is our most-loved collection for a reason, Join thousands of happy brewers.",
+        "background_color": "#c6631e",
+        "title": "Chill Your Summer, Sugar-Free",
+        "description": "Peach, Mango, and Mandarin Orange in one easy pack for bright, refreshing drinks.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"

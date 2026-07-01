@@ -1,5 +1,3 @@
-{% layout 'theme' %}
-
 {{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
 {% render 'pd-fixes' %}
 {% render 'pd-tweaks' %}
@@ -10,58 +8,127 @@
 {% render 'pd-cat-styles' %}
 {% render 'pd-cat-extras' %}
 
-<style>
-.pd-slider-mobile{display:none}.pd-slider-dots{display:none}
-@media (max-width:760px){
-  .pd-hero-frame{display:none!important}.pd-thumbs{display:none!important}
-  .pd-slider-mobile{display:block!important;position:relative;background:#FFFBF4;border:2px solid #1a1a1a;border-radius:20px;padding:0;box-shadow:4px 4px 0 #1a1a1a;overflow:hidden;max-width:340px;margin:0 auto}
-  .pd-slides{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;width:100%;position:relative;z-index:0}
-  .pd-slides::-webkit-scrollbar{display:none}.pd-slide{flex:0 0 100%;scroll-snap-align:start;min-width:100%}
-  .pd-slide img{width:100%;height:auto;display:block;aspect-ratio:1/1;object-fit:cover}
-  .pd-slider-dots{display:flex!important;justify-content:center;gap:5px;margin-top:10px}
-}
-html body .pd .pd-price-row{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:wrap!important}
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pd-text: {{ section.settings.text_primary }};
+    --pd-brand: {{ section.settings.text_brand }};
+    --pd-bg: {{ section.settings.bg_section }};
+    --pd-accent: {{ section.settings.accent_color }};
+    --pd-star: {{ section.settings.star_color }};
+    --pd-cta-bg: {{ section.settings.cta_color_bg }};
+    --pd-cta-text: {{ section.settings.cta_color_text }};
 
-/* ========= Pump accessory theming ========= */
-.pd-pmp-hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 25% 30%, #FFD4B8 0%, transparent 55%),radial-gradient(ellipse at 80% 75%, #FCE2A0 0%, transparent 60%);opacity:.55;pointer-events:none}
+    /* Hero */
+    --pd-hero-bg: {{ section.settings.hero_bg }};
+    --pd-hero-glow-1: {{ section.settings.hero_glow_1 }};
+    --pd-hero-glow-2: {{ section.settings.hero_glow_2 }};
 
-/* "How it works" 3-step strip */
-html body .pd .pd-pmp-howto{padding:96px 0 80px!important;background:#FFFBF4!important;border-top:2px solid #39220f!important;display:block!important}
-@media (max-width:760px){html body .pd .pd-pmp-howto{padding:64px 0 56px!important}}
-html body .pd .pd-pmp-howto-head{text-align:center!important;max-width:680px!important;margin:0 auto 40px!important}
-html body .pd .pd-pmp-howto-head .pd-eyebrow{display:inline-block!important;margin:0 auto 18px!important}
-html body .pd .pd-pmp-howto-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:22px!important;max-width:980px!important;margin:0 auto!important;padding:0 18px!important}
-@media (max-width:760px){html body .pd .pd-pmp-howto-grid{grid-template-columns:1fr!important;gap:16px!important}}
-html body .pd .pd-pmp-step{background:#FFFFFF!important;border:2px solid #39220f!important;border-radius:22px!important;box-shadow:5px 5px 0 #39220f!important;padding:30px 26px 28px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:10px!important;position:relative!important;transition:transform .25s ease, box-shadow .25s ease!important}
-html body .pd .pd-pmp-step:hover{transform:translate(-2px,-2px)!important;box-shadow:7px 7px 0 #39220f!important}
-html body .pd .pd-pmp-step-num{width:46px!important;height:46px!important;background:#c58548!important;color:#FFFBF4!important;border:2px solid #39220f!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:18px!important;box-shadow:2px 2px 0 #39220f!important;line-height:1!important}
-html body .pd .pd-pmp-step-title{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:18px!important;color:#39220f!important;margin:8px 0 2px!important;text-transform:uppercase!important;letter-spacing:.01em!important;line-height:1.15!important}
-html body .pd .pd-pmp-step-body{font-family:'Josefin Sans',sans-serif!important;font-size:15px!important;line-height:1.55!important;color:#39220f!important;font-weight:500!important;margin:0!important}
+    /* Marquee */
+    --pd-marquee-bg: {{ section.settings.marquee_bg }};
+    --pd-marquee-text: {{ section.settings.marquee_text }};
 
-/* Specs strip */
-html body .pd .pd-pmp-specs{padding:80px 0!important;background:#FCE2A0!important;border-top:2px solid #39220f!important;display:block!important}
-@media (max-width:760px){html body .pd .pd-pmp-specs{padding:56px 0!important}}
-html body .pd .pd-pmp-specs-head{text-align:center!important;margin:0 auto 36px!important;max-width:680px!important}
-html body .pd .pd-pmp-specs-head .pd-eyebrow{display:inline-block!important;margin:0 auto 18px!important;background:#39220f!important;color:#FCE2A0!important}
-html body .pd .pd-pmp-specs-grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:14px!important;max-width:1080px!important;margin:0 auto!important;padding:0 18px!important}
-@media (max-width:980px){html body .pd .pd-pmp-specs-grid{grid-template-columns:repeat(2,1fr)!important}}
-@media (max-width:520px){html body .pd .pd-pmp-specs-grid{grid-template-columns:1fr!important}}
-html body .pd .pd-pmp-spec{background:#FFFBF4!important;border:2px solid #39220f!important;border-radius:18px!important;box-shadow:4px 4px 0 #39220f!important;padding:22px 22px 22px!important;text-align:left!important;display:flex!important;flex-direction:column!important;gap:6px!important}
-html body .pd .pd-pmp-spec-label{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:10.5px!important;letter-spacing:.16em!important;text-transform:uppercase!important;color:#c58548!important;margin:0!important;line-height:1!important}
-html body .pd .pd-pmp-spec-value{font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:17px!important;color:#39220f!important;margin:0!important;text-transform:uppercase!important;letter-spacing:.005em!important;line-height:1.15!important}
-html body .pd .pd-pmp-spec-note{font-family:'Josefin Sans',sans-serif!important;font-size:13.5px!important;line-height:1.45!important;color:#39220f!important;font-weight:500!important;margin:2px 0 0!important;opacity:.85!important}
+    /* Description */
+    --pd-desc-bg: {{ section.settings.desc_bg }};
 
-/* Variant pack picker */
-html body .pd .pd-pmp-packs{display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin:8px 0 18px!important;padding:0!important;list-style:none!important}
-html body .pd .pd-pmp-packs-label{display:block!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:11px!important;letter-spacing:.16em!important;text-transform:uppercase!important;color:#39220f!important;margin:0 0 10px!important;line-height:1!important;width:100%!important}
-html body .pd .pd-pmp-pack{display:inline-flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;flex:1 1 0!important;min-width:64px!important;padding:14px 8px 12px!important;background:#FFFFFF!important;border:2px solid #39220f!important;border-radius:14px!important;color:#39220f!important;font-family:'Archivo Black','Archivo',sans-serif!important;text-decoration:none!important;box-shadow:3px 3px 0 #39220f!important;cursor:pointer!important;transition:transform .15s ease, box-shadow .15s ease, background .15s ease!important;line-height:1!important;text-align:center!important;gap:4px!important}
-html body .pd .pd-pmp-pack-num{font-size:20px!important;font-weight:400!important;letter-spacing:0!important}
-html body .pd .pd-pmp-pack-label{font-family:'Josefin Sans',sans-serif!important;font-size:11px!important;letter-spacing:.08em!important;text-transform:uppercase!important;font-weight:600!important;opacity:.7!important}
-html body .pd .pd-pmp-pack:hover{transform:translate(-1px,-1px)!important;box-shadow:4px 4px 0 #39220f!important;background:#FFF8EE!important}
-html body .pd .pd-pmp-pack.is-active{background:#39220f!important;color:#FFFBF4!important;box-shadow:3px 3px 0 #c58548!important;cursor:default!important}
-html body .pd .pd-pmp-pack.is-active:hover{transform:none!important;box-shadow:3px 3px 0 #c58548!important;background:#39220f!important}
-@media (max-width:760px){html body .pd .pd-pmp-pack{min-width:56px!important;padding:12px 6px 10px!important}html body .pd .pd-pmp-pack-num{font-size:18px!important}}
-</style>
+    /* How it works */
+    --pd-howto-bg: {{ section.settings.howto_bg }};
+    --pd-step-bg: {{ section.settings.step_bg }};
+    --pd-step-border: {{ section.settings.step_border }};
+    --pd-step-num-bg: {{ section.settings.step_num_bg }};
+    --pd-step-num-text: {{ section.settings.step_num_text }};
+    --pd-step-title: {{ section.settings.step_title_color }};
+    --pd-step-body: {{ section.settings.step_body_color }};
+
+    /* Specs */
+    --pd-specs-bg: {{ section.settings.specs_bg }};
+    --pd-spec-card-bg: {{ section.settings.spec_card_bg }};
+    --pd-spec-label: {{ section.settings.spec_label_color }};
+    --pd-spec-value: {{ section.settings.spec_value_color }};
+    --pd-spec-note: {{ section.settings.spec_note_color }};
+
+    /* Pack picker */
+    --pd-pack-bg: {{ section.settings.pack_bg }};
+    --pd-pack-text: {{ section.settings.pack_text }};
+    --pd-pack-border: {{ section.settings.pack_border }};
+    --pd-pack-active-bg: {{ section.settings.pack_active_bg }};
+    --pd-pack-active-text: {{ section.settings.pack_active_text }};
+
+    /* Why */
+    --pd-why-bg: {{ section.settings.why_bg }};
+
+    /* Sticky bar */
+    --pd-sticky-bg: {{ section.settings.sticky_bg }};
+    --pd-sticky-text: {{ section.settings.sticky_text }};
+  }
+
+  #shopify-section-{{ section.id }} .pd { background: var(--pd-bg) !important; }
+
+  #shopify-section-{{ section.id }} .pd-slider-mobile { display: none; }
+  #shopify-section-{{ section.id }} .pd-slider-dots { display: none; }
+  @media (max-width:760px){
+    #shopify-section-{{ section.id }} .pd-hero-frame { display: none !important; }
+    #shopify-section-{{ section.id }} .pd-thumbs { display: none !important; }
+    #shopify-section-{{ section.id }} .pd-slider-mobile { display: block !important; position: relative; background: #FFFBF4; border: 2px solid #1a1a1a; border-radius: 20px; padding: 0; box-shadow: 4px 4px 0 #1a1a1a; overflow: hidden; max-width: 340px; margin: 0 auto; }
+    #shopify-section-{{ section.id }} .pd-slides { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; scrollbar-width: none; width: 100%; position: relative; z-index: 0; }
+    #shopify-section-{{ section.id }} .pd-slides::-webkit-scrollbar { display: none; }
+    #shopify-section-{{ section.id }} .pd-slide { flex: 0 0 100%; scroll-snap-align: start; min-width: 100%; }
+    #shopify-section-{{ section.id }} .pd-slide img { width: 100%; height: auto; display: block; aspect-ratio: 1/1; object-fit: cover; }
+    #shopify-section-{{ section.id }} .pd-slider-dots { display: flex !important; justify-content: center; gap: 5px; margin-top: 10px; }
+  }
+  #shopify-section-{{ section.id }} .pd .pd-price-row { display: flex !important; align-items: center !important; gap: 10px !important; flex-wrap: wrap !important; }
+
+  /* ========= Pump accessory theming ========= */
+  #shopify-section-{{ section.id }} .pd-pmp-hero-bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(ellipse at 25% 30%, var(--pd-hero-glow-1) 0%, transparent 55%), radial-gradient(ellipse at 80% 75%, var(--pd-hero-glow-2) 0%, transparent 60%); opacity: .55; pointer-events: none; }
+  #shopify-section-{{ section.id }} .pd-hero { background: var(--pd-hero-bg) !important; }
+
+  /* "How it works" 3-step strip */
+  #shopify-section-{{ section.id }} .pd .pd-pmp-howto { padding: 96px 0 80px !important; background: var(--pd-howto-bg) !important; border-top: 2px solid var(--pd-brand) !important; display: block !important; }
+  @media (max-width:760px){ #shopify-section-{{ section.id }} .pd .pd-pmp-howto { padding: 64px 0 56px !important; } }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-howto-head { text-align: center !important; max-width: 680px !important; margin: 0 auto 40px !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-howto-head .pd-eyebrow { display: inline-block !important; margin: 0 auto 18px !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-howto-grid { display: grid !important; grid-template-columns: repeat(3,1fr) !important; gap: 22px !important; max-width: 980px !important; margin: 0 auto !important; padding: 0 18px !important; }
+  @media (max-width:760px){ #shopify-section-{{ section.id }} .pd .pd-pmp-howto-grid { grid-template-columns: 1fr !important; gap: 16px !important; } }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-step { background: var(--pd-step-bg) !important; border: 2px solid var(--pd-step-border) !important; border-radius: 22px !important; box-shadow: 5px 5px 0 var(--pd-step-border) !important; padding: 30px 26px 28px !important; display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; position: relative !important; transition: transform .25s ease, box-shadow .25s ease !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-step:hover { transform: translate(-2px,-2px) !important; box-shadow: 7px 7px 0 var(--pd-step-border) !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-step-num { width: 46px !important; height: 46px !important; background: var(--pd-step-num-bg) !important; color: var(--pd-step-num-text) !important; border: 2px solid var(--pd-step-border) !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important; font-family: 'Archivo Black','Archivo',sans-serif !important; font-weight: 400 !important; font-size: 18px !important; box-shadow: 2px 2px 0 var(--pd-step-border) !important; line-height: 1 !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-step-title { font-family: 'Archivo Black','Archivo',sans-serif !important; font-weight: 400 !important; font-size: 18px !important; color: var(--pd-step-title) !important; margin: 8px 0 2px !important; text-transform: uppercase !important; letter-spacing: .01em !important; line-height: 1.15 !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-step-body { font-family: 'Josefin Sans',sans-serif !important; font-size: 15px !important; line-height: 1.55 !important; color: var(--pd-step-body) !important; font-weight: 500 !important; margin: 0 !important; }
+
+  /* Specs strip */
+  #shopify-section-{{ section.id }} .pd .pd-pmp-specs { padding: 80px 0 !important; background: var(--pd-specs-bg) !important; border-top: 2px solid var(--pd-brand) !important; display: block !important; }
+  @media (max-width:760px){ #shopify-section-{{ section.id }} .pd .pd-pmp-specs { padding: 56px 0 !important; } }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-specs-head { text-align: center !important; margin: 0 auto 36px !important; max-width: 680px !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-specs-head .pd-eyebrow { display: inline-block !important; margin: 0 auto 18px !important; background: var(--pd-brand) !important; color: var(--pd-specs-bg) !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-specs-grid { display: grid !important; grid-template-columns: repeat(4,1fr) !important; gap: 14px !important; max-width: 1080px !important; margin: 0 auto !important; padding: 0 18px !important; }
+  @media (max-width:980px){ #shopify-section-{{ section.id }} .pd .pd-pmp-specs-grid { grid-template-columns: repeat(2,1fr) !important; } }
+  @media (max-width:520px){ #shopify-section-{{ section.id }} .pd .pd-pmp-specs-grid { grid-template-columns: 1fr !important; } }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-spec { background: var(--pd-spec-card-bg) !important; border: 2px solid var(--pd-brand) !important; border-radius: 18px !important; box-shadow: 4px 4px 0 var(--pd-brand) !important; padding: 22px 22px 22px !important; text-align: left !important; display: flex !important; flex-direction: column !important; gap: 6px !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-spec-label { font-family: 'Archivo Black','Archivo',sans-serif !important; font-weight: 400 !important; font-size: 10.5px !important; letter-spacing: .16em !important; text-transform: uppercase !important; color: var(--pd-spec-label) !important; margin: 0 !important; line-height: 1 !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-spec-value { font-family: 'Archivo Black','Archivo',sans-serif !important; font-weight: 400 !important; font-size: 17px !important; color: var(--pd-spec-value) !important; margin: 0 !important; text-transform: uppercase !important; letter-spacing: .005em !important; line-height: 1.15 !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-spec-note { font-family: 'Josefin Sans',sans-serif !important; font-size: 13.5px !important; line-height: 1.45 !important; color: var(--pd-spec-note) !important; font-weight: 500 !important; margin: 2px 0 0 !important; opacity: .85 !important; }
+
+  /* Variant pack picker */
+  #shopify-section-{{ section.id }} .pd .pd-pmp-packs { display: flex !important; gap: 8px !important; flex-wrap: wrap !important; margin: 8px 0 18px !important; padding: 0 !important; list-style: none !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-packs-label { display: block !important; font-family: 'Archivo Black','Archivo',sans-serif !important; font-weight: 400 !important; font-size: 11px !important; letter-spacing: .16em !important; text-transform: uppercase !important; color: var(--pd-brand) !important; margin: 0 0 10px !important; line-height: 1 !important; width: 100% !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-pack { display: inline-flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; flex: 1 1 0 !important; min-width: 64px !important; padding: 14px 8px 12px !important; background: var(--pd-pack-bg) !important; border: 2px solid var(--pd-pack-border) !important; border-radius: 14px !important; color: var(--pd-pack-text) !important; font-family: 'Archivo Black','Archivo',sans-serif !important; text-decoration: none !important; box-shadow: 3px 3px 0 var(--pd-pack-border) !important; cursor: pointer !important; transition: transform .15s ease, box-shadow .15s ease, background .15s ease !important; line-height: 1 !important; text-align: center !important; gap: 4px !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-pack-num { font-size: 20px !important; font-weight: 400 !important; letter-spacing: 0 !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-pack-label { font-family: 'Josefin Sans',sans-serif !important; font-size: 11px !important; letter-spacing: .08em !important; text-transform: uppercase !important; font-weight: 600 !important; opacity: .7 !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-pack:hover { transform: translate(-1px,-1px) !important; box-shadow: 4px 4px 0 var(--pd-pack-border) !important; background: var(--pd-hero-bg) !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-pack.is-active { background: var(--pd-pack-active-bg) !important; color: var(--pd-pack-active-text) !important; box-shadow: 3px 3px 0 var(--pd-accent) !important; cursor: default !important; }
+  #shopify-section-{{ section.id }} .pd .pd-pmp-pack.is-active:hover { transform: none !important; box-shadow: 3px 3px 0 var(--pd-accent) !important; background: var(--pd-pack-active-bg) !important; }
+  @media (max-width:760px){ #shopify-section-{{ section.id }} .pd .pd-pmp-pack { min-width: 56px !important; padding: 12px 6px 10px !important; } #shopify-section-{{ section.id }} .pd .pd-pmp-pack-num { font-size: 18px !important; } }
+
+  /* Section backgrounds & shared elements */
+  #shopify-section-{{ section.id }} .pd-marquee { background: var(--pd-marquee-bg) !important; color: var(--pd-marquee-text) !important; }
+  #shopify-section-{{ section.id }} .pd-marquee-track span { color: var(--pd-marquee-text) !important; }
+  #shopify-section-{{ section.id }} .pd-description { background: var(--pd-desc-bg) !important; }
+  #shopify-section-{{ section.id }} .pd-why { background: var(--pd-why-bg) !important; }
+  #shopify-section-{{ section.id }} .pd-h1, #shopify-section-{{ section.id }} .pd-h2 { color: var(--pd-brand) !important; }
+  #shopify-section-{{ section.id }} .pd-stars svg { fill: var(--pd-star) !important; stroke: var(--pd-star) !important; }
+  #shopify-section-{{ section.id }} .pd-atc, #shopify-section-{{ section.id }} .pd-stickybar .pd-atc { background: var(--pd-cta-bg) !important; color: var(--pd-cta-text) !important; }
+  #shopify-section-{{ section.id }} .pd-stickybar { background: var(--pd-sticky-bg) !important; }
+  #shopify-section-{{ section.id }} .pd-stickybar .pd-price { color: var(--pd-sticky-text) !important; }
+{% endstyle %}
 
 {%- assign hero_img = product.featured_media.preview_image -%}
 {%- assign hero_src = hero_img | image_url: width: 1400 -%}
@@ -77,9 +144,9 @@ html body .pd .pd-pmp-pack.is-active:hover{transform:none!important;box-shadow:3
   <nav class="pd-breadcrumbs" aria-label="Breadcrumb">
     <div class="pd-wrap">
       <ol>
-        <li><a href="/">Home</a></li>
+        <li><a href="/">{{ section.settings.breadcrumb_home }}</a></li>
         <li class="pd-bc-sep" aria-hidden="true">/</li>
-        <li><a href="/collections/accessories">Accessories</a></li>
+        <li><a href="/collections/accessories">{{ section.settings.breadcrumb_category }}</a></li>
         <li class="pd-bc-sep" aria-hidden="true">/</li>
         <li class="pd-bc-current">{{ product.title }}</li>
       </ol>
@@ -118,7 +185,7 @@ html body .pd .pd-pmp-pack.is-active:hover{transform:none!important;box-shadow:3
         <div class="pd-hero-info">
           <a href="#reviews" class="pd-rating-row">
             <span class="pd-stars" aria-hidden="true">
-              {%- for i in (1..5) -%}<svg viewBox="0 0 24 24" fill="#c58548" stroke="#c58548" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>{%- endfor -%}
+              {%- for i in (1..5) -%}<svg viewBox="0 0 24 24" fill="{{ section.settings.star_color }}" stroke="{{ section.settings.star_color }}" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>{%- endfor -%}
             </span>
             <span class="pd-rating-text">{{ review_count }} reviews</span>
           </a>
@@ -269,22 +336,22 @@ html body .pd .pd-pmp-pack.is-active:hover{transform:none!important;box-shadow:3
       <h2 class="pd-h2 pd-why-h2">Pour like the <em>pros</em>.</h2>
       <div class="pd-why-grid pd-why-grid--spaced">
         <div class="pd-why-card pd-why-card--peach">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 H15 V7 L18 10 V21 H6 V10 L9 7 Z"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 H15 V7 L18 10 V21 H6 V10 L9 7 Z"/></svg></div>
           <h3 class="pd-why-title">Perfect Fit</h3>
           <p class="pd-why-body">Custom-threaded for Syruvia bottles. No wobble, no leaks.</p>
         </div>
         <div class="pd-why-card pd-why-card--butter">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6 V12 L16 14"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6 V12 L16 14"/></svg></div>
           <h3 class="pd-why-title">Even Dose</h3>
           <p class="pd-why-body">¼ oz per push. Recipe-consistent every single time.</p>
         </div>
         <div class="pd-why-card pd-why-card--mint">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 12 L11 14 L15 9"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 12 L11 14 L15 9"/></svg></div>
           <h3 class="pd-why-title">Built Tough</h3>
           <p class="pd-why-body">Café-grade plastic, food-safe spring. Takes daily abuse.</p>
         </div>
         <div class="pd-why-card pd-why-card--sky">
-          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 M9 8 L15 16 M15 8 L9 16"/></svg></div>
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.text_brand }}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 M9 8 L15 16 M15 8 L9 16"/></svg></div>
           <h3 class="pd-why-title">Easy Clean</h3>
           <p class="pd-why-body">Unscrews fully. Dishwasher safe on the top rack.</p>
         </div>
@@ -419,3 +486,70 @@ window.PD_TIERS = [1, 0.95, 0.90, 0.85];
   if(mainAtc&&stickyBar&&'IntersectionObserver' in window){const io=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)stickyBar.classList.add('is-hidden');else stickyBar.classList.remove('is-hidden');});},{threshold:0.15}); io.observe(mainAtc);}
 })();
 </script>
+
+{% schema %}
+{
+  "name": "Pumps Page",
+  "tag": "section",
+  "class": "section-pumps-page",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    { "type": "header", "content": "Core colors" },
+    { "type": "color", "id": "text_primary", "label": "Primary text color", "default": "#39220f" },
+    { "type": "color", "id": "text_brand", "label": "Brand color (headings, borders, icons)", "default": "#39220f" },
+    { "type": "color", "id": "bg_section", "label": "Page background", "default": "#FFF8EE" },
+    { "type": "color", "id": "accent_color", "label": "Accent color", "default": "#c58548" },
+    { "type": "color", "id": "star_color", "label": "Review star color", "default": "#c58548" },
+    { "type": "color", "id": "cta_color_bg", "label": "Add to cart button background", "default": "#1a1a1a" },
+    { "type": "color", "id": "cta_color_text", "label": "Add to cart button text", "default": "#FFFBF4" },
+
+    { "type": "header", "content": "Hero" },
+    { "type": "color", "id": "hero_bg", "label": "Hero background", "default": "#FFF8EE" },
+    { "type": "color", "id": "hero_glow_1", "label": "Hero glow 1", "default": "#FFD4B8" },
+    { "type": "color", "id": "hero_glow_2", "label": "Hero glow 2", "default": "#FCE2A0" },
+
+    { "type": "header", "content": "Pack size picker" },
+    { "type": "color", "id": "pack_bg", "label": "Pack button background", "default": "#FFFFFF" },
+    { "type": "color", "id": "pack_text", "label": "Pack button text", "default": "#39220f" },
+    { "type": "color", "id": "pack_border", "label": "Pack button border", "default": "#39220f" },
+    { "type": "color", "id": "pack_active_bg", "label": "Selected pack background", "default": "#39220f" },
+    { "type": "color", "id": "pack_active_text", "label": "Selected pack text", "default": "#FFFBF4" },
+
+    { "type": "header", "content": "Marquee" },
+    { "type": "color", "id": "marquee_bg", "label": "Marquee background", "default": "#1a1a1a" },
+    { "type": "color", "id": "marquee_text", "label": "Marquee text", "default": "#FFFBF4" },
+
+    { "type": "header", "content": "Description section" },
+    { "type": "color", "id": "desc_bg", "label": "Description background", "default": "#FFFBF4" },
+
+    { "type": "header", "content": "How it works" },
+    { "type": "color", "id": "howto_bg", "label": "Section background", "default": "#FFFBF4" },
+    { "type": "color", "id": "step_bg", "label": "Step card background", "default": "#FFFFFF" },
+    { "type": "color", "id": "step_border", "label": "Step card border & shadow", "default": "#39220f" },
+    { "type": "color", "id": "step_num_bg", "label": "Step number background", "default": "#c58548" },
+    { "type": "color", "id": "step_num_text", "label": "Step number text", "default": "#FFFBF4" },
+    { "type": "color", "id": "step_title_color", "label": "Step title text", "default": "#39220f" },
+    { "type": "color", "id": "step_body_color", "label": "Step body text", "default": "#39220f" },
+
+    { "type": "header", "content": "Specs" },
+    { "type": "color", "id": "specs_bg", "label": "Section background", "default": "#FCE2A0" },
+    { "type": "color", "id": "spec_card_bg", "label": "Spec card background", "default": "#FFFBF4" },
+    { "type": "color", "id": "spec_label_color", "label": "Spec label text", "default": "#c58548" },
+    { "type": "color", "id": "spec_value_color", "label": "Spec value text", "default": "#39220f" },
+    { "type": "color", "id": "spec_note_color", "label": "Spec note text", "default": "#39220f" },
+
+    { "type": "header", "content": "Why section" },
+    { "type": "color", "id": "why_bg", "label": "Why section background", "default": "#FFF8EE" },
+
+    { "type": "header", "content": "Sticky bar" },
+    { "type": "color", "id": "sticky_bg", "label": "Sticky bar background", "default": "#FFFBF4" },
+    { "type": "color", "id": "sticky_text", "label": "Sticky bar price text", "default": "#39220f" },
+
+    { "type": "header", "content": "Breadcrumbs" },
+    { "type": "text", "id": "breadcrumb_home", "label": "Home label", "default": "Home" },
+    { "type": "text", "id": "breadcrumb_category", "label": "Category label", "default": "Accessories" }
+  ]
+}
+{% endschema %}
