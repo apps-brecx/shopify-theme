@@ -1,0 +1,126 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pd-text: {{ section.settings.text_primary }};
+    --pd-brand: {{ section.settings.text_brand }};
+    --pd-bg: {{ section.settings.bg_section }};
+    --pd-wrap: {{ section.settings.wrap_max_width }}px;
+    --pd-h2: {{ section.settings.h2_font_size }}px;
+    --pd-eyebrow-size: {{ section.settings.eyebrow_font_size }}px;
+    --pd-eyebrow-bg: {{ section.settings.eyebrow_bg }};
+    --pd-eyebrow-text: {{ section.settings.eyebrow_text_color }};
+    --pd-sec-pad-top: {{ section.settings.section_padding_top }}px;
+    --pd-sec-pad-bottom: {{ section.settings.section_padding_bottom }}px;
+    --pd-why-bg: {{ section.settings.why_bg }};
+    --pd-why-text: {{ section.settings.why_text_color }};
+    --peach: {{ section.settings.palette_peach }};
+    --butter: {{ section.settings.palette_butter }};
+    --mint: {{ section.settings.palette_mint }};
+    --sky: {{ section.settings.palette_sky }};
+  }
+  #shopify-section-{{ section.id }} .pd { background: var(--pd-bg) !important; color: var(--pd-text) !important; }
+  #shopify-section-{{ section.id }} .pd-wrap { max-width: var(--pd-wrap) !important; }
+  #shopify-section-{{ section.id }} .pd-why {
+    background: var(--pd-why-bg) !important;
+    padding-top: var(--pd-sec-pad-top) !important;
+    padding-bottom: var(--pd-sec-pad-bottom) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-h2 { font-size: var(--pd-h2) !important; color: var(--pd-brand) !important; }
+  #shopify-section-{{ section.id }} .pd-eyebrow {
+    font-size: var(--pd-eyebrow-size) !important;
+    background: var(--pd-eyebrow-bg) !important;
+    color: var(--pd-eyebrow-text) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-why-body { color: var(--pd-why-text) !important; }
+{% endstyle %}
+
+{%- assign is_sf = false -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- if t_lc contains 'sugar-free' or t_lc contains 'sugar free' -%}{%- assign is_sf = true -%}{%- endif -%}
+
+<div class="pd">
+  <section class="pd-why">
+    <div class="pd-wrap pd-why-wrap" style="text-align:center;">
+      <span class="pd-eyebrow">{{ section.settings.why_eyebrow }}</span>
+      <h2 class="pd-h2 pd-why-h2">{{ section.settings.why_heading }}</h2>
+      <div class="pd-why-grid pd-why-grid--spaced">
+        <div class="pd-why-card pd-why-card--peach">
+          <div class="pd-why-icon">
+            {%- if is_sf -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M6.5 17.5 L17.5 6.5"/></svg>
+            {%- else -%}
+              <svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="4.5" width="15" height="15" rx="2"/><path d="M4.5 12 H 19.5 M12 4.5 V 19.5"/></svg>
+            {%- endif -%}
+          </div>
+          <h3 class="pd-why-title">{% if is_sf %}{{ section.settings.card1_title_sf }}{% else %}{{ section.settings.card1_title_regular }}{% endif %}</h3>
+          <p class="pd-why-body">{% if is_sf %}{{ section.settings.card1_body_sf }}{% else %}{{ section.settings.card1_body_regular }}{% endif %}</p>
+        </div>
+        <div class="pd-why-card pd-why-card--butter">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 9 H 21 M3 13 H 21 M3 17 H 21"/><rect x="3" y="5" width="9" height="6" fill="#1a1a1a" stroke="none"/></svg></div>
+          <h3 class="pd-why-title">{{ section.settings.card2_title }}</h3>
+          <p class="pd-why-body">{{ section.settings.card2_body }}</p>
+        </div>
+        <div class="pd-why-card pd-why-card--mint">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L20 6 V12 C20 16.5 16.4 20.5 12 22 C7.6 20.5 4 16.5 4 12 V6 L12 3 Z"/><path d="M8.5 12 L11 14.5 L15.5 9.5"/></svg></div>
+          <h3 class="pd-why-title">{{ section.settings.card3_title }}</h3>
+          <p class="pd-why-body">{{ section.settings.card3_body }}</p>
+        </div>
+        <div class="pd-why-card pd-why-card--sky">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4 C 12 4, 5 11, 5 18 C 5 19.2, 5.8 20, 7 20 C 14 20, 21 13, 21 5 C 21 4.4, 20.6 4, 20 4 Z"/><path d="M5 20 L11 14"/></svg></div>
+          <h3 class="pd-why-title">{{ section.settings.card4_title }}</h3>
+          <p class="pd-why-body">{{ section.settings.card4_body }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PD Why",
+  "tag": "section",
+  "class": "section-pd-why",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "why_eyebrow", "label": "Eyebrow label", "default": "Why Syruvia" },
+    { "type": "text", "id": "why_heading", "label": "Heading (HTML allowed for <em>)", "default": "A better way to <em>pour</em>." },
+    { "type": "header", "content": "Card 1 (Sugar) — Regular product" },
+    { "type": "text", "id": "card1_title_regular", "label": "Card 1 title (regular)", "default": "Pure Cane Sugar" },
+    { "type": "textarea", "id": "card1_body_regular", "label": "Card 1 body (regular)", "default": "Real cane sugar. Rich, café-quality sweetness in every pour." },
+    { "type": "header", "content": "Card 1 (Sugar) — Sugar-free product" },
+    { "type": "text", "id": "card1_title_sf", "label": "Card 1 title (sugar-free)", "default": "Sugar Free" },
+    { "type": "textarea", "id": "card1_body_sf", "label": "Card 1 body (sugar-free)", "default": "All the rich, café-quality flavor without the sugar." },
+    { "type": "header", "content": "Card 2 (Made in USA)" },
+    { "type": "text", "id": "card2_title", "label": "Card 2 title", "default": "Made in USA" },
+    { "type": "textarea", "id": "card2_body", "label": "Card 2 body", "default": "Small-batch crafted in New Jersey to café-quality standards." },
+    { "type": "header", "content": "Card 3 (Kosher & Gluten Free)" },
+    { "type": "text", "id": "card3_title", "label": "Card 3 title", "default": "Kosher &amp; Gluten Free" },
+    { "type": "textarea", "id": "card3_body", "label": "Card 3 body", "default": "OU certified, gluten free, dietary friendly. Fits any cup." },
+    { "type": "header", "content": "Card 4 (Natural Color)" },
+    { "type": "text", "id": "card4_title", "label": "Card 4 title", "default": "Natural Color" },
+    { "type": "textarea", "id": "card4_body", "label": "Card 4 body", "default": "No artificial dyes. Rich, deep color from real ingredients only." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "text_primary", "label": "Primary text color", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_brand", "label": "Heading color", "default": "#39220f" },
+    { "type": "color", "id": "bg_section", "label": "Page background", "default": "#FFFBF4" },
+    { "type": "color", "id": "why_bg", "label": "Why section background", "default": "#FFF8EE" },
+    { "type": "color", "id": "why_text_color", "label": "Why card body text", "default": "#3a3a3a" },
+    { "type": "color", "id": "eyebrow_bg", "label": "Eyebrow label background", "default": "#FFFBF4" },
+    { "type": "color", "id": "eyebrow_text_color", "label": "Eyebrow label text", "default": "#1a1a1a" },
+    { "type": "header", "content": "Card colors" },
+    { "type": "color", "id": "palette_peach", "label": "Peach card", "default": "#FFD4B8" },
+    { "type": "color", "id": "palette_butter", "label": "Butter card", "default": "#FCE2A0" },
+    { "type": "color", "id": "palette_mint", "label": "Mint card", "default": "#C5E4D4" },
+    { "type": "color", "id": "palette_sky", "label": "Sky card", "default": "#B8DCEB" },
+    { "type": "header", "content": "Typography & spacing" },
+    { "type": "range", "id": "h2_font_size", "label": "H2 font size", "min": 20, "max": 56, "step": 1, "unit": "px", "default": 36 },
+    { "type": "range", "id": "eyebrow_font_size", "label": "Eyebrow label size", "min": 10, "max": 18, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "wrap_max_width", "label": "Content max width", "min": 900, "max": 1600, "step": 20, "unit": "px", "default": 1200 },
+    { "type": "range", "id": "section_padding_top", "label": "Section padding top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "section_padding_bottom", "label": "Section padding bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 60 }
+  ],
+  "presets": [{ "name": "PD Why" }]
+}
+{% endschema %}

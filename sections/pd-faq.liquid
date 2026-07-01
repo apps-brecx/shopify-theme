@@ -1,0 +1,178 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .pd .pd-faq{
+    background: {{ section.settings.section_bg }} !important;
+    border-top: 2px solid {{ section.settings.border_color }} !important;
+    border-bottom: 2px solid {{ section.settings.border_color }} !important;
+  }
+  #shopify-section-{{ section.id }} .pd .pd-faq-lede{ color: {{ section.settings.lede_color }} !important; }
+  #shopify-section-{{ section.id }} .pd .pd-faq-item{
+    background: {{ section.settings.card_bg }} !important;
+    border-color: {{ section.settings.card_border_color }} !important;
+    box-shadow: 4px 4px 0 {{ section.settings.card_border_color }} !important;
+  }
+  #shopify-section-{{ section.id }} .pd .pd-faq-item:hover{ box-shadow: 5px 5px 0 {{ section.settings.card_border_color }} !important; }
+  #shopify-section-{{ section.id }} .pd .pd-faq-item.is-open{
+    background: {{ section.settings.card_open_bg }} !important;
+    box-shadow: 5px 5px 0 {{ section.settings.accent_color }} !important;
+  }
+  #shopify-section-{{ section.id }} .pd .pd-faq-q{ color: {{ section.settings.question_color }} !important; }
+  #shopify-section-{{ section.id }} .pd .pd-faq-icon{ background: {{ section.settings.icon_bg }} !important; }
+  #shopify-section-{{ section.id }} .pd .pd-faq-item.is-open .pd-faq-icon{ background: {{ section.settings.accent_color }} !important; }
+  #shopify-section-{{ section.id }} .pd .pd-faq-a-inner{ color: {{ section.settings.answer_color }} !important; }
+{%- endstyle -%}
+
+<div class="pd">
+  <style>
+html body .pd .pd-faq{padding:96px 0!important;background:#FFFBF4!important;border-top:2px solid #1a1a1a!important;border-bottom:2px solid #1a1a1a!important}
+@media (max-width:760px){html body .pd .pd-faq{padding:64px 0!important}}
+html body .pd .pd-faq-head{text-align:center!important;max-width:680px!important;margin:0 auto 48px!important}
+html body .pd .pd-faq-head .pd-eyebrow{--faq-s:0.85;display:inline-block!important;margin:0 auto 18px!important;font-size:calc(11px * var(--faq-s))!important;padding:calc(7px * var(--faq-s)) calc(16px * var(--faq-s))!important;will-change:font-size,padding!important;transition:none!important;transform:none!important}
+html body .pd .pd-faq-head .pd-h2{margin:0 auto 12px!important;text-align:center!important}
+html body .pd .pd-faq-lede{font-family:'Josefin Sans',sans-serif!important;font-size:15.5px!important;line-height:1.55!important;color:#3a3a3a!important;font-weight:500!important;margin:0 auto!important;max-width:42ch!important}
+@media (max-width:760px){html body .pd .pd-faq-head{margin-bottom:32px!important;padding:0 18px!important}html body .pd .pd-faq-lede{font-size:14px!important}}
+
+html body .pd .pd-faq-list{display:flex!important;flex-direction:column!important;gap:14px!important;max-width:760px!important;margin:0 auto!important;padding:0 18px!important;list-style:none!important}
+html body .pd .pd-faq-item{background:#FFFFFF!important;border:2px solid #1a1a1a!important;border-radius:20px!important;box-shadow:4px 4px 0 #1a1a1a!important;padding:0!important;list-style:none!important;overflow:hidden!important;transition:background .25s ease, box-shadow .25s ease, transform .25s ease!important}
+html body .pd .pd-faq-item:hover{transform:translate(-1px,-1px)!important;box-shadow:5px 5px 0 #1a1a1a!important}
+html body .pd .pd-faq-item.is-open{background:#FFF8EE!important;box-shadow:5px 5px 0 #FF6B5C!important;transform:translate(-1px,-1px)!important}
+html body .pd .pd-faq-q{display:grid!important;grid-template-columns:1fr 38px!important;align-items:center!important;gap:18px!important;padding:22px 24px!important;cursor:pointer!important;user-select:none!important;font-family:'Archivo Black','Archivo',sans-serif!important;font-weight:400!important;font-size:16px!important;letter-spacing:.02em!important;color:#1a1a1a!important;line-height:1.3!important;background:transparent!important;border:0!important;margin:0!important;text-align:left!important;list-style:none!important;width:100%!important}
+html body .pd .pd-faq-q::-webkit-details-marker{display:none!important}
+html body .pd .pd-faq-q::marker{display:none!important;content:''!important}
+html body .pd .pd-faq-icon{width:38px!important;height:38px!important;background:#FCE2A0!important;border:2px solid #1a1a1a!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;flex-shrink:0!important;box-shadow:2px 2px 0 #1a1a1a!important;transition:background .25s ease, transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease!important;position:relative!important}
+html body .pd .pd-faq-icon::before,html body .pd .pd-faq-icon::after{content:''!important;position:absolute!important;background:#1a1a1a!important;border-radius:2px!important;transition:transform .3s ease!important}
+html body .pd .pd-faq-icon::before{width:14px!important;height:2.4px!important}
+html body .pd .pd-faq-icon::after{width:2.4px!important;height:14px!important}
+html body .pd .pd-faq-item.is-open .pd-faq-icon{background:#FF6B5C!important;transform:rotate(180deg)!important}
+html body .pd .pd-faq-item.is-open .pd-faq-icon::before,html body .pd .pd-faq-item.is-open .pd-faq-icon::after{background:#FFFBF4!important}
+html body .pd .pd-faq-item.is-open .pd-faq-icon::after{transform:rotate(90deg)!important}
+html body .pd .pd-faq-a{max-height:0!important;overflow:hidden!important;transition:max-height .35s ease, padding .35s ease!important;padding:0 24px!important}
+html body .pd .pd-faq-item.is-open .pd-faq-a{max-height:600px!important;padding:0 24px 22px!important}
+html body .pd .pd-faq-a-inner{font-family:'Josefin Sans',sans-serif!important;font-size:15px!important;line-height:1.65!important;color:#1a1a1a!important;font-weight:500!important;padding-top:6px!important;border-top:1.5px dashed rgba(26,26,26,.18)!important;padding-top:18px!important}
+@media (max-width:760px){
+  html body .pd .pd-faq-list{gap:10px!important;padding:0 18px!important}
+  html body .pd .pd-faq-q{padding:18px 18px!important;font-size:13.5px!important;letter-spacing:.01em!important;grid-template-columns:1fr 32px!important;gap:14px!important}
+  html body .pd .pd-faq-icon{width:32px!important;height:32px!important;box-shadow:2px 2px 0 #1a1a1a!important}
+  html body .pd .pd-faq-icon::before{width:12px!important}
+  html body .pd .pd-faq-icon::after{height:12px!important}
+  html body .pd .pd-faq-a{padding:0 18px!important}
+  html body .pd .pd-faq-item.is-open .pd-faq-a{padding:0 18px 18px!important}
+  html body .pd .pd-faq-a-inner{font-size:14px!important;padding-top:14px!important}
+  html body .pd .pd-faq-item{border-radius:16px!important;box-shadow:3px 3px 0 #1a1a1a!important}
+  html body .pd .pd-faq-item.is-open{box-shadow:4px 4px 0 #FF6B5C!important}
+}
+</style>
+
+<section class="pd-faq" id="pdFaq">
+  <div class="pd-wrap pd-faq-head">
+    <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+    <h2 class="pd-h2">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+    <p class="pd-faq-lede">{{ section.settings.lede }}</p>
+  </div>
+
+  <ul class="pd-faq-list">
+    {%- for i in (1..6) -%}
+      {%- assign q_key = 'faq_q' | append: i -%}
+      {%- assign a_key = 'faq_a' | append: i -%}
+      {%- assign q = section.settings[q_key] -%}
+      {%- assign a = section.settings[a_key] -%}
+      {%- if q != blank or a != blank -%}
+      <li class="pd-faq-item">
+        <button type="button" class="pd-faq-q" aria-expanded="false">
+          <span class="pd-faq-q-text">{{ q }}</span>
+          <span class="pd-faq-icon" aria-hidden="true"></span>
+        </button>
+        <div class="pd-faq-a">
+          <div class="pd-faq-a-inner">{{ a }}</div>
+        </div>
+      </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+</section>
+
+<script>
+(function(){
+  function init(){
+    document.querySelectorAll('.pd-faq-item').forEach(function(item){
+      var btn = item.querySelector('.pd-faq-q');
+      if (!btn) return;
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        var isOpen = item.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+    /* Scroll-grow eyebrow */
+    var section = document.getElementById('pdFaq');
+    var badge = section && section.querySelector('.pd-eyebrow');
+    if (!badge) return;
+    var minS = 0.85, maxS = 1.45, raf = null;
+    function update(){
+      raf = null;
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var r = section.getBoundingClientRect();
+      var denom = (vh - vh * 0.20) || 1;
+      var p = (vh - r.top) / denom;
+      if (p < 0) p = 0; if (p > 1) p = 1;
+      var ease = p * p * (3 - 2 * p);
+      badge.style.setProperty('--faq-s', (minS + (maxS - minS) * ease).toFixed(3));
+    }
+    function onScroll(){ if (raf) return; raf = requestAnimationFrame(update); }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    window.addEventListener('resize', onScroll, {passive:true});
+    update();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</div>
+
+{% schema %}
+{
+  "name": "PD FAQ",
+  "tag": "section",
+  "class": "section-pd-faq",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "FAQ" },
+    { "type": "text", "id": "heading_pre", "label": "Heading (before emphasis)", "default": "Before you " },
+    { "type": "text", "id": "heading_em", "label": "Heading (emphasized word)", "default": "pour" },
+    { "type": "text", "id": "heading_post", "label": "Heading (after emphasis)", "default": "." },
+    { "type": "text", "id": "lede", "label": "Lede", "default": "Everything you need to know before that first delicious pump." },
+    { "type": "header", "content": "FAQ Item 1" },
+    { "type": "text", "id": "faq_q1", "label": "Question 1", "default": "How much syrup per drink?" },
+    { "type": "textarea", "id": "faq_a1", "label": "Answer 1", "default": "One pump (about 1 Tbsp) per 8 oz drink is our baseline. Adjust to taste. Light hand for milk drinks, heavier hand for sparkling water." },
+    { "type": "header", "content": "FAQ Item 2" },
+    { "type": "text", "id": "faq_q2", "label": "Question 2", "default": "How long does a bottle last?" },
+    { "type": "textarea", "id": "faq_a2", "label": "Answer 2", "default": "Unopened, up to 18 months at room temperature. Once opened, refrigerate and use within 6 weeks for best flavor." },
+    { "type": "header", "content": "FAQ Item 3" },
+    { "type": "text", "id": "faq_q3", "label": "Question 3", "default": "What can I make with it?" },
+    { "type": "textarea", "id": "faq_a3", "label": "Answer 3", "default": "Coffee, lattes, cold brew, iced tea, matcha, sparkling water, cocktails, pancakes, oatmeal, yogurt. Anywhere you would add a touch of sweetness." },
+    { "type": "header", "content": "FAQ Item 4" },
+    { "type": "text", "id": "faq_q4", "label": "Question 4", "default": "How fast do you ship?" },
+    { "type": "textarea", "id": "faq_a4", "label": "Answer 4", "default": "We aim to ship every order within 48 hours from our New Jersey warehouse, though during busy periods it may take 1 to 3 business days. Flat-rate $4.95 shipping, free over $34." },
+    { "type": "header", "content": "FAQ Item 5" },
+    { "type": "text", "id": "faq_q5", "label": "Question 5", "default": "What if I do not love it?" },
+    { "type": "textarea", "id": "faq_a5", "label": "Answer 5", "default": "We back every bottle with a 30-day taste guarantee. If it is not your thing, email us and we will make it right. Refund, swap, or store credit, your call." },
+    { "type": "header", "content": "FAQ Item 6" },
+    { "type": "text", "id": "faq_q6", "label": "Question 6", "default": "Are your syrups kosher and gluten free?" },
+    { "type": "textarea", "id": "faq_a6", "label": "Answer 6", "default": "Yes. All Syruvia syrups are OU kosher certified, gluten free, and made with no artificial colors or high-fructose corn syrup." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "default": "#FFFBF4" },
+    { "type": "color", "id": "border_color", "label": "Section border", "default": "#1a1a1a" },
+    { "type": "color", "id": "lede_color", "label": "Lede text", "default": "#3a3a3a" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#FFFFFF" },
+    { "type": "color", "id": "card_border_color", "label": "Card border / shadow", "default": "#1a1a1a" },
+    { "type": "color", "id": "card_open_bg", "label": "Card background (open)", "default": "#FFF8EE" },
+    { "type": "color", "id": "accent_color", "label": "Accent (open shadow / icon)", "default": "#FF6B5C" },
+    { "type": "color", "id": "question_color", "label": "Question text", "default": "#1a1a1a" },
+    { "type": "color", "id": "icon_bg", "label": "Icon background", "default": "#FCE2A0" },
+    { "type": "color", "id": "answer_color", "label": "Answer text", "default": "#1a1a1a" }
+  ],
+  "presets": [{ "name": "PD FAQ" }]
+}
+{% endschema %}

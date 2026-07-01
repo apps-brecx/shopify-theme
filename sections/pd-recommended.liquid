@@ -1,0 +1,18 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+<div class="pd">
+  {% render 'pd-recommended' %}
+</div>
+
+{% schema %}
+{
+  "name": "PD Recommended",
+  "tag": "section",
+  "class": "section-pd-recommended",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "paragraph", "content": "Renders the pd-recommended snippet. Content is managed in the snippet." }
+  ],
+  "presets": [{ "name": "PD Recommended" }]
+}
+{% endschema %}

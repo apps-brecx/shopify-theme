@@ -1,0 +1,34 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.pd_bg != blank -%}
+{% style %}
+#shopify-section-{{ section.id }} .pd {
+  --pd-reviews-bg: {{ section.settings.pd_bg }};
+  background: var(--pd-reviews-bg) !important;
+}
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  {% render 'pd-reviews-v2' %}
+</div>
+
+{% schema %}
+{
+  "name": "PD Reviews",
+  "tag": "section",
+  "class": "section-pd-reviews",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "paragraph", "content": "Renders the pd-reviews-v2 snippet. Content is managed in the snippet." },
+    { "type": "header", "content": "Wrapper background" },
+    {
+      "type": "color",
+      "id": "pd_bg",
+      "label": "Section background color",
+      "info": "Leave empty to use the theme's default background."
+    }
+  ],
+  "presets": [{ "name": "PD Reviews" }]
+}
+{% endschema %}

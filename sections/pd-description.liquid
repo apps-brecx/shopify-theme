@@ -1,0 +1,304 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pd-text: {{ section.settings.text_primary }};
+    --pd-brand: {{ section.settings.text_brand }};
+    --pd-bg: {{ section.settings.bg_section }};
+    --pd-wrap: {{ section.settings.wrap_max_width }}px;
+    --pd-h2: {{ section.settings.h2_font_size }}px;
+    --pd-eyebrow-size: {{ section.settings.eyebrow_font_size }}px;
+    --pd-sec-pad-top: {{ section.settings.section_padding_top }}px;
+    --pd-sec-pad-bottom: {{ section.settings.section_padding_bottom }}px;
+    --pd-desc-bg: {{ section.settings.desc_bg }};
+    --pd-desc-card-bg: {{ section.settings.desc_card_bg }};
+    --pd-desc-text: {{ section.settings.desc_text_color }};
+    --pd-eyebrow-bg: {{ section.settings.eyebrow_bg }};
+    --pd-eyebrow-text: {{ section.settings.eyebrow_text_color }};
+  }
+  #shopify-section-{{ section.id }} .pd { background: var(--pd-bg) !important; color: var(--pd-text) !important; }
+  #shopify-section-{{ section.id }} .pd-wrap { max-width: var(--pd-wrap) !important; }
+  #shopify-section-{{ section.id }} .pd-description {
+    background: var(--pd-desc-bg) !important;
+    padding-top: var(--pd-sec-pad-top) !important;
+    padding-bottom: var(--pd-sec-pad-bottom) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-h2 { font-size: var(--pd-h2) !important; color: var(--pd-brand) !important; }
+  #shopify-section-{{ section.id }} .pd-eyebrow {
+    font-size: var(--pd-eyebrow-size) !important;
+    background: var(--pd-eyebrow-bg) !important;
+    color: var(--pd-eyebrow-text) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-desc-card,
+  #shopify-section-{{ section.id }} .pd-desc-card.pd-ing-card,
+  #shopify-section-{{ section.id }} .pd-desc-card.pd-nf-card { background: var(--pd-desc-card-bg); }
+  #shopify-section-{{ section.id }} .pd-desc-label,
+  #shopify-section-{{ section.id }} .pd-desc-text { color: var(--pd-desc-text) !important; }
+{% endstyle %}
+
+{%- assign is_sf = false -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- if t_lc contains 'sugar-free' or t_lc contains 'sugar free' -%}{%- assign is_sf = true -%}{%- endif -%}
+{%- assign ingredients_field = product.metafields.custom.additionalfield -%}
+
+{%- comment -%} Optional editable override for the main description text; falls back to the product's own description {%- endcomment -%}
+{%- assign desc_source = product.description -%}
+{%- if section.settings.description_override != blank -%}{%- assign desc_source = section.settings.description_override -%}{%- endif -%}
+
+<div class="pd">
+  <section class="pd-description">
+    <div class="pd-wrap">
+      <div class="pd-desc-head">
+        <span class="pd-eyebrow">{{ section.settings.desc_eyebrow }}</span>
+        <h2 class="pd-h2" style="margin-top:14px;">{{ section.settings.desc_heading_pre }} <em>{{ section.settings.desc_heading_emphasis }}</em>.</h2>
+      </div>
+
+      <div class="pd-desc-content">
+        {%- if desc_source and desc_source != blank and desc_source contains '<li' -%}
+
+          {%- comment -%} Server-side parse of <li> items from product.description {%- endcomment -%}
+          {%- assign items_str = '' -%}
+          {%- assign li_pieces = desc_source | split: '<li' -%}
+          {%- for piece in li_pieces -%}
+            {%- unless forloop.first -%}
+              {%- assign after_open = piece | split: '>' | slice: 1, 99 | join: '>' -%}
+              {%- assign item_text = after_open | split: '</li>' | first | strip_html | strip -%}
+              {%- if item_text != blank -%}
+                {%- assign items_str = items_str | append: item_text | append: '|##|' -%}
+              {%- endif -%}
+            {%- endunless -%}
+          {%- endfor -%}
+          {%- assign items_arr = items_str | split: '|##|' -%}
+          {%- assign item_count = items_arr | size -%}
+
+          <div class="pd-desc-card" data-transformed="1">
+            {%- for item in items_arr -%}
+              <div class="pd-desc-section{% unless forloop.first %} is-hidden{% endunless %}">
+                <div>
+                  {%- if item contains ':' -%}
+                    {%- assign colon_split = item | split: ':' -%}
+                    {%- assign label = colon_split | first | strip -%}
+                    {%- assign label_len = label | size -%}
+                    {%- assign rest_start = label_len | plus: 1 -%}
+                    {%- assign item_len = item | size -%}
+                    {%- assign desc_text = item | slice: rest_start, item_len | strip -%}
+                    {%- if label != blank and desc_text != blank -%}
+                      <h3 class="pd-desc-label">{{ label }}</h3>
+                      <p class="pd-desc-text">{{ desc_text }}</p>
+                    {%- else -%}
+                      <p class="pd-desc-text">{{ item }}</p>
+                    {%- endif -%}
+                  {%- else -%}
+                    <p class="pd-desc-text">{{ item }}</p>
+                  {%- endif -%}
+                </div>
+              </div>
+            {%- endfor -%}
+            {%- if item_count > 1 -%}
+              <button type="button" class="pd-desc-toggle">
+                <span class="pd-desc-toggle-text">{{ section.settings.read_more_text }}</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>
+              </button>
+            {%- endif -%}
+          </div>
+
+        {%- elsif desc_source and desc_source != blank -%}
+          {{ desc_source }}
+        {%- else -%}
+          <div class="pd-desc-card" data-transformed="1">
+            <div class="pd-desc-section">
+              <div>
+                <h3 class="pd-desc-label">{{ section.settings.fb_card1_label }}</h3>
+                <p class="pd-desc-text">{{ section.settings.fb_card1_body }}</p>
+              </div>
+            </div>
+            <div class="pd-desc-section is-hidden">
+              <div>
+                <h3 class="pd-desc-label">{% if is_sf %}{{ section.settings.fb_card2_label_sf }}{% else %}{{ section.settings.fb_card2_label_regular }}{% endif %}</h3>
+                <p class="pd-desc-text">{% if is_sf %}{{ section.settings.fb_card2_body_sf }}{% else %}{{ section.settings.fb_card2_body_regular }}{% endif %}</p>
+              </div>
+            </div>
+            <div class="pd-desc-section is-hidden">
+              <div>
+                <h3 class="pd-desc-label">{{ section.settings.fb_card3_label }}</h3>
+                <p class="pd-desc-text">{{ section.settings.fb_card3_body }}</p>
+              </div>
+            </div>
+            <div class="pd-desc-section is-hidden">
+              <div>
+                <h3 class="pd-desc-label">{{ section.settings.fb_card4_label }}</h3>
+                <p class="pd-desc-text">{{ section.settings.fb_card4_body }}</p>
+              </div>
+            </div>
+            <button type="button" class="pd-desc-toggle">
+              <span class="pd-desc-toggle-text">{{ section.settings.read_more_text }}</span>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>
+            </button>
+          </div>
+        {%- endif -%}
+
+        <div class="pd-desc-card pd-ing-card">
+          <div class="pd-desc-section">
+            <div>
+              <h3 class="pd-desc-label">{{ section.settings.ingredients_label }}</h3>
+              <p class="pd-desc-text">
+                {%- if ingredients_field -%}{{ ingredients_field | metafield_tag | strip_html }}{%- else -%}{{ section.settings.ingredients_fallback }}{%- endif -%}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="pd-desc-card pd-nf-card">
+          <button type="button" class="pd-nf-toggle">
+            <span class="pd-nf-toggle-dot" aria-hidden="true"></span>
+            <span class="pd-nf-toggle-text">{{ section.settings.nf_toggle_text }}</span>
+            <span class="pd-nf-toggle-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>
+            </span>
+          </button>
+          <div class="pd-nf-body">
+            <div class="pd-nutrition">
+              <div class="pd-nutrition-title">{{ section.settings.nf_title }}</div>
+              <div class="pd-nut-serv">{{ section.settings.nf_serving_size }}</div>
+              <div class="pd-nut-rule--thick"></div>
+              <div class="pd-nut-row"><strong>{{ section.settings.nf_amount_label }}</strong></div>
+              <div class="pd-nut-row" style="font-size:18px;"><strong>{{ section.settings.nf_calories_label }}</strong><strong>{%- if is_sf -%}{{ section.settings.nf_calories_sf }}{%- else -%}{{ section.settings.nf_calories_regular }}{%- endif -%}</strong></div>
+              <div class="pd-nut-rule"></div>
+              <div style="font-size:12px;text-align:right;">{{ section.settings.nf_dv_header }}</div>
+              <div class="pd-nut-row"><span><strong>{{ section.settings.nf_fat_label }}</strong> {{ section.settings.nf_fat_value }}</span><strong>{{ section.settings.nf_fat_dv }}</strong></div>
+              <div class="pd-nut-rule"></div>
+              <div class="pd-nut-row"><span><strong>{{ section.settings.nf_sodium_label }}</strong> {{ section.settings.nf_sodium_value }}</span><strong>{{ section.settings.nf_sodium_dv }}</strong></div>
+              <div class="pd-nut-rule"></div>
+              <div class="pd-nut-row"><span><strong>{{ section.settings.nf_carbs_label }}</strong> {%- if is_sf -%}{{ section.settings.nf_carbs_value_sf }}{%- else -%}{{ section.settings.nf_carbs_value_regular }}{%- endif -%}</span><strong>{%- if is_sf -%}{{ section.settings.nf_carbs_dv_sf }}{%- else -%}{{ section.settings.nf_carbs_dv_regular }}{%- endif -%}</strong></div>
+              <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>{{ section.settings.nf_sugars_label }} {%- if is_sf -%}{{ section.settings.nf_sugars_value_sf }}{%- else -%}{{ section.settings.nf_sugars_value_regular }}{%- endif -%}</span><span></span></div>
+              {%- unless is_sf -%}<div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>{{ section.settings.nf_added_sugars_text }}</span><strong>{{ section.settings.nf_added_sugars_dv }}</strong></div>{%- endunless -%}
+              <div class="pd-nut-rule"></div>
+              <div class="pd-nut-row"><span><strong>{{ section.settings.nf_protein_label }}</strong> {{ section.settings.nf_protein_value }}</span></div>
+              <div class="pd-nut-rule--med"></div>
+              <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">{{ section.settings.nf_dv_note }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  document.addEventListener('click', function(e){
+    const readMoreBtn = e.target.closest('.pd-desc-toggle');
+    if (readMoreBtn) {
+      const card = readMoreBtn.closest('.pd-desc-card');
+      if (!card) return;
+      const wasExpanded = card.classList.contains('is-expanded');
+      const isExpanded = card.classList.toggle('is-expanded');
+      readMoreBtn.classList.toggle('is-expanded', isExpanded);
+      const textEl = readMoreBtn.querySelector('.pd-desc-toggle-text');
+      if (textEl) textEl.textContent = isExpanded ? {{ section.settings.show_less_text | json }} : {{ section.settings.read_more_text | json }};
+      card.querySelectorAll('.pd-desc-section').forEach((s, i) => {
+        if (i > 0) s.classList.toggle('is-hidden', !isExpanded);
+      });
+      if (wasExpanded && !isExpanded) {
+        const desc = document.querySelector('.pd-description');
+        if (desc) {
+          const headerStr = getComputedStyle(document.documentElement).getPropertyValue('--header-height');
+          const headerH = parseInt(headerStr) || 84;
+          const targetY = desc.getBoundingClientRect().top + window.scrollY - headerH - 20;
+          window.scrollTo({top: Math.max(0, targetY), behavior: 'smooth'});
+        }
+      }
+      return;
+    }
+
+    const nfCard = e.target.closest('.pd-nf-card');
+    if (nfCard && !e.target.closest('.pd-nf-body')) {
+      const wasOpen = nfCard.classList.contains('is-open');
+      nfCard.classList.toggle('is-open');
+      if (wasOpen) {
+        const headerStr = getComputedStyle(document.documentElement).getPropertyValue('--header-height');
+        const headerH = parseInt(headerStr) || 84;
+        const targetY = nfCard.getBoundingClientRect().top + window.scrollY - headerH - 20;
+        window.scrollTo({top: Math.max(0, targetY), behavior: 'smooth'});
+      }
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "PD Description",
+  "tag": "section",
+  "class": "section-pd-description",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "desc_eyebrow", "label": "Eyebrow label", "default": "About this syrup" },
+    { "type": "text", "id": "desc_heading_pre", "label": "Heading (before emphasis)", "default": "More than a" },
+    { "type": "text", "id": "desc_heading_emphasis", "label": "Heading emphasized word", "default": "sweetener" },
+    { "type": "richtext", "id": "description_override", "label": "Description text (override)", "info": "Optional. Replaces the product's Description on this page. Leave empty to use the product's own Description. Use a bulleted list to get the Read more cards." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "text_primary", "label": "Primary text color", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_brand", "label": "Heading color", "default": "#39220f" },
+    { "type": "color", "id": "bg_section", "label": "Page background", "default": "#FFFBF4" },
+    { "type": "color", "id": "desc_bg", "label": "Description section background", "default": "#FFFBF4" },
+    { "type": "color", "id": "desc_card_bg", "label": "Description card background", "default": "#FFFBF4" },
+    { "type": "color", "id": "desc_text_color", "label": "Description card text", "default": "#1a1a1a" },
+    { "type": "color", "id": "eyebrow_bg", "label": "Eyebrow label background", "default": "#FFFBF4" },
+    { "type": "color", "id": "eyebrow_text_color", "label": "Eyebrow label text", "default": "#1a1a1a" },
+    { "type": "header", "content": "Typography & spacing" },
+    { "type": "range", "id": "h2_font_size", "label": "H2 font size", "min": 20, "max": 56, "step": 1, "unit": "px", "default": 36 },
+    { "type": "range", "id": "eyebrow_font_size", "label": "Eyebrow label size", "min": 10, "max": 18, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "wrap_max_width", "label": "Content max width", "min": 900, "max": 1600, "step": 20, "unit": "px", "default": 1200 },
+    { "type": "range", "id": "section_padding_top", "label": "Section padding top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "section_padding_bottom", "label": "Section padding bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 60 },
+    { "type": "header", "content": "Toggle button" },
+    { "type": "text", "id": "read_more_text", "label": "Read more label", "default": "Read more" },
+    { "type": "text", "id": "show_less_text", "label": "Show less label", "default": "Show less" },
+    { "type": "header", "content": "Fallback description " },
+    { "type": "text", "id": "fb_card1_label", "label": "Card 1 title", "default": "Real Flavor" },
+    { "type": "textarea", "id": "fb_card1_body", "label": "Card 1 body", "default": "Café-quality syrup with rich, true-to-source taste in every pump." },
+    { "type": "text", "id": "fb_card2_label_regular", "label": "Card 2 title (regular)", "default": "Pure Cane Sugar" },
+    { "type": "text", "id": "fb_card2_label_sf", "label": "Card 2 title (sugar-free)", "default": "Sugar-Free" },
+    { "type": "textarea", "id": "fb_card2_body_regular", "label": "Card 2 body (regular)", "default": "No high-fructose corn syrup, no weird aftertaste." },
+    { "type": "textarea", "id": "fb_card2_body_sf", "label": "Card 2 body (sugar-free)", "default": "All the rich flavor, zero sugar — no weird aftertaste." },
+    { "type": "text", "id": "fb_card3_label", "label": "Card 3 title", "default": "Long Lasting" },
+    { "type": "textarea", "id": "fb_card3_body", "label": "Card 3 body", "default": "50+ servings per bottle." },
+    { "type": "text", "id": "fb_card4_label", "label": "Card 4 title", "default": "Made in USA" },
+    { "type": "textarea", "id": "fb_card4_body", "label": "Card 4 body", "default": "Kosher certified, gluten free, dietary-friendly." },
+    { "type": "header", "content": "Ingredients card" },
+    { "type": "text", "id": "ingredients_label", "label": "Ingredients heading", "default": "Ingredients" },
+    { "type": "textarea", "id": "ingredients_fallback", "label": "Ingredients fallback (shown when no metafield)", "default": "Pure Cane Sugar, Filtered Water, Natural Flavor, Citric Acid, Potassium Sorbate (preservative)." },
+    { "type": "header", "content": "Nutrition Facts" },
+    { "type": "text", "id": "nf_toggle_text", "label": "Toggle button text", "default": "Nutrition Facts" },
+    { "type": "text", "id": "nf_title", "label": "Panel title", "default": "Nutrition Facts" },
+    { "type": "text", "id": "nf_serving_size", "label": "Serving size", "default": "Serving size 2 Tbsp (30 mL)" },
+    { "type": "text", "id": "nf_amount_label", "label": "Amount per serving label", "default": "Amount per serving" },
+    { "type": "text", "id": "nf_calories_label", "label": "Calories label", "default": "Calories" },
+    { "type": "text", "id": "nf_calories_regular", "label": "Calories value (regular)", "default": "60" },
+    { "type": "text", "id": "nf_calories_sf", "label": "Calories value (sugar-free)", "default": "0" },
+    { "type": "text", "id": "nf_dv_header", "label": "% Daily Value header", "default": "% Daily Value*" },
+    { "type": "text", "id": "nf_fat_label", "label": "Total Fat label", "default": "Total Fat" },
+    { "type": "text", "id": "nf_fat_value", "label": "Total Fat value", "default": "0g" },
+    { "type": "text", "id": "nf_fat_dv", "label": "Total Fat % DV", "default": "0%" },
+    { "type": "text", "id": "nf_sodium_label", "label": "Sodium label", "default": "Sodium" },
+    { "type": "text", "id": "nf_sodium_value", "label": "Sodium value", "default": "5mg" },
+    { "type": "text", "id": "nf_sodium_dv", "label": "Sodium % DV", "default": "0%" },
+    { "type": "text", "id": "nf_carbs_label", "label": "Total Carbohydrate label", "default": "Total Carbohydrate" },
+    { "type": "text", "id": "nf_carbs_value_regular", "label": "Carbohydrate value (regular)", "default": "15g" },
+    { "type": "text", "id": "nf_carbs_value_sf", "label": "Carbohydrate value (sugar-free)", "default": "1g" },
+    { "type": "text", "id": "nf_carbs_dv_regular", "label": "Carbohydrate % DV (regular)", "default": "5%" },
+    { "type": "text", "id": "nf_carbs_dv_sf", "label": "Carbohydrate % DV (sugar-free)", "default": "0%" },
+    { "type": "text", "id": "nf_sugars_label", "label": "Total Sugars label", "default": "Total Sugars" },
+    { "type": "text", "id": "nf_sugars_value_regular", "label": "Total Sugars value (regular)", "default": "14g" },
+    { "type": "text", "id": "nf_sugars_value_sf", "label": "Total Sugars value (sugar-free)", "default": "0g" },
+    { "type": "text", "id": "nf_added_sugars_text", "label": "Added Sugars line (regular only)", "default": "Incl. 14g Added Sugars" },
+    { "type": "text", "id": "nf_added_sugars_dv", "label": "Added Sugars % DV (regular only)", "default": "28%" },
+    { "type": "text", "id": "nf_protein_label", "label": "Protein label", "default": "Protein" },
+    { "type": "text", "id": "nf_protein_value", "label": "Protein value", "default": "0g" },
+    { "type": "text", "id": "nf_dv_note", "label": "Daily Value footnote", "default": "*% DV based on a 2,000 calorie diet." }
+  ],
+  "presets": [{ "name": "PD Description" }]
+}
+{% endschema %}
