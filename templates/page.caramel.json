@@ -1,0 +1,40 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "page-caramel",
+      "blocks": {
+        "stat_1": { "type": "stat", "settings": { "number": "50%", "label": "Off", "desc": "Every caramel flavor", "bg": "#ffffff" } },
+        "stat_2": { "type": "stat", "settings": { "number": "7", "label": "Caramel flavors", "desc": "Classic to limited edition", "bg": "#f6e3c6" } },
+        "stat_3": { "type": "stat", "settings": { "number": "0g", "label": "Sugar option", "desc": "Full sugar-free range", "bg": "#f7d9b0" } },
+        "stat_4": { "type": "stat", "settings": { "number": "50+", "label": "Servings", "desc": "Per 750 ml bottle", "bg": "#f3c466" } },
+        "flavor_1": { "type": "flavor", "settings": { "name": "Classic Caramel", "tag": "50% off", "bg": "#f6e3c6" } },
+        "flavor_2": { "type": "flavor", "settings": { "name": "Salted Caramel", "tag": "50% off", "bg": "#f7d9b0" } },
+        "flavor_3": { "type": "flavor", "settings": { "name": "Caramel Chocolate", "tag": "50% off", "bg": "#e8c79a" } },
+        "feature_1": { "type": "feature", "settings": { "icon": "drop", "title": "Real, buttery caramel", "text": "Smooth, true-to-source caramel taste — no high-fructose corn syrup, no artificial dyes." } },
+        "feature_2": { "type": "feature", "settings": { "icon": "check", "title": "Sugar-free options", "text": "Love caramel without the sugar? The whole caramel range comes in zero-sugar, zero-calorie too." } },
+        "feature_3": { "type": "feature", "settings": { "icon": "home", "title": "Made in the USA", "text": "Crafted, bottled and quality-checked in the USA — kosher and gluten-free, with 50+ servings a bottle." } }
+      },
+      "block_order": ["stat_1", "stat_2", "stat_3", "stat_4", "flavor_1", "flavor_2", "flavor_3", "feature_1", "feature_2", "feature_3"],
+      "settings": {
+        "collection_handle": "caramel",
+        "collection_sugarfree": "sugar-free-caramel",
+        "promo_code": "CARAMEL50",
+        "hero_cta_link": "/collections/caramel",
+        "hero_cta2_link": "#cm-deals",
+        "sf_btn_link": "/collections/caramel",
+        "vip_btn_link": "/account/login",
+        "vip_btn2_link": "/collections/caramel"
+      }
+    }
+  },
+  "order": ["main"]
+}
