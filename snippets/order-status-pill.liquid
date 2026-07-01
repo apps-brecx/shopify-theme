@@ -1,0 +1,47 @@
+{%- comment -%}
+  Renders an accurate order-status pill for the custom account page.
+
+  Usage:
+    {%- render 'order-status-pill', order: order, icCheck: icCheck, icTruck: icTruck, icRefresh: icRefresh -%}
+
+  Why this exists:
+    Shopify's `order.fulfillment_status == 'fulfilled'` only means the order has been
+    SHIPPED (a fulfillment / tracking number was created) — NOT that the carrier delivered it.
+    Storefront Liquid has no access to live carrier delivery status, so we must not label a
+    freshly shipped order "Delivered".
+
+  How it stays accurate:
+    1. If a real delivery status has been written to an order metafield
+       (custom.delivery_status), we trust that — e.g. "delivered", "out_for_delivery",
+       "in_transit". You can populate it with Shopify Flow off the carrier "Delivered" event.
+    2. Otherwise we fall back to what Liquid actually knows: shipped / partially shipped /
+       processing / cancelled.
+
+  Pill classes available: .delivered (green), .transit (amber), .processing (blue).
+{%- endcomment -%}
+{%- assign dstat = order.metafields.custom.delivery_status | default: '' | downcase | strip -%}
+{%- assign st = 'processing' -%}
+{%- assign slabel = 'Processing' -%}
+{%- assign sicon = icRefresh -%}
+
+{%- if order.cancelled -%}
+  {%- assign st = 'processing' -%}{%- assign slabel = 'Cancelled' -%}{%- assign sicon = icRefresh -%}
+{%- elsif dstat == 'delivered' -%}
+  {%- assign st = 'delivered' -%}{%- assign slabel = 'Delivered' -%}{%- assign sicon = icCheck -%}
+{%- elsif dstat contains 'out_for_delivery' or dstat contains 'out for delivery' -%}
+  {%- assign st = 'transit' -%}{%- assign slabel = 'Out for delivery' -%}{%- assign sicon = icTruck -%}
+{%- elsif dstat contains 'transit' or dstat contains 'in_transit' or dstat contains 'attempted' or dstat contains 'shipped' -%}
+  {%- assign st = 'transit' -%}{%- assign slabel = 'In transit' -%}{%- assign sicon = icTruck -%}
+{%- elsif dstat contains 'failure' or dstat contains 'return' -%}
+  {%- assign st = 'transit' -%}{%- assign slabel = 'Delivery issue' -%}{%- assign sicon = icTruck -%}
+{%- elsif order.fulfillment_status == 'fulfilled' -%}
+  {%- assign st = 'transit' -%}{%- assign slabel = 'Shipped' -%}{%- assign sicon = icTruck -%}
+{%- elsif order.fulfillment_status == 'partial' -%}
+  {%- assign st = 'transit' -%}{%- assign slabel = 'Partially shipped' -%}{%- assign sicon = icTruck -%}
+{%- elsif order.financial_status == 'pending' -%}
+  {%- assign st = 'processing' -%}{%- assign slabel = 'Payment pending' -%}{%- assign sicon = icRefresh -%}
+{%- else -%}
+  {%- assign st = 'processing' -%}{%- assign slabel = 'Processing' -%}{%- assign sicon = icRefresh -%}
+{%- endif -%}
+
+<span class="pill-status {{ st }}">{{ sicon }} {{ slabel }}</span>
