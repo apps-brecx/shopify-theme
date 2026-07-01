@@ -208,8 +208,7 @@
                 <div class="order-meta"><span class="k">Order</span><span class="v">{{ recent.name }}</span></div>
                 <div class="order-meta"><span class="k">Placed</span><span class="v">{{ recent.created_at | date: '%b %-d, %Y' }}</span></div>
                 <span class="spacer"></span>
-                {%- assign st = 'processing' -%}{%- if recent.fulfillment_status == 'fulfilled' -%}{%- assign st = 'delivered' -%}{%- elsif recent.fulfillment_status == 'partial' -%}{%- assign st = 'transit' -%}{%- endif -%}
-                <span class="pill-status {{ st }}">{% if st == 'delivered' %}{{ icCheck }} Delivered{% elsif st == 'transit' %}{{ icTruck }} In transit{% else %}{{ icRefresh }} {{ recent.financial_status_label }}{% endif %}</span>
+                {%- render 'order-status-pill', order: recent, icCheck: icCheck, icTruck: icTruck, icRefresh: icRefresh -%}
               </div>
               <div class="order-body">
                 {%- for line in recent.line_items limit: 3 -%}
@@ -234,8 +233,7 @@
                   <div class="order-meta"><span class="k">Placed</span><span class="v">{{ order.created_at | date: '%b %-d, %Y' }}</span></div>
                   <div class="order-meta"><span class="k">Items</span><span class="v">{{ order.item_count }}</span></div>
                   <span class="spacer"></span>
-                  {%- assign st = 'processing' -%}{%- if order.fulfillment_status == 'fulfilled' -%}{%- assign st = 'delivered' -%}{%- elsif order.fulfillment_status == 'partial' -%}{%- assign st = 'transit' -%}{%- endif -%}
-                  <span class="pill-status {{ st }}">{% if st == 'delivered' %}{{ icCheck }} Delivered{% elsif st == 'transit' %}{{ icTruck }} In transit{% else %}{{ icRefresh }} {{ order.financial_status_label }}{% endif %}</span>
+                  {%- render 'order-status-pill', order: order, icCheck: icCheck, icTruck: icTruck, icRefresh: icRefresh -%}
                 </div>
                 <div class="order-body">
                   {%- for line in order.line_items limit: 4 -%}
