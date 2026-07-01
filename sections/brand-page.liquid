@@ -31,55 +31,82 @@
     --pd-wrap: {{ section.settings.wrap_max_width }}px;
     --pd-cta-bg: {{ section.settings.cta_color_bg }};
     --pd-cta-text: {{ section.settings.cta_color_text }};
+
+    /* Per-section backgrounds & text */
+    --pd-bc-text: {{ section.settings.breadcrumb_text_color }};
+    --pd-hero-bg: {{ section.settings.hero_bg }};
+    --pd-marquee-bg: {{ section.settings.marquee_bg }};
+    --pd-marquee-text: {{ section.settings.marquee_text }};
+    --pd-desc-bg: {{ section.settings.desc_bg }};
+    --pd-desc-card-bg: {{ section.settings.desc_card_bg }};
+    --pd-desc-text: {{ section.settings.desc_text_color }};
+    --pd-why-bg: {{ section.settings.why_bg }};
+    --pd-why-text: {{ section.settings.why_text_color }};
+    --pd-ugc-bg: {{ section.settings.ugc_bg }};
+    --pd-ugc-text: {{ section.settings.ugc_text_color }};
+    --pd-sticky-bg: {{ section.settings.sticky_bg }};
+    --pd-sticky-text: {{ section.settings.sticky_text_color }};
+    --pd-sale-bg: {{ section.settings.sale_badge_bg }};
+    --pd-sale-text: {{ section.settings.sale_badge_text }};
+    --pd-eyebrow-bg: {{ section.settings.eyebrow_bg }};
+    --pd-eyebrow-text: {{ section.settings.eyebrow_text_color }};
+
+    /* Accent palette (chips, cards, emphasis) — overrides pdp-brand.css tokens */
+    --peach: {{ section.settings.palette_peach }};
+    --butter: {{ section.settings.palette_butter }};
+    --mint: {{ section.settings.palette_mint }};
+    --sky: {{ section.settings.palette_sky }};
+    --blush: {{ section.settings.palette_blush }};
+    --coral: {{ section.settings.palette_coral }};
   }
 
   /* Apply variables to page elements */
   #shopify-section-{{ section.id }} .pd {
-    background: var(--pd-bg);
+    background: var(--pd-bg) !important;
     color: var(--pd-text) !important;
   }
   #shopify-section-{{ section.id }} .pd-wrap {
-    max-width: var(--pd-wrap);
+    max-width: var(--pd-wrap) !important;
   }
 
   /* Hero spacing */
   #shopify-section-{{ section.id }} .pd-hero {
-    padding-top: var(--pd-hero-pad-top) !important;;
-    padding-bottom: var(--pd-hero-pad-bottom) !important;;
+    padding-top: var(--pd-hero-pad-top) !important;
+    padding-bottom: var(--pd-hero-pad-bottom) !important;
   }
 
   /* Section spacing (description, why, ugc) */
   #shopify-section-{{ section.id }} .pd-description,
   #shopify-section-{{ section.id }} .pd-why,
   #shopify-section-{{ section.id }} .pd-ugc {
-    padding-top: var(--pd-sec-pad-top);
-    padding-bottom: var(--pd-sec-pad-bottom) !important;;
+    padding-top: var(--pd-sec-pad-top) !important;
+    padding-bottom: var(--pd-sec-pad-bottom) !important;
   }
 
   /* Typography */
   #shopify-section-{{ section.id }} .pd-h1 {
-    font-size: clamp(28px, 8vw, var(--pd-h1-max)) !important;;
-    color: var(--pd-brand) !important;;
+    font-size: clamp(28px, 8vw, var(--pd-h1-max)) !important;
+    color: var(--pd-brand) !important;
   }
   #shopify-section-{{ section.id }} .pd-h2 {
-    font-size: var(--pd-h2) !important;;
-    color: var(--pd-brand) !important;;
+    font-size: var(--pd-h2) !important;
+    color: var(--pd-brand) !important;
   }
   #shopify-section-{{ section.id }} .pd-eyebrow {
-    font-size: var(--pd-eyebrow-size) !important;;
+    font-size: var(--pd-eyebrow-size) !important;
   }
 
   /* Stars */
   #shopify-section-{{ section.id }} .pd-stars svg {
-    fill: var(--pd-star) !important;;
-    stroke: var(--pd-star) !important;;
+    fill: var(--pd-star) !important;
+    stroke: var(--pd-star) !important;
   }
 
   /* Add to cart button */
   #shopify-section-{{ section.id }} .pd-atc,
   #shopify-section-{{ section.id }} .pd-stickybar .pd-atc {
-    background: var(--pd-cta-bg) !important;;
-    color: var(--pd-cta-text) !important;;
+    background: var(--pd-cta-bg) !important;
+    color: var(--pd-cta-text) !important;
   }
   #shopify-section-{{ section.id }} .pd-atc:hover {
     filter: brightness(0.92);
@@ -88,7 +115,7 @@
   /* Accent color usage (Read more, links) */
   #shopify-section-{{ section.id }} .pd-blurb-more,
   #shopify-section-{{ section.id }} .pd-variant-link strong {
-    color: var(--pd-accent) !important;;
+    color: var(--pd-accent) !important;
   }
 
   /* Mobile-only slider (preserved from original) */
@@ -100,11 +127,11 @@
     #shopify-section-{{ section.id }} .pd-slider-mobile {
       display: block !important;
       position: relative;
-      background: var(--pd-bg) !important;;
-      border: 2px solid var(--pd-brand) !important;;
+      background: var(--pd-bg) !important;
+      border: 2px solid var(--pd-brand) !important;
       border-radius: 20px;
       padding: 0;
-      box-shadow: 4px 4px 0 var(--pd-brand) !important;;
+      box-shadow: 4px 4px 0 var(--pd-brand) !important;
       overflow: hidden;
       max-width: 340px;
       margin: 0 auto;
@@ -149,6 +176,79 @@
     align-items: center !important;
     gap: 8px !important;
     flex-wrap: wrap !important;
+  }
+
+  /* ── Per-section background & text overrides ─────────────────── */
+  /* Breadcrumbs */
+  #shopify-section-{{ section.id }} .pd-breadcrumbs,
+  #shopify-section-{{ section.id }} .pd-breadcrumbs a,
+  #shopify-section-{{ section.id }} .pd-breadcrumbs .pd-bc-current {
+    color: var(--pd-bc-text) !important;
+  }
+
+  /* Hero */
+  #shopify-section-{{ section.id }} .pd-hero {
+    background: var(--pd-hero-bg) !important;
+  }
+
+  /* Marquee */
+  #shopify-section-{{ section.id }} .pd-marquee {
+    background: var(--pd-marquee-bg) !important;
+    color: var(--pd-marquee-text) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-marquee-track span {
+    color: var(--pd-marquee-text) !important;
+  }
+
+  /* Description section */
+  #shopify-section-{{ section.id }} .pd-description {
+    background: var(--pd-desc-bg) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-desc-card,
+  #shopify-section-{{ section.id }} .pd-desc-card.pd-ing-card,
+  #shopify-section-{{ section.id }} .pd-desc-card.pd-nf-card {
+    background: var(--pd-desc-card-bg) ;
+  }
+  #shopify-section-{{ section.id }} .pd-desc-label,
+  #shopify-section-{{ section.id }} .pd-desc-text {
+    color: var(--pd-desc-text) !important;
+  }
+
+  /* Why section */
+  #shopify-section-{{ section.id }} .pd-why {
+    background: var(--pd-why-bg) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-why-body {
+    color: var(--pd-why-text) !important;
+  }
+
+  /* UGC section */
+  #shopify-section-{{ section.id }} .pd-ugc {
+    background: var(--pd-ugc-bg) !important;
+    color: var(--pd-ugc-text) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-ugc .pd-h2 {
+    color: var(--pd-ugc-text) !important;
+  }
+
+  /* Sticky bar */
+  #shopify-section-{{ section.id }} .pd-stickybar {
+    background: var(--pd-sticky-bg) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-stickybar .pd-price {
+    color: var(--pd-sticky-text) !important;
+  }
+
+  /* Sale badge */
+  #shopify-section-{{ section.id }} .pd-sale-badge {
+    background: var(--pd-sale-bg) !important;
+    color: var(--pd-sale-text) !important;
+  }
+
+  /* Eyebrow labels */
+  #shopify-section-{{ section.id }} .pd-eyebrow {
+    background: var(--pd-eyebrow-bg) !important;
+    color: var(--pd-eyebrow-text) !important;
   }
 {% endstyle %}
 
@@ -602,7 +702,7 @@
   {%- if section.settings.show_ugc_section -%}
     <section class="pd-ugc">
       <div class="pd-wrap" style="text-align:center;">
-        <span class="pd-eyebrow" style="background:var(--pd-bg);">From the Syruvia jar</span>
+        <span class="pd-eyebrow" style="background:var(--pd-bg) !important;">From the Syruvia jar</span>
         <h2 class="pd-h2" style="margin-top:14px;">What our <em>regulars</em> are pouring.</h2>
         <div class="pd-ugc-grid" style="margin-top:36px;">
           {%- for img in product.images limit: 4 -%}
@@ -791,6 +891,160 @@ window.PD_TIERS = [1, 0.95, 0.90, 0.85];
       "type": "color",
       "id": "star_color",
       "label": "Review star color",
+      "default": "#FF6B5C"
+    },
+    {
+      "type": "header",
+      "content": "Section backgrounds & text"
+    },
+    {
+      "type": "paragraph",
+      "content": "Background and text color for each section. Defaults match the current design, so nothing changes until you edit a value."
+    },
+    {
+      "type": "color",
+      "id": "breadcrumb_text_color",
+      "label": "Breadcrumb text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "hero_bg",
+      "label": "Hero background",
+      "default": "#FFF8EE"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_bg",
+      "label": "Eyebrow label background",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_text_color",
+      "label": "Eyebrow label text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "marquee_bg",
+      "label": "Marquee background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "marquee_text",
+      "label": "Marquee text",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "desc_bg",
+      "label": "Description section background",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "desc_card_bg",
+      "label": "Description card background",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "desc_text_color",
+      "label": "Description card text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "why_bg",
+      "label": "Why section background",
+      "default": "#FFF8EE"
+    },
+    {
+      "type": "color",
+      "id": "why_text_color",
+      "label": "Why card body text",
+      "default": "#3a3a3a"
+    },
+    {
+      "type": "color",
+      "id": "ugc_bg",
+      "label": "UGC section background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "ugc_text_color",
+      "label": "UGC section text",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_bg",
+      "label": "Sale badge background",
+      "default": "#FF6B5C"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_text",
+      "label": "Sale badge text",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "sticky_bg",
+      "label": "Sticky bar background",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "sticky_text_color",
+      "label": "Sticky bar price text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Accent palette (chips & cards)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Pastel colors used by feature chips, \"Why\" cards and highlights."
+    },
+    {
+      "type": "color",
+      "id": "palette_peach",
+      "label": "Peach",
+      "default": "#FFD4B8"
+    },
+    {
+      "type": "color",
+      "id": "palette_butter",
+      "label": "Butter",
+      "default": "#FCE2A0"
+    },
+    {
+      "type": "color",
+      "id": "palette_mint",
+      "label": "Mint",
+      "default": "#C5E4D4"
+    },
+    {
+      "type": "color",
+      "id": "palette_sky",
+      "label": "Sky",
+      "default": "#B8DCEB"
+    },
+    {
+      "type": "color",
+      "id": "palette_blush",
+      "label": "Blush",
+      "default": "#F5C7BE"
+    },
+    {
+      "type": "color",
+      "id": "palette_coral",
+      "label": "Coral (emphasis words, marquee stars)",
       "default": "#FF6B5C"
     },
     {
