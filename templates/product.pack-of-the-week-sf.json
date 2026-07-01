@@ -661,18 +661,18 @@
     "trusted_pack_jggqKc": {
       "type": "trusted-pack",
       "blocks": {
+        "item_X9cE6d": {
+          "type": "item",
+          "settings": {
+            "icon": "shopify://shop_images/sugar-free_d9fecf16-f729-4501-85f1-1350f85167f4.png",
+            "text": "Sugar Free"
+          }
+        },
         "item_XgLWHj": {
           "type": "item",
           "settings": {
             "icon": "shopify://shop_images/U.png",
             "text": "Kosher"
-          }
-        },
-        "item_X9cE6d": {
-          "type": "item",
-          "settings": {
-            "icon": "shopify://shop_images/leaf_2.png",
-            "text": "Vegan"
           }
         },
         "item_LWQDPF": {
@@ -691,8 +691,8 @@
         }
       },
       "block_order": [
-        "item_XgLWHj",
         "item_X9cE6d",
+        "item_XgLWHj",
         "item_LWQDPF",
         "item_Fd6MBH"
       ],
