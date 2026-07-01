@@ -1,0 +1,48 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pd-marquee-bg: {{ section.settings.marquee_bg }};
+    --pd-marquee-text: {{ section.settings.marquee_text }};
+    --coral: {{ section.settings.palette_coral }};
+  }
+  #shopify-section-{{ section.id }} .pd-marquee {
+    background: var(--pd-marquee-bg) !important;
+    color: var(--pd-marquee-text) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-marquee-track span {
+    color: var(--pd-marquee-text) !important;
+  }
+{% endstyle %}
+
+<div class="pd">
+  <div class="pd-marquee" aria-hidden="true">
+    <div class="pd-marquee-track">
+      {%- assign marquee_lines = section.settings.marquee_items | newline_to_br | split: '<br />' -%}
+      {%- for i in (1..2) -%}
+        {%- for line in marquee_lines -%}
+          {%- assign trimmed = line | strip -%}
+          {%- if trimmed != blank -%}
+            <span>{{ trimmed }}</span>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "PD Marquee",
+  "tag": "section",
+  "class": "section-pd-marquee",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "textarea", "id": "marquee_items", "label": "Marquee items (one per line)", "default": "Pure Cane Sweet\nReal Flavor\n50+ Servings\nGluten-Free\nKosher Certified\nMade in the USA" },
+    { "type": "color", "id": "marquee_bg", "label": "Marquee background", "default": "#1a1a1a" },
+    { "type": "color", "id": "marquee_text", "label": "Marquee text", "default": "#FFFBF4" },
+    { "type": "color", "id": "palette_coral", "label": "Star color", "default": "#FF6B5C" }
+  ],
+  "presets": [{ "name": "PD Marquee" }]
+}
+{% endschema %}
