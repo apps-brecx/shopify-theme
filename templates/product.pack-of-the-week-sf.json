@@ -755,7 +755,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Salted Caramel is a game changer for my morning cold brew, saving over $150 a month and my drinks taste better than the coffee shop.",
+            "quote": "I love fruity drinks but don’t want the sugar. These flavors are bright, smooth, and super refreshing. Mandarin Orange is my favorite",
             "reviewer_initials": "SJ",
             "reviewer_name": "Sarah J.",
             "reviewer_role": "VERIFIED BUYER"
@@ -765,7 +765,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Finally, a sugar-free vanilla that doesn't have that weird aftertaste. Perfect for my keto lattes. The concentration is insane, one bottle lasts forever!",
+            "quote": "This pack is perfect for summer. I made lemonade with Peach and Mango, and it tasted like something from a café.",
             "reviewer_initials": "MR",
             "reviewer_name": "Michael R.",
             "reviewer_role": "COFFEE ENTHUSIAST"
@@ -775,7 +775,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I use the fruit refreshers for my sparkling water every afternoon. It's so crisp and light. My kids even love making their own healthy 'sodas' with them.",
+            "quote": "This pack is perfect for summer. I made lemonade with Peach and Mango, and it tasted like something from a café.",
             "reviewer_initials": "EG",
             "reviewer_name": "Elena G.",
             "reviewer_role": "HAPPY MOTHER"
@@ -785,7 +785,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I use the fruit refreshers for my sparkling water every afternoon. It's so crisp and light. My kids even love making their own healthy 'sodas' with them.",
+            "quote": "All three flavors mix really well. Peach is sweet, Mango is tropical, and Mandarin Orange adds the perfect citrus kick.",
             "reviewer_initials": "EG",
             "reviewer_name": "Elena G.",
             "reviewer_role": "HAPPY MOTHER"
@@ -795,7 +795,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Finally, a sugar-free vanilla that doesn't have that weird aftertaste. Perfect for my keto lattes. The concentration is insane, one bottle lasts forever!",
+            "quote": "The Mango tastes amazing in sparkling water, and the Peach is perfect for iced tea. This pack makes sugar-free drinks feel fun again.",
             "reviewer_initials": "MR",
             "reviewer_name": "Michael R.",
             "reviewer_role": "COFFEE ENTHUSIAST"
@@ -811,7 +811,7 @@
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "People\nLove this Combo",
+        "heading": "Sugar-Free Sippers\nLove It",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
