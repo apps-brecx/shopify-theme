@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Try multiple flavors",
-            "description": "Discover your favorite without the\ncommitment of full-size bulk."
+            "title": "Three Tropical Favorites",
+            "description": "Sugar-Free Mango, Peach, and Mandarin Orange give you bold, refreshing flavors in one versatile pack."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Rotate flavors easily",
-            "description": "Keep your morning routine exciting with fresh weekly picks."
+            "title": "Make Drinks More Refreshing",
+            "description": "Create unique summer drinks every day from iced teas to sparkling lemonades  without repeating the same flavor."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Avoid unused Flavors",
-            "description": "Optimized sizes meant for high-rotation use at home."
+            "title": "Big Flavor, Zero Sugar",
+            "description": "Made for bright summer drinks that taste juicy and refreshing without sugar."
           }
         }
       },
