@@ -1,0 +1,73 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-nutrition-wrap { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-nutrition-wrap" aria-hidden="true">
+    <div class="pd-wrap">
+      <div class="pd-nutrition">
+        <div class="pd-nutrition-title">{{ section.settings.title }}</div>
+        <div class="pd-nut-serv">{{ section.settings.serving }}</div>
+        <div class="pd-nut-rule--thick"></div>
+        <div class="pd-nut-row"><strong>{{ section.settings.amount_label }}</strong></div>
+        <div class="pd-nut-row" style="font-size:18px;"><strong>{{ section.settings.calories_label }}</strong><strong>{{ section.settings.calories_value }}</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div style="font-size:12px;text-align:right;">{{ section.settings.dv_label }}</div>
+        <div class="pd-nut-row"><span><strong>{{ section.settings.fat_label }}</strong> {{ section.settings.fat_value }}</span><strong>{{ section.settings.fat_dv }}</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>{{ section.settings.sodium_label }}</strong> {{ section.settings.sodium_value }}</span><strong>{{ section.settings.sodium_dv }}</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>{{ section.settings.carb_label }}</strong> {{ section.settings.carb_value }}</span><strong>{{ section.settings.carb_dv }}</strong></div>
+        <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>{{ section.settings.sugars_label }}</span><span></span></div>
+        <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>{{ section.settings.added_sugars_label }}</span><strong>{{ section.settings.added_sugars_dv }}</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>{{ section.settings.protein_label }}</strong> {{ section.settings.protein_value }}</span></div>
+        <div class="pd-nut-rule--med"></div>
+        <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">{{ section.settings.footnote }}</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PB Nutrition",
+  "tag": "section",
+  "class": "section-pb-nutrition",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "Nutrition Facts" },
+    { "type": "text", "id": "serving", "label": "Serving size", "default": "Serving size 1 oz (28 g)" },
+    { "type": "text", "id": "amount_label", "label": "Amount-per-serving label", "default": "Amount per serving" },
+    { "type": "text", "id": "calories_label", "label": "Calories label", "default": "Calories" },
+    { "type": "text", "id": "calories_value", "label": "Calories value", "default": "30" },
+    { "type": "text", "id": "dv_label", "label": "% Daily Value label", "default": "% Daily Value*" },
+    { "type": "header", "content": "Total Fat" },
+    { "type": "text", "id": "fat_label", "label": "Label", "default": "Total Fat" },
+    { "type": "text", "id": "fat_value", "label": "Value", "default": "0g" },
+    { "type": "text", "id": "fat_dv", "label": "% DV", "default": "0%" },
+    { "type": "header", "content": "Sodium" },
+    { "type": "text", "id": "sodium_label", "label": "Label", "default": "Sodium" },
+    { "type": "text", "id": "sodium_value", "label": "Value", "default": "15mg" },
+    { "type": "text", "id": "sodium_dv", "label": "% DV", "default": "1%" },
+    { "type": "header", "content": "Total Carbohydrate" },
+    { "type": "text", "id": "carb_label", "label": "Label", "default": "Total Carbohydrate" },
+    { "type": "text", "id": "carb_value", "label": "Value", "default": "8g" },
+    { "type": "text", "id": "carb_dv", "label": "% DV", "default": "3%" },
+    { "type": "text", "id": "sugars_label", "label": "Total Sugars line", "default": "Total Sugars 7g" },
+    { "type": "text", "id": "added_sugars_label", "label": "Added Sugars line", "default": "Incl. 6g Added Sugars" },
+    { "type": "text", "id": "added_sugars_dv", "label": "Added Sugars % DV", "default": "12%" },
+    { "type": "header", "content": "Protein" },
+    { "type": "text", "id": "protein_label", "label": "Label", "default": "Protein" },
+    { "type": "text", "id": "protein_value", "label": "Value", "default": "0g" },
+    { "type": "header", "content": "Footnote & colors" },
+    { "type": "text", "id": "footnote", "label": "Footnote", "default": "*% DV based on a 2,000 calorie diet." },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "PB Nutrition" }]
+}
+{% endschema %}

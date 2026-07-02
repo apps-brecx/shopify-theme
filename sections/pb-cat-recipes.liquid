@@ -1,0 +1,85 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign flavor = 'fruit' -%}
+{%- if t_lc contains 'mango' -%}{%- assign flavor = 'mango' -%}{%- endif -%}
+{%- if t_lc contains 'strawberry' -%}{%- assign flavor = 'strawberry' -%}{%- endif -%}
+{%- if t_lc contains 'peach' -%}{%- assign flavor = 'peach' -%}{%- endif -%}
+{%- if t_lc contains 'passion' -%}{%- assign flavor = 'passion fruit' -%}{%- endif -%}
+{%- if t_lc contains 'pomegranate' -%}{%- assign flavor = 'pomegranate' -%}{%- endif -%}
+{%- if t_lc contains 'blueberry' -%}{%- assign flavor = 'blueberry' -%}{%- endif -%}
+{%- assign flavor_cap = flavor | capitalize -%}
+
+{%- if section.settings.band_color != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-cat-recipes { background: {{ section.settings.band_color }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-cat-recipes">
+    <div class="pd-wrap" style="text-align:center;">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2" style="margin:14px auto 14px;">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      <p class="pd-cat-recipes-sub">{{ section.settings.sub }}</p>
+    </div>
+    <div class="pd-cat-recipes-scroll">
+      <button type="button" class="pd-cat-recipes-nav pd-cat-recipes-nav--prev" aria-label="Previous"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6 l-6 6 6 6"/></svg></button>
+      <div class="pd-cat-recipes-marquee">
+        <div class="pd-cat-recipes-track">
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c1_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c1_title | replace: '[flavor]', flavor_cap }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c1_body }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c2_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c2_title | replace: '[flavor]', flavor_cap }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c2_body }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c3_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c3_title | replace: '[flavor]', flavor_cap }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c3_body }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c4_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c4_title | replace: '[flavor]', flavor_cap }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c4_body }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c5_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c5_title | replace: '[flavor]', flavor_cap }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c5_body }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c6_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c6_title | replace: '[flavor]', flavor_cap }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c6_body }}</p></div>
+        </div>
+      </div>
+      <button type="button" class="pd-cat-recipes-nav pd-cat-recipes-nav--next" aria-label="Next"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 l6 6 -6 6"/></svg></button>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PB Ways To Use",
+  "tag": "section",
+  "class": "section-pb-cat-recipes",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Ways to use" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Pop them " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "everywhere" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "text", "id": "sub", "label": "Sub-text", "default": "From bubble tea to brunch bowls, these pearls upgrade every cup, scoop, or spoon." },
+    { "type": "color", "id": "band_color", "label": "Section background", "info": "Leave blank to keep the theme default (white)." },
+    { "type": "header", "content": "Card 1 (use [flavor] in titles for the flavor name)" },
+    { "type": "text", "id": "c1_tag", "label": "Tag", "default": "Smoothie Bowl" },
+    { "type": "text", "id": "c1_title", "label": "Title", "default": "Tropical Boba Bowl" },
+    { "type": "text", "id": "c1_body", "label": "Body", "default": "Blend frozen fruit + yogurt, scoop into a bowl, crown with a generous spoon of pearls." },
+    { "type": "header", "content": "Card 2" },
+    { "type": "text", "id": "c2_tag", "label": "Tag", "default": "Frozen Yogurt" },
+    { "type": "text", "id": "c2_title", "label": "Title", "default": "Fro-Yo Topping" },
+    { "type": "text", "id": "c2_body", "label": "Body", "default": "A tablespoon over vanilla or fruit fro-yo — textural surprise in every spoonful." },
+    { "type": "header", "content": "Card 3" },
+    { "type": "text", "id": "c3_tag", "label": "Tag", "default": "Ice Cream" },
+    { "type": "text", "id": "c3_title", "label": "Title", "default": "Boba Sundae" },
+    { "type": "text", "id": "c3_body", "label": "Body", "default": "Two scoops of vanilla, a drizzle of syrup, a heap of pearls. Done." },
+    { "type": "header", "content": "Card 4" },
+    { "type": "text", "id": "c4_tag", "label": "Tag", "default": "Lemonade" },
+    { "type": "text", "id": "c4_title", "label": "Title", "default": "[flavor] Lemonade Pop" },
+    { "type": "text", "id": "c4_body", "label": "Body", "default": "Sparkling lemonade, ice, a spoonful of pearls. Bright + bursty." },
+    { "type": "header", "content": "Card 5" },
+    { "type": "text", "id": "c5_tag", "label": "Tag", "default": "Cocktail" },
+    { "type": "text", "id": "c5_title", "label": "Title", "default": "Boba Spritz" },
+    { "type": "text", "id": "c5_body", "label": "Body", "default": "Prosecco + soda + pearls for a brunch-ready, photo-worthy drink." },
+    { "type": "header", "content": "Card 6" },
+    { "type": "text", "id": "c6_tag", "label": "Tag", "default": "Mocktail" },
+    { "type": "text", "id": "c6_title", "label": "Title", "default": "[flavor] Fizz" },
+    { "type": "text", "id": "c6_body", "label": "Body", "default": "Soda water, a splash of fruit juice, pearls. Bright, kid-friendly fun." }
+  ],
+  "presets": [{ "name": "PB Ways To Use" }]
+}
+{% endschema %}

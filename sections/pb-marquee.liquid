@@ -1,0 +1,36 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  #shopify-section-{{ section.id }} { --mq-bg: {{ section.settings.marquee_bg }}; --mq-text: {{ section.settings.marquee_text }}; }
+  #shopify-section-{{ section.id }} .pd-marquee { background: var(--mq-bg) !important; color: var(--mq-text) !important; }
+{% endstyle %}
+
+<div class="pd">
+  <div class="pd-marquee" aria-hidden="true">
+    <div class="pd-marquee-track">
+      {%- for i in (1..2) -%}<span>{{ section.settings.mq_item1 }}</span><span>{{ section.settings.mq_item2 }}</span><span>{{ section.settings.mq_item3 }}</span><span>{{ section.settings.mq_item4 }}</span><span>{{ section.settings.mq_item5 }}</span><span>{{ section.settings.mq_item6 }}</span>{%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "PB Marquee",
+  "tag": "section",
+  "class": "section-pb-marquee",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "marquee_bg", "label": "Marquee background", "default": "#1a1a1a" },
+    { "type": "color", "id": "marquee_text", "label": "Marquee text", "default": "#FFFBF4" },
+    { "type": "header", "content": "Scrolling phrases" },
+    { "type": "text", "id": "mq_item1", "label": "Phrase 1", "default": "Real Fruit Flavor" },
+    { "type": "text", "id": "mq_item2", "label": "Phrase 2", "default": "Burst Texture" },
+    { "type": "text", "id": "mq_item3", "label": "Phrase 3", "default": "Bubble Tea Ready" },
+    { "type": "text", "id": "mq_item4", "label": "Phrase 4", "default": "Vegan-Friendly" },
+    { "type": "text", "id": "mq_item5", "label": "Phrase 5", "default": "Gluten-Free" },
+    { "type": "text", "id": "mq_item6", "label": "Phrase 6", "default": "Made for café quality" }
+  ],
+  "presets": [{ "name": "PB Marquee" }]
+}
+{% endschema %}
