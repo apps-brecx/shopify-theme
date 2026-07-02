@@ -1,4 +1,7 @@
 {%- comment -%} Hero banner slider — simple: desktop + mobile image, optional overlay button {%- endcomment -%}
+{%- comment -%} Every slide fills the same viewport height so the carousel never jumps or shows white gaps {%- endcomment -%}
+{%- assign h_d = section.settings.height_d | default: 80 -%}
+{%- assign h_m = section.settings.height_m | default: 80 -%}
 <style id="syr-hero-{{ section.id }}-css">
   #syr-hero-{{ section.id }}{
     position:relative; overflow:hidden;
@@ -14,9 +17,11 @@
   #syr-hero-{{ section.id }} .syr-banner::-webkit-scrollbar{ display:none; }
   #syr-hero-{{ section.id }} .syr-slide{
     position:relative; flex:0 0 100%; width:100%;
+    height: {{ h_d }}vh; height: {{ h_d }}svh;
     scroll-snap-align:start;
   }
   #syr-hero-{{ section.id }} .syr-slide-link{
+    height: 100%;
     display:block; position:relative;
     text-decoration:none; color:inherit;
   }
@@ -24,28 +29,27 @@
   #syr-hero-{{ section.id }} .syr-slide-link.is-clickable:hover{ filter:brightness(1.03); }
   #syr-hero-{{ section.id }} .syr-slide-link.is-clickable:active{ filter:brightness(.97); }
 
+  {%- comment -%} media fills the uniform slide frame — cover keeps it edge-to-edge with no white gaps {%- endcomment -%}
   #syr-hero-{{ section.id }} .syr-slide-img-d,
   #syr-hero-{{ section.id }} .syr-slide-img-m,
   #syr-hero-{{ section.id }} .syr-slide-vid-d,
-  #syr-hero-{{ section.id }} .syr-slide-vid-m{ display:block; width:100%; height:auto; }
-  #syr-hero-{{ section.id }} .syr-slide-vid-d,
-  #syr-hero-{{ section.id }} .syr-slide-vid-m{ object-fit:cover; }
+  #syr-hero-{{ section.id }} .syr-slide-vid-m{ display:block; width:100%; height:100%; object-fit:cover; }
   #syr-hero-{{ section.id }} .syr-slide-img-m,
   #syr-hero-{{ section.id }} .syr-slide-vid-m{ display:none; }
   @media (max-width:760px){
+    #syr-hero-{{ section.id }} .syr-slide{ height: {{ h_m }}vh; height: {{ h_m }}svh; }
     #syr-hero-{{ section.id }} .syr-slide-img-d,
     #syr-hero-{{ section.id }} .syr-slide-vid-d{ display:none; }
     #syr-hero-{{ section.id }} .syr-slide-img-m,
     #syr-hero-{{ section.id }} .syr-slide-vid-m{ display:block; }
   }
   #syr-hero-{{ section.id }} .syr-slide-img-fb{
-    width:100%; aspect-ratio:21/9; max-height:78vh;
+    width:100%; height:100%;
     background:linear-gradient(135deg, #FFD4B8 0%, #c58548 100%);
     display:flex; align-items:center; justify-content:center;
     color:#fff; font-family:'Archivo Black',sans-serif;
     font-size:18px; letter-spacing:.14em; text-transform:uppercase;
   }
-  @media (max-width:760px){ #syr-hero-{{ section.id }} .syr-slide-img-fb{ aspect-ratio:4/5; } }
 
   /* Overlay button (3D push-button) */
   #syr-hero-{{ section.id }} .syr-slide-cta{
@@ -249,7 +253,11 @@
   "tag": "section",
   "max_blocks": 10,
   "settings": [
-    { "type": "range", "id": "autoplay_s", "label": "Auto-rotate (seconds, 0 = off)", "min": 0, "max": 12, "step": 1, "default": 6 }
+    { "type": "range", "id": "autoplay_s", "label": "Auto-rotate (seconds, 0 = off)", "min": 0, "max": 12, "step": 1, "default": 6 },
+    { "type": "header", "content": "Banner height (keeps every slide the same height)" },
+    { "type": "paragraph", "content": "100 = full screen. Images fill the frame edge-to-edge (cover), so lower this if the banner feels too tall." },
+    { "type": "range", "id": "height_d", "label": "Banner height — desktop", "min": 40, "max": 100, "step": 5, "unit": "vh", "default": 80 },
+    { "type": "range", "id": "height_m", "label": "Banner height — mobile", "min": 40, "max": 100, "step": 5, "unit": "vh", "default": 80 }
   ],
   "blocks": [
     {
