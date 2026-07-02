@@ -1,0 +1,72 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign flavor_short = 'topping' -%}
+{%- if t_lc contains 'chocolate crisp' -%}{%- assign flavor_short = 'chocolate' -%}
+{%- elsif t_lc contains 'cinnamon crisp' -%}{%- assign flavor_short = 'cinnamon' -%}
+{%- elsif t_lc contains 'sweet nutmeg' or t_lc contains 'nutmeg' -%}{%- assign flavor_short = 'nutmeg' -%}
+{%- elsif t_lc contains 'raspberry crunch' or t_lc contains 'raspberry' -%}{%- assign flavor_short = 'raspberry' -%}
+{%- elsif t_lc contains 'toasted coconut' or t_lc contains 'coconut' -%}{%- assign flavor_short = 'coconut' -%}
+{%- elsif t_lc contains 'french vanilla' or t_lc contains 'vanilla' -%}{%- assign flavor_short = 'vanilla' -%}
+{%- elsif t_lc contains 'white chocolate' -%}{%- assign flavor_short = 'white chocolate' -%}
+{%- endif -%}
+{%- assign flavor_cap = flavor_short | capitalize -%}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-description { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-description">
+    <div class="pd-wrap">
+      <div class="pd-desc-head">
+        <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+        <h2 class="pd-h2" style="margin-top:14px;">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      </div>
+      <div class="pd-desc-content">
+        {%- if section.settings.description_override != blank -%}
+          {{ section.settings.description_override }}
+        {%- elsif product.description and product.description != blank -%}
+          {{ product.description }}
+        {%- else -%}
+          <ul>
+            <li>{{ section.settings.fb1_prefix }} {{ flavor_cap }}: {{ section.settings.fb1_rest }}</li>
+            <li>{{ section.settings.fb2 }}</li>
+            <li>{{ section.settings.fb3 }}</li>
+            <li>{{ section.settings.fb4 }}</li>
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "ST Description",
+  "tag": "section",
+  "class": "section-st-description",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "About this topping" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "A finishing " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "flourish" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "header", "content": "Body" },
+    { "type": "richtext", "id": "description_override", "label": "Description (override)", "info": "Leave blank to use the product's own description. Falls back to the bullets below if the product has no description." },
+    { "type": "header", "content": "Fallback bullets (shown only if no description)" },
+    { "type": "text", "id": "fb1_prefix", "label": "Bullet 1 prefix (before flavor)", "default": "Bold" },
+    { "type": "text", "id": "fb1_rest", "label": "Bullet 1 text (after flavor)", "default": "Bright, fragrant flavor that hits the second the lid pops." },
+    { "type": "text", "id": "fb2", "label": "Bullet 2", "default": "Shake-and-Done: No grinder, no measuring. Easy-shake lid does the work." },
+    { "type": "text", "id": "fb3", "label": "Bullet 3", "default": "Built for Lattes & More: Whipped cream tops, cocoas, oatmeal, ice cream, baked goods." },
+    { "type": "text", "id": "fb4", "label": "Bullet 4", "default": "Kitchen-Ready: Kosher, non-GMO, long shelf life. Tuck it next to your coffee setup." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "ST Description" }]
+}
+{% endschema %}

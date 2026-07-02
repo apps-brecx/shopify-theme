@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "main": { "type": "st-hero", "settings": {} },
+    "st_marquee": { "type": "st-marquee", "settings": {} },
+    "st_description": { "type": "st-description", "settings": {} },
+    "st_standards": { "type": "st-standards", "settings": {} },
+    "st_nutrition": { "type": "st-nutrition", "settings": {} },
+    "st_why": { "type": "st-why", "settings": {} },
+    "st_reels": { "type": "st-reels", "settings": {} },
+    "st_recipe": { "type": "st-recipe-feature", "settings": {} },
+    "st_cat_recipes": { "type": "st-cat-recipes", "settings": {} },
+    "pd_reviews": { "type": "pd-reviews", "settings": {} },
+    "pd_write_review": { "type": "pd-write-review", "settings": {} },
+    "pd_recommended": { "type": "pd-recommended", "settings": {} },
+    "st_faq": { "type": "st-faq", "settings": {} },
+    "pd_vip": { "type": "pd-vip", "settings": {} }
+  },
+  "order": [
+    "main",
+    "st_marquee",
+    "st_description",
+    "st_standards",
+    "st_nutrition",
+    "st_why",
+    "st_reels",
+    "st_recipe",
+    "st_cat_recipes",
+    "pd_reviews",
+    "pd_write_review",
+    "pd_recommended",
+    "st_faq",
+    "pd_vip"
+  ]
+}

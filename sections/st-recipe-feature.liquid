@@ -1,0 +1,78 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign flavor_short = 'topping' -%}
+{%- if t_lc contains 'chocolate crisp' -%}{%- assign flavor_short = 'chocolate' -%}
+{%- elsif t_lc contains 'cinnamon crisp' -%}{%- assign flavor_short = 'cinnamon' -%}
+{%- elsif t_lc contains 'sweet nutmeg' or t_lc contains 'nutmeg' -%}{%- assign flavor_short = 'nutmeg' -%}
+{%- elsif t_lc contains 'raspberry crunch' or t_lc contains 'raspberry' -%}{%- assign flavor_short = 'raspberry' -%}
+{%- elsif t_lc contains 'toasted coconut' or t_lc contains 'coconut' -%}{%- assign flavor_short = 'coconut' -%}
+{%- elsif t_lc contains 'french vanilla' or t_lc contains 'vanilla' -%}{%- assign flavor_short = 'vanilla' -%}
+{%- elsif t_lc contains 'white chocolate' -%}{%- assign flavor_short = 'white chocolate' -%}
+{%- endif -%}
+{%- assign flavor_cap = flavor_short | capitalize -%}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-recipes-v2 { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-recipes-v2">
+    <div class="pd-wrap pd-rv2-head">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2">{{ section.settings.heading_pre }}<em>{{ flavor_short }}</em>{{ section.settings.heading_post }}</h2>
+      <p class="pd-rv2-lede">{{ section.settings.lede }}</p>
+    </div>
+    <div class="pd-wrap">
+      <article class="pd-rv2-feature">
+        <div class="pd-rv2-feature-img">
+          <img src="{{ product.featured_image | image_url: width: 1200 }}" alt="{{ product.title | escape }} latte" loading="lazy">
+          <span class="pd-rv2-feature-tag">{{ section.settings.feature_tag }}</span>
+        </div>
+        <div class="pd-rv2-feature-body">
+          <div class="pd-rv2-feature-content is-trimmed">
+            <h3 class="pd-rv2-feature-name">{{ section.settings.name_pre }}{{ flavor_cap }}{{ section.settings.name_post }}</h3>
+            <p class="pd-rv2-feature-ing-head"><strong>{{ section.settings.ing_head }}</strong></p>
+            <ul>
+              <li>{{ section.settings.ing1 }}</li>
+              <li>{{ section.settings.ing2 }}</li>
+              <li>{{ section.settings.ing3 | replace: '[flavor]', flavor_short }}</li>
+            </ul>
+          </div>
+          <span class="pd-rv2-feature-time">{{ section.settings.time_label }}</span>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "ST Recipe Feature",
+  "tag": "section",
+  "class": "section-st-recipe-feature",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Featured pour" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before flavor", "default": "The classic " },
+    { "type": "text", "id": "heading_post", "label": "Heading after flavor", "default": " latte." },
+    { "type": "text", "id": "lede", "label": "Lede", "default": "Café-style finish in 60 seconds, right at home." },
+    { "type": "header", "content": "Feature card" },
+    { "type": "text", "id": "feature_tag", "label": "Image tag", "default": "Signature shake" },
+    { "type": "text", "id": "name_pre", "label": "Recipe name before flavor", "default": "Classic " },
+    { "type": "text", "id": "name_post", "label": "Recipe name after flavor", "default": " Latte" },
+    { "type": "text", "id": "ing_head", "label": "Ingredients heading", "default": "INGREDIENTS" },
+    { "type": "text", "id": "ing1", "label": "Ingredient 1", "default": "1 double shot espresso (or 4 oz strong coffee)" },
+    { "type": "text", "id": "ing2", "label": "Ingredient 2", "default": "6 – 8 oz steamed milk, topped with light foam" },
+    { "type": "text", "id": "ing3", "label": "Ingredient 3", "info": "Use [flavor] for the flavor name.", "default": "2 – 3 generous shakes of Syruvia [flavor] topping over the foam" },
+    { "type": "text", "id": "time_label", "label": "Time label", "default": "2 min" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "ST Recipe Feature" }]
+}
+{% endschema %}

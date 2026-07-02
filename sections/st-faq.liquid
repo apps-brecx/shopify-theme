@@ -1,0 +1,76 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-faq { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-faq" id="pdFaq">
+    <div class="pd-wrap pd-faq-head">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      <p class="pd-faq-lede">{{ section.settings.lede }}</p>
+    </div>
+    {%- capture faqs_raw -%}{{ section.settings.q1 }}|{{ section.settings.a1 }};;{{ section.settings.q2 }}|{{ section.settings.a2 }};;{{ section.settings.q3 }}|{{ section.settings.a3 }};;{{ section.settings.q4 }}|{{ section.settings.a4 }};;{{ section.settings.q5 }}|{{ section.settings.a5 }};;{{ section.settings.q6 }}|{{ section.settings.a6 }};;{{ section.settings.q7 }}|{{ section.settings.a7 }};;{{ section.settings.q8 }}|{{ section.settings.a8 }}{%- endcapture -%}
+    {%- assign faqs = faqs_raw | split: ';;' -%}
+    <ul class="pd-faq-list">
+      {%- for faq in faqs -%}
+        {%- assign parts = faq | split: '|' -%}
+        {%- if parts[0] == blank -%}{%- continue -%}{%- endif -%}
+        <li class="pd-faq-item">
+          <button type="button" class="pd-faq-q" aria-expanded="false">
+            <span class="pd-faq-q-text">{{ parts[0] }}</span>
+            <span class="pd-faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="pd-faq-a"><div class="pd-faq-a-inner">{{ parts[1] }}</div></div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "ST FAQ",
+  "tag": "section",
+  "class": "section-st-faq",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "FAQ" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Before you " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "shake" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "text", "id": "lede", "label": "Lede", "default": "Everything you might want to know about Syruvia shakable toppings." },
+    { "type": "header", "content": "Q1" },
+    { "type": "text", "id": "q1", "label": "Question", "default": "How much should I shake on?" },
+    { "type": "textarea", "id": "a1", "label": "Answer", "default": "Start with 2-3 shakes for a latte or hot chocolate. For desserts and ice cream, go heavier — 4-5 shakes for full coverage." },
+    { "type": "header", "content": "Q2" },
+    { "type": "text", "id": "q2", "label": "Question", "default": "Is the lid actually shakable?" },
+    { "type": "textarea", "id": "a2", "label": "Answer", "default": "Yes — the lid has a built-in shaker grid. Twist it open for sprinkling, or twist it shut for storage. No spoons, no mess." },
+    { "type": "header", "content": "Q3" },
+    { "type": "text", "id": "q3", "label": "Question", "default": "What can I use this on?" },
+    { "type": "textarea", "id": "a3", "label": "Answer", "default": "Lattes, cappuccinos, hot cocoa, ice cream, oatmeal, yogurt parfaits, cookies, cupcakes, espresso martinis, even toast and pancakes." },
+    { "type": "header", "content": "Q4" },
+    { "type": "text", "id": "q4", "label": "Question", "default": "Will it dissolve in liquid?" },
+    { "type": "textarea", "id": "a4", "label": "Answer", "default": "It sits on top like café finishing toppings should — that is the point. For stirred drinks, stir lightly so it floats but flavors the sip." },
+    { "type": "header", "content": "Q5" },
+    { "type": "text", "id": "q5", "label": "Question", "default": "How long does an open jar last?" },
+    { "type": "textarea", "id": "a5", "label": "Answer", "default": "Sealed jars keep up to 18 months in a cool, dry pantry. Once open, use within 6 months for best aroma and crunch." },
+    { "type": "header", "content": "Q6" },
+    { "type": "text", "id": "q6", "label": "Question", "default": "Is it kosher? Gluten free?" },
+    { "type": "textarea", "id": "a6", "label": "Answer", "default": "Yes — kosher certified and gluten free. Check the label for allergen specifics on each flavor." },
+    { "type": "header", "content": "Q7" },
+    { "type": "text", "id": "q7", "label": "Question", "default": "How fast do you ship?" },
+    { "type": "textarea", "id": "a7", "label": "Answer", "default": "Orders ship in 1 business day from our New Jersey warehouse. Flat-rate $5.99 shipping, free over $34." },
+    { "type": "header", "content": "Q8" },
+    { "type": "text", "id": "q8", "label": "Question", "default": "What if I do not love it?" },
+    { "type": "textarea", "id": "a8", "label": "Answer", "default": "30-day taste guarantee. Email us and we will refund, replace, or credit — your call." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "ST FAQ" }]
+}
+{% endschema %}
