@@ -32,6 +32,47 @@
   #shopify-section-{{ section.id }} .pd-rv2-card-name { color: {{ section.settings.card_name_color }} !important; }
   #shopify-section-{{ section.id }} .pd-rv2-card-time { color: {{ section.settings.card_time_color }} !important; }
   #shopify-section-{{ section.id }} .pd-rv2-card-ings { color: {{ section.settings.card_ings_color }} !important; }
+
+  /* ── Carousel scroll layout (self-contained so arrows/dots work without shared snippets) ── */
+  #shopify-section-{{ section.id }} .pd-rv2-scroll { position: relative !important; width: 100% !important; }
+  #shopify-section-{{ section.id }} .pd-rv2-marquee {
+    position: relative !important; width: 100% !important; overflow-x: auto !important; overflow-y: hidden !important;
+    padding: 8px 0 16px !important; scrollbar-width: none !important; -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important; scroll-behavior: smooth !important;
+  }
+  #shopify-section-{{ section.id }} .pd-rv2-marquee::-webkit-scrollbar { display: none !important; height: 0 !important; }
+  #shopify-section-{{ section.id }} .pd-rv2-track {
+    display: flex !important; flex-wrap: nowrap !important; align-items: stretch !important; gap: 18px !important;
+    padding: 0 max(24px, calc((100vw - 1240px) / 2)) !important; width: max-content !important;
+  }
+  #shopify-section-{{ section.id }} .pd-rv2-card { flex: 0 0 300px !important; width: 300px !important; scroll-snap-align: start !important; }
+
+  /* Nav arrows (desktop) */
+  #shopify-section-{{ section.id }} .pd-rv2-nav {
+    position: absolute !important; top: 42% !important; transform: translateY(-50%) !important;
+    width: 52px !important; height: 52px !important; border-radius: 50% !important;
+    background: #FFFBF4 !important; border: 2px solid #1a1a1a !important; display: flex !important;
+    align-items: center !important; justify-content: center !important; color: #1a1a1a !important;
+    cursor: pointer !important; z-index: 5 !important; box-shadow: 4px 4px 0 #1a1a1a !important; padding: 0 !important;
+  }
+  #shopify-section-{{ section.id }} .pd-rv2-nav:hover { background: #FCE2A0 !important; }
+  #shopify-section-{{ section.id }} .pd-rv2-nav--prev { left: max(12px, calc((100vw - 1240px) / 2 - 28px)) !important; }
+  #shopify-section-{{ section.id }} .pd-rv2-nav--next { right: max(12px, calc((100vw - 1240px) / 2 - 28px)) !important; }
+
+  /* Dots */
+  #shopify-section-{{ section.id }} .pd-rv2-dots { display: flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; margin-top: 18px !important; }
+  #shopify-section-{{ section.id }} .pd-rv2-dot { width: 8px !important; height: 8px !important; border-radius: 50% !important; background: #FFFBF4 !important; border: 1.5px solid #1a1a1a !important; cursor: pointer !important; padding: 0 !important; transition: width .2s ease, background .2s ease !important; flex-shrink: 0 !important; }
+  #shopify-section-{{ section.id }} .pd-rv2-dot.is-active { width: 24px !important; border-radius: 999px !important; background: #FF6B5C !important; }
+
+  /* Mobile: hide arrows, resize cards */
+  @media (max-width: 980px) {
+    #shopify-section-{{ section.id }} .pd-rv2-nav { display: none !important; }
+    #shopify-section-{{ section.id }} .pd-rv2-track { gap: 14px !important; padding: 0 22px !important; }
+    #shopify-section-{{ section.id }} .pd-rv2-card { flex: 0 0 calc(100vw - 120px) !important; width: calc(100vw - 120px) !important; max-width: 320px !important; }
+  }
+  @media (max-width: 480px) {
+    #shopify-section-{{ section.id }} .pd-rv2-card { flex: 0 0 calc(100vw - 96px) !important; width: calc(100vw - 96px) !important; max-width: 300px !important; }
+  }
 {%- endstyle -%}
 
 <div class="pd">
@@ -84,12 +125,10 @@
                 <span class="pd-rv2-card-tag pd-rv2-card-tag--peach">{{ section.settings.card1_tag }}</span>
                 <span class="pd-rv2-card-time">{{ section.settings.card1_time }}</span>
               </div>
-              <h4 class="pd-rv2-card-name">{{ section.settings.card1_name_pre }}{{ t_clean }}{{ section.settings.card1_name_post }}</h4>
+              <h4 class="pd-rv2-card-name">{{ section.settings.card1_name | replace: '[product]', t_clean }}</h4>
               <ul class="pd-rv2-card-ings">
-                <li>{{ section.settings.card1_ing1_pre }}{{ t_clean }}{{ section.settings.card1_ing1_post }}</li>
-                <li>{{ section.settings.card1_ing2 }}</li>
-                <li>{{ section.settings.card1_ing3 }}</li>
-                <li>{{ section.settings.card1_ing4 }}</li>
+                {%- assign card1_ings = section.settings.card1_ings | newline_to_br | split: '<br />' -%}
+                {%- for line in card1_ings -%}{%- assign l = line | strip | replace: '[product]', t_clean -%}{%- if l != blank -%}<li>{{ l }}</li>{%- endif -%}{%- endfor -%}
               </ul>
             </div>
           </article>
@@ -100,12 +139,10 @@
                 <span class="pd-rv2-card-tag pd-rv2-card-tag--mint">{{ section.settings.card2_tag }}</span>
                 <span class="pd-rv2-card-time">{{ section.settings.card2_time }}</span>
               </div>
-              <h4 class="pd-rv2-card-name">{{ section.settings.card2_name_pre }}{{ t_clean }}{{ section.settings.card2_name_post }}</h4>
+              <h4 class="pd-rv2-card-name">{{ section.settings.card2_name | replace: '[product]', t_clean }}</h4>
               <ul class="pd-rv2-card-ings">
-                <li>{{ section.settings.card2_ing1_pre }}{{ t_clean }}{{ section.settings.card2_ing1_post }}</li>
-                <li>{{ section.settings.card2_ing2 }}</li>
-                <li>{{ section.settings.card2_ing3 }}</li>
-                <li>{{ section.settings.card2_ing4 }}</li>
+                {%- assign card2_ings = section.settings.card2_ings | newline_to_br | split: '<br />' -%}
+                {%- for line in card2_ings -%}{%- assign l = line | strip | replace: '[product]', t_clean -%}{%- if l != blank -%}<li>{{ l }}</li>{%- endif -%}{%- endfor -%}
               </ul>
             </div>
           </article>
@@ -116,12 +153,10 @@
                 <span class="pd-rv2-card-tag pd-rv2-card-tag--butter">{{ section.settings.card3_tag }}</span>
                 <span class="pd-rv2-card-time">{{ section.settings.card3_time }}</span>
               </div>
-              <h4 class="pd-rv2-card-name">{{ section.settings.card3_name_pre }}{{ t_clean }}{{ section.settings.card3_name_post }}</h4>
+              <h4 class="pd-rv2-card-name">{{ section.settings.card3_name | replace: '[product]', t_clean }}</h4>
               <ul class="pd-rv2-card-ings">
-                <li>{{ section.settings.card3_ing1_pre }}{{ t_clean }}{{ section.settings.card3_ing1_post }}</li>
-                <li>{{ section.settings.card3_ing2 }}</li>
-                <li>{{ section.settings.card3_ing3 }}</li>
-                <li>{{ section.settings.card3_ing4 }}</li>
+                {%- assign card3_ings = section.settings.card3_ings | newline_to_br | split: '<br />' -%}
+                {%- for line in card3_ings -%}{%- assign l = line | strip | replace: '[product]', t_clean -%}{%- if l != blank -%}<li>{{ l }}</li>{%- endif -%}{%- endfor -%}
               </ul>
             </div>
           </article>
@@ -132,12 +167,10 @@
                 <span class="pd-rv2-card-tag pd-rv2-card-tag--blush">{{ section.settings.card4_tag }}</span>
                 <span class="pd-rv2-card-time">{{ section.settings.card4_time }}</span>
               </div>
-              <h4 class="pd-rv2-card-name">{{ section.settings.card4_name_pre }}{{ t_clean }}{{ section.settings.card4_name_post }}</h4>
+              <h4 class="pd-rv2-card-name">{{ section.settings.card4_name | replace: '[product]', t_clean }}</h4>
               <ul class="pd-rv2-card-ings">
-                <li>{{ section.settings.card4_ing1_pre }}{{ t_clean }}{{ section.settings.card4_ing1_post }}</li>
-                <li>{{ section.settings.card4_ing2 }}</li>
-                <li>{{ section.settings.card4_ing3 }}</li>
-                <li>{{ section.settings.card4_ing4 }}</li>
+                {%- assign card4_ings = section.settings.card4_ings | newline_to_br | split: '<br />' -%}
+                {%- for line in card4_ings -%}{%- assign l = line | strip | replace: '[product]', t_clean -%}{%- if l != blank -%}<li>{{ l }}</li>{%- endif -%}{%- endfor -%}
               </ul>
             </div>
           </article>
@@ -311,46 +344,26 @@
     { "type": "header", "content": "Card 1" },
     { "type": "text", "id": "card1_tag", "label": "Tag", "default": "Most Popular" },
     { "type": "text", "id": "card1_time", "label": "Time", "default": "60 sec" },
-    { "type": "text", "id": "card1_name_pre", "label": "Name (before product)", "default": "Iced " },
-    { "type": "text", "id": "card1_name_post", "label": "Name (after product)", "default": " Latte" },
-    { "type": "text", "id": "card1_ing1_pre", "label": "Ingredient 1 (before product)", "default": "1 pump " },
-    { "type": "text", "id": "card1_ing1_post", "label": "Ingredient 1 (after product)", "default": "" },
-    { "type": "text", "id": "card1_ing2", "label": "Ingredient 2", "default": "1 shot espresso (or 4 oz cold brew)" },
-    { "type": "text", "id": "card1_ing3", "label": "Ingredient 3", "default": "8 oz cold milk of choice" },
-    { "type": "text", "id": "card1_ing4", "label": "Ingredient 4", "default": "Ice, to fill" },
+    { "type": "text", "id": "card1_name", "label": "Name ([product] = product name)", "default": "Iced [product] Latte" },
+    { "type": "textarea", "id": "card1_ings", "label": "Ingredients (one per line, [product] = product name)", "default": "1 pump [product]\n1 shot espresso (or 4 oz cold brew)\n8 oz cold milk of choice\nIce, to fill" },
 
     { "type": "header", "content": "Card 2" },
     { "type": "text", "id": "card2_tag", "label": "Tag", "default": "Quick Sip" },
     { "type": "text", "id": "card2_time", "label": "Time", "default": "30 sec" },
-    { "type": "text", "id": "card2_name_pre", "label": "Name (before product)", "default": "Sparkling " },
-    { "type": "text", "id": "card2_name_post", "label": "Name (after product)", "default": " Soda" },
-    { "type": "text", "id": "card2_ing1_pre", "label": "Ingredient 1 (before product)", "default": "1 pump " },
-    { "type": "text", "id": "card2_ing1_post", "label": "Ingredient 1 (after product)", "default": "" },
-    { "type": "text", "id": "card2_ing2", "label": "Ingredient 2", "default": "12 oz cold sparkling water" },
-    { "type": "text", "id": "card2_ing3", "label": "Ingredient 3", "default": "Squeeze of lemon" },
-    { "type": "text", "id": "card2_ing4", "label": "Ingredient 4", "default": "Ice, to fill" },
+    { "type": "text", "id": "card2_name", "label": "Name ([product] = product name)", "default": "Sparkling [product] Soda" },
+    { "type": "textarea", "id": "card2_ings", "label": "Ingredients (one per line, [product] = product name)", "default": "1 pump [product]\n12 oz cold sparkling water\nSqueeze of lemon\nIce, to fill" },
 
     { "type": "header", "content": "Card 3" },
     { "type": "text", "id": "card3_tag", "label": "Tag", "default": "Afternoon" },
     { "type": "text", "id": "card3_time", "label": "Time", "default": "45 sec" },
-    { "type": "text", "id": "card3_name_pre", "label": "Name (before product)", "default": "" },
-    { "type": "text", "id": "card3_name_post", "label": "Name (after product)", "default": " Cold Brew" },
-    { "type": "text", "id": "card3_ing1_pre", "label": "Ingredient 1 (before product)", "default": "1 pump " },
-    { "type": "text", "id": "card3_ing1_post", "label": "Ingredient 1 (after product)", "default": "" },
-    { "type": "text", "id": "card3_ing2", "label": "Ingredient 2", "default": "12 oz cold brew coffee" },
-    { "type": "text", "id": "card3_ing3", "label": "Ingredient 3", "default": "Splash of milk or cream" },
-    { "type": "text", "id": "card3_ing4", "label": "Ingredient 4", "default": "Ice, to fill" },
+    { "type": "text", "id": "card3_name", "label": "Name ([product] = product name)", "default": "[product] Cold Brew" },
+    { "type": "textarea", "id": "card3_ings", "label": "Ingredients (one per line, [product] = product name)", "default": "1 pump [product]\n12 oz cold brew coffee\nSplash of milk or cream\nIce, to fill" },
 
     { "type": "header", "content": "Card 4" },
     { "type": "text", "id": "card4_tag", "label": "Tag", "default": "Cozy Up" },
     { "type": "text", "id": "card4_time", "label": "Time", "default": "90 sec" },
-    { "type": "text", "id": "card4_name_pre", "label": "Name (before product)", "default": "" },
-    { "type": "text", "id": "card4_name_post", "label": "Name (after product)", "default": " Steamer" },
-    { "type": "text", "id": "card4_ing1_pre", "label": "Ingredient 1 (before product)", "default": "1 pump " },
-    { "type": "text", "id": "card4_ing1_post", "label": "Ingredient 1 (after product)", "default": "" },
-    { "type": "text", "id": "card4_ing2", "label": "Ingredient 2", "default": "12 oz steamed milk" },
-    { "type": "text", "id": "card4_ing3", "label": "Ingredient 3", "default": "Dash of cinnamon" },
-    { "type": "text", "id": "card4_ing4", "label": "Ingredient 4", "default": "Optional whipped cream" }
+    { "type": "text", "id": "card4_name", "label": "Name ([product] = product name)", "default": "[product] Steamer" },
+    { "type": "textarea", "id": "card4_ings", "label": "Ingredients (one per line, [product] = product name)", "default": "1 pump [product]\n12 oz steamed milk\nDash of cinnamon\nOptional whipped cream" }
   ],
   "presets": [{ "name": "PD Recipes" }]
 }
