@@ -1,0 +1,39 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign flavor_short = 'topping' -%}
+{%- if t_lc contains 'chocolate crisp' -%}{%- assign flavor_short = 'chocolate' -%}
+{%- elsif t_lc contains 'cinnamon crisp' -%}{%- assign flavor_short = 'cinnamon' -%}
+{%- elsif t_lc contains 'sweet nutmeg' or t_lc contains 'nutmeg' -%}{%- assign flavor_short = 'nutmeg' -%}
+{%- elsif t_lc contains 'raspberry crunch' or t_lc contains 'raspberry' -%}{%- assign flavor_short = 'raspberry' -%}
+{%- elsif t_lc contains 'toasted coconut' or t_lc contains 'coconut' -%}{%- assign flavor_short = 'coconut' -%}
+{%- elsif t_lc contains 'french vanilla' or t_lc contains 'vanilla' -%}{%- assign flavor_short = 'vanilla' -%}
+{%- elsif t_lc contains 'white chocolate' -%}{%- assign flavor_short = 'white chocolate' -%}
+{%- endif -%}
+{%- assign flavor_cap = flavor_short | capitalize -%}
+
+<div class="pd">
+  <section class="pd-standards" aria-hidden="true">
+    <div class="pd-wrap">
+      <div class="pd-ingredients">
+        <span class="pd-ingredients-label">{{ section.settings.ingredients_label }}</span>
+        <div>{{ section.settings.ingredients_text | replace: '[flavor]', flavor_cap }}</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "ST Standards",
+  "tag": "section",
+  "class": "section-st-standards",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "text", "id": "ingredients_label", "label": "Label", "default": "Ingredients" },
+    { "type": "textarea", "id": "ingredients_text", "label": "Ingredients text", "info": "Use [flavor] where the flavor name should appear.", "default": "Sugar, Natural & Artificial Flavor, [flavor] Bits, Anti-Caking Agent. Kosher certified." }
+  ],
+  "presets": [{ "name": "ST Standards" }]
+}
+{% endschema %}

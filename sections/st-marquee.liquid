@@ -1,0 +1,48 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign flavor_short = 'topping' -%}
+{%- if t_lc contains 'chocolate crisp' -%}{%- assign flavor_short = 'chocolate' -%}
+{%- elsif t_lc contains 'cinnamon crisp' -%}{%- assign flavor_short = 'cinnamon' -%}
+{%- elsif t_lc contains 'sweet nutmeg' or t_lc contains 'nutmeg' -%}{%- assign flavor_short = 'nutmeg' -%}
+{%- elsif t_lc contains 'raspberry crunch' or t_lc contains 'raspberry' -%}{%- assign flavor_short = 'raspberry' -%}
+{%- elsif t_lc contains 'toasted coconut' or t_lc contains 'coconut' -%}{%- assign flavor_short = 'coconut' -%}
+{%- elsif t_lc contains 'french vanilla' or t_lc contains 'vanilla' -%}{%- assign flavor_short = 'vanilla' -%}
+{%- elsif t_lc contains 'white chocolate' -%}{%- assign flavor_short = 'white chocolate' -%}
+{%- endif -%}
+
+{% style %}
+  #shopify-section-{{ section.id }} { --mq-bg: {{ section.settings.marquee_bg }}; --mq-text: {{ section.settings.marquee_text }}; }
+  #shopify-section-{{ section.id }} .pd-marquee { background: var(--mq-bg) !important; color: var(--mq-text) !important; }
+{% endstyle %}
+
+<div class="pd">
+  <div class="pd-marquee" aria-hidden="true">
+    <div class="pd-marquee-track">
+      {%- for i in (1..2) -%}<span>{{ section.settings.mq_prefix }} {{ flavor_short | capitalize }}</span><span>{{ section.settings.mq_item2 }}</span><span>{{ section.settings.mq_item3 }}</span><span>{{ section.settings.mq_item4 }}</span><span>{{ section.settings.mq_item5 }}</span><span>{{ section.settings.mq_item6 }}</span>{%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "ST Marquee",
+  "tag": "section",
+  "class": "section-st-marquee",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "marquee_bg", "label": "Marquee background", "default": "#1a1a1a" },
+    { "type": "color", "id": "marquee_text", "label": "Marquee text", "default": "#FFFBF4" },
+    { "type": "header", "content": "Scrolling phrases" },
+    { "type": "text", "id": "mq_prefix", "label": "Phrase 1 prefix (before flavor)", "default": "Bold" },
+    { "type": "text", "id": "mq_item2", "label": "Phrase 2", "default": "Lattes · Cappuccinos" },
+    { "type": "text", "id": "mq_item3", "label": "Phrase 3", "default": "Hot Cocoa" },
+    { "type": "text", "id": "mq_item4", "label": "Phrase 4", "default": "Whipped Cream Tops" },
+    { "type": "text", "id": "mq_item5", "label": "Phrase 5", "default": "Kosher · Non-GMO" },
+    { "type": "text", "id": "mq_item6", "label": "Phrase 6", "default": "Café-Ready" }
+  ],
+  "presets": [{ "name": "ST Marquee" }]
+}
+{% endschema %}
