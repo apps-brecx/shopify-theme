@@ -590,7 +590,7 @@
         ".page-cst-about-page-sec,.page-cst-mission-page-sec,.line-left,.line-right {display: none;}",
         ".mobile-pad {padding-bottom: 40px !important;}",
         ".rich-text__heading strong {font-family: \"Epilogue\", sans-serif !important;}",
-        ".rich-text__heading em {font-style: normal; color: #C6631E;}",
+        ".rich-text__heading em {font-style: normal; color: #c6631e;}",
         ".rich-text__text p {font-family: \"Manrope\", sans-serif !important;}",
         "@media (max-width: 768px) {.head {font-size: 32px !important; }}",
         "@media (max-width: 400px) {.rich-text__text p {font-size: 14px !important; line-height: normal !important; }}"
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Three Tropical Favorites",
-            "description": "Sugar-Free Mango, Peach, and Mandarin Orange give you bold, refreshing flavors in one versatile pack."
+            "title": "Cookie Butter Cozy",
+            "description": "Warm dessert flavor for coffee and lattes."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Make Drinks More Refreshing",
-            "description": "Create unique summer drinks every day from iced teas to sparkling lemonades  without repeating the same flavor."
+            "title": "Vanilla Classic",
+            "description": "Smooth, easy, and made for everyday drinks."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Big Flavor, Zero Sugar",
-            "description": "Made for bright summer drinks that taste juicy and refreshing without sugar."
+            "title": "Caramel Chocolate Rich",
+            "description": "Sweet caramel-chocolate flavor without the sugar."
           }
         }
       },
