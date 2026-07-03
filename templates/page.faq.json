@@ -60,13 +60,6 @@
             "question": "How long does shipping take?",
             "answer": "<p>Orders ship within 1 business day from our New Jersey warehouse, and most US orders arrive in 3–5 business days. Shipping is a flat $5.99, free on orders over $34.</p>"
           }
-        },
-        "faq_international": {
-          "type": "faq",
-          "settings": {
-            "question": "Do you offer international shipping?",
-            "answer": "<p>Yes — we ship to select countries outside the US. Available destinations, rates, and delivery estimates are shown at checkout once you enter your address.</p>"
-          }
         }
       },
       "block_order": [
@@ -76,8 +69,7 @@
         "faq_address",
         "faq_payments",
         "faq_secure",
-        "faq_shipping_time",
-        "faq_international"
+        "faq_shipping_time"
       ],
       "settings": {
         "eyebrow": "Help Center",
