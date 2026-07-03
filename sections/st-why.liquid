@@ -1,0 +1,81 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign flavor_short = 'topping' -%}
+{%- if t_lc contains 'chocolate crisp' -%}{%- assign flavor_short = 'chocolate' -%}
+{%- elsif t_lc contains 'cinnamon crisp' -%}{%- assign flavor_short = 'cinnamon' -%}
+{%- elsif t_lc contains 'sweet nutmeg' or t_lc contains 'nutmeg' -%}{%- assign flavor_short = 'nutmeg' -%}
+{%- elsif t_lc contains 'raspberry crunch' or t_lc contains 'raspberry' -%}{%- assign flavor_short = 'raspberry' -%}
+{%- elsif t_lc contains 'toasted coconut' or t_lc contains 'coconut' -%}{%- assign flavor_short = 'coconut' -%}
+{%- elsif t_lc contains 'french vanilla' or t_lc contains 'vanilla' -%}{%- assign flavor_short = 'vanilla' -%}
+{%- elsif t_lc contains 'white chocolate' -%}{%- assign flavor_short = 'white chocolate' -%}
+{%- endif -%}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-why { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-why">
+    <div class="pd-wrap pd-why-wrap" style="text-align:center;">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2 pd-why-h2">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      <div class="pd-why-grid pd-why-grid--spaced">
+        <div class="pd-why-card pd-why-card--peach">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="#39220f"/><circle cx="15" cy="10" r="1" fill="#39220f"/><path d="M8 15 Q12 18 16 15"/></svg></div>
+          <h3 class="pd-why-title">{{ section.settings.c1_title }}</h3>
+          <p class="pd-why-body">{{ section.settings.c1_body | replace: '[flavor]', flavor_short }}</p>
+        </div>
+        <div class="pd-why-card pd-why-card--butter">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 L20 6 M5 6 L7 20 H17 L19 6"/></svg></div>
+          <h3 class="pd-why-title">{{ section.settings.c2_title }}</h3>
+          <p class="pd-why-body">{{ section.settings.c2_body }}</p>
+        </div>
+        <div class="pd-why-card pd-why-card--mint">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L20 6 V12 C20 16.5 16.4 20.5 12 22 C7.6 20.5 4 16.5 4 12 V6 L12 3 Z"/><path d="M8.5 12 L11 14.5 L15.5 9.5"/></svg></div>
+          <h3 class="pd-why-title">{{ section.settings.c3_title }}</h3>
+          <p class="pd-why-body">{{ section.settings.c3_body }}</p>
+        </div>
+        <div class="pd-why-card pd-why-card--sky">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H18 L17 8 H7 Z M7 8 L8 21 H16 L17 8"/></svg></div>
+          <h3 class="pd-why-title">{{ section.settings.c4_title }}</h3>
+          <p class="pd-why-body">{{ section.settings.c4_body }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "ST Why",
+  "tag": "section",
+  "class": "section-st-why",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why Syruvia Toppings" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "A barista " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "finish" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "header", "content": "Card 1" },
+    { "type": "text", "id": "c1_title", "label": "Title", "default": "Bold Aroma" },
+    { "type": "text", "id": "c1_body", "label": "Body", "info": "Use [flavor] for the flavor name.", "default": "Fragrant [flavor] hits the second you twist the lid." },
+    { "type": "header", "content": "Card 2" },
+    { "type": "text", "id": "c2_title", "label": "Title", "default": "Easy-Shake Lid" },
+    { "type": "text", "id": "c2_body", "label": "Body", "default": "Twist, sprinkle, twist back. Just like the cafés use it." },
+    { "type": "header", "content": "Card 3" },
+    { "type": "text", "id": "c3_title", "label": "Title", "default": "Kosher & Non-GMO" },
+    { "type": "text", "id": "c3_body", "label": "Body", "default": "Premium ingredients. Kosher certified, long shelf life." },
+    { "type": "header", "content": "Card 4" },
+    { "type": "text", "id": "c4_title", "label": "Title", "default": "Pantry Pretty" },
+    { "type": "text", "id": "c4_body", "label": "Body", "default": "Clean jar that looks at home next to your coffee bar." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "ST Why" }]
+}
+{% endschema %}

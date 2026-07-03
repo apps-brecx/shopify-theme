@@ -1,0 +1,79 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign flavor = 'fruit' -%}
+{%- if t_lc contains 'mango' -%}{%- assign flavor = 'mango' -%}{%- endif -%}
+{%- if t_lc contains 'strawberry' -%}{%- assign flavor = 'strawberry' -%}{%- endif -%}
+{%- if t_lc contains 'peach' -%}{%- assign flavor = 'peach' -%}{%- endif -%}
+{%- if t_lc contains 'passion' -%}{%- assign flavor = 'passion fruit' -%}{%- endif -%}
+{%- if t_lc contains 'pomegranate' -%}{%- assign flavor = 'pomegranate' -%}{%- endif -%}
+{%- if t_lc contains 'blueberry' -%}{%- assign flavor = 'blueberry' -%}{%- endif -%}
+{%- assign flavor_cap = flavor | capitalize -%}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-recipes-v2 { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-recipes-v2">
+    <div class="pd-wrap pd-rv2-head">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      <p class="pd-rv2-lede">{{ section.settings.lede | replace: '[flavor]', flavor }}</p>
+    </div>
+    <div class="pd-wrap">
+      <article class="pd-rv2-feature">
+        <div class="pd-rv2-feature-img">
+          <img src="{{ product.featured_image | image_url: width: 1200 }}" alt="{{ product.title | escape }} signature recipe" loading="lazy">
+          <span class="pd-rv2-feature-tag">{{ section.settings.feature_tag }}</span>
+        </div>
+        <div class="pd-rv2-feature-body">
+          <div class="pd-rv2-feature-content is-trimmed">
+            <h3 class="pd-rv2-feature-name">{{ section.settings.name_pre }}{{ flavor_cap }}{{ section.settings.name_post }}</h3>
+            <p class="pd-rv2-feature-ing-head"><strong>{{ section.settings.ing_head }}</strong></p>
+            <ul>
+              <li>{{ section.settings.ing1 }}</li>
+              <li>{{ section.settings.ing2 | replace: '[flavor]', flavor }}</li>
+              <li>{{ section.settings.ing3 }}</li>
+              <li>{{ section.settings.ing4 }}</li>
+            </ul>
+          </div>
+          <span class="pd-rv2-feature-time">{{ section.settings.time_label }}</span>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PB Recipe Feature",
+  "tag": "section",
+  "class": "section-pb-recipe-feature",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Featured recipe" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Pour " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "like this" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "text", "id": "lede", "label": "Lede", "info": "Use [flavor] for the flavor name.", "default": "The signature pour for Syruvia [flavor] popping boba." },
+    { "type": "header", "content": "Feature card" },
+    { "type": "text", "id": "feature_tag", "label": "Image tag", "default": "Signature recipe" },
+    { "type": "text", "id": "name_pre", "label": "Recipe name before flavor" },
+    { "type": "text", "id": "name_post", "label": "Recipe name after flavor", "default": " Bubble Milk Tea" },
+    { "type": "text", "id": "ing_head", "label": "Ingredients heading", "default": "INGREDIENTS" },
+    { "type": "text", "id": "ing1", "label": "Ingredient 1", "default": "8 oz strong black tea, cooled" },
+    { "type": "text", "id": "ing2", "label": "Ingredient 2", "info": "Use [flavor] for the flavor name.", "default": "2–3 tbsp Syruvia [flavor] popping boba" },
+    { "type": "text", "id": "ing3", "label": "Ingredient 3", "default": "¼ cup milk (dairy, oat, or coconut)" },
+    { "type": "text", "id": "ing4", "label": "Ingredient 4", "default": "Ice, to fill" },
+    { "type": "text", "id": "time_label", "label": "Time label", "default": "5 min" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "PB Recipe Feature" }]
+}
+{% endschema %}

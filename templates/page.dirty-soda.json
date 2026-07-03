@@ -1,0 +1,31 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "page-dirty-soda",
+      "blocks": {
+        "flavor_1": { "type": "flavor", "settings": { "emoji": "🍓", "name": "Strawberry", "note": "Juicy, candy-sweet and bright — the classic dirty soda base.", "color": "#F5567B" } },
+        "flavor_2": { "type": "flavor", "settings": { "emoji": "🥥", "name": "Coconut", "note": "Smooth, creamy and tropical — the “dirty” in your dirty soda.", "color": "#E7C79B" } },
+        "flavor_3": { "type": "flavor", "settings": { "emoji": "🫐", "name": "Blue Raspberry", "note": "Bold, candy-like and fun — a vivid blue kick of flavor.", "color": "#3FA9E8" } },
+        "review_1": { "type": "review", "settings": { "stars": "★★★★★", "text": "Tastes just like my favorite soda shop — and no sugar crash!", "who": "Sarah M." } },
+        "review_2": { "type": "review", "settings": { "stars": "★★★★★", "text": "Three bottles for the price of one? Grabbed two packs instantly.", "who": "Danielle R." } },
+        "review_3": { "type": "review", "settings": { "stars": "★★★★★", "text": "My kids love making their own dirty sodas. Zero sugar is a win.", "who": "Marcus T." } }
+      },
+      "block_order": ["flavor_1", "flavor_2", "flavor_3", "review_1", "review_2", "review_3"],
+      "settings": {
+        "buy_url": "/products/sugar-free-dirty-soda-pack",
+        "price_now": "$9.99",
+        "price_was": "$14.98"
+      }
+    }
+  },
+  "order": ["main"]
+}

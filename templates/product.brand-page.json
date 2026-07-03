@@ -1,1 +1,58 @@
-{"sections":{"main":{"type":"brand-page","settings":{}},"areviews_1782312643_30db11":{"type":"apps","disabled":true,"blocks":{"areviews_reviews_importer_areviews_display_reviews_3B498B":{"type":"shopify://apps/areviews-reviews-importer/blocks/AreviewsDisplayReviews/ab0ec5fe-c95b-4fd6-bfb8-db2a30d0756f","settings":{"hide_areviews_title_rating":false,"areviews_theme_font":"inherit","areviews_stars_colors":"#f3c621","areviews_write_reviews_botton_color":"#373737"}}},"block_order":["areviews_reviews_importer_areviews_display_reviews_3B498B"],"settings":{}}},"order":["main","areviews_1782312643_30db11"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": { "type": "pd-hero", "settings": {} },
+    "pd_marquee": { "type": "pd-marquee", "settings": {} },
+    "pd_description": { "type": "pd-description", "settings": {} },
+    "pd_mm": { "type": "pd-mm-section", "settings": {} },
+    "pd_nutrition": { "type": "pd-nutrition-wrap", "settings": {} },
+    "pd_why": { "type": "pd-why", "settings": {} },
+    "pd_recipes": { "type": "pd-recipes", "settings": {} },
+    "pd_ugc": { "type": "pd-ugc", "settings": {} },
+    "pd_reviews": { "type": "pd-reviews", "settings": {} },
+    "pd_write_review": { "type": "pd-write-review", "settings": {} },
+    "pd_recommended": { "type": "pd-recommended", "settings": {} },
+    "pd_faq": { "type": "pd-faq", "settings": {} },
+    "pd_vip": { "type": "pd-vip", "settings": {} },
+    "areviews_1782312643_30db11": {
+      "type": "apps",
+      "disabled": true,
+      "blocks": {
+        "areviews_reviews_importer_areviews_display_reviews_3B498B": {
+          "type": "shopify://apps/areviews-reviews-importer/blocks/AreviewsDisplayReviews/ab0ec5fe-c95b-4fd6-bfb8-db2a30d0756f",
+          "settings": {
+            "hide_areviews_title_rating": false,
+            "areviews_theme_font": "inherit",
+            "areviews_stars_colors": "#f3c621",
+            "areviews_write_reviews_botton_color": "#373737"
+          }
+        }
+      },
+      "block_order": ["areviews_reviews_importer_areviews_display_reviews_3B498B"],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "pd_marquee",
+    "pd_description",
+    "pd_mm",
+    "pd_nutrition",
+    "pd_why",
+    "pd_recipes",
+    "pd_ugc",
+    "pd_reviews",
+    "pd_write_review",
+    "pd_recommended",
+    "pd_faq",
+    "pd_vip",
+    "areviews_1782312643_30db11"
+  ]
+}

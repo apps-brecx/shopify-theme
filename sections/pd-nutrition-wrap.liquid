@@ -1,0 +1,116 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pd-text: {{ section.settings.text_primary }};
+    --pd-bg: {{ section.settings.bg_section }};
+    --pd-wrap: {{ section.settings.wrap_max_width }}px;
+  }
+  #shopify-section-{{ section.id }} .pd { background: var(--pd-bg) !important; color: var(--pd-text) !important; }
+  #shopify-section-{{ section.id }} .pd-wrap { max-width: var(--pd-wrap) !important; }
+  #shopify-section-{{ section.id }} .pd-nutrition-title { color: {{ section.settings.nutrition_title_color }} !important; }
+  #shopify-section-{{ section.id }} .pd-ingredients-label { color: {{ section.settings.ingredients_label_color }} !important; }
+{% endstyle %}
+
+{%- assign is_sf = false -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- if t_lc contains 'sugar-free' or t_lc contains 'sugar free' -%}{%- assign is_sf = true -%}{%- endif -%}
+{%- assign ingredients_field = product.metafields.custom.additionalfield -%}
+
+<div class="pd">
+  <section class="pd-standards" aria-hidden="true">
+    <div class="pd-wrap">
+      <div class="pd-ingredients">
+        <span class="pd-ingredients-label">{{ section.settings.ingredients_label }}</span>
+        <div>{%- if ingredients_field -%}{{ ingredients_field | metafield_tag | strip_html }}{%- else -%}{{ section.settings.ingredients_fallback }}{%- endif -%}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pd-nutrition-wrap" aria-hidden="true">
+    <div class="pd-wrap">
+      <div class="pd-nutrition">
+        <div class="pd-nutrition-title">{{ section.settings.nutrition_title }}</div>
+        <div class="pd-nut-serv">{{ section.settings.serving_size }}</div>
+        <div class="pd-nut-rule--thick"></div>
+        <div class="pd-nut-row"><strong>{{ section.settings.amount_per_serving }}</strong></div>
+        <div class="pd-nut-row" style="font-size:18px;"><strong>{{ section.settings.calories_label }}</strong><strong>{%- if is_sf -%}{{ section.settings.calories_value_sf }}{%- else -%}{{ section.settings.calories_value_regular }}{%- endif -%}</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div style="font-size:12px;text-align:right;">{{ section.settings.daily_value_header }}</div>
+        <div class="pd-nut-row"><span><strong>{{ section.settings.total_fat_label }}</strong> {{ section.settings.total_fat_amount }}</span><strong>{{ section.settings.total_fat_dv }}</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>{{ section.settings.sodium_label }}</strong> {{ section.settings.sodium_amount }}</span><strong>{{ section.settings.sodium_dv }}</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>{{ section.settings.total_carb_label }}</strong> {%- if is_sf -%}{{ section.settings.total_carb_amount_sf }}{%- else -%}{{ section.settings.total_carb_amount_regular }}{%- endif -%}</span><strong>{%- if is_sf -%}{{ section.settings.total_carb_dv_sf }}{%- else -%}{{ section.settings.total_carb_dv_regular }}{%- endif -%}</strong></div>
+        <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>{{ section.settings.total_sugars_label }} {%- if is_sf -%}{{ section.settings.total_sugars_amount_sf }}{%- else -%}{{ section.settings.total_sugars_amount_regular }}{%- endif -%}</span><span></span></div>
+        {%- unless is_sf -%}<div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>{{ section.settings.added_sugars_label }}</span><strong>{{ section.settings.added_sugars_dv }}</strong></div>{%- endunless -%}
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>{{ section.settings.protein_label }}</strong> {{ section.settings.protein_amount }}</span></div>
+        <div class="pd-nut-rule--med"></div>
+        <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">{{ section.settings.dv_footnote }}</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PD Nutrition",
+  "tag": "section",
+  "class": "section-pd-nutrition-wrap",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "paragraph", "content": "Hidden helper block (ingredients + nutrition facts) preserved from the original page." },
+    { "type": "color", "id": "text_primary", "label": "Text color", "default": "#1a1a1a" },
+    { "type": "color", "id": "bg_section", "label": "Background", "default": "#FFFBF4" },
+    { "type": "range", "id": "wrap_max_width", "label": "Content max width", "min": 900, "max": 1600, "step": 20, "unit": "px", "default": 1200 },
+
+    { "type": "header", "content": "Ingredients" },
+    { "type": "text", "id": "ingredients_label", "label": "Ingredients label", "default": "Ingredients" },
+    { "type": "color", "id": "ingredients_label_color", "label": "Ingredients label color", "default": "#1a1a1a" },
+    { "type": "textarea", "id": "ingredients_fallback", "label": "Ingredients fallback (used when metafield is empty)", "default": "Pure Cane Sugar, Filtered Water, Natural Flavor, Citric Acid, Potassium Sorbate (preservative)." },
+
+    { "type": "header", "content": "Nutrition Facts — Headings" },
+    { "type": "text", "id": "nutrition_title", "label": "Nutrition Facts title", "default": "Nutrition Facts" },
+    { "type": "color", "id": "nutrition_title_color", "label": "Nutrition Facts title color", "default": "#1a1a1a" },
+    { "type": "text", "id": "serving_size", "label": "Serving size", "default": "Serving size 2 Tbsp (30 mL)" },
+    { "type": "text", "id": "amount_per_serving", "label": "Amount per serving", "default": "Amount per serving" },
+    { "type": "text", "id": "daily_value_header", "label": "% Daily Value header", "default": "% Daily Value*" },
+
+    { "type": "header", "content": "Nutrition Facts — Calories" },
+    { "type": "text", "id": "calories_label", "label": "Calories label", "default": "Calories" },
+    { "type": "text", "id": "calories_value_regular", "label": "Calories value (regular)", "default": "60" },
+    { "type": "text", "id": "calories_value_sf", "label": "Calories value (sugar-free)", "default": "0" },
+
+    { "type": "header", "content": "Nutrition Facts — Total Fat" },
+    { "type": "text", "id": "total_fat_label", "label": "Total Fat label", "default": "Total Fat" },
+    { "type": "text", "id": "total_fat_amount", "label": "Total Fat amount", "default": "0g" },
+    { "type": "text", "id": "total_fat_dv", "label": "Total Fat % DV", "default": "0%" },
+
+    { "type": "header", "content": "Nutrition Facts — Sodium" },
+    { "type": "text", "id": "sodium_label", "label": "Sodium label", "default": "Sodium" },
+    { "type": "text", "id": "sodium_amount", "label": "Sodium amount", "default": "5mg" },
+    { "type": "text", "id": "sodium_dv", "label": "Sodium % DV", "default": "0%" },
+
+    { "type": "header", "content": "Nutrition Facts — Total Carbohydrate" },
+    { "type": "text", "id": "total_carb_label", "label": "Total Carbohydrate label", "default": "Total Carbohydrate" },
+    { "type": "text", "id": "total_carb_amount_regular", "label": "Total Carbohydrate amount (regular)", "default": "15g" },
+    { "type": "text", "id": "total_carb_amount_sf", "label": "Total Carbohydrate amount (sugar-free)", "default": "1g" },
+    { "type": "text", "id": "total_carb_dv_regular", "label": "Total Carbohydrate % DV (regular)", "default": "5%" },
+    { "type": "text", "id": "total_carb_dv_sf", "label": "Total Carbohydrate % DV (sugar-free)", "default": "0%" },
+
+    { "type": "header", "content": "Nutrition Facts — Sugars" },
+    { "type": "text", "id": "total_sugars_label", "label": "Total Sugars label", "default": "Total Sugars" },
+    { "type": "text", "id": "total_sugars_amount_regular", "label": "Total Sugars amount (regular)", "default": "14g" },
+    { "type": "text", "id": "total_sugars_amount_sf", "label": "Total Sugars amount (sugar-free)", "default": "0g" },
+    { "type": "text", "id": "added_sugars_label", "label": "Added Sugars label (regular only)", "default": "Incl. 14g Added Sugars" },
+    { "type": "text", "id": "added_sugars_dv", "label": "Added Sugars % DV (regular only)", "default": "28%" },
+
+    { "type": "header", "content": "Nutrition Facts — Protein & Footnote" },
+    { "type": "text", "id": "protein_label", "label": "Protein label", "default": "Protein" },
+    { "type": "text", "id": "protein_amount", "label": "Protein amount", "default": "0g" },
+    { "type": "text", "id": "dv_footnote", "label": "Daily Value footnote", "default": "*% DV based on a 2,000 calorie diet." }
+  ],
+  "presets": [{ "name": "PD Nutrition" }]
+}
+{% endschema %}

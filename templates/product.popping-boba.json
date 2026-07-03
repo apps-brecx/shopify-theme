@@ -1,0 +1,32 @@
+{
+  "sections": {
+    "main": { "type": "pb-hero", "settings": {} },
+    "pb_marquee": { "type": "pb-marquee", "settings": {} },
+    "pb_description": { "type": "pb-description", "settings": {} },
+    "pb_standards": { "type": "pb-standards", "settings": {} },
+    "pb_nutrition": { "type": "pb-nutrition", "settings": {} },
+    "pb_why": { "type": "pb-why", "settings": {} },
+    "pb_reels": { "type": "pb-reels", "settings": {} },
+    "pb_recipe": { "type": "pb-recipe-feature", "settings": {} },
+    "pd_reviews": { "type": "pd-reviews", "settings": {} },
+    "pd_write_review": { "type": "pd-write-review", "settings": {} },
+    "pd_recommended": { "type": "pd-recommended", "settings": {} },
+    "pb_faq": { "type": "pb-faq", "settings": {} },
+    "pd_vip": { "type": "pd-vip", "settings": {} }
+  },
+  "order": [
+    "main",
+    "pb_marquee",
+    "pb_description",
+    "pb_standards",
+    "pb_nutrition",
+    "pb_why",
+    "pb_reels",
+    "pb_recipe",
+    "pd_reviews",
+    "pd_write_review",
+    "pd_recommended",
+    "pb_faq",
+    "pd_vip"
+  ]
+}

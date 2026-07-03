@@ -1,0 +1,71 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pd-text: {{ section.settings.text_primary }};
+    --pd-bg: {{ section.settings.bg_section }};
+    --pd-wrap: {{ section.settings.wrap_max_width }}px;
+    --pd-h2: {{ section.settings.h2_font_size }}px;
+    --pd-eyebrow-size: {{ section.settings.eyebrow_font_size }}px;
+    --pd-sec-pad-top: {{ section.settings.section_padding_top }}px;
+    --pd-sec-pad-bottom: {{ section.settings.section_padding_bottom }}px;
+    --pd-ugc-bg: {{ section.settings.ugc_bg }};
+    --pd-ugc-text: {{ section.settings.ugc_text_color }};
+  }
+  #shopify-section-{{ section.id }} .pd { background: var(--pd-bg) !important; color: var(--pd-text) !important; }
+  #shopify-section-{{ section.id }} .pd-wrap { max-width: var(--pd-wrap) !important; }
+  #shopify-section-{{ section.id }} .pd-ugc {
+    background: var(--pd-ugc-bg) !important;
+    color: var(--pd-ugc-text) !important;
+    padding-top: var(--pd-sec-pad-top) !important;
+    padding-bottom: var(--pd-sec-pad-bottom) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-h2 { font-size: var(--pd-h2) !important; }
+  #shopify-section-{{ section.id }} .pd-ugc .pd-h2 { color: var(--pd-ugc-text) !important; }
+  #shopify-section-{{ section.id }} .pd-eyebrow { font-size: var(--pd-eyebrow-size) !important; }
+{% endstyle %}
+
+<div class="pd">
+  <section class="pd-ugc">
+    <div class="pd-wrap" style="text-align:center;">
+      <span class="pd-eyebrow" style="background:var(--pd-bg) !important;">{{ section.settings.ugc_eyebrow }}</span>
+      <h2 class="pd-h2" style="margin-top:14px;">{{ section.settings.ugc_heading }}</h2>
+      <div class="pd-ugc-grid" style="margin-top:36px;">
+        {%- for img in product.images limit: 4 -%}
+          <div class="pd-ugc-tile"><span class="pd-ugc-tile-tag">{{ section.settings.ugc_handle }}</span><img src="{{ img | image_url: width: 600 }}" alt="" loading="lazy"></div>
+        {%- else -%}
+          {%- for i in (1..4) -%}
+            <div class="pd-ugc-tile"><span class="pd-ugc-tile-tag">{{ section.settings.ugc_handle }}</span><img src="{{ product.featured_image | image_url: width: 600 }}" alt="" loading="lazy"></div>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PD UGC",
+  "tag": "section",
+  "class": "section-pd-ugc",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "ugc_eyebrow", "label": "Eyebrow label", "default": "From the Syruvia jar" },
+    { "type": "text", "id": "ugc_heading", "label": "Heading (HTML allowed for <em>)", "default": "What our <em>regulars</em> are pouring." },
+    { "type": "text", "id": "ugc_handle", "label": "Tile handle", "default": "@syruvia_official" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "ugc_bg", "label": "UGC section background", "default": "#1a1a1a" },
+    { "type": "color", "id": "ugc_text_color", "label": "UGC section text", "default": "#FFFBF4" },
+    { "type": "color", "id": "text_primary", "label": "Primary text color", "default": "#1a1a1a" },
+    { "type": "color", "id": "bg_section", "label": "Page background (eyebrow chip)", "default": "#FFFBF4" },
+    { "type": "header", "content": "Typography & spacing" },
+    { "type": "range", "id": "h2_font_size", "label": "H2 font size", "min": 20, "max": 56, "step": 1, "unit": "px", "default": 36 },
+    { "type": "range", "id": "eyebrow_font_size", "label": "Eyebrow label size", "min": 10, "max": 18, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "wrap_max_width", "label": "Content max width", "min": 900, "max": 1600, "step": 20, "unit": "px", "default": 1200 },
+    { "type": "range", "id": "section_padding_top", "label": "Section padding top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "section_padding_bottom", "label": "Section padding bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 60 }
+  ],
+  "presets": [{ "name": "PD UGC" }]
+}
+{% endschema %}

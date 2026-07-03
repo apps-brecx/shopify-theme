@@ -1,0 +1,26 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.wrapper_bg != blank -%}
+{% style %}
+#shopify-section-{{ section.id }} .pd { background: {{ section.settings.wrapper_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  {% render 'pd-write-review' %}
+</div>
+
+{% schema %}
+{
+  "name": "PD Write Review",
+  "tag": "section",
+  "class": "section-pd-write-review",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "paragraph", "content": "Renders the pd-write-review snippet (review overlay). The form and its labels are functional/dynamic and managed in the snippet." },
+    { "type": "header", "content": "Wrapper" },
+    { "type": "color", "id": "wrapper_bg", "label": "Section wrapper background", "info": "Leave blank to keep the theme default (transparent). The review modal itself is an overlay and unaffected." }
+  ],
+  "presets": [{ "name": "PD Write Review" }]
+}
+{% endschema %}

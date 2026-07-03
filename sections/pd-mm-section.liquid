@@ -1,0 +1,127 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+<div class="pd">
+  <section id="pd-mm-snip" class="pd-mixmatch" data-mm-section>
+    <style>
+      #pd-mm-snip.pd-mixmatch{background:{{ section.settings.pdmm_bg | default: '#fffbf4' }} !important;}
+      #pd-mm-snip .pd-mm-card{background:{{ section.settings.pdmm_card_bg | default: '#ffffff' }} !important;}
+      #pd-mm-snip .pd-mm-badge{background:{{ section.settings.pdmm_badge_bg | default: '#fce2a0' }} !important;color:{{ section.settings.pdmm_badge_color | default: '#39220f' }} !important;}
+      #pd-mm-snip .pd-h2 em{color:{{ section.settings.pdmm_accent | default: '#c58548' }} !important;}
+      #pd-mm-snip .pd-mm-tier:not(.pd-mm-tier--best) .pd-mm-tier-save{background:{{ section.settings.pdmm_save_pill_bg | default: '#c5e4d4' }} !important;}
+      #pd-mm-snip .pd-mm-tier--best{background:{{ section.settings.pdmm_best_bg | default: '#c58548' }} !important;}
+      #pd-mm-snip .pd-mm-tier--best .pd-mm-tier-qty,#pd-mm-snip .pd-mm-tier--best .pd-mm-tier-label{color:{{ section.settings.pdmm_best_text | default: '#fffbf4' }} !important;}
+      #pd-mm-snip .pd-mm-btn{background:{{ section.settings.pdmm_btn_bg | default: '#39220f' }} !important;color:{{ section.settings.pdmm_btn_color | default: '#fffbf4' }} !important;}
+    </style>
+    <div class="pd-wrap">
+      <div class="pd-mm-card">
+        <span class="pd-mm-badge" data-mm-badge aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="#1a1a1a" aria-hidden="true"><path d="M12 2 L14 9 L21 11 L14 13 L12 20 L10 13 L3 11 L10 9 Z"/></svg>
+          {{ section.settings.pdmm_badge_text | default: 'Save up to 14%' }}
+        </span>
+        <div class="pd-mm-content">
+          <span class="pd-eyebrow">{{ section.settings.pdmm_eyebrow | default: 'Bundle &amp; Save' }}</span>
+          <h2 class="pd-h2">{{ section.settings.pdmm_headline_pre | default: 'Mix flavors. ' }}<em>{{ section.settings.pdmm_headline_em | default: 'Save bigger' }}</em>{{ section.settings.pdmm_headline_post | default: '.' }}</h2>
+          <p class="pd-mm-lead">{{ section.settings.pdmm_lead | default: 'Build a bundle of any flavors and any sizes. The more bottles you stack, the more you save. Up to 14% off when you go big.' }}</p>
+          <div class="pd-mm-tiers" role="list">
+            <div class="pd-mm-tier" role="listitem">
+              <span class="pd-mm-tier-qty">{{ section.settings.pdmm_t1_num | default: '2' }}</span>
+              <span class="pd-mm-tier-label">{{ section.settings.pdmm_t1_label | default: 'Bottles' }}</span>
+              <span class="pd-mm-tier-save">{{ section.settings.pdmm_t1_save | default: 'Save 4%' }}</span>
+            </div>
+            <div class="pd-mm-tier-arrow" aria-hidden="true">→</div>
+            <div class="pd-mm-tier" role="listitem">
+              <span class="pd-mm-tier-qty">{{ section.settings.pdmm_t2_num | default: '6' }}</span>
+              <span class="pd-mm-tier-label">{{ section.settings.pdmm_t2_label | default: 'Bottles' }}</span>
+              <span class="pd-mm-tier-save">{{ section.settings.pdmm_t2_save | default: 'Save 8%' }}</span>
+            </div>
+            <div class="pd-mm-tier-arrow" aria-hidden="true">→</div>
+            <div class="pd-mm-tier pd-mm-tier--best" role="listitem">
+              <span class="pd-mm-tier-flag">{{ section.settings.pdmm_t3_flag | default: 'Best Value' }}</span>
+              <span class="pd-mm-tier-qty">{{ section.settings.pdmm_t3_num | default: '12' }}</span>
+              <span class="pd-mm-tier-label">{{ section.settings.pdmm_t3_label | default: 'Bottles' }}</span>
+              <span class="pd-mm-tier-save">{{ section.settings.pdmm_t3_save | default: 'Save 14%' }}</span>
+            </div>
+          </div>
+          <a href="{{ section.settings.pdmm_cta_link | default: '/pages/build-your-bundle' }}" class="pd-mm-btn">
+            {{ section.settings.pdmm_cta_text | default: 'Build your bundle' }}
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 H19 M13 6 l6 6 -6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  function init(){
+    var section = document.querySelector('#pd-mm-snip[data-mm-section]');
+    var badge   = section && section.querySelector('[data-mm-badge]');
+    if (!section || !badge) return;
+    var minScale = 0.80, maxScale = 1.45, minRot = -6, maxRot = 2, raf = null;
+    function update(){
+      raf = null;
+      var r = section.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var start = vh, end = vh * 0.20, denom = (start - end) || 1;
+      var p = (start - r.top) / denom; if (p < 0) p = 0; if (p > 1) p = 1;
+      var ease = p * p * (3 - 2 * p);
+      badge.style.setProperty('--mm-s', (minScale + (maxScale - minScale) * ease).toFixed(3));
+      badge.style.setProperty('--mm-r', (minRot + (maxRot - minRot) * ease).toFixed(2) + 'deg');
+    }
+    function onScroll(){ if (raf) return; raf = requestAnimationFrame(update); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "PD MM Section",
+  "tag": "section",
+  "class": "section-pd-mm",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Badge" },
+    { "type": "text", "id": "pdmm_badge_text", "label": "Badge text", "default": "Save up to 14%" },
+    { "type": "header", "content": "Heading & Copy" },
+    { "type": "text", "id": "pdmm_eyebrow", "label": "Eyebrow", "default": "Bundle &amp; Save" },
+    { "type": "text", "id": "pdmm_headline_pre", "label": "Headline (before emphasis)", "default": "Mix flavors. " },
+    { "type": "text", "id": "pdmm_headline_em", "label": "Headline (emphasis)", "default": "Save bigger" },
+    { "type": "text", "id": "pdmm_headline_post", "label": "Headline (after emphasis)", "default": "." },
+    { "type": "textarea", "id": "pdmm_lead", "label": "Lead paragraph", "default": "Build a bundle of any flavors and any sizes. The more bottles you stack, the more you save. Up to 14% off when you go big." },
+    { "type": "header", "content": "Tier 1" },
+    { "type": "text", "id": "pdmm_t1_num", "label": "Tier 1 quantity", "default": "2" },
+    { "type": "text", "id": "pdmm_t1_label", "label": "Tier 1 label", "default": "Bottles" },
+    { "type": "text", "id": "pdmm_t1_save", "label": "Tier 1 save", "default": "Save 4%" },
+    { "type": "header", "content": "Tier 2" },
+    { "type": "text", "id": "pdmm_t2_num", "label": "Tier 2 quantity", "default": "6" },
+    { "type": "text", "id": "pdmm_t2_label", "label": "Tier 2 label", "default": "Bottles" },
+    { "type": "text", "id": "pdmm_t2_save", "label": "Tier 2 save", "default": "Save 8%" },
+    { "type": "header", "content": "Tier 3 (Best Value)" },
+    { "type": "text", "id": "pdmm_t3_flag", "label": "Tier 3 flag", "default": "Best Value" },
+    { "type": "text", "id": "pdmm_t3_num", "label": "Tier 3 quantity", "default": "12" },
+    { "type": "text", "id": "pdmm_t3_label", "label": "Tier 3 label", "default": "Bottles" },
+    { "type": "text", "id": "pdmm_t3_save", "label": "Tier 3 save", "default": "Save 14%" },
+    { "type": "header", "content": "Call to action" },
+    { "type": "text", "id": "pdmm_cta_text", "label": "Button text", "default": "Build your bundle" },
+    { "type": "url", "id": "pdmm_cta_link", "label": "Button link" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "pdmm_bg", "label": "Section background", "default": "#fffbf4" },
+    { "type": "color", "id": "pdmm_card_bg", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "pdmm_badge_bg", "label": "Badge background", "default": "#fce2a0" },
+    { "type": "color", "id": "pdmm_badge_color", "label": "Badge text color", "default": "#39220f" },
+    { "type": "color", "id": "pdmm_accent", "label": "Headline emphasis color", "default": "#c58548" },
+    { "type": "color", "id": "pdmm_save_pill_bg", "label": "Save pill background", "default": "#c5e4d4" },
+    { "type": "color", "id": "pdmm_best_bg", "label": "Best tier background", "default": "#c58548" },
+    { "type": "color", "id": "pdmm_best_text", "label": "Best tier text color", "default": "#fffbf4" },
+    { "type": "color", "id": "pdmm_btn_bg", "label": "Button background", "default": "#39220f" },
+    { "type": "color", "id": "pdmm_btn_color", "label": "Button text color", "default": "#fffbf4" }
+  ],
+  "presets": [{ "name": "PD MM Section" }]
+}
+{% endschema %}

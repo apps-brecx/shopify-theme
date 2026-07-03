@@ -1,0 +1,37 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign flavor = 'fruit' -%}
+{%- if t_lc contains 'mango' -%}{%- assign flavor = 'mango' -%}{%- endif -%}
+{%- if t_lc contains 'strawberry' -%}{%- assign flavor = 'strawberry' -%}{%- endif -%}
+{%- if t_lc contains 'peach' -%}{%- assign flavor = 'peach' -%}{%- endif -%}
+{%- if t_lc contains 'passion' -%}{%- assign flavor = 'passion fruit' -%}{%- endif -%}
+{%- if t_lc contains 'pomegranate' -%}{%- assign flavor = 'pomegranate' -%}{%- endif -%}
+{%- if t_lc contains 'blueberry' -%}{%- assign flavor = 'blueberry' -%}{%- endif -%}
+{%- assign flavor_cap = flavor | capitalize -%}
+
+<div class="pd">
+  <section class="pd-standards" aria-hidden="true">
+    <div class="pd-wrap">
+      <div class="pd-ingredients">
+        <span class="pd-ingredients-label">{{ section.settings.ingredients_label }}</span>
+        <div>{{ section.settings.ingredients_text | replace: '[flavor]', flavor_cap }}</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PB Standards",
+  "tag": "section",
+  "class": "section-pb-standards",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "text", "id": "ingredients_label", "label": "Label", "default": "Ingredients" },
+    { "type": "textarea", "id": "ingredients_text", "label": "Ingredients text", "info": "Use [flavor] where the flavor name should appear (capitalized).", "default": "Water, Sugar, [flavor] Juice, Sodium Alginate, Calcium Lactate, Natural Flavor, Citric Acid, Potassium Sorbate (preservative)." }
+  ],
+  "presets": [{ "name": "PB Standards" }]
+}
+{% endschema %}

@@ -1,0 +1,68 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign flavor = 'fruit' -%}
+{%- if t_lc contains 'mango' -%}{%- assign flavor = 'mango' -%}{%- endif -%}
+{%- if t_lc contains 'strawberry' -%}{%- assign flavor = 'strawberry' -%}{%- endif -%}
+{%- if t_lc contains 'peach' -%}{%- assign flavor = 'peach' -%}{%- endif -%}
+{%- if t_lc contains 'passion' -%}{%- assign flavor = 'passion fruit' -%}{%- endif -%}
+{%- if t_lc contains 'pomegranate' -%}{%- assign flavor = 'pomegranate' -%}{%- endif -%}
+{%- if t_lc contains 'blueberry' -%}{%- assign flavor = 'blueberry' -%}{%- endif -%}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-description { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-description">
+    <div class="pd-wrap">
+      <div class="pd-desc-head">
+        <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+        <h2 class="pd-h2" style="margin-top:14px;">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      </div>
+      <div class="pd-desc-content">
+        {%- if section.settings.description_override != blank -%}
+          {{ section.settings.description_override }}
+        {%- else -%}
+          <ul>
+            <li>{{ section.settings.fb1 | replace: '[flavor]', flavor }}</li>
+            <li>{{ section.settings.fb2 }}</li>
+            <li>{{ section.settings.fb3 }}</li>
+            <li>{{ section.settings.fb4 }}</li>
+            <li>{{ section.settings.fb5 }}</li>
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PB Description",
+  "tag": "section",
+  "class": "section-pb-description",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "About these pearls" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Bursts of " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "joy" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": " in every sip." },
+    { "type": "header", "content": "Body" },
+    { "type": "richtext", "id": "description_override", "label": "Description (override)", "info": "Leave blank to use the bullets below." },
+    { "type": "header", "content": "Bullets" },
+    { "type": "text", "id": "fb1", "label": "Bullet 1", "info": "Use [flavor] for the flavor name.", "default": "Real Fruit Flavor: Juicy [flavor] bursts in every pearl, made with real fruit notes — no artificial aftertaste." },
+    { "type": "text", "id": "fb2", "label": "Bullet 2", "default": "Burst Texture: That signature pop-in-your-mouth experience is the whole point. Customers love it." },
+    { "type": "text", "id": "fb3", "label": "Bullet 3", "default": "Multi-Use: Bubble tea, smoothies, yogurt parfaits, slushies, ice cream sundaes, lemonades, mocktails." },
+    { "type": "text", "id": "fb4", "label": "Bullet 4", "default": "Café-Grade Quality: Commercial-grade pearls, ready to serve right out of the pouch. No prep, no cooking." },
+    { "type": "text", "id": "fb5", "label": "Bullet 5", "default": "Shelf-Stable: Sealed pouches keep at room temp until opened, then refrigerate for up to 2 weeks." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "PB Description" }]
+}
+{% endschema %}

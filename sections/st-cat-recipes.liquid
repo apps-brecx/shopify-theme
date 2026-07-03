@@ -1,0 +1,88 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor color theming + copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign st_band = '#FCE2A0' -%}
+{%- assign flavor_short = 'topping' -%}
+{%- if t_lc contains 'chocolate crisp' -%}{%- assign st_band = '#E8C9A0' -%}{%- assign flavor_short = 'chocolate' -%}
+{%- elsif t_lc contains 'cinnamon crisp' -%}{%- assign st_band = '#FFD4B8' -%}{%- assign flavor_short = 'cinnamon' -%}
+{%- elsif t_lc contains 'sweet nutmeg' or t_lc contains 'nutmeg' -%}{%- assign st_band = '#E8C9A0' -%}{%- assign flavor_short = 'nutmeg' -%}
+{%- elsif t_lc contains 'raspberry crunch' or t_lc contains 'raspberry' -%}{%- assign st_band = '#F5C7BE' -%}{%- assign flavor_short = 'raspberry' -%}
+{%- elsif t_lc contains 'toasted coconut' or t_lc contains 'coconut' -%}{%- assign st_band = '#FCE2A0' -%}{%- assign flavor_short = 'coconut' -%}
+{%- elsif t_lc contains 'french vanilla' or t_lc contains 'vanilla' -%}{%- assign st_band = '#FCE2A0' -%}{%- assign flavor_short = 'vanilla' -%}
+{%- elsif t_lc contains 'white chocolate' -%}{%- assign st_band = '#FFD4B8' -%}{%- assign flavor_short = 'white chocolate' -%}
+{%- endif -%}
+{%- assign band_color = section.settings.band_color | default: st_band -%}
+
+{% style %}
+  #shopify-section-{{ section.id }} { --st-band: {{ band_color }}; }
+  #shopify-section-{{ section.id }} .pd-cat-recipes { background: var(--st-band) !important; }
+{% endstyle %}
+
+<div class="pd">
+  <section class="pd-cat-recipes">
+    <div class="pd-wrap" style="text-align:center;">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2" style="margin:14px auto 14px;">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      <p class="pd-cat-recipes-sub">{{ section.settings.sub }}</p>
+    </div>
+    <div class="pd-cat-recipes-scroll">
+      <button type="button" class="pd-cat-recipes-nav pd-cat-recipes-nav--prev" aria-label="Previous"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6 l-6 6 6 6"/></svg></button>
+      <div class="pd-cat-recipes-marquee">
+        <div class="pd-cat-recipes-track">
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c1_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c1_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c1_body | replace: '[flavor]', flavor_short }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c2_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c2_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c2_body | replace: '[flavor]', flavor_short }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c3_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c3_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c3_body | replace: '[flavor]', flavor_short }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c4_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c4_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c4_body | replace: '[flavor]', flavor_short }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c5_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c5_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c5_body | replace: '[flavor]', flavor_short }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c6_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c6_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c6_body | replace: '[flavor]', flavor_short }}</p></div>
+        </div>
+      </div>
+      <button type="button" class="pd-cat-recipes-nav pd-cat-recipes-nav--next" aria-label="Next"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 l6 6 -6 6"/></svg></button>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "ST Ways To Shake",
+  "tag": "section",
+  "class": "section-st-cat-recipes",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Ways to shake" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Way more than a " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "latte top" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "text", "id": "sub", "label": "Sub-text", "default": "One jar, a dozen finishing touches." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "band_color", "label": "Section background", "info": "Leave blank to auto-match the flavor color." },
+    { "type": "header", "content": "Card 1" },
+    { "type": "text", "id": "c1_tag", "label": "Tag", "default": "Coffee" },
+    { "type": "text", "id": "c1_title", "label": "Title", "default": "Latte Topper" },
+    { "type": "text", "id": "c1_body", "label": "Body", "info": "Use [flavor] for the flavor name.", "default": "2-3 shakes over the foam. Instant café-style finish." },
+    { "type": "header", "content": "Card 2" },
+    { "type": "text", "id": "c2_tag", "label": "Tag", "default": "Cocoa" },
+    { "type": "text", "id": "c2_title", "label": "Title", "default": "Hot Chocolate Crown" },
+    { "type": "text", "id": "c2_body", "label": "Body", "default": "Whipped cream + a heavy shake of [flavor]. Cozy upgrade." },
+    { "type": "header", "content": "Card 3" },
+    { "type": "text", "id": "c3_tag", "label": "Tag", "default": "Dessert" },
+    { "type": "text", "id": "c3_title", "label": "Title", "default": "Ice Cream Sprinkle" },
+    { "type": "text", "id": "c3_body", "label": "Body", "default": "Shake over vanilla, chocolate, or coffee ice cream for instant texture." },
+    { "type": "header", "content": "Card 4" },
+    { "type": "text", "id": "c4_tag", "label": "Tag", "default": "Bake" },
+    { "type": "text", "id": "c4_title", "label": "Title", "default": "Cookie & Cupcake Topper" },
+    { "type": "text", "id": "c4_body", "label": "Body", "default": "Dust over frosting or fresh-baked cookies before they cool." },
+    { "type": "header", "content": "Card 5" },
+    { "type": "text", "id": "c5_tag", "label": "Tag", "default": "Breakfast" },
+    { "type": "text", "id": "c5_title", "label": "Title", "default": "Oatmeal & Yogurt" },
+    { "type": "text", "id": "c5_body", "label": "Body", "default": "A morning shake adds café-style flavor with zero effort." },
+    { "type": "header", "content": "Card 6" },
+    { "type": "text", "id": "c6_tag", "label": "Tag", "default": "Cocktail" },
+    { "type": "text", "id": "c6_title", "label": "Title", "default": "Espresso Martini Rim" },
+    { "type": "text", "id": "c6_body", "label": "Body", "default": "Wet the rim, dip in [flavor] topping. Bartender energy." }
+  ],
+  "presets": [{ "name": "ST Ways To Shake" }]
+}
+{% endschema %}

@@ -1,0 +1,73 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-faq { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-faq" id="pdFaq">
+    <div class="pd-wrap pd-faq-head">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      <p class="pd-faq-lede">{{ section.settings.lede }}</p>
+    </div>
+    {%- capture faqs_raw -%}{{ section.settings.q1 }}|{{ section.settings.a1 }};;{{ section.settings.q2 }}|{{ section.settings.a2 }};;{{ section.settings.q3 }}|{{ section.settings.a3 }};;{{ section.settings.q4 }}|{{ section.settings.a4 }};;{{ section.settings.q5 }}|{{ section.settings.a5 }};;{{ section.settings.q6 }}|{{ section.settings.a6 }};;{{ section.settings.q7 }}|{{ section.settings.a7 }}{%- endcapture -%}
+    {%- assign faqs = faqs_raw | split: ';;' -%}
+    <ul class="pd-faq-list">
+      {%- for faq in faqs -%}
+        {%- assign parts = faq | split: '|' -%}
+        {%- if parts[0] == blank -%}{%- continue -%}{%- endif -%}
+        <li class="pd-faq-item">
+          <button type="button" class="pd-faq-q" aria-expanded="false">
+            <span class="pd-faq-q-text">{{ parts[0] }}</span>
+            <span class="pd-faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="pd-faq-a"><div class="pd-faq-a-inner">{{ parts[1] }}</div></div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PB FAQ",
+  "tag": "section",
+  "class": "section-pb-faq",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "FAQ" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Before you " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "scoop" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "text", "id": "lede", "label": "Lede", "default": "Everything you need to know about working with popping boba." },
+    { "type": "header", "content": "Q1" },
+    { "type": "text", "id": "q1", "label": "Question", "default": "How much boba per drink?" },
+    { "type": "textarea", "id": "a1", "label": "Answer", "default": "About 2 tablespoons (30 g) per 16 oz drink is the sweet spot. Adjust to taste — some customers want a single spoonful, some want the whole cup studded." },
+    { "type": "header", "content": "Q2" },
+    { "type": "text", "id": "q2", "label": "Question", "default": "How long does an open container last?" },
+    { "type": "textarea", "id": "a2", "label": "Answer", "default": "Once opened, transfer to an airtight container and refrigerate. Best within 2 weeks for peak burst texture." },
+    { "type": "header", "content": "Q3" },
+    { "type": "text", "id": "q3", "label": "Question", "default": "Do they need cooking?" },
+    { "type": "textarea", "id": "a3", "label": "Answer", "default": "No. These are ready-to-serve. Drain, scoop, and top your drink straight from the pouch." },
+    { "type": "header", "content": "Q4" },
+    { "type": "text", "id": "q4", "label": "Question", "default": "What can I make with them?" },
+    { "type": "textarea", "id": "a4", "label": "Answer", "default": "Bubble tea, smoothies, yogurt parfaits, slushies, ice cream sundaes, lemonades, cocktails, mocktails, fruit bowls. Anywhere you want texture + flavor." },
+    { "type": "header", "content": "Q5" },
+    { "type": "text", "id": "q5", "label": "Question", "default": "Are they vegan, gluten-free, kosher?" },
+    { "type": "textarea", "id": "a5", "label": "Answer", "default": "Yes — all Syruvia popping boba is vegan, gluten-free, and OU kosher certified." },
+    { "type": "header", "content": "Q6" },
+    { "type": "text", "id": "q6", "label": "Question", "default": "How fast do you ship?" },
+    { "type": "textarea", "id": "a6", "label": "Answer", "default": "Orders ship in 1 business day from our New Jersey warehouse. Flat-rate $5.99 shipping, free over $34. Most arrive in 3-5 business days." },
+    { "type": "header", "content": "Q7" },
+    { "type": "text", "id": "q7", "label": "Question", "default": "What if I do not love it?" },
+    { "type": "textarea", "id": "a7", "label": "Answer", "default": "We back every container with a 30-day taste guarantee. If it is not your thing, email us and we will make it right." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "PB FAQ" }]
+}
+{% endschema %}
