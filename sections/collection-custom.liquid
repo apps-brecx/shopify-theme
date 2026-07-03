@@ -97,7 +97,7 @@
     .scol .qv-rate .stars .str{ width:16px; height:16px; }
     .scol .grid-wrap{ max-width:1240px; margin:0 auto; padding:26px 28px 10px; }
     .scol .pgrid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(var(--col),1fr)); gap:var(--gap); }
-    .scol .pcard{ position:relative; background:var(--surface); border:var(--rule); border-radius:var(--radius); display:flex; flex-direction:column; overflow:hidden; box-shadow:var(--shadow); transition:transform .2s cubic-bezier(.3,1,.5,1),box-shadow .2s ease; }
+    .scol .pcard{ position:relative; background:var(--surface); border:var(--rule); border-radius:var(--radius); display:flex; flex-direction:column; overflow:hidden; box-shadow:var(--shadow); transition:transform .2s cubic-bezier(.3,1,.5,1),box-shadow .2s ease; cursor:pointer; }
     @media (prefers-reduced-motion: no-preference){ .scol .pcard{ animation:sccardIn .5s cubic-bezier(.3,1,.5,1) both; animation-delay:var(--d); } }
     @keyframes sccardIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:translateY(0); } }
     .scol .pcard:hover{ transform:translate(-3px,-3px); box-shadow:7px 7px 0 var(--ink); }
@@ -1028,7 +1028,14 @@
         var ok =
           (family === 'All' ? true : family === 'Sugar-Free' ? c.sf === 1 : c.family === family) &&
           (!q || c.name.indexOf(q) > -1);
-        c.el.style.display = ok ? '' : 'none';
+        // Hide with !important so it beats the collection-polish rule
+        // (html body .pcard{ display:flex !important }); show = clear it and
+        // let that flex layout take over again.
+        if (ok) {
+          c.el.style.removeProperty('display');
+        } else {
+          c.el.style.setProperty('display', 'none', 'important');
+        }
         grid.appendChild(c.el);
         if (ok) shown++;
       });
@@ -1129,13 +1136,10 @@
         addCart(card, 1);
         return;
       }
-      if (e.target.closest('[data-quick]')) {
-        if (window.matchMedia('(max-width:720px)').matches) {
-          window.location.href = card.dataset.url;
-        } else {
-          openQuick(card);
-        }
-        return;
+      // Quick view removed — any other click on the card goes straight to the
+      // product page. Works for sold-out cards too (every card has a data-url).
+      if (card.dataset.url) {
+        window.location.href = card.dataset.url;
       }
     });
     var qv = root.querySelector('[data-qvroot]'),
