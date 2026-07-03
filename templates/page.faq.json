@@ -10,115 +10,79 @@
 {
   "sections": {
     "main": {
-      "type": "main-page",
-      "disabled": true,
-      "settings": {
-        "padding_top": 28,
-        "padding_bottom": 28
-      }
-    },
-    "image_banner_NDCzWQ": {
-      "type": "image-banner",
+      "type": "faq-page",
       "blocks": {
-        "top_image_4UUgDi": {
-          "type": "top-image",
+        "faq_return": {
+          "type": "faq",
           "settings": {
-            "top_image": "shopify://shop_images/Blogfdzg-Page.png"
+            "question": "What is your return policy?",
+            "answer": "<p>We stand behind every bottle with a 30-day taste guarantee. If you're not happy for any reason, contact us within 30 days of delivery and we'll refund, replace, or credit your order — your call.</p>"
           }
         },
-        "heading_W7dhVC": {
-          "type": "heading",
+        "faq_refund": {
+          "type": "faq",
           "settings": {
-            "heading": "Syruvia Wholesale",
-            "heading_size": "h1",
-            "show_metafield_content": false
+            "question": "How do I request a refund?",
+            "answer": "<p>Reach out to our team through the <a href=\"/pages/contact-us\">contact page</a> with your order number and what went wrong. Most refunds are approved within 1–2 business days and returned to your original payment method.</p>"
+          }
+        },
+        "faq_track": {
+          "type": "faq",
+          "settings": {
+            "question": "How can I track my order?",
+            "answer": "<p>As soon as your order ships, we'll email you a confirmation with a tracking link. You can also find tracking anytime under your account's order history.</p>"
+          }
+        },
+        "faq_address": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I update my shipping address after placing an order?",
+            "answer": "<p>If your order hasn't shipped yet, contact us as soon as possible and we'll update the address for you. Once it's on its way we can't reroute it, but we'll always help you sort things out.</p>"
+          }
+        },
+        "faq_payments": {
+          "type": "faq",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "<p>We accept Visa, MasterCard, American Express, PayPal, and Bank Transfer.</p>"
+          }
+        },
+        "faq_secure": {
+          "type": "faq",
+          "settings": {
+            "question": "Is my payment information secure?",
+            "answer": "<p>Absolutely. Checkout is fully encrypted and PCI-compliant through Shopify Payments — we never see or store your full card details.</p>"
+          }
+        },
+        "faq_shipping_time": {
+          "type": "faq",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Orders ship within 1 business day from our New Jersey warehouse, and most US orders arrive in 3–5 business days. Shipping is a flat $5.99, free on orders over $34.</p>"
+          }
+        },
+        "faq_international": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you offer international shipping?",
+            "answer": "<p>Yes — we ship to select countries outside the US. Available destinations, rates, and delivery estimates are shown at checkout once you enter your address.</p>"
           }
         }
       },
       "block_order": [
-        "top_image_4UUgDi",
-        "heading_W7dhVC"
-      ],
-      "custom_css": [
-        "ssvg.placeholder-svg {opacity: 0 !important;}",
-        ".media {background-color: white;}",
-        "h2 {font-size: 48px; font-weight: bold; color: #39220f;}",
-        "a {color: #39220f;}"
+        "faq_return",
+        "faq_refund",
+        "faq_track",
+        "faq_address",
+        "faq_payments",
+        "faq_secure",
+        "faq_shipping_time",
+        "faq_international"
       ],
       "settings": {
-        "custom_class": "",
-        "image": "shopify://shop_images/Blog-ddPage.webp",
-        "image_overlay_opacity": 0,
-        "image_height": "adapt",
-        "desktop_content_position": "middle-center",
-        "show_text_box": false,
-        "desktop_content_alignment": "center",
-        "color_scheme": "",
-        "image_behavior": "none",
-        "mobile_content_alignment": "center",
-        "stack_images_on_mobile": false,
-        "show_text_below": false
-      }
-    },
-    "rich_text_hAgRfB": {
-      "type": "rich-text",
-      "blocks": {
-        "heading_7zC64y": {
-          "type": "heading",
-          "settings": {
-            "show_image": false,
-            "heading": "",
-            "heading_size": "h1"
-          }
-        },
-        "text_Ab9Nih": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
-          }
-        },
-        "button_RgkdPx": {
-          "type": "button",
-          "settings": {
-            "button_label": "Button label",
-            "button_link": "",
-            "button_style_secondary": false,
-            "button_label_2": "",
-            "button_link_2": "",
-            "button_style_secondary_2": false
-          }
-        }
-      },
-      "block_order": [
-        "heading_7zC64y",
-        "text_Ab9Nih",
-        "button_RgkdPx"
-      ],
-      "name": "t:sections.rich-text.presets.name",
-      "settings": {
-        "custom_class": "about-drop-sec-gt",
-        "custom_id": "",
-        "custom_imgclass": "",
-        "custom_class_bg_gtr": "",
-        "custom_class1": "ever-drop-gt-cstm",
-        "custom_class11": "",
-        "custom_class12": "",
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "",
-        "full_width": true,
-        "padding_top": 40,
-        "padding_bottom": 52,
-        "ever_drop_image": "shopify://shop_images/Vector1.png",
-        "ever_drop_image_alt_text": "Description of the ever drop image",
-        "ever_drop_image_alt_text11": "Description of the ever drop image",
-        "ever_drop_image_alt_text12": "Description of the ever drop image"
+        "cta_button_link": "/pages/contact-us"
       }
     }
   },
-  "order": [
-    "main",
-    "image_banner_NDCzWQ",
-    "rich_text_hAgRfB"
-  ]
+  "order": ["main"]
 }
