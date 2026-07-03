@@ -571,14 +571,14 @@
           "type": "heading",
           "settings": {
             "show_image": false,
-            "heading": "<strong>What is Pack of the Week?</strong>",
+            "heading": "<strong>What is </strong><em><strong>Pack of the Week?</strong></em>",
             "heading_size": "h1"
           }
         },
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This curated trio gives you the perfect summer refreshers. Sugar-Free Mango, Peach, and Mandarin Orange allow you to make colorful, fruity drinks without sugar iced teas, sparkling water, lemonades, and mocktails.</p>"
+            "text": "<p>This week’s Sugar-Free Cookie Caramel Cream Pack brings together three smooth dessert-style flavors for better coffee at home. Cookie Butter tastes cozy, Vanilla keeps it classic, and Caramel Chocolate adds a rich sweet finish.</p>"
           }
         }
       },
