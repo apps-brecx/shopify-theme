@@ -755,7 +755,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I love fruity drinks but don’t want the sugar. These flavors are bright, smooth, and super refreshing. Mandarin Orange is my favorite",
+            "quote": "Cookie Butter in iced coffee is so good, and I love that it is sugar free. This pack makes my morning coffee feel like a treat.",
             "reviewer_initials": "SJ",
             "reviewer_name": "Sarah J.",
             "reviewer_role": "VERIFIED BUYER"
@@ -765,7 +765,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack is perfect for summer. I made lemonade with Peach and Mango, and it tasted like something from a café.",
+            "quote": "The Caramel Chocolate is my favorite. It makes cold brew taste rich and dessert-like without adding sugar.",
             "reviewer_initials": "MR",
             "reviewer_name": "Michael R.",
             "reviewer_role": "COFFEE ENTHUSIAST"
@@ -775,7 +775,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack is perfect for summer. I made lemonade with Peach and Mango, and it tasted like something from a café.",
+            "quote": "Vanilla is perfect for everyday lattes, Cookie Butter feels cozy, and Caramel Chocolate gives the pack a nice sweet finish.",
             "reviewer_initials": "EG",
             "reviewer_name": "Elena G.",
             "reviewer_role": "HAPPY MOTHER"
@@ -785,17 +785,17 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "All three flavors mix really well. Peach is sweet, Mango is tropical, and Mandarin Orange adds the perfect citrus kick.",
+            "quote": "I wanted dessert-style coffee flavors without the sugar, and this pack is exactly that. All three mix really well.",
             "reviewer_initials": "EG",
             "reviewer_name": "Elena G.",
             "reviewer_role": "HAPPY MOTHER"
           }
         },
-        "testimonial_ExpYLN": {
+        "testimonial_6tDyKy": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Mango tastes amazing in sparkling water, and the Peach is perfect for iced tea. This pack makes sugar-free drinks feel fun again.",
+            "quote": "The Caramel Chocolate is my favorite. It makes cold brew taste rich and dessert-like without adding sugar.",
             "reviewer_initials": "MR",
             "reviewer_name": "Michael R.",
             "reviewer_role": "COFFEE ENTHUSIAST"
@@ -807,7 +807,7 @@
         "testimonial_w7H38p",
         "testimonial_grwGng",
         "testimonial_cdT8rN",
-        "testimonial_ExpYLN"
+        "testimonial_6tDyKy"
       ],
       "name": "People Love This Combo",
       "settings": {
