@@ -44,7 +44,7 @@
           "type": "faq",
           "settings": {
             "question": "What payment methods do you accept?",
-            "answer": "<p>We accept Visa, MasterCard, American Express, PayPal, and Bank Transfer.</p>"
+            "answer": "<p>We accept Visa, MasterCard, American Express, PayPal</p>"
           }
         },
         "faq_secure": {
@@ -80,9 +80,33 @@
         "faq_international"
       ],
       "settings": {
-        "cta_button_link": "/pages/contact-us"
+        "eyebrow": "Help Center",
+        "title": "Frequently Asked Questions",
+        "intro": "Answers to the questions we hear most. Still stuck? Reach out — we're happy to help.",
+        "q_prefix": "Q:",
+        "a_prefix": "A:",
+        "show_search": true,
+        "search_placeholder": "Search questions…",
+        "no_results_text": "No questions match your search.",
+        "show_cta": true,
+        "cta_heading": "Still have questions?",
+        "cta_text": "Our team is one message away.",
+        "cta_button_label": "Contact us",
+        "cta_button_link": "/pages/contact-us",
+        "bg": "#fffbf4",
+        "card_bg": "#ffffff",
+        "brand": "#39220f",
+        "accent": "#c58548",
+        "icon_bg": "#fce2a0",
+        "eyebrow_bg": "#fce2a0",
+        "answer_color": "#39220f",
+        "max_width": 820,
+        "pad_top": 72,
+        "pad_bottom": 88
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
