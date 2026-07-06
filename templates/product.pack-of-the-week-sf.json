@@ -571,14 +571,14 @@
           "type": "heading",
           "settings": {
             "show_image": false,
-            "heading": "<strong>What is Pack of the Week?</strong>",
+            "heading": "<strong>What is </strong><em><strong>Pack of the Week?</strong></em>",
             "heading_size": "h1"
           }
         },
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This curated trio gives you the perfect summer refreshers. Sugar-Free Mango, Peach, and Mandarin Orange allow you to make colorful, fruity drinks without sugar iced teas, sparkling water, lemonades, and mocktails.</p>"
+            "text": "<p>This week’s Sugar-Free Cookie Caramel Cream Pack brings together three smooth dessert-style flavors for better coffee at home. Cookie Butter tastes cozy, Vanilla keeps it classic, and Caramel Chocolate adds a rich sweet finish.</p>"
           }
         }
       },
@@ -590,7 +590,7 @@
         ".page-cst-about-page-sec,.page-cst-mission-page-sec,.line-left,.line-right {display: none;}",
         ".mobile-pad {padding-bottom: 40px !important;}",
         ".rich-text__heading strong {font-family: \"Epilogue\", sans-serif !important;}",
-        ".rich-text__heading em {font-style: normal; color: #61155b;}",
+        ".rich-text__heading em {font-style: normal; color: #c6631e;}",
         ".rich-text__text p {font-family: \"Manrope\", sans-serif !important;}",
         "@media (max-width: 768px) {.head {font-size: 32px !important; }}",
         "@media (max-width: 400px) {.rich-text__text p {font-size: 14px !important; line-height: normal !important; }}"
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Three Tropical Favorites",
-            "description": "Sugar-Free Mango, Peach, and Mandarin Orange give you bold, refreshing flavors in one versatile pack."
+            "title": "Cookie Butter Cozy",
+            "description": "Warm dessert flavor for coffee and lattes."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Make Drinks More Refreshing",
-            "description": "Create unique summer drinks every day from iced teas to sparkling lemonades  without repeating the same flavor."
+            "title": "Vanilla Classic",
+            "description": "Smooth, easy, and made for everyday drinks."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Big Flavor, Zero Sugar",
-            "description": "Made for bright summer drinks that taste juicy and refreshing without sugar."
+            "title": "Caramel Chocolate Rich",
+            "description": "Sweet caramel-chocolate flavor without the sugar."
           }
         }
       },
@@ -700,7 +700,7 @@
       "settings": {
         "background_color": "#c6631e",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Bright fruit flavor crafted for refreshing drinks you can enjoy all summer.</p>",
+        "description": "<p>Crafted for smooth mixing, creamy flavor, and easy sugar-free drinks at home.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -755,7 +755,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I love fruity drinks but don’t want the sugar. These flavors are bright, smooth, and super refreshing. Mandarin Orange is my favorite",
+            "quote": "Cookie Butter in iced coffee is so good, and I love that it is sugar free. This pack makes my morning coffee feel like a treat.",
             "reviewer_initials": "SJ",
             "reviewer_name": "Sarah J.",
             "reviewer_role": "VERIFIED BUYER"
@@ -765,7 +765,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack is perfect for summer. I made lemonade with Peach and Mango, and it tasted like something from a café.",
+            "quote": "The Caramel Chocolate is my favorite. It makes cold brew taste rich and dessert-like without adding sugar.",
             "reviewer_initials": "MR",
             "reviewer_name": "Michael R.",
             "reviewer_role": "COFFEE ENTHUSIAST"
@@ -775,7 +775,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack is perfect for summer. I made lemonade with Peach and Mango, and it tasted like something from a café.",
+            "quote": "Vanilla is perfect for everyday lattes, Cookie Butter feels cozy, and Caramel Chocolate gives the pack a nice sweet finish.",
             "reviewer_initials": "EG",
             "reviewer_name": "Elena G.",
             "reviewer_role": "HAPPY MOTHER"
@@ -785,17 +785,17 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "All three flavors mix really well. Peach is sweet, Mango is tropical, and Mandarin Orange adds the perfect citrus kick.",
+            "quote": "I wanted dessert-style coffee flavors without the sugar, and this pack is exactly that. All three mix really well.",
             "reviewer_initials": "EG",
             "reviewer_name": "Elena G.",
             "reviewer_role": "HAPPY MOTHER"
           }
         },
-        "testimonial_ExpYLN": {
+        "testimonial_6tDyKy": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Mango tastes amazing in sparkling water, and the Peach is perfect for iced tea. This pack makes sugar-free drinks feel fun again.",
+            "quote": "The Caramel Chocolate is my favorite. It makes cold brew taste rich and dessert-like without adding sugar.",
             "reviewer_initials": "MR",
             "reviewer_name": "Michael R.",
             "reviewer_role": "COFFEE ENTHUSIAST"
@@ -807,7 +807,7 @@
         "testimonial_w7H38p",
         "testimonial_grwGng",
         "testimonial_cdT8rN",
-        "testimonial_ExpYLN"
+        "testimonial_6tDyKy"
       ],
       "name": "People Love This Combo",
       "settings": {
@@ -837,8 +837,8 @@
       "name": "Start Pack",
       "settings": {
         "background_color": "#c6631e",
-        "title": "Chill Your Summer, Sugar-Free",
-        "description": "Peach, Mango, and Mandarin Orange in one easy pack for bright, refreshing drinks.",
+        "title": "Creamy Sips, Zero Sugar",
+        "description": "Three creamy flavors. Zero sugar. Cookie Butter, Vanilla, and Caramel Chocolate made for better drinks at home.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"

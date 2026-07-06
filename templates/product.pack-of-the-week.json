@@ -16,7 +16,7 @@
         "bg_img": "shopify://shop_images/Rectangle_2272_2.png",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
-        "accent_color": "#c6631e"
+        "accent_color": "#8d4925"
       }
     },
     "main": {
@@ -479,9 +479,9 @@
         "column_WtABe3": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/iced-tea_2.png",
+            "image": "shopify://shop_images/Icon_6.png",
             "column_link": "",
-            "title": "<strong>Mixes in Seconds</strong>",
+            "title": "<strong>Effortless to use</strong>",
             "text": "",
             "link_label": "",
             "link": ""
@@ -490,9 +490,9 @@
         "column_k7Ua7t": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/lemonade_2.png",
+            "image": "shopify://shop_images/Icon_7.png",
             "column_link": "",
-            "title": "<strong>Built for Iced Drinks</strong>",
+            "title": "<strong>Made for daily drinks</strong>",
             "text": "",
             "link_label": "",
             "link": ""
@@ -501,9 +501,9 @@
         "column_UrhpMn": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/drink_4.png",
+            "image": "shopify://shop_images/Icon_8.png",
             "column_link": "",
-            "title": "<strong>Summer-Ready Pack</strong>",
+            "title": "<strong>Flavors you’ll actually love</strong>",
             "text": "",
             "link_label": "",
             "link": ""
@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>Each week, we highlight one pack we think is worth trying. Same premium products, just an easier place for you to start your flavor journey without the decision fatigue.</p>"
+            "text": "<p>This week’s Cookie Caramel Cream Pack brings together three smooth, sweet flavors made for cozy coffeehouse drinks at home. Cookie Butter adds warm dessert flavor, Vanilla keeps it classic, and Caramel Chocolate brings the rich finish.</p>"
           }
         }
       },
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#d35605"
+        "background_color": "#8d4925"
       }
     },
     "pack_steps_AbyNtH": {
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Three Fruity Favorites",
-            "description": "Mango, Peach, and Mandarine Orange in one easy summer pack."
+            "title": "Cookie Butter Cozy",
+            "description": "Warm, sweet, and made for dessert-style coffee."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Mix Drinks Fast",
-            "description": "Add bright fruit flavor to lemonades, iced teas, sodas, and mocktails."
+            "title": "Vanilla Classic",
+            "description": "Smooth flavor that works with almost any drink."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Made for Summer",
-            "description": "Perfect for refreshing drinks, party sips, and everyday cool-downs."
+            "title": "Caramel Chocolate Rich",
+            "description": "A creamy caramel-chocolate finish for bold sweet sips."
           }
         }
       },
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#d35605",
+        "background_color": "#8d4925",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -698,9 +698,9 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#c6631e",
+        "background_color": "#8D4925",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Bright fruit flavors crafted to bring refreshing summer vibes to every drink.</p>",
+        "description": "<p>Crafted for smooth mixing, rich flavor, and easy café-style drinks at home.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -755,7 +755,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "\"Mandarine Orange is the flavor I didn’t know I needed. It adds the perfect citrus pop to sparkling water and mocktails.\"",
+            "quote": "The Cookie Butter is so good in iced coffee, and Vanilla makes every latte smoother. This pack feels like a coffee shop at home.",
             "reviewer_initials": "SJ",
             "reviewer_name": "Sarah J.",
             "reviewer_role": "VERIFIED BUYER"
@@ -765,7 +765,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "“This pack is easy to use and the flavors actually stand out. Perfect for lemonades, iced teas, and fruity drinks at home..”",
+            "quote": "Caramel Chocolate was my favorite. It made my cold brew taste rich without needing anything extra.",
             "reviewer_initials": "MR",
             "reviewer_name": "Michael R.",
             "reviewer_role": "COFFEE ENTHUSIAST"
@@ -775,7 +775,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "\"I used all three for a weekend drink bar, and everyone had a favorite. Mango was bold, Peach was sweet, and Mandarine Orange made everything taste fresh.\"",
+            "quote": "I used all three for weekend coffee drinks, and everyone picked a favorite. Cookie Butter was the first one gone.",
             "reviewer_initials": "EG",
             "reviewer_name": "Elena G.",
             "reviewer_role": "HAPPY MOTHER"
@@ -785,17 +785,17 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "\"Mandarine Orange is the flavor I didn’t know I needed. It adds the perfect citrus pop to sparkling water and mocktails.\"",
+            "quote": "Vanilla is classic, Cookie Butter is cozy, and Caramel Chocolate makes dessert coffee easy. Great pack for the price.",
             "reviewer_initials": "EG",
             "reviewer_name": "Elena G.",
             "reviewer_role": "HAPPY MOTHER"
           }
         },
-        "testimonial_ExpYLN": {
+        "testimonial_8bGFNJ": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Mango gives my lemonade a tropical kick, and the Peach makes iced tea taste so smooth. This pack feels made for summer.",
+            "quote": "Caramel Chocolate was my favorite. It made my cold brew taste rich without needing anything extra.",
             "reviewer_initials": "MR",
             "reviewer_name": "Michael R.",
             "reviewer_role": "COFFEE ENTHUSIAST"
@@ -807,11 +807,11 @@
         "testimonial_w7H38p",
         "testimonial_grwGng",
         "testimonial_cdT8rN",
-        "testimonial_ExpYLN"
+        "testimonial_8bGFNJ"
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "People\nLove this Combo",
+        "heading": "Coffee Lovers\nLove This Pack",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
@@ -836,9 +836,9 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#d35605",
-        "title": "Turn Every Drink Into Summer",
-        "description": "Three bright fruit flavors. One chill pack. Mango, Peach, and Mandarine Orange made for refreshing drinks at home.",
+        "background_color": "#8d4925",
+        "title": "Make Coffee Taste Like Dessert",
+        "description": "Three creamy flavors. One easy pack. Cookie Butter, Vanilla, and Caramel Chocolate made for better drinks at home.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"
