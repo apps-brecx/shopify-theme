@@ -103,6 +103,16 @@
     display: inline-flex !important; align-items: center !important; gap: 8px !important; flex-wrap: wrap !important;
   }
 
+  /* Thumbnail strip → arrow-only slider (every product image, ~4 visible; navigate with ‹ ›, no scrollbar) */
+  #shopify-section-{{ section.id }} .pd-hero-media { min-width: 0; }
+  #shopify-section-{{ section.id }} .pd-thumbs-wrap { margin-top: 14px; display: flex; align-items: center; gap: 8px; }
+  html body #shopify-section-{{ section.id }} .pd .pd-thumbs { margin-top: 0 !important; display: flex !important; grid-template-columns: none !important; gap: 10px !important; flex: 1 1 auto; min-width: 0; overflow: hidden; scroll-behavior: smooth; scroll-snap-type: x mandatory; }
+  html body #shopify-section-{{ section.id }} .pd .pd-thumb { flex: 0 0 calc((100% - 30px) / 4) !important; scroll-snap-align: start; }
+  #shopify-section-{{ section.id }} .pd-thumbs-nav { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--pd-brand); background: #FFFBF4; color: var(--pd-brand); cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'Archivo', sans-serif; font-size: 18px; line-height: 1; box-shadow: 2px 2px 0 var(--pd-brand); transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease; padding: 0; }
+  #shopify-section-{{ section.id }} .pd-thumbs-nav:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--pd-brand); }
+  #shopify-section-{{ section.id }} .pd-thumbs-nav:disabled { cursor: default; box-shadow: none; transform: none; }
+  @media (max-width: 760px) { #shopify-section-{{ section.id }} .pd-thumbs-wrap { display: none !important; } }
+
   /* Mobile-only slider */
   #shopify-section-{{ section.id }} .pd-slider-mobile { display: none; }
   #shopify-section-{{ section.id }} .pd-slider-dots { display: none; }
@@ -180,10 +190,14 @@
             <img id="pdHeroImg" src="{{ hero_src }}" alt="{{ product.title | escape }}" width="1200" height="1200" fetchpriority="high">
           </div>
           {%- if product.images.size > 1 -%}
-            <div class="pd-thumbs">
-              {%- for img in product.images limit: 4 -%}
-                <button type="button" class="pd-thumb{% if forloop.first %} is-active{% endif %}" data-src="{{ img | image_url: width: 1400 }}" aria-label="View image {{ forloop.index }}"><img src="{{ img | image_url: width: 200 }}" alt="" width="200" height="200" loading="lazy"></button>
-              {%- endfor -%}
+            <div class="pd-thumbs-wrap">
+              {%- if product.images.size > 4 -%}<button type="button" class="pd-thumbs-nav pd-thumbs-prev" aria-label="Previous thumbnails">‹</button>{%- endif -%}
+              <div class="pd-thumbs">
+                {%- for img in product.images -%}
+                  <button type="button" class="pd-thumb{% if forloop.first %} is-active{% endif %}" data-src="{{ img | image_url: width: 1400 }}" aria-label="View image {{ forloop.index }}"><img src="{{ img | image_url: width: 200 }}" alt="" width="200" height="200" loading="lazy"></button>
+                {%- endfor -%}
+              </div>
+              {%- if product.images.size > 4 -%}<button type="button" class="pd-thumbs-nav pd-thumbs-next" aria-label="Next thumbnails">›</button>{%- endif -%}
             </div>
           {%- endif -%}
 
@@ -386,6 +400,20 @@ window.PD_TIERS = [1, 0.95, 0.90, 0.85];
   document.querySelectorAll('.pd-thumb').forEach(t=>{
     t.addEventListener('click', ()=>{document.querySelectorAll('.pd-thumb').forEach(x=>x.classList.remove('is-active'));t.classList.add('is-active');if (heroImg && t.dataset.src) heroImg.src = t.dataset.src;});
   });
+  /* Desktop thumbnail slider — arrow controls */
+  (function(){
+    var strip = document.querySelector('.pd-thumbs');
+    var prev = document.querySelector('.pd-thumbs-prev');
+    var next = document.querySelector('.pd-thumbs-next');
+    if (!strip || !prev || !next) return;
+    function upd(){ var max = strip.scrollWidth - strip.clientWidth - 2; prev.disabled = strip.scrollLeft <= 2; next.disabled = strip.scrollLeft >= max; }
+    function step(){ return Math.max(strip.clientWidth * 0.8, 120); }
+    prev.addEventListener('click', function(){ strip.scrollBy({left: -step(), behavior: 'smooth'}); });
+    next.addEventListener('click', function(){ strip.scrollBy({left: step(), behavior: 'smooth'}); });
+    strip.addEventListener('scroll', upd, {passive: true});
+    window.addEventListener('resize', upd);
+    upd();
+  })();
   const slides = document.getElementById('pdSlides');
   const dots = document.querySelectorAll('.pd-dot');
   if (slides && dots.length){
