@@ -1,0 +1,30 @@
+{
+  "sections": {
+    "main": { "type": "pmp-hero", "settings": {} },
+    "pmp_marquee": { "type": "pmp-marquee", "settings": {} },
+    "pmp_description": { "type": "pmp-description", "settings": {} },
+    "pmp_howto": { "type": "pmp-howto", "settings": {} },
+    "pmp_specs": { "type": "pmp-specs", "settings": {} },
+    "pmp_why": { "type": "pmp-why", "settings": {} },
+    "pmp_reels": { "type": "pmp-reels", "settings": {} },
+    "pd_reviews": { "type": "pd-reviews", "settings": {} },
+    "pd_write_review": { "type": "pd-write-review", "settings": {} },
+    "pd_recommended": { "type": "pd-recommended", "settings": {} },
+    "pmp_faq": { "type": "pmp-faq", "settings": {} },
+    "pd_vip": { "type": "pd-vip", "settings": {} }
+  },
+  "order": [
+    "main",
+    "pmp_marquee",
+    "pmp_description",
+    "pmp_howto",
+    "pmp_specs",
+    "pmp_why",
+    "pmp_reels",
+    "pd_reviews",
+    "pd_write_review",
+    "pd_recommended",
+    "pmp_faq",
+    "pd_vip"
+  ]
+}
