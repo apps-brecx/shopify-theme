@@ -808,6 +808,7 @@
           best: +dx.best,
           isnew: +dx.new,
           sf: +(dx.sf || 0),
+          avail: dx.avail === '0' ? 0 : 1,
         };
       });
     }
@@ -898,6 +899,7 @@
         best: +dx.best,
         isnew: +dx.new,
         sf: +(dx.sf || 0),
+        avail: dx.avail === '0' ? 0 : 1,
       };
     });
     var family = 'All',
@@ -1018,7 +1020,12 @@
         },
       };
       var key = sort === 'new' ? 'neww' : sort;
-      var arr = cards.slice().sort(by[key]);
+      var base = by[key];
+      var arr = cards.slice().sort(function (a, b) {
+        // Sold-out always sinks to the bottom, then apply the chosen sort within each group
+        if (a.avail !== b.avail) return b.avail - a.avail;
+        return base(a, b);
+      });
       var q = searchEl && searchEl.value ? searchEl.value.trim().toLowerCase() : '';
       [].slice.call(grid.querySelectorAll('.promo-card')).forEach(function (n) {
         n.remove();

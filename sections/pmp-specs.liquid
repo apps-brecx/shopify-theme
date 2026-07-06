@@ -1,0 +1,82 @@
+{% comment %} Pumps — Specs strip (4 cards on a butter band). {% endcomment %}
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-specs { padding:80px 0 !important; background:{{ section.settings.section_bg }} !important; border-top:2px solid #39220f !important; display:block !important; }
+  @media (max-width:760px){ html body #shopify-section-{{ section.id }} .pd .pd-pmp-specs { padding:56px 0 !important; } }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-specs-head { text-align:center !important; margin:0 auto 36px !important; max-width:680px !important; }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-specs-head .pd-eyebrow { display:inline-block !important; margin:0 auto 18px !important; background:#39220f !important; color:#FCE2A0 !important; }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-specs-grid { display:grid !important; grid-template-columns:repeat(4,1fr) !important; gap:14px !important; max-width:1080px !important; margin:0 auto !important; padding:0 18px !important; }
+  @media (max-width:980px){ html body #shopify-section-{{ section.id }} .pd .pd-pmp-specs-grid { grid-template-columns:repeat(2,1fr) !important; } }
+  @media (max-width:520px){ html body #shopify-section-{{ section.id }} .pd .pd-pmp-specs-grid { grid-template-columns:1fr !important; } }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-spec { background:#FFFBF4 !important; border:2px solid #39220f !important; border-radius:18px !important; box-shadow:4px 4px 0 #39220f !important; padding:22px 22px 22px !important; text-align:left !important; display:flex !important; flex-direction:column !important; gap:6px !important; }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-spec-label { font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important; font-size:10.5px !important; letter-spacing:.16em !important; text-transform:uppercase !important; color:#c58548 !important; margin:0 !important; line-height:1 !important; }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-spec-value { font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important; font-size:17px !important; color:#39220f !important; margin:0 !important; text-transform:uppercase !important; letter-spacing:.005em !important; line-height:1.15 !important; }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-spec-note { font-family:'Josefin Sans',sans-serif !important; font-size:13.5px !important; line-height:1.45 !important; color:#39220f !important; font-weight:500 !important; margin:2px 0 0 !important; opacity:.85 !important; }
+{% endstyle %}
+
+<div class="pd">
+  <section class="pd-pmp-specs">
+    <div class="pd-pmp-specs-head">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+    </div>
+    <div class="pd-pmp-specs-grid">
+      <div class="pd-pmp-spec">
+        <span class="pd-pmp-spec-label">{{ section.settings.sp1_label }}</span>
+        <span class="pd-pmp-spec-value">{{ section.settings.sp1_value }}</span>
+        <span class="pd-pmp-spec-note">{{ section.settings.sp1_note }}</span>
+      </div>
+      <div class="pd-pmp-spec">
+        <span class="pd-pmp-spec-label">{{ section.settings.sp2_label }}</span>
+        <span class="pd-pmp-spec-value">{{ section.settings.sp2_value }}</span>
+        <span class="pd-pmp-spec-note">{{ section.settings.sp2_note }}</span>
+      </div>
+      <div class="pd-pmp-spec">
+        <span class="pd-pmp-spec-label">{{ section.settings.sp3_label }}</span>
+        <span class="pd-pmp-spec-value">{{ section.settings.sp3_value }}</span>
+        <span class="pd-pmp-spec-note">{{ section.settings.sp3_note }}</span>
+      </div>
+      <div class="pd-pmp-spec">
+        <span class="pd-pmp-spec-label">{{ section.settings.sp4_label }}</span>
+        <span class="pd-pmp-spec-value">{{ section.settings.sp4_value }}</span>
+        <span class="pd-pmp-spec-note">{{ section.settings.sp4_note }}</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PMP Specs",
+  "tag": "section",
+  "class": "section-pmp-specs",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Specs" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Built for daily " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "use" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "header", "content": "Spec 1" },
+    { "type": "text", "id": "sp1_label", "label": "Label", "default": "Dose" },
+    { "type": "text", "id": "sp1_value", "label": "Value", "default": "¼ oz per push" },
+    { "type": "text", "id": "sp1_note", "label": "Note", "default": "Roughly 1½ tsp — same as a café pump." },
+    { "type": "header", "content": "Spec 2" },
+    { "type": "text", "id": "sp2_label", "label": "Label", "default": "Fits" },
+    { "type": "text", "id": "sp2_value", "label": "Value", "default": "All Syruvia 750mL" },
+    { "type": "text", "id": "sp2_note", "label": "Note", "default": "Standard 28-410 thread, works with most syrup bottles." },
+    { "type": "header", "content": "Spec 3" },
+    { "type": "text", "id": "sp3_label", "label": "Label", "default": "Material" },
+    { "type": "text", "id": "sp3_value", "label": "Value", "default": "BPA-Free Plastic" },
+    { "type": "text", "id": "sp3_note", "label": "Note", "default": "Food-grade, heavy-duty, café-tested build." },
+    { "type": "header", "content": "Spec 4" },
+    { "type": "text", "id": "sp4_label", "label": "Label", "default": "Care" },
+    { "type": "text", "id": "sp4_value", "label": "Value", "default": "Rinse + Lock" },
+    { "type": "text", "id": "sp4_note", "label": "Note", "default": "Disassembles fully for deep cleaning. Top-rack safe." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "default": "#FCE2A0" }
+  ],
+  "presets": [{ "name": "PMP Specs" }]
+}
+{% endschema %}

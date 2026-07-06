@@ -1,0 +1,58 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-description { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-description">
+    <div class="pd-wrap">
+      <div class="pd-desc-head">
+        <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+        <h2 class="pd-h2" style="margin-top:14px;">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      </div>
+      <div class="pd-desc-content">
+        {%- if section.settings.description_override != blank -%}
+          {{ section.settings.description_override }}
+        {%- elsif product.description and product.description != blank -%}
+          {{ product.description }}
+        {%- else -%}
+          <ul>
+            <li>{{ section.settings.fb1 }}</li>
+            <li>{{ section.settings.fb2 }}</li>
+            <li>{{ section.settings.fb3 }}</li>
+            <li>{{ section.settings.fb4 }}</li>
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PMP Description",
+  "tag": "section",
+  "class": "section-pmp-description",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "About this pump" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "A café in a " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "twist" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "header", "content": "Body" },
+    { "type": "richtext", "id": "description_override", "label": "Description (override)", "info": "Leave blank to use the product description, then the bullets below." },
+    { "type": "header", "content": "Fallback bullets", "info": "Shown only when there is no override and no product description." },
+    { "type": "text", "id": "fb1", "label": "Bullet 1", "default": "Custom-Fit Threading: Designed to screw onto Syruvia syrup bottles — no leaks, no rocking." },
+    { "type": "text", "id": "fb2", "label": "Bullet 2", "default": "Consistent Portion: ¼ oz per push. Same dose every time, just like the cafés." },
+    { "type": "text", "id": "fb3", "label": "Bullet 3", "default": "One-Handed Use: Press down, syrup flows. No twisting the bottle, no over-pouring." },
+    { "type": "text", "id": "fb4", "label": "Bullet 4", "default": "Built to Last: Heavy-duty BPA-free plastic, food-grade spring, dishwasher-safe disassembly." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "PMP Description" }]
+}
+{% endschema %}

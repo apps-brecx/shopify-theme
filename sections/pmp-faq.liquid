@@ -1,0 +1,76 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-faq { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-faq" id="pdFaq">
+    <div class="pd-wrap pd-faq-head">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      <p class="pd-faq-lede">{{ section.settings.lede }}</p>
+    </div>
+    {%- capture faqs_raw -%}{{ section.settings.q1 }}|{{ section.settings.a1 }};;{{ section.settings.q2 }}|{{ section.settings.a2 }};;{{ section.settings.q3 }}|{{ section.settings.a3 }};;{{ section.settings.q4 }}|{{ section.settings.a4 }};;{{ section.settings.q5 }}|{{ section.settings.a5 }};;{{ section.settings.q6 }}|{{ section.settings.a6 }};;{{ section.settings.q7 }}|{{ section.settings.a7 }};;{{ section.settings.q8 }}|{{ section.settings.a8 }}{%- endcapture -%}
+    {%- assign faqs = faqs_raw | split: ';;' -%}
+    <ul class="pd-faq-list">
+      {%- for faq in faqs -%}
+        {%- assign parts = faq | split: '|' -%}
+        {%- if parts[0] == blank -%}{%- continue -%}{%- endif -%}
+        <li class="pd-faq-item">
+          <button type="button" class="pd-faq-q" aria-expanded="false">
+            <span class="pd-faq-q-text">{{ parts[0] }}</span>
+            <span class="pd-faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="pd-faq-a"><div class="pd-faq-a-inner">{{ parts[1] }}</div></div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PMP FAQ",
+  "tag": "section",
+  "class": "section-pmp-faq",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "FAQ" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Before you " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "pump" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "text", "id": "lede", "label": "Lede", "default": "Everything you might want to know about Syruvia syrup pumps." },
+    { "type": "header", "content": "Q1" },
+    { "type": "text", "id": "q1", "label": "Question", "default": "How much syrup per push?" },
+    { "type": "textarea", "id": "a1", "label": "Answer", "default": "Each push is about ¼ oz (roughly 1½ tsp) — the same dose café pumps use. Two pumps for a small drink, three for a 16oz latte." },
+    { "type": "header", "content": "Q2" },
+    { "type": "text", "id": "q2", "label": "Question", "default": "Will it fit my Syruvia bottle?" },
+    { "type": "textarea", "id": "a2", "label": "Answer", "default": "Yes. Our pumps are custom-threaded for Syruvia 750mL bottles. They also fit most standard 28-410 syrup bottles." },
+    { "type": "header", "content": "Q3" },
+    { "type": "text", "id": "q3", "label": "Question", "default": "Can I use it on non-Syruvia syrup bottles?" },
+    { "type": "textarea", "id": "a3", "label": "Answer", "default": "If the bottle has a standard 28-410 thread it will fit. Most major syrup brands use this size, but always double-check the neck." },
+    { "type": "header", "content": "Q4" },
+    { "type": "text", "id": "q4", "label": "Question", "default": "How do I clean it?" },
+    { "type": "textarea", "id": "a4", "label": "Answer", "default": "Unscrew the top, pull out the dip tube, rinse with warm soapy water. All parts are top-rack dishwasher safe." },
+    { "type": "header", "content": "Q5" },
+    { "type": "text", "id": "q5", "label": "Question", "default": "Does the spout lock?" },
+    { "type": "textarea", "id": "a5", "label": "Answer", "default": "Yes. Twist the spout to lock it closed between uses — keeps it fresh and prevents drips if you move the bottle." },
+    { "type": "header", "content": "Q6" },
+    { "type": "text", "id": "q6", "label": "Question", "default": "Will it leak in transit?" },
+    { "type": "textarea", "id": "a6", "label": "Answer", "default": "No. The threaded base seals tight against the bottle and the lock spout prevents drips. Travel and pantry safe." },
+    { "type": "header", "content": "Q7" },
+    { "type": "text", "id": "q7", "label": "Question", "default": "How many pumps come with the pack?" },
+    { "type": "textarea", "id": "a7", "label": "Answer", "default": "Whatever pack size you pick — 1, 2, 4, 6, or 12. Most customers stock one pump per syrup bottle they keep open." },
+    { "type": "header", "content": "Q8" },
+    { "type": "text", "id": "q8", "label": "Question", "default": "How fast do you ship?" },
+    { "type": "textarea", "id": "a8", "label": "Answer", "default": "Orders ship in 1 business day from our New Jersey warehouse. Flat-rate $5.99 shipping, free over $34." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "PMP FAQ" }]
+}
+{% endschema %}
