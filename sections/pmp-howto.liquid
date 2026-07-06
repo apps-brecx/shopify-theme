@@ -1,0 +1,70 @@
+{% comment %} Pumps — "How it works" 3-step strip. {% endcomment %}
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-howto { padding:96px 0 80px !important; background:{{ section.settings.section_bg }} !important; border-top:2px solid #39220f !important; display:block !important; }
+  @media (max-width:760px){ html body #shopify-section-{{ section.id }} .pd .pd-pmp-howto { padding:64px 0 56px !important; } }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-howto-head { text-align:center !important; max-width:680px !important; margin:0 auto 40px !important; }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-howto-head .pd-eyebrow { display:inline-block !important; margin:0 auto 18px !important; }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-howto-grid { display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:22px !important; max-width:980px !important; margin:0 auto !important; padding:0 18px !important; }
+  @media (max-width:760px){ html body #shopify-section-{{ section.id }} .pd .pd-pmp-howto-grid { grid-template-columns:1fr !important; gap:16px !important; } }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-step { background:#FFFFFF !important; border:2px solid #39220f !important; border-radius:22px !important; box-shadow:5px 5px 0 #39220f !important; padding:30px 26px 28px !important; display:flex !important; flex-direction:column !important; align-items:flex-start !important; gap:10px !important; position:relative !important; transition:transform .25s ease, box-shadow .25s ease !important; }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-step:hover { transform:translate(-2px,-2px) !important; box-shadow:7px 7px 0 #39220f !important; }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-step-num { width:46px !important; height:46px !important; background:#c58548 !important; color:#FFFBF4 !important; border:2px solid #39220f !important; border-radius:50% !important; display:flex !important; align-items:center !important; justify-content:center !important; font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important; font-size:18px !important; box-shadow:2px 2px 0 #39220f !important; line-height:1 !important; }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-step-title { font-family:'Archivo Black','Archivo',sans-serif !important; font-weight:400 !important; font-size:18px !important; color:#39220f !important; margin:8px 0 2px !important; text-transform:uppercase !important; letter-spacing:.01em !important; line-height:1.15 !important; }
+  html body #shopify-section-{{ section.id }} .pd .pd-pmp-step-body { font-family:'Josefin Sans',sans-serif !important; font-size:15px !important; line-height:1.55 !important; color:#39220f !important; font-weight:500 !important; margin:0 !important; }
+{% endstyle %}
+
+<div class="pd">
+  <section class="pd-pmp-howto">
+    <div class="pd-pmp-howto-head">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+    </div>
+    <div class="pd-pmp-howto-grid">
+      <div class="pd-pmp-step">
+        <div class="pd-pmp-step-num">1</div>
+        <h3 class="pd-pmp-step-title">{{ section.settings.s1_title }}</h3>
+        <p class="pd-pmp-step-body">{{ section.settings.s1_body }}</p>
+      </div>
+      <div class="pd-pmp-step">
+        <div class="pd-pmp-step-num">2</div>
+        <h3 class="pd-pmp-step-title">{{ section.settings.s2_title }}</h3>
+        <p class="pd-pmp-step-body">{{ section.settings.s2_body }}</p>
+      </div>
+      <div class="pd-pmp-step">
+        <div class="pd-pmp-step-num">3</div>
+        <h3 class="pd-pmp-step-title">{{ section.settings.s3_title }}</h3>
+        <p class="pd-pmp-step-body">{{ section.settings.s3_body }}</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PMP How it works",
+  "tag": "section",
+  "class": "section-pmp-howto",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "How it works" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Three steps to " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "café-style" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "header", "content": "Step 1" },
+    { "type": "text", "id": "s1_title", "label": "Title", "default": "Twist On" },
+    { "type": "textarea", "id": "s1_body", "label": "Body", "default": "Screw the pump onto any Syruvia 750mL bottle. Snug fit, no leaks." },
+    { "type": "header", "content": "Step 2" },
+    { "type": "text", "id": "s2_title", "label": "Title", "default": "Press Down" },
+    { "type": "textarea", "id": "s2_body", "label": "Body", "default": "One push = ¼ oz. Two pushes for a latte, three for a bigger drink." },
+    { "type": "header", "content": "Step 3" },
+    { "type": "text", "id": "s3_title", "label": "Title", "default": "Lock + Store" },
+    { "type": "textarea", "id": "s3_body", "label": "Body", "default": "Twist the spout closed between uses to keep it fresh and travel-safe." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "default": "#FFFBF4" }
+  ],
+  "presets": [{ "name": "PMP How it works" }]
+}
+{% endschema %}

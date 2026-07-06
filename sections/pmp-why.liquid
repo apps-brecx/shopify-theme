@@ -1,0 +1,69 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-why { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-why">
+    <div class="pd-wrap pd-why-wrap" style="text-align:center;">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2 pd-why-h2">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      <div class="pd-why-grid pd-why-grid--spaced">
+        <div class="pd-why-card pd-why-card--peach">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3 H15 V7 L18 10 V21 H6 V10 L9 7 Z"/></svg></div>
+          <h3 class="pd-why-title">{{ section.settings.c1_title }}</h3>
+          <p class="pd-why-body">{{ section.settings.c1_body }}</p>
+        </div>
+        <div class="pd-why-card pd-why-card--butter">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6 V12 L16 14"/></svg></div>
+          <h3 class="pd-why-title">{{ section.settings.c2_title }}</h3>
+          <p class="pd-why-body">{{ section.settings.c2_body }}</p>
+        </div>
+        <div class="pd-why-card pd-why-card--mint">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 12 L11 14 L15 9"/></svg></div>
+          <h3 class="pd-why-title">{{ section.settings.c3_title }}</h3>
+          <p class="pd-why-body">{{ section.settings.c3_body }}</p>
+        </div>
+        <div class="pd-why-card pd-why-card--sky">
+          <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#39220f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 M9 8 L15 16 M15 8 L9 16"/></svg></div>
+          <h3 class="pd-why-title">{{ section.settings.c4_title }}</h3>
+          <p class="pd-why-body">{{ section.settings.c4_body }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "PMP Why",
+  "tag": "section",
+  "class": "section-pmp-why",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why this pump" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Pour like the " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "pros" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "header", "content": "Card 1" },
+    { "type": "text", "id": "c1_title", "label": "Title", "default": "Perfect Fit" },
+    { "type": "text", "id": "c1_body", "label": "Body", "default": "Custom-threaded for Syruvia bottles. No wobble, no leaks." },
+    { "type": "header", "content": "Card 2" },
+    { "type": "text", "id": "c2_title", "label": "Title", "default": "Even Dose" },
+    { "type": "text", "id": "c2_body", "label": "Body", "default": "¼ oz per push. Recipe-consistent every single time." },
+    { "type": "header", "content": "Card 3" },
+    { "type": "text", "id": "c3_title", "label": "Title", "default": "Built Tough" },
+    { "type": "text", "id": "c3_body", "label": "Body", "default": "Café-grade plastic, food-safe spring. Takes daily abuse." },
+    { "type": "header", "content": "Card 4" },
+    { "type": "text", "id": "c4_title", "label": "Title", "default": "Easy Clean" },
+    { "type": "text", "id": "c4_body", "label": "Body", "default": "Unscrews fully. Dishwasher safe on the top rack." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "PMP Why" }]
+}
+{% endschema %}
