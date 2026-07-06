@@ -52,6 +52,13 @@
   html body #shopify-section-{{ section.id }} .pd .pd-pmp-pack.is-active:hover { transform:none !important; box-shadow:3px 3px 0 #c58548 !important; background:#39220f !important; }
   @media (max-width:760px){ html body #shopify-section-{{ section.id }} .pd .pd-pmp-pack { min-width:56px !important; padding:12px 6px 10px !important; } html body #shopify-section-{{ section.id }} .pd .pd-pmp-pack-num { font-size:18px !important; } }
 
+  /* Thumbnail strip → horizontal slider (shows every product image, ~4 at a time, scroll for the rest) */
+  html body #shopify-section-{{ section.id }} .pd .pd-thumbs { display:flex !important; grid-template-columns:none !important; gap:10px !important; overflow-x:auto; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch; padding-bottom:8px; scrollbar-width:thin; scrollbar-color:rgba(57,34,15,.35) transparent; }
+  html body #shopify-section-{{ section.id }} .pd .pd-thumb { flex:0 0 calc((100% - 30px) / 4) !important; scroll-snap-align:start; }
+  #shopify-section-{{ section.id }} .pd-thumbs::-webkit-scrollbar { height:6px; }
+  #shopify-section-{{ section.id }} .pd-thumbs::-webkit-scrollbar-thumb { background:rgba(57,34,15,.35); border-radius:999px; }
+  #shopify-section-{{ section.id }} .pd-thumbs::-webkit-scrollbar-track { background:transparent; }
+
   /* Mobile-only slider */
   #shopify-section-{{ section.id }} .pd-slider-mobile { display:none; }
   #shopify-section-{{ section.id }} .pd-slider-dots { display:none; }
@@ -102,7 +109,7 @@
           </div>
           {%- if product.images.size > 1 -%}
             <div class="pd-thumbs">
-              {%- for img in product.images limit: 4 -%}
+              {%- for img in product.images -%}
                 <button type="button" class="pd-thumb{% if forloop.first %} is-active{% endif %}" data-src="{{ img | image_url: width: 1400 }}" aria-label="View image {{ forloop.index }}"><img src="{{ img | image_url: width: 200 }}" alt="" width="200" height="200" loading="lazy"></button>
               {%- endfor -%}
             </div>
