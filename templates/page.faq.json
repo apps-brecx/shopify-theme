@@ -44,7 +44,7 @@
           "type": "faq",
           "settings": {
             "question": "What payment methods do you accept?",
-            "answer": "<p>We accept Visa, MasterCard, American Express, PayPal</p>"
+            "answer": "<p>We accept Visa, MasterCard, American Express, PayPal, Shop Pay</p>"
           }
         },
         "faq_secure": {
