@@ -12,6 +12,32 @@
     "hero": {
       "type": "syr-hero",
       "blocks": {
+        "slide_qGkiAB": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Web.png",
+            "image_mobile": "shopify://shop_images/Mobile_2.png",
+            "video_autoplay": false,
+            "alt": "",
+            "link": "shopify://collections/fruit",
+            "show_button": false,
+            "btn_text": "Shop Now",
+            "btn_bg": "#c8252b",
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
+          }
+        },
         "slide_TeK4MJ": {
           "type": "slide",
           "settings": {
@@ -22,7 +48,7 @@
             "link": "shopify://collections/cookie-butter-syrup",
             "show_button": true,
             "btn_text": "Shop Now",
-            "btn_bg": "#AD5C05",
+            "btn_bg": "#ad5c05",
             "btn_color": "#ffffff",
             "show_text": true,
             "text_heading": "",
@@ -121,6 +147,7 @@
         }
       },
       "block_order": [
+        "slide_qGkiAB",
         "slide_TeK4MJ",
         "slide_F8daTC",
         "slide_tw9mi8",
