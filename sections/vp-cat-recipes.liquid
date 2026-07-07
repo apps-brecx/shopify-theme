@@ -1,0 +1,75 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-cat-recipes { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-cat-recipes">
+    <div class="pd-wrap" style="text-align:center;">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2" style="margin:14px auto 14px;">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      <p class="pd-cat-recipes-sub">{{ section.settings.sub }}</p>
+    </div>
+    <div class="pd-cat-recipes-scroll">
+      <button type="button" class="pd-cat-recipes-nav pd-cat-recipes-nav--prev" aria-label="Previous"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6 l-6 6 6 6"/></svg></button>
+      <div class="pd-cat-recipes-marquee">
+        <div class="pd-cat-recipes-track">
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c1_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c1_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c1_body }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c2_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c2_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c2_body }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c3_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c3_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c3_body }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c4_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c4_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c4_body }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c5_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c5_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c5_body }}</p></div>
+          <div class="pd-cat-recipes-card"><span class="pd-cat-recipes-tag">{{ section.settings.c6_tag }}</span><h3 class="pd-cat-recipes-card-title">{{ section.settings.c6_title }}</h3><p class="pd-cat-recipes-card-body">{{ section.settings.c6_body }}</p></div>
+        </div>
+      </div>
+      <button type="button" class="pd-cat-recipes-nav pd-cat-recipes-nav--next" aria-label="Next"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 l6 6 -6 6"/></svg></button>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "VP Ways to Pour",
+  "tag": "section",
+  "class": "section-vp-cat-recipes",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Ways to pour" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "More than a " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "latte" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "text", "id": "sub", "label": "Sub-text", "default": "Once you have the pack, here’s how to use every bottle." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background" },
+    { "type": "header", "content": "Card 1" },
+    { "type": "text", "id": "c1_tag", "label": "Tag", "default": "Hot Latte" },
+    { "type": "text", "id": "c1_title", "label": "Title", "default": "Classic Café Latte" },
+    { "type": "text", "id": "c1_body", "label": "Body", "default": "1 shot espresso, 8 oz steamed milk, 1 pump of any flavor in the pack. Stir + sip." },
+    { "type": "header", "content": "Card 2" },
+    { "type": "text", "id": "c2_tag", "label": "Tag", "default": "Iced" },
+    { "type": "text", "id": "c2_title", "label": "Title", "default": "Iced Flavored Coffee" },
+    { "type": "text", "id": "c2_body", "label": "Body", "default": "Cold brew over ice, splash of milk, one pump. Endless combos." },
+    { "type": "header", "content": "Card 3" },
+    { "type": "text", "id": "c3_tag", "label": "Tag", "default": "Dessert" },
+    { "type": "text", "id": "c3_title", "label": "Title", "default": "Vanilla Ice Cream Drizzle" },
+    { "type": "text", "id": "c3_body", "label": "Body", "default": "Drizzle any syrup over vanilla ice cream. Different flavor every night." },
+    { "type": "header", "content": "Card 4" },
+    { "type": "text", "id": "c4_tag", "label": "Tag", "default": "Breakfast" },
+    { "type": "text", "id": "c4_title", "label": "Title", "default": "Pancake Pour" },
+    { "type": "text", "id": "c4_body", "label": "Body", "default": "Swap syrup for one of these on pancakes, waffles, or French toast." },
+    { "type": "header", "content": "Card 5" },
+    { "type": "text", "id": "c5_tag", "label": "Tag", "default": "Mocktail" },
+    { "type": "text", "id": "c5_title", "label": "Title", "default": "Sparkling Spritz" },
+    { "type": "text", "id": "c5_body", "label": "Body", "default": "Soda water + 1 pump syrup + lemon = bright, zero-proof drink." },
+    { "type": "header", "content": "Card 6" },
+    { "type": "text", "id": "c6_tag", "label": "Tag", "default": "Cocktail" },
+    { "type": "text", "id": "c6_title", "label": "Title", "default": "Bar Cart Upgrade" },
+    { "type": "text", "id": "c6_body", "label": "Body", "default": "Pump into bourbon, vodka, or rum cocktails. House signature in 30 seconds." }
+  ],
+  "presets": [{ "name": "VP Ways to Pour" }]
+}
+{% endschema %}

@@ -1,0 +1,18 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+<div class="pd">
+  {% render 'pd-pack-flavors' %}
+</div>
+
+{% schema %}
+{
+  "name": "VP Pack Flavors",
+  "tag": "section",
+  "class": "section-vp-pack-flavors",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "paragraph", "content": "Renders the pd-pack-flavors snippet (the \"What's inside\" flavor cards). Flavors are derived automatically from the custom.pack_flavors metafield or the product title." }
+  ],
+  "presets": [{ "name": "VP Pack Flavors" }]
+}
+{% endschema %}

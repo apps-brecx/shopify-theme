@@ -1,0 +1,70 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+{%- comment -%} ===== Flavor color theming + copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign is_sf = false -%}
+{%- if t_lc contains 'sugar-free' or t_lc contains 'sugar free' -%}{%- assign is_sf = true -%}{%- endif -%}
+{%- assign si_main = '#FFD4B8' -%}
+{%- assign si_accent = '#FCE2A0' -%}
+{%- assign si_glow = '#FFD4B8' -%}
+{%- assign si_glow2 = '#B8DCEB' -%}
+{%- assign si_band = '#FCE2A0' -%}
+{%- assign flavor_name = 'snow cone' -%}
+{%- if t_lc contains 'blue raspberry' -%}
+  {%- assign si_main = '#B8DCEB' -%}{%- assign si_accent = '#5BA3D0' -%}{%- assign si_glow = '#B8DCEB' -%}{%- assign si_glow2 = '#E0F2FA' -%}{%- assign si_band = '#B8DCEB' -%}{%- assign flavor_name = 'blue raspberry' -%}
+{%- elsif t_lc contains 'blue cotton candy' -%}
+  {%- assign si_main = '#A8D8F0' -%}{%- assign si_accent = '#F5C7BE' -%}{%- assign si_glow = '#A8D8F0' -%}{%- assign si_glow2 = '#FFD4E5' -%}{%- assign si_band = '#A8D8F0' -%}{%- assign flavor_name = 'cotton candy' -%}
+{%- elsif t_lc contains 'cherry' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#D14B3F' -%}{%- assign si_glow = '#F5C7BE' -%}{%- assign si_glow2 = '#FFE8E5' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'cherry' -%}
+{%- elsif t_lc contains 'grape' -%}
+  {%- assign si_main = '#D4B8E0' -%}{%- assign si_accent = '#6B3F8C' -%}{%- assign si_glow = '#D4B8E0' -%}{%- assign si_glow2 = '#E8D5F0' -%}{%- assign si_band = '#D4B8E0' -%}{%- assign flavor_name = 'grape' -%}
+{%- elsif t_lc contains 'pina colada' -%}
+  {%- assign si_main = '#FCE2A0' -%}{%- assign si_accent = '#C5E4D4' -%}{%- assign si_glow = '#FCE2A0' -%}{%- assign si_glow2 = '#C5E4D4' -%}{%- assign si_band = '#FCE2A0' -%}{%- assign flavor_name = 'piña colada' -%}
+{%- elsif t_lc contains 'bubble gum' -%}
+  {%- assign si_main = '#FFD4E5' -%}{%- assign si_accent = '#FF8FB8' -%}{%- assign si_glow = '#FFD4E5' -%}{%- assign si_glow2 = '#FFE8F0' -%}{%- assign si_band = '#FFD4E5' -%}{%- assign flavor_name = 'bubble gum' -%}
+{%- elsif t_lc contains 'root beer' -%}
+  {%- assign si_main = '#D4A574' -%}{%- assign si_accent = '#7A4F2A' -%}{%- assign si_glow = '#E8C9A0' -%}{%- assign si_glow2 = '#FCE2A0' -%}{%- assign si_band = '#E8C9A0' -%}{%- assign flavor_name = 'root beer' -%}
+{%- elsif t_lc contains 'lime' -%}
+  {%- assign si_main = '#C5E4D4' -%}{%- assign si_accent = '#5A9968' -%}{%- assign si_glow = '#C5E4D4' -%}{%- assign si_glow2 = '#E5F3E0' -%}{%- assign si_band = '#C5E4D4' -%}{%- assign flavor_name = 'lime' -%}
+{%- elsif t_lc contains 'orange' -%}
+  {%- assign si_main = '#FFD4B8' -%}{%- assign si_accent = '#E87E2A' -%}{%- assign si_glow = '#FFD4B8' -%}{%- assign si_glow2 = '#FFE8D5' -%}{%- assign si_band = '#FFD4B8' -%}{%- assign flavor_name = 'orange' -%}
+{%- elsif t_lc contains 'strawberry' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#E85541' -%}{%- assign si_glow = '#F5C7BE' -%}{%- assign si_glow2 = '#FFE0DA' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'strawberry' -%}
+{%- elsif t_lc contains 'fruit punch' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#E85541' -%}{%- assign si_glow = '#FFD4B8' -%}{%- assign si_glow2 = '#F5C7BE' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'fruit punch' -%}
+{%- endif -%}
+{%- assign flavor_cap = flavor_name | capitalize -%}
+
+{% style %}
+  #shopify-section-{{ section.id }} { --mq-bg: {{ section.settings.marquee_bg }}; --mq-text: {{ section.settings.marquee_text }}; }
+  #shopify-section-{{ section.id }} .pd-marquee { background: var(--mq-bg) !important; color: var(--mq-text) !important; }
+{% endstyle %}
+
+<div class="pd">
+  <div class="pd-marquee" aria-hidden="true">
+    <div class="pd-marquee-track">
+      {%- for i in (1..2) -%}<span>{{ section.settings.mq_item1 | replace: '[flavor]', flavor_cap | replace: '[flavor_lc]', flavor_name }}</span><span>{{ section.settings.mq_item2 }}</span><span>{{ section.settings.mq_item3 }}</span><span>{{ section.settings.mq_item4 }}</span><span>{{ section.settings.mq_item5 }}</span><span>{{ section.settings.mq_item6 }}</span>{%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "SI Marquee",
+  "tag": "section",
+  "class": "section-si-marquee",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "marquee_bg", "label": "Marquee background", "default": "#1a1a1a" },
+    { "type": "color", "id": "marquee_text", "label": "Marquee text", "default": "#FFFBF4" },
+    { "type": "header", "content": "Scrolling phrases" },
+    { "type": "text", "id": "mq_item1", "label": "Phrase 1", "default": "Bold [flavor]" },
+    { "type": "text", "id": "mq_item2", "label": "Phrase 2", "default": "Snow Cones" },
+    { "type": "text", "id": "mq_item3", "label": "Phrase 3", "default": "Slushies" },
+    { "type": "text", "id": "mq_item4", "label": "Phrase 4", "default": "Ice Pops" },
+    { "type": "text", "id": "mq_item5", "label": "Phrase 5", "default": "Kosher · Non-GMO" },
+    { "type": "text", "id": "mq_item6", "label": "Phrase 6", "default": "Pool Party Ready" }
+  ],
+  "presets": [{ "name": "SI Marquee" }]
+}
+{% endschema %}

@@ -16,6 +16,24 @@
     --pd-eyebrow-bg: {{ section.settings.eyebrow_bg }};
     --pd-eyebrow-text: {{ section.settings.eyebrow_text_color }};
   }
+#shopify-section-{{ section.id }} .pd-nut-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+  font-size: 15px;
+}
+
+/* Border only on the last row of sections that AREN'T the final section */
+#shopify-section-{{ section.id }} .pd-nut-section:not(:last-child) .pd-nut-row:last-child {
+  border-bottom: 1px solid var(--ink);
+  margin-bottom: 10px;
+}
+
+#shopify-section-{{ section.id }} .pd-nut-row--indent {
+  padding-left: 14px;
+  font-size: 13px;
+}
   #shopify-section-{{ section.id }} .pd { background: var(--pd-bg) !important; color: var(--pd-text) !important; }
   #shopify-section-{{ section.id }} .pd-wrap { max-width: var(--pd-wrap) !important; }
   #shopify-section-{{ section.id }} .pd-description {
@@ -157,26 +175,75 @@
             </span>
           </button>
           <div class="pd-nf-body">
-            <div class="pd-nutrition">
-              <div class="pd-nutrition-title">{{ section.settings.nf_title }}</div>
-              <div class="pd-nut-serv">{{ section.settings.nf_serving_size }}</div>
-              <div class="pd-nut-rule--thick"></div>
-              <div class="pd-nut-row"><strong>{{ section.settings.nf_amount_label }}</strong></div>
-              <div class="pd-nut-row" style="font-size:18px;"><strong>{{ section.settings.nf_calories_label }}</strong><strong>{%- if is_sf -%}{{ section.settings.nf_calories_sf }}{%- else -%}{{ section.settings.nf_calories_regular }}{%- endif -%}</strong></div>
-              <div class="pd-nut-rule"></div>
-              <div style="font-size:12px;text-align:right;">{{ section.settings.nf_dv_header }}</div>
-              <div class="pd-nut-row"><span><strong>{{ section.settings.nf_fat_label }}</strong> {{ section.settings.nf_fat_value }}</span><strong>{{ section.settings.nf_fat_dv }}</strong></div>
-              <div class="pd-nut-rule"></div>
-              <div class="pd-nut-row"><span><strong>{{ section.settings.nf_sodium_label }}</strong> {{ section.settings.nf_sodium_value }}</span><strong>{{ section.settings.nf_sodium_dv }}</strong></div>
-              <div class="pd-nut-rule"></div>
-              <div class="pd-nut-row"><span><strong>{{ section.settings.nf_carbs_label }}</strong> {%- if is_sf -%}{{ section.settings.nf_carbs_value_sf }}{%- else -%}{{ section.settings.nf_carbs_value_regular }}{%- endif -%}</span><strong>{%- if is_sf -%}{{ section.settings.nf_carbs_dv_sf }}{%- else -%}{{ section.settings.nf_carbs_dv_regular }}{%- endif -%}</strong></div>
-              <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>{{ section.settings.nf_sugars_label }} {%- if is_sf -%}{{ section.settings.nf_sugars_value_sf }}{%- else -%}{{ section.settings.nf_sugars_value_regular }}{%- endif -%}</span><span></span></div>
-              {%- unless is_sf -%}<div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>{{ section.settings.nf_added_sugars_text }}</span><strong>{{ section.settings.nf_added_sugars_dv }}</strong></div>{%- endunless -%}
-              <div class="pd-nut-rule"></div>
-              <div class="pd-nut-row"><span><strong>{{ section.settings.nf_protein_label }}</strong> {{ section.settings.nf_protein_value }}</span></div>
-              <div class="pd-nut-rule--med"></div>
-              <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">{{ section.settings.nf_dv_note }}</div>
-            </div>
+{%- assign nutrition_raw = product.metafields.custom.nutrition_facts.value | default: '' -%}
+
+{%- if nutrition_raw != blank -%}
+  <div class="pd-nutrition">
+    <div class="pd-nutrition-title">{{ section.settings.nf_title | default: 'Nutrition Facts' }}</div>
+
+    {%- assign nf_sections = nutrition_raw | split: '---' -%}
+    {%- for nf_section in nf_sections -%}
+      <div class="pd-nut-section">
+        {%- assign section_lines = nf_section | strip | newline_to_br | split: '<br />' -%}
+
+        {%- for line_raw in section_lines -%}
+          {%- assign line = line_raw | strip -%}
+          {%- if line == blank -%}{%- continue -%}{%- endif -%}
+
+          {%- assign first_two = line | slice: 0, 2 -%}
+          {%- assign is_indented = false -%}
+          {%- if first_two == '- ' -%}
+            {%- assign is_indented = true -%}
+            {%- assign line_len = line | size -%}
+            {%- assign line = line | slice: 2, line_len | strip -%}
+          {%- endif -%}
+
+          {%- assign first_char = line | slice: 0, 1 -%}
+
+          {%- if first_char == '*' -%}
+            <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">{{ line }}</div>
+
+          {%- elsif line contains '|' -%}
+            {%- assign parts = line | split: '|' -%}
+            {%- assign row_label = parts[0] | default: '' | strip -%}
+            {%- assign row_value = parts[1] | default: '' | strip -%}
+            {%- assign row_dv = parts[2] | default: '' | strip -%}
+
+            {%- if is_indented -%}
+              <div class="pd-nut-row pd-nut-row--indent">
+                <span>{{ row_label }}{% if row_value != blank %} {{ row_value }}{% endif %}</span>
+                {%- if row_dv != blank -%}<strong>{{ row_dv }}</strong>{%- endif -%}
+              </div>
+            {%- else -%}
+              <div class="pd-nut-row">
+                <span><strong>{{ row_label }}</strong>{% if row_value != blank %} {{ row_value }}{% endif %}</span>
+                {%- if row_dv != blank -%}<strong>{{ row_dv }}</strong>{%- endif -%}
+              </div>
+            {%- endif -%}
+
+          {%- elsif line contains ':' -%}
+            {%- assign kv = line | split: ':' -%}
+            {%- assign kv_label = kv[0] | strip -%}
+            {%- assign kv_value = kv | slice: 1, 99 | join: ':' | strip -%}
+
+            {%- if kv_label == 'Serving Size' or kv_label == 'Serving size' -%}
+              <div class="pd-nut-serv">{{ kv_label }} {{ kv_value }}</div>
+              <div class="pd-nut-row"><strong>Amount per serving</strong></div>
+            {%- elsif kv_label == 'Calories' -%}
+              <div class="pd-nut-row" style="font-size:18px;"><strong>{{ kv_label }}</strong><strong>{{ kv_value }}</strong></div>
+              <div style="font-size:12px;text-align:right;">% Daily Value*</div>
+            {%- else -%}
+              <div class="pd-nut-row"><span><strong>{{ kv_label }}</strong> {{ kv_value }}</span></div>
+            {%- endif -%}
+
+          {%- else -%}
+            <div class="pd-nut-row" style="font-size:13px;line-height:1.4;padding:4px 0;">{{ line }}</div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+{%- endif -%}
           </div>
         </div>
       </div>
