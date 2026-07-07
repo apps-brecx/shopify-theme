@@ -1,0 +1,48 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+{%- comment -%} ===== Pack flavors (from metafield, else parsed from the title) ===== {%- endcomment -%}
+{%- assign pf_arr = '' | split: ',' -%}
+{%- assign mf = product.metafields.custom.pack_flavors -%}
+{%- if mf and mf.value -%}
+  {%- assign pf_arr = mf.value | strip | split: ',' -%}
+{%- else -%}
+  {%- assign pf_clean = product.title | remove_first: 'Variety Pack,' | remove_first: 'Variety Pack' | remove: ' Coffee Syrup' | remove: ' Tea Syrup' | remove: ' Syrup' | remove: ' Coffee' | replace: ' and ', ', ' -%}
+  {%- assign pf_arr = pf_clean | split: ',' -%}
+{%- endif -%}
+{%- assign flavor_count = pf_arr.size -%}
+{%- if flavor_count < 2 -%}{%- assign flavor_count = 4 -%}{%- endif -%}
+{%- capture flavor_csv -%}{%- for f in pf_arr -%}{{ f | strip }}{%- unless forloop.last %}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
+
+{% style %}
+  #shopify-section-{{ section.id }} { --mq-bg: {{ section.settings.marquee_bg }}; --mq-text: {{ section.settings.marquee_text }}; }
+  #shopify-section-{{ section.id }} .pd-marquee { background: var(--mq-bg) !important; color: var(--mq-text) !important; }
+{% endstyle %}
+
+<div class="pd">
+  <div class="pd-marquee" aria-hidden="true">
+    <div class="pd-marquee-track">
+      {%- for i in (1..2) -%}<span>{{ section.settings.mq_item1 | replace: '[count]', flavor_count }}</span><span>{{ section.settings.mq_item2 }}</span><span>{{ section.settings.mq_item3 }}</span><span>{{ section.settings.mq_item4 }}</span><span>{{ section.settings.mq_item5 }}</span><span>{{ section.settings.mq_item6 }}</span>{%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "VP Marquee",
+  "tag": "section",
+  "class": "section-vp-marquee",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "marquee_bg", "label": "Marquee background", "default": "#1a1a1a" },
+    { "type": "color", "id": "marquee_text", "label": "Marquee text", "default": "#FFFBF4" },
+    { "type": "header", "content": "Scrolling phrases" },
+    { "type": "text", "id": "mq_item1", "label": "Phrase 1", "default": "[count] Bottles Inside" },
+    { "type": "text", "id": "mq_item2", "label": "Phrase 2", "default": "Pure Cane Sugar" },
+    { "type": "text", "id": "mq_item3", "label": "Phrase 3", "default": "Gift-Ready" },
+    { "type": "text", "id": "mq_item4", "label": "Phrase 4", "default": "Save vs Singles" },
+    { "type": "text", "id": "mq_item5", "label": "Phrase 5", "default": "Gluten-Free · Kosher" },
+    { "type": "text", "id": "mq_item6", "label": "Phrase 6", "default": "Made in the USA" }
+  ],
+  "presets": [{ "name": "VP Marquee" }]
+}
+{% endschema %}
