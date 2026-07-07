@@ -698,7 +698,7 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#8D4925",
+        "background_color": "#8d4925",
         "title": "<h2>Trusted Quality </h2>",
         "description": "<p>Crafted for smooth mixing, rich flavor, and easy café-style drinks at home.</p>",
         "button_text": "Shop The Pack",
@@ -776,8 +776,8 @@
           "settings": {
             "rating": 5,
             "quote": "I used all three for weekend coffee drinks, and everyone picked a favorite. Cookie Butter was the first one gone.",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
+            "reviewer_initials": "MC",
+            "reviewer_name": "Megan Cooper",
             "reviewer_role": "HAPPY MOTHER"
           }
         },
