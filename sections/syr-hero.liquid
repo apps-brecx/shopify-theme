@@ -87,8 +87,8 @@
   #syr-hero-{{ section.id }} .syr-slide-text.has-shadow .syr-os{ text-shadow:0 2px 14px rgba(0,0,0,.55), 0 1px 3px rgba(0,0,0,.5); }
   @media (max-width:760px){
     #syr-hero-{{ section.id }} .syr-slide-text{ padding:8% 7%; }
-    #syr-hero-{{ section.id }} .syr-slide-text .syr-oh{ font-size:var(--hm) !important; }
-    #syr-hero-{{ section.id }} .syr-slide-text .syr-os{ font-size:var(--sm) !important; }
+    #syr-hero-{{ section.id }} .syr-slide-text .syr-oh{ font-size:var(--hm, 30px) !important; }
+    #syr-hero-{{ section.id }} .syr-slide-text .syr-os{ font-size:var(--sm, 15px) !important; }
   }
 
   /* DOTS */
@@ -179,11 +179,7 @@
             {%- if block.settings.show_text and block.settings.text_heading != blank or block.settings.show_text and block.settings.text_sub != blank -%}
               {%- assign ofont = block.settings.text_font -%}
               <div class="syr-slide-text pos-{{ block.settings.text_position | default: 'center' }} al-{{ block.settings.text_align | default: 'center' }}{% if block.settings.text_shadow %} has-shadow{% endif %}"
-                   style="color:{{ block.settings.text_color | default: '#ffffff' }};
-                   {% if ofont != blank %}font-family:{{ ofont.family }}, {{ ofont.fallback_families }};
-                   font-weight:{{ ofont.weight | default: 400 }};
-                   font-style:{{ ofont.style | default: 'normal' }};
-                   {% endif %}--hd:{{ block.settings.heading_size_d | default: 48 }}px;--hm:{{ block.settings.heading_size_m | default: 30 }}px;--sd:{{ block.settings.sub_size_d | default: 20 }}px;--sm:{{ block.settings.sub_size_m | default: 15 }}px;">
+                   style="--hd:{{ block.settings.heading_size_d | default: 48 }}px;--hm:{{ block.settings.heading_size_m | default: 30 }}px;--sd:{{ block.settings.sub_size_d | default: 20 }}px;--sm:{{ block.settings.sub_size_m | default: 15 }}px;color:{{ block.settings.text_color | default: '#ffffff' }};{% if ofont != blank %}font-family:{{ ofont.family | escape }}, {{ ofont.fallback_families | escape }};font-weight:{{ ofont.weight | default: 400 }};font-style:{{ ofont.style | default: 'normal' }};{% endif %}">
                 {%- if block.settings.text_heading != blank -%}<div class="syr-oh">{{ block.settings.text_heading }}</div>{%- endif -%}
                 {%- if block.settings.text_sub != blank -%}<div class="syr-os">{{ block.settings.text_sub }}</div>{%- endif -%}
               </div>
