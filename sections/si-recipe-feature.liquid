@@ -1,0 +1,100 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor color theming + copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign is_sf = false -%}
+{%- if t_lc contains 'sugar-free' or t_lc contains 'sugar free' -%}{%- assign is_sf = true -%}{%- endif -%}
+{%- assign si_main = '#FFD4B8' -%}
+{%- assign si_accent = '#FCE2A0' -%}
+{%- assign si_glow = '#FFD4B8' -%}
+{%- assign si_glow2 = '#B8DCEB' -%}
+{%- assign si_band = '#FCE2A0' -%}
+{%- assign flavor_name = 'snow cone' -%}
+{%- if t_lc contains 'blue raspberry' -%}
+  {%- assign si_main = '#B8DCEB' -%}{%- assign si_accent = '#5BA3D0' -%}{%- assign si_glow = '#B8DCEB' -%}{%- assign si_glow2 = '#E0F2FA' -%}{%- assign si_band = '#B8DCEB' -%}{%- assign flavor_name = 'blue raspberry' -%}
+{%- elsif t_lc contains 'blue cotton candy' -%}
+  {%- assign si_main = '#A8D8F0' -%}{%- assign si_accent = '#F5C7BE' -%}{%- assign si_glow = '#A8D8F0' -%}{%- assign si_glow2 = '#FFD4E5' -%}{%- assign si_band = '#A8D8F0' -%}{%- assign flavor_name = 'cotton candy' -%}
+{%- elsif t_lc contains 'cherry' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#D14B3F' -%}{%- assign si_glow = '#F5C7BE' -%}{%- assign si_glow2 = '#FFE8E5' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'cherry' -%}
+{%- elsif t_lc contains 'grape' -%}
+  {%- assign si_main = '#D4B8E0' -%}{%- assign si_accent = '#6B3F8C' -%}{%- assign si_glow = '#D4B8E0' -%}{%- assign si_glow2 = '#E8D5F0' -%}{%- assign si_band = '#D4B8E0' -%}{%- assign flavor_name = 'grape' -%}
+{%- elsif t_lc contains 'pina colada' -%}
+  {%- assign si_main = '#FCE2A0' -%}{%- assign si_accent = '#C5E4D4' -%}{%- assign si_glow = '#FCE2A0' -%}{%- assign si_glow2 = '#C5E4D4' -%}{%- assign si_band = '#FCE2A0' -%}{%- assign flavor_name = 'piña colada' -%}
+{%- elsif t_lc contains 'bubble gum' -%}
+  {%- assign si_main = '#FFD4E5' -%}{%- assign si_accent = '#FF8FB8' -%}{%- assign si_glow = '#FFD4E5' -%}{%- assign si_glow2 = '#FFE8F0' -%}{%- assign si_band = '#FFD4E5' -%}{%- assign flavor_name = 'bubble gum' -%}
+{%- elsif t_lc contains 'root beer' -%}
+  {%- assign si_main = '#D4A574' -%}{%- assign si_accent = '#7A4F2A' -%}{%- assign si_glow = '#E8C9A0' -%}{%- assign si_glow2 = '#FCE2A0' -%}{%- assign si_band = '#E8C9A0' -%}{%- assign flavor_name = 'root beer' -%}
+{%- elsif t_lc contains 'lime' -%}
+  {%- assign si_main = '#C5E4D4' -%}{%- assign si_accent = '#5A9968' -%}{%- assign si_glow = '#C5E4D4' -%}{%- assign si_glow2 = '#E5F3E0' -%}{%- assign si_band = '#C5E4D4' -%}{%- assign flavor_name = 'lime' -%}
+{%- elsif t_lc contains 'orange' -%}
+  {%- assign si_main = '#FFD4B8' -%}{%- assign si_accent = '#E87E2A' -%}{%- assign si_glow = '#FFD4B8' -%}{%- assign si_glow2 = '#FFE8D5' -%}{%- assign si_band = '#FFD4B8' -%}{%- assign flavor_name = 'orange' -%}
+{%- elsif t_lc contains 'strawberry' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#E85541' -%}{%- assign si_glow = '#F5C7BE' -%}{%- assign si_glow2 = '#FFE0DA' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'strawberry' -%}
+{%- elsif t_lc contains 'fruit punch' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#E85541' -%}{%- assign si_glow = '#FFD4B8' -%}{%- assign si_glow2 = '#F5C7BE' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'fruit punch' -%}
+{%- endif -%}
+{%- assign flavor_cap = flavor_name | capitalize -%}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-recipes-v2 { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-recipes-v2">
+    <div class="pd-wrap pd-rv2-head">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      <p class="pd-rv2-lede">{{ section.settings.lede | replace: '[flavor]', flavor_cap | replace: '[flavor_lc]', flavor_name }}</p>
+    </div>
+    <div class="pd-wrap">
+      <article class="pd-rv2-feature">
+        <div class="pd-rv2-feature-img">
+          <img src="{{ product.featured_image | image_url: width: 1200 }}" alt="{{ product.title | escape }} snow cone" loading="lazy">
+          <span class="pd-rv2-feature-tag">{{ section.settings.img_tag }}</span>
+        </div>
+        <div class="pd-rv2-feature-body">
+          <div class="pd-rv2-feature-content is-trimmed">
+            <h3 class="pd-rv2-feature-name">{{ section.settings.recipe_name | replace: '[flavor]', flavor_cap | replace: '[flavor_lc]', flavor_name }}</h3>
+            <p class="pd-rv2-feature-ing-head"><strong>{{ section.settings.ing_head }}</strong></p>
+            <ul>
+              <li>{{ section.settings.ing1 | replace: '[flavor]', flavor_cap | replace: '[flavor_lc]', flavor_name }}</li>
+              <li>{{ section.settings.ing2 | replace: '[flavor]', flavor_cap | replace: '[flavor_lc]', flavor_name }}</li>
+              <li>{{ section.settings.ing3 | replace: '[flavor]', flavor_cap | replace: '[flavor_lc]', flavor_name }}</li>
+            </ul>
+          </div>
+          <span class="pd-rv2-feature-time">{{ section.settings.time }}</span>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "SI Recipe Feature",
+  "tag": "section",
+  "class": "section-si-recipe-feature",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Featured recipe" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Build the " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis word", "default": "perfect" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": " snow cone." },
+    { "type": "text", "id": "lede", "label": "Lede", "info": "Use [flavor] for the capitalized flavor, [flavor_lc] for lowercase.", "default": "The signature pour for Syruvia [flavor_lc] shaved ice syrup." },
+    { "type": "header", "content": "Feature card" },
+    { "type": "text", "id": "img_tag", "label": "Image tag", "default": "Signature pour" },
+    { "type": "text", "id": "recipe_name", "label": "Recipe name", "info": "Use [flavor] for the capitalized flavor, [flavor_lc] for lowercase.", "default": "Classic [flavor] Snow Cone" },
+    { "type": "text", "id": "ing_head", "label": "Ingredients heading", "default": "INGREDIENTS" },
+    { "type": "textarea", "id": "ing1", "label": "Ingredient 1", "info": "Use [flavor] / [flavor_lc] for the flavor name.", "default": "1 paper snow cone cup, filled with finely-shaved ice" },
+    { "type": "textarea", "id": "ing2", "label": "Ingredient 2", "info": "Use [flavor] / [flavor_lc] for the flavor name.", "default": "2 – 3 oz Syruvia [flavor_lc] shaved ice syrup" },
+    { "type": "textarea", "id": "ing3", "label": "Ingredient 3", "info": "Use [flavor] / [flavor_lc] for the flavor name.", "default": "Optional: a squeeze of fresh lime + a straw-spoon" },
+    { "type": "text", "id": "time", "label": "Time label", "default": "2 min" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "SI Recipe Feature" }]
+}
+{% endschema %}

@@ -1,0 +1,93 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Flavor color theming + copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign is_sf = false -%}
+{%- if t_lc contains 'sugar-free' or t_lc contains 'sugar free' -%}{%- assign is_sf = true -%}{%- endif -%}
+{%- assign si_main = '#FFD4B8' -%}
+{%- assign si_accent = '#FCE2A0' -%}
+{%- assign si_glow = '#FFD4B8' -%}
+{%- assign si_glow2 = '#B8DCEB' -%}
+{%- assign si_band = '#FCE2A0' -%}
+{%- assign flavor_name = 'snow cone' -%}
+{%- if t_lc contains 'blue raspberry' -%}
+  {%- assign si_main = '#B8DCEB' -%}{%- assign si_accent = '#5BA3D0' -%}{%- assign si_glow = '#B8DCEB' -%}{%- assign si_glow2 = '#E0F2FA' -%}{%- assign si_band = '#B8DCEB' -%}{%- assign flavor_name = 'blue raspberry' -%}
+{%- elsif t_lc contains 'blue cotton candy' -%}
+  {%- assign si_main = '#A8D8F0' -%}{%- assign si_accent = '#F5C7BE' -%}{%- assign si_glow = '#A8D8F0' -%}{%- assign si_glow2 = '#FFD4E5' -%}{%- assign si_band = '#A8D8F0' -%}{%- assign flavor_name = 'cotton candy' -%}
+{%- elsif t_lc contains 'cherry' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#D14B3F' -%}{%- assign si_glow = '#F5C7BE' -%}{%- assign si_glow2 = '#FFE8E5' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'cherry' -%}
+{%- elsif t_lc contains 'grape' -%}
+  {%- assign si_main = '#D4B8E0' -%}{%- assign si_accent = '#6B3F8C' -%}{%- assign si_glow = '#D4B8E0' -%}{%- assign si_glow2 = '#E8D5F0' -%}{%- assign si_band = '#D4B8E0' -%}{%- assign flavor_name = 'grape' -%}
+{%- elsif t_lc contains 'pina colada' -%}
+  {%- assign si_main = '#FCE2A0' -%}{%- assign si_accent = '#C5E4D4' -%}{%- assign si_glow = '#FCE2A0' -%}{%- assign si_glow2 = '#C5E4D4' -%}{%- assign si_band = '#FCE2A0' -%}{%- assign flavor_name = 'piña colada' -%}
+{%- elsif t_lc contains 'bubble gum' -%}
+  {%- assign si_main = '#FFD4E5' -%}{%- assign si_accent = '#FF8FB8' -%}{%- assign si_glow = '#FFD4E5' -%}{%- assign si_glow2 = '#FFE8F0' -%}{%- assign si_band = '#FFD4E5' -%}{%- assign flavor_name = 'bubble gum' -%}
+{%- elsif t_lc contains 'root beer' -%}
+  {%- assign si_main = '#D4A574' -%}{%- assign si_accent = '#7A4F2A' -%}{%- assign si_glow = '#E8C9A0' -%}{%- assign si_glow2 = '#FCE2A0' -%}{%- assign si_band = '#E8C9A0' -%}{%- assign flavor_name = 'root beer' -%}
+{%- elsif t_lc contains 'lime' -%}
+  {%- assign si_main = '#C5E4D4' -%}{%- assign si_accent = '#5A9968' -%}{%- assign si_glow = '#C5E4D4' -%}{%- assign si_glow2 = '#E5F3E0' -%}{%- assign si_band = '#C5E4D4' -%}{%- assign flavor_name = 'lime' -%}
+{%- elsif t_lc contains 'orange' -%}
+  {%- assign si_main = '#FFD4B8' -%}{%- assign si_accent = '#E87E2A' -%}{%- assign si_glow = '#FFD4B8' -%}{%- assign si_glow2 = '#FFE8D5' -%}{%- assign si_band = '#FFD4B8' -%}{%- assign flavor_name = 'orange' -%}
+{%- elsif t_lc contains 'strawberry' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#E85541' -%}{%- assign si_glow = '#F5C7BE' -%}{%- assign si_glow2 = '#FFE0DA' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'strawberry' -%}
+{%- elsif t_lc contains 'fruit punch' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#E85541' -%}{%- assign si_glow = '#FFD4B8' -%}{%- assign si_glow2 = '#F5C7BE' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'fruit punch' -%}
+{%- endif -%}
+{%- assign flavor_cap = flavor_name | capitalize -%}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-description { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-description">
+    <div class="pd-wrap">
+      <div class="pd-desc-head">
+        <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+        <h2 class="pd-h2" style="margin-top:14px;">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      </div>
+      <div class="pd-desc-content">
+        {%- if section.settings.description_override != blank -%}
+          {{ section.settings.description_override }}
+        {%- elsif product.description and product.description != blank -%}
+          {{ product.description }}
+        {%- else -%}
+          <ul>
+            <li>{{ section.settings.fb1 | replace: '[flavor]', flavor_cap | replace: '[flavor_lc]', flavor_name }}</li>
+            <li>{{ section.settings.fb2 }}</li>
+            <li>{{ section.settings.fb3 }}</li>
+            <li>{{ section.settings.fb4 }}</li>
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "SI Description",
+  "tag": "section",
+  "class": "section-si-description",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "About this flavor" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Built for " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "summer" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "header", "content": "Body" },
+    { "type": "richtext", "id": "description_override", "label": "Description (override)", "info": "Leave blank to use the product description, then the bullets" },
+    { "type": "header", "content": "Bullets" },
+    { "type": "text", "id": "fb1", "label": "Bullet 1", "info": "Use [flavor] for the flavor name.", "default": "Bold [flavor]: A pop of bright, refreshing flavor with every pour." },
+    { "type": "text", "id": "fb2", "label": "Bullet 2", "default": "Snow Cone Ready: Goes straight onto fresh-shaved ice. No mixing, no fuss." },
+    { "type": "text", "id": "fb3", "label": "Bullet 3", "default": "Premium Recipe: Kosher, non-GMO, dairy-free, long shelf life." },
+    { "type": "text", "id": "fb4", "label": "Bullet 4", "default": "Endless Possibilities: Snow cones, slushies, ice pops, sodas, shakes, smoothies." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "SI Description" }]
+}
+{% endschema %}

@@ -1,0 +1,340 @@
+{% comment %} Shaved Ice — Hero (primary/main section). Loads shared assets once. Includes flavor colour theming + sugar-free chip toggle. {% endcomment %}
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+{% render 'pd-fixes' %}
+{% render 'pd-tweaks' %}
+{% render 'pd-rv2-affordances' %}
+{% render 'pd-reviews-style' %}
+{% render 'pd-color-swap' %}
+{% render 'pd-page-polish-v2' %}
+{% render 'pd-cat-styles' %}
+{% render 'pd-cat-extras' %}
+
+{%- comment -%} ===== Flavor color theming + copy (dynamic, from product title) ===== {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign is_sf = false -%}
+{%- if t_lc contains 'sugar-free' or t_lc contains 'sugar free' -%}{%- assign is_sf = true -%}{%- endif -%}
+{%- assign si_main = '#FFD4B8' -%}
+{%- assign si_accent = '#FCE2A0' -%}
+{%- assign si_glow = '#FFD4B8' -%}
+{%- assign si_glow2 = '#B8DCEB' -%}
+{%- assign si_band = '#FCE2A0' -%}
+{%- assign flavor_name = 'snow cone' -%}
+{%- if t_lc contains 'blue raspberry' -%}
+  {%- assign si_main = '#B8DCEB' -%}{%- assign si_accent = '#5BA3D0' -%}{%- assign si_glow = '#B8DCEB' -%}{%- assign si_glow2 = '#E0F2FA' -%}{%- assign si_band = '#B8DCEB' -%}{%- assign flavor_name = 'blue raspberry' -%}
+{%- elsif t_lc contains 'blue cotton candy' -%}
+  {%- assign si_main = '#A8D8F0' -%}{%- assign si_accent = '#F5C7BE' -%}{%- assign si_glow = '#A8D8F0' -%}{%- assign si_glow2 = '#FFD4E5' -%}{%- assign si_band = '#A8D8F0' -%}{%- assign flavor_name = 'cotton candy' -%}
+{%- elsif t_lc contains 'cherry' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#D14B3F' -%}{%- assign si_glow = '#F5C7BE' -%}{%- assign si_glow2 = '#FFE8E5' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'cherry' -%}
+{%- elsif t_lc contains 'grape' -%}
+  {%- assign si_main = '#D4B8E0' -%}{%- assign si_accent = '#6B3F8C' -%}{%- assign si_glow = '#D4B8E0' -%}{%- assign si_glow2 = '#E8D5F0' -%}{%- assign si_band = '#D4B8E0' -%}{%- assign flavor_name = 'grape' -%}
+{%- elsif t_lc contains 'pina colada' -%}
+  {%- assign si_main = '#FCE2A0' -%}{%- assign si_accent = '#C5E4D4' -%}{%- assign si_glow = '#FCE2A0' -%}{%- assign si_glow2 = '#C5E4D4' -%}{%- assign si_band = '#FCE2A0' -%}{%- assign flavor_name = 'piña colada' -%}
+{%- elsif t_lc contains 'bubble gum' -%}
+  {%- assign si_main = '#FFD4E5' -%}{%- assign si_accent = '#FF8FB8' -%}{%- assign si_glow = '#FFD4E5' -%}{%- assign si_glow2 = '#FFE8F0' -%}{%- assign si_band = '#FFD4E5' -%}{%- assign flavor_name = 'bubble gum' -%}
+{%- elsif t_lc contains 'root beer' -%}
+  {%- assign si_main = '#D4A574' -%}{%- assign si_accent = '#7A4F2A' -%}{%- assign si_glow = '#E8C9A0' -%}{%- assign si_glow2 = '#FCE2A0' -%}{%- assign si_band = '#E8C9A0' -%}{%- assign flavor_name = 'root beer' -%}
+{%- elsif t_lc contains 'lime' -%}
+  {%- assign si_main = '#C5E4D4' -%}{%- assign si_accent = '#5A9968' -%}{%- assign si_glow = '#C5E4D4' -%}{%- assign si_glow2 = '#E5F3E0' -%}{%- assign si_band = '#C5E4D4' -%}{%- assign flavor_name = 'lime' -%}
+{%- elsif t_lc contains 'orange' -%}
+  {%- assign si_main = '#FFD4B8' -%}{%- assign si_accent = '#E87E2A' -%}{%- assign si_glow = '#FFD4B8' -%}{%- assign si_glow2 = '#FFE8D5' -%}{%- assign si_band = '#FFD4B8' -%}{%- assign flavor_name = 'orange' -%}
+{%- elsif t_lc contains 'strawberry' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#E85541' -%}{%- assign si_glow = '#F5C7BE' -%}{%- assign si_glow2 = '#FFE0DA' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'strawberry' -%}
+{%- elsif t_lc contains 'fruit punch' -%}
+  {%- assign si_main = '#F5C7BE' -%}{%- assign si_accent = '#E85541' -%}{%- assign si_glow = '#FFD4B8' -%}{%- assign si_glow2 = '#F5C7BE' -%}{%- assign si_band = '#F5C7BE' -%}{%- assign flavor_name = 'fruit punch' -%}
+{%- endif -%}
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pd-text: {{ section.settings.text_primary }};
+    --pd-brand: {{ section.settings.text_brand }};
+    --pd-bg: {{ section.settings.bg_section }};
+    --pd-hero-bg: {{ section.settings.hero_bg }};
+    --pd-cta-bg: {{ section.settings.cta_color_bg }};
+    --pd-cta-text: {{ section.settings.cta_color_text }};
+    --pd-price-color: {{ section.settings.price_color }};
+    --pd-rating-text: {{ section.settings.rating_text_color }};
+    --pd-chip-text: {{ section.settings.chip_text_color }};
+    --pd-sticky-bg: {{ section.settings.sticky_bg }};
+    --pd-sticky-text: {{ section.settings.sticky_text_color }};
+    --si-main: {{ si_main }};
+    --si-glow: {{ si_glow }};
+    --si-glow2: {{ si_glow2 }};
+  }
+
+  #shopify-section-{{ section.id }} .pd { background: var(--pd-bg) !important; color: var(--pd-text) !important; }
+  #shopify-section-{{ section.id }} .pd-hero { background: var(--pd-hero-bg) !important; }
+  #shopify-section-{{ section.id }} .pd-h1 { color: var(--pd-brand) !important; }
+  #shopify-section-{{ section.id }} .pd-price { color: var(--pd-price-color) !important; }
+  #shopify-section-{{ section.id }} .pd-rating-text { color: var(--pd-rating-text) !important; }
+  #shopify-section-{{ section.id }} .pd-chip { color: var(--pd-chip-text) !important; }
+  #shopify-section-{{ section.id }} .pd-atc,
+  #shopify-section-{{ section.id }} .pd-stickybar .pd-atc { background: var(--pd-cta-bg) !important; color: var(--pd-cta-text) !important; }
+  #shopify-section-{{ section.id }} .pd-atc:hover { filter: brightness(0.92); }
+  #shopify-section-{{ section.id }} .pd-stickybar { background: var(--pd-sticky-bg) !important; }
+  #shopify-section-{{ section.id }} .pd-stickybar .pd-price { color: var(--pd-sticky-text) !important; }
+
+  html body #shopify-section-{{ section.id }} .pd .pd-price-row { display:flex !important; align-items:center !important; gap:10px !important; flex-wrap:wrap !important; }
+
+  /* Shaved Ice flavor theming */
+  #shopify-section-{{ section.id }} .pd-si-hero-bg { position:absolute; inset:0; z-index:0; background:radial-gradient(ellipse at 30% 20%, var(--si-glow) 0%, transparent 55%),radial-gradient(ellipse at 75% 80%, var(--si-glow2) 0%, transparent 60%); opacity:.65; pointer-events:none; }
+  #shopify-section-{{ section.id }} .pd-si-chip { background:var(--si-main) !important; }
+
+  /* Thumbnail strip → arrow-only slider (every product image, ~4 visible; navigate with ‹ ›, no scrollbar) */
+  #shopify-section-{{ section.id }} .pd-hero-media { min-width:0; }
+  #shopify-section-{{ section.id }} .pd-thumbs-wrap { margin-top:14px; display:flex; align-items:center; gap:8px; }
+  html body #shopify-section-{{ section.id }} .pd .pd-thumbs { margin-top:0 !important; display:flex !important; grid-template-columns:none !important; gap:10px !important; flex:1 1 auto; min-width:0; overflow:hidden; scroll-behavior:smooth; scroll-snap-type:x mandatory; }
+  html body #shopify-section-{{ section.id }} .pd .pd-thumb { flex:0 0 calc((100% - 30px) / 4) !important; scroll-snap-align:start; }
+  #shopify-section-{{ section.id }} .pd-thumbs-nav { flex:0 0 auto; width:30px; height:30px; border-radius:50%; border:2px solid var(--pd-brand); background:#FFFBF4; color:var(--pd-brand); cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:'Archivo',sans-serif; font-size:18px; line-height:1; box-shadow:2px 2px 0 var(--pd-brand); transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease; padding:0; }
+  #shopify-section-{{ section.id }} .pd-thumbs-nav:hover { transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--pd-brand); }
+  #shopify-section-{{ section.id }} .pd-thumbs-nav:disabled { cursor:default; box-shadow:none; transform:none; }
+  @media (max-width:760px){ #shopify-section-{{ section.id }} .pd-thumbs-wrap { display:none !important; } }
+
+  /* Mobile-only slider */
+  #shopify-section-{{ section.id }} .pd-slider-mobile { display:none; }
+  #shopify-section-{{ section.id }} .pd-slider-dots { display:none; }
+  @media (max-width:760px){
+    #shopify-section-{{ section.id }} .pd-hero-frame { display:none !important; }
+    #shopify-section-{{ section.id }} .pd-thumbs { display:none !important; }
+    #shopify-section-{{ section.id }} .pd-slider-mobile { display:block !important; position:relative; background:#FFFBF4; border:2px solid var(--pd-brand); border-radius:20px; padding:0; box-shadow:4px 4px 0 var(--pd-brand); overflow:hidden; max-width:340px; margin:0 auto; }
+    #shopify-section-{{ section.id }} .pd-slides { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scroll-behavior:smooth; -webkit-overflow-scrolling:touch; scrollbar-width:none; width:100%; position:relative; z-index:0; }
+    #shopify-section-{{ section.id }} .pd-slides::-webkit-scrollbar { display:none; }
+    #shopify-section-{{ section.id }} .pd-slide { flex:0 0 100%; scroll-snap-align:start; min-width:100%; }
+    #shopify-section-{{ section.id }} .pd-slide img { width:100%; height:auto; display:block; aspect-ratio:1/1; object-fit:cover; }
+    #shopify-section-{{ section.id }} .pd-slider-dots { display:flex !important; justify-content:center; gap:5px; margin-top:10px; }
+  }
+{% endstyle %}
+
+{%- assign hero_img = product.featured_media.preview_image -%}
+{%- assign hero_src = hero_img | image_url: width: 1400 -%}
+<link rel="preload" as="image" href="{{ hero_src }}" imagesrcset="{{ hero_img | image_url: width: 600 }} 600w, {{ hero_img | image_url: width: 1000 }} 1000w, {{ hero_img | image_url: width: 1400 }} 1400w" imagesizes="(max-width: 980px) 100vw, 600px" fetchpriority="high">
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign price = current_variant.price -%}
+{%- assign display_price = price -%}
+{%- assign review_count = product.metafields.reviews.rating_count.value | default: 0 -%}
+
+<div class="pd" data-product-id="{{ product.id }}" data-base-price="{{ display_price }}">
+
+  {%- if section.settings.show_breadcrumbs -%}
+    <nav class="pd-breadcrumbs" aria-label="Breadcrumb">
+      <div class="pd-wrap">
+        <ol>
+          <li><a href="/">{{ section.settings.breadcrumb_home }}</a></li>
+          <li class="pd-bc-sep" aria-hidden="true">/</li>
+          <li><a href="/collections/shaved-ice">{{ section.settings.breadcrumb_category }}</a></li>
+          <li class="pd-bc-sep" aria-hidden="true">/</li>
+          <li class="pd-bc-current">{{ product.title }}</li>
+        </ol>
+      </div>
+    </nav>
+  {%- endif -%}
+
+  <section class="pd-hero" style="position:relative;overflow:hidden">
+    <div class="pd-si-hero-bg" aria-hidden="true"></div>
+    <div class="pd-wrap" style="position:relative;z-index:1">
+      <div class="pd-hero-grid">
+        <div class="pd-hero-media">
+          <div class="pd-hero-frame">
+            <img id="pdHeroImg" src="{{ hero_src }}" alt="{{ product.title | escape }}" width="1200" height="1200" fetchpriority="high">
+          </div>
+          {%- if product.images.size > 1 -%}
+            <div class="pd-thumbs-wrap">
+              {%- if product.images.size > 4 -%}<button type="button" class="pd-thumbs-nav pd-thumbs-prev" aria-label="Previous thumbnails">‹</button>{%- endif -%}
+              <div class="pd-thumbs">
+                {%- for img in product.images -%}
+                  <button type="button" class="pd-thumb{% if forloop.first %} is-active{% endif %}" data-src="{{ img | image_url: width: 1400 }}" aria-label="View image {{ forloop.index }}"><img src="{{ img | image_url: width: 200 }}" alt="" width="200" height="200" loading="lazy"></button>
+                {%- endfor -%}
+              </div>
+              {%- if product.images.size > 4 -%}<button type="button" class="pd-thumbs-nav pd-thumbs-next" aria-label="Next thumbnails">›</button>{%- endif -%}
+            </div>
+          {%- endif -%}
+          <div class="pd-slider-mobile">
+            <div class="pd-slides" id="pdSlides">
+              {%- for img in product.images -%}
+                <div class="pd-slide" data-idx="{{ forloop.index0 }}"><img src="{{ img | image_url: width: 1000 }}" alt="{{ product.title | escape }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}></div>
+              {%- endfor -%}
+            </div>
+          </div>
+          {%- if product.images.size > 1 -%}
+            <div class="pd-slider-dots" id="pdDots">
+              {%- for img in product.images -%}<button type="button" class="pd-dot{% if forloop.first %} is-active{% endif %}" data-idx="{{ forloop.index0 }}" aria-label="View image {{ forloop.index }}"></button>{%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="pd-hero-info">
+          <a href="#reviews" class="pd-rating-row">
+            <span class="pd-stars" aria-hidden="true">
+              {%- for i in (1..5) -%}<svg viewBox="0 0 24 24" fill="{{ section.settings.star_color }}" stroke="{{ section.settings.star_color }}" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>{%- endfor -%}
+            </span>
+            <span class="pd-rating-text">{{ review_count }} {{ section.settings.reviews_label }}</span>
+          </a>
+          <h1 class="pd-h1">{{ product.title | upcase }}</h1>
+
+          <div class="pd-chips">
+            <span class="pd-chip pd-si-chip" style="background:var(--si-main)!important"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/><path d="M8 15 Q12 18 16 15"/></svg>{{ section.settings.chip_flavor_prefix }} {{ flavor_name | capitalize }} {{ section.settings.chip_flavor_suffix }}</span>
+            {%- if is_sf -%}
+              <span class="pd-chip pd-chip--blush"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M5 5l14 14"/></svg>{{ section.settings.chip_sugar_sf }}</span>
+            {%- else -%}
+              <span class="pd-chip pd-chip--butter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 Q12 4 21 12 Q12 20 3 12 Z"/></svg>{{ section.settings.chip_sugar_regular }}</span>
+            {%- endif -%}
+            <span class="pd-chip pd-chip--mint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg>{{ section.settings.chip_kosher }}</span>
+            <span class="pd-chip pd-chip--sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L14 9 L20 9 L15 13 L17 19 L12 16 L7 19 L9 13 L4 9 L10 9 Z"/></svg>{{ section.settings.chip_party }}</span>
+          </div>
+
+          {%- form 'product', product, id: 'pdAtcForm', class: 'pd-form' -%}
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+            <div class="pd-priceqty">
+              <div class="pd-priceblock">
+                <div class="pd-price-row">
+                  <span class="pd-price" id="pdPriceTotal">{{ display_price | money }}</span>
+                  <span class="pd-price-was" id="pdPriceWas" style="display:none"></span>
+                </div>
+                <span class="pd-save-inline" id="pdSaveTag" style="display:none"></span>
+              </div>
+              <div class="pd-qty" aria-label="Quantity">
+                <button type="button" data-qty="-1" aria-label="Decrease">−</button>
+                <input type="number" name="quantity" value="1" min="1" inputmode="numeric">
+                <button type="button" data-qty="1" aria-label="Increase">+</button>
+              </div>
+            </div>
+            <button type="submit" class="pd-atc pd-atc--full" {% unless product.available %}disabled{% endunless %}>
+              <svg class="pd-atc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 L4 6 V20 a2 2 0 0 0 2 2 H18 a2 2 0 0 0 2 -2 V6 L18 2 Z M4 6 H20 M16 10 a4 4 0 0 1 -8 0"/></svg>
+              <span class="pd-atc-text" id="pdAtcText">{%- if product.available -%}{{ section.settings.atc_text_available }}{%- else -%}{{ section.settings.atc_text_soldout }}{%- endif -%}</span>
+              {%- if product.available -%}<svg class="pd-atc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 H19 M13 6 l6 6 -6 6"/></svg>{%- endif -%}
+            </button>
+          {%- endform -%}
+
+          {%- if section.settings.show_mini_bundle -%}
+            <div class="pd-minibundle">
+              <div class="pd-mb-head">
+                <span class="pd-mb-headline">{{ section.settings.mb_headline }}</span>
+                <span class="pd-mb-sub">{{ section.settings.mb_sub }}</span>
+              </div>
+              <div class="pd-mb-grid">
+                <button type="button" class="pd-mb-cell" data-tier="2"><span class="pd-mb-num">{{ section.settings.mb_tier2_num }}</span><span class="pd-mb-label">{{ section.settings.mb_tier2_label }}</span><span class="pd-mb-save">{{ section.settings.mb_tier2_save }}</span></button>
+                <button type="button" class="pd-mb-cell" data-tier="3"><span class="pd-mb-flag">{{ section.settings.mb_tier3_flag }}</span><span class="pd-mb-num">{{ section.settings.mb_tier3_num }}</span><span class="pd-mb-label">{{ section.settings.mb_tier3_label }}</span><span class="pd-mb-save">{{ section.settings.mb_tier3_save }}</span></button>
+                <button type="button" class="pd-mb-cell" data-tier="4"><span class="pd-mb-num">{{ section.settings.mb_tier4_num }}</span><span class="pd-mb-label">{{ section.settings.mb_tier4_label }}</span><span class="pd-mb-save">{{ section.settings.mb_tier4_save }}</span></button>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {%- if section.settings.show_sticky_bar -%}
+    <div class="pd-stickybar" id="pdStickybar">
+      <span class="pd-price"><span id="pdStickyPrice">{{ display_price | money }}</span></span>
+      <button type="button" class="pd-atc" {% unless product.available %}disabled{% endunless %} onclick="document.getElementById('pdAtcForm').requestSubmit()">{%- if product.available -%}{{ section.settings.atc_text_available }}{%- else -%}{{ section.settings.atc_text_soldout }}{%- endif -%}</button>
+    </div>
+  {%- endif -%}
+</div>
+
+{% render 'pd-mb-prices' %}
+
+<script>
+window.PD_BASE_CENTS = {{ display_price }};
+window.PD_TIERS = [1, 0.95, 0.90, 0.85];
+(function(){
+  var currentBaseCents = window.PD_BASE_CENTS;
+  const tiers = window.PD_TIERS;
+  const fmt = (c)=>{const d=c/100; return '$' + d.toFixed(2);};
+  function updatePrice(qty){
+    qty = Math.max(1, parseInt(qty)||1);
+    const tierIdx = Math.min(qty-1, tiers.length-1);
+    const discount = tiers[tierIdx];
+    const totalCents = Math.round(currentBaseCents * qty * discount);
+    const origCents = currentBaseCents * qty;
+    const priceEl = document.getElementById('pdPriceTotal');
+    const wasEl = document.getElementById('pdPriceWas');
+    const saveEl = document.getElementById('pdSaveTag');
+    const stickyPriceEl = document.getElementById('pdStickyPrice');
+    if (priceEl) priceEl.textContent = fmt(totalCents);
+    if (stickyPriceEl) stickyPriceEl.textContent = fmt(totalCents);
+    if (qty > 1){ if (wasEl){wasEl.textContent = fmt(origCents); wasEl.style.display='inline';} if (saveEl){saveEl.textContent = 'Save '+Math.round((1-discount)*100)+'%'; saveEl.style.display='inline-block';} }
+    else { if (wasEl) wasEl.style.display='none'; if (saveEl) saveEl.style.display='none'; }
+    document.querySelectorAll('.pd-mb-cell').forEach(c=>{ const t = parseInt(c.dataset.tier)||1; const match = (qty === t) || (qty >= 4 && t === 4); if (match) c.setAttribute('data-active',''); else c.removeAttribute('data-active'); });
+  }
+  document.querySelectorAll('.pd-qty [data-qty]').forEach(b=>{b.addEventListener('click',()=>{const inp=b.parentElement.querySelector('input'); const v=Math.max(1,(parseInt(inp.value)||1)+parseInt(b.dataset.qty)); inp.value=v; updatePrice(v);});});
+  document.querySelectorAll('.pd-qty input').forEach(inp=>{inp.addEventListener('change',()=>updatePrice(parseInt(inp.value)||1)); inp.addEventListener('input',()=>updatePrice(parseInt(inp.value)||1));});
+  document.querySelectorAll('.pd-mb-cell').forEach(c=>{c.addEventListener('click',()=>{const tier=parseInt(c.dataset.tier)||1; const qtyInp=document.querySelector('.pd-qty input'); if(qtyInp){qtyInp.value=tier; updatePrice(tier);}});});
+  const heroImg=document.getElementById('pdHeroImg');
+  document.querySelectorAll('.pd-thumb').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.pd-thumb').forEach(x=>x.classList.remove('is-active'));t.classList.add('is-active');if(heroImg&&t.dataset.src)heroImg.src=t.dataset.src;});});
+  /* Desktop thumbnail slider — arrow controls */
+  (function(){
+    var strip=document.querySelector('.pd-thumbs');
+    var prev=document.querySelector('.pd-thumbs-prev');
+    var next=document.querySelector('.pd-thumbs-next');
+    if(!strip||!prev||!next) return;
+    function upd(){ var max=strip.scrollWidth-strip.clientWidth-2; prev.disabled=strip.scrollLeft<=2; next.disabled=strip.scrollLeft>=max; }
+    function step(){ return Math.max(strip.clientWidth*0.8, 120); }
+    prev.addEventListener('click',function(){ strip.scrollBy({left:-step(),behavior:'smooth'}); });
+    next.addEventListener('click',function(){ strip.scrollBy({left:step(),behavior:'smooth'}); });
+    strip.addEventListener('scroll',upd,{passive:true});
+    window.addEventListener('resize',upd);
+    upd();
+  })();
+  const slides=document.getElementById('pdSlides'); const dots=document.querySelectorAll('.pd-dot');
+  if(slides&&dots.length){let st; slides.addEventListener('scroll',()=>{clearTimeout(st);st=setTimeout(()=>{const idx=Math.round(slides.scrollLeft/slides.clientWidth);dots.forEach((d,i)=>d.classList.toggle('is-active',i===idx));},50);}); dots.forEach((d,i)=>d.addEventListener('click',()=>{slides.scrollTo({left:i*slides.clientWidth,behavior:'smooth'});}));}
+  const mainAtc=document.querySelector('.pd-atc--full'); const stickyBar=document.getElementById('pdStickybar');
+  if(mainAtc&&stickyBar&&'IntersectionObserver' in window){const io=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)stickyBar.classList.add('is-hidden');else stickyBar.classList.remove('is-hidden');});},{threshold:0.15}); io.observe(mainAtc);}
+})();
+</script>
+
+{% schema %}
+{
+  "name": "SI Hero",
+  "tag": "section",
+  "class": "section-si-hero",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "text_primary", "label": "Primary text color", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_brand", "label": "Brand color (headings, slider border)", "default": "#1a1a1a" },
+    { "type": "color", "id": "bg_section", "label": "Page background", "default": "#FFF8EE" },
+    { "type": "color", "id": "hero_bg", "label": "Hero background", "default": "#FFF8EE" },
+    { "type": "color", "id": "star_color", "label": "Review star color", "default": "#c58548" },
+    { "type": "color", "id": "rating_text_color", "label": "Rating text color", "default": "#3a3a3a" },
+    { "type": "color", "id": "chip_text_color", "label": "Feature chip text color", "default": "#1a1a1a" },
+    { "type": "color", "id": "price_color", "label": "Price text color", "default": "#1a1a1a" },
+    { "type": "header", "content": "Add to Cart button" },
+    { "type": "color", "id": "cta_color_bg", "label": "Button background", "default": "#1a1a1a" },
+    { "type": "color", "id": "cta_color_text", "label": "Button text", "default": "#FFFBF4" },
+    { "type": "text", "id": "atc_text_available", "label": "Add to cart text (available)", "default": "Add to cart" },
+    { "type": "text", "id": "atc_text_soldout", "label": "Add to cart text (sold out)", "default": "Sold Out" },
+    { "type": "header", "content": "Rating" },
+    { "type": "text", "id": "reviews_label", "label": "Reviews label (after count)", "default": "reviews" },
+    { "type": "header", "content": "Feature chips" },
+    { "type": "text", "id": "chip_flavor_prefix", "label": "Flavor chip prefix (before flavor)", "default": "Bold" },
+    { "type": "text", "id": "chip_flavor_suffix", "label": "Flavor chip suffix (after flavor)", "default": "Flavor" },
+    { "type": "text", "id": "chip_sugar_sf", "label": "Sugar chip (sugar-free product)", "default": "Sugar-Free" },
+    { "type": "text", "id": "chip_sugar_regular", "label": "Sugar chip (regular product)", "default": "Ready to Pour" },
+    { "type": "text", "id": "chip_kosher", "label": "Kosher chip", "default": "Kosher · Non-GMO" },
+    { "type": "text", "id": "chip_party", "label": "Party chip", "default": "Party-Ready" },
+    { "type": "header", "content": "Breadcrumbs" },
+    { "type": "checkbox", "id": "show_breadcrumbs", "label": "Show breadcrumbs", "default": true },
+    { "type": "text", "id": "breadcrumb_home", "label": "Home label", "default": "Home" },
+    { "type": "text", "id": "breadcrumb_category", "label": "Category label", "default": "Shaved Ice" },
+    { "type": "header", "content": "Mini bundle" },
+    { "type": "checkbox", "id": "show_mini_bundle", "label": "Show \"Stock up for summer\" bundle", "default": true },
+    { "type": "text", "id": "mb_headline", "label": "Bundle headline", "default": "Stock up for summer" },
+    { "type": "text", "id": "mb_sub", "label": "Bundle sub-text", "default": "More bottles, more savings" },
+    { "type": "text", "id": "mb_tier2_num", "label": "Tier 2 number", "default": "2" },
+    { "type": "text", "id": "mb_tier2_label", "label": "Tier 2 label", "default": "Bottles" },
+    { "type": "text", "id": "mb_tier2_save", "label": "Tier 2 savings", "default": "Save 5%" },
+    { "type": "text", "id": "mb_tier3_flag", "label": "Tier 3 flag", "default": "Most Popular" },
+    { "type": "text", "id": "mb_tier3_num", "label": "Tier 3 number", "default": "3" },
+    { "type": "text", "id": "mb_tier3_label", "label": "Tier 3 label", "default": "Bottles" },
+    { "type": "text", "id": "mb_tier3_save", "label": "Tier 3 savings", "default": "Save 10%" },
+    { "type": "text", "id": "mb_tier4_num", "label": "Tier 4 number", "default": "4+" },
+    { "type": "text", "id": "mb_tier4_label", "label": "Tier 4 label", "default": "Bottles" },
+    { "type": "text", "id": "mb_tier4_save", "label": "Tier 4 savings", "default": "Save 15%" },
+    { "type": "header", "content": "Sticky bar" },
+    { "type": "checkbox", "id": "show_sticky_bar", "label": "Show mobile sticky bar", "default": true },
+    { "type": "color", "id": "sticky_bg", "label": "Sticky bar background", "default": "#FFFBF4" },
+    { "type": "color", "id": "sticky_text_color", "label": "Sticky bar price text", "default": "#1a1a1a" }
+  ],
+  "presets": [{ "name": "SI Hero" }]
+}
+{% endschema %}
