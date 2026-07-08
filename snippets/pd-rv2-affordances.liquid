@@ -19,7 +19,12 @@ html body .pd .pd-rv2-nav:hover{background:#FCE2A0!important;transform:translate
 html body .pd .pd-rv2-nav:active{transform:translateY(-50%) scale(.97)!important;box-shadow:2px 2px 0 #1a1a1a!important}
 html body .pd .pd-rv2-nav--prev{left:max(12px, calc((100vw - 1240px)/2 - 28px))!important}
 html body .pd .pd-rv2-nav--next{right:max(12px, calc((100vw - 1240px)/2 - 28px))!important}
+html body .pd .pd-rv2-nav:disabled{opacity:.32!important;cursor:default!important;box-shadow:none!important;transform:translateY(-50%)!important}
 @media (max-width:980px){html body .pd .pd-rv2-nav{display:none!important}}
+
+/* Cards already fit — no slider: hide arrows + dots */
+html body .pd .pd-rv2-scroll.pd-rv2-static .pd-rv2-nav{display:none!important}
+html body .pd .pd-rv2-scroll.pd-rv2-static .pd-rv2-dots{display:none!important}
 
 /* Dots indicator */
 html body .pd .pd-rv2-dots{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;margin-top:18px!important}

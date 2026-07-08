@@ -6,7 +6,52 @@
   endif
   assign bcoll = collections[section.settings.bottles_collection] | default: collections['coffee']
 -%}
-{%- if customer -%}<script>window.location.replace({{ routes.account_url | json }});</script><style>.sauth{display:none !important;}</style>{%- endif -%}
+{%- if customer -%}<style>.sauth{display:none !important;}</style>{%- endif -%}
+<script>
+(function(){
+  var ACCOUNT = {{ routes.account_url | json }};
+  var LOGGED_IN = {% if customer %}true{% else %}false{% endif %};
+  function safePath(u){
+    if(!u) return null;
+    try{
+      var url = new URL(u, location.origin);
+      if(url.origin !== location.origin) return null;          // same-store paths only
+      var p = url.pathname;
+      if(/^\/account(\/(login|register|logout))?\/?$/.test(p)) return null;  // never bounce back to auth
+      if(/^\/account\/(reset|activate)/.test(p)) return null;
+      if(/^\/(challenge|password)(\/|$)/.test(p)) return null;
+      return url.pathname + url.search;
+    }catch(e){ return null; }
+  }
+  // Where did they come from? explicit param wins, else the referring page.
+  var q = new URLSearchParams(location.search || '');
+  var dest = safePath(q.get('return_to') || q.get('checkout_url') || q.get('return_url')) || safePath(document.referrer);
+
+  // Already signed in -> straight back to where they came from (or the account page).
+  if(LOGGED_IN){ window.location.replace(dest || ACCOUNT); return; }
+  if(!dest) return;
+
+  // Carry the destination through Shopify's forms so it returns there after auth.
+  // Classic accounts: login honours checkout_url, registration honours return_to — set both to be safe.
+  function setHidden(form, name){
+    var h = form.querySelector('input[name="'+name+'"]');
+    if(!h){ h = document.createElement('input'); h.type='hidden'; h.name=name; form.appendChild(h); }
+    h.value = dest;
+  }
+  function decorate(){
+    var forms = document.querySelectorAll('[data-sauth] form');
+    for(var i=0;i<forms.length;i++){
+      var form = forms[i];
+      var ft = form.querySelector('input[name="form_type"]');
+      var type = ft ? ft.value : '';
+      if(type==='customer_login'){ setHidden(form,'checkout_url'); setHidden(form,'return_to'); }
+      else if(type==='create_customer'){ setHidden(form,'return_to'); setHidden(form,'checkout_url'); }
+    }
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', decorate); }
+  else { decorate(); }
+})();
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700;800&family=Josefin+Sans:ital,wght@0,300..700;1,300..600&display=swap');
   .sauth{ --bg:#FFFBF4; --bg-2:#FFF8EE; --surface:#FFFFFF; --ink:#39220f; --ink-2:#5a4632; --muted:#8a7a68; --hair:color-mix(in srgb,var(--ink) 16%,transparent);

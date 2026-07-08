@@ -176,6 +176,8 @@
     var cards = track.querySelectorAll('.pd-rv2-card');
     if (!cards.length) return;
 
+    var scroller = marquee.closest ? marquee.closest('.pd-rv2-scroll') : marquee.parentNode;
+
     // Force initial scroll position to 0 so the first card is fully visible
     try { marquee.scrollLeft = 0; } catch(e){}
 
@@ -183,11 +185,37 @@
       var rect = cards[0].getBoundingClientRect();
       return rect.width + 18;
     }
+    function maxScroll(){ return marquee.scrollWidth - marquee.clientWidth; }
+    // True overflow = the card row itself is wider than the viewport (ignore peek padding).
+    function hasOverflow(){
+      var gap = parseFloat(getComputedStyle(track).columnGap) || 18;
+      var row = 0;
+      for (var i = 0; i < cards.length; i++){ row += cards[i].getBoundingClientRect().width; }
+      row += gap * (cards.length - 1);
+      return row > marquee.clientWidth + 4;
+    }
+
     function scrollByCards(dir){
       marquee.scrollBy({ left: step() * dir, behavior: 'smooth' });
     }
     if (prev) prev.addEventListener('click', function(){ scrollByCards(-1); });
     if (next) next.addEventListener('click', function(){ scrollByCards(1); });
+
+    function syncActive(){
+      if (!dots) return;
+      var idx = Math.round(marquee.scrollLeft / step());
+      Array.prototype.forEach.call(dots.children, function(el, i){
+        el.classList.toggle('is-active', i === idx);
+      });
+    }
+
+    // Only show arrows + dots when the cards overflow; otherwise it's a static row.
+    function refresh(){
+      var overflow = hasOverflow();
+      if (scroller) scroller.classList.toggle('pd-rv2-static', !overflow);
+      if (prev) prev.disabled = !overflow || marquee.scrollLeft <= 2;
+      if (next) next.disabled = !overflow || marquee.scrollLeft >= maxScroll() - 2;
+    }
 
     if (dots){
       dots.innerHTML = '';
@@ -204,25 +232,23 @@
         });
         dots.appendChild(d);
       }
-      function syncActive(){
-        var idx = Math.round(marquee.scrollLeft / step());
-        Array.prototype.forEach.call(dots.children, function(el, i){
-          el.classList.toggle('is-active', i === idx);
-        });
-      }
-      var raf = null;
-      marquee.addEventListener('scroll', function(){
-        if (raf) return;
-        raf = requestAnimationFrame(function(){ raf = null; syncActive(); });
-      }, { passive: true });
     }
 
-    // One-time peek: nudge right, then snap reliably back to 0
+    var raf = null;
+    marquee.addEventListener('scroll', function(){
+      if (raf) return;
+      raf = requestAnimationFrame(function(){ raf = null; syncActive(); refresh(); });
+    }, { passive: true });
+    window.addEventListener('resize', refresh);
+    window.addEventListener('load', refresh);
+    refresh();
+
+    // One-time peek: nudge right, then snap reliably back to 0 — only when scrollable
     if ('IntersectionObserver' in window){
       var peeked = false;
       var io = new IntersectionObserver(function(entries){
         entries.forEach(function(e){
-          if (e.isIntersecting && !peeked){
+          if (e.isIntersecting && !peeked && hasOverflow()){
             peeked = true;
             var w = step();
             setTimeout(function(){ marquee.scrollBy({ left: w * 0.18, behavior: 'smooth' }); }, 450);
