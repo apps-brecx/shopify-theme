@@ -279,7 +279,9 @@
   {%- assign sale_pct = sale_diff | times: 100 | divided_by: compare_at -%}
 {%- endif -%}
 
-{%- assign counterpart = product.metafields.custom.sugar_free.value -%}
+{%- comment -%} Counterpart: regular products store it in custom.sugar_free, sugar-free products in custom.regular. {%- endcomment -%}
+{%- if is_sf -%}{%- assign counterpart = product.metafields.custom.regular.value -%}{%- else -%}{%- assign counterpart = product.metafields.custom.sugar_free.value -%}{%- endif -%}
+{%- if counterpart == blank -%}{%- assign counterpart = product.metafields.custom.sugar_free.value | default: product.metafields.custom.regular.value -%}{%- endif -%}
 {%- assign ingredients_field = product.metafields.custom.additionalfield -%}
 {%- assign review_count = product.metafields.reviews.rating_count.value | default: 0 -%}
 
