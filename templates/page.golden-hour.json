@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-golden-hour",
+      "blocks": {
+        "flavor_1": { "type": "flavor", "settings": { "name": "Sugar-Free Mango", "note": "Juicy, tropical and bright — sunshine in a bottle.", "tag": "0g sugar · 0 cal", "color": "#FFB43A" } },
+        "flavor_2": { "type": "flavor", "settings": { "name": "Sugar-Free Pineapple", "note": "Sweet, tangy and golden — the star of the set.", "tag": "0g sugar · 0 cal", "color": "#F6D14E" } },
+        "flavor_3": { "type": "flavor", "settings": { "name": "Sugar-Free Peach", "note": "Soft, mellow and warm — pure golden-hour glow.", "tag": "0g sugar · 0 cal", "color": "#FF9E7A" } },
+        "review_1": { "type": "review", "settings": { "stars": "★★★★★", "text": "The mango is unreal — tastes like summer with zero sugar.", "who": "Jess K." } },
+        "review_2": { "type": "review", "settings": { "stars": "★★★★★", "text": "Pineapple + sparkling water = my new golden hour ritual.", "who": "Aaron D." } },
+        "review_3": { "type": "review", "settings": { "stars": "★★★★★", "text": "Three bottles for $9.99 felt like a steal. The peach won me over.", "who": "Maya L." } }
+      },
+      "block_order": ["flavor_1", "flavor_2", "flavor_3", "review_1", "review_2", "review_3"],
+      "settings": {
+        "price_now": "$9.99",
+        "price_was": "$29.97"
+      }
+    }
+  },
+  "order": ["main"]
+}
