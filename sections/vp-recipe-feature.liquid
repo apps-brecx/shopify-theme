@@ -1,0 +1,80 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Pack flavors (from metafield, else parsed from the title) ===== {%- endcomment -%}
+{%- assign pf_arr = '' | split: ',' -%}
+{%- assign mf = product.metafields.custom.pack_flavors -%}
+{%- if mf and mf.value -%}
+  {%- assign pf_arr = mf.value | strip | split: ',' -%}
+{%- else -%}
+  {%- assign pf_clean = product.title | remove_first: 'Variety Pack,' | remove_first: 'Variety Pack' | remove: ' Coffee Syrup' | remove: ' Tea Syrup' | remove: ' Syrup' | remove: ' Coffee' | replace: ' and ', ', ' -%}
+  {%- assign pf_arr = pf_clean | split: ',' -%}
+{%- endif -%}
+{%- assign flavor_count = pf_arr.size -%}
+{%- if flavor_count < 2 -%}{%- assign flavor_count = 4 -%}{%- endif -%}
+{%- capture flavor_csv -%}{%- for f in pf_arr -%}{{ f | strip }}{%- unless forloop.last %}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-recipes-v2 { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-recipes-v2">
+    <div class="pd-wrap pd-rv2-head">
+      <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="pd-h2">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      <p class="pd-rv2-lede">{{ section.settings.lede }}</p>
+    </div>
+    <div class="pd-wrap">
+      <article class="pd-rv2-feature">
+        <div class="pd-rv2-feature-img">
+          <img src="{{ product.featured_image | image_url: width: 1200 }}" alt="{{ product.title | escape }} flight" loading="lazy">
+          <span class="pd-rv2-feature-tag">{{ section.settings.img_tag }}</span>
+        </div>
+        <div class="pd-rv2-feature-body">
+          <div class="pd-rv2-feature-content is-trimmed">
+            <h3 class="pd-rv2-feature-name">{{ section.settings.recipe_name }}</h3>
+            <p class="pd-rv2-feature-ing-head"><strong>{{ section.settings.ing_head }}</strong></p>
+            <ul>
+              <li>{{ section.settings.ing1 | replace: '[count]', flavor_count }}</li>
+              <li>{{ section.settings.ing2 }}</li>
+              <li>{{ section.settings.ing3 }}</li>
+              <li>{{ section.settings.ing4 }}</li>
+            </ul>
+          </div>
+          <span class="pd-rv2-feature-time">{{ section.settings.time }}</span>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "VP Recipe Feature",
+  "tag": "section",
+  "class": "section-vp-recipe-feature",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Featured recipe" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Pour " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis", "default": "a flight" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "text", "id": "lede", "label": "Lede", "default": "Side-by-side mini lattes — try all the flavors in one sitting." },
+    { "type": "header", "content": "Feature card" },
+    { "type": "text", "id": "img_tag", "label": "Image tag", "default": "Signature flight" },
+    { "type": "text", "id": "recipe_name", "label": "Recipe name", "default": "Tasting Flight" },
+    { "type": "text", "id": "ing_head", "label": "Ingredients heading", "default": "INGREDIENTS" },
+    { "type": "textarea", "id": "ing1", "label": "Ingredient 1", "info": "Use [count] for the flavor count.", "default": "[count] small glasses, each with 1 espresso shot (or 3 oz cold brew)" },
+    { "type": "textarea", "id": "ing2", "label": "Ingredient 2", "default": "1 pump from each flavor in this pack" },
+    { "type": "textarea", "id": "ing3", "label": "Ingredient 3", "default": "2 oz steamed or cold milk per glass" },
+    { "type": "textarea", "id": "ing4", "label": "Ingredient 4", "default": "Optional: ice + a sprinkle of cinnamon" },
+    { "type": "text", "id": "time", "label": "Time label", "default": "7 min" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "VP Recipe Feature" }]
+}
+{% endschema %}

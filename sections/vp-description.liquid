@@ -1,0 +1,75 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%} ===== Pack flavors (from metafield, else parsed from the title) ===== {%- endcomment -%}
+{%- assign pf_arr = '' | split: ',' -%}
+{%- assign mf = product.metafields.custom.pack_flavors -%}
+{%- if mf and mf.value -%}
+  {%- assign pf_arr = mf.value | strip | split: ',' -%}
+{%- else -%}
+  {%- assign pf_clean = product.title | remove_first: 'Variety Pack,' | remove_first: 'Variety Pack' | remove: ' Coffee Syrup' | remove: ' Tea Syrup' | remove: ' Syrup' | remove: ' Coffee' | replace: ' and ', ', ' -%}
+  {%- assign pf_arr = pf_clean | split: ',' -%}
+{%- endif -%}
+{%- assign flavor_count = pf_arr.size -%}
+{%- if flavor_count < 2 -%}{%- assign flavor_count = 4 -%}{%- endif -%}
+{%- capture flavor_csv -%}{%- for f in pf_arr -%}{{ f | strip }}{%- unless forloop.last %}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
+
+{%- if section.settings.section_bg != blank -%}
+{% style %}
+  #shopify-section-{{ section.id }} .pd-description { background: {{ section.settings.section_bg }} !important; }
+{% endstyle %}
+{%- endif -%}
+
+<div class="pd">
+  <section class="pd-description">
+    <div class="pd-wrap">
+      <div class="pd-desc-head">
+        <span class="pd-eyebrow">{{ section.settings.eyebrow }}</span>
+        <h2 class="pd-h2" style="margin-top:14px;">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
+      </div>
+      <div class="pd-desc-content">
+        {%- if section.settings.description_override != blank -%}
+          {{ section.settings.description_override }}
+        {%- else -%}
+          <ul>
+            {%- if pf_arr.size >= 2 -%}
+              <li><strong>{{ section.settings.flavors_label }}</strong> {{ flavor_csv }}.</li>
+            {%- endif -%}
+            <li>{{ section.settings.fb1 }}</li>
+            <li>{{ section.settings.fb2 }}</li>
+            <li>{{ section.settings.fb3 }}</li>
+            <li>{{ section.settings.fb4 }}</li>
+            <li>{{ section.settings.fb5 }}</li>
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "VP Description",
+  "tag": "section",
+  "class": "section-vp-description",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "About this pack" },
+    { "type": "text", "id": "heading_pre", "label": "Heading before emphasis", "default": "Taste of " },
+    { "type": "text", "id": "heading_em", "label": "Heading emphasis (italic)", "default": "everything" },
+    { "type": "text", "id": "heading_post", "label": "Heading after emphasis", "default": "." },
+    { "type": "header", "content": "Body" },
+    { "type": "richtext", "id": "description_override", "label": "Description (override)", "info": "Leave blank to use the bullets below" },
+    { "type": "header", "content": "Bullets" },
+    { "type": "text", "id": "flavors_label", "label": "Flavors label", "info": "Shown before the flavor list (only when the pack has 2+ flavors).", "default": "Flavors inside:" },
+    { "type": "text", "id": "fb1", "label": "Bullet 1", "default": "Curated Lineup: A hand-picked set of bestseller flavors, balanced so every cup tastes different." },
+    { "type": "text", "id": "fb2", "label": "Bullet 2", "default": "Save vs Singles: Bundle pricing built in. Always cheaper than buying these flavors one bottle at a time." },
+    { "type": "text", "id": "fb3", "label": "Bullet 3", "default": "Gift-Ready: Comes packed and presentable. Hand it off as-is to a coffee fan, or split between friends." },
+    { "type": "text", "id": "fb4", "label": "Bullet 4", "default": "Same Real Flavor: Same Syruvia recipes inside, made with pure cane sugar and real fruit and natural notes." },
+    { "type": "text", "id": "fb5", "label": "Bullet 5", "default": "Café-Quality: 50+ servings per bottle. Roughly 200+ drinks per pack." },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
+  ],
+  "presets": [{ "name": "VP Description" }]
+}
+{% endschema %}

@@ -1,0 +1,18 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+<div class="pd">
+  {% render 'pd-reels-section' %}
+</div>
+
+{% schema %}
+{
+  "name": "VP Reels",
+  "tag": "section",
+  "class": "section-vp-reels",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "paragraph", "content": "Renders the pd-reels-section snippet (Instagram reels marquee). Content is managed in the snippet." }
+  ],
+  "presets": [{ "name": "VP Reels" }]
+}
+{% endschema %}
