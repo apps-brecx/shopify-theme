@@ -38,6 +38,32 @@
             "sub_size_m": 15
           }
         },
+        "slide_gUGR4D": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Vip_Banner_2.png",
+            "image_mobile": "shopify://shop_images/Vip_Banner_Mobile.png",
+            "video_autoplay": false,
+            "alt": "",
+            "link": "https://syruvia.com/account/login",
+            "show_button": false,
+            "btn_text": "Shop Now",
+            "btn_bg": "#c8252b",
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
+          }
+        },
         "slide_TeK4MJ": {
           "type": "slide",
           "settings": {
@@ -148,6 +174,7 @@
       },
       "block_order": [
         "slide_qGkiAB",
+        "slide_gUGR4D",
         "slide_TeK4MJ",
         "slide_F8daTC",
         "slide_tw9mi8",
