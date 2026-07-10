@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#d35605"
+        "background_color": "#72305C"
       }
     },
     "pack_steps_AbyNtH": {
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#c6631e",
+        "background_color": "#72305C",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
