@@ -218,9 +218,9 @@
   }
   // Deep-link: open the item referenced in the URL hash
   function openFromHash(){
-    if (!location.hash || location.hash.length < 2) return;
-    var item = null;
-    try { var el = root.querySelector(location.hash); item = el ? el.closest('[data-faq-item]') : null; } catch (e) { item = null; }
+    if (!location.hash) return;
+    var target = root.querySelector(location.hash + ', [id="' + location.hash.slice(1) + '"]');
+    var item = target ? target.closest('[data-faq-item]') : null;
     if (item && !item.classList.contains('is-open')){
       var btn = item.querySelector('.syr-faq-q');
       if (btn) btn.click();
