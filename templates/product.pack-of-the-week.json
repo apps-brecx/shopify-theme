@@ -13,10 +13,10 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272_2.png",
+        "bg_img": "shopify://shop_images/Rectangle_2272.jpg",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
-        "accent_color": "#c6631e"
+        "accent_color": "#72305C"
       }
     },
     "main": {
@@ -479,9 +479,9 @@
         "column_WtABe3": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/iced-tea_2.png",
+            "image": "shopify://shop_images/4_Flvvor_1.png",
             "column_link": "",
-            "title": "<strong>Mixes in Seconds</strong>",
+            "title": "",
             "text": "",
             "link_label": "",
             "link": ""
@@ -490,9 +490,9 @@
         "column_k7Ua7t": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/lemonade_2.png",
+            "image": "shopify://shop_images/15_9d23c980-97bd-42d1-8f90-9b0d0e6f6b2f.png",
             "column_link": "",
-            "title": "<strong>Built for Iced Drinks</strong>",
+            "title": "",
             "text": "",
             "link_label": "",
             "link": ""
@@ -501,9 +501,9 @@
         "column_UrhpMn": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/drink_4.png",
+            "image": "shopify://shop_images/1_Pack.png",
             "column_link": "",
-            "title": "<strong>Summer-Ready Pack</strong>",
+            "title": "",
             "text": "",
             "link_label": "",
             "link": ""
@@ -521,7 +521,7 @@
         ".multicolumn-list {justify-content: center;}",
         ".grid--3-col-desktop .grid__item {width: 20%; max-width: 20%;}",
         ".media {padding: 0 !important;}",
-        "img {object-fit: contain; margin: 0 auto; position: unset; width: 60px; height: 60px;}",
+        "img {object-fit: contain; margin: 0 auto; position: unset; width: 100px; height: 60px;}",
         ".inline-richtext {text-align: center; font-family: \"Manrope\", sans-serif !important;}",
         "@media screen and (max-width: 989px) {.grid--1-col-tablet-down .grid__item {flex: 1 0 40%; max-width: calc(100% / 2 - 2px); }}"
       ],
@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>Each week, we highlight one pack we think is worth trying. Same premium products, just an easier place for you to start your flavor journey without the decision fatigue.</p>"
+            "text": "<p>This week’s Ube Dream Cream Pack brings together four soft, creamy flavors that make homemade drinks feel special. Ube gives it that dreamy purple sweetness, Vanilla keeps it smooth, Pistachio adds a nutty touch, and Almond brings a cozy café-style finish.</p>"
           }
         }
       },
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#d35605"
+        "background_color": "#72305C"
       }
     },
     "pack_steps_AbyNtH": {
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Three Fruity Favorites",
-            "description": "Mango, Peach, and Mandarine Orange in one easy summer pack."
+            "title": "Ube Dream",
+            "description": "Sweet, creamy, and made for colorful café-style drinks."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Mix Drinks Fast",
-            "description": "Add bright fruit flavor to lemonades, iced teas, sodas, and mocktails."
+            "title": "Vanilla Smooth",
+            "description": "Classic flavor that blends easily with coffee, tea, and shakes."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Made for Summer",
-            "description": "Perfect for refreshing drinks, party sips, and everyday cool-downs."
+            "title": "Nutty Duo",
+            "description": "Pistachio and Almond add a soft, cozy finish to every sip."
           }
         }
       },
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#d35605",
+        "background_color": "#72305C",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -698,9 +698,9 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#c6631e",
+        "background_color": "#8d4925",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Bright fruit flavors crafted to bring refreshing summer vibes to every drink.</p>",
+        "description": "<p>Crafted for smooth mixing, creamy flavor, and easy drinks at home.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -751,67 +751,67 @@
     "pack_testimonial_btMyHt": {
       "type": "pack-testimonial",
       "blocks": {
+        "testimonial_8bGFNJ": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "The Ube makes my iced latte look beautiful and taste so creamy. Vanilla and Pistachio make the whole pack feel extra smooth",
+            "reviewer_initials": "MR",
+            "reviewer_name": "Maya R.",
+            "reviewer_role": "Iced Latte Lover"
+          }
+        },
         "testimonial_RVrkPA": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "\"Mandarine Orange is the flavor I didn’t know I needed. It adds the perfect citrus pop to sparkling water and mocktails.\"",
-            "reviewer_initials": "SJ",
-            "reviewer_name": "Sarah J.",
-            "reviewer_role": "VERIFIED BUYER"
+            "quote": "Almond and Pistachio are so good together. I used them in cold brew and milk tea, and both tasted café-level.",
+            "reviewer_initials": "JP",
+            "reviewer_name": "Jordan P.",
+            "reviewer_role": "Home Drink Maker"
           }
         },
         "testimonial_w7H38p": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "“This pack is easy to use and the flavors actually stand out. Perfect for lemonades, iced teas, and fruity drinks at home..”",
+            "quote": "This pack feels different from the usual flavors. Ube is fun, Vanilla is classic, and the nutty flavors make it feel premium.",
             "reviewer_initials": "MR",
-            "reviewer_name": "Michael R.",
-            "reviewer_role": "COFFEE ENTHUSIAST"
+            "reviewer_name": "Sofia L.",
+            "reviewer_role": "Flavor Explorer"
           }
         },
         "testimonial_grwGng": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "\"I used all three for a weekend drink bar, and everyone had a favorite. Mango was bold, Peach was sweet, and Mandarine Orange made everything taste fresh.\"",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
-            "reviewer_role": "HAPPY MOTHER"
+            "quote": "I made ube milk tea and a pistachio almond latte with this pack. Both were so easy and honestly tasted amazing.",
+            "reviewer_initials": "NK",
+            "reviewer_name": "Nina K.",
+            "reviewer_role": "Milk Tea Fan"
           }
         },
-        "testimonial_cdT8rN": {
+        "testimonial_DM9AKq": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "\"Mandarine Orange is the flavor I didn’t know I needed. It adds the perfect citrus pop to sparkling water and mocktails.\"",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
-            "reviewer_role": "HAPPY MOTHER"
-          }
-        },
-        "testimonial_ExpYLN": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 5,
-            "quote": "The Mango gives my lemonade a tropical kick, and the Peach makes iced tea taste so smooth. This pack feels made for summer.",
-            "reviewer_initials": "MR",
-            "reviewer_name": "Michael R.",
-            "reviewer_role": "COFFEE ENTHUSIAST"
+            "quote": "Almond and Pistachio are so good together. I used them in cold brew and milk tea, and both tasted café-level.",
+            "reviewer_initials": "JP",
+            "reviewer_name": "Jordan P.",
+            "reviewer_role": "Home Drink Maker"
           }
         }
       },
       "block_order": [
+        "testimonial_8bGFNJ",
         "testimonial_RVrkPA",
         "testimonial_w7H38p",
         "testimonial_grwGng",
-        "testimonial_cdT8rN",
-        "testimonial_ExpYLN"
+        "testimonial_DM9AKq"
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "People\nLove this Combo",
+        "heading": "Creamy Sip\nFans",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
@@ -836,9 +836,9 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#d35605",
-        "title": "Turn Every Drink Into Summer",
-        "description": "Three bright fruit flavors. One chill pack. Mango, Peach, and Mandarine Orange made for refreshing drinks at home.",
+        "background_color": "#72305C",
+        "title": "Make Your Next Sip Dreamy",
+        "description": "Ube, Vanilla, Pistachio, and Almond are on deal this week a creamy pack made for better drinks at home.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"

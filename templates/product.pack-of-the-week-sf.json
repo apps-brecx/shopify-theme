@@ -13,10 +13,10 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272_2.png",
+        "bg_img": "shopify://shop_images/Rectangle_2272.jpg",
         "secondary_button_text": "View Regular",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week",
-        "accent_color": "#c6631e"
+        "accent_color": "#72305C"
       }
     },
     "main": {
@@ -532,7 +532,7 @@
         "custom_class1": "",
         "custom_class11": "",
         "custom_class12": "",
-        "title": "",
+        "title": "<strong>Creamy. Nutty. Sugar Free.</strong>",
         "image_alt_text": "",
         "content": "",
         "additional_text": "",
@@ -571,14 +571,14 @@
           "type": "heading",
           "settings": {
             "show_image": false,
-            "heading": "<strong>What is Pack of the Week?</strong>",
+            "heading": "<strong>What is </strong><em><strong>Pack of the Week?</strong></em>",
             "heading_size": "h1"
           }
         },
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This curated trio gives you the perfect summer refreshers. Sugar-Free Mango, Peach, and Mandarin Orange allow you to make colorful, fruity drinks without sugar iced teas, sparkling water, lemonades, and mocktails.</p>"
+            "text": "<p>This week’s Sugar-Free Ube Dream Cream Pack brings together four creamy café-style flavors without the sugar. Ube gives it that dreamy purple sip, Vanilla keeps it smooth, Pistachio adds a soft nutty touch, and Almond brings a cozy finish.</p>"
           }
         }
       },
@@ -590,7 +590,7 @@
         ".page-cst-about-page-sec,.page-cst-mission-page-sec,.line-left,.line-right {display: none;}",
         ".mobile-pad {padding-bottom: 40px !important;}",
         ".rich-text__heading strong {font-family: \"Epilogue\", sans-serif !important;}",
-        ".rich-text__heading em {font-style: normal; color: #61155b;}",
+        ".rich-text__heading em {font-style: normal; color: #72305c;}",
         ".rich-text__text p {font-family: \"Manrope\", sans-serif !important;}",
         "@media (max-width: 768px) {.head {font-size: 32px !important; }}",
         "@media (max-width: 400px) {.rich-text__text p {font-size: 14px !important; line-height: normal !important; }}"
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#D35605"
+        "background_color": "#72305C"
       }
     },
     "pack_steps_AbyNtH": {
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Three Tropical Favorites",
-            "description": "Sugar-Free Mango, Peach, and Mandarin Orange give you bold, refreshing flavors in one versatile pack."
+            "title": "Ube Dream",
+            "description": "Creamy purple flavor for fun café-style drinks."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Make Drinks More Refreshing",
-            "description": "Create unique summer drinks every day from iced teas to sparkling lemonades  without repeating the same flavor."
+            "title": "Vanilla Smooth",
+            "description": "Classic, soft, and easy to mix with almost anything."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Big Flavor, Zero Sugar",
-            "description": "Made for bright summer drinks that taste juicy and refreshing without sugar."
+            "title": "Nutty Finish",
+            "description": "Pistachio and Almond bring a cozy, premium touch."
           }
         }
       },
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#c6631e",
+        "background_color": "#72305C",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -698,9 +698,9 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#c6631e",
+        "background_color": "#72305C",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Bright fruit flavor crafted for refreshing drinks you can enjoy all summer.</p>",
+        "description": "<p>Crafted for smooth mixing, creamy flavor, and easy sugar-free drinks at home.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -755,50 +755,50 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I love fruity drinks but don’t want the sugar. These flavors are bright, smooth, and super refreshing. Mandarin Orange is my favorite",
-            "reviewer_initials": "SJ",
-            "reviewer_name": "Sarah J.",
-            "reviewer_role": "VERIFIED BUYER"
+            "quote": "The Sugar Free Ube makes my iced latte look so pretty and still tastes creamy. Vanilla makes it even smoother.",
+            "reviewer_initials": "AM",
+            "reviewer_name": "Alyssa M.",
+            "reviewer_role": "Iced Latte Fan"
           }
         },
         "testimonial_w7H38p": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack is perfect for summer. I made lemonade with Peach and Mango, and it tasted like something from a café.",
-            "reviewer_initials": "MR",
-            "reviewer_name": "Michael R.",
-            "reviewer_role": "COFFEE ENTHUSIAST"
+            "quote": "Pistachio and Almond together are so good in cold brew. This pack makes sugar-free coffee feel way less boring.",
+            "reviewer_initials": "MD",
+            "reviewer_name": "Marcus D.",
+            "reviewer_role": "Cold Brew Lover"
           }
         },
         "testimonial_grwGng": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack is perfect for summer. I made lemonade with Peach and Mango, and it tasted like something from a café.",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
-            "reviewer_role": "HAPPY MOTHER"
+            "quote": "I made an ube milk tea with this and loved it. Sweet, creamy, and no sugar exactly what I wanted.",
+            "reviewer_initials": "TR",
+            "reviewer_name": "Tina R.",
+            "reviewer_role": "Milk Tea Maker"
           }
         },
         "testimonial_cdT8rN": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "All three flavors mix really well. Peach is sweet, Mango is tropical, and Mandarin Orange adds the perfect citrus kick.",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
-            "reviewer_role": "HAPPY MOTHER"
+            "quote": "This pack feels different from basic sugar-free flavors. Ube is fun, Vanilla is classic, and the nutty flavors make it feel fancy.",
+            "reviewer_initials": "RK",
+            "reviewer_name": "Rachel K.",
+            "reviewer_role": "Sugar-Free Flavor Fan"
           }
         },
-        "testimonial_ExpYLN": {
+        "testimonial_kyjF3L": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Mango tastes amazing in sparkling water, and the Peach is perfect for iced tea. This pack makes sugar-free drinks feel fun again.",
-            "reviewer_initials": "MR",
-            "reviewer_name": "Michael R.",
-            "reviewer_role": "COFFEE ENTHUSIAST"
+            "quote": "Pistachio and Almond together are so good in cold brew. This pack makes sugar-free coffee feel way less boring.",
+            "reviewer_initials": "MD",
+            "reviewer_name": "Marcus D.",
+            "reviewer_role": "Cold Brew Lover"
           }
         }
       },
@@ -807,11 +807,11 @@
         "testimonial_w7H38p",
         "testimonial_grwGng",
         "testimonial_cdT8rN",
-        "testimonial_ExpYLN"
+        "testimonial_kyjF3L"
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Sugar-Free Sippers\nLove It",
+        "heading": "Sugar Free Sip Fans\nLove This Pack",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
@@ -836,9 +836,9 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#c6631e",
-        "title": "Chill Your Summer, Sugar-Free",
-        "description": "Peach, Mango, and Mandarin Orange in one easy pack for bright, refreshing drinks.",
+        "background_color": "#72305C",
+        "title": "Make Your Next Sip Dreamy,Sugar-Free",
+        "description": "Ube, Vanilla, Pistachio, and Almond are on deal this week a creamy sugar-free pack made for better drinks at home.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"
