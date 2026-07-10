@@ -521,7 +521,7 @@
         ".multicolumn-list {justify-content: center;}",
         ".grid--3-col-desktop .grid__item {width: 20%; max-width: 20%;}",
         ".media {padding: 0 !important;}",
-        "img {object-fit: contain; margin: 0 auto; position: unset; width: 60px; height: 60px;}",
+        "img {object-fit: contain; margin: 0 auto; position: unset; width: 100px; height: 60px;}",
         ".inline-richtext {text-align: center; font-family: \"Manrope\", sans-serif !important;}",
         "@media screen and (max-width: 989px) {.grid--1-col-tablet-down .grid__item {flex: 1 0 40%; max-width: calc(100% / 2 - 2px); }}"
       ],
