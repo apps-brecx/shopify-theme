@@ -16,7 +16,7 @@
         "bg_img": "shopify://shop_images/Rectangle_2272.jpg",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
-        "accent_color": "#72305C"
+        "accent_color": "#72305c"
       }
     },
     "main": {
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#72305C"
+        "background_color": "#72305c"
       }
     },
     "pack_steps_AbyNtH": {
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#72305C",
+        "background_color": "#72305c",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -795,10 +795,10 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Almond and Pistachio are so good together. I used them in cold brew and milk tea, and both tasted café-level.",
-            "reviewer_initials": "JP",
-            "reviewer_name": "Jordan P.",
-            "reviewer_role": "Home Drink Maker"
+            "quote": "Every bottle in this pack has its own personality. I've been switching between iced lattes, matcha, and milk teas, and each one tastes like something I'd order from a café.",
+            "reviewer_initials": "EC",
+            "reviewer_name": " Emma C.",
+            "reviewer_role": " CAFÉ STYLE FAN"
           }
         }
       },
@@ -836,7 +836,7 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#72305C",
+        "background_color": "#72305c",
         "title": "Make Your Next Sip Dreamy",
         "description": "Ube, Vanilla, Pistachio, and Almond are on deal this week a creamy pack made for better drinks at home.",
         "button_text": "Shop This Pack",
