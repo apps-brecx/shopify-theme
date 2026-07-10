@@ -1,0 +1,488 @@
+{%- comment -%}
+  Golden Hour Set landing page (Syruvia) — Sugar-Free Mango, Pineapple & Peach, 3-for-1.
+  Brand style (Archivo Black + Josefin Sans, cream/espresso) with a warm golden-hour
+  sunset identity. Mobile-first with clean scroll effects: bottle fan-out hero over a
+  rising sun disc, gentle float + parallax, scroll-snap flavor carousel, reveal +
+  count-up, sticky mobile buy-bar. Fonts load non-blocking. Everything editable;
+  flavors & reviews are blocks. Respects prefers-reduced-motion.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign rad = s.card_radius | default: 20 -%}
+{%- assign buy = s.buy_url | default: '/products/golden-hour-set' -%}
+{%- assign img_pine = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Pineapple_8ace16d7-c403-4ec1-8e5f-99efffb76495.png?v=1783543701' -%}
+{%- assign img_mango = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Mango_2.png?v=1783543700' -%}
+{%- assign img_peach = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Peach_8ec123ac-28f2-4aa6-9238-4db0d6f2d5cc.png?v=1783543700' -%}
+{%- if s.bottle_center != blank -%}{%- assign img_pine = s.bottle_center | image_url: width: 800 -%}{%- endif -%}
+{%- if s.bottle_left != blank -%}{%- assign img_mango = s.bottle_left | image_url: width: 700 -%}{%- endif -%}
+{%- if s.bottle_right != blank -%}{%- assign img_peach = s.bottle_right | image_url: width: 700 -%}{%- endif -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:wght@300;400;600;700&display=swap"></noscript>
+
+<style>
+  #gh-{{ section.id }}{
+    --ink:{{ s.color_ink | default: '#1a1a1a' }};
+    --brand:{{ s.color_brand | default: '#39220f' }};
+    --bg:{{ s.color_bg | default: '#FFFBF4' }};
+    --paper:{{ s.color_paper | default: '#ffffff' }};
+    --gold:{{ s.color_gold | default: '#F2A93B' }};
+    --mango:{{ s.color_mango | default: '#FFB43A' }};
+    --pine:{{ s.color_pine | default: '#F6D14E' }};
+    --peach:{{ s.color_peach | default: '#FF9E7A' }};
+    --pop:{{ s.color_pop | default: '#E86A33' }};
+    --rule-c:{{ s.color_rule | default: '#39220f' }};
+    --wrap:{{ s.wrap_max | default: 1080 }}px;
+    --rad:{{ rad }}px;
+    --display:'Archivo Black','Josefin Sans',system-ui,sans-serif;
+    --serif:'Josefin Sans',system-ui,sans-serif;
+    --rule:2px solid var(--rule-c);
+    background:var(--bg);color:var(--ink);font-family:var(--serif);position:relative;overflow-x:clip;
+    font-size:16px;line-height:1.5;
+  }
+  #gh-{{ section.id }} *{box-sizing:border-box;}
+  #gh-{{ section.id }} .gh-wrap{max-width:var(--wrap);margin:0 auto;padding:0 18px;}
+  #gh-{{ section.id }} .gh-eyebrow{font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;display:inline-block;padding:7px 14px;border:var(--rule);border-radius:999px;background:var(--paper);color:var(--brand);}
+  #gh-{{ section.id }} .gh-h2{font-family:var(--display);font-weight:900;font-size:clamp(26px,7vw,46px);line-height:.98;letter-spacing:-.01em;text-transform:uppercase;margin:12px 0 0;color:var(--brand);text-wrap:balance;}
+  #gh-{{ section.id }} .gh-h2 em,#gh-{{ section.id }} .gh-h1 em{font-family:var(--serif);font-weight:300;font-style:italic;text-transform:none;color:var(--pop);}
+  #gh-{{ section.id }} .gh-rev{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.7,.2,1);}
+  #gh-{{ section.id }} .gh-rev.in{opacity:1;transform:none;}
+  #gh-{{ section.id }} .gh-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--display);font-size:15px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:17px 26px;border:var(--rule);border-radius:999px;cursor:pointer;transition:transform .14s ease,box-shadow .14s ease;background:var(--pop);color:#fff;box-shadow:4px 4px 0 var(--rule-c);width:100%;max-width:420px;}
+  #gh-{{ section.id }} .gh-btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--rule-c);}
+  @media(hover:hover){#gh-{{ section.id }} .gh-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--rule-c);}}
+
+  /* STICKY MOBILE BUY BAR */
+  #gh-{{ section.id }} .gh-sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--paper);border-top:var(--rule);box-shadow:0 -6px 20px rgba(57,34,15,.12);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px;transform:translateY(120%);transition:transform .3s ease;}
+  #gh-{{ section.id }} .gh-sticky.show{transform:none;}
+  #gh-{{ section.id }} .gh-sticky .p{display:flex;flex-direction:column;line-height:1;flex:0 0 auto;}
+  #gh-{{ section.id }} .gh-sticky .p .now{font-family:var(--display);font-size:20px;color:var(--brand);}
+  #gh-{{ section.id }} .gh-sticky .p .was{font-size:12px;text-decoration:line-through;opacity:.6;}
+  #gh-{{ section.id }} .gh-sticky .gh-btn{margin:0;flex:1;padding:14px 16px;font-size:14px;}
+  @media(min-width:900px){#gh-{{ section.id }} .gh-sticky{display:none;}}
+
+  /* ===== HERO — golden hour sky + sun + bottle fan ===== */
+  #gh-{{ section.id }} .gh-hero{position:relative;overflow:hidden;padding:26px 0 0;background:linear-gradient(180deg,{{ s.sky_top | default: '#FFE9C4' }} 0%,{{ s.sky_mid | default: '#FFD489' }} 55%,{{ s.sky_bot | default: '#FFB86B' }} 100%);border-bottom:var(--rule);}
+  #gh-{{ section.id }} .gh-hero .gh-wrap{position:relative;z-index:3;text-align:center;}
+  #gh-{{ section.id }} .gh-flag{display:inline-flex;align-items:center;gap:7px;background:var(--pop);color:#fff;border:var(--rule);border-radius:999px;font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:7px 15px;box-shadow:3px 3px 0 var(--rule-c);}
+  #gh-{{ section.id }} .gh-flag .dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:ghpulse{{ section.id }} 1.5s infinite;}
+  @keyframes ghpulse{{ section.id }}{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}70%{box-shadow:0 0 0 7px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+  #gh-{{ section.id }} .gh-h1{font-family:var(--display);font-weight:900;font-size:clamp(34px,10.5vw,64px);line-height:.92;letter-spacing:-.02em;text-transform:uppercase;margin:16px 0 0;color:var(--brand);}
+  #gh-{{ section.id }} .gh-sub{font-size:clamp(16px,4.2vw,20px);margin:14px auto 0;max-width:32ch;color:var(--brand);}
+  /* sun disc */
+  #gh-{{ section.id }} .gh-sun{position:absolute;left:50%;bottom:-6%;transform:translateX(-50%);width:min(74vw,520px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 50% 38%, #FFF3D6 0%, var(--pine) 45%, var(--gold) 100%);border:var(--rule);box-shadow:0 0 0 14px rgba(255,255,255,.22), 0 0 90px 30px rgba(255,200,90,.55);z-index:1;}
+  /* bottle stage */
+  #gh-{{ section.id }} .gh-stage{position:relative;z-index:2;margin:26px auto 0;max-width:560px;height:clamp(300px,78vw,430px);}
+  #gh-{{ section.id }} .gh-bottle{position:absolute;bottom:0;left:50%;height:92%;width:auto;filter:drop-shadow(6px 10px 0 rgba(57,34,15,.18));will-change:transform;transition:transform .9s cubic-bezier(.2,.7,.2,1),opacity .7s ease;}
+  #gh-{{ section.id }} .gh-bottle img{height:100%;width:auto;display:block;}
+  #gh-{{ section.id }} .gh-b-c{transform:translateX(-50%) translateY(6%);z-index:3;}
+  #gh-{{ section.id }} .gh-b-l,#gh-{{ section.id }} .gh-b-r{height:80%;opacity:0;z-index:2;}
+  #gh-{{ section.id }} .gh-b-l{transform:translateX(-50%) rotate(0deg);}
+  #gh-{{ section.id }} .gh-b-r{transform:translateX(-50%) rotate(0deg);}
+  #gh-{{ section.id }} .gh-stage.fan .gh-b-c{transform:translateX(-50%) translateY(0);}
+  #gh-{{ section.id }} .gh-stage.fan .gh-b-l{opacity:1;transform:translateX(-118%) rotate(-9deg);}
+  #gh-{{ section.id }} .gh-stage.fan .gh-b-r{opacity:1;transform:translateX(18%) rotate(9deg);}
+  /* gentle float once fanned */
+  #gh-{{ section.id }} .gh-stage.fan.float .gh-b-c{animation:ghfloat{{ section.id }} 5s ease-in-out 1s infinite;}
+  @keyframes ghfloat{{ section.id }}{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-10px)}}
+  /* price card overlapping hero bottom */
+  #gh-{{ section.id }} .gh-offer{position:relative;z-index:4;margin:-34px auto 0;max-width:420px;background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 6px);box-shadow:7px 7px 0 var(--rule-c);padding:20px 20px 22px;text-align:center;}
+  #gh-{{ section.id }} .gh-offer .deal{font-family:var(--display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--pop);border:var(--rule);border-radius:999px;display:inline-block;padding:6px 14px;margin-top:-38px;box-shadow:3px 3px 0 var(--rule-c);}
+  #gh-{{ section.id }} .gh-price{display:flex;align-items:baseline;justify-content:center;gap:12px;margin-top:12px;}
+  #gh-{{ section.id }} .gh-price .now{font-family:var(--display);font-size:clamp(40px,11vw,56px);color:var(--brand);line-height:1;}
+  #gh-{{ section.id }} .gh-price .was{font-size:clamp(17px,4.6vw,22px);text-decoration:line-through;opacity:.55;font-weight:700;}
+  #gh-{{ section.id }} .gh-offer .note{font-size:13px;opacity:.75;margin-top:8px;}
+  #gh-{{ section.id }} .gh-offer .gh-btn{margin-top:14px;}
+  #gh-{{ section.id }} .gh-trust{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin:14px auto 0;}
+  #gh-{{ section.id }} .gh-trust span{font-family:var(--display);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--brand);display:inline-flex;align-items:center;gap:6px;}
+  #gh-{{ section.id }} .gh-trust span::before{content:'';width:14px;height:14px;border-radius:50%;background:var(--pine);border:var(--rule);flex:0 0 auto;}
+
+  /* MARQUEE */
+  #gh-{{ section.id }} .gh-marq{margin-top:30px;border-top:var(--rule);border-bottom:var(--rule);overflow:hidden;background:var(--gold);}
+  #gh-{{ section.id }} .gh-marq-t{display:flex;width:max-content;white-space:nowrap;animation:ghmarq{{ section.id }} 20s linear infinite;}
+  #gh-{{ section.id }} .gh-marq-t span{font-family:var(--display);font-size:clamp(14px,4vw,20px);text-transform:uppercase;letter-spacing:.06em;color:var(--brand);padding:11px 0;display:inline-flex;align-items:center;}
+  #gh-{{ section.id }} .gh-marq-t span::after{content:'☀';margin:0 16px;font-size:.9em;opacity:.7;}
+  @keyframes ghmarq{{ section.id }}{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* STATS */
+  #gh-{{ section.id }} .gh-stats{padding:30px 0 6px;}
+  #gh-{{ section.id }} .gh-stats-g{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  #gh-{{ section.id }} .gh-st{border:var(--rule);border-radius:var(--rad);box-shadow:4px 4px 0 var(--rule-c);padding:18px 8px;text-align:center;background:var(--paper);}
+  #gh-{{ section.id }} .gh-st:nth-child(2){background:#FFF3D6;}
+  #gh-{{ section.id }} .gh-st:nth-child(3){background:#FFE9DB;}
+  #gh-{{ section.id }} .gh-st:nth-child(4){background:#FFF7E2;}
+  #gh-{{ section.id }} .gh-st .n{font-family:var(--display);font-size:clamp(22px,6vw,32px);color:var(--brand);line-height:1;}
+  #gh-{{ section.id }} .gh-st .l{font-family:var(--display);font-size:10px;letter-spacing:.06em;text-transform:uppercase;margin-top:6px;display:block;}
+  @media(max-width:560px){#gh-{{ section.id }} .gh-stats-g{grid-template-columns:repeat(2,1fr);}}
+
+  /* FLAVORS — scroll-snap carousel on mobile */
+  #gh-{{ section.id }} .gh-flav{padding:34px 0;}
+  #gh-{{ section.id }} .gh-head{text-align:center;margin-bottom:22px;}
+  #gh-{{ section.id }} .gh-track{display:grid;grid-auto-flow:column;grid-auto-columns:78%;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 18px 14px;margin:0 -18px;scrollbar-width:none;}
+  #gh-{{ section.id }} .gh-track::-webkit-scrollbar{display:none;}
+  #gh-{{ section.id }} .gh-fcard{scroll-snap-align:center;border:var(--rule);border-radius:calc(var(--rad) + 4px);box-shadow:6px 6px 0 var(--rule-c);overflow:hidden;background:var(--paper);display:flex;flex-direction:column;}
+  #gh-{{ section.id }} .gh-fcard .ph{aspect-ratio:4/3;display:flex;align-items:flex-end;justify-content:center;border-bottom:var(--rule);padding:14px 0 0;}
+  #gh-{{ section.id }} .gh-fcard .ph img{height:96%;width:auto;object-fit:contain;filter:drop-shadow(4px 6px 0 rgba(57,34,15,.15));}
+  #gh-{{ section.id }} .gh-fcard .b{padding:16px;text-align:center;}
+  #gh-{{ section.id }} .gh-fcard .b h3{font-family:var(--display);font-size:18px;text-transform:uppercase;margin:0;color:var(--brand);}
+  #gh-{{ section.id }} .gh-fcard .b p{font-size:14px;opacity:.82;margin:8px 0 0;}
+  #gh-{{ section.id }} .gh-fcard .b .zero{display:inline-block;margin-top:10px;font-family:var(--display);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;border:var(--rule);border-radius:999px;padding:5px 11px;background:var(--pine);color:var(--brand);}
+  #gh-{{ section.id }} .gh-dots{display:flex;justify-content:center;gap:8px;margin-top:6px;}
+  #gh-{{ section.id }} .gh-dots span{width:9px;height:9px;border-radius:50%;background:var(--paper);border:var(--rule);transition:transform .2s,background .2s;}
+  #gh-{{ section.id }} .gh-dots span.on{background:var(--pop);transform:scale(1.3);}
+  @media(min-width:760px){
+    #gh-{{ section.id }} .gh-track{grid-auto-flow:row;grid-template-columns:repeat(3,1fr);grid-auto-columns:auto;overflow:visible;margin:0;padding:0;}
+    #gh-{{ section.id }} .gh-dots{display:none;}
+  }
+
+  /* GOLDEN MOMENTS (how to use) */
+  #gh-{{ section.id }} .gh-mom{padding:30px 0;}
+  #gh-{{ section.id }} .gh-mom-g{display:grid;grid-template-columns:1fr;gap:14px;margin-top:22px;}
+  #gh-{{ section.id }} .gh-m{display:flex;gap:14px;align-items:flex-start;background:var(--paper);border:var(--rule);border-radius:var(--rad);box-shadow:4px 4px 0 var(--rule-c);padding:18px;}
+  #gh-{{ section.id }} .gh-m .ic{flex:0 0 auto;width:42px;height:42px;border-radius:50%;border:var(--rule);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:2px 2px 0 var(--rule-c);background:var(--peach);}
+  #gh-{{ section.id }} .gh-m:nth-child(2) .ic{background:var(--pine);}
+  #gh-{{ section.id }} .gh-m:nth-child(3) .ic{background:var(--mango);}
+  #gh-{{ section.id }} .gh-m h3{font-family:var(--display);font-size:16px;text-transform:uppercase;margin:2px 0 0;color:var(--brand);}
+  #gh-{{ section.id }} .gh-m p{font-size:14px;opacity:.82;margin:6px 0 0;}
+  @media(min-width:760px){#gh-{{ section.id }} .gh-mom-g{grid-template-columns:repeat(3,1fr);}}
+
+  /* REVIEWS */
+  #gh-{{ section.id }} .gh-revs{padding:30px 0;}
+  #gh-{{ section.id }} .gh-revs-g{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px;}
+  #gh-{{ section.id }} .gh-rc{background:var(--paper);border:var(--rule);border-radius:var(--rad);box-shadow:4px 4px 0 var(--rule-c);padding:18px;}
+  #gh-{{ section.id }} .gh-rc .stars{color:var(--pop);font-family:var(--display);letter-spacing:2px;font-size:15px;}
+  #gh-{{ section.id }} .gh-rc p{font-size:15px;margin:8px 0 10px;}
+  #gh-{{ section.id }} .gh-rc .who{font-family:var(--display);font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--brand);}
+  @media(min-width:760px){#gh-{{ section.id }} .gh-revs-g{grid-template-columns:repeat(3,1fr);}}
+
+  /* FINAL CTA — sunset band */
+  #gh-{{ section.id }} .gh-final{padding:16px 0 60px;}
+  #gh-{{ section.id }} .gh-final-card{position:relative;overflow:hidden;border:var(--rule);border-radius:calc(var(--rad) + 10px);box-shadow:8px 8px 0 var(--rule-c);padding:clamp(34px,7vw,56px) 22px;text-align:center;background:linear-gradient(180deg,{{ s.sky_mid | default: '#FFD489' }} 0%,{{ s.sky_bot | default: '#FFB86B' }} 100%);}
+  #gh-{{ section.id }} .gh-final-card .sun2{position:absolute;left:50%;bottom:-40%;transform:translateX(-50%);width:70%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 50% 35%,#FFF3D6 0%,var(--pine) 55%,var(--gold) 100%);opacity:.55;pointer-events:none;}
+  #gh-{{ section.id }} .gh-final-card .gh-h2{position:relative;color:var(--brand);}
+  #gh-{{ section.id }} .gh-final-card p{position:relative;max-width:44ch;margin:14px auto 0;color:var(--brand);}
+  #gh-{{ section.id }} .gh-final-card .gh-btn{position:relative;margin:22px auto 0;}
+  #gh-{{ section.id }} .gh-final-card .guar{position:relative;margin-top:14px;font-size:12.5px;opacity:.8;color:var(--brand);}
+
+  @media (prefers-reduced-motion: reduce){
+    #gh-{{ section.id }} .gh-rev{opacity:1;transform:none;}
+    #gh-{{ section.id }} .gh-flag .dot{animation:none;}
+    #gh-{{ section.id }} .gh-marq-t{animation:none;}
+    #gh-{{ section.id }} .gh-stage .gh-bottle{transition:none;animation:none !important;}
+    #gh-{{ section.id }} .gh-stage .gh-b-l{opacity:1;transform:translateX(-118%) rotate(-9deg);}
+    #gh-{{ section.id }} .gh-stage .gh-b-c{transform:translateX(-50%);}
+    #gh-{{ section.id }} .gh-stage .gh-b-r{opacity:1;transform:translateX(18%) rotate(9deg);}
+  }
+</style>
+
+<section id="gh-{{ section.id }}">
+
+  {%- comment -%} ===== Sticky mobile buy bar ===== {%- endcomment -%}
+  <div class="gh-sticky" data-sticky>
+    <div class="p"><span class="now">{{ s.price_now | default: '$9.99' }}</span><span class="was">{{ s.price_was | default: '$29.97' }}</span></div>
+    <a class="gh-btn" href="{{ buy }}">{{ s.cta_text | default: 'Get the set' }}</a>
+  </div>
+
+  {%- comment -%} ===== Hero ===== {%- endcomment -%}
+  <div class="gh-hero">
+    <span class="gh-sun" aria-hidden="true"></span>
+    <div class="gh-wrap">
+      <span class="gh-flag gh-rev"><span class="dot"></span>{{ s.flash_text | default: 'New · Limited-time launch deal' }}</span>
+      <h1 class="gh-h1 gh-rev">{{ s.hero_title | default: 'The Golden<br>Hour <em>Set</em>.' }}</h1>
+      <p class="gh-sub gh-rev">{{ s.hero_sub | default: 'Sugar-Free Mango, Pineapple &amp; Peach — three sunset flavors, one golden price.' }}</p>
+      <div class="gh-stage" data-stage>
+        <span class="gh-bottle gh-b-l"><img src="{{ img_mango }}" alt="{{ s.bottle_left_alt | default: 'Syruvia Sugar-Free Mango Syrup' | escape }}" loading="eager"></span>
+        <span class="gh-bottle gh-b-c"><img src="{{ img_pine }}" alt="{{ s.bottle_center_alt | default: 'Syruvia Sugar-Free Pineapple Syrup' | escape }}" loading="eager"></span>
+        <span class="gh-bottle gh-b-r"><img src="{{ img_peach }}" alt="{{ s.bottle_right_alt | default: 'Syruvia Sugar-Free Peach Syrup' | escape }}" loading="eager"></span>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ===== Offer card (overlaps hero) ===== {%- endcomment -%}
+  <div class="gh-wrap">
+    <div class="gh-offer gh-rev">
+      <span class="deal">{{ s.deal_text | default: '3 for the price of 1' }}</span>
+      <div class="gh-price">
+        <span class="now">{{ s.price_now | default: '$9.99' }}</span>
+        <span class="was">{{ s.price_was | default: '$29.97' }}</span>
+      </div>
+      <p class="note">{{ s.offer_note | default: 'Three full-size 750 ml bottles. Zero sugar, zero calories.' }}</p>
+      <a class="gh-btn" href="{{ buy }}" data-hero-cta>{{ s.cta_text | default: 'Get the set — $9.99' }}</a>
+      <div class="gh-trust">
+        {%- assign trust = s.trust_items | default: 'Zero sugar,3 full-size bottles,Made in the USA,Kosher & gluten-free' | split: ',' -%}
+        {%- for t in trust -%}<span>{{ t | strip }}</span>{%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  {%- if s.show_marquee -%}
+  <div class="gh-marq" aria-hidden="true">
+    <div class="gh-marq-t">
+      {%- assign mq = s.marquee_items | default: 'Golden Hour Set,Sugar-Free Mango,Sugar-Free Pineapple,Sugar-Free Peach,3 for the price of 1' | split: ',' -%}
+      {%- for r in (1..2) -%}{%- for m in mq -%}<span>{{ m | strip }}</span>{%- endfor -%}{%- endfor -%}
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if s.show_stats -%}
+  <div class="gh-stats">
+    <div class="gh-wrap">
+      <div class="gh-stats-g">
+        <div class="gh-st gh-rev"><span class="n gh-count">3</span><span class="l">{{ s.stat1 | default: 'Bottles' }}</span></div>
+        <div class="gh-st gh-rev"><span class="n">0g</span><span class="l">{{ s.stat2 | default: 'Sugar' }}</span></div>
+        <div class="gh-st gh-rev"><span class="n gh-count">750</span><span class="l">{{ s.stat3 | default: 'ml each' }}</span></div>
+        <div class="gh-st gh-rev"><span class="n">{{ s.price_now | default: '$9.99' }}</span><span class="l">{{ s.stat4 | default: 'Today' }}</span></div>
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- assign flavors = section.blocks | where: 'type', 'flavor' -%}
+  {%- if flavors.size > 0 -%}
+  <div class="gh-flav">
+    <div class="gh-wrap">
+      <div class="gh-head gh-rev">
+        <span class="gh-eyebrow">{{ s.flav_eyebrow | default: 'What&rsquo;s inside' }}</span>
+        <h2 class="gh-h2">{{ s.flav_title | default: 'Three sunset <em>flavors</em>.' }}</h2>
+      </div>
+      <div class="gh-track" data-track>
+        {%- for b in flavors -%}
+        <div class="gh-fcard gh-rev" {{ b.shopify_attributes }}>
+          <div class="ph" style="background:{{ b.settings.color | default: '#FFB43A' }};">
+            {%- assign bimg = '' -%}
+            {%- if b.settings.image != blank -%}{%- assign bimg = b.settings.image | image_url: width: 640 -%}
+            {%- elsif forloop.index == 1 -%}{%- assign bimg = img_mango -%}
+            {%- elsif forloop.index == 2 -%}{%- assign bimg = img_pine -%}
+            {%- elsif forloop.index == 3 -%}{%- assign bimg = img_peach -%}
+            {%- endif -%}
+            {%- if bimg != '' -%}<img src="{{ bimg }}" alt="{{ b.settings.name | escape }}" loading="lazy">{%- endif -%}
+          </div>
+          <div class="b">
+            <h3>{{ b.settings.name }}</h3>
+            {%- if b.settings.note != blank -%}<p>{{ b.settings.note }}</p>{%- endif -%}
+            {%- if b.settings.tag != blank -%}<span class="zero">{{ b.settings.tag }}</span>{%- endif -%}
+          </div>
+        </div>
+        {%- endfor -%}
+      </div>
+      <div class="gh-dots" data-dots>{%- for b in flavors -%}<span></span>{%- endfor -%}</div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- if s.show_moments -%}
+  <div class="gh-mom">
+    <div class="gh-wrap">
+      <div class="gh-head gh-rev">
+        <span class="gh-eyebrow">{{ s.mom_eyebrow | default: 'Golden hour, any hour' }}</span>
+        <h2 class="gh-h2">{{ s.mom_title | default: 'Pour the <em>sunset</em>.' }}</h2>
+      </div>
+      <div class="gh-mom-g">
+        <div class="gh-m gh-rev"><span class="ic">🍹</span><div><h3>{{ s.mom1_t | default: 'Mocktails & sodas' }}</h3><p>{{ s.mom1_p | default: 'A splash over sparkling water or lemonade turns any glass golden.' }}</p></div></div>
+        <div class="gh-m gh-rev"><span class="ic">🧋</span><div><h3>{{ s.mom2_t | default: 'Iced teas & refreshers' }}</h3><p>{{ s.mom2_p | default: 'Mango-peach iced tea, pineapple refreshers — café drinks at home.' }}</p></div></div>
+        <div class="gh-m gh-rev"><span class="ic">🍧</span><div><h3>{{ s.mom3_t | default: 'Desserts & more' }}</h3><p>{{ s.mom3_p | default: 'Drizzle over shaved ice, yogurt or fruit bowls — zero sugar, all flavor.' }}</p></div></div>
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- assign revs = section.blocks | where: 'type', 'review' -%}
+  {%- if revs.size > 0 -%}
+  <div class="gh-revs">
+    <div class="gh-wrap">
+      <div class="gh-head gh-rev">
+        <span class="gh-eyebrow">{{ s.revs_eyebrow | default: 'Sunset approved' }}</span>
+        <h2 class="gh-h2">{{ s.revs_title | default: 'Golden <em>reviews</em>.' }}</h2>
+      </div>
+      <div class="gh-revs-g">
+        {%- for b in revs -%}
+        <div class="gh-rc gh-rev" {{ b.shopify_attributes }}>
+          <div class="stars" aria-hidden="true">{{ b.settings.stars | default: '★★★★★' }}</div>
+          <p>{{ b.settings.text }}</p>
+          <span class="who">{{ b.settings.who }}</span>
+        </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  <div class="gh-final">
+    <div class="gh-wrap">
+      <div class="gh-final-card gh-rev">
+        <span class="sun2" aria-hidden="true"></span>
+        <span class="gh-eyebrow">{{ s.final_eyebrow | default: 'Catch it before sundown' }}</span>
+        <h2 class="gh-h2">{{ s.final_title | default: '3 bottles. <em>$9.99.</em> Golden.' }}</h2>
+        <p>{{ s.final_sub | default: 'Mango, Pineapple &amp; Peach — all sugar-free, all yours for the price of one bottle. While the launch deal lasts.' }}</p>
+        <a class="gh-btn" href="{{ buy }}">{{ s.cta_text | default: 'Get the set — $9.99' }}</a>
+        {%- if s.guarantee != blank -%}<div class="guar">{{ s.guarantee }}</div>{%- endif -%}
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('gh-{{ section.id }}');
+  if(!root) return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // bottle fan-out on load / in view
+  var stage=root.querySelector('[data-stage]');
+  if(stage){
+    if(reduce){ stage.classList.add('fan'); }
+    else if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es,io){ es.forEach(function(e){ if(e.isIntersecting){ setTimeout(function(){ stage.classList.add('fan'); setTimeout(function(){ stage.classList.add('float'); },900); },200); io.unobserve(e.target); } }); },{threshold:.25}).observe(stage);
+    } else { stage.classList.add('fan'); }
+  }
+
+  // reveal + count-up
+  function countUp(el){
+    if(el.__c) return; var m=(el.textContent||'').trim().match(/^(\d+)(\D*)$/); if(!m) return; el.__c=1;
+    var target=parseInt(m[1],10),suf=m[2]||'',start=null,dur=1000;
+    function step(ts){ if(!start)start=ts; var p=Math.min((ts-start)/dur,1),e=1-Math.pow(1-p,3); el.textContent=Math.round(e*target)+suf; if(p<1)requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); var c=e.target.querySelector('.gh-count'); if(c)countUp(c); io.unobserve(e.target); } });},{threshold:.14});
+    root.querySelectorAll('.gh-rev').forEach(function(el){io.observe(el);});
+  } else { root.querySelectorAll('.gh-rev').forEach(function(el){el.classList.add('in');}); }
+
+  // sticky buy bar after hero CTA scrolls away
+  var bar=root.querySelector('[data-sticky]'), heroCta=root.querySelector('[data-hero-cta]');
+  if(bar&&heroCta&&'IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ es.forEach(function(e){ bar.classList.toggle('show', !e.isIntersecting && e.boundingClientRect.top<0); }); },{threshold:0}).observe(heroCta);
+  }
+
+  // flavor carousel dots (mobile)
+  var track=root.querySelector('[data-track]'), dotsWrap=root.querySelector('[data-dots]');
+  var dots=dotsWrap?[].slice.call(dotsWrap.querySelectorAll('span')):[];
+  if(track&&dots.length){
+    var cards=[].slice.call(track.children);
+    track.addEventListener('scroll',function(){
+      var c=track.scrollLeft+track.clientWidth/2, best=0, bd=1e9;
+      cards.forEach(function(el,i){ var mid=el.offsetLeft+el.offsetWidth/2, d=Math.abs(mid-c); if(d<bd){bd=d;best=i;} });
+      dots.forEach(function(d,i){ d.classList.toggle('on', i===best); });
+    },{passive:true});
+    if(dots[0]) dots[0].classList.add('on');
+  }
+
+  // subtle sun parallax on scroll (rAF-throttled, desktop & mobile safe)
+  var sun=root.querySelector('.gh-sun');
+  if(sun&&!reduce){
+    var ticking=false;
+    function upd(){ ticking=false; var r=root.getBoundingClientRect(); var p=Math.min(Math.max(-r.top/600,0),1); sun.style.transform='translateX(-50%) translateY('+(p*40).toFixed(1)+'px)'; }
+    window.addEventListener('scroll',function(){ if(!ticking){ticking=true;requestAnimationFrame(upd);} },{passive:true});
+    upd();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Golden Hour Landing",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Offer & buy button" },
+    { "type": "url", "id": "buy_url", "label": "Buy button link (product or /cart/VARIANT:1)" },
+    { "type": "text", "id": "cta_text", "label": "Button text", "default": "Get the set — $9.99" },
+    { "type": "text", "id": "price_now", "label": "Deal price", "default": "$9.99" },
+    { "type": "text", "id": "price_was", "label": "Compare-at price", "default": "$29.97" },
+    { "type": "text", "id": "deal_text", "label": "Deal ribbon", "default": "3 for the price of 1" },
+    { "type": "text", "id": "offer_note", "label": "Offer note", "default": "Three full-size 750 ml bottles. Zero sugar, zero calories." },
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "flash_text", "label": "Flash badge", "default": "New · Limited-time launch deal" },
+    { "type": "html", "id": "hero_title", "label": "Title (HTML, <em> = italic)", "default": "The Golden<br>Hour <em>Set</em>." },
+    { "type": "textarea", "id": "hero_sub", "label": "Subtitle", "default": "Sugar-Free Mango, Pineapple & Peach — three sunset flavors, one golden price." },
+    { "type": "image_picker", "id": "bottle_center", "label": "Center bottle (default: Pineapple)" },
+    { "type": "text", "id": "bottle_center_alt", "label": "Center bottle alt", "default": "Syruvia Sugar-Free Pineapple Syrup" },
+    { "type": "image_picker", "id": "bottle_left", "label": "Left bottle (default: Mango)" },
+    { "type": "text", "id": "bottle_left_alt", "label": "Left bottle alt", "default": "Syruvia Sugar-Free Mango Syrup" },
+    { "type": "image_picker", "id": "bottle_right", "label": "Right bottle (default: Peach)" },
+    { "type": "text", "id": "bottle_right_alt", "label": "Right bottle alt", "default": "Syruvia Sugar-Free Peach Syrup" },
+    { "type": "color", "id": "sky_top", "label": "Sky top", "default": "#FFE9C4" },
+    { "type": "color", "id": "sky_mid", "label": "Sky middle", "default": "#FFD489" },
+    { "type": "color", "id": "sky_bot", "label": "Sky bottom", "default": "#FFB86B" },
+    { "type": "text", "id": "trust_items", "label": "Trust items (comma separated)", "default": "Zero sugar,3 full-size bottles,Made in the USA,Kosher & gluten-free" },
+    { "type": "header", "content": "Brand colors" },
+    { "type": "color", "id": "color_ink", "label": "Body text", "default": "#1a1a1a" },
+    { "type": "color", "id": "color_brand", "label": "Headings", "default": "#39220f" },
+    { "type": "color", "id": "color_bg", "label": "Page background", "default": "#FFFBF4" },
+    { "type": "color", "id": "color_paper", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "color_gold", "label": "Gold", "default": "#F2A93B" },
+    { "type": "color", "id": "color_mango", "label": "Mango", "default": "#FFB43A" },
+    { "type": "color", "id": "color_pine", "label": "Pineapple", "default": "#F6D14E" },
+    { "type": "color", "id": "color_peach", "label": "Peach", "default": "#FF9E7A" },
+    { "type": "color", "id": "color_pop", "label": "CTA / highlight", "default": "#E86A33" },
+    { "type": "color", "id": "color_rule", "label": "Borders & shadows", "default": "#39220f" },
+    { "type": "range", "id": "wrap_max", "label": "Content width", "min": 900, "max": 1280, "step": 20, "unit": "px", "default": 1080 },
+    { "type": "range", "id": "card_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Marquee" },
+    { "type": "checkbox", "id": "show_marquee", "label": "Show marquee", "default": true },
+    { "type": "text", "id": "marquee_items", "label": "Items (comma separated)", "default": "Golden Hour Set,Sugar-Free Mango,Sugar-Free Pineapple,Sugar-Free Peach,3 for the price of 1" },
+    { "type": "header", "content": "Stats strip" },
+    { "type": "checkbox", "id": "show_stats", "label": "Show stats", "default": true },
+    { "type": "text", "id": "stat1", "label": "Stat 1 label", "default": "Bottles" },
+    { "type": "text", "id": "stat2", "label": "Stat 2 label", "default": "Sugar" },
+    { "type": "text", "id": "stat3", "label": "Stat 3 label", "default": "ml each" },
+    { "type": "text", "id": "stat4", "label": "Stat 4 label", "default": "Today" },
+    { "type": "header", "content": "Flavors (add Flavor blocks)" },
+    { "type": "text", "id": "flav_eyebrow", "label": "Eyebrow", "default": "What’s inside" },
+    { "type": "text", "id": "flav_title", "label": "Heading", "default": "Three sunset <em>flavors</em>." },
+    { "type": "header", "content": "Golden moments" },
+    { "type": "checkbox", "id": "show_moments", "label": "Show moments", "default": true },
+    { "type": "text", "id": "mom_eyebrow", "label": "Eyebrow", "default": "Golden hour, any hour" },
+    { "type": "text", "id": "mom_title", "label": "Heading", "default": "Pour the <em>sunset</em>." },
+    { "type": "text", "id": "mom1_t", "label": "Moment 1 title", "default": "Mocktails & sodas" },
+    { "type": "textarea", "id": "mom1_p", "label": "Moment 1 text", "default": "A splash over sparkling water or lemonade turns any glass golden." },
+    { "type": "text", "id": "mom2_t", "label": "Moment 2 title", "default": "Iced teas & refreshers" },
+    { "type": "textarea", "id": "mom2_p", "label": "Moment 2 text", "default": "Mango-peach iced tea, pineapple refreshers — café drinks at home." },
+    { "type": "text", "id": "mom3_t", "label": "Moment 3 title", "default": "Desserts & more" },
+    { "type": "textarea", "id": "mom3_p", "label": "Moment 3 text", "default": "Drizzle over shaved ice, yogurt or fruit bowls — zero sugar, all flavor." },
+    { "type": "header", "content": "Reviews (add Review blocks)" },
+    { "type": "text", "id": "revs_eyebrow", "label": "Eyebrow", "default": "Sunset approved" },
+    { "type": "text", "id": "revs_title", "label": "Heading", "default": "Golden <em>reviews</em>." },
+    { "type": "header", "content": "Final CTA" },
+    { "type": "text", "id": "final_eyebrow", "label": "Eyebrow", "default": "Catch it before sundown" },
+    { "type": "text", "id": "final_title", "label": "Heading", "default": "3 bottles. <em>$9.99.</em> Golden." },
+    { "type": "textarea", "id": "final_sub", "label": "Text", "default": "Mango, Pineapple & Peach — all sugar-free, all yours for the price of one bottle. While the launch deal lasts." },
+    { "type": "text", "id": "guarantee", "label": "Guarantee line", "default": "Free & easy returns · Ships from the USA" }
+  ],
+  "blocks": [
+    {
+      "type": "flavor",
+      "name": "Flavor",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Bottle image (defaults to the set bottles)" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Sugar-Free Mango" },
+        { "type": "textarea", "id": "note", "label": "Note", "default": "Juicy, tropical and bright — sunshine in a bottle." },
+        { "type": "text", "id": "tag", "label": "Tag", "default": "0g sugar · 0 cal" },
+        { "type": "color", "id": "color", "label": "Card color", "default": "#FFB43A" }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "text", "id": "stars", "label": "Stars", "default": "★★★★★" },
+        { "type": "textarea", "id": "text", "label": "Review", "default": "The mango is unreal — tastes like summer with zero sugar." },
+        { "type": "text", "id": "who", "label": "Name", "default": "Jess K." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Golden Hour Landing",
+      "blocks": [
+        { "type": "flavor", "settings": { "name": "Sugar-Free Mango", "note": "Juicy, tropical and bright — sunshine in a bottle.", "tag": "0g sugar · 0 cal", "color": "#FFB43A" } },
+        { "type": "flavor", "settings": { "name": "Sugar-Free Pineapple", "note": "Sweet, tangy and golden — the star of the set.", "tag": "0g sugar · 0 cal", "color": "#F6D14E" } },
+        { "type": "flavor", "settings": { "name": "Sugar-Free Peach", "note": "Soft, mellow and warm — pure golden-hour glow.", "tag": "0g sugar · 0 cal", "color": "#FF9E7A" } },
+        { "type": "review", "settings": { "stars": "★★★★★", "text": "The mango is unreal — tastes like summer with zero sugar.", "who": "Jess K." } },
+        { "type": "review", "settings": { "stars": "★★★★★", "text": "Pineapple + sparkling water = my new golden hour ritual.", "who": "Aaron D." } },
+        { "type": "review", "settings": { "stars": "★★★★★", "text": "Three bottles for $9.99 felt like a steal. The peach won me over.", "who": "Maya L." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
