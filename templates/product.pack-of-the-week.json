@@ -519,6 +519,7 @@
         ".multicolumn {background: #fef8f1;}",
         ".about-page-custom-cst-multi-sec {display: none;}",
         ".multicolumn-list {justify-content: center;}",
+        ".grid{column-gap:100px;}",
         ".grid--3-col-desktop .grid__item {width: 20%; max-width: 20%;}",
         ".media {padding: 0 !important;}",
         "img {object-fit: contain; margin: 0 auto; position: unset; width: 140px; height: 60px;}",
