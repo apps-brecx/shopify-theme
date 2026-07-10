@@ -755,10 +755,10 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Cookie Butter in iced coffee is so good, and I love that it is sugar free. This pack makes my morning coffee feel like a treat.",
-            "reviewer_initials": "SJ",
-            "reviewer_name": "Sarah J.",
-            "reviewer_role": "VERIFIED BUYER"
+            "quote": "The Sugar Free Ube makes my iced latte look so pretty and still tastes creamy. Vanilla makes it even smoother.",
+            "reviewer_initials": "AM",
+            "reviewer_name": "Alyssa M.",
+            "reviewer_role": "Iced Latte Fan"
           }
         },
         "testimonial_w7H38p": {
@@ -811,7 +811,7 @@
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Sugar-Free Sippers\nLove It",
+        "heading": "Sugar Free Sip Fans\nLove This Pack",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
