@@ -532,7 +532,7 @@
         "custom_class1": "",
         "custom_class11": "",
         "custom_class12": "",
-        "title": "<strong>Creamy Flavor. Zero Sugar.</strong>",
+        "title": "<strong>Creamy. Nutty. Sugar Free.</strong>",
         "image_alt_text": "",
         "content": "",
         "additional_text": "",
@@ -590,7 +590,7 @@
         ".page-cst-about-page-sec,.page-cst-mission-page-sec,.line-left,.line-right {display: none;}",
         ".mobile-pad {padding-bottom: 40px !important;}",
         ".rich-text__heading strong {font-family: \"Epilogue\", sans-serif !important;}",
-        ".rich-text__heading em {font-style: normal; color: #c6631e;}",
+        ".rich-text__heading em {font-style: normal; color: #72305c;}",
         ".rich-text__text p {font-family: \"Manrope\", sans-serif !important;}",
         "@media (max-width: 768px) {.head {font-size: 32px !important; }}",
         "@media (max-width: 400px) {.rich-text__text p {font-size: 14px !important; line-height: normal !important; }}"
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#d35605"
+        "background_color": "#72305C"
       }
     },
     "pack_steps_AbyNtH": {
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Cookie Butter Cozy",
-            "description": "Warm dessert flavor for coffee and lattes."
+            "title": "Ube Dream",
+            "description": "Creamy purple flavor for fun café-style drinks."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Vanilla Classic",
-            "description": "Smooth, easy, and made for everyday drinks."
+            "title": "Vanilla Smooth",
+            "description": "Classic, soft, and easy to mix with almost anything."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Caramel Chocolate Rich",
-            "description": "Sweet caramel-chocolate flavor without the sugar."
+            "title": "Nutty Finish",
+            "description": "Pistachio and Almond bring a cozy, premium touch."
           }
         }
       },
@@ -755,50 +755,50 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Cookie Butter in iced coffee is so good, and I love that it is sugar free. This pack makes my morning coffee feel like a treat.",
-            "reviewer_initials": "SJ",
-            "reviewer_name": "Sarah J.",
-            "reviewer_role": "VERIFIED BUYER"
+            "quote": "The Sugar Free Ube makes my iced latte look so pretty and still tastes creamy. Vanilla makes it even smoother.",
+            "reviewer_initials": "AM",
+            "reviewer_name": "Alyssa M.",
+            "reviewer_role": "Iced Latte Fan"
           }
         },
         "testimonial_w7H38p": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Caramel Chocolate is my favorite. It makes cold brew taste rich and dessert-like without adding sugar.",
-            "reviewer_initials": "MR",
-            "reviewer_name": "Michael R.",
-            "reviewer_role": "COFFEE ENTHUSIAST"
+            "quote": "Pistachio and Almond together are so good in cold brew. This pack makes sugar-free coffee feel way less boring.",
+            "reviewer_initials": "MD",
+            "reviewer_name": "Marcus D.",
+            "reviewer_role": "Cold Brew Lover"
           }
         },
         "testimonial_grwGng": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Vanilla is perfect for everyday lattes, Cookie Butter feels cozy, and Caramel Chocolate gives the pack a nice sweet finish.",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
-            "reviewer_role": "HAPPY MOTHER"
+            "quote": "I made an ube milk tea with this and loved it. Sweet, creamy, and no sugar exactly what I wanted.",
+            "reviewer_initials": "TR",
+            "reviewer_name": "Tina R.",
+            "reviewer_role": "Milk Tea Maker"
           }
         },
         "testimonial_cdT8rN": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I wanted dessert-style coffee flavors without the sugar, and this pack is exactly that. All three mix really well.",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
-            "reviewer_role": "HAPPY MOTHER"
+            "quote": "This pack feels different from basic sugar-free flavors. Ube is fun, Vanilla is classic, and the nutty flavors make it feel fancy.",
+            "reviewer_initials": "RK",
+            "reviewer_name": "Rachel K.",
+            "reviewer_role": "Sugar-Free Flavor Fan"
           }
         },
-        "testimonial_6tDyKy": {
+        "testimonial_kyjF3L": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Caramel Chocolate is my favorite. It makes cold brew taste rich and dessert-like without adding sugar.",
-            "reviewer_initials": "MR",
-            "reviewer_name": "Michael R.",
-            "reviewer_role": "COFFEE ENTHUSIAST"
+            "quote": "Pistachio and Almond together are so good in cold brew. This pack makes sugar-free coffee feel way less boring.",
+            "reviewer_initials": "MD",
+            "reviewer_name": "Marcus D.",
+            "reviewer_role": "Cold Brew Lover"
           }
         }
       },
@@ -807,7 +807,7 @@
         "testimonial_w7H38p",
         "testimonial_grwGng",
         "testimonial_cdT8rN",
-        "testimonial_6tDyKy"
+        "testimonial_kyjF3L"
       ],
       "name": "People Love This Combo",
       "settings": {
@@ -836,9 +836,9 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#c6631e",
-        "title": "Creamy Sips, Zero Sugar",
-        "description": "Three creamy flavors. Zero sugar. Cookie Butter, Vanilla, and Caramel Chocolate made for better drinks at home.",
+        "background_color": "#72305C",
+        "title": "Make Your Next Sip Dreamy,Sugar-Free",
+        "description": "Ube, Vanilla, Pistachio, and Almond are on deal this week a creamy sugar-free pack made for better drinks at home.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"

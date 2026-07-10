@@ -188,9 +188,13 @@
       <div class="syr-foot-top">
         <div class="syr-foot-brand">
           {%- if section.settings.brand_logo != blank -%}
+            <a href="/">
             <img src="{{ section.settings.brand_logo | image_url: width: 400 }}" alt="{{ shop.name | escape }}" loading="lazy">
+            </a>
           {%- elsif settings.logo != blank -%}
+               <a href="/">
             <img src="{{ settings.logo | image_url: width: 400 }}" alt="{{ shop.name | escape }}" loading="lazy">
+                        </a>
           {%- endif -%}
           {%- if section.settings.brand_description != blank -%}
             <p class="syr-foot-brand-desc">{{ section.settings.brand_description }}</p>

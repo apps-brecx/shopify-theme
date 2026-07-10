@@ -16,7 +16,7 @@
         "bg_img": "shopify://shop_images/Rectangle_2272.jpg",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
-        "accent_color": "#8d4925"
+        "accent_color": "#72305C"
       }
     },
     "main": {
@@ -490,9 +490,9 @@
         "column_k7Ua7t": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Icon_7.png",
+            "image": "shopify://shop_images/15_9d23c980-97bd-42d1-8f90-9b0d0e6f6b2f.png",
             "column_link": "",
-            "title": "<strong>Made for daily drinks</strong>",
+            "title": "",
             "text": "",
             "link_label": "",
             "link": ""
@@ -501,9 +501,9 @@
         "column_UrhpMn": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Icon_8.png",
+            "image": "shopify://shop_images/1_Pack.png",
             "column_link": "",
-            "title": "<strong>Flavors you’ll actually love</strong>",
+            "title": "",
             "text": "",
             "link_label": "",
             "link": ""
@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This week’s Cookie Caramel Cream Pack brings together three smooth, sweet flavors made for cozy coffeehouse drinks at home. Cookie Butter adds warm dessert flavor, Vanilla keeps it classic, and Caramel Chocolate brings the rich finish.</p>"
+            "text": "<p>This week’s Ube Dream Cream Pack brings together four soft, creamy flavors that make homemade drinks feel special. Ube gives it that dreamy purple sweetness, Vanilla keeps it smooth, Pistachio adds a nutty touch, and Almond brings a cozy café-style finish.</p>"
           }
         }
       },
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#8d4925"
+        "background_color": "#72305C"
       }
     },
     "pack_steps_AbyNtH": {
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Cookie Butter Cozy",
-            "description": "Warm, sweet, and made for dessert-style coffee."
+            "title": "Ube Dream",
+            "description": "Sweet, creamy, and made for colorful café-style drinks."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Vanilla Classic",
-            "description": "Smooth flavor that works with almost any drink."
+            "title": "Vanilla Smooth",
+            "description": "Classic flavor that blends easily with coffee, tea, and shakes."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Caramel Chocolate Rich",
-            "description": "A creamy caramel-chocolate finish for bold sweet sips."
+            "title": "Nutty Duo",
+            "description": "Pistachio and Almond add a soft, cozy finish to every sip."
           }
         }
       },
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#8d4925",
+        "background_color": "#72305C",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -698,9 +698,9 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#8D4925",
+        "background_color": "#8d4925",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Crafted for smooth mixing, rich flavor, and easy café-style drinks at home.</p>",
+        "description": "<p>Crafted for smooth mixing, creamy flavor, and easy drinks at home.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -755,10 +755,10 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Cookie Butter is so good in iced coffee, and Vanilla makes every latte smoother. This pack feels like a coffee shop at home.",
-            "reviewer_initials": "SJ",
-            "reviewer_name": "Sarah J.",
-            "reviewer_role": "VERIFIED BUYER"
+            "quote": "The Ube makes my iced latte look beautiful and taste so creamy. Vanilla and Pistachio make the whole pack feel extra smooth",
+            "reviewer_initials": "MR",
+            "reviewer_name": "Maya R.",
+            "reviewer_role": "Iced Latte Lover"
           }
         },
         "testimonial_RVrkPA": {
