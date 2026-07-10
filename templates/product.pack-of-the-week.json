@@ -700,7 +700,7 @@
       "settings": {
         "background_color": "#8d4925",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Crafted for smooth mixing, rich flavor, and easy café-style drinks at home.</p>",
+        "description": "<p>Crafted for smooth mixing, creamy flavor, and easy drinks at home.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -751,67 +751,67 @@
     "pack_testimonial_btMyHt": {
       "type": "pack-testimonial",
       "blocks": {
+        "testimonial_8bGFNJ": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "The Ube makes my iced latte look beautiful and taste so creamy. Vanilla and Pistachio make the whole pack feel extra smooth",
+            "reviewer_initials": "MR",
+            "reviewer_name": "Maya R.",
+            "reviewer_role": "Iced Latte Lover"
+          }
+        },
         "testimonial_RVrkPA": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Cookie Butter is so good in iced coffee, and Vanilla makes every latte smoother. This pack feels like a coffee shop at home.",
-            "reviewer_initials": "SJ",
-            "reviewer_name": "Sarah J.",
-            "reviewer_role": "VERIFIED BUYER"
+            "quote": "Almond and Pistachio are so good together. I used them in cold brew and milk tea, and both tasted café-level.",
+            "reviewer_initials": "JP",
+            "reviewer_name": "Jordan P.",
+            "reviewer_role": "Home Drink Maker"
           }
         },
         "testimonial_w7H38p": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Caramel Chocolate was my favorite. It made my cold brew taste rich without needing anything extra.",
+            "quote": "This pack feels different from the usual flavors. Ube is fun, Vanilla is classic, and the nutty flavors make it feel premium.",
             "reviewer_initials": "MR",
-            "reviewer_name": "Michael R.",
-            "reviewer_role": "COFFEE ENTHUSIAST"
+            "reviewer_name": "Sofia L.",
+            "reviewer_role": "Flavor Explorer"
           }
         },
         "testimonial_grwGng": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I used all three for weekend coffee drinks, and everyone picked a favorite. Cookie Butter was the first one gone.",
-            "reviewer_initials": "MC",
-            "reviewer_name": "Megan Cooper",
-            "reviewer_role": "HAPPY MOTHER"
+            "quote": "I made ube milk tea and a pistachio almond latte with this pack. Both were so easy and honestly tasted amazing.",
+            "reviewer_initials": "NK",
+            "reviewer_name": "Nina K.",
+            "reviewer_role": "Milk Tea Fan"
           }
         },
-        "testimonial_cdT8rN": {
+        "testimonial_DM9AKq": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Vanilla is classic, Cookie Butter is cozy, and Caramel Chocolate makes dessert coffee easy. Great pack for the price.",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
-            "reviewer_role": "HAPPY MOTHER"
-          }
-        },
-        "testimonial_8bGFNJ": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 5,
-            "quote": "Caramel Chocolate was my favorite. It made my cold brew taste rich without needing anything extra.",
-            "reviewer_initials": "MR",
-            "reviewer_name": "Michael R.",
-            "reviewer_role": "COFFEE ENTHUSIAST"
+            "quote": "Almond and Pistachio are so good together. I used them in cold brew and milk tea, and both tasted café-level.",
+            "reviewer_initials": "JP",
+            "reviewer_name": "Jordan P.",
+            "reviewer_role": "Home Drink Maker"
           }
         }
       },
       "block_order": [
+        "testimonial_8bGFNJ",
         "testimonial_RVrkPA",
         "testimonial_w7H38p",
         "testimonial_grwGng",
-        "testimonial_cdT8rN",
-        "testimonial_8bGFNJ"
+        "testimonial_DM9AKq"
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Coffee Lovers\nLove This Pack",
+        "heading": "Creamy Sip\nFans",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
