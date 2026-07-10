@@ -481,7 +481,7 @@
           "settings": {
             "image": "shopify://shop_images/Icon_6.png",
             "column_link": "",
-            "title": "<strong>4 Flabour</strong>",
+            "title": "",
             "text": "",
             "link_label": "",
             "link": ""
@@ -490,9 +490,9 @@
         "column_k7Ua7t": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Icon_7.png",
+            "image": "shopify://shop_images/15_9d23c980-97bd-42d1-8f90-9b0d0e6f6b2f.png",
             "column_link": "",
-            "title": "<strong>$15 SAVE</strong>",
+            "title": "",
             "text": "",
             "link_label": "",
             "link": ""
@@ -501,9 +501,9 @@
         "column_UrhpMn": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Icon_8.png",
+            "image": "shopify://shop_images/1_Pack.png",
             "column_link": "",
-            "title": "<strong>1 EASY PACK</strong>",
+            "title": "",
             "text": "",
             "link_label": "",
             "link": ""
