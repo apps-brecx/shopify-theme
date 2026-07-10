@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Cookie Butter Cozy",
-            "description": "Warm, sweet, and made for dessert-style coffee."
+            "title": "Ube Dream",
+            "description": "Sweet, creamy, and made for colorful café-style drinks."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Vanilla Classic",
-            "description": "Smooth flavor that works with almost any drink."
+            "title": "Vanilla Smooth",
+            "description": "Classic flavor that blends easily with coffee, tea, and shakes."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Caramel Chocolate Rich",
-            "description": "A creamy caramel-chocolate finish for bold sweet sips."
+            "title": "Nutty Duo",
+            "description": "Pistachio and Almond add a soft, cozy finish to every sip."
           }
         }
       },
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#8d4925",
+        "background_color": "#72305C",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
