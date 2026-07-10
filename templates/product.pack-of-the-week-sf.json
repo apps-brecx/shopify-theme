@@ -13,10 +13,10 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272_2.png",
+        "bg_img": "shopify://shop_images/Rectangle_2272.jpg",
         "secondary_button_text": "View Regular",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week",
-        "accent_color": "#c6631e"
+        "accent_color": "#72305C"
       }
     },
     "main": {
@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This week’s Sugar-Free Cookie Caramel Cream Pack brings together three smooth dessert-style flavors for better coffee at home. Cookie Butter tastes cozy, Vanilla keeps it classic, and Caramel Chocolate adds a rich sweet finish.</p>"
+            "text": "<p>This week’s Sugar-Free Ube Dream Cream Pack brings together four creamy café-style flavors without the sugar. Ube gives it that dreamy purple sip, Vanilla keeps it smooth, Pistachio adds a soft nutty touch, and Almond brings a cozy finish.</p>"
           }
         }
       },
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#c6631e",
+        "background_color": "#72305C",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -698,7 +698,7 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#c6631e",
+        "background_color": "#72305C",
         "title": "<h2>Trusted Quality </h2>",
         "description": "<p>Crafted for smooth mixing, creamy flavor, and easy sugar-free drinks at home.</p>",
         "button_text": "Shop The Pack",
@@ -811,7 +811,7 @@
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Sugar-Free Sippers\nLove It",
+        "heading": "Sugar Free Sip Fans\nLove This Pack",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,

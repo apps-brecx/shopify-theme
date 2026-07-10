@@ -13,7 +13,7 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272_2.png",
+        "bg_img": "shopify://shop_images/Rectangle_2272.jpg",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
         "accent_color": "#8d4925"
@@ -479,9 +479,9 @@
         "column_WtABe3": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/Icon_6.png",
+            "image": "shopify://shop_images/4_Flvvor_1.png",
             "column_link": "",
-            "title": "<strong>Effortless to use</strong>",
+            "title": "",
             "text": "",
             "link_label": "",
             "link": ""
@@ -521,7 +521,7 @@
         ".multicolumn-list {justify-content: center;}",
         ".grid--3-col-desktop .grid__item {width: 20%; max-width: 20%;}",
         ".media {padding: 0 !important;}",
-        "img {object-fit: contain; margin: 0 auto; position: unset; width: 60px; height: 60px;}",
+        "img {object-fit: contain; margin: 0 auto; position: unset; width: 100px; height: 60px;}",
         ".inline-richtext {text-align: center; font-family: \"Manrope\", sans-serif !important;}",
         "@media screen and (max-width: 989px) {.grid--1-col-tablet-down .grid__item {flex: 1 0 40%; max-width: calc(100% / 2 - 2px); }}"
       ],
@@ -751,7 +751,7 @@
     "pack_testimonial_btMyHt": {
       "type": "pack-testimonial",
       "blocks": {
-        "testimonial_RVrkPA": {
+        "testimonial_8bGFNJ": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
@@ -761,57 +761,57 @@
             "reviewer_role": "VERIFIED BUYER"
           }
         },
+        "testimonial_RVrkPA": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "quote": "Almond and Pistachio are so good together. I used them in cold brew and milk tea, and both tasted café-level.",
+            "reviewer_initials": "JP",
+            "reviewer_name": "Jordan P.",
+            "reviewer_role": "Home Drink Maker"
+          }
+        },
         "testimonial_w7H38p": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Caramel Chocolate was my favorite. It made my cold brew taste rich without needing anything extra.",
+            "quote": "This pack feels different from the usual flavors. Ube is fun, Vanilla is classic, and the nutty flavors make it feel premium.",
             "reviewer_initials": "MR",
-            "reviewer_name": "Michael R.",
-            "reviewer_role": "COFFEE ENTHUSIAST"
+            "reviewer_name": "Sofia L.",
+            "reviewer_role": "Flavor Explorer"
           }
         },
         "testimonial_grwGng": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I used all three for weekend coffee drinks, and everyone picked a favorite. Cookie Butter was the first one gone.",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
-            "reviewer_role": "HAPPY MOTHER"
+            "quote": "I made ube milk tea and a pistachio almond latte with this pack. Both were so easy and honestly tasted amazing.",
+            "reviewer_initials": "NK",
+            "reviewer_name": "Nina K.",
+            "reviewer_role": "Milk Tea Fan"
           }
         },
-        "testimonial_cdT8rN": {
+        "testimonial_DM9AKq": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Vanilla is classic, Cookie Butter is cozy, and Caramel Chocolate makes dessert coffee easy. Great pack for the price.",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
-            "reviewer_role": "HAPPY MOTHER"
-          }
-        },
-        "testimonial_8bGFNJ": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 5,
-            "quote": "Caramel Chocolate was my favorite. It made my cold brew taste rich without needing anything extra.",
-            "reviewer_initials": "MR",
-            "reviewer_name": "Michael R.",
-            "reviewer_role": "COFFEE ENTHUSIAST"
+            "quote": "Almond and Pistachio are so good together. I used them in cold brew and milk tea, and both tasted café-level.",
+            "reviewer_initials": "JP",
+            "reviewer_name": "Jordan P.",
+            "reviewer_role": "Home Drink Maker"
           }
         }
       },
       "block_order": [
+        "testimonial_8bGFNJ",
         "testimonial_RVrkPA",
         "testimonial_w7H38p",
         "testimonial_grwGng",
-        "testimonial_cdT8rN",
-        "testimonial_8bGFNJ"
+        "testimonial_DM9AKq"
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Coffee Lovers\nLove This Pack",
+        "heading": "Creamy Sip\nFans",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
@@ -836,9 +836,9 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#8d4925",
-        "title": "Make Coffee Taste Like Dessert",
-        "description": "Three creamy flavors. One easy pack. Cookie Butter, Vanilla, and Caramel Chocolate made for better drinks at home.",
+        "background_color": "#72305C",
+        "title": "Make Your Next Sip Dreamy",
+        "description": "Ube, Vanilla, Pistachio, and Almond are on deal this week a creamy pack made for better drinks at home.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"
