@@ -775,30 +775,30 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Vanilla is perfect for everyday lattes, Cookie Butter feels cozy, and Caramel Chocolate gives the pack a nice sweet finish.",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
-            "reviewer_role": "HAPPY MOTHER"
+            "quote": "I made an ube milk tea with this and loved it. Sweet, creamy, and no sugar exactly what I wanted.",
+            "reviewer_initials": "TR",
+            "reviewer_name": "Tina R.",
+            "reviewer_role": "Milk Tea Maker"
           }
         },
         "testimonial_cdT8rN": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I wanted dessert-style coffee flavors without the sugar, and this pack is exactly that. All three mix really well.",
-            "reviewer_initials": "EG",
-            "reviewer_name": "Elena G.",
-            "reviewer_role": "HAPPY MOTHER"
+            "quote": "This pack feels different from basic sugar-free flavors. Ube is fun, Vanilla is classic, and the nutty flavors make it feel fancy.",
+            "reviewer_initials": "RK",
+            "reviewer_name": "Rachel K.",
+            "reviewer_role": "Sugar-Free Flavor Fan"
           }
         },
-        "testimonial_6tDyKy": {
+        "testimonial_kyjF3L": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Caramel Chocolate is my favorite. It makes cold brew taste rich and dessert-like without adding sugar.",
-            "reviewer_initials": "MR",
-            "reviewer_name": "Michael R.",
-            "reviewer_role": "COFFEE ENTHUSIAST"
+            "quote": "Pistachio and Almond together are so good in cold brew. This pack makes sugar-free coffee feel way less boring.",
+            "reviewer_initials": "MD",
+            "reviewer_name": "Marcus D.",
+            "reviewer_role": "Cold Brew Lover"
           }
         }
       },
@@ -807,7 +807,7 @@
         "testimonial_w7H38p",
         "testimonial_grwGng",
         "testimonial_cdT8rN",
-        "testimonial_6tDyKy"
+        "testimonial_kyjF3L"
       ],
       "name": "People Love This Combo",
       "settings": {
