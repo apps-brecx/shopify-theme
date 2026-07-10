@@ -214,8 +214,97 @@
   var dots = section.querySelectorAll('[data-banner-dot]');
   var slides = banner.querySelectorAll('.syr-slide');
   if (slides.length < 2) return;
-  var current = 0, autoTimer = null;
   var AUTO_MS = parseInt('{{ section.settings.autoplay_s | default: 6 }}', 10) * 1000;
+  var ROTATE = AUTO_MS >= 1000;                       // 0 = auto-rotate off
+  var HARD_CAP = Math.max(AUTO_MS, 20000) + 10000;    // a stalled video must never freeze the carousel
+  var allVids = banner.getElementsByTagName('video');
+
+  var current = 0, running = false;
+  var autoTimer = null, fbTimer = null, scrollTimer = null, rzTimer = null, armedAt = 0;
+  var activeVid = null, armedVid = null, onEnded = null, onErr = null;
+
+  /* Only one of the desktop/mobile <video> twins is displayed at a given breakpoint. */
+  function visVid(slide){
+    var vs = slide.getElementsByTagName('video');
+    for (var i = 0; i < vs.length; i++){ if (vs[i].offsetParent !== null) return vs[i]; }
+    return null;
+  }
+  function isAuto(v){ return !!v && v.hasAttribute('autoplay'); }
+
+  function pauseOthers(keep){
+    for (var i = 0; i < allVids.length; i++){
+      var v = allVids[i];
+      if (v === keep) continue;
+      try { v.pause(); if (v.currentTime) v.currentTime = 0; } catch(e){}
+    }
+  }
+  function playVid(v){
+    v.muted = true;                                   // autoplay is only permitted while muted
+    var p;
+    try { p = v.play(); } catch(e){}
+    if (p && typeof p.catch === 'function'){
+      p.catch(function(){                             // blocked — fall back to the timed rotation
+        if (armedVid === v){ disarm(); if (ROTATE) autoTimer = setTimeout(next, AUTO_MS); }
+      });
+    }
+  }
+
+  function disarm(){
+    if (autoTimer){ clearTimeout(autoTimer); autoTimer = null; }
+    if (fbTimer){ clearTimeout(fbTimer); fbTimer = null; }
+    if (armedVid){
+      if (onEnded) armedVid.removeEventListener('ended', onEnded);
+      if (onErr) armedVid.removeEventListener('error', onErr, true);
+    }
+    armedVid = null; onEnded = null; onErr = null;
+  }
+
+  /* Safety net: if 'ended' never arrives (stall / bad file) advance anyway. */
+  function armFallback(v){
+    if (fbTimer) clearTimeout(fbTimer);
+    var d = v.duration;
+    if (!isFinite(d) || d <= 0){                      // metadata not loaded yet — re-check shortly
+      fbTimer = setTimeout(function(){
+        if (armedVid !== v) return;
+        if (Date.now() - armedAt > HARD_CAP) next(); else armFallback(v);
+      }, 400);
+      return;
+    }
+    var remain = Math.max(0, d - (v.currentTime || 0));
+    fbTimer = setTimeout(function(){
+      if (armedVid !== v) return;
+      if (v.ended){ next(); return; }
+      if (!v.paused && Date.now() - armedAt < d * 1000 + HARD_CAP){ armFallback(v); return; } // still buffering
+      next();
+    }, remain * 1000 + 1200);
+  }
+
+  /* Attach the advance trigger for the current slide (does not touch playback position). */
+  function arm(){
+    disarm();
+    if (!ROTATE) return;
+    var v = visVid(slides[current]);
+    if (!isAuto(v)){ autoTimer = setTimeout(next, AUTO_MS); return; }  // image slide, or manual-play video
+    if (v.ended){ next(); return; }                   // it finished while rotation was paused
+    armedVid = v; armedAt = Date.now();
+    v.loop = false;                                   // required, otherwise 'ended' never fires
+    onEnded = function(){ if (armedVid === v) next(); };
+    onErr   = function(){ if (armedVid === v){ disarm(); autoTimer = setTimeout(next, AUTO_MS); } };
+    v.addEventListener('ended', onEnded);
+    v.addEventListener('error', onErr, true);         // capture: <source> errors don't bubble
+    armFallback(v);
+    if (v.paused) playVid(v);
+  }
+
+  /* Slide changed: play its video from the top, pause every other one. */
+  function activate(){
+    var v = visVid(slides[current]);
+    activeVid = v;
+    pauseOthers(v);
+    if (isAuto(v)){ try { v.currentTime = 0; } catch(e){} playVid(v); }
+    if (running) arm();
+  }
+
   function setCurrent(i){
     current = (i + slides.length) % slides.length;
     dots.forEach(function(d, di){ d.classList.toggle('is-active', di === current); });
@@ -223,27 +312,59 @@
   function goTo(i){
     setCurrent(i);
     banner.scrollTo({ left: slides[current].offsetLeft, behavior:'smooth' });
+    activate();
   }
-  function startAuto(){ if (AUTO_MS < 1000) return; stopAuto(); autoTimer = setInterval(function(){ goTo(current + 1); }, AUTO_MS); }
-  function stopAuto(){ if (autoTimer){ clearInterval(autoTimer); autoTimer = null; } }
-  dots.forEach(function(d){ d.addEventListener('click', function(){ goTo(parseInt(d.getAttribute('data-banner-dot'), 10)); stopAuto(); startAuto(); }); });
+  function next(){ goTo(current + 1); }
+
+  function startAuto(){ running = true; arm(); }
+  function stopAuto(){ running = false; disarm(); }
+
+  dots.forEach(function(d){ d.addEventListener('click', function(){ goTo(parseInt(d.getAttribute('data-banner-dot'), 10)); }); });
   var prevBtn = section.querySelector('[data-banner-prev]');
   var nextBtn = section.querySelector('[data-banner-next]');
-  if (prevBtn) prevBtn.addEventListener('click', function(){ goTo(current - 1); stopAuto(); startAuto(); });
-  if (nextBtn) nextBtn.addEventListener('click', function(){ goTo(current + 1); stopAuto(); startAuto(); });
-  var scrollTimer = null;
+  if (prevBtn) prevBtn.addEventListener('click', function(){ goTo(current - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function(){ goTo(current + 1); });
+
   banner.addEventListener('scroll', function(){
     clearTimeout(scrollTimer);
     scrollTimer = setTimeout(function(){
       var idx = Math.round(banner.scrollLeft / banner.clientWidth);
-      if (idx !== current) setCurrent(idx);
+      if (idx !== current){ setCurrent(idx); activate(); }
     }, 100);
   });
+
   banner.addEventListener('touchstart', stopAuto, { passive:true });
   banner.addEventListener('mouseenter', stopAuto);
   banner.addEventListener('mouseleave', startAuto);
-  startAuto();
-  document.addEventListener('visibilitychange', function(){ if (document.hidden) stopAuto(); else startAuto(); });
+
+  /* A breakpoint flip swaps the desktop/mobile <video> — hand over to the new one. */
+  window.addEventListener('resize', function(){
+    clearTimeout(rzTimer);
+    rzTimer = setTimeout(function(){ if (visVid(slides[current]) !== activeVid) activate(); }, 200);
+  });
+
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden){
+      stopAuto();
+      if (activeVid){ try { activeVid.pause(); } catch(e){} }
+    } else {
+      if (isAuto(activeVid) && activeVid.paused && !activeVid.ended) playVid(activeVid);
+      startAuto();
+    }
+  });
+
+  /* Every slide is in the DOM, so the browser autoplays them all — keep only the active one running. */
+  for (var i = 0; i < allVids.length; i++){
+    (function(v){
+      v.addEventListener('play', function(){
+        if (v !== activeVid){ try { v.pause(); v.currentTime = 0; } catch(e){} }
+      });
+    })(allVids[i]);
+  }
+
+  running = true;
+  setCurrent(0);
+  activate();
 })();
 </script>
 
@@ -253,7 +374,7 @@
   "tag": "section",
   "max_blocks": 10,
   "settings": [
-    { "type": "range", "id": "autoplay_s", "label": "Auto-rotate (seconds, 0 = off)", "min": 0, "max": 12, "step": 1, "default": 6 },
+    { "type": "range", "id": "autoplay_s", "label": "Auto-rotate (seconds, 0 = off)", "min": 0, "max": 12, "step": 1, "default": 6, "info": "Applies to image slides. A slide with an autoplaying video waits for the video to finish before advancing." },
     { "type": "header", "content": "Banner height (keeps every slide the same height)" },
     { "type": "paragraph", "content": "100 = full screen. Images fill the frame edge-to-edge (cover), so lower this if the banner feels too tall." },
     { "type": "range", "id": "height_d", "label": "Banner height — desktop", "min": 40, "max": 100, "step": 5, "unit": "vh", "default": 80 },
