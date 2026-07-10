@@ -12,17 +12,56 @@
     "hero": {
       "type": "syr-hero",
       "blocks": {
+        "slide_iFi7c9": {
+          "type": "slide",
+          "settings": {
+            "video_desktop": "shopify://files/videos/Comp 1_4.mp4",
+            "video_mobile": "shopify://files/videos/Cookie Butter mobile video (1).mp4",
+            "video_autoplay": true,
+            "alt": "",
+            "link": "",
+            "show_button": true,
+            "btn_text": "Shop Now",
+            "btn_bg": "#c8252b",
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
+          }
+        },
         "slide_F8daTC": {
           "type": "slide",
           "settings": {
             "image_desktop": "shopify://shop_images/website.png",
             "image_mobile": "shopify://shop_images/mobile_1.png",
+            "video_autoplay": true,
             "alt": "",
             "link": "shopify://collections/all-products",
             "show_button": false,
             "btn_text": "Shop Now",
             "btn_bg": "#c8252b",
-            "btn_color": "#ffffff"
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
           }
         },
         "slide_tw9mi8": {
@@ -30,12 +69,25 @@
           "settings": {
             "image_desktop": "shopify://shop_images/Fruit_Pack.png",
             "image_mobile": "shopify://shop_images/Mobile_4ff1ea90-bd14-4164-a49b-3d61dfb87334.png",
+            "video_autoplay": true,
             "alt": "",
             "link": "shopify://pages/july-4",
             "show_button": false,
             "btn_text": "Shop Now",
             "btn_bg": "#c8252b",
-            "btn_color": "#ffffff"
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
           }
         },
         "slide_3L9aTR": {
@@ -44,22 +96,38 @@
           "settings": {
             "image_desktop": "shopify://shop_images/Desktop.jpg",
             "image_mobile": "shopify://shop_images/Mobile.jpg",
+            "video_autoplay": true,
             "alt": "",
             "link": "shopify://collections/coffee-house-sets",
             "show_button": false,
             "btn_text": "Shop Now",
             "btn_bg": "#0b0001",
-            "btn_color": "#ffffff"
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
           }
         }
       },
       "block_order": [
+        "slide_iFi7c9",
         "slide_F8daTC",
         "slide_tw9mi8",
         "slide_3L9aTR"
       ],
       "settings": {
-        "autoplay_s": 6
+        "autoplay_s": 6,
+        "height_d": 80,
+        "height_m": 80
       }
     },
     "ticker": {
