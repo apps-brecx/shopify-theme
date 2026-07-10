@@ -12,15 +12,15 @@
     "hero": {
       "type": "syr-hero",
       "blocks": {
-        "slide_iFi7c9": {
+        "slide_F8daTC": {
           "type": "slide",
           "settings": {
-            "video_desktop": "shopify://files/videos/Comp 1_4.mp4",
-            "video_mobile": "shopify://files/videos/Cookie Butter mobile video (1).mp4",
+            "image_desktop": "shopify://shop_images/website.png",
+            "image_mobile": "shopify://shop_images/mobile_1.png",
             "video_autoplay": true,
             "alt": "",
-            "link": "",
-            "show_button": true,
+            "link": "shopify://collections/all-products",
+            "show_button": false,
             "btn_text": "Shop Now",
             "btn_bg": "#c8252b",
             "btn_color": "#ffffff",
@@ -38,15 +38,15 @@
             "sub_size_m": 15
           }
         },
-        "slide_F8daTC": {
+        "slide_iFi7c9": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/website.png",
-            "image_mobile": "shopify://shop_images/mobile_1.png",
+            "video_desktop": "shopify://files/videos/Comp 1_4.mp4",
+            "video_mobile": "shopify://files/videos/Cookie Butter mobile video (1).mp4",
             "video_autoplay": true,
             "alt": "",
-            "link": "shopify://collections/all-products",
-            "show_button": false,
+            "link": "",
+            "show_button": true,
             "btn_text": "Shop Now",
             "btn_bg": "#c8252b",
             "btn_color": "#ffffff",
@@ -119,8 +119,8 @@
         }
       },
       "block_order": [
-        "slide_iFi7c9",
         "slide_F8daTC",
+        "slide_iFi7c9",
         "slide_tw9mi8",
         "slide_3L9aTR"
       ],
