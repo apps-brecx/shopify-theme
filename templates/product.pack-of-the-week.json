@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This week’s Cookie Caramel Cream Pack brings together three smooth, sweet flavors made for cozy coffeehouse drinks at home. Cookie Butter adds warm dessert flavor, Vanilla keeps it classic, and Caramel Chocolate brings the rich finish.</p>"
+            "text": "<p>This week’s Ube Dream Cream Pack brings together four soft, creamy flavors that make homemade drinks feel special. Ube gives it that dreamy purple sweetness, Vanilla keeps it smooth, Pistachio adds a nutty touch, and Almond brings a cozy café-style finish.</p>"
           }
         }
       },
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#8d4925"
+        "background_color": "#72305C"
       }
     },
     "pack_steps_AbyNtH": {
