@@ -1,11 +1,16 @@
 {%- comment -%}
-  Mobile search toggle + sitewide white-box killer for every search input.
+  Header search toggle (desktop + mobile) + sitewide white-box killer for every search input.
+
+  Only one nav is ever visible: #syrnav (mobile, hidden >=901px) or header.syrn (desktop,
+  hidden <=900px). There is a single .syrnav-msearch bar, authored inside the mobile nav.
+  placeBar() moves that one bar into whichever nav is currently visible, so the same markup,
+  styling and predictive-suggest wiring serve both breakpoints.
 {%- endcomment -%}
 {%- render 'pd-search-suggest' -%}
 <style id="pd-search-toggle-css">
 /* ============================================================
    SITEWIDE: kill the white inner box on every search input.
-   Applies to header mobile search bar, /search page hero,
+   Applies to header search bar, /search page hero,
    predictive-search forms, and anywhere a type=search lives.
    ============================================================ */
 html body input[type="search"],
@@ -46,88 +51,115 @@ html body .syr-search input:-webkit-autofill{
 }
 
 /* ============================================================
-   HEADER MOBILE SEARCH — brand pill
+   HEADER SEARCH — brand pill. Root-agnostic: the bar is styled
+   wherever it currently lives, and opens when its host nav
+   carries .search-open.
    ============================================================ */
-@media (max-width:980px){
-  html body #syrnav .syrnav-msearch{
-    display:none !important;
-    overflow:hidden !important;
-    max-height:0 !important;
-    padding-top:0 !important;
-    padding-bottom:0 !important;
-    border-bottom:0 !important;
-    transition:max-height .3s ease, padding .3s ease, border-color .2s ease !important;
-  }
-  html body #syrnav.search-open .syrnav-msearch{
-    display:block !important;
-    max-height:75vh !important;
-    padding-top:10px !important;
-    padding-bottom:12px !important;
-    border-bottom:2px solid #1F1813 !important;
-    overflow:visible !important;
-  }
+html body .syrnav-msearch{
+  display:none !important;
+  overflow:hidden !important;
+  max-height:0 !important;
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+  border-bottom:0 !important;
+  transition:max-height .3s ease, padding .3s ease, border-color .2s ease !important;
+}
+html body .search-open .syrnav-msearch{
+  display:block !important;
+  max-height:75vh !important;
+  padding-top:10px !important;
+  padding-bottom:12px !important;
+  border-bottom:2px solid #1F1813 !important;
+  overflow:visible !important;
+}
 
-  html body #syrnav .syrnav-msearch-box{
-    position:relative !important;
-    display:flex !important; align-items:center !important; gap:8px !important;
-    background:transparent !important;
-    background-color:transparent !important;
-    border:2px solid #39220f !important;
-    border-radius:999px !important;
-    box-shadow:3px 3px 0 #39220f !important;
-    padding:4px 4px 4px 18px !important;
-    margin:0 4px !important;
-  }
-  html body #syrnav .syrnav-msearch-box input,
-  html body #syrnav .syrnav-msearch-box input[type="search"],
-  html body #syrnav .syrnav-msearch-box input[type="text"]{
-    flex:1 1 auto !important; min-width:0 !important;
-    background:transparent !important;
-    background-color:transparent !important;
-    background-image:none !important;
-    border:0 !important;
-    box-shadow:none !important;
-    outline:0 !important;
-    -webkit-appearance:none !important; appearance:none !important;
-    padding:8px 0 !important;
-    font-family:'Josefin Sans','Josefin',sans-serif !important;
-    font-size:15px !important;
-    color:#39220f !important;
-    -webkit-text-fill-color:#39220f !important;
-    height:auto !important;
-  }
-  html body #syrnav .syrnav-msearch-box input::placeholder{
-    color:rgba(57,34,15,.4) !important;
-  }
-  html body #syrnav .syrnav-msearch-close{
-    background:transparent !important; border:0 !important; padding:0 !important;
-    color:#39220f !important; cursor:pointer !important;
-    display:inline-flex !important; align-items:center !important; justify-content:center !important;
-    flex:0 0 auto !important; border-radius:50% !important;
-    width:34px !important; height:34px !important;
-    transition:background .15s ease, color .15s ease, transform .12s ease !important;
-    -webkit-tap-highlight-color:transparent !important;
-  }
-  html body #syrnav .syrnav-msearch-close:hover,
-  html body #syrnav .syrnav-msearch-close:active{
-    background:#FCE2A0 !important; color:#c58548 !important; transform:scale(1.05) !important;
-  }
-  html body #syrnav .syrnav-msearch-close svg{ width:14px !important; height:14px !important; display:block !important; }
+html body .syrnav-msearch-box{
+  position:relative !important;
+  display:flex !important; align-items:center !important; gap:8px !important;
+  background:transparent !important;
+  background-color:transparent !important;
+  border:2px solid #39220f !important;
+  border-radius:999px !important;
+  box-shadow:3px 3px 0 #39220f !important;
+  padding:4px 4px 4px 18px !important;
+  margin:0 4px !important;
+}
+html body .syrnav-msearch-box input,
+html body .syrnav-msearch-box input[type="search"],
+html body .syrnav-msearch-box input[type="text"]{
+  flex:1 1 auto !important; min-width:0 !important;
+  background:transparent !important;
+  background-color:transparent !important;
+  background-image:none !important;
+  border:0 !important;
+  box-shadow:none !important;
+  outline:0 !important;
+  -webkit-appearance:none !important; appearance:none !important;
+  padding:8px 0 !important;
+  font-family:'Josefin Sans','Josefin',sans-serif !important;
+  font-size:15px !important;
+  color:#39220f !important;
+  -webkit-text-fill-color:#39220f !important;
+  height:auto !important;
+}
+html body .syrnav-msearch-box input::placeholder{
+  color:rgba(57,34,15,.4) !important;
+}
+html body .syrnav-msearch-close{
+  background:transparent !important; border:0 !important; padding:0 !important;
+  color:#39220f !important; cursor:pointer !important;
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  flex:0 0 auto !important; border-radius:50% !important;
+  width:34px !important; height:34px !important;
+  transition:background .15s ease, color .15s ease, transform .12s ease !important;
+  -webkit-tap-highlight-color:transparent !important;
+}
+html body .syrnav-msearch-close:hover,
+html body .syrnav-msearch-close:active{
+  background:#FCE2A0 !important; color:#c58548 !important; transform:scale(1.05) !important;
+}
+html body .syrnav-msearch-close svg{ width:14px !important; height:14px !important; display:block !important; }
 
-  /* If the form contains a submit/search button, brand it too */
-  html body #syrnav .syrnav-msearch-box button[type="submit"]{
-    background:#39220f !important; color:#FFFBF4 !important;
-    border:1.5px solid #39220f !important; border-radius:50% !important;
-    width:36px !important; height:36px !important; padding:0 !important;
-    display:inline-flex !important; align-items:center !important; justify-content:center !important;
-    flex:0 0 auto !important; cursor:pointer !important;
-  }
-  html body #syrnav .syrnav-msearch-box button[type="submit"] svg{ width:14px !important; height:14px !important; color:#FFFBF4 !important; }
+/* If the form contains a submit/search button, brand it too */
+html body .syrnav-msearch-box button[type="submit"]{
+  background:#39220f !important; color:#FFFBF4 !important;
+  border:1.5px solid #39220f !important; border-radius:50% !important;
+  width:36px !important; height:36px !important; padding:0 !important;
+  display:inline-flex !important; align-items:center !important; justify-content:center !important;
+  flex:0 0 auto !important; cursor:pointer !important;
+}
+html body .syrnav-msearch-box button[type="submit"] svg{ width:14px !important; height:14px !important; color:#FFFBF4 !important; }
 
-  html body #syrnav.search-open .syrnav-ic[data-search-toggle]{
-    background:rgba(252,226,160,.5) !important; color:#c58548 !important;
+/* Active state on whichever search icon opened the bar */
+html body .search-open .syrnav-ic[data-search-toggle],
+html body .search-open .syrn-ic[data-search-toggle]{
+  background:rgba(252,226,160,.5) !important; color:#c58548 !important;
+}
+html body .search-open .syrnav-ic[data-search-toggle] svg,
+html body .search-open .syrn-ic[data-search-toggle] svg{ color:#c58548 !important; }
+
+/* Mobile nav supplies its own bg + side padding; desktop nav needs both. */
+@media (min-width:901px){
+  html body header.syrn .syrnav-msearch{
+    background:#FFFBF4 !important;
+    padding-left:24px !important;
+    padding-right:24px !important;
   }
-  html body #syrnav.search-open .syrnav-ic[data-search-toggle] svg{ color:#c58548 !important; }
+  html body header.syrn.search-open .syrnav-msearch{
+    padding-top:12px !important;
+    padding-bottom:14px !important;
+  }
+  html body header.syrn .syrnav-msearch-box{
+    max-width:720px !important;
+    margin:0 auto !important;
+  }
+  /* Keep the suggestions dropdown aligned with the centred pill */
+  html body header.syrn .syrnav-suggest{
+    left:50% !important;
+    right:auto !important;
+    transform:translateX(-50%) !important;
+    width:min(720px, calc(100% - 48px)) !important;
+  }
 }
 </style>
 
@@ -135,13 +167,23 @@ html body .syr-search input:-webkit-autofill{
 (function(){
   if (window.__pdSearchToggleInit) return; window.__pdSearchToggleInit = true;
   var CLOSE_SVG = '<svg viewBox="0 0 20 20" width="18" height="18" fill="none"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  var ICON_SEL = '#syrnav .syrnav-icons .syrnav-ic, header.syrn .syrn-icons .syrn-ic';
 
-  function isMobile(){ return window.matchMedia('(max-width:980px)').matches; }
+  /* display:none elements have no client rects — works for the sticky desktop header too */
+  function visible(el){ return !!(el && el.getClientRects().length); }
+  function bar(){ return document.querySelector('.syrnav-msearch'); }
+  function host(){ var b = bar(); return b ? b.parentElement : null; }
+
+  function activeNav(){
+    var mob = document.getElementById('syrnav');
+    if (visible(mob)) return mob;
+    var desk = document.querySelector('header.syrn');
+    if (visible(desk)) return desk;
+    return mob || desk || null;
+  }
 
   function markSearchToggle(){
-    var syrnav = document.getElementById('syrnav'); if (!syrnav) return;
-    var icons = syrnav.querySelectorAll('.syrnav-icons .syrnav-ic');
-    icons.forEach(function(ic){
+    document.querySelectorAll(ICON_SEL).forEach(function(ic){
       var href = ic.getAttribute('href') || '';
       var label = (ic.getAttribute('aria-label') || '').toLowerCase();
       var isSearch = (href.indexOf('/search') !== -1) || label.indexOf('search') !== -1;
@@ -150,8 +192,23 @@ html body .syr-search input:-webkit-autofill{
     });
   }
 
+  /* Keep the one search bar inside whichever nav is currently visible. */
+  function placeBar(){
+    var bars = document.querySelectorAll('.syrnav-msearch');
+    if (!bars.length) return;
+    var b = bars[0];
+    for (var i = 1; i < bars.length; i++){            /* a section re-render can duplicate it */
+      if (bars[i].parentNode) bars[i].parentNode.removeChild(bars[i]);
+    }
+    var root = activeNav();
+    if (!root || b.parentElement === root) return;
+    var prev = b.parentElement;
+    if (prev) prev.classList.remove('search-open');   /* never leave a hidden nav stuck open */
+    root.appendChild(b);
+  }
+
   function injectCloseBtn(){
-    var box = document.querySelector('#syrnav .syrnav-msearch .syrnav-msearch-box');
+    var box = document.querySelector('.syrnav-msearch .syrnav-msearch-box');
     if (!box) return;
     if (box.querySelector('.syrnav-msearch-close')) return;
     var btn = document.createElement('button');
@@ -165,7 +222,7 @@ html body .syr-search input:-webkit-autofill{
 
   /* Force-clear any inline white bg the theme JS might re-apply to search inputs */
   function nukeInlineBg(){
-    var inputs = document.querySelectorAll('#syrnav .syrnav-msearch input, .syr-search input, input[type="search"]');
+    var inputs = document.querySelectorAll('.syrnav-msearch input, .syr-search input, input[type="search"]');
     inputs.forEach(function(inp){
       try {
         inp.style.setProperty('background', 'transparent', 'important');
@@ -178,30 +235,32 @@ html body .syr-search input:-webkit-autofill{
   }
 
   function openSearch(){
-    var syrnav = document.getElementById('syrnav'); if (!syrnav) return;
-    syrnav.classList.add('search-open');
+    placeBar();
+    var root = host(); if (!root) return;
+    root.classList.add('search-open');
     setTimeout(function(){
-      var input = syrnav.querySelector('.syrnav-msearch input');
+      var input = root.querySelector('.syrnav-msearch input');
       if (input) try { input.focus(); } catch(e){}
       nukeInlineBg();
     }, 250);
   }
   function closeSearch(){
-    var syrnav = document.getElementById('syrnav'); if (!syrnav) return;
-    syrnav.classList.remove('search-open');
-    var input = syrnav.querySelector('.syrnav-msearch input');
+    var root = host(); if (!root) return;
+    root.classList.remove('search-open');
+    var input = root.querySelector('.syrnav-msearch input');
     if (input) try { input.blur(); } catch(e){}
     var suggest = document.getElementById('syrnav-suggest');
     if (suggest) suggest.classList.remove('has-results');
   }
 
   document.addEventListener('click', function(e){
-    if (!isMobile()) return;
     var toggle = e.target.closest('[data-search-toggle]');
     if (toggle){
+      if (!bar()) return;                 /* no bar in the DOM -> let the link go to /search */
       e.preventDefault();
-      var syrnav = document.getElementById('syrnav'); if (!syrnav) return;
-      if (syrnav.classList.contains('search-open')) closeSearch();
+      placeBar();
+      var root = host();
+      if (root && root.classList.contains('search-open')) closeSearch();
       else openSearch();
       return;
     }
@@ -215,13 +274,20 @@ html body .syr-search input:-webkit-autofill{
 
   document.addEventListener('keydown', function(e){
     if (e.key === 'Escape'){
-      var syrnav = document.getElementById('syrnav');
-      if (syrnav && syrnav.classList.contains('search-open')) closeSearch();
+      var root = host();
+      if (root && root.classList.contains('search-open')) closeSearch();
     }
+  });
+
+  var rzTimer = null;
+  window.addEventListener('resize', function(){
+    clearTimeout(rzTimer);
+    rzTimer = setTimeout(placeBar, 150);   /* breakpoint flip hands the bar to the other nav */
   });
 
   function init(){
     markSearchToggle();
+    placeBar();
     injectCloseBtn();
     nukeInlineBg();
   }
@@ -229,7 +295,7 @@ html body .syr-search input:-webkit-autofill{
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   setTimeout(init, 200); setTimeout(init, 1000); setTimeout(init, 2500);
   if ('MutationObserver' in window){
-    new MutationObserver(function(){ markSearchToggle(); injectCloseBtn(); nukeInlineBg(); }).observe(document.body, {childList:true, subtree:true});
+    new MutationObserver(function(){ markSearchToggle(); placeBar(); injectCloseBtn(); nukeInlineBg(); }).observe(document.body, {childList:true, subtree:true});
   }
   document.addEventListener('input', function(e){
     if (e.target && e.target.matches && e.target.matches('input[type="search"]')) nukeInlineBg();
