@@ -10,7 +10,7 @@
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 {%- assign rad = s.card_radius | default: 20 -%}
-{%- assign tagv = s.waitlist_tag | default: 'Pouches' -%}
+{%- assign tagv = s.waitlist_tag | default: 'Pouches Notify Me' -%}
 {%- assign img_d = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Banner_2.png?v=1783969922' -%}
 {%- assign img_m = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Mobile_5.png?v=1783969922' -%}
 {%- if s.hero_desktop != blank -%}{%- assign img_d = s.hero_desktop | image_url: width: 2400 -%}{%- endif -%}
@@ -321,7 +321,7 @@
     { "type": "text", "id": "launch_title", "label": "Title", "default": "Launching July 27" },
     { "type": "text", "id": "launch_iso", "label": "Launch date/time (ISO)", "default": "2026-07-27T10:00:00-04:00", "info": "Format: YYYY-MM-DDTHH:MM:SS-04:00 (EDT)" },
     { "type": "header", "content": "Notify Me form" },
-    { "type": "text", "id": "waitlist_tag", "label": "Customer tag for the segment", "default": "Pouches", "info": "Signups get this tag. In admin, build your segment as: customer_tags CONTAINS 'Pouches'." },
+    { "type": "text", "id": "waitlist_tag", "label": "Customer tag for the segment", "default": "Pouches Notify Me", "info": "Signups get this tag. In admin, build your segment as: customer_tags CONTAINS 'Pouches Notify Me'." },
     { "type": "text", "id": "form_title", "label": "Form title", "default": "Be the first to know" },
     { "type": "textarea", "id": "form_sub", "label": "Form subtitle", "default": "Tap notify and we’ll email you the second it drops. No spam — just the reveal." },
     { "type": "text", "id": "btn_text", "label": "Button text", "default": "Notify me" },
