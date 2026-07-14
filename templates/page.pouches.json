@@ -1,12 +1,69 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "page-pouches",
       "settings": {
+        "hero_alt": "Syruvia Pouches — coming soon",
+        "show_overlay": false,
+        "overlay_title": "Pouches",
+        "overlay_sub": "Your favorite syrups — pocket-size. July 27.",
+        "overlay_pos": "flex-end",
+        "overlay_color": "#fffbf4",
+        "launch_ribbon": "Coming soon",
+        "launch_title": "Launching July 27",
+        "launch_iso": "2026-07-27T10:00:00-04:00",
         "waitlist_tag": "Pouches",
-        "launch_iso": "2026-07-27T10:00:00-04:00"
+        "form_title": "Be first to pour",
+        "form_sub": "Tap Notify Me, and we’ll email you the second Pouches go live.",
+        "btn_text": "Notify me",
+        "email_placeholder": "Your email address",
+        "hello_text": "Hi",
+        "hello_sub": "one tap and you’re in:",
+        "signin_pre": "Have an account?",
+        "signin_link": "Sign in",
+        "signin_post": "for one-tap notify.",
+        "ok_title": "You’re on the list!",
+        "ok_badge": "Notification set",
+        "ok_text": "We’ll email you the moment Pouches drop on July 27. Keep an eye on your inbox, early birds get first pour.",
+        "show_features": true,
+        "feat_eyebrow": "Meet the pouch",
+        "feat_title": "Your syrups, to go!",
+        "f1_icon": "🎒",
+        "f1_t": "Take it anywhere",
+        "f1_p": "Pocket-size pouches of your favorite Syruvia flavors — office, travel, gym bag, anywhere.",
+        "f2_icon": "☕",
+        "f2_t": "Same real flavor",
+        "f2_p": "The café-quality taste you know from our bottles, in a perfectly portioned squeeze.",
+        "f3_icon": "✨",
+        "f3_t": "No mess, no measuring",
+        "f3_p": "Tear, pour, enjoy. Every pouch is one perfect serving — zero cleanup.",
+        "final_eyebrow": "July 27 · Mark it",
+        "final_title": "Don’t miss the drop.",
+        "final_sub": "Pouches will be limited at launch. Get on the list and we’ll make sure you’re first in line.",
+        "final_btn": "Notify me",
+        "color_ink": "#1a1a1a",
+        "color_brand": "#39220f",
+        "color_bg": "#DA8927",
+        "color_paper": "#ffffff",
+        "color_accent": "#c58548",
+        "color_pop": "#1E5271",
+        "color_success": "#c5e4d4",
+        "color_rule": "#39220f",
+        "wrap_max": 1040,
+        "card_radius": 20
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
