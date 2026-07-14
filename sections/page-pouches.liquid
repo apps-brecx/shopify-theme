@@ -93,6 +93,9 @@
   #pw-{{ section.id }} .pw-ok .big{font-family:var(--display);font-size:18px;text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;justify-content:center;gap:8px;}
   #pw-{{ section.id }} .pw-ok p{font-size:14px;margin:8px 0 0;}
   #pw-{{ section.id }} .pw-err{background:#FBE3E0;border:2px solid #B23A48;color:#B23A48;border-radius:14px;padding:12px 14px;margin-top:14px;font-size:14px;}
+  #pw-{{ section.id }} .pw-redirect-note{font-size:13px;margin:12px 0 0;opacity:.85;}
+  #pw-{{ section.id }} .pw-redirect-note b{font-family:var(--display);}
+  #pw-{{ section.id }} .pw-redirect-note a{color:inherit;font-weight:700;}
   /* confetti burst on success */
   #pw-{{ section.id }} .pw-confetti{position:relative;height:0;}
   #pw-{{ section.id }} .pw-confetti i{position:absolute;top:0;left:50%;width:8px;height:12px;border:1.5px solid var(--rule-c);opacity:0;}
@@ -168,6 +171,9 @@
               <div class="pw-confetti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
               <span class="big">✓ {{ s.ok_badge | default: 'Notification set' }}</span>
               <p>{{ s.ok_text | default: 'We&rsquo;ll email you the moment it drops on July 27. Keep an eye on your inbox — you&rsquo;ll be among the first to see it.' }}</p>
+              {%- if s.redirect_enabled -%}
+                <p class="pw-redirect-note" data-pw-redirect data-url="{{ s.redirect_url | default: '/' }}" data-secs="{{ s.redirect_seconds | default: 5 }}">{{ s.redirect_text | default: 'Taking you back in' }} <b data-pw-secs>{{ s.redirect_seconds | default: 5 }}</b>… <a href="{{ s.redirect_url | default: '/' }}">{{ s.redirect_now | default: 'Go now' }}</a></p>
+              {%- endif -%}
             </div>
           {%- else -%}
             <h2>{{ s.form_title | default: 'Be the first to know' }}</h2>
@@ -280,6 +286,18 @@
       ok.classList.add('burst');
       try{ ok.closest('.pw-note-card').scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'}); }catch(e){}
     },300);
+    // timed redirect after success (editable link + delay)
+    var rd=ok.querySelector('[data-pw-redirect]');
+    if(rd){
+      var url=rd.getAttribute('data-url')||'/';
+      var secs=parseInt(rd.getAttribute('data-secs'),10)||5;
+      var out=rd.querySelector('[data-pw-secs]');
+      var t=setInterval(function(){
+        secs--;
+        if(out) out.textContent=secs;
+        if(secs<=0){ clearInterval(t); window.location.href=url; }
+      },1000);
+    }
   }
 })();
 </script>
@@ -317,6 +335,11 @@
     { "type": "text", "id": "ok_title", "label": "Success title", "default": "You’re on the list!" },
     { "type": "text", "id": "ok_badge", "label": "Success badge", "default": "Notification set" },
     { "type": "textarea", "id": "ok_text", "label": "Success text", "default": "We’ll email you the moment it drops on July 27. Keep an eye on your inbox — you’ll be among the first to see it." },
+    { "type": "checkbox", "id": "redirect_enabled", "label": "Redirect after success", "default": true },
+    { "type": "url", "id": "redirect_url", "label": "Redirect link (default: home page)" },
+    { "type": "range", "id": "redirect_seconds", "label": "Redirect delay", "min": 2, "max": 20, "step": 1, "unit": "s", "default": 5 },
+    { "type": "text", "id": "redirect_text", "label": "Redirect note text", "default": "Taking you back in" },
+    { "type": "text", "id": "redirect_now", "label": "'Go now' link text", "default": "Go now" },
     { "type": "header", "content": "Big statement" },
     { "type": "checkbox", "id": "show_statement", "label": "Show big statement text", "default": true },
     { "type": "text", "id": "statement_text", "label": "Statement text", "default": "Flavor To Go!" },
