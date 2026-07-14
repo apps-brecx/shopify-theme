@@ -12,6 +12,32 @@
     "hero": {
       "type": "syr-hero",
       "blocks": {
+        "slide_eXhJU3": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Banner_2.png",
+            "image_mobile": "shopify://shop_images/Mobile_5.png",
+            "video_autoplay": false,
+            "alt": "",
+            "link": "",
+            "show_button": false,
+            "btn_text": "Shop Now",
+            "btn_bg": "#c8252b",
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
+          }
+        },
         "slide_qGkiAB": {
           "type": "slide",
           "settings": {
@@ -173,11 +199,11 @@
         }
       },
       "block_order": [
+        "slide_eXhJU3",
         "slide_qGkiAB",
         "slide_gUGR4D",
         "slide_TeK4MJ",
         "slide_F8daTC",
-        "slide_iFi7c9",
         "slide_tw9mi8",
         "slide_3L9aTR"
       ],

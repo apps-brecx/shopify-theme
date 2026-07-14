@@ -27,8 +27,10 @@
 <div{% if showPageData %} data-page="{{page}}"{% endif %} class="spf-col-xl-4 spf-col-lg-4 spf-col-md-6 spf-col-sm-6 spf-col-6 {{ product.handle }}">
     <div class="spf-product-card spf-product-card__center spf-product-card__template-5{% unless product.available %} spf-soldout{% endunless %}">
 <!-- Swym Wishlist Plus EPI Button with default first variant -->
+<div class="pcard-wish-inline">
 <button aria-label="Add to Wishlist" data-with-epi="true" class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}" data-variant-id="{{product.variants[0].id}}" data-product-url="https://syruvia.com/{{ product.url }}">
 </button>
+</div>
         <div class="spf-product-card__inner">
 		 {%- unless product.available -%}
                 <span translatable class="spf-product__label spf-product__label-soldout">{{translation.product.sold_out | default: "Sold out"}}</span>
