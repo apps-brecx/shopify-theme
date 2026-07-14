@@ -3,3 +3,6 @@ html body .syr-drawer-close { display: none !important; }
  .vipp .gate-hero h1, .vipp .gate-hero p, .vipp .gate-cta .ghost{
     color: #39220f !important;
 }
+.vipp .sect-head{
+    margin: 24px 0 !important;
+}
