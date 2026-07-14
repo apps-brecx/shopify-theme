@@ -6,28 +6,93 @@
 {% endstyle %}
 {%- endif -%}
 
+{%- comment -%} Same source as the brand page: product.metafields.custom.nutrition_facts.value.
+   pd-mb-prices clones this hidden .pd-nutrition into the collapsible card in the description,
+   so making it metafield-driven here makes the description's nutrition metafield-driven too.
+   Dividers are real elements (.pd-nut-rule) so they survive the clone; the static settings
+   below are used only when the metafield is empty. {%- endcomment -%}
+{%- assign nutrition_raw = product.metafields.custom.nutrition_facts.value | default: '' -%}
+
 <div class="pd">
   <section class="pd-nutrition-wrap" aria-hidden="true">
     <div class="pd-wrap">
       <div class="pd-nutrition">
         <div class="pd-nutrition-title">{{ section.settings.title }}</div>
-        <div class="pd-nut-serv">{{ section.settings.serving }}</div>
-        <div class="pd-nut-rule--thick"></div>
-        <div class="pd-nut-row"><strong>{{ section.settings.amount_label }}</strong></div>
-        <div class="pd-nut-row" style="font-size:18px;"><strong>Calories</strong><strong>{{ section.settings.calories }}</strong></div>
-        <div class="pd-nut-rule"></div>
-        <div style="font-size:12px;text-align:right;">% Daily Value*</div>
-        <div class="pd-nut-row"><span><strong>Total Fat</strong> {{ section.settings.fat }}</span><strong>{{ section.settings.fat_dv }}</strong></div>
-        <div class="pd-nut-rule"></div>
-        <div class="pd-nut-row"><span><strong>Sodium</strong> {{ section.settings.sodium }}</span><strong>{{ section.settings.sodium_dv }}</strong></div>
-        <div class="pd-nut-rule"></div>
-        <div class="pd-nut-row"><span><strong>Total Carbohydrate</strong> {{ section.settings.carbs }}</span><strong>{{ section.settings.carbs_dv }}</strong></div>
-        <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Total Sugars {{ section.settings.sugars }}</span><span></span></div>
-        <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>{{ section.settings.added_sugars }}</span><strong>{{ section.settings.added_sugars_dv }}</strong></div>
-        <div class="pd-nut-rule"></div>
-        <div class="pd-nut-row"><span><strong>Protein</strong> {{ section.settings.protein }}</span></div>
-        <div class="pd-nut-rule--med"></div>
-        <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">{{ section.settings.footnote }}</div>
+
+        {%- if nutrition_raw != blank -%}
+          {%- assign nf_sections = nutrition_raw | split: '---' -%}
+          {%- for nf_section in nf_sections -%}
+            {%- assign section_lines = nf_section | strip | newline_to_br | split: '<br />' -%}
+            {%- for line_raw in section_lines -%}
+              {%- assign line = line_raw | strip -%}
+              {%- if line == blank -%}{%- continue -%}{%- endif -%}
+
+              {%- assign first_two = line | slice: 0, 2 -%}
+              {%- assign is_indented = false -%}
+              {%- if first_two == '- ' -%}
+                {%- assign is_indented = true -%}
+                {%- assign line_len = line | size -%}
+                {%- assign line = line | slice: 2, line_len | strip -%}
+              {%- endif -%}
+
+              {%- assign first_char = line | slice: 0, 1 -%}
+
+              {%- if first_char == '*' -%}
+                <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">{{ line }}</div>
+
+              {%- elsif line contains '|' -%}
+                {%- assign parts = line | split: '|' -%}
+                {%- assign row_label = parts[0] | default: '' | strip -%}
+                {%- assign row_value = parts[1] | default: '' | strip -%}
+                {%- assign row_dv = parts[2] | default: '' | strip -%}
+                {%- if is_indented -%}
+                  <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>{{ row_label }}{% if row_value != blank %} {{ row_value }}{% endif %}</span>{%- if row_dv != blank -%}<strong>{{ row_dv }}</strong>{%- endif -%}</div>
+                {%- else -%}
+                  <div class="pd-nut-row"><span><strong>{{ row_label }}</strong>{% if row_value != blank %} {{ row_value }}{% endif %}</span>{%- if row_dv != blank -%}<strong>{{ row_dv }}</strong>{%- endif -%}</div>
+                {%- endif -%}
+
+              {%- elsif line contains ':' -%}
+                {%- assign kv = line | split: ':' -%}
+                {%- assign kv_label = kv[0] | strip -%}
+                {%- assign kv_value = kv | slice: 1, 99 | join: ':' | strip -%}
+                {%- if kv_label == 'Serving Size' or kv_label == 'Serving size' -%}
+                  <div class="pd-nut-serv">{{ kv_label }} {{ kv_value }}</div>
+                  <div class="pd-nut-rule--thick"></div>
+                  <div class="pd-nut-row"><strong>Amount per serving</strong></div>
+                {%- elsif kv_label == 'Calories' -%}
+                  <div class="pd-nut-row" style="font-size:18px;"><strong>{{ kv_label }}</strong><strong>{{ kv_value }}</strong></div>
+                  <div style="font-size:12px;text-align:right;">% Daily Value*</div>
+                {%- else -%}
+                  <div class="pd-nut-row"><span><strong>{{ kv_label }}</strong> {{ kv_value }}</span></div>
+                {%- endif -%}
+
+              {%- else -%}
+                <div class="pd-nut-row" style="font-size:13px;line-height:1.4;padding:4px 0;">{{ line }}</div>
+              {%- endif -%}
+            {%- endfor -%}
+            {%- unless forloop.last -%}<div class="pd-nut-rule"></div>{%- endunless -%}
+          {%- endfor -%}
+
+        {%- else -%}
+          {%- comment -%} Fallback: theme-editor values (used when the product has no nutrition_facts metafield) {%- endcomment -%}
+          <div class="pd-nut-serv">{{ section.settings.serving }}</div>
+          <div class="pd-nut-rule--thick"></div>
+          <div class="pd-nut-row"><strong>{{ section.settings.amount_label }}</strong></div>
+          <div class="pd-nut-row" style="font-size:18px;"><strong>Calories</strong><strong>{{ section.settings.calories }}</strong></div>
+          <div class="pd-nut-rule"></div>
+          <div style="font-size:12px;text-align:right;">% Daily Value*</div>
+          <div class="pd-nut-row"><span><strong>Total Fat</strong> {{ section.settings.fat }}</span><strong>{{ section.settings.fat_dv }}</strong></div>
+          <div class="pd-nut-rule"></div>
+          <div class="pd-nut-row"><span><strong>Sodium</strong> {{ section.settings.sodium }}</span><strong>{{ section.settings.sodium_dv }}</strong></div>
+          <div class="pd-nut-rule"></div>
+          <div class="pd-nut-row"><span><strong>Total Carbohydrate</strong> {{ section.settings.carbs }}</span><strong>{{ section.settings.carbs_dv }}</strong></div>
+          <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Total Sugars {{ section.settings.sugars }}</span><span></span></div>
+          <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>{{ section.settings.added_sugars }}</span><strong>{{ section.settings.added_sugars_dv }}</strong></div>
+          <div class="pd-nut-rule"></div>
+          <div class="pd-nut-row"><span><strong>Protein</strong> {{ section.settings.protein }}</span></div>
+          <div class="pd-nut-rule--med"></div>
+          <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">{{ section.settings.footnote }}</div>
+        {%- endif -%}
       </div>
     </div>
   </section>
@@ -40,6 +105,7 @@
   "class": "section-vp-nutrition",
   "enabled_on": { "templates": ["product"] },
   "settings": [
+    { "type": "paragraph", "content": "Nutrition is pulled from the product's custom.nutrition_facts metafield when it's set (same as the brand page). The values below are only used as a fallback when that metafield is empty." },
     { "type": "text", "id": "title", "label": "Title", "default": "Nutrition Facts" },
     { "type": "text", "id": "serving", "label": "Serving line", "default": "Per bottle · Serving size 2 Tbsp (30 mL)" },
     { "type": "text", "id": "amount_label", "label": "Amount-per-serving label", "default": "Amount per serving" },

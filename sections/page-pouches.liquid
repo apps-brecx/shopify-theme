@@ -1,0 +1,339 @@
+{%- comment -%}
+  Pouches — coming-soon landing page (Syruvia).
+  Purpose: email announces "Pouches" (syrup pouches, releasing July 27). The email's
+  Notify Me button lands here; visitors tap Notify Me → success state, and their
+  customer record gets the waitlist tag (schema setting, default "Pouches") via the
+  native Shopify customer form — build your segment on that tag in admin.
+  Logged-in customers get a prefilled one-tap notify; guests enter their email or sign in.
+  Mobile-first + desktop hero images (provided CDN banners), live countdown to launch,
+  reveal-on-scroll, clean brand system (Archivo Black + Josefin Sans). Everything editable.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign rad = s.card_radius | default: 20 -%}
+{%- assign tagv = s.waitlist_tag | default: 'Pouches' -%}
+{%- assign img_d = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Banner_2.png?v=1783969922' -%}
+{%- assign img_m = 'https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Mobile_5.png?v=1783969922' -%}
+{%- if s.hero_desktop != blank -%}{%- assign img_d = s.hero_desktop | image_url: width: 2400 -%}{%- endif -%}
+{%- if s.hero_mobile != blank -%}{%- assign img_m = s.hero_mobile | image_url: width: 1200 -%}{%- endif -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:wght@300;400;600;700&display=swap"></noscript>
+
+<style>
+  #pw-{{ section.id }}{
+    --ink:{{ s.color_ink | default: '#1a1a1a' }};
+    --brand:{{ s.color_brand | default: '#39220f' }};
+    --bg:{{ s.color_bg | default: '#FFFBF4' }};
+    --paper:{{ s.color_paper | default: '#ffffff' }};
+    --accent:{{ s.color_accent | default: '#c58548' }};
+    --pop:{{ s.color_pop | default: '#FF6B5C' }};
+    --mint:{{ s.color_success | default: '#C5E4D4' }};
+    --mint-ink:#2b6b53;
+    --rule-c:{{ s.color_rule | default: '#39220f' }};
+    --wrap:{{ s.wrap_max | default: 1040 }}px;
+    --rad:{{ rad }}px;
+    --display:'Archivo Black','Josefin Sans',system-ui,sans-serif;
+    --serif:'Josefin Sans',system-ui,sans-serif;
+    --rule:2px solid var(--rule-c);
+    background:var(--bg);color:var(--ink);font-family:var(--serif);position:relative;overflow-x:clip;
+    font-size:16px;line-height:1.5;
+  }
+  #pw-{{ section.id }} *{box-sizing:border-box;}
+  #pw-{{ section.id }} .pw-wrap{max-width:var(--wrap);margin:0 auto;padding:0 18px;}
+  #pw-{{ section.id }} .pw-eyebrow{font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;display:inline-block;padding:7px 14px;border:var(--rule);border-radius:999px;background:var(--paper);color:var(--brand);}
+  #pw-{{ section.id }} .pw-h2{font-family:var(--display);font-weight:900;font-size:clamp(26px,7vw,44px);line-height:.98;letter-spacing:-.01em;text-transform:uppercase;margin:12px 0 0;color:var(--brand);text-wrap:balance;}
+  #pw-{{ section.id }} .pw-h2 em{font-family:var(--serif);font-weight:300;font-style:italic;text-transform:none;color:var(--pop);}
+  #pw-{{ section.id }} .pw-rev{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.7,.2,1);}
+  #pw-{{ section.id }} .pw-rev.in{opacity:1;transform:none;}
+  #pw-{{ section.id }} .pw-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--display);font-size:15px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:17px 28px;border:var(--rule);border-radius:999px;cursor:pointer;transition:transform .14s ease,box-shadow .14s ease;background:var(--pop);color:#fff;box-shadow:4px 4px 0 var(--rule-c);}
+  #pw-{{ section.id }} .pw-btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--rule-c);}
+  @media(hover:hover){#pw-{{ section.id }} .pw-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--rule-c);}}
+
+  /* HERO — full-bleed banner, desktop vs mobile art */
+  #pw-{{ section.id }} .pw-hero{position:relative;}
+  #pw-{{ section.id }} .pw-hero img{display:block;width:100%;height:auto;}
+  #pw-{{ section.id }} .pw-hero .d{display:block;}
+  #pw-{{ section.id }} .pw-hero .m{display:none;}
+  @media(max-width:760px){
+    #pw-{{ section.id }} .pw-hero .d{display:none;}
+    #pw-{{ section.id }} .pw-hero .m{display:block;}
+  }
+  #pw-{{ section.id }} .pw-hero-text{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:{{ s.overlay_pos | default: 'flex-end' }};align-items:center;text-align:center;padding:7% 6%;pointer-events:none;}
+  #pw-{{ section.id }} .pw-hero-text .t{font-family:var(--display);font-weight:900;font-size:clamp(30px,7.5vw,64px);line-height:.94;letter-spacing:-.01em;text-transform:uppercase;color:{{ s.overlay_color | default: '#FFFBF4' }};text-shadow:0 2px 16px rgba(0,0,0,.45);margin:0;}
+  #pw-{{ section.id }} .pw-hero-text .st{font-size:clamp(14px,3.6vw,19px);color:{{ s.overlay_color | default: '#FFFBF4' }};text-shadow:0 1px 8px rgba(0,0,0,.5);margin:10px 0 0;max-width:36ch;}
+
+  /* LAUNCH STRIP — countdown card overlapping hero */
+  #pw-{{ section.id }} .pw-launch{position:relative;z-index:3;margin-top:-34px;}
+  #pw-{{ section.id }} .pw-launch-card{background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 6px);box-shadow:7px 7px 0 var(--rule-c);padding:22px 18px 24px;text-align:center;max-width:640px;margin:0 auto;}
+  #pw-{{ section.id }} .pw-launch-card .ribbon{font-family:var(--display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--pop);border:var(--rule);border-radius:999px;display:inline-block;padding:6px 15px;margin-top:-40px;box-shadow:3px 3px 0 var(--rule-c);}
+  #pw-{{ section.id }} .pw-launch-card h2{font-family:var(--display);font-size:clamp(22px,5.4vw,32px);text-transform:uppercase;color:var(--brand);margin:14px 0 0;line-height:1;}
+  #pw-{{ section.id }} .pw-count{display:flex;justify-content:center;gap:10px;margin-top:18px;}
+  #pw-{{ section.id }} .pw-cell{min-width:64px;background:var(--bg);border:var(--rule);border-radius:14px;box-shadow:3px 3px 0 var(--rule-c);padding:12px 8px 10px;}
+  #pw-{{ section.id }} .pw-cell .n{font-family:var(--display);font-size:clamp(22px,6vw,30px);line-height:1;color:var(--brand);display:block;}
+  #pw-{{ section.id }} .pw-cell .l{font-family:var(--display);font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;display:block;margin-top:5px;}
+  @media(max-width:400px){#pw-{{ section.id }} .pw-cell{min-width:56px;}}
+
+  /* NOTIFY FORM */
+  #pw-{{ section.id }} .pw-notify{padding:34px 0 8px;}
+  #pw-{{ section.id }} .pw-note-card{max-width:640px;margin:0 auto;background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 6px);box-shadow:6px 6px 0 var(--rule-c);padding:26px 22px 28px;text-align:center;}
+  #pw-{{ section.id }} .pw-note-card h2{font-family:var(--display);font-size:clamp(20px,5vw,28px);text-transform:uppercase;color:var(--brand);margin:0;line-height:1.05;}
+  #pw-{{ section.id }} .pw-note-card p.sub{font-size:15px;opacity:.8;margin:10px auto 0;max-width:40ch;}
+  #pw-{{ section.id }} .pw-form{margin-top:18px;display:flex;flex-direction:column;gap:12px;align-items:center;}
+  #pw-{{ section.id }} .pw-form .row{display:flex;gap:10px;width:100%;max-width:440px;}
+  #pw-{{ section.id }} .pw-form input[type=email]{flex:1;min-width:0;font-family:var(--serif);font-size:16px;padding:15px 18px;border:var(--rule);border-radius:999px;background:var(--bg);color:var(--ink);}
+  #pw-{{ section.id }} .pw-form input[type=email]:focus{outline:3px solid var(--accent);outline-offset:1px;}
+  #pw-{{ section.id }} .pw-form .pw-btn{width:100%;max-width:440px;}
+  #pw-{{ section.id }} .pw-hello{font-size:14.5px;margin:0 0 2px;opacity:.85;}
+  #pw-{{ section.id }} .pw-signin{font-size:13.5px;margin-top:12px;opacity:.85;}
+  #pw-{{ section.id }} .pw-signin a{color:var(--brand);font-weight:700;}
+  /* success + error */
+  #pw-{{ section.id }} .pw-ok{background:var(--mint);border:2px solid var(--mint-ink);color:var(--mint-ink);border-radius:16px;padding:18px 16px;margin-top:16px;}
+  #pw-{{ section.id }} .pw-ok .big{font-family:var(--display);font-size:18px;text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;justify-content:center;gap:8px;}
+  #pw-{{ section.id }} .pw-ok p{font-size:14px;margin:8px 0 0;}
+  #pw-{{ section.id }} .pw-err{background:#FBE3E0;border:2px solid #B23A48;color:#B23A48;border-radius:14px;padding:12px 14px;margin-top:14px;font-size:14px;}
+  /* confetti burst on success */
+  #pw-{{ section.id }} .pw-confetti{position:relative;height:0;}
+  #pw-{{ section.id }} .pw-confetti i{position:absolute;top:0;left:50%;width:8px;height:12px;border:1.5px solid var(--rule-c);opacity:0;}
+  #pw-{{ section.id }} .pw-ok.burst .pw-confetti i{animation:pwpop{{ section.id }} 1s ease-out forwards;}
+  @keyframes pwpop{{ section.id }}{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--dr))}}
+
+  /* FEATURES */
+  #pw-{{ section.id }} .pw-feat{padding:36px 0;}
+  #pw-{{ section.id }} .pw-head{text-align:center;margin-bottom:22px;}
+  #pw-{{ section.id }} .pw-feat-g{display:grid;grid-template-columns:1fr;gap:14px;}
+  #pw-{{ section.id }} .pw-f{display:flex;gap:14px;align-items:flex-start;background:var(--paper);border:var(--rule);border-radius:var(--rad);box-shadow:4px 4px 0 var(--rule-c);padding:18px;}
+  #pw-{{ section.id }} .pw-f .ic{flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:var(--rule);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:2px 2px 0 var(--rule-c);background:var(--accent);}
+  #pw-{{ section.id }} .pw-f h3{font-family:var(--display);font-size:16px;text-transform:uppercase;margin:2px 0 0;color:var(--brand);}
+  #pw-{{ section.id }} .pw-f p{font-size:14px;opacity:.82;margin:6px 0 0;}
+  @media(min-width:760px){#pw-{{ section.id }} .pw-feat-g{grid-template-columns:repeat(3,1fr);}}
+
+  /* FINAL CTA */
+  #pw-{{ section.id }} .pw-final{padding:10px 0 60px;}
+  #pw-{{ section.id }} .pw-final-card{background:var(--brand);color:#fff;border:var(--rule);border-radius:calc(var(--rad) + 10px);box-shadow:8px 8px 0 var(--rule-c);padding:clamp(32px,6.5vw,52px) 22px;text-align:center;}
+  #pw-{{ section.id }} .pw-final-card .pw-h2{color:#fff;}
+  #pw-{{ section.id }} .pw-final-card .pw-h2 em{color:var(--accent);}
+  #pw-{{ section.id }} .pw-final-card p{max-width:44ch;margin:14px auto 0;opacity:.92;}
+  #pw-{{ section.id }} .pw-final-card .pw-btn{margin-top:22px;background:var(--pop);}
+
+  @media (prefers-reduced-motion: reduce){
+    #pw-{{ section.id }} .pw-rev{opacity:1;transform:none;}
+    #pw-{{ section.id }} .pw-ok.burst .pw-confetti i{animation:none;}
+  }
+</style>
+
+<section id="pw-{{ section.id }}">
+
+  {%- comment -%} ===== Hero banner (desktop / mobile art) ===== {%- endcomment -%}
+  <div class="pw-hero">
+    <img class="d" src="{{ img_d }}" alt="{{ s.hero_alt | default: 'Syruvia Pouches — coming soon' | escape }}" loading="eager">
+    <img class="m" src="{{ img_m }}" alt="{{ s.hero_alt | default: 'Syruvia Pouches — coming soon' | escape }}" loading="eager">
+    {%- if s.show_overlay -%}
+    <div class="pw-hero-text">
+      {%- if s.overlay_title != blank -%}<h1 class="t">{{ s.overlay_title }}</h1>{%- endif -%}
+      {%- if s.overlay_sub != blank -%}<p class="st">{{ s.overlay_sub }}</p>{%- endif -%}
+    </div>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} ===== Countdown card ===== {%- endcomment -%}
+  <div class="pw-launch">
+    <div class="pw-wrap">
+      <div class="pw-launch-card">
+        <span class="ribbon">{{ s.launch_ribbon | default: 'Coming soon' }}</span>
+        <h2>{{ s.launch_title | default: 'Launching July 27' }}</h2>
+        <div class="pw-count" data-count-to="{{ s.launch_iso | default: '2026-07-27T10:00:00-04:00' }}" aria-label="Countdown to launch">
+          <div class="pw-cell"><span class="n" data-dd>–</span><span class="l">Days</span></div>
+          <div class="pw-cell"><span class="n" data-hh>–</span><span class="l">Hours</span></div>
+          <div class="pw-cell"><span class="n" data-mm>–</span><span class="l">Min</span></div>
+          <div class="pw-cell"><span class="n" data-ss>–</span><span class="l">Sec</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ===== Notify Me (native Shopify customer form → waitlist tag) ===== {%- endcomment -%}
+  <div class="pw-notify" id="notify">
+    <div class="pw-wrap">
+      <div class="pw-note-card pw-rev">
+        {%- form 'customer', id: 'pw-notify-form' -%}
+          {%- if form.posted_successfully? -%}
+            <h2>{{ s.ok_title | default: 'You&rsquo;re on the list!' }}</h2>
+            <div class="pw-ok" data-pw-ok>
+              <div class="pw-confetti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <span class="big">✓ {{ s.ok_badge | default: 'Notification set' }}</span>
+              <p>{{ s.ok_text | default: 'We&rsquo;ll email you the moment Pouches drop on July 27. Keep an eye on your inbox — early birds get first pour.' }}</p>
+            </div>
+          {%- else -%}
+            <h2>{{ s.form_title | default: 'Be first to pour' }}</h2>
+            <p class="sub">{{ s.form_sub | default: 'Tap notify and we&rsquo;ll email you the second Pouches go live. No spam — just the drop.' }}</p>
+            {%- if form.errors -%}
+              <div class="pw-err">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</div>
+            {%- endif -%}
+            <div class="pw-form">
+              <input type="hidden" name="contact[tags]" value="{{ tagv }}">
+              {%- if customer -%}
+                <p class="pw-hello">{{ s.hello_text | default: 'Hi' }} {{ customer.first_name | default: 'there' }} 👋 — {{ s.hello_sub | default: 'one tap and you&rsquo;re in:' }}</p>
+                <input type="hidden" name="contact[email]" value="{{ customer.email }}">
+                <button type="submit" class="pw-btn">{{ s.btn_text | default: 'Notify me' }}</button>
+              {%- else -%}
+                <div class="row">
+                  <input type="email" name="contact[email]" required autocomplete="email" placeholder="{{ s.email_placeholder | default: 'Your email address' }}" aria-label="Email address">
+                </div>
+                <button type="submit" class="pw-btn">{{ s.btn_text | default: 'Notify me' }}</button>
+                <p class="pw-signin">{{ s.signin_pre | default: 'Have an account?' }} <a href="{{ routes.account_login_url }}?return_url={{ request.path | url_encode }}">{{ s.signin_link | default: 'Sign in' }}</a> {{ s.signin_post | default: 'for one-tap notify.' }}</p>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ===== What are Pouches ===== {%- endcomment -%}
+  {%- if s.show_features -%}
+  <div class="pw-feat">
+    <div class="pw-wrap">
+      <div class="pw-head pw-rev">
+        <span class="pw-eyebrow">{{ s.feat_eyebrow | default: 'Meet the pouch' }}</span>
+        <h2 class="pw-h2">{{ s.feat_title | default: 'Your syrups, <em>to go</em>.' }}</h2>
+      </div>
+      <div class="pw-feat-g">
+        <div class="pw-f pw-rev"><span class="ic">{{ s.f1_icon | default: '🎒' }}</span><div><h3>{{ s.f1_t | default: 'Take it anywhere' }}</h3><p>{{ s.f1_p | default: 'Pocket-size pouches of your favorite Syruvia flavors — office, travel, gym bag, anywhere.' }}</p></div></div>
+        <div class="pw-f pw-rev"><span class="ic">{{ s.f2_icon | default: '☕' }}</span><div><h3>{{ s.f2_t | default: 'Same real flavor' }}</h3><p>{{ s.f2_p | default: 'The café-quality taste you know from our bottles, in a perfectly portioned squeeze.' }}</p></div></div>
+        <div class="pw-f pw-rev"><span class="ic">{{ s.f3_icon | default: '✨' }}</span><div><h3>{{ s.f3_t | default: 'No mess, no measuring' }}</h3><p>{{ s.f3_p | default: 'Tear, pour, enjoy. Every pouch is one perfect serving — zero cleanup.' }}</p></div></div>
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- comment -%} ===== Final CTA ===== {%- endcomment -%}
+  <div class="pw-final">
+    <div class="pw-wrap">
+      <div class="pw-final-card pw-rev">
+        <span class="pw-eyebrow" style="background:var(--accent);color:#fff;">{{ s.final_eyebrow | default: 'July 27 · Mark it' }}</span>
+        <h2 class="pw-h2">{{ s.final_title | default: 'Don&rsquo;t miss <em>the drop</em>.' }}</h2>
+        <p>{{ s.final_sub | default: 'Pouches will be limited at launch. Get on the list and we&rsquo;ll make sure you&rsquo;re first in line.' }}</p>
+        <a class="pw-btn" href="#notify">{{ s.final_btn | default: 'Notify me' }}</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('pw-{{ section.id }}');
+  if(!root) return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // reveal on scroll
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });},{threshold:.14});
+    root.querySelectorAll('.pw-rev').forEach(function(el){io.observe(el);});
+  } else { root.querySelectorAll('.pw-rev').forEach(function(el){el.classList.add('in');}); }
+
+  // countdown
+  var cd=root.querySelector('[data-count-to]');
+  if(cd){
+    var target=new Date(cd.getAttribute('data-count-to')).getTime();
+    var dd=cd.querySelector('[data-dd]'),hh=cd.querySelector('[data-hh]'),mm=cd.querySelector('[data-mm]'),ss=cd.querySelector('[data-ss]');
+    function pad(n){return n<10?'0'+n:''+n;}
+    function tick(){
+      var diff=target-Date.now();
+      if(isNaN(target)) return;
+      if(diff<=0){ dd.textContent='0'; hh.textContent='00'; mm.textContent='00'; ss.textContent='00'; return; }
+      dd.textContent=Math.floor(diff/86400000);
+      hh.textContent=pad(Math.floor(diff/3600000)%24);
+      mm.textContent=pad(Math.floor(diff/60000)%60);
+      ss.textContent=pad(Math.floor(diff/1000)%60);
+      setTimeout(tick,1000);
+    }
+    tick();
+  }
+
+  // success: scroll into view + confetti burst
+  var ok=root.querySelector('[data-pw-ok]');
+  if(ok){
+    ok.querySelectorAll('.pw-confetti i').forEach(function(el,i){
+      var ang=(i/12)*Math.PI*2, dist=60+((i*29)%60);
+      el.style.setProperty('--dx',(Math.cos(ang)*dist).toFixed(0)+'px');
+      el.style.setProperty('--dy',(Math.sin(ang)*dist-40).toFixed(0)+'px');
+      el.style.setProperty('--dr',((i*97)%360)+'deg');
+      el.style.background=['#FF6B5C','#c58548','#FCE2A0','#C5E4D4'][i%4];
+    });
+    setTimeout(function(){
+      ok.classList.add('burst');
+      try{ ok.closest('.pw-note-card').scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'}); }catch(e){}
+    },300);
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Pouches Coming Soon",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Hero images" },
+    { "type": "image_picker", "id": "hero_desktop", "label": "Desktop banner (defaults to provided art)" },
+    { "type": "image_picker", "id": "hero_mobile", "label": "Mobile banner (defaults to provided art)" },
+    { "type": "text", "id": "hero_alt", "label": "Hero alt text", "default": "Syruvia Pouches — coming soon" },
+    { "type": "checkbox", "id": "show_overlay", "label": "Show text on the image", "default": false },
+    { "type": "text", "id": "overlay_title", "label": "Overlay title", "default": "Pouches" },
+    { "type": "text", "id": "overlay_sub", "label": "Overlay subtitle", "default": "Your favorite syrups — pocket-size. July 27." },
+    { "type": "select", "id": "overlay_pos", "label": "Overlay position", "default": "flex-end", "options": [ { "value": "flex-start", "label": "Top" }, { "value": "center", "label": "Center" }, { "value": "flex-end", "label": "Bottom" } ] },
+    { "type": "color", "id": "overlay_color", "label": "Overlay text color", "default": "#FFFBF4" },
+    { "type": "header", "content": "Launch countdown" },
+    { "type": "text", "id": "launch_ribbon", "label": "Ribbon", "default": "Coming soon" },
+    { "type": "text", "id": "launch_title", "label": "Title", "default": "Launching July 27" },
+    { "type": "text", "id": "launch_iso", "label": "Launch date/time (ISO)", "default": "2026-07-27T10:00:00-04:00", "info": "Format: YYYY-MM-DDTHH:MM:SS-04:00 (EDT)" },
+    { "type": "header", "content": "Notify Me form" },
+    { "type": "text", "id": "waitlist_tag", "label": "Customer tag for the segment", "default": "Pouches", "info": "Signups get this tag. In admin, build your segment as: customer_tags CONTAINS 'Pouches'." },
+    { "type": "text", "id": "form_title", "label": "Form title", "default": "Be first to pour" },
+    { "type": "textarea", "id": "form_sub", "label": "Form subtitle", "default": "Tap notify and we’ll email you the second Pouches go live. No spam — just the drop." },
+    { "type": "text", "id": "btn_text", "label": "Button text", "default": "Notify me" },
+    { "type": "text", "id": "email_placeholder", "label": "Email placeholder", "default": "Your email address" },
+    { "type": "text", "id": "hello_text", "label": "Logged-in greeting", "default": "Hi" },
+    { "type": "text", "id": "hello_sub", "label": "Logged-in sub-text", "default": "one tap and you’re in:" },
+    { "type": "text", "id": "signin_pre", "label": "Sign-in prompt (before link)", "default": "Have an account?" },
+    { "type": "text", "id": "signin_link", "label": "Sign-in link text", "default": "Sign in" },
+    { "type": "text", "id": "signin_post", "label": "Sign-in prompt (after link)", "default": "for one-tap notify." },
+    { "type": "header", "content": "Success state" },
+    { "type": "text", "id": "ok_title", "label": "Success title", "default": "You’re on the list!" },
+    { "type": "text", "id": "ok_badge", "label": "Success badge", "default": "Notification set" },
+    { "type": "textarea", "id": "ok_text", "label": "Success text", "default": "We’ll email you the moment Pouches drop on July 27. Keep an eye on your inbox — early birds get first pour." },
+    { "type": "header", "content": "Features" },
+    { "type": "checkbox", "id": "show_features", "label": "Show features", "default": true },
+    { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "Meet the pouch" },
+    { "type": "text", "id": "feat_title", "label": "Heading", "default": "Your syrups, <em>to go</em>." },
+    { "type": "text", "id": "f1_icon", "label": "Feature 1 emoji", "default": "🎒" },
+    { "type": "text", "id": "f1_t", "label": "Feature 1 title", "default": "Take it anywhere" },
+    { "type": "textarea", "id": "f1_p", "label": "Feature 1 text", "default": "Pocket-size pouches of your favorite Syruvia flavors — office, travel, gym bag, anywhere." },
+    { "type": "text", "id": "f2_icon", "label": "Feature 2 emoji", "default": "☕" },
+    { "type": "text", "id": "f2_t", "label": "Feature 2 title", "default": "Same real flavor" },
+    { "type": "textarea", "id": "f2_p", "label": "Feature 2 text", "default": "The café-quality taste you know from our bottles, in a perfectly portioned squeeze." },
+    { "type": "text", "id": "f3_icon", "label": "Feature 3 emoji", "default": "✨" },
+    { "type": "text", "id": "f3_t", "label": "Feature 3 title", "default": "No mess, no measuring" },
+    { "type": "textarea", "id": "f3_p", "label": "Feature 3 text", "default": "Tear, pour, enjoy. Every pouch is one perfect serving — zero cleanup." },
+    { "type": "header", "content": "Final CTA" },
+    { "type": "text", "id": "final_eyebrow", "label": "Eyebrow", "default": "July 27 · Mark it" },
+    { "type": "text", "id": "final_title", "label": "Heading", "default": "Don’t miss <em>the drop</em>." },
+    { "type": "textarea", "id": "final_sub", "label": "Text", "default": "Pouches will be limited at launch. Get on the list and we’ll make sure you’re first in line." },
+    { "type": "text", "id": "final_btn", "label": "Button text", "default": "Notify me" },
+    { "type": "header", "content": "Brand colors & layout" },
+    { "type": "color", "id": "color_ink", "label": "Body text", "default": "#1a1a1a" },
+    { "type": "color", "id": "color_brand", "label": "Headings", "default": "#39220f" },
+    { "type": "color", "id": "color_bg", "label": "Page background", "default": "#FFFBF4" },
+    { "type": "color", "id": "color_paper", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "color_accent", "label": "Accent", "default": "#c58548" },
+    { "type": "color", "id": "color_pop", "label": "CTA / highlight", "default": "#FF6B5C" },
+    { "type": "color", "id": "color_success", "label": "Success background", "default": "#C5E4D4" },
+    { "type": "color", "id": "color_rule", "label": "Borders & shadows", "default": "#39220f" },
+    { "type": "range", "id": "wrap_max", "label": "Content width", "min": 900, "max": 1280, "step": 20, "unit": "px", "default": 1040 },
+    { "type": "range", "id": "card_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 20 }
+  ],
+  "presets": [ { "name": "Pouches Coming Soon" } ]
+}
+{% endschema %}
