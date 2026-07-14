@@ -3655,10 +3655,12 @@ section#shopify-section-template--23106814443804__image_banner_iBk9RT
   background: #cb282d !important;
 }
 body .swym-add-to-wishlist-view-product:after {
-  color: #18514b !important;
+  color: #b85423 !important;
+  width: 20px;
+  height: 20px;
 }
 body .swym-added.swym-add-to-wishlist-view-product:after {
-  color: #18514b !important;
+  color: #b85423 !important;
 }
 .collection-custom-collection
   .section-template--23106814443804__image_with_text_GneQji-padding.gradient {
