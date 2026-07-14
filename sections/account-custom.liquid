@@ -252,6 +252,11 @@
         <div class="dpanel" data-panel="favorites">
           <div class="sect-head"><div><h2>Favorites</h2><p>Your saved flavors.</p></div></div>
           <div class="card"><div class="empty-state"><div class="eg">{{ icHeart }}</div><h3>No favorites yet</h3><p>Tap the heart on any product to save it here. (Connects to your wishlist app.)</p><a class="btn-ink" href="{{ routes.all_products_collection_url | default: '/collections/all' }}">Browse flavors {{ icArrow }}</a></div></div>
+          <div class="wishlist-page-container">
+  <h1>My Wishlist</h1>
+  <div id="swym-wishlist-render-container"></div>
+</div>
+
         </div>
 
         <div class="dpanel" data-panel="vip">
