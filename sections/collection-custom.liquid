@@ -576,6 +576,7 @@
               data-desc="{{ pdesc | escape }}"
               style="--tint:{{ tintBg }};--tint-ink:{{ tintInk }};--d:{{ dd }}ms"
             >
+        
               <div class="pcard-media" data-quick>
                 <div class="pcard-badges">
                   {%- unless avail -%}
@@ -589,9 +590,8 @@
                   {%- endif %}
                 </div>
                 {% comment %} <button aria-label="Add to Wishlist" data-with-epi="true" class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}" data-variant-id="{{product.variants[0].id}}" data-product-url="https://syruvia.com/{{ product.url }}"> {% endcomment %}
-                <button class="wish" data-wish aria-label="Save">
-                  <span class="wish-o">{{ icHeart }}</span><span class="wish-f">{{ icHeartF }}</span>
-                </button>
+                <button aria-label="Add to Wishlist" data-with-epi="true" class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}" data-variant-id="{{product.variants[0].id}}" data-product-url="https://syruvia.com/{{ product.url }}">
+</button>
                 <div class="pcard-imgwrap">
                   <img
                     class="pcard-img"
