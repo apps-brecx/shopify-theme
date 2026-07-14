@@ -99,6 +99,10 @@
   #pw-{{ section.id }} .pw-ok.burst .pw-confetti i{animation:pwpop{{ section.id }} 1s ease-out forwards;}
   @keyframes pwpop{{ section.id }}{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--dr))}}
 
+  /* BIG STATEMENT */
+  #pw-{{ section.id }} .pw-statement{padding:clamp(38px,8vw,72px) 0;text-align:center;}
+  #pw-{{ section.id }} .pw-statement .txt{font-family:var(--display);font-weight:900;font-size:clamp(40px,10vw,92px);line-height:.95;letter-spacing:-.01em;text-transform:uppercase;color:{{ s.statement_color | default: '#FFFFFF' }};margin:0;text-wrap:balance;}
+
   /* FEATURES */
   #pw-{{ section.id }} .pw-feat{padding:36px 0;}
   #pw-{{ section.id }} .pw-head{text-align:center;margin-bottom:22px;}
@@ -191,7 +195,16 @@
     </div>
   </div>
 
-  {%- comment -%} ===== What are Pouches ===== {%- endcomment -%}
+  {%- comment -%} ===== Big statement ===== {%- endcomment -%}
+  {%- if s.show_statement -%}
+  <div class="pw-statement">
+    <div class="pw-wrap">
+      <h2 class="txt pw-rev">{{ s.statement_text | default: 'Flavor To Go!' }}</h2>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- comment -%} ===== Hint cards (optional) ===== {%- endcomment -%}
   {%- if s.show_features -%}
   <div class="pw-feat">
     <div class="pw-wrap">
@@ -304,8 +317,12 @@
     { "type": "text", "id": "ok_title", "label": "Success title", "default": "You’re on the list!" },
     { "type": "text", "id": "ok_badge", "label": "Success badge", "default": "Notification set" },
     { "type": "textarea", "id": "ok_text", "label": "Success text", "default": "We’ll email you the moment it drops on July 27. Keep an eye on your inbox — you’ll be among the first to see it." },
-    { "type": "header", "content": "Features" },
-    { "type": "checkbox", "id": "show_features", "label": "Show features", "default": true },
+    { "type": "header", "content": "Big statement" },
+    { "type": "checkbox", "id": "show_statement", "label": "Show big statement text", "default": true },
+    { "type": "text", "id": "statement_text", "label": "Statement text", "default": "Flavor To Go!" },
+    { "type": "color", "id": "statement_color", "label": "Statement color", "default": "#FFFFFF" },
+    { "type": "header", "content": "Hint cards (optional)" },
+    { "type": "checkbox", "id": "show_features", "label": "Show hint cards", "default": false },
     { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "Here’s a hint" },
     { "type": "text", "id": "feat_title", "label": "Heading", "default": "Small. Mighty. <em>Everywhere</em>." },
     { "type": "text", "id": "f1_icon", "label": "Feature 1 emoji", "default": "🤫" },
