@@ -127,8 +127,8 @@
 
   {%- comment -%} ===== Hero banner (desktop / mobile art) ===== {%- endcomment -%}
   <div class="pw-hero">
-    <img class="d" src="{{ img_d }}" alt="{{ s.hero_alt | default: 'Syruvia Pouches — coming soon' | escape }}" loading="eager">
-    <img class="m" src="{{ img_m }}" alt="{{ s.hero_alt | default: 'Syruvia Pouches — coming soon' | escape }}" loading="eager">
+    <img class="d" src="{{ img_d }}" alt="{{ s.hero_alt | default: 'Syruvia — something new is coming' | escape }}" loading="eager">
+    <img class="m" src="{{ img_m }}" alt="{{ s.hero_alt | default: 'Syruvia — something new is coming' | escape }}" loading="eager">
     {%- if s.show_overlay -%}
     <div class="pw-hero-text">
       {%- if s.overlay_title != blank -%}<h1 class="t">{{ s.overlay_title }}</h1>{%- endif -%}
@@ -163,11 +163,11 @@
             <div class="pw-ok" data-pw-ok>
               <div class="pw-confetti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
               <span class="big">✓ {{ s.ok_badge | default: 'Notification set' }}</span>
-              <p>{{ s.ok_text | default: 'We&rsquo;ll email you the moment Pouches drop on July 27. Keep an eye on your inbox — early birds get first pour.' }}</p>
+              <p>{{ s.ok_text | default: 'We&rsquo;ll email you the moment it drops on July 27. Keep an eye on your inbox — you&rsquo;ll be among the first to see it.' }}</p>
             </div>
           {%- else -%}
-            <h2>{{ s.form_title | default: 'Be first to pour' }}</h2>
-            <p class="sub">{{ s.form_sub | default: 'Tap notify and we&rsquo;ll email you the second Pouches go live. No spam — just the drop.' }}</p>
+            <h2>{{ s.form_title | default: 'Be the first to know' }}</h2>
+            <p class="sub">{{ s.form_sub | default: 'Tap notify and we&rsquo;ll email you the second it drops. No spam — just the reveal.' }}</p>
             {%- if form.errors -%}
               <div class="pw-err">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</div>
             {%- endif -%}
@@ -196,13 +196,13 @@
   <div class="pw-feat">
     <div class="pw-wrap">
       <div class="pw-head pw-rev">
-        <span class="pw-eyebrow">{{ s.feat_eyebrow | default: 'Meet the pouch' }}</span>
-        <h2 class="pw-h2">{{ s.feat_title | default: 'Your syrups, <em>to go</em>.' }}</h2>
+        <span class="pw-eyebrow">{{ s.feat_eyebrow | default: 'Here’s a hint' }}</span>
+        <h2 class="pw-h2">{{ s.feat_title | default: 'Small. Mighty. <em>Everywhere</em>.' }}</h2>
       </div>
       <div class="pw-feat-g">
-        <div class="pw-f pw-rev"><span class="ic">{{ s.f1_icon | default: '🎒' }}</span><div><h3>{{ s.f1_t | default: 'Take it anywhere' }}</h3><p>{{ s.f1_p | default: 'Pocket-size pouches of your favorite Syruvia flavors — office, travel, gym bag, anywhere.' }}</p></div></div>
-        <div class="pw-f pw-rev"><span class="ic">{{ s.f2_icon | default: '☕' }}</span><div><h3>{{ s.f2_t | default: 'Same real flavor' }}</h3><p>{{ s.f2_p | default: 'The café-quality taste you know from our bottles, in a perfectly portioned squeeze.' }}</p></div></div>
-        <div class="pw-f pw-rev"><span class="ic">{{ s.f3_icon | default: '✨' }}</span><div><h3>{{ s.f3_t | default: 'No mess, no measuring' }}</h3><p>{{ s.f3_p | default: 'Tear, pour, enjoy. Every pouch is one perfect serving — zero cleanup.' }}</p></div></div>
+        <div class="pw-f pw-rev"><span class="ic">{{ s.f1_icon | default: '🎒' }}</span><div><h3>{{ s.f1_t | default: 'Top secret' }}</h3><p>{{ s.f1_p | default: 'We can’t say what it is just yet — but you’ve never had Syruvia quite like this.' }}</p></div></div>
+        <div class="pw-f pw-rev"><span class="ic">{{ s.f2_icon | default: '☕' }}</span><div><h3>{{ s.f2_t | default: 'Same real flavor' }}</h3><p>{{ s.f2_p | default: 'Made for pockets, bags, road trips and adventures. That’s all we’re saying.' }}</p></div></div>
+        <div class="pw-f pw-rev"><span class="ic">{{ s.f3_icon | default: '✨' }}</span><div><h3>{{ s.f3_t | default: 'No mess, no measuring' }}</h3><p>{{ s.f3_p | default: 'The same real, café-quality flavor you already love — in a whole new way.' }}</p></div></div>
       </div>
     </div>
   </div>
@@ -213,8 +213,8 @@
     <div class="pw-wrap">
       <div class="pw-final-card pw-rev">
         <span class="pw-eyebrow" style="background:var(--accent);color:#fff;">{{ s.final_eyebrow | default: 'July 27 · Mark it' }}</span>
-        <h2 class="pw-h2">{{ s.final_title | default: 'Don&rsquo;t miss <em>the drop</em>.' }}</h2>
-        <p>{{ s.final_sub | default: 'Pouches will be limited at launch. Get on the list and we&rsquo;ll make sure you&rsquo;re first in line.' }}</p>
+        <h2 class="pw-h2">{{ s.final_title | default: 'Don&rsquo;t miss <em>the reveal</em>.' }}</h2>
+        <p>{{ s.final_sub | default: 'It&rsquo;ll be limited at launch. Get on the list and you&rsquo;ll be first in line when we unveil it.' }}</p>
         <a class="pw-btn" href="#notify">{{ s.final_btn | default: 'Notify me' }}</a>
       </div>
     </div>
@@ -279,10 +279,10 @@
     { "type": "header", "content": "Hero images" },
     { "type": "image_picker", "id": "hero_desktop", "label": "Desktop banner (defaults to provided art)" },
     { "type": "image_picker", "id": "hero_mobile", "label": "Mobile banner (defaults to provided art)" },
-    { "type": "text", "id": "hero_alt", "label": "Hero alt text", "default": "Syruvia Pouches — coming soon" },
+    { "type": "text", "id": "hero_alt", "label": "Hero alt text", "default": "Syruvia — something new is coming" },
     { "type": "checkbox", "id": "show_overlay", "label": "Show text on the image", "default": false },
-    { "type": "text", "id": "overlay_title", "label": "Overlay title", "default": "Pouches" },
-    { "type": "text", "id": "overlay_sub", "label": "Overlay subtitle", "default": "Your favorite syrups — pocket-size. July 27." },
+    { "type": "text", "id": "overlay_title", "label": "Overlay title", "default": "Something new is coming" },
+    { "type": "text", "id": "overlay_sub", "label": "Overlay subtitle", "default": "A new way to take Syruvia anywhere. July 27." },
     { "type": "select", "id": "overlay_pos", "label": "Overlay position", "default": "flex-end", "options": [ { "value": "flex-start", "label": "Top" }, { "value": "center", "label": "Center" }, { "value": "flex-end", "label": "Bottom" } ] },
     { "type": "color", "id": "overlay_color", "label": "Overlay text color", "default": "#FFFBF4" },
     { "type": "header", "content": "Launch countdown" },
@@ -291,8 +291,8 @@
     { "type": "text", "id": "launch_iso", "label": "Launch date/time (ISO)", "default": "2026-07-27T10:00:00-04:00", "info": "Format: YYYY-MM-DDTHH:MM:SS-04:00 (EDT)" },
     { "type": "header", "content": "Notify Me form" },
     { "type": "text", "id": "waitlist_tag", "label": "Customer tag for the segment", "default": "Pouches", "info": "Signups get this tag. In admin, build your segment as: customer_tags CONTAINS 'Pouches'." },
-    { "type": "text", "id": "form_title", "label": "Form title", "default": "Be first to pour" },
-    { "type": "textarea", "id": "form_sub", "label": "Form subtitle", "default": "Tap notify and we’ll email you the second Pouches go live. No spam — just the drop." },
+    { "type": "text", "id": "form_title", "label": "Form title", "default": "Be the first to know" },
+    { "type": "textarea", "id": "form_sub", "label": "Form subtitle", "default": "Tap notify and we’ll email you the second it drops. No spam — just the reveal." },
     { "type": "text", "id": "btn_text", "label": "Button text", "default": "Notify me" },
     { "type": "text", "id": "email_placeholder", "label": "Email placeholder", "default": "Your email address" },
     { "type": "text", "id": "hello_text", "label": "Logged-in greeting", "default": "Hi" },
@@ -303,24 +303,24 @@
     { "type": "header", "content": "Success state" },
     { "type": "text", "id": "ok_title", "label": "Success title", "default": "You’re on the list!" },
     { "type": "text", "id": "ok_badge", "label": "Success badge", "default": "Notification set" },
-    { "type": "textarea", "id": "ok_text", "label": "Success text", "default": "We’ll email you the moment Pouches drop on July 27. Keep an eye on your inbox — early birds get first pour." },
+    { "type": "textarea", "id": "ok_text", "label": "Success text", "default": "We’ll email you the moment it drops on July 27. Keep an eye on your inbox — you’ll be among the first to see it." },
     { "type": "header", "content": "Features" },
     { "type": "checkbox", "id": "show_features", "label": "Show features", "default": true },
-    { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "Meet the pouch" },
-    { "type": "text", "id": "feat_title", "label": "Heading", "default": "Your syrups, <em>to go</em>." },
-    { "type": "text", "id": "f1_icon", "label": "Feature 1 emoji", "default": "🎒" },
-    { "type": "text", "id": "f1_t", "label": "Feature 1 title", "default": "Take it anywhere" },
-    { "type": "textarea", "id": "f1_p", "label": "Feature 1 text", "default": "Pocket-size pouches of your favorite Syruvia flavors — office, travel, gym bag, anywhere." },
-    { "type": "text", "id": "f2_icon", "label": "Feature 2 emoji", "default": "☕" },
-    { "type": "text", "id": "f2_t", "label": "Feature 2 title", "default": "Same real flavor" },
-    { "type": "textarea", "id": "f2_p", "label": "Feature 2 text", "default": "The café-quality taste you know from our bottles, in a perfectly portioned squeeze." },
-    { "type": "text", "id": "f3_icon", "label": "Feature 3 emoji", "default": "✨" },
-    { "type": "text", "id": "f3_t", "label": "Feature 3 title", "default": "No mess, no measuring" },
-    { "type": "textarea", "id": "f3_p", "label": "Feature 3 text", "default": "Tear, pour, enjoy. Every pouch is one perfect serving — zero cleanup." },
+    { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "Here’s a hint" },
+    { "type": "text", "id": "feat_title", "label": "Heading", "default": "Small. Mighty. <em>Everywhere</em>." },
+    { "type": "text", "id": "f1_icon", "label": "Feature 1 emoji", "default": "🤫" },
+    { "type": "text", "id": "f1_t", "label": "Feature 1 title", "default": "Top secret" },
+    { "type": "textarea", "id": "f1_p", "label": "Feature 1 text", "default": "We can’t say what it is just yet — but you’ve never had Syruvia quite like this." },
+    { "type": "text", "id": "f2_icon", "label": "Feature 2 emoji", "default": "🎒" },
+    { "type": "text", "id": "f2_t", "label": "Feature 2 title", "default": "Goes where you go" },
+    { "type": "textarea", "id": "f2_p", "label": "Feature 2 text", "default": "Made for pockets, bags, road trips and adventures. That’s all we’re saying." },
+    { "type": "text", "id": "f3_icon", "label": "Feature 3 emoji", "default": "☕" },
+    { "type": "text", "id": "f3_t", "label": "Feature 3 title", "default": "100% Syruvia" },
+    { "type": "textarea", "id": "f3_p", "label": "Feature 3 text", "default": "The same real, café-quality flavor you already love — in a whole new way." },
     { "type": "header", "content": "Final CTA" },
     { "type": "text", "id": "final_eyebrow", "label": "Eyebrow", "default": "July 27 · Mark it" },
-    { "type": "text", "id": "final_title", "label": "Heading", "default": "Don’t miss <em>the drop</em>." },
-    { "type": "textarea", "id": "final_sub", "label": "Text", "default": "Pouches will be limited at launch. Get on the list and we’ll make sure you’re first in line." },
+    { "type": "text", "id": "final_title", "label": "Heading", "default": "Don’t miss <em>the reveal</em>." },
+    { "type": "textarea", "id": "final_sub", "label": "Text", "default": "It’ll be limited at launch. Get on the list and you’ll be first in line when we unveil it." },
     { "type": "text", "id": "final_btn", "label": "Button text", "default": "Notify me" },
     { "type": "header", "content": "Brand colors & layout" },
     { "type": "color", "id": "color_ink", "label": "Body text", "default": "#1a1a1a" },
