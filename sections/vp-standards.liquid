@@ -6,12 +6,17 @@
 {% endstyle %}
 {%- endif -%}
 
+{%- comment -%} Sugar-free packs use a different ingredients list (title contains "sugar free"/"sugar-free", any case). {%- endcomment -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- assign is_sf = false -%}
+{%- if t_lc contains 'sugar-free' or t_lc contains 'sugar free' -%}{%- assign is_sf = true -%}{%- endif -%}
+
 <div class="pd">
   <section class="pd-standards" aria-hidden="true">
     <div class="pd-wrap">
       <div class="pd-ingredients">
         <span class="pd-ingredients-label">{{ section.settings.ingredients_label }}</span>
-        <div>{{ section.settings.ingredients }}</div>
+        <div>{% if is_sf %}{{ section.settings.ingredients_sf }}{% else %}{{ section.settings.ingredients }}{% endif %}</div>
       </div>
     </div>
   </section>
@@ -25,7 +30,8 @@
   "enabled_on": { "templates": ["product"] },
   "settings": [
     { "type": "text", "id": "ingredients_label", "label": "Label", "default": "Ingredients" },
-    { "type": "textarea", "id": "ingredients", "label": "Ingredients text", "default": "Varies by flavor. Each bottle: Pure Cane Sugar, Filtered Water, Natural Flavor, Citric Acid, Potassium Sorbate (preservative)." },
+    { "type": "textarea", "id": "ingredients", "label": "Ingredients text (regular)", "info": "Used when the product title is NOT sugar-free.", "default": "Varies by flavor. Each bottle: Pure Cane Sugar, Filtered Water, Natural Flavor, Citric Acid, Potassium Sorbate (preservative)." },
+    { "type": "textarea", "id": "ingredients_sf", "label": "Ingredients text (sugar-free)", "info": "Used when the product title contains \"sugar free\" / \"sugar-free\".", "default": "Varies by flavor. Each bottle: Water, Natural Flavors, Gum, Sucralose, Sodium Acid Sulfate (Preservative) Citric Acid (Freshness), Sodium Benzoate, Potassium Sorbate & Ace K (Preservatives), Natural Color." },
     { "type": "color", "id": "section_bg", "label": "Section background" }
   ],
   "presets": [{ "name": "VP Standards" }]
