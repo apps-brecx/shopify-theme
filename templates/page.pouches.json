@@ -1,12 +1,72 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "page-pouches",
       "settings": {
+        "hero_alt": "Syruvia — something new is coming",
+        "show_overlay": false,
+        "overlay_title": "Something new is coming",
+        "overlay_sub": "A new way to take Syruvia anywhere. July 27.",
+        "overlay_pos": "flex-end",
+        "overlay_color": "#fffbf4",
+        "launch_ribbon": "Coming soon",
+        "launch_title": "Launching July 27",
+        "launch_iso": "2026-07-27T10:00:00-04:00",
         "waitlist_tag": "Pouches",
-        "launch_iso": "2026-07-27T10:00:00-04:00"
+        "form_title": "Be the first to know",
+        "form_sub": "Tap Notify Me and we’ll email you the second it drops. No spam — just the reveal.",
+        "btn_text": "Notify me",
+        "email_placeholder": "Your email address",
+        "hello_text": "Hi",
+        "hello_sub": "one tap and you’re in:",
+        "signin_pre": "Have an account?",
+        "signin_link": "Sign in",
+        "signin_post": "for one-tap notify.",
+        "ok_title": "You’re on the list!",
+        "ok_badge": "Notification set",
+        "ok_text": "We’ll email you the moment it drops on July 27. Keep an eye on your inbox — you’ll be among the first to see it.",
+        "show_statement": true,
+        "statement_text": "Flavor To Go!",
+        "statement_color": "#FFFFFF",
+        "show_features": false,
+        "feat_eyebrow": "Here’s a hint",
+        "feat_title": "Small. Mighty. <em>Everywhere</em>.",
+        "f1_icon": "🤫",
+        "f1_t": "Top secret",
+        "f1_p": "We can’t say what it is just yet — but you’ve never had Syruvia quite like this.",
+        "f2_icon": "🎒",
+        "f2_t": "Goes where you go",
+        "f2_p": "Made for pockets, bags, road trips and adventures. That’s all we’re saying.",
+        "f3_icon": "☕",
+        "f3_t": "100% Syruvia",
+        "f3_p": "The same real, café-quality flavor you already love — in a whole new way.",
+        "final_eyebrow": "July 27 · Mark it",
+        "final_title": "Don’t miss the reveal.",
+        "final_sub": "It’ll be limited at launch. Get on the list and you’ll be first in line when we unveil it.",
+        "final_btn": "Notify me",
+        "color_ink": "#1a1a1a",
+        "color_brand": "#39220f",
+        "color_bg": "#DA8927",
+        "color_paper": "#ffffff",
+        "color_accent": "#c58548",
+        "color_pop": "#1E5271",
+        "color_success": "#c5e4d4",
+        "color_rule": "#39220f",
+        "wrap_max": 1040,
+        "card_radius": 20
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
