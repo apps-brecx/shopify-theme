@@ -13,7 +13,7 @@
     "logo_width": 160,
     "favicon": "shopify://shop_images/Untitled_design_-_2025-01-01T141055.162.png",
     "show_shipping_bar": true,
-    "minimum_free_shipping": 37,
+    "minimum_free_shipping": 36,
     "shipping_bar_color": "#341c02",
     "type_header_font": "sans-serif",
     "heading_scale": 100,
