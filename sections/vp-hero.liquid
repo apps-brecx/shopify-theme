@@ -90,17 +90,36 @@
   {%- assign sale_pct = sale_diff | times: 100 | divided_by: compare_at -%}
 {%- endif -%}
 
-{%- comment -%} ===== Pack flavors (from metafield, else parsed from the title) ===== {%- endcomment -%}
-{%- assign pf_arr = '' | split: ',' -%}
+{%- comment -%} ===== Bottles inside (chip 1) =====
+   The count is the number of flavors in the pack. Priority:
+   1) custom.bottle_count metafield (an exact number) — wins if set
+   2) custom.pack_flavors — counts the flavors (comma list OR a list metafield)
+   3) flavors parsed from the product title
+   4) the "Bottles-inside fallback" setting — used only when 1-3 give fewer than 2
+   To fix a wrong count on a pack: fill custom.pack_flavors (this also powers the
+   "What's inside" cards) or set a custom.bottle_count number on that product. {%- endcomment -%}
 {%- assign mf = product.metafields.custom.pack_flavors -%}
-{%- if mf and mf.value -%}
-  {%- assign pf_arr = mf.value | strip | split: ',' -%}
+{%- assign pf_arr = '' | split: ',' -%}
+{%- if mf and mf.value != blank -%}
+  {%- if mf.type contains 'list' -%}
+    {%- assign pf_arr = mf.value -%}
+  {%- else -%}
+    {%- assign pf_arr = mf.value | strip | split: ',' -%}
+  {%- endif -%}
 {%- else -%}
   {%- assign pf_clean = product.title | remove_first: 'Variety Pack,' | remove_first: 'Variety Pack' | remove: ' Coffee Syrup' | remove: ' Tea Syrup' | remove: ' Syrup' | remove: ' Coffee' | replace: ' and ', ', ' -%}
   {%- assign pf_arr = pf_clean | split: ',' -%}
 {%- endif -%}
-{%- assign flavor_count = pf_arr.size -%}
-{%- if flavor_count < 2 -%}{%- assign flavor_count = 4 -%}{%- endif -%}
+
+{%- comment -%} count only non-blank entries (ignores trailing commas / stray whitespace) {%- endcomment -%}
+{%- assign flavor_count = 0 -%}
+{%- for f in pf_arr -%}{%- assign ff = f | strip -%}{%- unless ff == blank -%}{%- assign flavor_count = flavor_count | plus: 1 -%}{%- endunless -%}{%- endfor -%}
+
+{%- if flavor_count < 2 -%}{%- assign flavor_count = section.settings.bottle_count_fallback | default: 4 -%}{%- endif -%}
+
+{%- comment -%} explicit per-product override wins over everything {%- endcomment -%}
+{%- assign bottle_count_mf = product.metafields.custom.bottle_count -%}
+{%- if bottle_count_mf and bottle_count_mf.value != blank -%}{%- assign flavor_count = bottle_count_mf.value | plus: 0 -%}{%- endif -%}
 
 <div class="pd" data-product-id="{{ product.id }}" data-base-price="{{ display_price }}">
 
@@ -314,6 +333,7 @@ window.PD_TIERS = [1, 0.95, 0.90, 0.85];
     { "type": "text", "id": "reviews_label", "label": "Reviews label (after count)", "default": "reviews" },
     { "type": "header", "content": "Feature chips" },
     { "type": "text", "id": "chip1_suffix", "label": "Chip 1 suffix (after the flavor count)", "default": "Bottles Inside" },
+    { "type": "number", "id": "bottle_count_fallback", "label": "Bottles-inside fallback", "info": "Chip 1 counts the flavors in the product's custom.pack_flavors metafield (or uses a custom.bottle_count number if set). This value is only used when a pack has neither.", "default": 4 },
     { "type": "text", "id": "chip2", "label": "Chip 2 (regular)", "info": "Shown when the title is NOT sugar-free.", "default": "Pure Cane Sugar" },
     { "type": "text", "id": "chip2_sf", "label": "Chip 2 (sugar-free)", "info": "Shown when the title contains \"sugar free\" / \"sugar-free\".", "default": "Sugar Free" },
     { "type": "text", "id": "chip3", "label": "Chip 3", "default": "Gift-Ready" },
