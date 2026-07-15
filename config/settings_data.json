@@ -289,7 +289,7 @@
       },
       "10738956402881057245": {
         "type": "shopify://apps/searchstash/blocks/searchstash/a1507f32-9122-4ffc-b825-10a924642efa",
-        "disabled": false,
+        "disabled": true,
         "settings": {
           "search_display_count": 20,
           "dropdown_background": "#ffffff",
