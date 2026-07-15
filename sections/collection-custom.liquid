@@ -132,6 +132,7 @@
     .scol .rate-n em{ font-style:normal; color:var(--muted); font-weight:600; }
     .scol .pcard-foot{ margin-top:auto; padding-top:10px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
     .scol .pcard-price{ font-family:var(--font-head); font-size:19px; }
+    .scol .pcard-compare{ font-family:'Josefin Sans',sans-serif; font-size:13.5px; font-weight:700; color:rgba(57,34,15,.45); text-decoration:line-through; text-decoration-thickness:2px; margin-left:4px; white-space:nowrap; }
     .scol .foot-add{ display:inline-flex; align-items:center; justify-content:center; gap:8px; width:40px; height:40px; border-radius:999px; border:var(--rule); background:var(--surface); color:var(--ink); transition:transform .15s,box-shadow .15s,background .16s,color .16s; }
     .scol .foot-add:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-sm); background:var(--accent); color:var(--ink); }
     .scol .foot-add-ic{ display:inline-flex; } .scol .foot-add-ic svg{ width:14px; height:14px; display:block; }
@@ -156,6 +157,7 @@
     .scol.view-list .pcard-name{ font-size:22px; }
     .scol.view-list .pcard-foot{ padding-top:12px; justify-content:flex-start; gap:18px; }
     .scol.view-list .pcard-price{ font-size:22px; }
+    .scol.view-list .pcard-compare{ font-size:15px; }
     .scol.view-list .foot-add{ width:auto; height:44px; padding:0 20px; }
     .scol.view-list .foot-add-label{ display:inline; }
     .scol .qv-root{ position:fixed; inset:0; z-index:90; pointer-events:none; } .scol .qv-root.open{ pointer-events:auto; }
@@ -564,6 +566,7 @@
               data-family="{{ fam }}"
               data-name="{{ nm | escape }}"
               data-price="{{ v.price }}"
+              data-cap="{{ v.compare_at_price | default: 0 }}"
               data-id="{{ v.id }}"
               data-img="{{ product.featured_image | image_url: width: 420 }}"
               data-rt="{{ rt }}"
@@ -637,6 +640,9 @@
                       <span class="pcard-vipbadge">{{ icVipStar }} VIP</span>
                     {%- else -%}
                       {{ v.price | money }}
+                      {%- if v.compare_at_price > v.price -%}
+                        <s class="pcard-compare">{{ v.compare_at_price | money }}</s>
+                      {%- endif -%}
                     {%- endif -%}
                   </span>
                   {%- if avail -%}

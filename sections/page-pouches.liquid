@@ -164,8 +164,10 @@
   <div class="pw-notify" id="notify">
     <div class="pw-wrap">
       <div class="pw-note-card pw-rev">
+        <style>#pw-{{ section.id }} [hidden]{display:none !important;}</style>
         {%- form 'customer', id: 'pw-notify-form' -%}
-          {%- if form.posted_successfully? -%}
+          {%- comment -%} Success state — revealed by JS after an AJAX post; also shown after a no-JS server post {%- endcomment -%}
+          <div data-pw-okwrap{% unless form.posted_successfully? %} hidden{% endunless %}>
             <h2>{{ s.ok_title | default: 'You&rsquo;re on the list!' }}</h2>
             <div class="pw-ok" data-pw-ok>
               <div class="pw-confetti" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -175,12 +177,12 @@
                 <p class="pw-redirect-note" data-pw-redirect data-url="{{ s.redirect_url | default: '/' }}" data-secs="{{ s.redirect_seconds | default: 5 }}">{{ s.redirect_text | default: 'Taking you back in' }} <b data-pw-secs>{{ s.redirect_seconds | default: 5 }}</b>… <a href="{{ s.redirect_url | default: '/' }}">{{ s.redirect_now | default: 'Go now' }}</a></p>
               {%- endif -%}
             </div>
-          {%- else -%}
+          </div>
+          {%- comment -%} Form state — hidden by JS after a successful AJAX post {%- endcomment -%}
+          <div data-pw-formwrap{% if form.posted_successfully? %} hidden{% endif %}>
             <h2>{{ s.form_title | default: 'Be the first to know' }}</h2>
             <p class="sub">{{ s.form_sub | default: 'Tap notify and we&rsquo;ll email you the second it drops. No spam — just the reveal.' }}</p>
-            {%- if form.errors -%}
-              <div class="pw-err">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</div>
-            {%- endif -%}
+            <div class="pw-err" data-pw-err{% unless form.errors %} hidden{% endunless %}>{% if form.errors %}{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}{% endif %}</div>
             <div class="pw-form">
               <input type="hidden" name="contact[tags]" value="{{ tagv }}">
               {%- if customer -%}
@@ -195,7 +197,7 @@
                 <p class="pw-signin">{{ s.signin_pre | default: 'Have an account?' }} <a href="{{ routes.account_login_url }}?return_url={{ request.path | url_encode }}">{{ s.signin_link | default: 'Sign in' }}</a> {{ s.signin_post | default: 'for one-tap notify.' }}</p>
               {%- endif -%}
             </div>
-          {%- endif -%}
+          </div>
         {%- endform -%}
       </div>
     </div>
@@ -272,9 +274,12 @@
     tick();
   }
 
-  // success: scroll into view + confetti burst
-  var ok=root.querySelector('[data-pw-ok]');
-  if(ok){
+  // success FX: confetti burst + scroll into view + optional timed redirect
+  var okFxDone=false;
+  function runSuccessFx(){
+    var ok=root.querySelector('[data-pw-ok]');
+    if(!ok || okFxDone) return;
+    okFxDone=true;
     ok.querySelectorAll('.pw-confetti i').forEach(function(el,i){
       var ang=(i/12)*Math.PI*2, dist=60+((i*29)%60);
       el.style.setProperty('--dx',(Math.cos(ang)*dist).toFixed(0)+'px');
@@ -298,6 +303,48 @@
         if(secs<=0){ clearInterval(t); window.location.href=url; }
       },1000);
     }
+  }
+
+  // Notify form -> AJAX submit so the customer is tagged with NO reload and NO ?customer_posted URL change
+  var form=root.querySelector('#pw-notify-form');
+  var okwrap=root.querySelector('[data-pw-okwrap]');
+  var formwrap=root.querySelector('[data-pw-formwrap]');
+  var errEl=root.querySelector('[data-pw-err]');
+  function showSuccess(){
+    if(formwrap) formwrap.hidden=true;
+    if(okwrap) okwrap.hidden=false;
+    runSuccessFx();
+  }
+  // No-JS server post already rendered the success state -> run the FX now
+  if(okwrap && !okwrap.hidden){ runSuccessFx(); }
+  if(form){
+    form.addEventListener('submit', function(e){
+      // stop the native navigation (that was the reload + ?customer_posted URL change)
+      e.preventDefault();
+      if(typeof form.reportValidity==='function' && !form.reportValidity()) return;
+      var btn=form.querySelector('button[type="submit"]');
+      if(btn){ btn.disabled=true; btn.setAttribute('aria-busy','true'); }
+      if(errEl) errEl.hidden=true;
+      // POST the form to /contact. Shopify processes it server-side and tags the customer;
+      // it then 302-redirects to ?customer_posted=true, which fetch follows (in the background,
+      // no page reload). We never call form.submit(), so the page never navigates.
+      fetch(form.action, { method:'POST', body:new FormData(form), headers:{'Accept':'text/html'}, credentials:'same-origin' })
+        .then(function(res){
+          // Success ONLY when Shopify redirected to ?customer_posted=true (tag applied).
+          // A redirect to /challenge (spam protection) or a plain 200 (validation error) is NOT success.
+          if(res.url && res.url.indexOf('customer_posted=true')!==-1){
+            showSuccess();
+          } else {
+            if(res.url && res.url.indexOf('challenge')!==-1){ try{ console.warn('[pouches] Form blocked by Shopify spam protection (captcha). AJAX signups cannot pass it — disable spam protection for forms, or revert to native submit.'); }catch(_e){} }
+            if(btn){ btn.disabled=false; btn.removeAttribute('aria-busy'); }
+            if(errEl){ errEl.textContent='Sorry — that didn’t go through. Please try again.'; errEl.hidden=false; }
+          }
+        })
+        .catch(function(){
+          if(btn){ btn.disabled=false; btn.removeAttribute('aria-busy'); }
+          if(errEl){ errEl.textContent='Network error — please try again.'; errEl.hidden=false; }
+        });
+    });
   }
 })();
 </script>
