@@ -109,6 +109,7 @@
     .scol .pcard-badges{ position:absolute; top:12px; left:12px; z-index:3; display:flex; flex-direction:column; gap:5px; align-items:flex-start; }
     .scol .badge{ font-family:var(--font-head); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; padding:5px 9px; border-radius:999px; border:var(--rule-1); white-space:nowrap; }
     .scol .badge.best{ background:var(--ink); color:var(--bg); } .scol .badge.new{ background:var(--accent); color:var(--ink); }
+    .scol .badge.sale{ position:absolute; top:44px; right:12px; z-index:3; background:#FF6B5C; color:#FFFBF4; }
     .scol .wish{ position:absolute; top:11px; right:11px; z-index:3; width:34px; height:34px; border-radius:50%; background:var(--surface); border:var(--rule-1); color:var(--ink); display:grid; place-items:center; transition:transform .15s,box-shadow .15s,color .15s; }
     .scol .wish:hover{ transform:translate(-1px,-1px); box-shadow:var(--shadow-sm); color:var(--accent); }
     .scol .wish.on{ color:var(--accent); background:var(--blush); }
@@ -592,6 +593,12 @@
                     <span class="badge new">New</span>
                   {%- endif %}
                 </div>
+                {%- if v.compare_at_price > v.price -%}
+                  {%- assign save_pct = v.compare_at_price | minus: v.price | times: 100 | divided_by: v.compare_at_price -%}
+                  {%- if save_pct > 0 -%}
+                    <span class="badge sale">Save {{ save_pct }}%</span>
+                  {%- endif -%}
+                {%- endif -%}
                 {% comment %} <button aria-label="Add to Wishlist" data-with-epi="true" class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}" data-variant-id="{{product.variants[0].id}}" data-product-url="https://syruvia.com/{{ product.url }}"> {% endcomment %}
                 <button aria-label="Add to Wishlist" data-with-epi="true" class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}" data-variant-id="{{product.variants[0].id}}" data-product-url="https://syruvia.com/{{ product.url }}">
 </button>
