@@ -186,7 +186,8 @@ html body .pd .pd-recs-price{display:flex!important;flex-wrap:wrap!important;ali
         c.setAttribute('data-vipstrip','1');
         var reg=parseInt(c.getAttribute('data-price'),10);
         var pe=c.querySelector('.pcard-price');
-        if(pe && reg) pe.innerHTML=money(reg);
+        var cap=parseInt(c.getAttribute('data-cap'),10)||0;
+        if(pe && reg) pe.innerHTML=money(reg)+(cap>reg?' <s class="pcard-compare">'+money(cap)+'</s>':'');
         var pl=c.querySelector('.pcard-vip-cta'); if(pl && pl.parentNode) pl.parentNode.removeChild(pl);
         continue;
       }
