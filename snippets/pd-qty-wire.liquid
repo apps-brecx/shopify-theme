@@ -1,11 +1,23 @@
-{%- comment -%} Product page quantity tiers: sync 5/7/10% display + apply QTY test code at add-to-cart (combines with VIP). Test codes only. {%- endcomment -%}
+{%- comment -%}
+  Product-page quantity tiers.
+  • Display : shows the tiered "Save X%" price as the quantity changes (5/7/10%).
+  • Apply   : adds the matching manual order-discount code (QTY2TEST / QTY3TEST / QTY4TEST)
+              to the cart so the saving is applied at checkout.
+
+  The custom cart drawer (#SyrCD) intercepts the product Add-to-cart submit at the document
+  level, so it OWNS the add. When it is present we let it add the item, then apply the code
+  once the item has landed (the drawer fires `syr:cart:added`) and re-render the drawer via
+  the exposed window.SyrCD.refresh(). When the drawer is off (settings.cart_type != 'drawer')
+  we fall back to intercepting the submit ourselves and applying via /discount/{code}.
+{%- endcomment -%}
 <script>
 (function(){
-  var MYTIERS=[1,0.95,0.93,0.90];           /* qty 1/2/3/4+ -> 0/5/7/10% */
+  var MYTIERS=[1,0.95,0.93,0.90];           /* qty 1/2/3/4+ -> 0/5/7/10% (display) */
   var QCODES={2:'QTY2TEST',3:'QTY3TEST',4:'QTY4TEST'};
   var SAVE={'3':'Save 7%','4':'Save 10%'};
   function money(c){return '$'+(c/100).toFixed(2);}
   function getQty(){var qi=document.querySelector('#pdAtcForm input[name="quantity"]')||document.querySelector('.pd-qty input');return qi?Math.max(1,parseInt(qi.value,10)||1):1;}
+  function codeForQty(q){ return q>=4?QCODES[4]:(QCODES[q]||''); }
   function patchPrice(){
     var base=window.PD_BASE_CENTS||0; if(!base) return;
     var q=getQty(); var tier=MYTIERS[Math.min(q-1,MYTIERS.length-1)];
@@ -14,25 +26,59 @@
     var st=document.getElementById('pdStickyPrice'); if(st) st.textContent=money(total);
     var saveEl=document.getElementById('pdSaveTag'); if(saveEl && q>1){ saveEl.textContent='Save '+Math.round((1-tier)*100)+'%'; }
   }
+  /* Apply a manual order-discount code to the current cart (sets the cart discount cookie),
+     then re-render the drawer. Silent + non-blocking. */
+  function applyCode(code){
+    if(!code) return Promise.resolve();
+    return fetch('/discount/'+encodeURIComponent(code)+'?redirect=/cart.js',{headers:{'Accept':'application/json'},credentials:'same-origin'})
+      .then(function(){ if(window.SyrCD && typeof window.SyrCD.refresh==='function'){ return window.SyrCD.refresh(); } })
+      .catch(function(){});
+  }
   function init(){
+    /* ---------- tier price display ---------- */
     document.querySelectorAll('.pd-mb-cell').forEach(function(cell){var t=cell.getAttribute('data-tier');var s=cell.querySelector('.pd-mb-save');if(s&&SAVE[t])s.textContent=SAVE[t];});
     document.addEventListener('click',function(e){ if(e.target.closest('.pd-qty')||e.target.closest('.pd-mb-cell')){ setTimeout(patchPrice,0); } });
     document.addEventListener('input',function(e){ if(e.target.closest('.pd-qty')){ setTimeout(patchPrice,0); } });
     setTimeout(patchPrice,200);
-    var form=document.getElementById('pdAtcForm');
-    if(form){
-      form.addEventListener('submit',function(e){
-        e.preventDefault(); e.stopImmediatePropagation();
-        var q=getQty();
-        var idInput=form.querySelector('input[name="id"]'); var vid=idInput?idInput.value:null;
-        if(!vid){ form.submit(); return; }
-        var code=q>=4?'QTY4TEST':(QCODES[q]||'');
-        var btn=form.querySelector('.pd-atc--full'); if(btn) btn.disabled=true;
-        fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:[{id:parseInt(vid,10),quantity:q}]})})
-          .then(function(r){return r.json();})
-          .then(function(){ window.location.href=code?('/discount/'+encodeURIComponent(code)+'?redirect=/cart'):'/cart'; })
-          .catch(function(){ if(btn) btn.disabled=false; window.location.href='/cart'; });
+
+    /* ---------- discount application ---------- */
+    if(document.getElementById('SyrCD')){
+      /* Drawer present: it owns the add. Remember the qty chosen when the ATC is pressed,
+         then apply the matching code once the item is in the cart. */
+      var pending={code:'',t:0};
+      document.addEventListener('click',function(e){
+        if(e.target.closest('.pd-atc, .pd-atc--full')){ pending={code:codeForQty(getQty()),t:Date.now()}; }
       }, true);
+      var busy=false;
+      document.addEventListener('syr:cart:added',function(e){
+        var q=(e && e.detail && e.detail.quantity)||0;
+        var code=q?codeForQty(q):'';
+        if(!code){
+          var fresh=pending.code && (Date.now()-pending.t)<8000;
+          code=fresh?pending.code:'';
+        }
+        pending={code:'',t:0};
+        if(!code || busy) return;
+        busy=true;
+        applyCode(code).then(function(){ busy=false; }, function(){ busy=false; });
+      });
+    } else {
+      /* No drawer: intercept the submit and apply via the /discount/{code} redirect. */
+      var form=document.getElementById('pdAtcForm');
+      if(form){
+        form.addEventListener('submit',function(e){
+          e.preventDefault(); e.stopImmediatePropagation();
+          var q=getQty();
+          var idInput=form.querySelector('input[name="id"]'); var vid=idInput?idInput.value:null;
+          if(!vid){ form.submit(); return; }
+          var code=codeForQty(q);
+          var btn=form.querySelector('.pd-atc--full'); if(btn) btn.disabled=true;
+          fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:[{id:parseInt(vid,10),quantity:q}]})})
+            .then(function(r){return r.json();})
+            .then(function(){ window.location.href=code?('/discount/'+encodeURIComponent(code)+'?redirect=/cart'):'/cart'; })
+            .catch(function(){ if(btn) btn.disabled=false; window.location.href='/cart'; });
+        }, true);
+      }
     }
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();

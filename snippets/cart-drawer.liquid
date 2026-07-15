@@ -337,6 +337,11 @@
           {%- elsif vip_savings > 0 -%}
             <a class="d-vsave tease" href="{{ routes.account_register_url }}"><span class="lft">{{ icon_diamond }} Join free &amp; save</span><span>−{{ vip_savings | money }}</span></a>
           {%- endif -%}
+          {%- if cart.cart_level_discount_applications.size > 0 -%}
+            {%- for discount in cart.cart_level_discount_applications -%}
+              <div class="d-vsave applied"><span class="lft">{{ icon_check }} {{ discount.title }}</span><span>−{{ discount.total_allocated_amount | money }}</span></div>
+            {%- endfor -%}
+          {%- endif -%}
           <div class="d-sub">
             <span class="l">Subtotal{% if is_vip %} · VIP{% endif %}</span>
             <span class="v">{{ payable | money }}</span>
@@ -408,6 +413,8 @@
     if(it && (it.title || it.product_title)){
       lastAdded = { title:(it.product_title||it.title), image:it.image||it.featured_image||(it.featured_image&&it.featured_image.url), quantity:it.quantity, final_line_price:it.final_line_price, line_price:it.line_price };
     }
+    /* let other scripts (e.g. pd-qty-wire quantity discounts) react to the add */
+    try{ document.dispatchEvent(new CustomEvent('syr:cart:added',{detail:{item:it,quantity:(it&&it.quantity)||1}})); }catch(e){}
     return refresh().then(function(){ injectHero(); open(); bumpBubble(); });
   }
 
@@ -474,5 +481,8 @@
       return p;
     };
   }
+
+  /* expose a small API so other scripts can refresh / open the drawer after mutating the cart */
+  window.SyrCD = { open:open, close:close, refresh:refresh };
 })();
 </script>
