@@ -103,6 +103,10 @@
 #syrn-{{ section.id }} .syrn-item:first-child.open .syrn-mega {
   transform: translateX(-5%) translateY(0);
 }
+#syrn-{{ section.id }} .syrn-item:nth-child(3):hover .syrn-mega,
+#syrn-{{ section.id }} .syrn-item:nth-child(3).open .syrn-mega {
+  transform: translateX(-39%) translateY(0);
+}
   #syrn-{{ section.id }} .syrn-mega-grid{ display:grid; gap:32px; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); }
   #syrn-{{ section.id }} .syrn-mega-col h4{ font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-weight:400; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--mega-link-color); margin:0 0 14px; opacity:.75; }
   #syrn-{{ section.id }} .syrn-mega-col ul{ list-style:none; padding:0; margin:0; }

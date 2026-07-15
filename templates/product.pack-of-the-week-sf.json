@@ -16,7 +16,7 @@
         "bg_img": "shopify://shop_images/Rectangle_2272.jpg",
         "secondary_button_text": "View Regular",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week",
-        "accent_color": "#72305C"
+        "accent_color": "#72305c"
       }
     },
     "main": {
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#72305C"
+        "background_color": "#72305c"
       }
     },
     "pack_steps_AbyNtH": {
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#72305C",
+        "background_color": "#72305c",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -698,7 +698,7 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#72305C",
+        "background_color": "#72305c",
         "title": "<h2>Trusted Quality </h2>",
         "description": "<p>Crafted for smooth mixing, creamy flavor, and easy sugar-free drinks at home.</p>",
         "button_text": "Shop The Pack",
@@ -758,7 +758,7 @@
             "quote": "The Sugar Free Ube makes my iced latte look so pretty and still tastes creamy. Vanilla makes it even smoother.",
             "reviewer_initials": "AM",
             "reviewer_name": "Alyssa M.",
-            "reviewer_role": "Iced Latte Fan"
+            "reviewer_role": ""
           }
         },
         "testimonial_w7H38p": {
@@ -768,7 +768,7 @@
             "quote": "Pistachio and Almond together are so good in cold brew. This pack makes sugar-free coffee feel way less boring.",
             "reviewer_initials": "MD",
             "reviewer_name": "Marcus D.",
-            "reviewer_role": "Cold Brew Lover"
+            "reviewer_role": ""
           }
         },
         "testimonial_grwGng": {
@@ -778,7 +778,7 @@
             "quote": "I made an ube milk tea with this and loved it. Sweet, creamy, and no sugar exactly what I wanted.",
             "reviewer_initials": "TR",
             "reviewer_name": "Tina R.",
-            "reviewer_role": "Milk Tea Maker"
+            "reviewer_role": ""
           }
         },
         "testimonial_cdT8rN": {
@@ -788,17 +788,17 @@
             "quote": "This pack feels different from basic sugar-free flavors. Ube is fun, Vanilla is classic, and the nutty flavors make it feel fancy.",
             "reviewer_initials": "RK",
             "reviewer_name": "Rachel K.",
-            "reviewer_role": "Sugar-Free Flavor Fan"
+            "reviewer_role": ""
           }
         },
         "testimonial_kyjF3L": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Pistachio and Almond together are so good in cold brew. This pack makes sugar-free coffee feel way less boring.",
-            "reviewer_initials": "MD",
-            "reviewer_name": "Marcus D.",
-            "reviewer_role": "Cold Brew Lover"
+            "quote": "Four delicious flavors without the sugar. Ube tastes creamy, Vanilla stays smooth, while Almond and Pistachio make every drink café-worthy.",
+            "reviewer_initials": "KS",
+            "reviewer_name": "Kayla S.",
+            "reviewer_role": ""
           }
         }
       },
@@ -836,7 +836,7 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#72305C",
+        "background_color": "#72305c",
         "title": "Make Your Next Sip Dreamy,Sugar-Free",
         "description": "Ube, Vanilla, Pistachio, and Almond are on deal this week a creamy sugar-free pack made for better drinks at home.",
         "button_text": "Shop This Pack",

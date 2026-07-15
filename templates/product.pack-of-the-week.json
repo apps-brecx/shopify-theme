@@ -16,7 +16,7 @@
         "bg_img": "shopify://shop_images/Rectangle_2272.jpg",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
-        "accent_color": "#72305C"
+        "accent_color": "#72305c"
       }
     },
     "main": {
@@ -519,10 +519,10 @@
         ".multicolumn {background: #fef8f1;}",
         ".about-page-custom-cst-multi-sec {display: none;}",
         ".multicolumn-list {justify-content: center;}",
+        ".grid {column-gap: 100px; row-gap: 35px;}",
         ".grid--3-col-desktop .grid__item {width: 20%; max-width: 20%;}",
         ".media {padding: 0 !important;}",
-        "img {object-fit: contain; margin: 0 auto; position: unset; width: 100px; height: 60px;}",
-        ".inline-richtext {text-align: center; font-family: \"Manrope\", sans-serif !important;}",
+        "img {object-fit: contain; margin: 0 auto; position: unset; width: 140px; height: 60px;}",
         "@media screen and (max-width: 989px) {.grid--1-col-tablet-down .grid__item {flex: 1 0 40%; max-width: calc(100% / 2 - 2px); }}"
       ],
       "name": "t:sections.multicolumn.presets.name",
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#72305C"
+        "background_color": "#72305c"
       }
     },
     "pack_steps_AbyNtH": {
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#72305C",
+        "background_color": "#72305c",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -758,7 +758,7 @@
             "quote": "The Ube makes my iced latte look beautiful and taste so creamy. Vanilla and Pistachio make the whole pack feel extra smooth",
             "reviewer_initials": "MR",
             "reviewer_name": "Maya R.",
-            "reviewer_role": "Iced Latte Lover"
+            "reviewer_role": ""
           }
         },
         "testimonial_RVrkPA": {
@@ -768,7 +768,7 @@
             "quote": "Almond and Pistachio are so good together. I used them in cold brew and milk tea, and both tasted café-level.",
             "reviewer_initials": "JP",
             "reviewer_name": "Jordan P.",
-            "reviewer_role": "Home Drink Maker"
+            "reviewer_role": ""
           }
         },
         "testimonial_w7H38p": {
@@ -778,7 +778,7 @@
             "quote": "This pack feels different from the usual flavors. Ube is fun, Vanilla is classic, and the nutty flavors make it feel premium.",
             "reviewer_initials": "MR",
             "reviewer_name": "Sofia L.",
-            "reviewer_role": "Flavor Explorer"
+            "reviewer_role": ""
           }
         },
         "testimonial_grwGng": {
@@ -788,17 +788,17 @@
             "quote": "I made ube milk tea and a pistachio almond latte with this pack. Both were so easy and honestly tasted amazing.",
             "reviewer_initials": "NK",
             "reviewer_name": "Nina K.",
-            "reviewer_role": "Milk Tea Fan"
+            "reviewer_role": ""
           }
         },
         "testimonial_DM9AKq": {
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Almond and Pistachio are so good together. I used them in cold brew and milk tea, and both tasted café-level.",
-            "reviewer_initials": "JP",
-            "reviewer_name": "Jordan P.",
-            "reviewer_role": "Home Drink Maker"
+            "quote": "Every flavor brings something special. Ube is creamy, Vanilla is smooth, while Almond and Pistachio make homemade drinks taste café-quality.",
+            "reviewer_initials": "EC",
+            "reviewer_name": " Emma C.",
+            "reviewer_role": ""
           }
         }
       },
@@ -836,7 +836,7 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#72305C",
+        "background_color": "#72305c",
         "title": "Make Your Next Sip Dreamy",
         "description": "Ube, Vanilla, Pistachio, and Almond are on deal this week a creamy pack made for better drinks at home.",
         "button_text": "Shop This Pack",
