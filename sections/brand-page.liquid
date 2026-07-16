@@ -744,7 +744,7 @@
 window.PD_BASE_CENTS = {{ display_price }};
 window.PD_COMPARE_AT_CENTS = {{ compare_at | default: 0 }};
 window.PD_HAS_SALE = {% if has_sale %}true{% else %}false{% endif %};
-window.PD_TIERS = [1, 0.95, 0.90, 0.85];
+window.PD_TIERS = [1, 0.95, 0.93, 0.90];
 (function(){
   var currentBaseCents = window.PD_BASE_CENTS;
   var compareAtCents = window.PD_COMPARE_AT_CENTS;
