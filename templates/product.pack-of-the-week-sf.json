@@ -16,7 +16,7 @@
         "bg_img": "shopify://shop_images/Rectangle_2272.jpg",
         "secondary_button_text": "View Regular",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week",
-        "accent_color": "#72305c"
+        "accent_color": "#7C3003"
       }
     },
     "main": {
@@ -590,7 +590,7 @@
         ".page-cst-about-page-sec,.page-cst-mission-page-sec,.line-left,.line-right {display: none;}",
         ".mobile-pad {padding-bottom: 40px !important;}",
         ".rich-text__heading strong {font-family: \"Epilogue\", sans-serif !important;}",
-        ".rich-text__heading em {font-style: normal; color: #72305c;}",
+        ".rich-text__heading em {font-style: normal; color: #7c3003;}",
         ".rich-text__text p {font-family: \"Manrope\", sans-serif !important;}",
         "@media (max-width: 768px) {.head {font-size: 32px !important; }}",
         "@media (max-width: 400px) {.rich-text__text p {font-size: 14px !important; line-height: normal !important; }}"
