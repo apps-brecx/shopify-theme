@@ -223,8 +223,9 @@
     if(!payload.length){ bbToast('Your case is empty'); return; }
     var n=0; payload.forEach(function(p){ n+=p.quantity; });
     btn.disabled=true; btn.textContent='Adding\u2026';
-    fetch('/cart/clear.js',{method:'POST',headers:{'Content-Type':'application/json'}})
-      .then(function(){return fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:payload})});})
+    /* Append the case to the existing cart \u2014 never clear it; whatever the customer
+       already had in the cart stays. */
+    fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:payload})})
       .then(function(r){
         if(r.ok){
           try{localStorage.removeItem(KEY);}catch(e){}
@@ -232,8 +233,9 @@
           window.location.href=code?('/discount/'+encodeURIComponent(code)+'?redirect=/cart'):'/cart';
           return;
         }
-        /* A flavor went out of stock since load. Cart was cleared; re-add the in-stock
-           flavors one by one, flag the sold-out one(s), and never lose the selection. */
+        /* A flavor went out of stock since load, so the batch add was rejected as a
+           whole. Add the in-stock flavors one by one, flag the sold-out one(s), and
+           never lose the selection. */
         recover(payload, btn);
       })
       .catch(function(){ btn.disabled=false; btn.textContent='Add case to cart'; bbToast('Network hiccup \u2014 your case is saved, try again'); });
