@@ -836,9 +836,9 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#72305c",
-        "title": "Make Your Next Sip Dreamy",
-        "description": "Ube, Vanilla, Pistachio, and Almond are on deal this week a creamy pack made for better drinks at home.",
+        "background_color": "#7C3003",
+        "title": "Make Coffee Taste Richer",
+        "description": "Almond, Hazelnut, Butter Pecan, and Caramel Pecan are on deal this week — one nutty pack for café-style drinks at home.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"
