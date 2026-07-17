@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Ube Dream",
-            "description": "Creamy purple flavor for fun café-style drinks."
+            "title": "Almond Smooth",
+            "description": "Soft nutty flavor for coffee, lattes, and creamy drinks."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Vanilla Smooth",
-            "description": "Classic, soft, and easy to mix with almost anything."
+            "title": "Hazelnut Classic",
+            "description": "A coffee favorite made for easy everyday drinks."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Nutty Finish",
-            "description": "Pistachio and Almond bring a cozy, premium touch."
+            "title": "Pecan Dessert Duo",
+            "description": "Butter Pecan and Caramel Pecan bring rich dessert-style flavor without the sugar."
           }
         }
       },
