@@ -236,7 +236,7 @@
 
 <script>
 window.PD_BASE_CENTS = {{ display_price }};
-window.PD_TIERS = [1, 0.95, 0.90, 0.85];
+window.PD_TIERS = [1, 0.95, 0.93, 0.90];
 (function(){
   var currentBaseCents = window.PD_BASE_CENTS;
   const tiers = window.PD_TIERS;
@@ -325,10 +325,10 @@ window.PD_TIERS = [1, 0.95, 0.90, 0.85];
     { "type": "text", "id": "mb_tier3_flag", "label": "Tier 3 flag", "default": "Most Popular" },
     { "type": "text", "id": "mb_tier3_num", "label": "Tier 3 number", "default": "3" },
     { "type": "text", "id": "mb_tier3_label", "label": "Tier 3 label", "default": "Jars" },
-    { "type": "text", "id": "mb_tier3_save", "label": "Tier 3 savings", "default": "Save 10%" },
+    { "type": "text", "id": "mb_tier3_save", "label": "Tier 3 savings", "default": "Save 7%" },
     { "type": "text", "id": "mb_tier4_num", "label": "Tier 4 number", "default": "4+" },
     { "type": "text", "id": "mb_tier4_label", "label": "Tier 4 label", "default": "Jars" },
-    { "type": "text", "id": "mb_tier4_save", "label": "Tier 4 savings", "default": "Save 15%" },
+    { "type": "text", "id": "mb_tier4_save", "label": "Tier 4 savings", "default": "Save 10%" },
     { "type": "header", "content": "Sticky bar" },
     { "type": "checkbox", "id": "show_sticky_bar", "label": "Show mobile sticky bar", "default": true },
     { "type": "color", "id": "sticky_bg", "label": "Sticky bar background", "default": "#FFFBF4" },

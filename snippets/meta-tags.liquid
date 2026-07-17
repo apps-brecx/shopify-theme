@@ -38,7 +38,7 @@ html body .pd .pd-recs-price{display:flex!important;flex-wrap:wrap!important;ali
   function money(c){return '$'+(c/100).toFixed(2);}
   function cents(t){var m=(t||'').replace(/[^0-9.]/g,'');var f=parseFloat(m);return isNaN(f)?0:Math.round(f*100);}
   function fixTiers(base){
-    var tiers=window.PD_TIERS||[1,0.95,0.90,0.85];
+    var tiers=window.PD_TIERS||[1,0.95,0.93,0.90];
     var cells=document.querySelectorAll('.pd-mb-cell');
     for(var i=0;i<cells.length;i++){
       var t=parseInt(cells[i].getAttribute('data-tier'),10)||1;

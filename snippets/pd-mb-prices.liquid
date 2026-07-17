@@ -96,7 +96,7 @@ body .pd .pd-nutrition-wrap{display:none!important}
 </style>
 <script>
 (function(){
-  const tiers = [1, 0.95, 0.90, 0.85];
+  const tiers = [1, 0.95, 0.93, 0.90];
   function injectPrices(){
     const pd = document.querySelector('.pd[data-base-price]');
     if (!pd) return;
@@ -107,9 +107,14 @@ body .pd .pd-nutrition-wrap{display:none!important}
       if (c.querySelector('.pd-mb-price')) return;
       const tier = parseInt(c.dataset.tier)||1;
       const tierIdx = Math.min(tier-1, tiers.length-1);
-      const discount = tiers[tierIdx];
-      const total = Math.round(base * tier * discount);
       const saveEl = c.querySelector('.pd-mb-save');
+      /* The cell's visible "Save X%" label is the source of truth, so the pill can
+         never contradict it (pd-qty-wire patches tiers 3/4 to 7%/10% on syrup PDPs
+         to match the real QTY discount codes). Static table is only a fallback. */
+      let discount = tiers[tierIdx];
+      const m = saveEl && saveEl.textContent.match(/(\d+(?:\.\d+)?)\s*%/);
+      if (m) discount = 1 - parseFloat(m[1])/100;
+      const total = Math.round(base * tier * discount);
       const priceSpan = document.createElement('span');
       priceSpan.className = 'pd-mb-price';
       priceSpan.textContent = fmt(total);
