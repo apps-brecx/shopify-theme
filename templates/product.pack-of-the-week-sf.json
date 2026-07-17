@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#72305c",
+        "background_color": "#7C3003",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -698,7 +698,7 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#72305c",
+        "background_color": "#7C3003",
         "title": "<h2>Trusted Quality </h2>",
         "description": "<p>Crafted for smooth mixing, rich flavor, and easy sugar-free drinks at home.</p>",
         "button_text": "Shop The Pack",
