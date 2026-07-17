@@ -220,6 +220,8 @@
   html body .syr-search .syr-card--text .syr-card-media{ display:none; }
   html body .syr-search .syr-card--text{ background:var(--syr-paper); }
   html body .syr-search .syr-card--text .syr-card-body{ padding:22px 18px; min-height:130px; }
+  /* Article cards with a featured image: editorial photo fills the media box */
+  html body .syr-search .syr-card--article .syr-card-media img{ object-fit:cover; padding:0; }
 
   /* ===== PAGINATION ===== */
   html body .syr-search .syr-pagi{
@@ -439,8 +441,19 @@
                   <a class="syr-card-link" href="{{ p.url }}">{{ p.title | escape }}</a>
                 </li>
               {%- when 'article' -%}
-                <li class="syr-card syr-card--text">
+                <li class="syr-card{% if item.image %} syr-card--article{% else %} syr-card--text{% endif %}">
                   <span class="syr-card-kind">Article</span>
+                  {%- if item.image -%}
+                    <div class="syr-card-media">
+                      <img
+                        srcset="{{ item.image | image_url: width: 360 }} 360w, {{ item.image | image_url: width: 533 }} 533w, {{ item.image | image_url: width: 720 }} 720w"
+                        sizes="(max-width:760px) 140px, (max-width:1100px) 30vw, 22vw"
+                        src="{{ item.image | image_url: width: 533 }}"
+                        alt="{{ item.image.alt | escape | default: item.title | escape }}"
+                        width="{{ item.image.width }}" height="{{ item.image.height }}"
+                        loading="lazy">
+                    </div>
+                  {%- endif -%}
                   <div class="syr-card-body">
                     <h3 class="syr-card-title">{{ item.title | escape }}</h3>
                     {%- if item.excerpt_or_content -%}
