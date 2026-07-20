@@ -671,11 +671,11 @@
         "v_vanilla": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/922242a0a616441b8823e7ec8ad9d8c5/922242a0a616441b8823e7ec8ad9d8c5.HD-720p-1.6Mbps-37353314.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/922242a0a616441b8823e7ec8ad9d8c5.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_11.m4v?v=1784559618",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_11.m4v?v=1784559618",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Vanilla",
+            "tag_text": "Blueberry",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
