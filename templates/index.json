@@ -749,11 +749,11 @@
         "v_banana_nut": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/709be99dc11f42a3b1310e39f2928be2/709be99dc11f42a3b1310e39f2928be2.HD-720p-4.5Mbps-38476837.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/709be99dc11f42a3b1310e39f2928be2.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_4.m4v?v=1784559423",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_4.m4v?v=1784559423",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Banana Nut",
+            "tag_text": "Salted Cookie Butter",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
