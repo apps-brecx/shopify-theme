@@ -662,7 +662,7 @@
             "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/e8c5698a0a38444e9204597f21abf5c8.thumbnail.0000000000.jpg",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Strawberry",
+            "tag_text": "Watermelon",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
@@ -694,20 +694,6 @@
             "tag_border": "#39220f"
           }
         },
-        "v_hazelnut": {
-          "type": "video",
-          "disabled": true,
-          "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/da6127b78f30417ea44e22505d70e0c4/da6127b78f30417ea44e22505d70e0c4.HD-720p-1.6Mbps-37353320.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/da6127b78f30417ea44e22505d70e0c4.thumbnail.0000000000.jpg",
-            "video_link": "",
-            "show_tag": true,
-            "tag_text": "Hazelnut",
-            "tag_bg": "#fce2a0",
-            "tag_color": "#39220f",
-            "tag_border": "#39220f"
-          }
-        },
         "v_mango": {
           "type": "video",
           "settings": {
@@ -729,20 +715,6 @@
             "video_link": "",
             "show_tag": true,
             "tag_text": "Peach",
-            "tag_bg": "#fce2a0",
-            "tag_color": "#39220f",
-            "tag_border": "#39220f"
-          }
-        },
-        "v_blueberry": {
-          "type": "video",
-          "disabled": true,
-          "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/80bf19b8c43e46c4b0041358dd951f66/80bf19b8c43e46c4b0041358dd951f66.HD-720p-1.6Mbps-37354127.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/80bf19b8c43e46c4b0041358dd951f66.thumbnail.0000000000.jpg",
-            "video_link": "",
-            "show_tag": true,
-            "tag_text": "Blueberry",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
@@ -818,10 +790,8 @@
         "v_strawberry",
         "v_vanilla",
         "v_caramel",
-        "v_hazelnut",
         "v_mango",
         "v_peach",
-        "v_blueberry",
         "v_cotton_candy",
         "v_salted_caramel",
         "v_banana_nut",
