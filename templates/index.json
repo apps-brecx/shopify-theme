@@ -762,11 +762,11 @@
         "v_cookie_butter": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/40236e72322c4b8f8887c3274bd6b7e8/40236e72322c4b8f8887c3274bd6b7e8.HD-720p-4.5Mbps-38476835.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/40236e72322c4b8f8887c3274bd6b7e8.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download.m4v?v=1784559422",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download.m4v?v=1784559422",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Cookie Butter",
+            "tag_text": "Strawberry",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
