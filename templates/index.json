@@ -736,11 +736,11 @@
         "v_salted_caramel": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/2f180f1fdc5d463e88d3a21b5884b86f/2f180f1fdc5d463e88d3a21b5884b86f.HD-720p-1.6Mbps-38476833.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/2f180f1fdc5d463e88d3a21b5884b86f.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_6.m4v?v=1784559423",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_6.m4v?v=1784559423",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Salted Caramel",
+            "tag_text": "Salted Cookie Butter",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
