@@ -684,11 +684,11 @@
         "v_caramel": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/97d5785f2f1e4eb885d2519f5e845679/97d5785f2f1e4eb885d2519f5e845679.HD-720p-1.6Mbps-37353317.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/97d5785f2f1e4eb885d2519f5e845679.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_9.m4v?v=1784559424",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_9.m4v?v=1784559424",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Caramel",
+            "tag_text": "Passion Fruit",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
