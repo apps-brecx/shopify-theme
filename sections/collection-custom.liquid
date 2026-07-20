@@ -536,10 +536,11 @@
             {%- if product.tags contains 'New' or product.tags contains 'New Arrival' -%}
               {%- assign isnew = true -%}
             {%- endif -%}
-            {%- assign rmod = product.id | modulo: 5 -%}
-            {%- assign rt = 45 | plus: rmod -%}
+            {%- comment -%} Real review data — same source as the product page (reviews app metafields), so the counts always match. {%- endcomment -%}
+            {%- assign rv = product.metafields.reviews.rating_count.value | default: 0 | plus: 0 -%}
+            {%- assign jm_rating = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | default: 0 -%}
+            {%- assign rt = jm_rating | times: 10 | round -%}
             {%- assign rdisp = rt | divided_by: 10.0 -%}
-            {%- assign rpct = rt | times: 2 -%}
             {%- assign rfull = rt | divided_by: 10 -%}
             {%- assign rbase = rfull | times: 10 -%}
             {%- assign rrem = rt | minus: rbase -%}
@@ -551,11 +552,6 @@
             {%- endif -%}
             {%- assign rnext = rfull | plus: 1 -%}
             {%- capture starrow -%}{%- for s in (1..5) -%}{%- if s <= rfull -%}{{ starFull }}{%- elsif rhalf and s == rnext -%}{{ starHalf }}{%- else -%}{{ starEmpty }}{%- endif -%}{%- endfor -%}{%- endcapture -%}
-            {%- if best -%}
-              {%- assign rv = product.id | modulo: 460 | plus: 180 -%}
-            {%- else -%}
-              {%- assign rv = product.id | modulo: 236 | plus: 24 -%}
-            {%- endif -%}
             {%- assign dd = forloop.index0 | modulo: 12 | times: 45 -%}
             <article
               class="pcard{% unless avail %} pcard--soldout{% endunless %}"
@@ -624,6 +620,7 @@
                 {%- if issf -%}
                   <p class="sf-label">Sugar-Free</p>
                 {%- endif -%}
+                {%- if rv > 0 -%}
                 <div class="pcard-rate">
                   <span class="stars">{{ starrow }}</span
                   ><span class="rate-n">
@@ -631,6 +628,7 @@
                     <em>({{ rv }})</em></span
                   >
                 </div>
+                {%- endif -%}
                 {%- if has_vip and is_vip == false -%}
                   <button class="pcard-vip-cta" data-vip type="button" aria-label="Unlock VIP price">
                     {{ icVipStar }} Unlock VIP {{ vipprice | money }}
