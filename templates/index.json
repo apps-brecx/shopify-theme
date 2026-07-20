@@ -697,11 +697,11 @@
         "v_mango": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/6b236213f0564257a7eaca77b52ae285/6b236213f0564257a7eaca77b52ae285.HD-720p-1.6Mbps-37353321.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/6b236213f0564257a7eaca77b52ae285.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_1.m4v?v=1784559424",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_1.m4v?v=1784559424",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Mango",
+            "tag_text": "Lavender",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
