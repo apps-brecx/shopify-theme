@@ -775,11 +775,11 @@
         "v_pumpkin_spice": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/c75067903311468bad5e6236c8849ce1/c75067903311468bad5e6236c8849ce1.HD-720p-4.5Mbps-38476836.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/c75067903311468bad5e6236c8849ce1.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_8.m4v?v=1784559422",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_8.m4v?v=1784559422",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Pumpkin Spice",
+            "tag_text": "French Vanilla",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
