@@ -3,7 +3,7 @@
   - Injects #syrnav-suggest dropdown into .syrnav-msearch via JS (no section edit needed).
   - Root-agnostic: pd-search-toggle moves the single .syrnav-msearch into whichever nav is visible.
   - When empty + focused: shows recent searches stored in localStorage.
-  - When typing: debounced fetch to Shopify's /search/suggest.json, renders products.
+  - When typing: debounced fetch to Shopify's /search/suggest.json, renders products + collections.
   - Submits + click on a product save the term to history (last 6).
   - Keyboard nav: ↑/↓ to move, Esc to close.
 {%- endcomment -%}
@@ -198,28 +198,51 @@
     return '$' + n.toFixed(2);
   }
 
-  function renderProducts(suggest, products, query){
-    if (!products || !products.length){
+  var COLL_ICON = '<span style="width:44px;height:44px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border:1.5px solid #39220f;border-radius:8px;background:#FCE2A0;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#39220f" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>';
+
+  function renderResults(suggest, products, colls, query){
+    var hasP = products && products.length;
+    var hasC = colls && colls.length;
+    if (!hasP && !hasC){
       suggest.innerHTML = '<div class="syrnav-suggest-empty">No results for <strong>"' + esc(query) + '"</strong></div>';
       suggest.classList.add('has-results');
       return;
     }
-    var html = '<div class="syrnav-suggest-history">Products</div>';
-    products.forEach(function(p){
-      var img = p.image || (p.featured_image && p.featured_image.url) || '';
-      var url = p.url || '/products/' + (p.handle || '');
-      var title = p.title || '';
-      var price = p.price;
-      if (price && typeof price === 'object') price = price.amount || price.cents || price.value;
-      var imgUrl = img ? (img.indexOf('?') >= 0 ? (img + '&width=88') : (img + '?width=88')) : '';
-      html += '<a class="syrnav-suggest-item" href="' + esc(url) + '">' +
-        (imgUrl ? '<img src="' + esc(imgUrl) + '" alt="' + esc(title) + '" loading="lazy">' : '<div style="width:44px;height:44px;flex:0 0 auto;"></div>') +
-        '<div class="syrnav-suggest-item-info">' +
-          '<div class="syrnav-suggest-item-title">' + esc(title) + '</div>' +
-          (price ? '<div class="syrnav-suggest-item-price">' + esc(moneyStr(price)) + '</div>' : '') +
-        '</div>' +
-      '</a>';
-    });
+    var html = '';
+    if (hasP){
+      html += '<div class="syrnav-suggest-history">Products</div>';
+      products.forEach(function(p){
+        var img = p.image || (p.featured_image && p.featured_image.url) || '';
+        var url = p.url || '/products/' + (p.handle || '');
+        var title = p.title || '';
+        var price = p.price;
+        if (price && typeof price === 'object') price = price.amount || price.cents || price.value;
+        var imgUrl = img ? (img.indexOf('?') >= 0 ? (img + '&width=88') : (img + '?width=88')) : '';
+        html += '<a class="syrnav-suggest-item" href="' + esc(url) + '">' +
+          (imgUrl ? '<img src="' + esc(imgUrl) + '" alt="' + esc(title) + '" loading="lazy">' : '<div style="width:44px;height:44px;flex:0 0 auto;"></div>') +
+          '<div class="syrnav-suggest-item-info">' +
+            '<div class="syrnav-suggest-item-title">' + esc(title) + '</div>' +
+            (price ? '<div class="syrnav-suggest-item-price">' + esc(moneyStr(price)) + '</div>' : '') +
+          '</div>' +
+        '</a>';
+      });
+    }
+    if (hasC){
+      html += '<div class="syrnav-suggest-history">Collections</div>';
+      colls.slice(0, 4).forEach(function(c){
+        var img = c.image || (c.featured_image && (c.featured_image.url || c.featured_image)) || '';
+        if (img && typeof img === 'object') img = img.url || '';
+        var imgUrl = img ? (String(img).indexOf('?') >= 0 ? (img + '&width=88') : (img + '?width=88')) : '';
+        var url = c.url || '/collections/' + (c.handle || '');
+        html += '<a class="syrnav-suggest-item" href="' + esc(url) + '">' +
+          (imgUrl ? '<img src="' + esc(imgUrl) + '" alt="' + esc(c.title || '') + '" loading="lazy">' : COLL_ICON) +
+          '<div class="syrnav-suggest-item-info">' +
+            '<div class="syrnav-suggest-item-title">' + esc(c.title || '') + '</div>' +
+            '<div class="syrnav-suggest-item-price">Collection</div>' +
+          '</div>' +
+        '</a>';
+      });
+    }
     html += '<a class="syrnav-suggest-all" href="/search?q=' + encodeURIComponent(query) + '">See all results for "' + esc(query) + '" →</a>';
     suggest.innerHTML = html;
     suggest.classList.add('has-results');
@@ -231,16 +254,16 @@
   function fetchSuggestions(input, suggest, q){
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(function(){
-      if (q === lastQuery) return;
+      if (q === lastQuery && suggest.classList.contains('has-results')) return;
       lastQuery = q;
-      fetch('/search/suggest.json?q=' + encodeURIComponent(q) + '&resources[type]=product&resources[limit]=5')
-        .then(function(r){ return r.json(); })
+      fetch('/search/suggest.json?q=' + encodeURIComponent(q) + '&resources[type]=product,collection&resources[limit]=5&resources[limit_scope]=each')
+        .then(function(r){ if (!r.ok) throw new Error('suggest ' + r.status); return r.json(); })
         .then(function(data){
           if (input.value.trim() !== q) return; /* stale */
-          var products = (data && data.resources && data.resources.results && data.resources.results.products) || [];
-          renderProducts(suggest, products, q);
+          var results = (data && data.resources && data.resources.results) || {};
+          renderResults(suggest, results.products || [], results.collections || [], q);
         })
-        .catch(function(){});
+        .catch(function(){ if (lastQuery === q) lastQuery = ''; });
     }, DEBOUNCE_MS);
   }
 
@@ -286,8 +309,9 @@
       }
     });
 
-    /* Keyboard nav */
-    input.addEventListener('keydown', function(e){
+    /* Keyboard nav — bound to both the input and the dropdown so arrows work
+       from any focused row, not just the first. */
+    function onKeyNav(e){
       var items = Array.prototype.slice.call(suggest.querySelectorAll('.syrnav-suggest-item, .syrnav-suggest-all'));
       var focused = suggest.querySelector('.syrnav-suggest-item:focus, .syrnav-suggest-all:focus');
       var idx = items.indexOf(focused);
@@ -301,9 +325,12 @@
         else { var prev = items[idx - 1]; if (prev) prev.focus(); }
       } else if (e.key === 'Escape'){
         suggest.classList.remove('has-results');
-        input.blur();
+        lastQuery = '';
+        if (focused) input.focus(); else input.blur();
       }
-    });
+    }
+    input.addEventListener('keydown', onKeyNav);
+    suggest.addEventListener('keydown', onKeyNav);
   }
 
   function init(){

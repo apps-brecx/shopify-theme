@@ -151,6 +151,38 @@
     background-repeat:no-repeat; background-position:right 14px center;
   }
 
+  /* ===== MATCHING COLLECTIONS ===== */
+  html body .syr-search .syr-colls{ margin:0 0 22px; text-align:center; }
+  html body .syr-search .syr-colls-h{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--syr-copper); margin:0 0 12px;
+  }
+  html body .syr-search .syr-colls-list{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; list-style:none; padding:0; margin:0; }
+  html body .syr-search .syr-coll-card{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--syr-paper); color:var(--syr-ink);
+    border:1.5px solid var(--syr-ink); border-radius:999px;
+    padding:7px 18px 7px 8px; text-decoration:none;
+    box-shadow:2px 2px 0 var(--syr-ink);
+    transition:transform .12s ease, background .15s ease;
+  }
+  html body .syr-search .syr-coll-card:hover{ background:var(--syr-butter); transform:translate(-1px,-1px); }
+  html body .syr-search .syr-coll-thumb{
+    width:34px; height:34px; border-radius:50%; overflow:hidden;
+    border:1.5px solid var(--syr-ink); background:#fff;
+    display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+  }
+  html body .syr-search .syr-coll-thumb img{ width:100%; height:100%; object-fit:cover; }
+  html body .syr-search .syr-coll-name{
+    font-family:'Archivo Black','Archivo',sans-serif; font-weight:400;
+    font-size:12px; letter-spacing:.02em; text-transform:uppercase;
+  }
+  html body .syr-search .syr-coll-count{
+    font-family:'Josefin Sans','Josefin',sans-serif;
+    font-size:11.5px; font-weight:600; color:rgba(57,34,15,.55);
+  }
+
   /* ===== GRID ===== */
   html body .syr-search .syr-grid{
     display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;
@@ -343,7 +375,7 @@
       <span class="syr-eyebrow">Search Syruvia</span>
       <h1 class="syr-h1">
         {%- if search.performed -%}
-          You searched <em>for</em><br>{{ search.terms }}
+          You searched <em>for</em><br>{{ terms }}
         {%- else -%}
           Find your <em>flavor</em>
         {%- endif -%}
@@ -354,7 +386,6 @@
       <form action="{{ routes.search_url }}" method="get" role="search" class="syr-form" id="syr-search-form">
         <div class="syr-field">
           <input type="hidden" name="options[prefix]" value="last">
-          <input type="hidden" name="type" value="product">
           <input
             class="syr-input"
             id="syr-search-input"
@@ -375,24 +406,70 @@
       {%- if search.performed -%}
         <p class="syr-count">
           {%- if search.results_count > 0 -%}
-            <strong>{{ search.results_count }}</strong> result{% if search.results_count != 1 %}s{% endif %} for “<strong>{{ search.terms }}</strong>”
+            <strong>{{ search.results_count }}</strong> result{% if search.results_count != 1 %}s{% endif %} for “<strong>{{ terms }}</strong>”
           {%- else -%}
-            No results for “<strong>{{ search.terms }}</strong>”
+            No results for “<strong>{{ terms }}</strong>”
           {%- endif -%}
         </p>
       {%- endif -%}
     </div>
 
+    {%- comment -%} Collections aren't in Shopify's search index, so match the query
+        against collection titles ourselves and offer them above the results. {%- endcomment -%}
+    {%- if search.performed -%}
+      {%- assign q_lc = search.terms | downcase | strip -%}
+      {%- assign q_words = q_lc | split: ' ' -%}
+      {%- capture coll_html -%}
+        {%- assign coll_shown = 0 -%}
+        {%- for c in collections -%}
+          {%- if coll_shown >= 6 -%}{%- break -%}{%- endif -%}
+          {%- if c.handle == 'frontpage' or c.products_count == 0 -%}{%- continue -%}{%- endif -%}
+          {%- assign t_lc = c.title | downcase -%}
+          {%- assign hit = false -%}
+          {%- if q_lc != blank and t_lc contains q_lc -%}
+            {%- assign hit = true -%}
+          {%- else -%}
+            {%- for w in q_words -%}
+              {%- assign wlen = w | size -%}
+              {%- if wlen >= 3 and t_lc contains w -%}{%- assign hit = true -%}{%- break -%}{%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- if hit -%}
+            {%- assign coll_shown = coll_shown | plus: 1 -%}
+            <li><a class="syr-coll-card" href="{{ c.url }}">
+              <span class="syr-coll-thumb">
+                {%- if c.featured_image -%}
+                  <img src="{{ c.featured_image | image_url: width: 96 }}" alt="{{ c.title | escape }}" loading="lazy">
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#39220f" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                {%- endif -%}
+              </span>
+              <span class="syr-coll-name">{{ c.title | escape }}</span>
+              <span class="syr-coll-count">{{ c.products_count }}</span>
+            </a></li>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- assign coll_check = coll_html | strip -%}
+      {%- if coll_check != blank -%}
+        <div class="syr-colls">
+          <p class="syr-colls-h">Matching collections</p>
+          <ul class="syr-colls-list" role="list">{{ coll_html }}</ul>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
     {%- if has_results -%}
       <div class="syr-toolbar">
         <div class="syr-toolbar-left">
-          <strong>{{ search.results_count }}</strong> {% if search.results_count == 1 %}product{% else %}products{% endif %}
+          <strong>{{ search.results_count }}</strong> result{% if search.results_count != 1 %}s{% endif %}
         </div>
         {%- if section.settings.enable_sorting -%}
         <form class="syr-sort" id="syr-sort-form">
           <label for="syr-sort-by">Sort</label>
           <input type="hidden" name="q" value="{{ search.terms | escape }}">
           <input type="hidden" name="options[prefix]" value="last">
+          {%- if search.types.size == 1 -%}<input type="hidden" name="type" value="{{ search.types.first }}">{%- endif -%}
           {%- assign sort_by = search.sort_by | default: search.default_sort_by -%}
           <select name="sort_by" id="syr-sort-by" class="syr-sort-select" onchange="this.form.submit()">
             {%- for option in search.sort_options -%}
@@ -505,13 +582,13 @@
       <div class="syr-pop">
         <p class="syr-pop-h">Popular searches</p>
         <ul class="syr-pop-list" role="list">
-          <li><a href="/search?q=vanilla&type=product">Vanilla</a></li>
-          <li><a href="/search?q=caramel&type=product">Caramel</a></li>
-          <li><a href="/search?q=hazelnut&type=product">Hazelnut</a></li>
-          <li><a href="/search?q=chocolate&type=product">Chocolate</a></li>
-          <li><a href="/search?q=butterscotch&type=product">Butterscotch</a></li>
-          <li><a href="/search?q=pump&type=product">Pump</a></li>
-          <li><a href="/search?q=bundle&type=product">Bundle</a></li>
+          <li><a href="/search?q=vanilla">Vanilla</a></li>
+          <li><a href="/search?q=caramel">Caramel</a></li>
+          <li><a href="/search?q=hazelnut">Hazelnut</a></li>
+          <li><a href="/search?q=chocolate">Chocolate</a></li>
+          <li><a href="/search?q=butterscotch">Butterscotch</a></li>
+          <li><a href="/search?q=pump">Pump</a></li>
+          <li><a href="/search?q=bundle">Bundle</a></li>
         </ul>
       </div>
     {%- endif -%}
