@@ -90,6 +90,7 @@
           {%- assign item_count = items_arr | size -%}
 
           <div class="pd-desc-card" data-transformed="1">
+            <div class="pd-desc-scrollwrap">
             {%- for item in items_arr -%}
               <div class="pd-desc-section{% unless forloop.first %} is-hidden{% endunless %}">
                 <div>
@@ -112,6 +113,7 @@
                 </div>
               </div>
             {%- endfor -%}
+            </div>
             {%- if item_count > 1 -%}
               <button type="button" class="pd-desc-toggle">
                 <span class="pd-desc-toggle-text">{{ section.settings.read_more_text }}</span>
@@ -124,6 +126,7 @@
           {{ desc_source }}
         {%- else -%}
           <div class="pd-desc-card" data-transformed="1">
+            <div class="pd-desc-scrollwrap">
             <div class="pd-desc-section">
               <div>
                 <h3 class="pd-desc-label">{{ section.settings.fb_card1_label }}</h3>
@@ -148,6 +151,7 @@
                 <p class="pd-desc-text">{{ section.settings.fb_card4_body }}</p>
               </div>
             </div>
+            </div>
             <button type="button" class="pd-desc-toggle">
               <span class="pd-desc-toggle-text">{{ section.settings.read_more_text }}</span>
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>
@@ -159,9 +163,29 @@
           <div class="pd-desc-section">
             <div>
               <h3 class="pd-desc-label">{{ section.settings.ingredients_label }}</h3>
-              <p class="pd-desc-text">
-                {%- if ingredients_field -%}{{ ingredients_field | metafield_tag | strip_html }}{%- else -%}{{ section.settings.ingredients_fallback }}{%- endif -%}
-              </p>
+              {%- if ingredients_field -%}
+                {%- assign ing_text = ingredients_field | metafield_tag | strip_html -%}
+              {%- else -%}
+                {%- assign ing_text = section.settings.ingredients_fallback -%}
+              {%- endif -%}
+              {%- assign ing_parts = ing_text | split: ',' -%}
+              {%- if ing_parts.size > 1 -%}
+                <ul class="pd-desc-text pd-ing-list">
+                  {%- for part in ing_parts -%}
+                    {%- assign p = part | strip -%}
+                    {%- if forloop.last -%}
+                      {%- assign lastchar = p | slice: -1, 1 -%}
+                      {%- if lastchar == '.' -%}
+                        {%- assign plen = p.size | minus: 1 -%}
+                        {%- assign p = p | slice: 0, plen -%}
+                      {%- endif -%}
+                    {%- endif -%}
+                    {%- if p != blank -%}<li>{{ p }}</li>{%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                <p class="pd-desc-text">{{ ing_text }}</p>
+              {%- endif -%}
             </div>
           </div>
         </div>
@@ -253,9 +277,29 @@
 
 <script>
 (function(){
+  function isDesk(){ return window.matchMedia('(min-width:761px)').matches; }
+  /* Desktop: Read more toggles ONE shared scroll state on the clipped description
+     and ingredients cards; the nutrition card is always fully open at natural
+     height. pd-mb-prices exposes the canonical toggle; fall back to a local copy. */
+  function deskToggle(){
+    const c = document.querySelector('.pd-desc-content');
+    const open = !(c && c.classList.contains('is-open'));
+    if (window.__pdSetDeskOpen){ window.__pdSetDeskOpen(open); return; }
+    if (!c) return;
+    c.classList.toggle('is-open', open);
+    const btn = c.querySelector('.pd-desc-toggle');
+    if (btn){
+      btn.classList.toggle('is-expanded', open);
+      const t = btn.querySelector('.pd-desc-toggle-text');
+      if (t) t.textContent = open ? {{ section.settings.show_less_text | json }} : {{ section.settings.read_more_text | json }};
+    }
+    if (!open) c.querySelectorAll('.pd-desc-scrollwrap, .pd-ing-card .pd-desc-section').forEach(function(s){ s.scrollTop = 0; });
+  }
   document.addEventListener('click', function(e){
+    if (e.pdDescHandled) return; /* already handled by pd-mb-prices' direct listeners */
     const readMoreBtn = e.target.closest('.pd-desc-toggle');
     if (readMoreBtn) {
+      if (isDesk()){ deskToggle(); return; }
       const card = readMoreBtn.closest('.pd-desc-card');
       if (!card) return;
       const wasExpanded = card.classList.contains('is-expanded');
@@ -280,6 +324,7 @@
 
     const nfCard = e.target.closest('.pd-nf-card');
     if (nfCard && !e.target.closest('.pd-nf-body')) {
+      if (isDesk()) return; /* always open on desktop — nothing to toggle */
       const wasOpen = nfCard.classList.contains('is-open');
       nfCard.classList.toggle('is-open');
       if (wasOpen) {
