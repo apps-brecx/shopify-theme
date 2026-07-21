@@ -258,24 +258,22 @@
 <script>
 (function(){
   function isDesk(){ return window.matchMedia('(min-width:761px)').matches; }
-  /* Desktop: Read more and the nutrition arrow share ONE expanded state across all
-     three cards (fixed-height previews that grow +30px and scroll internally).
-     pd-mb-prices exposes the canonical toggle; fall back to a local copy. */
+  /* Desktop: Read more toggles ONE shared scroll state on the clipped description
+     and ingredients cards; the nutrition card is always fully open at natural
+     height. pd-mb-prices exposes the canonical toggle; fall back to a local copy. */
   function deskToggle(){
     const c = document.querySelector('.pd-desc-content');
     const open = !(c && c.classList.contains('is-open'));
     if (window.__pdSetDeskOpen){ window.__pdSetDeskOpen(open); return; }
     if (!c) return;
     c.classList.toggle('is-open', open);
-    const nf = c.querySelector('.pd-nf-card');
-    if (nf) nf.classList.toggle('is-open', open);
     const btn = c.querySelector('.pd-desc-toggle');
     if (btn){
       btn.classList.toggle('is-expanded', open);
       const t = btn.querySelector('.pd-desc-toggle-text');
       if (t) t.textContent = open ? {{ section.settings.show_less_text | json }} : {{ section.settings.read_more_text | json }};
     }
-    if (!open) c.querySelectorAll('.pd-desc-scrollwrap, .pd-nf-body, .pd-ing-card .pd-desc-section').forEach(function(s){ s.scrollTop = 0; });
+    if (!open) c.querySelectorAll('.pd-desc-scrollwrap, .pd-ing-card .pd-desc-section').forEach(function(s){ s.scrollTop = 0; });
   }
   document.addEventListener('click', function(e){
     if (e.pdDescHandled) return; /* already handled by pd-mb-prices' direct listeners */
@@ -306,7 +304,7 @@
 
     const nfCard = e.target.closest('.pd-nf-card');
     if (nfCard && !e.target.closest('.pd-nf-body')) {
-      if (isDesk()){ deskToggle(); return; }
+      if (isDesk()) return; /* always open on desktop — nothing to toggle */
       const wasOpen = nfCard.classList.contains('is-open');
       nfCard.classList.toggle('is-open');
       if (wasOpen) {
