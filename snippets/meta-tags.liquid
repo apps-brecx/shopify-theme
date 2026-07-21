@@ -171,12 +171,18 @@ html body .pd .pd-recs-price{display:flex!important;flex-wrap:wrap!important;ali
   var SIGNED_IN = {% if customer %}true{% else %}false{% endif %};
   var VIPMAX=799;
   var BADGE='<span class="pcard-vipbadge"><svg class="vipstar" viewBox="0 0 24 24" width="11" height="11" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.8-5 4.6 1.3 6.7L12 17.8 5.9 20.4 7.2 13.7l-5-4.6 6.8-.8z"></path></svg> VIP</span>';
-  var NONSYRUP=/boba|popping|pearl|\\btopping|variety|jelly|bundle|sampler|combo|\\bkit\\b|\\bset\\b|\\bduo\\b|\\btrio\\b|coffeehouse|\\bball|\\bpump\\b|\\bpack/i;
-  var NONSYRUP_URL=/variety-pack|popping-boba|bursting-balls|shakable-topping|shakeable-topping|syrup-pump|-pump\\b/i;
-  var LABEL=' Unlock VIP $7.99';
-  var LEDE="VIP members unlock our best price on every syrup: a flat $7.99. Create a free Syruvia account (or sign in) and the VIP price shows up automatically.";
+  var NONSYRUP=/boba|popping|pearl|\btopping|variety|jelly|bundle|sampler|combo|\bkit\b|\bset\b|\bduo\b|\btrio\b|coffeehouse|\bball|\bpump\b|\bpack/i;
+  var NONSYRUP_URL=/variety-pack|popping-boba|bursting-balls|shakable-topping|shakeable-topping|syrup-pump|-pump\b/i;
   function money(c){return '$'+(c/100).toFixed(2);}
-  function isNonSyrup(card){ return NONSYRUP.test(card.getAttribute('data-name')||'') || NONSYRUP_URL.test(card.getAttribute('data-url')||''); }
+  /* The card's data-vipok flag (computed in Liquid from the RAW title + tags —
+     which this script can't see) is authoritative; the name/url regexes are
+     only a fallback for cards rendered without the flag. */
+  function isNonSyrup(card){
+    var ok=card.getAttribute('data-vipok');
+    if(ok==='1') return false;
+    if(ok==='0') return true;
+    return NONSYRUP.test(card.getAttribute('data-name')||'') || NONSYRUP_URL.test(card.getAttribute('data-url')||'');
+  }
   function processIn(){
     var cards=document.querySelectorAll('article.pcard');
     for(var i=0;i<cards.length;i++){
@@ -194,7 +200,7 @@ html body .pd .pd-recs-price{display:flex!important;flex-wrap:wrap!important;ali
       if(c.getAttribute('data-sf')==='1'){
         var reg2=parseInt(c.getAttribute('data-price'),10);
         if(!reg2) continue;
-        var vip=Math.min(VIPMAX,reg2);
+        var vip=Math.min(699,reg2); /* sugar-free VIP is $6.99 (matches Liquid + modal) */
         var pe2=c.querySelector('.pcard-price');
         if(!pe2) continue;
         if(pe2.getAttribute('data-vipfix')===String(vip)) continue;
@@ -215,10 +221,10 @@ html body .pd .pd-recs-price{display:flex!important;flex-wrap:wrap!important;ali
       pill.setAttribute('data-v799','1');
       var kids=Array.prototype.slice.call(pill.childNodes);
       for(var k=0;k<kids.length;k++){ if(kids[k].nodeType===3) pill.removeChild(kids[k]); }
-      pill.appendChild(document.createTextNode(LABEL));
+      var lbl=(card && card.getAttribute('data-sf')==='1') ? ' Unlock VIP $6.99' : ' Unlock VIP $7.99';
+      pill.appendChild(document.createTextNode(lbl));
     }
-    var ledes=document.querySelectorAll('.scol-vip-lede');
-    for(var j=0;j<ledes.length;j++){ var p=ledes[j]; if(p.getAttribute('data-v799')==='1') continue; p.setAttribute('data-v799','1'); p.textContent=LEDE; }
+    /* the modal lede is server-rendered with both prices — no JS rewrite needed */
   }
   function run(){ if(SIGNED_IN) processIn(); else processOut(); }
   function init(){

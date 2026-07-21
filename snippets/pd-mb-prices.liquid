@@ -77,6 +77,36 @@ body .pd .pd-nf-body .pd-nutrition{margin:24px auto 0!important}
 body .pd .pd-standards{display:none!important}
 body .pd .pd-nutrition-wrap{display:none!important}
 
+/* Ingredients as bullets (both the server-rendered and JS-built card) */
+body .pd .pd-ing-card ul.pd-ing-list{list-style:disc!important;margin:0!important;padding:0 0 0 22px!important;text-align:left!important}
+body .pd .pd-ing-card ul.pd-ing-list li{display:list-item!important;margin:0 0 6px!important;padding:0!important}
+body .pd .pd-ing-card ul.pd-ing-list li:last-child{margin-bottom:0!important}
+body .pd .pd-ing-card ul.pd-ing-list li::marker{color:#39220f}
+
+/* Desktop: the nutrition card is always fully open at its natural height and sets
+   the height for the row — JS measures it into --pdcard-h and the description /
+   ingredients cards are clipped to match. Read more only toggles scroll-y inside
+   those two clipped cards; heights never change. */
+@media (min-width:761px){
+  html body .pd .pd-desc-content{--pdcard-h:270px}
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card{height:var(--pdcard-h)!important;overflow:hidden!important}
+  /* nutrition card: natural height, always open, no toggle affordance.
+     align-self:flex-start stops the row's stretch so offsetHeight = natural height. */
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-nf-card{height:auto!important;overflow:visible!important;align-self:flex-start!important;background:#FFF8EE!important}
+  body .pd .pd-nf-card .pd-nf-body{display:block!important;animation:none!important;flex:none!important;min-height:0!important;overflow:visible!important}
+  body .pd .pd-nf-card .pd-nf-toggle{cursor:default!important}
+  body .pd .pd-nf-card .pd-nf-toggle-icon{display:none!important}
+  /* the content areas are the scrollers (clipped when closed, scroll-y when open) */
+  body .pd .pd-desc-card .pd-desc-scrollwrap{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
+  body .pd .pd-ing-card .pd-desc-section{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
+  body .pd .pd-desc-content.is-open .pd-desc-card .pd-desc-scrollwrap,
+  body .pd .pd-desc-content.is-open .pd-ing-card .pd-desc-section{overflow-y:auto!important;scrollbar-width:thin}
+  /* preview is height-clipped, not section-hidden, so scrolling reveals everything */
+  body .pd .pd-desc-card .pd-desc-section.is-hidden{display:block!important}
+  /* pre-JS safety: direct-child sections must never flex-squish inside the clip */
+  body .pd .pd-desc-card > .pd-desc-section{flex:0 0 auto!important}
+}
+
 @media (max-width:760px){
   body .pd .pd-description{padding:64px 0!important}
   body .pd .pd-desc-head{margin:0 auto 36px!important}
@@ -122,13 +152,82 @@ body .pd .pd-nutrition-wrap{display:none!important}
       else c.appendChild(priceSpan);
     });
   }
+  function isDesktop(){ return window.matchMedia('(min-width:761px)').matches; }
+  /* The description card's sections get wrapped in a .pd-desc-scrollwrap so the
+     content area (not the card) is the scroller and the Read more button never
+     moves. Works for both the JS-built card and the server-rendered one from
+     sections/pd-description.liquid. Idempotent. */
+  function ensureScrollWrap(){
+    const card = document.querySelector('.pd-desc-content .pd-desc-card[data-transformed="1"]');
+    if (!card || card.querySelector('.pd-desc-scrollwrap')) return;
+    const secs = Array.prototype.filter.call(card.children, function(el){ return el.classList && el.classList.contains('pd-desc-section'); });
+    if (!secs.length) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'pd-desc-scrollwrap';
+    card.insertBefore(wrap, secs[0]);
+    secs.forEach(function(s){ wrap.appendChild(s); });
+  }
+  /* Desktop: Read more toggles ONE shared scroll state on the clipped cards
+     (description + ingredients). The nutrition card is always fully open. */
+  function setDeskOpen(open){
+    const content = document.querySelector('.pd-desc-content');
+    if (!content) return;
+    ensureScrollWrap();
+    content.classList.toggle('is-open', open);
+    const btn = content.querySelector('.pd-desc-toggle');
+    if (btn){
+      btn.classList.toggle('is-expanded', open);
+      const t = btn.querySelector('.pd-desc-toggle-text');
+      if (t) t.textContent = open ? 'Show less' : 'Read more';
+    }
+    if (!open) content.querySelectorAll('.pd-desc-scrollwrap, .pd-ing-card .pd-desc-section').forEach(function(c){ c.scrollTop = 0; });
+  }
+  /* shared with sections/pd-description.liquid (server-rendered card path) */
+  window.__pdSetDeskOpen = setDeskOpen;
+  function deskOpen(){
+    const c = document.querySelector('.pd-desc-content');
+    return !!(c && c.classList.contains('is-open'));
+  }
+  /* All cards match the nutrition card's natural height: measure it and feed the
+     CSS var that the fixed-height rule clips the other cards to. */
+  function syncHeights(){
+    if (!isDesktop()) return;
+    const content = document.querySelector('.pd-desc-content');
+    if (!content) return;
+    const nf = content.querySelector('.pd-nf-card');
+    if (!nf) return;
+    const h = nf.offsetHeight;
+    if (h) content.style.setProperty('--pdcard-h', h + 'px');
+  }
+  /* Crossing the 760px breakpoint resets both the desktop shared state and the
+     mobile expansion state so the controls and content never disagree. */
+  var wasDesk = isDesktop();
+  window.addEventListener('resize', function(){
+    const d = isDesktop();
+    if (d !== wasDesk){
+      wasDesk = d;
+      setDeskOpen(false);
+      const content = document.querySelector('.pd-desc-content');
+      if (content && !d) content.style.removeProperty('--pdcard-h');
+      const card = document.querySelector('.pd-desc-content .pd-desc-card[data-transformed="1"]');
+      if (card){
+        card.classList.remove('is-expanded');
+        card.querySelectorAll('.pd-desc-section').forEach(function(s, i){ if (i > 0) s.classList.add('is-hidden'); });
+      }
+    }
+    if (d) requestAnimationFrame(syncHeights);
+  });
+
   function transformDesc(){
     const ul = document.querySelector('.pd-desc-content ul');
-    if (!ul || ul.dataset.transformed === '1') return;
+    /* the ingredients bullet list lives INSIDE a card — never rebuild that */
+    if (!ul || ul.dataset.transformed === '1' || ul.closest('.pd-desc-card')) return;
     const items = Array.from(ul.querySelectorAll('li'));
     if (!items.length) return;
     const card = document.createElement('div');
     card.className = 'pd-desc-card';
+    const swrap = document.createElement('div');
+    swrap.className = 'pd-desc-scrollwrap';
     items.forEach((li, idx)=>{
       const text = (li.innerText || li.textContent || '').trim();
       const colonIdx = text.indexOf(':');
@@ -156,14 +255,17 @@ body .pd .pd-nutrition-wrap{display:none!important}
         wrap.appendChild(descEl);
         section.appendChild(wrap);
       }
-      card.appendChild(section);
+      swrap.appendChild(section);
     });
+    card.appendChild(swrap);
     if (items.length > 1) {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'pd-desc-toggle';
       btn.innerHTML = '<span class="pd-desc-toggle-text">Read more</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>';
-      btn.addEventListener('click', ()=>{
+      btn.addEventListener('click', (ev)=>{
+        ev.pdDescHandled = true; /* stop pd-description's delegated handler double-firing */
+        if (isDesktop()){ setDeskOpen(!deskOpen()); return; }
         const wasExpanded = card.classList.contains('is-expanded');
         const isExpanded = card.classList.toggle('is-expanded');
         btn.classList.toggle('is-expanded', isExpanded);
@@ -204,9 +306,24 @@ body .pd .pd-nutrition-wrap{display:none!important}
         const label = document.createElement('h3');
         label.className = 'pd-desc-label';
         label.textContent = 'Ingredients';
-        const body = document.createElement('p');
-        body.className = 'pd-desc-text';
-        body.textContent = ingText;
+        /* comma-separated ingredients render as a bullet list (single-phrase
+           text stays a plain paragraph) */
+        const bits = ingText.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+        let body;
+        if (bits.length > 1){
+          body = document.createElement('ul');
+          body.className = 'pd-desc-text pd-ing-list';
+          bits.forEach(function(b, i){
+            if (i === bits.length - 1) b = b.replace(/\.\s*$/, '');
+            const li = document.createElement('li');
+            li.textContent = b;
+            body.appendChild(li);
+          });
+        } else {
+          body = document.createElement('p');
+          body.className = 'pd-desc-text';
+          body.textContent = ingText;
+        }
         wrap.appendChild(label);
         wrap.appendChild(body);
         section.appendChild(wrap);
@@ -227,6 +344,8 @@ body .pd .pd-nutrition-wrap{display:none!important}
       body.appendChild(nfSrc.cloneNode(true));
       const handleToggle = (e)=>{
         if (e.target.closest('.pd-nf-body')) return;
+        e.pdDescHandled = true; /* stop pd-description's delegated handler double-firing */
+        if (isDesktop()) return; /* always open on desktop — nothing to toggle */
         const wasOpen = card.classList.contains('is-open');
         card.classList.toggle('is-open');
         if (wasOpen) {
@@ -242,11 +361,14 @@ body .pd .pd-nutrition-wrap{display:none!important}
       descContent.appendChild(card);
     }
   }
-  function runAll(){ injectPrices(); transformDesc(); }
+  function runAll(){ injectPrices(); transformDesc(); ensureScrollWrap(); syncHeights(); }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', runAll);
   } else {
     runAll();
   }
+  /* fonts and images can change the nutrition card's natural height after DCL */
+  window.addEventListener('load', syncHeights);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ syncHeights(); });
 })();
 </script>

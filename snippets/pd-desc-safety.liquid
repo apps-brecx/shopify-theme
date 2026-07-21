@@ -38,14 +38,18 @@ html body .pd .pd-desc-content .pd-desc-card{
    inner content area was shorter than the actual text. Fix: override overflow to visible on
    the card AND the parent content, and remove every possible height cap. Sticky behavior stays
    intact (position is NOT touched). */
-html body .pd .pd-desc-content,
-body .pd .pd-desc-content,
-html body .pd .pd-desc-content .pd-desc-card,
-body .pd .pd-desc-card{
-  overflow:visible!important;
-  max-height:none!important;
-  min-height:0!important;
-  height:auto!important;
+/* Scoped to mobile: the sticky-stack effect only exists there — on desktop the
+   cards are fixed-height previews (pd-mb-prices) and must keep their clip. */
+@media (max-width:760px){
+  html body .pd .pd-desc-content,
+  body .pd .pd-desc-content,
+  html body .pd .pd-desc-content .pd-desc-card,
+  body .pd .pd-desc-card{
+    overflow:visible!important;
+    max-height:none!important;
+    min-height:0!important;
+    height:auto!important;
+  }
 }
 
 /* Extra mobile safety — the sticky card on mobile should always show its real content height */

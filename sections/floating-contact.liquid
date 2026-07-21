@@ -22,6 +22,11 @@
   data-webhook-url="{{ section.settings.webhook_url | escape }}"
   data-success-text="{{ section.settings.success_text | escape }}"
   data-error-text="{{ section.settings.error_text | escape }}"
+  data-default-tab="{{ section.settings.default_tab | default: 'chat' }}"
+  data-chat-endpoint="{{ section.settings.chat_endpoint | escape }}"
+  data-customer-email="{% if customer %}{{ customer.email | escape }}{% endif %}"
+  data-chat-greeting="{{ section.settings.chat_greeting | escape }}"
+  data-chat-fallback="{{ section.settings.chat_fallback | escape }}"
 >
   <!-- Floating button -->
   <button class="bb-float-btn"
@@ -53,6 +58,43 @@
       <h3 class="bb-modal-title" id="bb-modal-title">{{ section.settings.modal_title }}</h3>
       <p class="bb-modal-sub">{{ section.settings.modal_subtext }}</p>
 
+      {%- if section.settings.enable_chat -%}
+      <div class="bb-tabs" role="tablist" aria-label="Contact options">
+        <button type="button" class="bb-tab" id="bb-tab-chat" role="tab" aria-controls="bb-panel-chat" aria-selected="false">{{ section.settings.chat_tab_label | default: 'Quick help' }}</button>
+        <button type="button" class="bb-tab" id="bb-tab-form" role="tab" aria-controls="bb-panel-form" aria-selected="false">{{ section.settings.form_tab_label | default: 'Send message' }}</button>
+      </div>
+
+      <div class="bb-panel" id="bb-panel-chat" role="tabpanel" aria-labelledby="bb-tab-chat" hidden>
+        <div class="bb-chat-log" id="bb-chat-log" aria-live="polite"></div>
+        <div class="bb-chat-pills" id="bb-chat-pills">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'faq' -%}
+              {%- if block.settings.question != blank -%}
+                <button type="button" class="bb-pill" data-faq="{{ forloop.index0 }}" {{ block.shopify_attributes }}>{{ block.settings.question | escape }}</button>
+              {%- elsif request.design_mode -%}
+                <button type="button" class="bb-pill bb-pill--empty" {{ block.shopify_attributes }}>Add a question…</button>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'faq' and block.settings.answer != blank -%}
+            <div class="bb-faq-answer" id="bb-faq-answer-{{ forloop.index0 }}" hidden>{{ block.settings.answer }}</div>
+          {%- endif -%}
+        {%- endfor -%}
+        <form class="bb-chat-inputrow" id="bb-chat-inputrow" novalidate>
+          <input type="text" id="bb-chat-input" placeholder="{{ section.settings.chat_placeholder | default: 'Type a question…' | escape }}" autocomplete="off" maxlength="300">
+          <button type="submit" class="bb-chat-send" aria-label="Send">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12l18-8-8 18-2-8-8-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </button>
+        </form>
+      </div>
+
+      {%- endif -%}
+
+      {%- comment -%} Chat disabled: the form renders as the whole modal, visible
+          without JS (no hidden attribute, no tab roles). {%- endcomment -%}
+      <div class="bb-panel" id="bb-panel-form" {% if section.settings.enable_chat %}role="tabpanel" aria-labelledby="bb-tab-form" hidden{% endif %}>
       {% if section.settings.send_mode == 'shopify' %}
         {%- form 'contact', id: 'FloatingContactForm', class: 'bb-form' -%}
           <input type="hidden" name="form_type" value="contact">
@@ -110,6 +152,7 @@
           <div class="bb-status" id="bb-status" aria-live="polite"></div>
         </form>
       {% endif %}
+      </div>
     </div>
   </div>
 
@@ -154,9 +197,11 @@
 
     .bb-modal-card{
         position: relative;
-        pointer-events: auto;                          
+        pointer-events: auto;
         width: 100%;
         max-width: 520px;
+        max-height: calc(100vh - 130px);
+        overflow-y: auto;
         background: #fff;
         border-radius: 16px;
         padding: 24px;
@@ -191,6 +236,35 @@
     .bb-modal-title { margin: 0 0 6px; font-size: 20px; font-family: Helvetica !important ;}
     .bb-modal-sub   { margin: 0 0 16px; color: #555; font-size: 14px; font-family: Helvetica !important ; }
     .bb-status      { margin-top: 10px; min-height: 18px; font-size: 14px; }
+
+    /* Tabs + chat */
+    .bb-tabs{display:flex;gap:8px;margin:0 0 14px;border-bottom:1px solid #eee;padding-bottom:12px}
+    .bb-tab{flex:1;padding:9px 10px;border:1px solid #ddd;border-radius:10px;background:#fff;color:#3C2005;font:inherit;font-weight:700;font-size:13px;cursor:pointer}
+    .bb-tab.is-active{background:#3C2005;color:#fff;border-color:#3C2005}
+    .bb-panel[hidden], .bb-faq-answer[hidden]{display:none!important}
+    .bb-chat-log{display:flex;flex-direction:column;gap:8px;min-height:110px;max-height:250px;overflow-y:auto;padding:4px 2px;margin-bottom:10px;scrollbar-width:thin}
+    .bb-msg{max-width:85%;padding:9px 12px;border-radius:12px;font-size:13.5px;line-height:1.45;overflow-wrap:break-word}
+    .bb-msg--plain{white-space:pre-line}
+    .bb-msg--bot{align-self:flex-start;background:#F6F1E7;color:#3C2005;border-bottom-left-radius:4px}
+    .bb-msg--user{align-self:flex-end;background:#3C2005;color:#fff;border-bottom-right-radius:4px}
+    .bb-msg--bot p{margin:0 0 6px}
+    .bb-msg--bot p:last-child{margin:0}
+    .bb-msg-link{display:inline-block;margin-top:6px;color:#3C2005;font-weight:700;text-decoration:underline;cursor:pointer;background:none;border:0;padding:0;font:inherit;font-size:13px}
+    .bb-msg--product{display:flex;flex-direction:column;gap:2px}
+    .bb-prod-link{color:#3C2005;font-weight:700;text-decoration:underline}
+    .bb-prod-price{font-size:12.5px;color:#6b5138}
+    .bb-typing{align-self:flex-start;background:#F6F1E7;color:#3C2005;border-radius:12px;padding:9px 14px;font-size:15px;letter-spacing:3px}
+    .bb-chat-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+    .bb-chat-pills:empty{display:none}
+    .bb-pill{padding:7px 12px;border:1px solid #ddd;border-radius:999px;background:#fff;color:#333;font:inherit;font-size:12.5px;cursor:pointer}
+    .bb-pill:hover{border-color:#3C2005;color:#3C2005}
+    .bb-pill--empty{opacity:.5;font-style:italic}
+    .bb-chat-send[disabled]{opacity:.55;cursor:default}
+    .bb-chat-inputrow input[disabled]{opacity:.7}
+    .bb-chat-inputrow{display:flex;gap:8px}
+    .bb-chat-inputrow input{flex:1;min-width:0;padding:10px 12px;border-radius:10px;border:1px solid #ddd;font:inherit}
+    .bb-chat-send{width:42px;height:42px;flex:0 0 auto;border:0;border-radius:10px;background:#3C2005;color:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+    .bb-chat-send svg{width:18px;height:18px}
 
     /* Hide when closed */
     .bb-modal[hidden], .bb-modal-overlay[hidden] { display: none !important; }
@@ -374,6 +448,262 @@
 
       setButtonIcon(false);
     })();
+
+    /* ---- Quick-help chat tab (separate from the form logic above) ---- */
+    (function () {
+      const root = document.getElementById('bb-floating-contact');
+      if (!root) return;
+      const log       = document.getElementById('bb-chat-log');
+      const pills     = document.getElementById('bb-chat-pills');
+      const inputRow  = document.getElementById('bb-chat-inputrow');
+      const input     = document.getElementById('bb-chat-input');
+      const tabChat   = document.getElementById('bb-tab-chat');
+      const tabForm   = document.getElementById('bb-tab-form');
+      const panelChat = document.getElementById('bb-panel-chat');
+      const panelForm = document.getElementById('bb-panel-form');
+      if (!log || !tabChat || !tabForm || !panelChat || !panelForm) return;
+
+      const greeting     = root.dataset.chatGreeting || '';
+      const fallbackText = root.dataset.chatFallback || "I couldn't find an instant answer for that.";
+      const llmUrl       = (root.dataset.chatEndpoint || '').trim();
+
+      function showTab(name){
+        const chat = name === 'chat';
+        panelChat.hidden = !chat;
+        panelForm.hidden = chat;
+        tabChat.classList.toggle('is-active', chat);
+        tabForm.classList.toggle('is-active', !chat);
+        tabChat.setAttribute('aria-selected', chat ? 'true' : 'false');
+        tabForm.setAttribute('aria-selected', chat ? 'false' : 'true');
+      }
+      tabChat.addEventListener('click', function(){ showTab('chat'); });
+      tabForm.addEventListener('click', function(){ showTab('form'); });
+      showTab(root.dataset.defaultTab === 'form' ? 'form' : 'chat');
+
+      function scrollLog(){ log.scrollTop = log.scrollHeight; }
+      function addMsg(who, content, opts){
+        const el = document.createElement('div');
+        el.className = 'bb-msg bb-msg--' + who;
+        if (opts && opts.html){ el.innerHTML = content; }
+        else { el.classList.add('bb-msg--plain'); el.textContent = content; }
+        log.appendChild(el);
+        scrollLog();
+        return el;
+      }
+      function addFormLink(el){
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bb-msg-link';
+        btn.textContent = 'Send us a message instead';
+        btn.addEventListener('click', function(){ showTab('form'); });
+        el.appendChild(document.createElement('br'));
+        el.appendChild(btn);
+        scrollLog();
+      }
+      let typingEl = null;
+      function typing(on){
+        if (on && !typingEl){
+          typingEl = document.createElement('div');
+          typingEl.className = 'bb-typing';
+          typingEl.textContent = '•••';
+          log.appendChild(typingEl);
+          scrollLog();
+        }
+        if (!on && typingEl){ typingEl.remove(); typingEl = null; }
+      }
+
+      if (greeting) addMsg('bot', greeting);
+
+      const sendBtn = inputRow ? inputRow.querySelector('.bb-chat-send') : null;
+      let busy = false;
+      function setBusy(on){
+        busy = on;
+        if (input) input.disabled = on;
+        if (sendBtn) sendBtn.disabled = on;
+      }
+      async function ask(q, history){
+        if (busy) return;
+        setBusy(true);
+        typing(true);
+        try {
+          if (llmUrl) await askLlm(q, history); else await askFaq(q);
+        } catch(e){
+          console.warn('[bb-chat]', e);
+          addFormLink(addMsg('bot', fallbackText));
+        } finally {
+          typing(false);
+          setBusy(false);
+        }
+      }
+
+      /* Shopify Storefront MCP — same-origin, public, no auth needed.
+         The FAQ tool lives on /api/mcp (sunsets 2026-08-31; failures degrade to the
+         fallback + form link). Catalog search uses its successor /api/ucp/mcp.
+         The abort timer covers the whole request INCLUDING the body read. */
+      async function fetchJson(url, body, timeoutMs){
+        const ctrl  = ('AbortController' in window) ? new AbortController() : null;
+        const timer = ctrl && setTimeout(function(){ ctrl.abort(); }, timeoutMs || 12000);
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+            signal: ctrl ? ctrl.signal : undefined
+          });
+          if (!res.ok) throw new Error('http ' + res.status);
+          return await res.json();
+        } finally {
+          if (timer) clearTimeout(timer);
+        }
+      }
+      const UCP_PROFILE = 'https://shopify.dev/ucp/agent-profiles/examples/2026-04-08/valid-with-capabilities.json';
+      async function mcpCall(endpoint, name, args){
+        const data = await fetchJson(endpoint, { jsonrpc: '2.0', method: 'tools/call', id: 1,
+          params: { name: name, arguments: args } });
+        return (data && data.result && data.result.content) || [];
+      }
+      function parseJsonItems(items){
+        const out = [];
+        items.forEach(function(it){
+          if (it && it.type === 'text' && typeof it.text === 'string'){
+            try { out.push(JSON.parse(it.text)); } catch(e){}
+          }
+        });
+        return out;
+      }
+      function money(pr){
+        const mn = pr && pr.min && typeof pr.min.amount === 'number' ? pr.min.amount : null;
+        if (mn === null) return '';
+        const mx = pr.max && typeof pr.max.amount === 'number' ? pr.max.amount : mn;
+        const cur = (pr.min && pr.min.currency) || 'USD';
+        const f = function(c){ return cur === 'USD' ? '$' + (c/100).toFixed(2) : (c/100).toFixed(2) + ' ' + cur; };
+        return mn === mx ? f(mn) : f(mn) + ' – ' + f(mx);
+      }
+      function addProductMsg(p){
+        const url = String(p.url || '');
+        if (!/^https?:\/\//i.test(url)) return;
+        const el = document.createElement('div');
+        el.className = 'bb-msg bb-msg--bot bb-msg--product';
+        const a = document.createElement('a');
+        a.href = url;
+        a.className = 'bb-prod-link';
+        a.textContent = p.title;
+        el.appendChild(a);
+        const priceTxt = money(p.price_range);
+        if (priceTxt){
+          const s = document.createElement('span');
+          s.className = 'bb-prod-price';
+          s.textContent = priceTxt;
+          el.appendChild(s);
+        }
+        log.appendChild(el);
+        scrollLog();
+      }
+      /* Order-status questions can't be answered from the storefront (needs the
+         authenticated Admin API via the future AI endpoint) — route them to the
+         customer's account order history instead of the generic fallback. */
+      function looksLikeOrderQuery(q){
+        if (/^#?\d{3,}$/.test(q.trim())) return true;
+        return /(order|track|shipment|delivery|status)/i.test(q) && /#?\d{3,}/.test(q);
+      }
+      function addOrderHelpMsg(){
+        const el = addMsg('bot', 'I can’t look up individual orders in this chat yet. You can see your order status and tracking any time in your account:');
+        const a = document.createElement('a');
+        a.href = '/account';
+        a.className = 'bb-prod-link';
+        a.textContent = 'View my orders';
+        el.appendChild(document.createElement('br'));
+        el.appendChild(a);
+        addFormLink(el);
+      }
+      /* Free-text flow: store policies/FAQ first, then product catalog, then fallback. */
+      async function askFaq(q){
+        if (looksLikeOrderQuery(q)){ addOrderHelpMsg(); return; }
+        let answers = [];
+        try {
+          parseJsonItems(await mcpCall('/api/mcp', 'search_shop_policies_and_faqs', { query: q }))
+            .forEach(function(v){ if (Array.isArray(v)) answers = answers.concat(v); });
+        } catch(e){ console.warn('[bb-chat] faq lookup failed', e); }
+        answers = answers.filter(function(a){ return a && a.answer; }).slice(0, 2);
+        if (answers.length){
+          answers.forEach(function(a){ addMsg('bot', a.answer); });
+          return;
+        }
+        let products = [];
+        try {
+          parseJsonItems(await mcpCall('/api/ucp/mcp', 'search_catalog', { meta: { 'ucp-agent': { profile: UCP_PROFILE } }, catalog: { query: q } }))
+            .forEach(function(v){ if (v && Array.isArray(v.products)) products = products.concat(v.products); });
+        } catch(e){ console.warn('[bb-chat] catalog lookup failed', e); }
+        products = products.filter(function(p){ return p && p.title && p.url; }).slice(0, 3);
+        if (products.length){
+          addMsg('bot', 'Here’s what I found in our shop:');
+          products.forEach(addProductMsg);
+          return;
+        }
+        addFormLink(addMsg('bot', fallbackText));
+      }
+
+      /* Optional AI endpoint (section setting) for when the LLM Worker exists.
+         Contract: POST {message, history:[{role,text}...], page} -> {reply:"..."}
+         History is snapshotted BEFORE the outgoing question is painted, and UI
+         affordances (the "Send us a message instead" button) are stripped. */
+      function snapshotHistory(){
+        return Array.prototype.slice.call(log.querySelectorAll('.bb-msg')).slice(-10).map(function(m){
+          const c = m.cloneNode(true);
+          Array.prototype.forEach.call(c.querySelectorAll('.bb-msg-link, br'), function(n){ n.remove(); });
+          return { role: m.classList.contains('bb-msg--user') ? 'user' : 'assistant', text: (c.textContent || '').trim() };
+        });
+      }
+      async function askLlm(q, history){
+        const payload = { message: q, history: history || [], page: location.href };
+        if (root.dataset.customerEmail) payload.customer_email = root.dataset.customerEmail;
+        const data = await fetchJson(llmUrl, payload, 25000);
+        if (data && typeof data.reply === 'string' && data.reply) addMsg('bot', data.reply);
+        else throw new Error('bad reply');
+      }
+
+      if (pills) pills.addEventListener('click', function(e){
+        const pill = e.target.closest('.bb-pill');
+        if (!pill || typeof pill.dataset.faq === 'undefined') return;
+        const q = pill.textContent.trim();
+        const canned = document.getElementById('bb-faq-answer-' + pill.dataset.faq);
+        if (canned){
+          addMsg('user', q);
+          addMsg('bot', canned.innerHTML, { html: true });
+          return;
+        }
+        if (busy) return;
+        const h = snapshotHistory();
+        addMsg('user', q);
+        ask(q, h);
+      });
+      if (inputRow) inputRow.addEventListener('submit', function(e){
+        e.preventDefault();
+        if (busy) return;
+        const q = (input.value || '').trim();
+        if (!q) return;
+        const h = snapshotHistory();
+        input.value = '';
+        addMsg('user', q);
+        ask(q, h);
+      });
+
+      /* Theme editor: selecting the section or a Quick question block opens the
+         widget so merchants can see what they're editing. */
+      if (window.Shopify && window.Shopify.designMode){
+        const ensureOpen = function(){
+          const m = document.getElementById('bb-contact-modal');
+          const b = document.getElementById('bb-float-btn');
+          if (m && m.hidden && b) b.click();
+        };
+        document.addEventListener('shopify:section:select', function(e){
+          if (e.target && e.target.contains(root)) ensureOpen();
+        });
+        document.addEventListener('shopify:block:select', function(e){
+          if (e.target && e.target.contains(root)){ ensureOpen(); showTab('chat'); }
+        });
+      }
+    })();
   </script>
 </section>
 
@@ -418,8 +748,57 @@
 
     { "type": "text", "id": "submit_label", "label": "Submit label", "default": "Send Message" },
     { "type": "text", "id": "success_text", "label": "Success text", "default": "Thanks! We received your message." },
-    { "type": "text", "id": "error_text", "label": "Error text", "default": "Something went wrong. Please try again." }
+    { "type": "text", "id": "error_text", "label": "Error text", "default": "Something went wrong. Please try again." },
+
+    { "type": "header", "content": "Quick-help chat" },
+    {
+      "type": "checkbox",
+      "id": "enable_chat",
+      "label": "Enable Quick-help chat",
+      "default": true,
+      "info": "Off: the widget shows only the contact form, exactly as before the chat existed."
+    },
+    {
+      "type": "select",
+      "id": "default_tab",
+      "label": "Tab shown when the widget opens",
+      "default": "chat",
+      "options": [
+        { "value": "chat", "label": "Quick help (chat)" },
+        { "value": "form", "label": "Contact form" }
+      ]
+    },
+    { "type": "text", "id": "chat_tab_label", "label": "Chat tab label", "default": "Quick help" },
+    { "type": "text", "id": "form_tab_label", "label": "Form tab label", "default": "Send message" },
+    { "type": "text", "id": "chat_greeting", "label": "Chat greeting", "default": "Hi! Pick a question below, or type your own — I’ll answer instantly." },
+    { "type": "text", "id": "chat_placeholder", "label": "Input placeholder", "default": "Type a question…" },
+    { "type": "text", "id": "chat_fallback", "label": "No-answer fallback text", "default": "I couldn’t find an instant answer for that." },
+    { "type": "url", "id": "chat_endpoint", "label": "AI chat endpoint (optional)", "info": "Leave empty to answer typed questions from the store’s built-in policies/FAQ search. Set to your AI Worker URL later to switch to LLM replies." }
   ],
-  "presets": [{ "name": "Floating contact button" }]
+  "max_blocks": 12,
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "Quick question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer (optional)",
+          "info": "Leave empty to auto-answer this question from the store’s policies/FAQ search."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Floating contact button",
+      "blocks": [
+        { "type": "faq", "settings": { "question": "What countries do you ship to?" } },
+        { "type": "faq", "settings": { "question": "How long does shipping take?" } }
+      ]
+    }
+  ]
 }
 {% endschema %}

@@ -527,8 +527,20 @@
             {%- endif -%}
             {%- assign vipprice = 799 -%}
             {%- if issf -%}{%- assign vipprice = 699 -%}{%- endif -%}
+            {%- comment -%} VIP flat pricing applies ONLY to individual syrups: the title
+                must contain "Syrup", and sets/packs/bundles/boba/toppings are excluded
+                by title AND tags (e.g. "Coffee Trend Set", tag "Variety Pack"). {%- endcomment -%}
+            {%- assign tl = t | downcase -%}
+            {%- assign vip_ok = false -%}
+            {%- if tl contains 'syrup' -%}{%- assign vip_ok = true -%}{%- endif -%}
+            {%- if tl contains 'boba' or tl contains 'popping' or tl contains 'pearl' or tl contains 'topping' or tl contains 'variety' or tl contains 'jelly' or tl contains 'bundle' or tl contains 'sampler' or tl contains 'combo' or tl contains 'coffeehouse' or tl contains 'pump' or tl contains ' kit' or tl contains ' set' or tl contains ' duo' or tl contains ' trio' or tl contains ' ball' or tl contains ' pack' or tl contains 'pack of' -%}
+              {%- assign vip_ok = false -%}
+            {%- endif -%}
+            {%- if tg contains 'variety' or tg contains 'boba' or tg contains 'topping' or tg contains 'bundle' -%}
+              {%- assign vip_ok = false -%}
+            {%- endif -%}
             {%- assign has_vip = false -%}
-            {%- if vipprice < v.price -%}{%- assign has_vip = true -%}{%- endif -%}
+            {%- if vip_ok and vipprice < v.price -%}{%- assign has_vip = true -%}{%- endif -%}
             {%- assign pdesc = product.description | strip_html | truncate: 180 -%}
             {%- assign best = false -%}
             {%- if product.tags contains 'Best Seller' -%}{%- assign best = true -%}{%- endif -%}
@@ -571,6 +583,7 @@
               data-best="{% if best %}1{% else %}0{% endif %}"
               data-new="{% if isnew %}1{% else %}0{% endif %}"
               data-sf="{% if issf %}1{% else %}0{% endif %}"
+              data-vipok="{% if vip_ok %}1{% else %}0{% endif %}"
               data-desc="{{ pdesc | escape }}"
               style="--tint:{{ tintBg }};--tint-ink:{{ tintInk }};--d:{{ dd }}ms"
             >

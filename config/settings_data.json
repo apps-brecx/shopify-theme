@@ -194,6 +194,34 @@
       },
       "floating-contact": {
         "type": "floating-contact",
+        "blocks": {
+          "faq-ship-countries": {
+            "type": "faq",
+            "settings": {
+              "question": "What countries do you ship to?",
+              "answer": "<p>We currently ship within the United States only.</p>"
+            }
+          },
+          "faq-delivery-time": {
+            "type": "faq",
+            "settings": {
+              "question": "How long does delivery take?",
+              "answer": ""
+            }
+          },
+          "faq-sugar-free": {
+            "type": "faq",
+            "settings": {
+              "question": "Do you have sugar-free syrups?",
+              "answer": ""
+            }
+          }
+        },
+        "block_order": [
+          "faq-ship-countries",
+          "faq-delivery-time",
+          "faq-sugar-free"
+        ],
         "settings": {
           "send_mode": "shopify",
           "webhook_url": "",
