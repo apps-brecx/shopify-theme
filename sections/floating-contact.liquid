@@ -593,8 +593,26 @@
         log.appendChild(el);
         scrollLog();
       }
+      /* Order-status questions can't be answered from the storefront (needs the
+         authenticated Admin API via the future AI endpoint) — route them to the
+         customer's account order history instead of the generic fallback. */
+      function looksLikeOrderQuery(q){
+        if (/^#?\d{3,}$/.test(q.trim())) return true;
+        return /(order|track|shipment|delivery|status)/i.test(q) && /#?\d{3,}/.test(q);
+      }
+      function addOrderHelpMsg(){
+        const el = addMsg('bot', 'I can’t look up individual orders in this chat yet. You can see your order status and tracking any time in your account:');
+        const a = document.createElement('a');
+        a.href = '/account';
+        a.className = 'bb-prod-link';
+        a.textContent = 'View my orders';
+        el.appendChild(document.createElement('br'));
+        el.appendChild(a);
+        addFormLink(el);
+      }
       /* Free-text flow: store policies/FAQ first, then product catalog, then fallback. */
       async function askFaq(q){
+        if (looksLikeOrderQuery(q)){ addOrderHelpMsg(); return; }
         let answers = [];
         try {
           parseJsonItems(await mcpCall('/api/mcp', 'search_shop_policies_and_faqs', { query: q }))

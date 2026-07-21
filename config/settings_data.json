@@ -199,7 +199,7 @@
             "type": "faq",
             "settings": {
               "question": "What countries do you ship to?",
-              "answer": ""
+              "answer": "<p>We currently ship within the United States only.</p>"
             }
           },
           "faq-delivery-time": {
