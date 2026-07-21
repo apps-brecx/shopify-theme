@@ -133,22 +133,23 @@ async function searchPoliciesFaqs(query) {
   return answers.length ? answers.slice(0, 4) : 'No matching policy or FAQ entries found.';
 }
 
+const ORDER_GQL = `query($q: String!) {
+  orders(first: 5, query: $q) {
+    nodes {
+      name email createdAt displayFinancialStatus displayFulfillmentStatus
+      fulfillments { displayStatus trackingInfo { number url company } }
+    }
+  }
+}`;
+
 async function getOrderStatus(env, orderNumber, email) {
   const num = String(orderNumber || '').replace(/[^0-9]/g, '');
   const mail = String(email || '').trim().toLowerCase();
   if (!num || !mail) return 'Both order number and email are required.';
-  const gql = `query($q: String!) {
-    orders(first: 5, query: $q) {
-      nodes {
-        name email createdAt displayFinancialStatus displayFulfillmentStatus
-        fulfillments { displayStatus trackingInfo { number url company } }
-      }
-    }
-  }`;
   const res = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN },
-    body: JSON.stringify({ query: gql, variables: { q: 'name:#' + num } }),
+    body: JSON.stringify({ query: ORDER_GQL, variables: { q: 'name:#' + num } }),
   }, 8000);
   if (!res.ok) throw new Error('admin api HTTP ' + res.status);
   const data = await res.json();
@@ -292,6 +293,31 @@ export default {
           }, 8000);
           let data = {};
           try { data = await res.json(); } catch (e) {}
+          /* also run the EXACT production order query with a dummy search
+             (name:#0 matches nothing → zero rows, but permission/validation
+             errors still surface with their codes and messages) */
+          let orderQuery = {};
+          try {
+            const res2 = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN },
+              body: JSON.stringify({ query: ORDER_GQL, variables: { q: 'name:#0' } }),
+            }, 8000);
+            let d2 = {};
+            try { d2 = await res2.json(); } catch (e) {}
+            orderQuery = {
+              http: res2.status,
+              ok: res2.status === 200 && !d2.errors,
+              error_codes: (d2.errors || []).map(function (er) {
+                return (er.extensions && er.extensions.code) || '';
+              }).slice(0, 3),
+              error_messages: (d2.errors || []).map(function (er) {
+                return String(er.message || '').slice(0, 160);
+              }).slice(0, 3),
+            };
+          } catch (e) {
+            orderQuery = { hint: String((e && e.message) || e).slice(0, 120) };
+          }
           return json({
             token_set: true,
             http: res.status,
@@ -301,6 +327,7 @@ export default {
             error_codes: (data.errors || []).map(function (er) {
               return (er.extensions && er.extensions.code) || String(er.message || '').slice(0, 80);
             }).slice(0, 3),
+            production_order_query: orderQuery,
           }, 200, headers);
         } catch (e) {
           return json({ token_set: true, reachable: false, hint: String((e && e.message) || e).slice(0, 120) }, 200, headers);
