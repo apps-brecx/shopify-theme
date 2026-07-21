@@ -131,9 +131,15 @@ body .pd .pd-ing-card ul.pd-ing-list li::marker{color:#39220f}
 body .pd .pd-ing-toggle{display:none!important}
 @media (max-width:760px){
   html body .pd .pd-desc-content{--pdcard-hm:200px}
-  html body .pd section.pd-description .pd-desc-content .pd-desc-card:not(.pd-nf-card){height:var(--pdcard-hm)!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
-  html body .pd section.pd-description .pd-desc-content .pd-desc-card.is-expanded:not(.pd-nf-card),
-  html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-ing-card.is-open{height:auto!important;overflow:visible!important}
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card{height:var(--pdcard-hm)!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card.is-expanded,
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-ing-card.is-open,
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-nf-card.is-open{height:auto!important;overflow:visible!important}
+  /* nutrition matches the 200px preview: header fixed, table partially
+     visible below it even while closed; the arrow expands to full height */
+  html body .pd section.pd-description .pd-desc-content .pd-nf-card .pd-nf-toggle{flex:0 0 auto!important}
+  html body .pd section.pd-description .pd-desc-content .pd-nf-card .pd-nf-body{display:block!important;animation:none!important;flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
+  html body .pd section.pd-description .pd-desc-content .pd-nf-card.is-open .pd-nf-body{overflow:visible!important}
   /* clipped content areas; Read more / arrow stay visible below them */
   html body .pd section.pd-description .pd-desc-content .pd-desc-card .pd-desc-scrollwrap{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
   html body .pd section.pd-description .pd-desc-content .pd-desc-card.is-expanded .pd-desc-scrollwrap{overflow:visible!important}
