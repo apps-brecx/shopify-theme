@@ -195,6 +195,20 @@
       "floating-contact": {
         "type": "floating-contact",
         "blocks": {
+          "faq_8HbJTk": {
+            "type": "faq",
+            "settings": {
+              "question": "How can I contact support?",
+              "answer": ""
+            }
+          },
+          "faq_7zjCeU": {
+            "type": "faq",
+            "settings": {
+              "question": "How do I create an account?",
+              "answer": ""
+            }
+          },
           "faq-ship-countries": {
             "type": "faq",
             "settings": {
@@ -218,6 +232,8 @@
           }
         },
         "block_order": [
+          "faq_8HbJTk",
+          "faq_7zjCeU",
           "faq-ship-countries",
           "faq-delivery-time",
           "faq-sugar-free"
