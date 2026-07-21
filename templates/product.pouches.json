@@ -14,8 +14,8 @@
         "why_eyebrow": "Why Pouches",
         "why_heading": "One tear from <em>flavor</em>.",
         "marquee_items": "Tear. Pour. Enjoy.\nOne Perfect Serving\nTake It Anywhere\nReal Flavor\nGluten-Free\nKosher Certified\nMade in the USA",
-        "show_pouch_info_card": true,
-        "pi_bg": "#FFF3DC"
+        "show_mini_bundle": false,
+        "show_pouch_band": true
       }
     }
   },
