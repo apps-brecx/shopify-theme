@@ -76,7 +76,20 @@
   #sp-{{ section.id }} .sp-wave{display:block;width:100%;height:clamp(26px,5vw,56px);}
 
   /* ===== HERO — warm gradient + blobs ===== */
-  #sp-{{ section.id }} .sp-hero{position:relative;padding:clamp(34px,7vw,64px) 0 clamp(30px,5vw,50px);text-align:center;overflow:hidden;background:linear-gradient(180deg,{{ s.hero_g1 | default: '#FFF3DC' }} 0%,{{ s.hero_g2 | default: '#FFD9A0' }} 100%);}
+  #sp-{{ section.id }} .sp-scene{position:relative;overflow:clip;}
+  #sp-{{ section.id }} .sp-rain{position:absolute;inset:0;z-index:1;pointer-events:none;}
+  #sp-{{ section.id }} .sp-rain-item{position:absolute;will-change:transform;filter:drop-shadow(4px 8px 10px rgba(60,36,21,.25));}
+  #sp-{{ section.id }} .sp-rain-item img{display:block;width:100%;height:auto;}
+  #sp-{{ section.id }} .sp-rain-item.tile{background:#fff;border:2px solid var(--rule-c);border-radius:14px;box-shadow:4px 4px 0 var(--rule-c);padding:6px;overflow:hidden;}
+  #sp-{{ section.id }} .sp-rain-item.tile img{border-radius:8px;}
+  @media(max-width:700px){#sp-{{ section.id }} .sp-rain-item.m-hide{display:none;}}
+  @media (prefers-reduced-motion: reduce){#sp-{{ section.id }} .sp-rain{display:none;}}
+  #sp-{{ section.id }} .sp-scene > *:not(.sp-rain){position:relative;z-index:2;}
+  #sp-{{ section.id }} .sp-hero{position:relative;min-height:92svh;display:flex;align-items:center;justify-content:center;padding:clamp(30px,6vw,56px) 0 clamp(56px,8vw,84px);text-align:center;background:linear-gradient(180deg,{{ s.hero_g1 | default: '#FFF3DC' }} 0%,{{ s.hero_g2 | default: '#FFD9A0' }} 100%);}
+  #sp-{{ section.id }} .sp-cue{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:3;width:40px;height:40px;border-radius:50%;background:var(--paper);border:var(--rule);box-shadow:3px 3px 0 var(--rule-c);display:flex;align-items:center;justify-content:center;animation:spcue{{ section.id }} 1.8s ease-in-out infinite;}
+  #sp-{{ section.id }} .sp-cue svg{width:16px;height:16px;color:var(--brand);}
+  @keyframes spcue{{ section.id }}{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+  @media (prefers-reduced-motion: reduce){#sp-{{ section.id }} .sp-cue{animation:none;}}
   #sp-{{ section.id }} .sp-blob{position:absolute;border-radius:50%;opacity:.5;pointer-events:none;filter:blur(2px);}
   #sp-{{ section.id }} .sp-blob.b1{width:26vw;height:26vw;max-width:280px;max-height:280px;background:var(--gold);top:-8%;left:-6%;}
   #sp-{{ section.id }} .sp-blob.b2{width:20vw;height:20vw;max-width:220px;max-height:220px;background:var(--peach);bottom:-10%;right:-4%;}
@@ -85,7 +98,7 @@
   #sp-{{ section.id }} .sp-vipflag{display:inline-flex;align-items:center;gap:8px;background:var(--pop);color:#fff;border:var(--rule);border-radius:999px;font-family:var(--display);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;box-shadow:3px 3px 0 var(--rule-c);}
   #sp-{{ section.id }} .sp-vipflag .dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:sppulse{{ section.id }} 1.6s infinite;}
   @keyframes sppulse{{ section.id }}{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}70%{box-shadow:0 0 0 7px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
-  #sp-{{ section.id }} .sp-logo{margin:22px auto 0;max-width:min(520px,86vw);}
+  #sp-{{ section.id }} .sp-logo{margin:22px auto 0;max-width:min(680px,90vw);will-change:transform;transform-origin:center top;}
   #sp-{{ section.id }} .sp-logo .top{display:block;width:56%;margin:0 auto;}
   #sp-{{ section.id }} .sp-logo .main{display:block;width:100%;margin:6px auto 0;}
   #sp-{{ section.id }} .sp-logo img{width:100%;height:auto;display:block;}
@@ -202,12 +215,46 @@
 
 <section id="sp-{{ section.id }}">
 
-  {%- comment -%} ===== HERO ===== {%- endcomment -%}
+  {%- comment -%} ===== SCENE: hero + gate + live now, with falling pouches ===== {%- endcomment -%}
+  <div class="sp-scene" data-scene>
+    {%- if s.show_rain -%}
+    <div class="sp-rain" aria-hidden="true" data-rain>
+      {%- assign rain_slots = 'rain_1,rain_2,rain_3,rain_4,rain_5,rain_6,rain_7,rain_8' | split: ',' -%}
+      {%- assign cfg_left = '4,78,16,64,88,30,52,8' | split: ',' -%}
+      {%- assign cfg_size = '120,150,100,170,110,140,95,130' | split: ',' -%}
+      {%- assign cfg_speed = '0.42,0.30,0.55,0.24,0.48,0.36,0.60,0.28' | split: ',' -%}
+      {%- assign cfg_rot = '-12,9,-6,14,-16,7,11,-9' | split: ',' -%}
+      {%- assign cfg_top = '-12,-28,-45,-8,-60,-35,-20,-52' | split: ',' -%}
+      {%- assign rain_any = false -%}
+      {%- for slot in rain_slots -%}
+        {%- assign img = s[slot] -%}
+        {%- if img != blank -%}{%- assign rain_any = true -%}
+          {%- assign i = forloop.index0 -%}
+          <div class="sp-rain-item{% if i > 4 %} m-hide{% endif %}" data-speed="{{ cfg_speed[i] }}" data-rot="{{ cfg_rot[i] }}" style="left:{{ cfg_left[i] }}%;top:{{ cfg_top[i] }}%;width:clamp(70px,{{ cfg_size[i] | divided_by: 10 }}vw,{{ cfg_size[i] }}px);transform:rotate({{ cfg_rot[i] }}deg);">
+            <img src="{{ img | image_url: width: 400 }}" alt="" loading="lazy">
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- unless rain_any -%}
+        {%- if cl != blank -%}
+          {%- assign ri = 0 -%}
+          {%- for pr in cl.products limit: 6 -%}
+            {%- if pr.featured_image -%}
+              <div class="sp-rain-item tile{% if ri > 4 %} m-hide{% endif %}" data-speed="{{ cfg_speed[ri] }}" data-rot="{{ cfg_rot[ri] }}" style="left:{{ cfg_left[ri] }}%;top:{{ cfg_top[ri] }}%;width:clamp(70px,{{ cfg_size[ri] | divided_by: 10 }}vw,{{ cfg_size[ri] }}px);transform:rotate({{ cfg_rot[ri] }}deg);">
+                <img src="{{ pr.featured_image | image_url: width: 300 }}" alt="" loading="lazy">
+              </div>
+              {%- assign ri = ri | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endunless -%}
+    </div>
+    {%- endif -%}
   <div class="sp-hero">
     <span class="sp-blob b1" aria-hidden="true"></span><span class="sp-blob b2" aria-hidden="true"></span><span class="sp-blob b3" aria-hidden="true"></span>
     <div class="sp-wrap">
       {%- if s.vip_badge != blank -%}<span class="sp-vipflag sp-rev"><span class="dot"></span>{{ s.vip_badge }}</span>{%- endif -%}
-      <div class="sp-logo sp-rev">
+      <div class="sp-logo sp-rev" data-hero-logo>
         <span class="top"><img src="{{ logo_top }}" alt="Syrup" loading="eager"></span>
         <span class="main"><img src="{{ logo_main }}" alt="Pouches" loading="eager"></span>
       </div>
@@ -222,6 +269,7 @@
         {%- if s.collection_btn_url != blank -%}<a class="sp-btn sp-btn--ghost" href="{{ s.collection_btn_url }}">{{ s.collection_btn_text | default: 'View the collection' }}</a>{%- endif -%}
       </div>
     </div>
+    <a class="sp-cue" href="#sp-gate-{{ section.id }}" aria-label="Scroll down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg></a>
   </div>
   <svg class="sp-wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true" style="background:{{ s.hero_g2 | default: '#FFD9A0' }};"><path d="M0,32 C240,64 480,0 720,30 C960,60 1200,4 1440,32 L1440,60 L0,60 Z" fill="{{ s.color_bg | default: '#FFFBF4' }}"/></svg>
 
@@ -277,6 +325,7 @@
   </div>
   <svg class="sp-wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true" style="background:{{ s.color_orange | default: '#e28f26' }};"><path d="M0,32 C240,64 480,0 720,30 C960,60 1200,4 1440,32 L1440,60 L0,60 Z" fill="{{ s.color_bg | default: '#FFFBF4' }}"/></svg>
   {%- endif -%}
+  </div>{%- comment -%} /sp-scene {%- endcomment -%}
 
   {%- comment -%} ===== FULL-BLEED PICTURE 1 ===== {%- endcomment -%}
   {%- if s.band1_img != blank -%}
@@ -390,6 +439,31 @@
     var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });},{threshold:.1});
     root.querySelectorAll('.sp-rev').forEach(function(el){io.observe(el);});
   } else { root.querySelectorAll('.sp-rev').forEach(function(el){el.classList.add('in');}); }
+  var scene=root.querySelector('[data-scene]');
+  if(scene && !reduce){
+    var drops=[].slice.call(scene.querySelectorAll('.sp-rain-item'));
+    var heroLogo=scene.querySelector('[data-hero-logo]');
+    var tick2=false;
+    function fall(){
+      tick2=false;
+      var sr=scene.getBoundingClientRect();
+      var sc=-sr.top; if(sc<0)sc=0;
+      for(var i=0;i<drops.length;i++){
+        var el=drops[i];
+        var sp=parseFloat(el.getAttribute('data-speed'))||0.4;
+        var rot=parseFloat(el.getAttribute('data-rot'))||0;
+        el.style.transform='translateY('+(sc*sp).toFixed(1)+'px) rotate('+(rot + sc*0.015*(rot<0?-1:1)).toFixed(1)+'deg)';
+      }
+      if(heroLogo){
+        var p=Math.min(sc/500,1);
+        heroLogo.style.transform='scale('+(1-p*0.18).toFixed(3)+')';
+        heroLogo.style.opacity=(1-p*0.25).toFixed(2);
+      }
+    }
+    window.addEventListener('scroll',function(){ if(!tick2){tick2=true;requestAnimationFrame(fall);} },{passive:true});
+    window.addEventListener('resize',fall);
+    fall();
+  }
   var tabs=[].slice.call(root.querySelectorAll('.sp-tab'));
   var tiles=[].slice.call(root.querySelectorAll('[data-grid] .sp-tile'));
   tabs.forEach(function(tb){
@@ -421,6 +495,17 @@
     { "type": "text", "id": "gate_join", "label": "Join button", "default": "Join VIP — it’s free" },
     { "type": "text", "id": "gate_signin", "label": "Sign-in button", "default": "Sign in" },
     { "type": "text", "id": "locked_label", "label": "Locked tile label", "default": "VIP only" },
+    { "type": "header", "content": "Falling pouches (scroll effect)" },
+    { "type": "checkbox", "id": "show_rain", "label": "Show falling pouches", "default": true },
+    { "type": "paragraph", "content": "Add transparent PNG pack renders below (regular + sugar-free mixed). With no images set, the effect falls back to product photos from the collection in small tilted cards." },
+    { "type": "image_picker", "id": "rain_1", "label": "Pouch 1" },
+    { "type": "image_picker", "id": "rain_2", "label": "Pouch 2" },
+    { "type": "image_picker", "id": "rain_3", "label": "Pouch 3" },
+    { "type": "image_picker", "id": "rain_4", "label": "Pouch 4" },
+    { "type": "image_picker", "id": "rain_5", "label": "Pouch 5" },
+    { "type": "image_picker", "id": "rain_6", "label": "Pouch 6" },
+    { "type": "image_picker", "id": "rain_7", "label": "Pouch 7" },
+    { "type": "image_picker", "id": "rain_8", "label": "Pouch 8" },
     { "type": "header", "content": "Hero" },
     { "type": "image_picker", "id": "logo_top", "label": "Logo — 'Syrup' (defaults to built-in SVG)" },
     { "type": "image_picker", "id": "logo_main", "label": "Logo — 'Pouches' (defaults to built-in SVG)" },
