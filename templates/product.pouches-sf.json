@@ -1,7 +1,7 @@
 {
   "sections": {
     "main": {
-      "type": "brand-page",
+      "type": "pouch-page",
       "settings": {
         "accent_color": "#2F7DC4",
         "hero_bg": "#EAF6FF",
