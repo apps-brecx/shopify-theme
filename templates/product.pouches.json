@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "main": {
+      "type": "brand-page",
+      "settings": {
+        "accent_color": "#e28f26",
+        "hero_bg": "#FFF3DC",
+        "marquee_bg": "#e28f26",
+        "marquee_text": "#FFFBF4",
+        "breadcrumb_category": "Syrup Pouches",
+        "desc_eyebrow": "About this pouch",
+        "desc_heading_pre": "Flavor that",
+        "desc_heading_emphasis": "goes anywhere",
+        "why_eyebrow": "Why Pouches",
+        "why_heading": "One tear from <em>flavor</em>.",
+        "marquee_items": "Tear. Pour. Enjoy.\nOne Perfect Serving\nTake It Anywhere\nReal Flavor\nGluten-Free\nKosher Certified\nMade in the USA",
+        "show_mini_bundle": false
+      }
+    },
+    "pouch_info": {
+      "type": "pouch-info",
+      "settings": {
+        "eyebrow": "New format",
+        "title": "What’s a Syrup Pouch?",
+        "sub": "All the flavor of our bottles in a pocket-size, single-serving pouch — made to go wherever you do.",
+        "chips": "One perfect serving,Take it anywhere,No mess,Made in the USA,Kosher & gluten-free",
+        "color_band": "#e28f26",
+        "color_chip": "#FFF3DC"
+      }
+    }
+  },
+  "order": ["main", "pouch_info"]
+}

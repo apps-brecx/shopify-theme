@@ -1,0 +1,80 @@
+{%- comment -%}
+  Pouch info band — sits under the main product section on the Syrup Pouches
+  product templates (product.pouches / product.pouches-sf). Explains what a
+  pouch is: Tear / Pour / Enjoy steps, fact chips, and an optional note.
+  Fully editable; color-themed per template (orange = regular, blue = sugar-free).
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<style>
+  #pi-{{ section.id }}{
+    --brand:{{ s.color_brand | default: '#3c2415' }};
+    --band:{{ s.color_band | default: '#e28f26' }};
+    --paper:{{ s.color_paper | default: '#ffffff' }};
+    --chipbg:{{ s.color_chip | default: '#FFF3DC' }};
+    --rule:2px solid {{ s.color_brand | default: '#3c2415' }};
+    --display:'Archivo Black','Josefin Sans',system-ui,sans-serif;
+    --serif:'Josefin Sans',system-ui,sans-serif;
+    background:var(--band);
+    font-family:var(--serif);
+    padding:clamp(36px,6vw,64px) 0 clamp(42px,7vw,70px);
+  }
+  #pi-{{ section.id }} *{box-sizing:border-box;}
+  #pi-{{ section.id }} .pi-wrap{max-width:1080px;margin:0 auto;padding:0 18px;text-align:center;}
+  #pi-{{ section.id }} .pi-eyebrow{font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;display:inline-block;padding:7px 14px;border:var(--rule);border-radius:999px;background:var(--paper);color:var(--brand);}
+  #pi-{{ section.id }} .pi-h2{font-family:var(--display);font-weight:900;font-size:clamp(24px,6vw,40px);line-height:.98;text-transform:uppercase;margin:12px 0 0;color:#fff;text-shadow:2px 3px 0 rgba(60,36,21,.3);text-wrap:balance;}
+  #pi-{{ section.id }} .pi-sub{font-size:clamp(15px,3.6vw,18px);color:#fff;opacity:.95;margin:12px auto 0;max-width:52ch;}
+  #pi-{{ section.id }} .pi-steps{display:grid;grid-template-columns:1fr;gap:14px;margin-top:26px;}
+  @media(min-width:700px){#pi-{{ section.id }} .pi-steps{grid-template-columns:repeat(3,1fr);}}
+  #pi-{{ section.id }} .pi-step{background:var(--paper);border:var(--rule);border-radius:18px;box-shadow:5px 5px 0 var(--brand);padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:9px;}
+  #pi-{{ section.id }} .pi-step .n{width:44px;height:44px;border-radius:50%;background:var(--band);color:#fff;border:var(--rule);box-shadow:2px 2px 0 var(--brand);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:19px;}
+  #pi-{{ section.id }} .pi-step h3{font-family:var(--display);font-size:16px;text-transform:uppercase;color:var(--brand);margin:0;}
+  #pi-{{ section.id }} .pi-step p{font-size:14px;opacity:.82;margin:0;line-height:1.5;}
+  #pi-{{ section.id }} .pi-chips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px;}
+  #pi-{{ section.id }} .pi-chip{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:var(--rule);border-radius:999px;padding:8px 15px;background:var(--chipbg);color:var(--brand);box-shadow:2px 2px 0 var(--brand);}
+  #pi-{{ section.id }} .pi-note{font-size:13px;color:#fff;opacity:.85;margin:20px auto 0;max-width:56ch;}
+</style>
+<div id="pi-{{ section.id }}">
+  <div class="pi-wrap">
+    {%- if s.eyebrow != blank -%}<span class="pi-eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+    <h2 class="pi-h2">{{ s.title | default: 'What’s a Syrup Pouch?' }}</h2>
+    {%- if s.sub != blank -%}<p class="pi-sub">{{ s.sub }}</p>{%- endif -%}
+    <div class="pi-steps">
+      <div class="pi-step"><span class="n">1</span><h3>{{ s.s1_t | default: 'Tear' }}</h3><p>{{ s.s1_p | default: 'Rip the pouch open — no pump, no bottle, no measuring.' }}</p></div>
+      <div class="pi-step"><span class="n">2</span><h3>{{ s.s2_t | default: 'Pour' }}</h3><p>{{ s.s2_p | default: 'One pouch is one perfect serving of café-quality syrup.' }}</p></div>
+      <div class="pi-step"><span class="n">3</span><h3>{{ s.s3_t | default: 'Enjoy' }}</h3><p>{{ s.s3_p | default: 'Coffee, soda, lemonade, desserts — flavor anything, anywhere.' }}</p></div>
+    </div>
+    {%- if s.chips != blank -%}
+    <div class="pi-chips">
+      {%- assign cs = s.chips | split: ',' -%}
+      {%- for c in cs -%}<span class="pi-chip">{{ c | strip }}</span>{%- endfor -%}
+    </div>
+    {%- endif -%}
+    {%- if s.note != blank -%}<p class="pi-note">{{ s.note }}</p>{%- endif -%}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Pouch Info",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "New format" },
+    { "type": "text", "id": "title", "label": "Title", "default": "What’s a Syrup Pouch?" },
+    { "type": "textarea", "id": "sub", "label": "Subtitle", "default": "All the flavor of our bottles in a pocket-size, single-serving pouch — made to go wherever you do." },
+    { "type": "header", "content": "Steps" },
+    { "type": "text", "id": "s1_t", "label": "Step 1 title", "default": "Tear" },
+    { "type": "textarea", "id": "s1_p", "label": "Step 1 text", "default": "Rip the pouch open — no pump, no bottle, no measuring." },
+    { "type": "text", "id": "s2_t", "label": "Step 2 title", "default": "Pour" },
+    { "type": "textarea", "id": "s2_p", "label": "Step 2 text", "default": "One pouch is one perfect serving of café-quality syrup." },
+    { "type": "text", "id": "s3_t", "label": "Step 3 title", "default": "Enjoy" },
+    { "type": "textarea", "id": "s3_p", "label": "Step 3 text", "default": "Coffee, soda, lemonade, desserts — flavor anything, anywhere." },
+    { "type": "text", "id": "chips", "label": "Fact chips (comma separated)", "default": "One perfect serving,Take it anywhere,No mess,Made in the USA,Kosher & gluten-free" },
+    { "type": "textarea", "id": "note", "label": "Small note (optional)", "default": "" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "color_band", "label": "Band background", "default": "#e28f26" },
+    { "type": "color", "id": "color_brand", "label": "Text / borders", "default": "#3c2415" },
+    { "type": "color", "id": "color_paper", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "color_chip", "label": "Chip background", "default": "#FFF3DC" }
+  ],
+  "presets": [ { "name": "Pouch Info" } ]
+}
+{% endschema %}
