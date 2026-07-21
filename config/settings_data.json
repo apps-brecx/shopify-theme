@@ -261,7 +261,7 @@
           "submit_label": "Send Message",
           "success_text": "Thanks! We received your message.",
           "error_text": "Something went wrong. Please try again.",
-          "enable_chat": true,
+          "enable_chat": false,
           "default_tab": "chat",
           "chat_tab_label": "Quick help",
           "form_tab_label": "Send message",
