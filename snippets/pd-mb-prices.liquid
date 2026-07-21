@@ -146,12 +146,11 @@ body .pd .pd-ing-toggle{display:none!important}
   html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-ing-card > .pd-desc-section{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
   html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-ing-card.is-open > .pd-desc-section{overflow:visible!important}
   html body .pd section.pd-description .pd-desc-content .pd-desc-card:not(.pd-ing-card):not(.pd-nf-card) > *:not(.pd-desc-scrollwrap){flex:0 0 auto!important}
-  /* the round expand arrow — absolutely positioned at the card's bottom so it
-     can never be clipped away by the 200px preview; the card's extra bottom
-     padding reserves its space in both states */
-  html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-ing-card{padding-bottom:56px!important}
-  html body .pd section.pd-description .pd-desc-content .pd-ing-card .pd-ing-toggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;position:absolute!important;bottom:10px!important;left:50%!important;transform:translateX(-50%)!important;z-index:3!important;width:36px!important;height:36px!important;margin:0!important;border:2px solid #39220f!important;border-radius:50%!important;background:#FFFBF4!important;color:#39220f!important;box-shadow:2px 2px 0 #39220f!important;cursor:pointer!important;padding:0!important}
-  html body .pd .pd-ing-toggle svg{transition:transform .2s ease}
+  /* the expand arrow — top-right of the card, styled exactly like the
+     nutrition facts arrow (30px circle, honey bg, ink border + offset shadow) */
+  html body .pd section.pd-description .pd-desc-content .pd-ing-card .pd-ing-toggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;position:absolute!important;top:18px!important;right:16px!important;z-index:3!important;width:30px!important;height:30px!important;margin:0!important;border:2px solid #1a1a1a!important;border-radius:50%!important;background:#FCE2A0!important;color:#1a1a1a!important;box-shadow:2px 2px 0 #1a1a1a!important;cursor:pointer!important;padding:0!important;transition:background .25s ease!important}
+  html body .pd .pd-ing-card.is-open .pd-ing-toggle{background:#FF6B5C!important;color:#FFFBF4!important}
+  html body .pd .pd-ing-toggle svg{width:15px!important;height:15px!important;stroke:currentColor!important;fill:none!important;transition:transform .2s ease}
   html body .pd .pd-ing-card.is-open .pd-ing-toggle svg{transform:rotate(180deg)}
 }
 </style>
