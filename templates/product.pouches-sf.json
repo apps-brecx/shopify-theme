@@ -18,7 +18,8 @@
         "show_pouch_band": true,
         "pib_bg": "#2F7DC4",
         "pib_chip": "#EAF6FF",
-        "pib_chips": "0g sugar · 0 calories,30 pouches per bag,450 ml (15.2 fl oz) total,Take it anywhere"
+        "pib_chips": "0g sugar · 0 calories,30 pouches per bag,450 ml (15.2 fl oz) total,Take it anywhere",
+        "pib_text": "#FFFBF4"
       }
     }
   },
