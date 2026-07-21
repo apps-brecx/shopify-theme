@@ -77,6 +77,12 @@ body .pd .pd-nf-body .pd-nutrition{margin:24px auto 0!important}
 body .pd .pd-standards{display:none!important}
 body .pd .pd-nutrition-wrap{display:none!important}
 
+/* Ingredients as bullets (both the server-rendered and JS-built card) */
+body .pd .pd-ing-card ul.pd-ing-list{list-style:disc!important;margin:0!important;padding:0 0 0 22px!important;text-align:left!important}
+body .pd .pd-ing-card ul.pd-ing-list li{display:list-item!important;margin:0 0 6px!important;padding:0!important}
+body .pd .pd-ing-card ul.pd-ing-list li:last-child{margin-bottom:0!important}
+body .pd .pd-ing-card ul.pd-ing-list li::marker{color:#39220f}
+
 /* Desktop: the nutrition card is always fully open at its natural height and sets
    the height for the row — JS measures it into --pdcard-h and the description /
    ingredients cards are clipped to match. Read more only toggles scroll-y inside
@@ -214,7 +220,8 @@ body .pd .pd-nutrition-wrap{display:none!important}
 
   function transformDesc(){
     const ul = document.querySelector('.pd-desc-content ul');
-    if (!ul || ul.dataset.transformed === '1') return;
+    /* the ingredients bullet list lives INSIDE a card — never rebuild that */
+    if (!ul || ul.dataset.transformed === '1' || ul.closest('.pd-desc-card')) return;
     const items = Array.from(ul.querySelectorAll('li'));
     if (!items.length) return;
     const card = document.createElement('div');
@@ -299,9 +306,24 @@ body .pd .pd-nutrition-wrap{display:none!important}
         const label = document.createElement('h3');
         label.className = 'pd-desc-label';
         label.textContent = 'Ingredients';
-        const body = document.createElement('p');
-        body.className = 'pd-desc-text';
-        body.textContent = ingText;
+        /* comma-separated ingredients render as a bullet list (single-phrase
+           text stays a plain paragraph) */
+        const bits = ingText.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+        let body;
+        if (bits.length > 1){
+          body = document.createElement('ul');
+          body.className = 'pd-desc-text pd-ing-list';
+          bits.forEach(function(b, i){
+            if (i === bits.length - 1) b = b.replace(/\.\s*$/, '');
+            const li = document.createElement('li');
+            li.textContent = b;
+            body.appendChild(li);
+          });
+        } else {
+          body = document.createElement('p');
+          body.className = 'pd-desc-text';
+          body.textContent = ingText;
+        }
         wrap.appendChild(label);
         wrap.appendChild(body);
         section.appendChild(wrap);

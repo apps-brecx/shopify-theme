@@ -163,9 +163,29 @@
           <div class="pd-desc-section">
             <div>
               <h3 class="pd-desc-label">{{ section.settings.ingredients_label }}</h3>
-              <p class="pd-desc-text">
-                {%- if ingredients_field -%}{{ ingredients_field | metafield_tag | strip_html }}{%- else -%}{{ section.settings.ingredients_fallback }}{%- endif -%}
-              </p>
+              {%- if ingredients_field -%}
+                {%- assign ing_text = ingredients_field | metafield_tag | strip_html -%}
+              {%- else -%}
+                {%- assign ing_text = section.settings.ingredients_fallback -%}
+              {%- endif -%}
+              {%- assign ing_parts = ing_text | split: ',' -%}
+              {%- if ing_parts.size > 1 -%}
+                <ul class="pd-desc-text pd-ing-list">
+                  {%- for part in ing_parts -%}
+                    {%- assign p = part | strip -%}
+                    {%- if forloop.last -%}
+                      {%- assign lastchar = p | slice: -1, 1 -%}
+                      {%- if lastchar == '.' -%}
+                        {%- assign plen = p.size | minus: 1 -%}
+                        {%- assign p = p | slice: 0, plen -%}
+                      {%- endif -%}
+                    {%- endif -%}
+                    {%- if p != blank -%}<li>{{ p }}</li>{%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                <p class="pd-desc-text">{{ ing_text }}</p>
+              {%- endif -%}
             </div>
           </div>
         </div>
