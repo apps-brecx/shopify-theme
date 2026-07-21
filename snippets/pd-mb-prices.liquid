@@ -123,6 +123,36 @@ body .pd .pd-ing-card ul.pd-ing-list li::marker{color:#39220f}
   body .pd .pd-nf-toggle-icon svg{width:15px!important;height:15px!important}
   body .pd .pd-nf-body{padding:0 14px 22px!important}
 }
+
+/* Mobile: description + ingredients cards are fixed 200px previews. Read more
+   expands the description; a round arrow (JS-injected) expands the
+   ingredients. Nutrition keeps its own collapsed/open behavior. Selectors are
+   deliberately heavier than pd-desc-safety's mobile height:auto resets. */
+body .pd .pd-ing-toggle{display:none!important}
+@media (max-width:760px){
+  html body .pd .pd-desc-content{--pdcard-hm:200px}
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card{height:var(--pdcard-hm)!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card.is-expanded,
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-ing-card.is-open,
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-nf-card.is-open{height:auto!important;overflow:visible!important}
+  /* nutrition matches the 200px preview: header fixed, table partially
+     visible below it even while closed; the arrow expands to full height */
+  html body .pd section.pd-description .pd-desc-content .pd-nf-card .pd-nf-toggle{flex:0 0 auto!important}
+  html body .pd section.pd-description .pd-desc-content .pd-nf-card .pd-nf-body{display:block!important;animation:none!important;flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
+  html body .pd section.pd-description .pd-desc-content .pd-nf-card.is-open .pd-nf-body{overflow:visible!important}
+  /* clipped content areas; Read more / arrow stay visible below them */
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card .pd-desc-scrollwrap{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card.is-expanded .pd-desc-scrollwrap{overflow:visible!important}
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-ing-card > .pd-desc-section{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-ing-card.is-open > .pd-desc-section{overflow:visible!important}
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card:not(.pd-ing-card):not(.pd-nf-card) > *:not(.pd-desc-scrollwrap){flex:0 0 auto!important}
+  /* the expand arrow — top-right of the card, styled exactly like the
+     nutrition facts arrow (30px circle, honey bg, ink border + offset shadow) */
+  html body .pd section.pd-description .pd-desc-content .pd-ing-card .pd-ing-toggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;position:absolute!important;top:18px!important;right:16px!important;z-index:3!important;width:30px!important;height:30px!important;margin:0!important;border:2px solid #1a1a1a!important;border-radius:50%!important;background:#FCE2A0!important;color:#1a1a1a!important;box-shadow:2px 2px 0 #1a1a1a!important;cursor:pointer!important;padding:0!important;transition:background .25s ease!important}
+  html body .pd .pd-ing-card.is-open .pd-ing-toggle{background:#FF6B5C!important;color:#FFFBF4!important}
+  html body .pd .pd-ing-toggle svg{width:15px!important;height:15px!important;stroke:currentColor!important;fill:none!important;transition:transform .2s ease}
+  html body .pd .pd-ing-card.is-open .pd-ing-toggle svg{transform:rotate(180deg)}
+}
 </style>
 <script>
 (function(){
@@ -166,6 +196,31 @@ body .pd .pd-ing-card ul.pd-ing-list li::marker{color:#39220f}
     wrap.className = 'pd-desc-scrollwrap';
     card.insertBefore(wrap, secs[0]);
     secs.forEach(function(s){ wrap.appendChild(s); });
+  }
+  /* Mobile: round arrow on the ingredients card expands its clipped 200px
+     preview to full height. Works for both the server-rendered and JS-built
+     card; hidden on desktop by CSS. Idempotent. */
+  function ensureIngToggle(){
+    const card = document.querySelector('.pd-ing-card');
+    if (!card || card.querySelector('.pd-ing-toggle')) return;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pd-ing-toggle';
+    btn.setAttribute('aria-label', 'Show full ingredients');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>';
+    btn.addEventListener('click', function(ev){
+      ev.pdDescHandled = true;
+      if (isDesktop()) return;
+      const open = card.classList.toggle('is-open');
+      btn.setAttribute('aria-label', open ? 'Show less ingredients' : 'Show full ingredients');
+      if (!open){
+        const headerStr = getComputedStyle(document.documentElement).getPropertyValue('--header-height');
+        const headerH = parseInt(headerStr) || 84;
+        const targetY = card.getBoundingClientRect().top + window.scrollY - headerH - 20;
+        window.scrollTo({top: Math.max(0, targetY), behavior: 'smooth'});
+      }
+    });
+    card.appendChild(btn);
   }
   /* Desktop: Read more toggles ONE shared scroll state on the clipped cards
      (description + ingredients). The nutrition card is always fully open. */
@@ -213,6 +268,12 @@ body .pd .pd-ing-card ul.pd-ing-list li::marker{color:#39220f}
       if (card){
         card.classList.remove('is-expanded');
         card.querySelectorAll('.pd-desc-section').forEach(function(s, i){ if (i > 0) s.classList.add('is-hidden'); });
+      }
+      const ing = document.querySelector('.pd-ing-card');
+      if (ing){
+        ing.classList.remove('is-open');
+        const t = ing.querySelector('.pd-ing-toggle');
+        if (t) t.setAttribute('aria-label', 'Show full ingredients');
       }
     }
     if (d) requestAnimationFrame(syncHeights);
@@ -361,12 +422,16 @@ body .pd .pd-ing-card ul.pd-ing-list li::marker{color:#39220f}
       descContent.appendChild(card);
     }
   }
-  function runAll(){ injectPrices(); transformDesc(); ensureScrollWrap(); syncHeights(); }
+  function runAll(){ injectPrices(); transformDesc(); ensureScrollWrap(); ensureIngToggle(); syncHeights(); }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', runAll);
   } else {
     runAll();
   }
+  /* the ingredients card can be built late on some templates — retry the
+     arrow injection (idempotent) */
+  setTimeout(ensureIngToggle, 400);
+  setTimeout(ensureIngToggle, 1200);
   /* fonts and images can change the nutrition card's natural height after DCL */
   window.addEventListener('load', syncHeights);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ syncHeights(); });
