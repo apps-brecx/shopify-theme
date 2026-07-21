@@ -77,6 +77,27 @@ body .pd .pd-nf-body .pd-nutrition{margin:24px auto 0!important}
 body .pd .pd-standards{display:none!important}
 body .pd .pd-nutrition-wrap{display:none!important}
 
+/* Desktop: description / ingredients / nutrition cards are fixed-height previews
+   (content partially visible). Read more or the nutrition arrow expands ALL of
+   them by 30px and enables internal scroll-y; the two controls stay in sync. */
+@media (min-width:761px){
+  body .pd .pd-desc-content{--pdcard-h:300px}
+  body .pd .pd-desc-content .pd-desc-card{height:var(--pdcard-h)!important;overflow:hidden!important;transition:height .25s ease!important}
+  body .pd .pd-desc-content.is-open .pd-desc-card{height:calc(var(--pdcard-h) + 30px)!important;overflow-y:auto!important;scrollbar-width:thin}
+  /* nutrition body always rendered so it previews under the clip */
+  body .pd .pd-nf-card .pd-nf-body{display:block!important;animation:none!important}
+  /* header stays visible while the nutrition table scrolls */
+  body .pd .pd-nf-card .pd-nf-toggle{position:sticky!important;top:0!important;background:inherit!important;z-index:2!important}
+  /* preview is height-clipped, not section-hidden, so scrolling reveals everything */
+  body .pd .pd-desc-card .pd-desc-section.is-hidden{display:block!important}
+  /* Read more pinned to the card's bottom edge in both states */
+  body .pd .pd-desc-card .pd-desc-toggle{position:sticky!important;bottom:6px!important;z-index:2!important}
+  /* pd-page-polish-v2 gives open cards a 28px bottom margin (<=980px); in the linked
+     row layout all cards open together, so keep them flush and aligned */
+  html body .pd section.pd-description .pd-desc-content.is-open .pd-desc-card.is-open,
+  html body .pd section.pd-description .pd-desc-content.is-open .pd-desc-card.is-expanded{margin-bottom:0!important}
+}
+
 @media (max-width:760px){
   body .pd .pd-description{padding:64px 0!important}
   body .pd .pd-desc-head{margin:0 auto 36px!important}
@@ -122,6 +143,42 @@ body .pd .pd-nutrition-wrap{display:none!important}
       else c.appendChild(priceSpan);
     });
   }
+  function isDesktop(){ return window.matchMedia('(min-width:761px)').matches; }
+  /* Desktop: the three cards are fixed-height previews sharing ONE expanded state —
+     Read more and the nutrition arrow open/close them together (+30px, scroll-y). */
+  function setDeskOpen(open){
+    const content = document.querySelector('.pd-desc-content');
+    if (!content) return;
+    content.classList.toggle('is-open', open);
+    const nf = document.querySelector('.pd-nf-card');
+    if (nf) nf.classList.toggle('is-open', open);
+    const btn = content.querySelector('.pd-desc-toggle');
+    if (btn){
+      btn.classList.toggle('is-expanded', open);
+      const t = btn.querySelector('.pd-desc-toggle-text');
+      if (t) t.textContent = open ? 'Show less' : 'Read more';
+    }
+    if (!open) content.querySelectorAll('.pd-desc-card').forEach(function(c){ c.scrollTop = 0; });
+  }
+  function deskOpen(){
+    const c = document.querySelector('.pd-desc-content');
+    return !!(c && c.classList.contains('is-open'));
+  }
+  /* Crossing the 760px breakpoint resets both the desktop shared state and the
+     mobile expansion state so the controls and content never disagree. */
+  var wasDesk = isDesktop();
+  window.addEventListener('resize', function(){
+    const d = isDesktop();
+    if (d === wasDesk) return;
+    wasDesk = d;
+    setDeskOpen(false);
+    const card = document.querySelector('.pd-desc-content .pd-desc-card[data-transformed="1"]');
+    if (card){
+      card.classList.remove('is-expanded');
+      card.querySelectorAll('.pd-desc-section').forEach(function(s, i){ if (i > 0) s.classList.add('is-hidden'); });
+    }
+  });
+
   function transformDesc(){
     const ul = document.querySelector('.pd-desc-content ul');
     if (!ul || ul.dataset.transformed === '1') return;
@@ -164,6 +221,7 @@ body .pd .pd-nutrition-wrap{display:none!important}
       btn.className = 'pd-desc-toggle';
       btn.innerHTML = '<span class="pd-desc-toggle-text">Read more</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>';
       btn.addEventListener('click', ()=>{
+        if (isDesktop()){ setDeskOpen(!deskOpen()); return; }
         const wasExpanded = card.classList.contains('is-expanded');
         const isExpanded = card.classList.toggle('is-expanded');
         btn.classList.toggle('is-expanded', isExpanded);
@@ -227,6 +285,7 @@ body .pd .pd-nutrition-wrap{display:none!important}
       body.appendChild(nfSrc.cloneNode(true));
       const handleToggle = (e)=>{
         if (e.target.closest('.pd-nf-body')) return;
+        if (isDesktop()){ setDeskOpen(!deskOpen()); return; }
         const wasOpen = card.classList.contains('is-open');
         card.classList.toggle('is-open');
         if (wasOpen) {
