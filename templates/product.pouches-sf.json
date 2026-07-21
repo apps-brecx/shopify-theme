@@ -14,21 +14,13 @@
         "why_eyebrow": "Why Pouches",
         "why_heading": "Zero sugar. <em>Zero effort.</em>",
         "marquee_items": "Zero Sugar\nZero Calories\nTear. Pour. Enjoy.\nOne Perfect Serving\nTake It Anywhere\nGluten-Free\nKosher Certified\nMade in the USA",
-        "show_mini_bundle": false
-      }
-    },
-    "pouch_info": {
-      "type": "pouch-info",
-      "settings": {
-        "eyebrow": "Sugar-free · New format",
-        "title": "What’s a Syrup Pouch?",
-        "sub": "All the flavor of our bottles in a pocket-size, single-serving pouch — zero sugar, zero calories, made to go wherever you do.",
-        "chips": "0g sugar · 0 calories,One perfect serving,Take it anywhere,No mess,Made in the USA,Kosher & gluten-free",
-        "color_band": "#2F7DC4",
-        "color_chip": "#EAF6FF"
+        "show_pouch_info_card": true,
+        "pi_bg": "#EAF6FF",
+        "pi_chips": "0g sugar · 0 calories,30 pouches per bag,450 ml (15.2 fl oz) total,Take it anywhere"
       }
     }
   },
-  "order": ["main", "pouch_info"]
+  "order": [
+    "main"
+  ]
 }
-
