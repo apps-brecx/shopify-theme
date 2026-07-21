@@ -534,9 +534,9 @@
          The FAQ tool lives on /api/mcp (sunsets 2026-08-31; failures degrade to the
          fallback + form link). Catalog search uses its successor /api/ucp/mcp.
          The abort timer covers the whole request INCLUDING the body read. */
-      async function fetchJson(url, body){
+      async function fetchJson(url, body, timeoutMs){
         const ctrl  = ('AbortController' in window) ? new AbortController() : null;
-        const timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 12000);
+        const timer = ctrl && setTimeout(function(){ ctrl.abort(); }, timeoutMs || 12000);
         try {
           const res = await fetch(url, {
             method: 'POST',
@@ -649,7 +649,7 @@
         });
       }
       async function askLlm(q, history){
-        const data = await fetchJson(llmUrl, { message: q, history: history || [], page: location.href });
+        const data = await fetchJson(llmUrl, { message: q, history: history || [], page: location.href }, 25000);
         if (data && typeof data.reply === 'string' && data.reply) addMsg('bot', data.reply);
         else throw new Error('bad reply');
       }
