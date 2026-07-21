@@ -627,47 +627,68 @@
   {%- endif -%}
 
   {%- if section.settings.show_pouch_band -%}
+  {%- assign pib_text = section.settings.pib_text | default: '#3c2415' -%}
   <section class="pd-pib" style="background:{{ section.settings.pib_bg | default: '#e28f26' }};padding:clamp(36px,6vw,64px) 0 clamp(42px,7vw,70px);">
     <style>
       html body .pd .pd-pib .pd-pib-wrap{max-width:1080px;margin:0 auto;padding:0 18px;text-align:center;}
-      html body .pd .pd-pib .pd-pib-logo{display:inline-block;background:#fff;border:2px solid #3c2415;border-radius:18px;box-shadow:4px 4px 0 #3c2415;padding:14px 24px 16px;margin-bottom:16px;width:min(280px,72vw);}
+      html body .pd .pd-pib .pd-pib-logo{display:block;background:#fff;border:2px solid #3c2415;border-radius:18px;box-shadow:4px 4px 0 #3c2415;padding:14px 24px 16px;margin:0 auto 18px;width:min(260px,70vw);}
       html body .pd .pd-pib .pd-pib-logo img{display:block;width:100%;height:auto;}
       html body .pd .pd-pib .pd-pib-logo img.top{width:54%;margin:0 auto 4px;}
-      html body .pd .pd-pib .pd-pib-logo img.single{width:100%;}
-      html body .pd .pd-pib .pd-eyebrow{background:#fff;}
-      html body .pd .pd-pib .pd-pib-h2{font-family:'Archivo Black','Archivo',sans-serif;font-weight:400;font-size:clamp(24px,6vw,40px);line-height:.98;text-transform:uppercase;margin:12px 0 0;color:#fff;text-shadow:2px 3px 0 rgba(60,36,21,.3);}
-      html body .pd .pd-pib .pd-pib-sub{font-size:clamp(15px,3.6vw,18px);color:#fff;opacity:.95;margin:12px auto 0;max-width:52ch;}
-      html body .pd .pd-pib .pd-pib-steps{display:grid;grid-template-columns:1fr;gap:14px;margin-top:26px;}
+      html body .pd .pd-pib .pd-pib-eyerow{display:block;margin-bottom:4px;}
+      html body .pd .pd-pib .pd-pib-title{color:{{ pib_text }} !important;margin-top:10px !important;}
+      html body .pd .pd-pib .pd-pib-sub{font-size:clamp(15px,3.6vw,18px);color:{{ pib_text }};opacity:.92;margin:12px auto 0;max-width:52ch;line-height:1.55;}
+      html body .pd .pd-pib .pd-pib-steps{display:grid;grid-template-columns:1fr;gap:14px;margin-top:28px;}
       @media(min-width:700px){html body .pd .pd-pib .pd-pib-steps{grid-template-columns:repeat(3,1fr);}}
       html body .pd .pd-pib .pd-pib-step{background:#fff;border:2px solid #3c2415;border-radius:18px;box-shadow:5px 5px 0 #3c2415;padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:9px;}
-      html body .pd .pd-pib .pd-pib-step .n{width:44px;height:44px;border-radius:50%;background:{{ section.settings.pib_bg | default: '#e28f26' }};color:#fff;border:2px solid #3c2415;box-shadow:2px 2px 0 #3c2415;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:19px;}
-      html body .pd .pd-pib .pd-pib-step h3{font-family:'Archivo Black','Archivo',sans-serif;font-weight:400;font-size:16px;text-transform:uppercase;color:#3c2415;margin:0;}
+      html body .pd .pd-pib .pd-pib-step .n{width:44px;height:44px;border-radius:50%;background:{{ section.settings.pib_bg | default: '#e28f26' }};color:#fff;border:2px solid #3c2415;box-shadow:2px 2px 0 #3c2415;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black','Archivo',sans-serif !important;font-weight:400 !important;font-size:19px;}
+      html body .pd .pd-pib .pd-pib-step h3{font-family:'Archivo Black','Archivo',sans-serif !important;font-weight:400 !important;font-size:16px !important;letter-spacing:.06em;text-transform:uppercase;color:#3c2415;margin:0;}
       html body .pd .pd-pib .pd-pib-step p{font-size:14px;opacity:.82;margin:0;line-height:1.5;color:#1a1a1a;}
-      html body .pd .pd-pib .pd-pib-chips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px;}
-      html body .pd .pd-pib .pd-pib-chips span{font-family:'Archivo Black','Archivo',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:2px solid #3c2415;border-radius:999px;padding:8px 15px;background:{{ section.settings.pib_chip | default: '#FFF3DC' }};color:#3c2415;box-shadow:2px 2px 0 #3c2415;}
+      html body .pd .pd-pib .pd-pib-chips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px;}
+      html body .pd .pd-pib .pd-pib-chips span{font-family:'Archivo Black','Archivo',sans-serif !important;font-weight:400 !important;font-size:11px !important;letter-spacing:.08em;text-transform:uppercase;border:2px solid #3c2415;border-radius:999px;padding:8px 15px;background:{{ section.settings.pib_chip | default: '#FFF3DC' }};color:#3c2415;box-shadow:2px 2px 0 #3c2415;}
+      /* stacking entrance (staggered) */
+      html body .pd .pd-pib .pd-pib-anim{opacity:0;transform:translateY(30px) scale(.95);transition:opacity .55s ease var(--d,0s),transform .7s cubic-bezier(.2,.7,.2,1.25) var(--d,0s);}
+      html body .pd .pd-pib .pd-pib-anim.in{opacity:1;transform:none;}
+      html body .pd .pd-pib .pd-pib-chips span{opacity:0;transform:translateY(16px);transition:opacity .45s ease var(--d,0s),transform .55s cubic-bezier(.2,.7,.2,1.3) var(--d,0s);}
+      html body .pd .pd-pib .pd-pib-chips.in span{opacity:1;transform:none;}
+      @media (prefers-reduced-motion: reduce){
+        html body .pd .pd-pib .pd-pib-anim,html body .pd .pd-pib .pd-pib-chips span{opacity:1 !important;transform:none !important;transition:none !important;}
+      }
     </style>
     <div class="pd-pib-wrap">
       {%- if section.settings.show_pib_logo -%}
-      <div class="pd-pib-logo">
+      <div class="pd-pib-logo pd-pib-anim" style="--d:0s;">
         {%- if section.settings.pib_logo != blank -%}
-          <img class="single" src="{{ section.settings.pib_logo | image_url: width: 600 }}" alt="Syrup Pouches" loading="lazy">
+          <img src="{{ section.settings.pib_logo | image_url: width: 600 }}" alt="Syrup Pouches" loading="lazy">
         {%- else -%}
           <img class="top" src="{{ 'sp-logo-syrup.svg' | asset_url }}" alt="Syrup" loading="lazy">
-          <img class="main" src="{{ 'sp-logo-pouches.svg' | asset_url }}" alt="Pouches" loading="lazy">
+          <img src="{{ 'sp-logo-pouches.svg' | asset_url }}" alt="Pouches" loading="lazy">
         {%- endif -%}
       </div>
       {%- endif -%}
-      {%- if section.settings.pib_eyebrow != blank -%}<span class="pd-eyebrow">{{ section.settings.pib_eyebrow }}</span>{%- endif -%}
-      <h2 class="pd-pib-h2">{{ section.settings.pib_title | default: 'What&rsquo;s a Syrup Pouch?' }}</h2>
-      {%- if section.settings.pib_sub != blank -%}<p class="pd-pib-sub">{{ section.settings.pib_sub }}</p>{%- endif -%}
+      {%- if section.settings.pib_eyebrow != blank -%}<div class="pd-pib-eyerow pd-pib-anim" style="--d:.08s;"><span class="pd-eyebrow">{{ section.settings.pib_eyebrow }}</span></div>{%- endif -%}
+      <h2 class="pd-h2 pd-pib-title pd-pib-anim" style="--d:.14s;">{{ section.settings.pib_title | default: 'What&rsquo;s a Syrup Pouch?' }}</h2>
+      {%- if section.settings.pib_sub != blank -%}<p class="pd-pib-sub pd-pib-anim" style="--d:.2s;">{{ section.settings.pib_sub }}</p>{%- endif -%}
       <div class="pd-pib-steps">
-        <div class="pd-pib-step"><span class="n">1</span><h3>{{ section.settings.pib_s1_t | default: 'Tear' }}</h3><p>{{ section.settings.pib_s1_p | default: 'Rip the pouch open — no pump, no bottle, no measuring.' }}</p></div>
-        <div class="pd-pib-step"><span class="n">2</span><h3>{{ section.settings.pib_s2_t | default: 'Pour' }}</h3><p>{{ section.settings.pib_s2_p | default: 'One pouch is one perfect 15 ml (0.50 fl oz) serving.' }}</p></div>
-        <div class="pd-pib-step"><span class="n">3</span><h3>{{ section.settings.pib_s3_t | default: 'Enjoy' }}</h3><p>{{ section.settings.pib_s3_p | default: 'Coffee, soda, lemonade, desserts — flavor anything, anywhere.' }}</p></div>
+        <div class="pd-pib-step pd-pib-anim" style="--d:.1s;"><span class="n">1</span><h3>{{ section.settings.pib_s1_t | default: 'Tear' }}</h3><p>{{ section.settings.pib_s1_p | default: 'Rip the pouch open — no pump, no bottle, no measuring.' }}</p></div>
+        <div class="pd-pib-step pd-pib-anim" style="--d:.24s;"><span class="n">2</span><h3>{{ section.settings.pib_s2_t | default: 'Pour' }}</h3><p>{{ section.settings.pib_s2_p | default: 'One pouch is one perfect 15 ml (0.50 fl oz) serving.' }}</p></div>
+        <div class="pd-pib-step pd-pib-anim" style="--d:.38s;"><span class="n">3</span><h3>{{ section.settings.pib_s3_t | default: 'Enjoy' }}</h3><p>{{ section.settings.pib_s3_p | default: 'Coffee, soda, lemonade, desserts — flavor anything, anywhere.' }}</p></div>
       </div>
       {%- assign pib_chips = section.settings.pib_chips | default: '30 pouches per bag,450 ml (15.2 fl oz) total,Take it anywhere,Made in the USA' -%}
-      <div class="pd-pib-chips">{%- assign pcs = pib_chips | split: ',' -%}{%- for c in pcs -%}<span>{{ c | strip }}</span>{%- endfor -%}</div>
+      <div class="pd-pib-chips" data-pib-chips>{%- assign pcs = pib_chips | split: ',' -%}{%- for c in pcs -%}<span style="--d:{{ forloop.index0 | times: 0.09 }}s;">{{ c | strip }}</span>{%- endfor -%}</div>
     </div>
+    <script>
+    (function(){
+      var band=document.currentScript.closest('.pd-pib');
+      if(!band) return;
+      var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var els=[].slice.call(band.querySelectorAll('.pd-pib-anim'));
+      var chips=band.querySelector('[data-pib-chips]');
+      if(!('IntersectionObserver' in window)||reduce){ els.forEach(function(e){e.classList.add('in');}); if(chips)chips.classList.add('in'); return; }
+      var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });},{threshold:.15});
+      els.forEach(function(e){io.observe(e);});
+      if(chips)io.observe(chips);
+    })();
+    </script>
   </section>
 {%- endif -%}
 
@@ -1309,6 +1330,7 @@ window.PD_TIERS = [1, 0.95, 0.93, 0.90];
     { "type": "textarea", "id": "pib_s3_p", "label": "Step 3 text", "default": "Coffee, soda, lemonade, desserts — flavor anything, anywhere." },
     { "type": "text", "id": "pib_chips", "label": "Chips (comma separated)", "default": "30 pouches per bag,450 ml (15.2 fl oz) total,Take it anywhere,Made in the USA" },
     { "type": "color", "id": "pib_bg", "label": "Band background", "default": "#e28f26" },
+    { "type": "color", "id": "pib_text", "label": "Band text color", "default": "#3c2415" },
     { "type": "color", "id": "pib_chip", "label": "Chip background", "default": "#FFF3DC" },
     {
       "type": "checkbox",
