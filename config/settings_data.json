@@ -236,7 +236,15 @@
           "offset_right": 24,
           "submit_label": "Send Message",
           "success_text": "Thanks! We received your message.",
-          "error_text": "Something went wrong. Please try again."
+          "error_text": "Something went wrong. Please try again.",
+          "enable_chat": true,
+          "default_tab": "chat",
+          "chat_tab_label": "Quick help",
+          "form_tab_label": "Send message",
+          "chat_greeting": "Hi! Pick a question below, or type your own — I’ll answer instantly.",
+          "chat_placeholder": "Type a question…",
+          "chat_fallback": "I couldn’t find an instant answer for that.",
+          "chat_endpoint": "https://gentle-shadow-e778.ti-243.workers.dev/"
         }
       }
     },
