@@ -1,3 +1,4 @@
+{%- assign pd_unit = unit | default: 'pump' -%}
 {%- comment -%} Recipes v2 — featured signature + text-only quick sips carousel with scroll affordances. {%- endcomment -%}
 
 {%- assign sig_image_ref = product.metafields.custom.product_summary_image.value -%}
@@ -67,7 +68,7 @@
             </div>
             <h4 class="pd-rv2-card-name">Iced {{ t_clean }} Latte</h4>
             <ul class="pd-rv2-card-ings">
-              <li>1 pump {{ t_clean }}</li>
+              <li>1 {{ pd_unit }} {{ t_clean }}</li>
               <li>1 shot espresso (or 4 oz cold brew)</li>
               <li>8 oz cold milk of choice</li>
               <li>Ice, to fill</li>
@@ -83,7 +84,7 @@
             </div>
             <h4 class="pd-rv2-card-name">Sparkling {{ t_clean }} Soda</h4>
             <ul class="pd-rv2-card-ings">
-              <li>1 pump {{ t_clean }}</li>
+              <li>1 {{ pd_unit }} {{ t_clean }}</li>
               <li>12 oz cold sparkling water</li>
               <li>Squeeze of lemon</li>
               <li>Ice, to fill</li>
@@ -99,7 +100,7 @@
             </div>
             <h4 class="pd-rv2-card-name">{{ t_clean }} Cold Brew</h4>
             <ul class="pd-rv2-card-ings">
-              <li>1 pump {{ t_clean }}</li>
+              <li>1 {{ pd_unit }} {{ t_clean }}</li>
               <li>12 oz cold brew coffee</li>
               <li>Splash of milk or cream</li>
               <li>Ice, to fill</li>
@@ -115,7 +116,7 @@
             </div>
             <h4 class="pd-rv2-card-name">{{ t_clean }} Steamer</h4>
             <ul class="pd-rv2-card-ings">
-              <li>1 pump {{ t_clean }}</li>
+              <li>1 {{ pd_unit }} {{ t_clean }}</li>
               <li>12 oz steamed milk</li>
               <li>Dash of cinnamon</li>
               <li>Optional whipped cream</li>
