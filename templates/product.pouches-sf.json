@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "main": {
+      "type": "brand-page",
+      "settings": {
+        "accent_color": "#2F7DC4",
+        "hero_bg": "#EAF6FF",
+        "marquee_bg": "#2F7DC4",
+        "marquee_text": "#FFFBF4",
+        "breadcrumb_category": "Syrup Pouches",
+        "desc_eyebrow": "About this sugar-free pouch",
+        "desc_heading_pre": "All the flavor,",
+        "desc_heading_emphasis": "none of the sugar",
+        "why_eyebrow": "Why Pouches",
+        "why_heading": "Zero sugar. <em>Zero effort.</em>",
+        "marquee_items": "Zero Sugar\nZero Calories\nTear. Pour. Enjoy.\nOne Perfect Serving\nTake It Anywhere\nGluten-Free\nKosher Certified\nMade in the USA",
+        "show_mini_bundle": false
+      }
+    },
+    "pouch_info": {
+      "type": "pouch-info",
+      "settings": {
+        "eyebrow": "Sugar-free · New format",
+        "title": "What’s a Syrup Pouch?",
+        "sub": "All the flavor of our bottles in a pocket-size, single-serving pouch — zero sugar, zero calories, made to go wherever you do.",
+        "chips": "0g sugar · 0 calories,One perfect serving,Take it anywhere,No mess,Made in the USA,Kosher & gluten-free",
+        "color_band": "#2F7DC4",
+        "color_chip": "#EAF6FF"
+      }
+    }
+  },
+  "order": ["main", "pouch_info"]
+}
