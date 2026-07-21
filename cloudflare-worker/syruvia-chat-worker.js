@@ -26,7 +26,7 @@
  */
 
 const STORE_DOMAIN = '1afd15-57.myshopify.com';
-const MODEL = 'claude-haiku-4-5';
+const MODEL = 'claude-haiku-4-5-20251001';
 const ADMIN_API_VERSION = '2026-01';
 const UCP_PROFILE = 'https://shopify.dev/ucp/agent-profiles/examples/2026-04-08/valid-with-capabilities.json';
 const ALLOWED_ORIGINS = [
@@ -319,7 +319,9 @@ export default {
       return json({ reply: reply }, 200, headers);
     } catch (e) {
       console.error('request failed:', e && e.message ? e.message : e);
-      return json({ error: 'upstream failure' }, 502, headers);
+      /* detail is only ever our own constructed message (e.g. "anthropic HTTP 401")
+         or an abort/network error string — never keys or customer data. */
+      return json({ error: 'upstream failure', detail: String((e && e.message) || e).slice(0, 120) }, 502, headers);
     }
   },
 };
