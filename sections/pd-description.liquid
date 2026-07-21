@@ -90,6 +90,7 @@
           {%- assign item_count = items_arr | size -%}
 
           <div class="pd-desc-card" data-transformed="1">
+            <div class="pd-desc-scrollwrap">
             {%- for item in items_arr -%}
               <div class="pd-desc-section{% unless forloop.first %} is-hidden{% endunless %}">
                 <div>
@@ -112,6 +113,7 @@
                 </div>
               </div>
             {%- endfor -%}
+            </div>
             {%- if item_count > 1 -%}
               <button type="button" class="pd-desc-toggle">
                 <span class="pd-desc-toggle-text">{{ section.settings.read_more_text }}</span>
@@ -124,6 +126,7 @@
           {{ desc_source }}
         {%- else -%}
           <div class="pd-desc-card" data-transformed="1">
+            <div class="pd-desc-scrollwrap">
             <div class="pd-desc-section">
               <div>
                 <h3 class="pd-desc-label">{{ section.settings.fb_card1_label }}</h3>
@@ -147,6 +150,7 @@
                 <h3 class="pd-desc-label">{{ section.settings.fb_card4_label }}</h3>
                 <p class="pd-desc-text">{{ section.settings.fb_card4_body }}</p>
               </div>
+            </div>
             </div>
             <button type="button" class="pd-desc-toggle">
               <span class="pd-desc-toggle-text">{{ section.settings.read_more_text }}</span>

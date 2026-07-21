@@ -82,7 +82,7 @@ body .pd .pd-nutrition-wrap{display:none!important}
    them by 30px and enables scroll-y INSIDE each card's content area; the button
    and the nutrition header sit outside the scroller so they never move. */
 @media (min-width:761px){
-  html body .pd .pd-desc-content{--pdcard-h:240px}
+  html body .pd .pd-desc-content{--pdcard-h:270px}
   html body .pd section.pd-description .pd-desc-content .pd-desc-card{height:var(--pdcard-h)!important;overflow:hidden!important}
   html body .pd section.pd-description .pd-desc-content.is-open .pd-desc-card{height:calc(var(--pdcard-h) + 30px)!important}
   /* the content areas are the scrollers (clipped when closed, scroll-y when open) */
@@ -94,6 +94,8 @@ body .pd .pd-nutrition-wrap{display:none!important}
   body .pd .pd-desc-content.is-open .pd-ing-card .pd-desc-section{overflow-y:auto!important;scrollbar-width:thin}
   /* preview is height-clipped, not section-hidden, so scrolling reveals everything */
   body .pd .pd-desc-card .pd-desc-section.is-hidden{display:block!important}
+  /* pre-JS safety: direct-child sections must never flex-squish inside the clip */
+  body .pd .pd-desc-card > .pd-desc-section{flex:0 0 auto!important}
   /* pd-page-polish-v2 gives open cards a 28px bottom margin (<=980px); in the linked
      row layout all cards open together, so keep them flush and aligned */
   html body .pd section.pd-description .pd-desc-content.is-open .pd-desc-card.is-open,
@@ -205,6 +207,8 @@ body .pd .pd-nutrition-wrap{display:none!important}
     if (!items.length) return;
     const card = document.createElement('div');
     card.className = 'pd-desc-card';
+    const swrap = document.createElement('div');
+    swrap.className = 'pd-desc-scrollwrap';
     items.forEach((li, idx)=>{
       const text = (li.innerText || li.textContent || '').trim();
       const colonIdx = text.indexOf(':');
@@ -232,8 +236,9 @@ body .pd .pd-nutrition-wrap{display:none!important}
         wrap.appendChild(descEl);
         section.appendChild(wrap);
       }
-      card.appendChild(section);
+      swrap.appendChild(section);
     });
+    card.appendChild(swrap);
     if (items.length > 1) {
       const btn = document.createElement('button');
       btn.type = 'button';
