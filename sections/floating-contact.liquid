@@ -58,6 +58,7 @@
       <h3 class="bb-modal-title" id="bb-modal-title">{{ section.settings.modal_title }}</h3>
       <p class="bb-modal-sub">{{ section.settings.modal_subtext }}</p>
 
+      {%- if section.settings.enable_chat -%}
       <div class="bb-tabs" role="tablist" aria-label="Contact options">
         <button type="button" class="bb-tab" id="bb-tab-chat" role="tab" aria-controls="bb-panel-chat" aria-selected="false">{{ section.settings.chat_tab_label | default: 'Quick help' }}</button>
         <button type="button" class="bb-tab" id="bb-tab-form" role="tab" aria-controls="bb-panel-form" aria-selected="false">{{ section.settings.form_tab_label | default: 'Send message' }}</button>
@@ -89,7 +90,11 @@
         </form>
       </div>
 
-      <div class="bb-panel" id="bb-panel-form" role="tabpanel" aria-labelledby="bb-tab-form" hidden>
+      {%- endif -%}
+
+      {%- comment -%} Chat disabled: the form renders as the whole modal, visible
+          without JS (no hidden attribute, no tab roles). {%- endcomment -%}
+      <div class="bb-panel" id="bb-panel-form" {% if section.settings.enable_chat %}role="tabpanel" aria-labelledby="bb-tab-form" hidden{% endif %}>
       {% if section.settings.send_mode == 'shopify' %}
         {%- form 'contact', id: 'FloatingContactForm', class: 'bb-form' -%}
           <input type="hidden" name="form_type" value="contact">
@@ -746,6 +751,13 @@
     { "type": "text", "id": "error_text", "label": "Error text", "default": "Something went wrong. Please try again." },
 
     { "type": "header", "content": "Quick-help chat" },
+    {
+      "type": "checkbox",
+      "id": "enable_chat",
+      "label": "Enable Quick-help chat",
+      "default": true,
+      "info": "Off: the widget shows only the contact form, exactly as before the chat existed."
+    },
     {
       "type": "select",
       "id": "default_tab",
