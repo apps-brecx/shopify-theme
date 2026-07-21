@@ -66,8 +66,12 @@
         <div class="bb-chat-log" id="bb-chat-log" aria-live="polite"></div>
         <div class="bb-chat-pills" id="bb-chat-pills">
           {%- for block in section.blocks -%}
-            {%- if block.type == 'faq' and block.settings.question != blank -%}
-              <button type="button" class="bb-pill" data-faq="{{ forloop.index0 }}" {{ block.shopify_attributes }}>{{ block.settings.question | escape }}</button>
+            {%- if block.type == 'faq' -%}
+              {%- if block.settings.question != blank -%}
+                <button type="button" class="bb-pill" data-faq="{{ forloop.index0 }}" {{ block.shopify_attributes }}>{{ block.settings.question | escape }}</button>
+              {%- elsif request.design_mode -%}
+                <button type="button" class="bb-pill bb-pill--empty" {{ block.shopify_attributes }}>Add a question…</button>
+              {%- endif -%}
             {%- endif -%}
           {%- endfor -%}
         </div>
@@ -187,9 +191,11 @@
 
     .bb-modal-card{
         position: relative;
-        pointer-events: auto;                          
+        pointer-events: auto;
         width: 100%;
         max-width: 520px;
+        max-height: calc(100vh - 130px);
+        overflow-y: auto;
         background: #fff;
         border-radius: 16px;
         padding: 24px;
@@ -246,6 +252,9 @@
     .bb-chat-pills:empty{display:none}
     .bb-pill{padding:7px 12px;border:1px solid #ddd;border-radius:999px;background:#fff;color:#333;font:inherit;font-size:12.5px;cursor:pointer}
     .bb-pill:hover{border-color:#3C2005;color:#3C2005}
+    .bb-pill--empty{opacity:.5;font-style:italic}
+    .bb-chat-send[disabled]{opacity:.55;cursor:default}
+    .bb-chat-inputrow input[disabled]{opacity:.7}
     .bb-chat-inputrow{display:flex;gap:8px}
     .bb-chat-inputrow input{flex:1;min-width:0;padding:10px 12px;border-radius:10px;border:1px solid #ddd;font:inherit}
     .bb-chat-send{width:42px;height:42px;flex:0 0 auto;border:0;border-radius:10px;background:#3C2005;color:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
@@ -499,40 +508,52 @@
 
       if (greeting) addMsg('bot', greeting);
 
+      const sendBtn = inputRow ? inputRow.querySelector('.bb-chat-send') : null;
       let busy = false;
-      async function ask(q){
+      function setBusy(on){
+        busy = on;
+        if (input) input.disabled = on;
+        if (sendBtn) sendBtn.disabled = on;
+      }
+      async function ask(q, history){
         if (busy) return;
-        busy = true;
+        setBusy(true);
         typing(true);
         try {
-          if (llmUrl) await askLlm(q); else await askFaq(q);
+          if (llmUrl) await askLlm(q, history); else await askFaq(q);
         } catch(e){
+          console.warn('[bb-chat]', e);
           addFormLink(addMsg('bot', fallbackText));
         } finally {
           typing(false);
-          busy = false;
+          setBusy(false);
         }
       }
 
       /* Shopify Storefront MCP — same-origin, public, no auth needed.
-         /api/mcp sunsets 2026-08-31; any failure degrades to the fallback + form link. */
-      async function mcpCall(name, args){
+         The FAQ tool lives on /api/mcp (sunsets 2026-08-31; failures degrade to the
+         fallback + form link). Catalog search uses its successor /api/ucp/mcp.
+         The abort timer covers the whole request INCLUDING the body read. */
+      async function fetchJson(url, body){
         const ctrl  = ('AbortController' in window) ? new AbortController() : null;
         const timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 12000);
-        let res;
         try {
-          res = await fetch('/api/mcp', {
+          const res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ jsonrpc: '2.0', method: 'tools/call', id: 1,
-              params: { name: name, arguments: args } }),
+            body: JSON.stringify(body),
             signal: ctrl ? ctrl.signal : undefined
           });
+          if (!res.ok) throw new Error('http ' + res.status);
+          return await res.json();
         } finally {
           if (timer) clearTimeout(timer);
         }
-        if (!res.ok) throw new Error('http ' + res.status);
-        const data = await res.json();
+      }
+      const UCP_PROFILE = 'https://shopify.dev/ucp/agent-profiles/examples/2026-04-08/valid-with-capabilities.json';
+      async function mcpCall(endpoint, name, args){
+        const data = await fetchJson(endpoint, { jsonrpc: '2.0', method: 'tools/call', id: 1,
+          params: { name: name, arguments: args } });
         return (data && data.result && data.result.content) || [];
       }
       function parseJsonItems(items){
@@ -576,7 +597,7 @@
       async function askFaq(q){
         let answers = [];
         try {
-          parseJsonItems(await mcpCall('search_shop_policies_and_faqs', { query: q }))
+          parseJsonItems(await mcpCall('/api/mcp', 'search_shop_policies_and_faqs', { query: q }))
             .forEach(function(v){ if (Array.isArray(v)) answers = answers.concat(v); });
         } catch(e){ console.warn('[bb-chat] faq lookup failed', e); }
         answers = answers.filter(function(a){ return a && a.answer; }).slice(0, 2);
@@ -586,7 +607,7 @@
         }
         let products = [];
         try {
-          parseJsonItems(await mcpCall('search_catalog', { catalog: { query: q } }))
+          parseJsonItems(await mcpCall('/api/ucp/mcp', 'search_catalog', { meta: { 'ucp-agent': { profile: UCP_PROFILE } }, catalog: { query: q } }))
             .forEach(function(v){ if (v && Array.isArray(v.products)) products = products.concat(v.products); });
         } catch(e){ console.warn('[bb-chat] catalog lookup failed', e); }
         products = products.filter(function(p){ return p && p.title && p.url; }).slice(0, 3);
@@ -599,39 +620,63 @@
       }
 
       /* Optional AI endpoint (section setting) for when the LLM Worker exists.
-         Contract: POST {message, history:[{role,text}...], page} -> {reply:"..."} */
-      async function askLlm(q){
-        const history = Array.prototype.slice.call(log.querySelectorAll('.bb-msg')).slice(-10).map(function(m){
-          return { role: m.classList.contains('bb-msg--user') ? 'user' : 'assistant', text: m.textContent };
+         Contract: POST {message, history:[{role,text}...], page} -> {reply:"..."}
+         History is snapshotted BEFORE the outgoing question is painted, and UI
+         affordances (the "Send us a message instead" button) are stripped. */
+      function snapshotHistory(){
+        return Array.prototype.slice.call(log.querySelectorAll('.bb-msg')).slice(-10).map(function(m){
+          const c = m.cloneNode(true);
+          Array.prototype.forEach.call(c.querySelectorAll('.bb-msg-link, br'), function(n){ n.remove(); });
+          return { role: m.classList.contains('bb-msg--user') ? 'user' : 'assistant', text: (c.textContent || '').trim() };
         });
-        const res = await fetch(llmUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: q, history: history, page: location.href })
-        });
-        if (!res.ok) throw new Error('http ' + res.status);
-        const data = await res.json();
+      }
+      async function askLlm(q, history){
+        const data = await fetchJson(llmUrl, { message: q, history: history || [], page: location.href });
         if (data && typeof data.reply === 'string' && data.reply) addMsg('bot', data.reply);
         else throw new Error('bad reply');
       }
 
       if (pills) pills.addEventListener('click', function(e){
         const pill = e.target.closest('.bb-pill');
-        if (!pill) return;
+        if (!pill || typeof pill.dataset.faq === 'undefined') return;
         const q = pill.textContent.trim();
-        addMsg('user', q);
         const canned = document.getElementById('bb-faq-answer-' + pill.dataset.faq);
-        if (canned){ addMsg('bot', canned.innerHTML, { html: true }); return; }
-        ask(q);
+        if (canned){
+          addMsg('user', q);
+          addMsg('bot', canned.innerHTML, { html: true });
+          return;
+        }
+        if (busy) return;
+        const h = snapshotHistory();
+        addMsg('user', q);
+        ask(q, h);
       });
       if (inputRow) inputRow.addEventListener('submit', function(e){
         e.preventDefault();
+        if (busy) return;
         const q = (input.value || '').trim();
         if (!q) return;
+        const h = snapshotHistory();
         input.value = '';
         addMsg('user', q);
-        ask(q);
+        ask(q, h);
       });
+
+      /* Theme editor: selecting the section or a Quick question block opens the
+         widget so merchants can see what they're editing. */
+      if (window.Shopify && window.Shopify.designMode){
+        const ensureOpen = function(){
+          const m = document.getElementById('bb-contact-modal');
+          const b = document.getElementById('bb-float-btn');
+          if (m && m.hidden && b) b.click();
+        };
+        document.addEventListener('shopify:section:select', function(e){
+          if (e.target && e.target.contains(root)) ensureOpen();
+        });
+        document.addEventListener('shopify:block:select', function(e){
+          if (e.target && e.target.contains(root)){ ensureOpen(); showTab('chat'); }
+        });
+      }
     })();
   </script>
 </section>
