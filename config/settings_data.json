@@ -205,7 +205,7 @@
           "faq-delivery-time": {
             "type": "faq",
             "settings": {
-              "question": "How long does delivery take?",
+              "question": "What payment methods do you accept?",
               "answer": ""
             }
           },
