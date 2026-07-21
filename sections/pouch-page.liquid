@@ -397,31 +397,28 @@
             </button>
           {%- endform -%}
 
-          {%- if section.settings.show_mini_bundle -%}
-            <div class="pd-minibundle">
-              <div class="pd-mb-head">
-                <span class="pd-mb-headline">Add more, save more</span>
-                <span class="pd-mb-sub">Tap a tier to apply</span>
+          {%- if section.settings.show_pouch_info_card -%}
+            <div class="pd-pouchinfo">
+              <div class="pd-pi-head">{{ section.settings.pi_title | default: 'What&rsquo;s a Syrup Pouch?' }}</div>
+              <div class="pd-pi-steps">
+                <div class="pd-pi-step"><span class="n">1</span><div><b>{{ section.settings.pi_s1_t | default: 'Tear' }}</b><p>{{ section.settings.pi_s1_p | default: 'No pump, no bottle, no measuring.' }}</p></div></div>
+                <div class="pd-pi-step"><span class="n">2</span><div><b>{{ section.settings.pi_s2_t | default: 'Pour' }}</b><p>{{ section.settings.pi_s2_p | default: 'One pouch = one perfect 15 ml serving.' }}</p></div></div>
+                <div class="pd-pi-step"><span class="n">3</span><div><b>{{ section.settings.pi_s3_t | default: 'Enjoy' }}</b><p>{{ section.settings.pi_s3_p | default: 'Coffee, soda, desserts — anywhere.' }}</p></div></div>
               </div>
-              <div class="pd-mb-grid">
-                <button type="button" class="pd-mb-cell" data-tier="2">
-                  <span class="pd-mb-num">2</span>
-                  <span class="pd-mb-label">Pouches</span>
-                  <span class="pd-mb-save">Save 5%</span>
-                </button>
-                <button type="button" class="pd-mb-cell" data-tier="3">
-                  <span class="pd-mb-flag">Most Popular</span>
-                  <span class="pd-mb-num">3</span>
-                  <span class="pd-mb-label">Pouches</span>
-                  <span class="pd-mb-save">Save 10%</span>
-                </button>
-                <button type="button" class="pd-mb-cell" data-tier="4">
-                  <span class="pd-mb-num">4+</span>
-                  <span class="pd-mb-label">Pouches</span>
-                  <span class="pd-mb-save">Save 15%</span>
-                </button>
-              </div>
+              {%- assign pi_chips = section.settings.pi_chips | default: '30 pouches per bag,450 ml (15.2 fl oz) total,Take it anywhere' -%}
+              <div class="pd-pi-chips">{%- assign pcs = pi_chips | split: ',' -%}{%- for c in pcs -%}<span>{{ c | strip }}</span>{%- endfor -%}</div>
             </div>
+            <style>
+              html body .pd .pd-pouchinfo{margin-top:18px;border:2px solid var(--pd-text,#1a1a1a);border-radius:16px;background:{{ section.settings.pi_bg | default: '#FFF3DC' }};padding:16px 16px 14px;}
+              html body .pd .pd-pi-head{font-family:'Archivo Black','Archivo',sans-serif;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
+              html body .pd .pd-pi-steps{display:flex;flex-direction:column;gap:10px;}
+              html body .pd .pd-pi-step{display:flex;gap:10px;align-items:flex-start;}
+              html body .pd .pd-pi-step .n{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:{{ section.settings.accent_color | default: '#e28f26' }};color:#fff;font-family:'Archivo Black',sans-serif;font-size:13px;display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--pd-text,#1a1a1a);}
+              html body .pd .pd-pi-step b{font-family:'Archivo Black','Archivo',sans-serif;font-size:12px;letter-spacing:.06em;text-transform:uppercase;display:block;}
+              html body .pd .pd-pi-step p{font-size:13px;margin:2px 0 0;opacity:.8;line-height:1.4;}
+              html body .pd .pd-pi-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
+              html body .pd .pd-pi-chips span{font-family:'Archivo Black','Archivo',sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:1.5px solid var(--pd-text,#1a1a1a);border-radius:999px;padding:5px 10px;background:#fff;}
+            </style>
           {%- endif -%}
 
         </div>
@@ -1246,11 +1243,19 @@ window.PD_TIERS = [1, 0.95, 0.93, 0.90];
       "content": "Other sections"
     },
     {
-      "type": "checkbox",
-      "id": "show_mini_bundle",
-      "label": "Show \"Add more, save more\" bundle",
-      "default": true
+      "type": "header",
+      "content": "Pouch info card (in buy box)"
     },
+    { "type": "checkbox", "id": "show_pouch_info_card", "label": "Show pouch info card", "default": true },
+    { "type": "text", "id": "pi_title", "label": "Title", "default": "What’s a Syrup Pouch?" },
+    { "type": "text", "id": "pi_s1_t", "label": "Step 1 title", "default": "Tear" },
+    { "type": "text", "id": "pi_s1_p", "label": "Step 1 text", "default": "No pump, no bottle, no measuring." },
+    { "type": "text", "id": "pi_s2_t", "label": "Step 2 title", "default": "Pour" },
+    { "type": "text", "id": "pi_s2_p", "label": "Step 2 text", "default": "One pouch = one perfect 15 ml serving." },
+    { "type": "text", "id": "pi_s3_t", "label": "Step 3 title", "default": "Enjoy" },
+    { "type": "text", "id": "pi_s3_p", "label": "Step 3 text", "default": "Coffee, soda, desserts — anywhere." },
+    { "type": "text", "id": "pi_chips", "label": "Chips (comma separated)", "default": "30 pouches per bag,450 ml (15.2 fl oz) total,Take it anywhere" },
+    { "type": "color", "id": "pi_bg", "label": "Card background", "default": "#FFF3DC" },
     {
       "type": "checkbox",
       "id": "show_ugc_section",
