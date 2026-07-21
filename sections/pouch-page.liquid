@@ -630,6 +630,10 @@
   <section class="pd-pib" style="background:{{ section.settings.pib_bg | default: '#e28f26' }};padding:clamp(36px,6vw,64px) 0 clamp(42px,7vw,70px);">
     <style>
       html body .pd .pd-pib .pd-pib-wrap{max-width:1080px;margin:0 auto;padding:0 18px;text-align:center;}
+      html body .pd .pd-pib .pd-pib-logo{display:inline-block;background:#fff;border:2px solid #3c2415;border-radius:18px;box-shadow:4px 4px 0 #3c2415;padding:14px 24px 16px;margin-bottom:16px;width:min(280px,72vw);}
+      html body .pd .pd-pib .pd-pib-logo img{display:block;width:100%;height:auto;}
+      html body .pd .pd-pib .pd-pib-logo img.top{width:54%;margin:0 auto 4px;}
+      html body .pd .pd-pib .pd-pib-logo img.single{width:100%;}
       html body .pd .pd-pib .pd-eyebrow{background:#fff;}
       html body .pd .pd-pib .pd-pib-h2{font-family:'Archivo Black','Archivo',sans-serif;font-weight:400;font-size:clamp(24px,6vw,40px);line-height:.98;text-transform:uppercase;margin:12px 0 0;color:#fff;text-shadow:2px 3px 0 rgba(60,36,21,.3);}
       html body .pd .pd-pib .pd-pib-sub{font-size:clamp(15px,3.6vw,18px);color:#fff;opacity:.95;margin:12px auto 0;max-width:52ch;}
@@ -643,6 +647,16 @@
       html body .pd .pd-pib .pd-pib-chips span{font-family:'Archivo Black','Archivo',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:2px solid #3c2415;border-radius:999px;padding:8px 15px;background:{{ section.settings.pib_chip | default: '#FFF3DC' }};color:#3c2415;box-shadow:2px 2px 0 #3c2415;}
     </style>
     <div class="pd-pib-wrap">
+      {%- if section.settings.show_pib_logo -%}
+      <div class="pd-pib-logo">
+        {%- if section.settings.pib_logo != blank -%}
+          <img class="single" src="{{ section.settings.pib_logo | image_url: width: 600 }}" alt="Syrup Pouches" loading="lazy">
+        {%- else -%}
+          <img class="top" src="{{ 'sp-logo-syrup.svg' | asset_url }}" alt="Syrup" loading="lazy">
+          <img class="main" src="{{ 'sp-logo-pouches.svg' | asset_url }}" alt="Pouches" loading="lazy">
+        {%- endif -%}
+      </div>
+      {%- endif -%}
       {%- if section.settings.pib_eyebrow != blank -%}<span class="pd-eyebrow">{{ section.settings.pib_eyebrow }}</span>{%- endif -%}
       <h2 class="pd-pib-h2">{{ section.settings.pib_title | default: 'What&rsquo;s a Syrup Pouch?' }}</h2>
       {%- if section.settings.pib_sub != blank -%}<p class="pd-pib-sub">{{ section.settings.pib_sub }}</p>{%- endif -%}
@@ -1282,6 +1296,8 @@ window.PD_TIERS = [1, 0.95, 0.93, 0.90];
     },
     { "type": "header", "content": "Pouch info band (replaces Bundle & Save)" },
     { "type": "checkbox", "id": "show_pouch_band", "label": "Show pouch info band", "default": true },
+    { "type": "checkbox", "id": "show_pib_logo", "label": "Show Syrup Pouches logo", "default": true },
+    { "type": "image_picker", "id": "pib_logo", "label": "Logo override (optional, replaces built-in)" },
     { "type": "text", "id": "pib_eyebrow", "label": "Eyebrow", "default": "New format" },
     { "type": "text", "id": "pib_title", "label": "Title", "default": "What’s a Syrup Pouch?" },
     { "type": "textarea", "id": "pib_sub", "label": "Subtitle", "default": "All the flavor of our bottles in a pocket-size, single-serving pouch — made to go wherever you do." },
