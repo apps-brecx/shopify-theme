@@ -195,6 +195,13 @@
       "floating-contact": {
         "type": "floating-contact",
         "blocks": {
+          "faq_kkdHgY": {
+            "type": "faq",
+            "settings": {
+              "question": "What are your best-selling products?",
+              "answer": ""
+            }
+          },
           "faq_8HbJTk": {
             "type": "faq",
             "settings": {
@@ -232,6 +239,7 @@
           }
         },
         "block_order": [
+          "faq_kkdHgY",
           "faq_8HbJTk",
           "faq_7zjCeU",
           "faq-ship-countries",
