@@ -571,11 +571,11 @@
                 <div class="pd-nut-rule"></div>
                 <div class="pd-nut-row"><span><strong>Total Carbohydrate</strong> {%- if is_sf -%}0g{%- else -%}10g{%- endif -%}</span><strong>{%- if is_sf -%}0%{%- else -%}4%{%- endif -%}</strong></div>
                 <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Total Sugars {%- if is_sf -%}0g{%- else -%}10g{%- endif -%}</span><span></span></div>
-                {%- unless is_sf -%}<div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Incl. 10g Added Sugars</span><strong>20%</strong></div>{%- endunless -%}
+                <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Incl. {% if is_sf %}0g{% else %}10g{% endif %} Added Sugars</span><strong>{% if is_sf %}0%{% else %}20%{% endif %}</strong></div>
                 <div class="pd-nut-rule"></div>
                 <div class="pd-nut-row"><span><strong>Protein</strong> 0g</span></div>
                 <div class="pd-nut-rule--med"></div>
-                <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">*% DV based on a 2,000 calorie diet. Not a significant source of saturated fat, trans fat, cholesterol, dietary fiber, vitamin D, calcium, iron and potassium.</div>{%- unless is_sf -%}<div style="font-size:11px;line-height:1.35;color:#3a3a3a;margin-top:8px;text-align:left;"><strong>INGREDIENTS:</strong> Pure Cane Sugar, Water, Natural Flavors, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate &amp; Potassium Sorbate (Preservatives)</div>{%- endunless -%}
+                <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">*% DV based on a 2,000 calorie diet. Not a significant source of saturated fat, trans fat, cholesterol, dietary fiber, vitamin D, calcium, iron and potassium.</div><div style="font-size:11px;line-height:1.35;color:#3a3a3a;margin-top:8px;text-align:left;"><strong>INGREDIENTS:</strong> {% if is_sf %}Water, Natural Flavors, Gum, Sucralose, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate, Potassium Sorbate &amp; Ace K (Preservatives){% else %}Pure Cane Sugar, Water, Natural Flavors, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate &amp; Potassium Sorbate (Preservatives){% endif %}</div>
               </div>
             </div>
           </div>
@@ -737,11 +737,11 @@
         <div class="pd-nut-rule"></div>
         <div class="pd-nut-row"><span><strong>Total Carbohydrate</strong> {%- if is_sf -%}0g{%- else -%}10g{%- endif -%}</span><strong>{%- if is_sf -%}0%{%- else -%}4%{%- endif -%}</strong></div>
         <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Total Sugars {%- if is_sf -%}0g{%- else -%}10g{%- endif -%}</span><span></span></div>
-        {%- unless is_sf -%}<div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Incl. 10g Added Sugars</span><strong>20%</strong></div>{%- endunless -%}
+        <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Incl. {% if is_sf %}0g{% else %}10g{% endif %} Added Sugars</span><strong>{% if is_sf %}0%{% else %}20%{% endif %}</strong></div>
         <div class="pd-nut-rule"></div>
         <div class="pd-nut-row"><span><strong>Protein</strong> 0g</span></div>
         <div class="pd-nut-rule--med"></div>
-        <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">*% DV based on a 2,000 calorie diet. Not a significant source of saturated fat, trans fat, cholesterol, dietary fiber, vitamin D, calcium, iron and potassium.</div>{%- unless is_sf -%}<div style="font-size:11px;line-height:1.35;color:#3a3a3a;margin-top:8px;text-align:left;"><strong>INGREDIENTS:</strong> Pure Cane Sugar, Water, Natural Flavors, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate &amp; Potassium Sorbate (Preservatives)</div>{%- endunless -%}
+        <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">*% DV based on a 2,000 calorie diet. Not a significant source of saturated fat, trans fat, cholesterol, dietary fiber, vitamin D, calcium, iron and potassium.</div><div style="font-size:11px;line-height:1.35;color:#3a3a3a;margin-top:8px;text-align:left;"><strong>INGREDIENTS:</strong> {% if is_sf %}Water, Natural Flavors, Gum, Sucralose, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate, Potassium Sorbate &amp; Ace K (Preservatives){% else %}Pure Cane Sugar, Water, Natural Flavors, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate &amp; Potassium Sorbate (Preservatives){% endif %}</div>
       </div>
     </div>
   </section>
