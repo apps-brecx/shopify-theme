@@ -79,19 +79,21 @@ body .pd .pd-nutrition-wrap{display:none!important}
 
 /* Desktop: description / ingredients / nutrition cards are fixed-height previews
    (content partially visible). Read more or the nutrition arrow expands ALL of
-   them by 30px and enables internal scroll-y; the two controls stay in sync. */
+   them by 30px and enables scroll-y INSIDE each card's content area; the button
+   and the nutrition header sit outside the scroller so they never move. */
 @media (min-width:761px){
-  body .pd .pd-desc-content{--pdcard-h:300px}
-  body .pd .pd-desc-content .pd-desc-card{height:var(--pdcard-h)!important;overflow:hidden!important;transition:height .25s ease!important}
-  body .pd .pd-desc-content.is-open .pd-desc-card{height:calc(var(--pdcard-h) + 30px)!important;overflow-y:auto!important;scrollbar-width:thin}
-  /* nutrition body always rendered so it previews under the clip */
-  body .pd .pd-nf-card .pd-nf-body{display:block!important;animation:none!important}
-  /* header stays visible while the nutrition table scrolls */
-  body .pd .pd-nf-card .pd-nf-toggle{position:sticky!important;top:0!important;background:inherit!important;z-index:2!important}
+  html body .pd .pd-desc-content{--pdcard-h:240px}
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card{height:var(--pdcard-h)!important;overflow:hidden!important}
+  html body .pd section.pd-description .pd-desc-content.is-open .pd-desc-card{height:calc(var(--pdcard-h) + 30px)!important}
+  /* the content areas are the scrollers (clipped when closed, scroll-y when open) */
+  body .pd .pd-desc-card .pd-desc-scrollwrap{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
+  body .pd .pd-nf-card .pd-nf-body{display:block!important;animation:none!important;flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
+  body .pd .pd-ing-card .pd-desc-section{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
+  body .pd .pd-desc-content.is-open .pd-desc-card .pd-desc-scrollwrap,
+  body .pd .pd-desc-content.is-open .pd-nf-card .pd-nf-body,
+  body .pd .pd-desc-content.is-open .pd-ing-card .pd-desc-section{overflow-y:auto!important;scrollbar-width:thin}
   /* preview is height-clipped, not section-hidden, so scrolling reveals everything */
   body .pd .pd-desc-card .pd-desc-section.is-hidden{display:block!important}
-  /* Read more pinned to the card's bottom edge in both states */
-  body .pd .pd-desc-card .pd-desc-toggle{position:sticky!important;bottom:6px!important;z-index:2!important}
   /* pd-page-polish-v2 gives open cards a 28px bottom margin (<=980px); in the linked
      row layout all cards open together, so keep them flush and aligned */
   html body .pd section.pd-description .pd-desc-content.is-open .pd-desc-card.is-open,
@@ -144,11 +146,26 @@ body .pd .pd-nutrition-wrap{display:none!important}
     });
   }
   function isDesktop(){ return window.matchMedia('(min-width:761px)').matches; }
+  /* The description card's sections get wrapped in a .pd-desc-scrollwrap so the
+     content area (not the card) is the scroller and the Read more button never
+     moves. Works for both the JS-built card and the server-rendered one from
+     sections/pd-description.liquid. Idempotent. */
+  function ensureScrollWrap(){
+    const card = document.querySelector('.pd-desc-content .pd-desc-card[data-transformed="1"]');
+    if (!card || card.querySelector('.pd-desc-scrollwrap')) return;
+    const secs = Array.prototype.filter.call(card.children, function(el){ return el.classList && el.classList.contains('pd-desc-section'); });
+    if (!secs.length) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'pd-desc-scrollwrap';
+    card.insertBefore(wrap, secs[0]);
+    secs.forEach(function(s){ wrap.appendChild(s); });
+  }
   /* Desktop: the three cards are fixed-height previews sharing ONE expanded state —
      Read more and the nutrition arrow open/close them together (+30px, scroll-y). */
   function setDeskOpen(open){
     const content = document.querySelector('.pd-desc-content');
     if (!content) return;
+    ensureScrollWrap();
     content.classList.toggle('is-open', open);
     const nf = document.querySelector('.pd-nf-card');
     if (nf) nf.classList.toggle('is-open', open);
@@ -158,8 +175,10 @@ body .pd .pd-nutrition-wrap{display:none!important}
       const t = btn.querySelector('.pd-desc-toggle-text');
       if (t) t.textContent = open ? 'Show less' : 'Read more';
     }
-    if (!open) content.querySelectorAll('.pd-desc-card').forEach(function(c){ c.scrollTop = 0; });
+    if (!open) content.querySelectorAll('.pd-desc-scrollwrap, .pd-nf-body, .pd-ing-card .pd-desc-section').forEach(function(c){ c.scrollTop = 0; });
   }
+  /* shared with sections/pd-description.liquid (server-rendered card path) */
+  window.__pdSetDeskOpen = setDeskOpen;
   function deskOpen(){
     const c = document.querySelector('.pd-desc-content');
     return !!(c && c.classList.contains('is-open'));
@@ -220,7 +239,8 @@ body .pd .pd-nutrition-wrap{display:none!important}
       btn.type = 'button';
       btn.className = 'pd-desc-toggle';
       btn.innerHTML = '<span class="pd-desc-toggle-text">Read more</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>';
-      btn.addEventListener('click', ()=>{
+      btn.addEventListener('click', (ev)=>{
+        ev.pdDescHandled = true; /* stop pd-description's delegated handler double-firing */
         if (isDesktop()){ setDeskOpen(!deskOpen()); return; }
         const wasExpanded = card.classList.contains('is-expanded');
         const isExpanded = card.classList.toggle('is-expanded');
@@ -285,6 +305,7 @@ body .pd .pd-nutrition-wrap{display:none!important}
       body.appendChild(nfSrc.cloneNode(true));
       const handleToggle = (e)=>{
         if (e.target.closest('.pd-nf-body')) return;
+        e.pdDescHandled = true; /* stop pd-description's delegated handler double-firing */
         if (isDesktop()){ setDeskOpen(!deskOpen()); return; }
         const wasOpen = card.classList.contains('is-open');
         card.classList.toggle('is-open');
@@ -301,7 +322,7 @@ body .pd .pd-nutrition-wrap{display:none!important}
       descContent.appendChild(card);
     }
   }
-  function runAll(){ injectPrices(); transformDesc(); }
+  function runAll(){ injectPrices(); transformDesc(); ensureScrollWrap(); }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', runAll);
   } else {
