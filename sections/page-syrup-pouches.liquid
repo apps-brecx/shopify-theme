@@ -1,22 +1,20 @@
 {%- comment -%}
-  Syrup Pouches — launch / pre-order page (Syruvia).
-  • Hero with the Syrup Pouches logo lockup (SYRUP + POUCHES svg assets, editable).
-  • VIP pre-order gating with an editor-side switch: VIP members only (signed-in),
-    strict VIP tag, or open to everyone (flip when pre-order opens to all on Monday).
-    Non-members see a join-free / sign-in gate; tiles lock until allowed.
-  • "Shop now" buttons scroll to the flavor grid; optional collection button too.
-  • Flavor grid = live products from a collection (pre-orderable) + coming-soon
-    tiles from editable lists ("Name | optional date" per line) with a color
-    overlay. Tabs filter All / Regular / Sugar-Free. Live products are detected
-    as sugar-free by title. A coming-soon name matching a live product is skipped.
-  Mobile-first, reveal-on-scroll, brand system (Archivo Black + Josefin Sans),
-  logo colors (espresso #3c2415 / orange #e28f26). Fonts non-blocking.
+  Syrup Pouches — launch / pre-order page (Syruvia) · v2 "full color".
+  Colorful band layout (gradient hero, wavy color bands, rainbow flavor tiles) in the
+  brand system — logo espresso #3c2415 + orange #e28f26 with a warm fruit palette.
+  • Hero: Syrup Pouches logo lockup, VIP pre-order badge, chips, Shop now (anchors to grid).
+  • VIP gating switch (signed-in / strict VIP tag / everyone) with join-free gate card.
+  • "Live now" duo: two product pickers (Vanilla + Sugar-Free Vanilla) as big spotlight
+    cards; falls back to the first two collection products if none picked.
+  • Three full-bleed picture bands (editable image slots; hidden until an image is set).
+  • Flavor grid: live products from a collection + coming-soon overlay tiles from
+    editable lists; All / Regular / Sugar-Free tabs; colorful tile backgrounds.
+  Mobile-first, reveal-on-scroll, fonts non-blocking, prefers-reduced-motion respected.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 {%- assign rad = s.card_radius | default: 18 -%}
 {%- assign cl = collections[s.collection_handle] -%}
 
-{%- comment -%} access gate {%- endcomment -%}
 {%- assign allowed = false -%}
 {%- case s.access_mode -%}
   {%- when 'everyone' -%}{%- assign allowed = true -%}
@@ -24,13 +22,17 @@
   {%- else -%}{%- if customer -%}{%- assign allowed = true -%}{%- endif -%}
 {%- endcase -%}
 
-{%- comment -%} logo lockup (editable overrides, default = uploaded svg assets) {%- endcomment -%}
 {%- assign logo_top = 'sp-logo-syrup.svg' | asset_url -%}
 {%- assign logo_main = 'sp-logo-pouches.svg' | asset_url -%}
 {%- if s.logo_top != blank -%}{%- assign logo_top = s.logo_top | image_url: width: 600 -%}{%- endif -%}
 {%- if s.logo_main != blank -%}{%- assign logo_main = s.logo_main | image_url: width: 1000 -%}{%- endif -%}
 
-{%- comment -%} blob of live titles for coming-soon dedupe {%- endcomment -%}
+{%- comment -%} featured live duo: product pickers, fallback to first 2 collection products {%- endcomment -%}
+{%- assign f1 = s.feat_prod_1 -%}
+{%- assign f2 = s.feat_prod_2 -%}
+{%- if f1 == blank and cl != blank and cl.products.size > 0 -%}{%- assign f1 = cl.products[0] -%}{%- endif -%}
+{%- if f2 == blank and cl != blank and cl.products.size > 1 -%}{%- assign f2 = cl.products[1] -%}{%- endif -%}
+
 {%- capture live_titles -%}{%- if cl != blank -%}{%- for p in cl.products limit: 50 -%}{{ p.title | downcase }}|{%- endfor -%}{%- endif -%}{%- endcapture -%}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,30 +50,38 @@
     --pop:{{ s.color_pop | default: '#C8252B' }};
     --rule-c:{{ s.color_rule | default: '#3c2415' }};
     --soon:{{ s.coming_overlay | default: '#3c2415' }};
+    --gold:#F6C14E;--peach:#FF9E7A;--pink:#F5567B;--sky:#5FB4E5;--mint:#7CC9A1;--lav:#B69AE0;
     --wrap:{{ s.wrap_max | default: 1120 }}px;
     --rad:{{ rad }}px;
     --display:'Archivo Black','Josefin Sans',system-ui,sans-serif;
     --serif:'Josefin Sans',system-ui,sans-serif;
     --rule:2px solid var(--rule-c);
-    background:var(--bg);color:var(--ink);font-family:var(--serif);position:relative;overflow-x:clip;font-size:16px;line-height:1.5;
-    scroll-behavior:smooth;
+    background:var(--bg);color:var(--ink);font-family:var(--serif);position:relative;overflow-x:clip;font-size:16px;line-height:1.5;scroll-behavior:smooth;
   }
   #sp-{{ section.id }} *{box-sizing:border-box;}
   #sp-{{ section.id }} .sp-wrap{max-width:var(--wrap);margin:0 auto;padding:0 18px;}
   #sp-{{ section.id }} .sp-eyebrow{font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;display:inline-block;padding:7px 14px;border:var(--rule);border-radius:999px;background:var(--paper);color:var(--brand);}
-  #sp-{{ section.id }} .sp-h2{font-family:var(--display);font-weight:900;font-size:clamp(24px,6.4vw,42px);line-height:.98;letter-spacing:-.01em;text-transform:uppercase;margin:12px 0 0;color:var(--brand);text-wrap:balance;}
+  #sp-{{ section.id }} .sp-h2{font-family:var(--display);font-weight:900;font-size:clamp(24px,6.4vw,44px);line-height:.98;letter-spacing:-.01em;text-transform:uppercase;margin:12px 0 0;color:var(--brand);text-wrap:balance;}
   #sp-{{ section.id }} .sp-h2 em{font-family:var(--serif);font-weight:300;font-style:italic;text-transform:none;color:var(--orange);}
   #sp-{{ section.id }} .sp-rev{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.7,.2,1);}
   #sp-{{ section.id }} .sp-rev.in{opacity:1;transform:none;}
   #sp-{{ section.id }} .sp-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--display);font-size:14px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:16px 26px;border:var(--rule);border-radius:999px;cursor:pointer;transition:transform .14s ease,box-shadow .14s ease;background:var(--orange);color:#fff;box-shadow:4px 4px 0 var(--rule-c);}
   #sp-{{ section.id }} .sp-btn--ghost{background:var(--paper);color:var(--brand);}
+  #sp-{{ section.id }} .sp-btn--pop{background:var(--pop);}
   #sp-{{ section.id }} .sp-btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--rule-c);}
   @media(hover:hover){#sp-{{ section.id }} .sp-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--rule-c);}}
   #sp-{{ section.id }} .sp-btnrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
   @media(max-width:560px){#sp-{{ section.id }} .sp-btnrow .sp-btn{width:100%;}}
+  /* wave divider */
+  #sp-{{ section.id }} .sp-wave{display:block;width:100%;height:clamp(26px,5vw,56px);}
 
-  /* HERO */
-  #sp-{{ section.id }} .sp-hero{padding:clamp(34px,7vw,64px) 0 clamp(26px,5vw,46px);text-align:center;position:relative;}
+  /* ===== HERO — warm gradient + blobs ===== */
+  #sp-{{ section.id }} .sp-hero{position:relative;padding:clamp(34px,7vw,64px) 0 clamp(30px,5vw,50px);text-align:center;overflow:hidden;background:linear-gradient(180deg,{{ s.hero_g1 | default: '#FFF3DC' }} 0%,{{ s.hero_g2 | default: '#FFD9A0' }} 100%);}
+  #sp-{{ section.id }} .sp-blob{position:absolute;border-radius:50%;opacity:.5;pointer-events:none;filter:blur(2px);}
+  #sp-{{ section.id }} .sp-blob.b1{width:26vw;height:26vw;max-width:280px;max-height:280px;background:var(--gold);top:-8%;left:-6%;}
+  #sp-{{ section.id }} .sp-blob.b2{width:20vw;height:20vw;max-width:220px;max-height:220px;background:var(--peach);bottom:-10%;right:-4%;}
+  #sp-{{ section.id }} .sp-blob.b3{width:12vw;height:12vw;max-width:130px;max-height:130px;background:var(--pink);top:18%;right:10%;opacity:.35;}
+  #sp-{{ section.id }} .sp-hero .sp-wrap{position:relative;z-index:2;}
   #sp-{{ section.id }} .sp-vipflag{display:inline-flex;align-items:center;gap:8px;background:var(--pop);color:#fff;border:var(--rule);border-radius:999px;font-family:var(--display);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;box-shadow:3px 3px 0 var(--rule-c);}
   #sp-{{ section.id }} .sp-vipflag .dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:sppulse{{ section.id }} 1.6s infinite;}
   @keyframes sppulse{{ section.id }}{0%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}70%{box-shadow:0 0 0 7px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
@@ -79,14 +89,16 @@
   #sp-{{ section.id }} .sp-logo .top{display:block;width:56%;margin:0 auto;}
   #sp-{{ section.id }} .sp-logo .main{display:block;width:100%;margin:6px auto 0;}
   #sp-{{ section.id }} .sp-logo img{width:100%;height:auto;display:block;}
-  #sp-{{ section.id }} .sp-sub{font-size:clamp(16px,4vw,20px);margin:18px auto 0;max-width:44ch;color:var(--ink);}
+  #sp-{{ section.id }} .sp-sub{font-size:clamp(16px,4vw,20px);margin:18px auto 0;max-width:44ch;color:var(--brand);}
   #sp-{{ section.id }} .sp-chips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px;}
-  #sp-{{ section.id }} .sp-chip{font-family:var(--display);font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:var(--rule);border-radius:999px;padding:7px 14px;background:var(--paper);color:var(--brand);}
-  #sp-{{ section.id }} .sp-chip.alt{background:var(--orange);color:#fff;}
+  #sp-{{ section.id }} .sp-chip{font-family:var(--display);font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:var(--rule);border-radius:999px;padding:7px 14px;background:var(--paper);color:var(--brand);box-shadow:2px 2px 0 var(--rule-c);}
+  #sp-{{ section.id }} .sp-chip.c1{background:var(--gold);}
+  #sp-{{ section.id }} .sp-chip.c2{background:var(--sky);color:#fff;}
+  #sp-{{ section.id }} .sp-chip.c3{background:var(--pink);color:#fff;}
   #sp-{{ section.id }} .sp-hero .sp-btnrow{margin-top:24px;}
 
-  /* VIP GATE */
-  #sp-{{ section.id }} .sp-gate{padding:8px 0 26px;scroll-margin-top:90px;}
+  /* ===== VIP GATE ===== */
+  #sp-{{ section.id }} .sp-gate{padding:26px 0;scroll-margin-top:90px;background:var(--bg);}
   #sp-{{ section.id }} .sp-gate-card{max-width:640px;margin:0 auto;background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 8px);box-shadow:7px 7px 0 var(--rule-c);padding:26px 22px;text-align:center;}
   #sp-{{ section.id }} .sp-gate-card .lock{width:52px;height:52px;border-radius:50%;background:var(--orange);border:var(--rule);box-shadow:3px 3px 0 var(--rule-c);display:inline-flex;align-items:center;justify-content:center;font-size:22px;margin-top:-52px;}
   #sp-{{ section.id }} .sp-gate-card h2{font-family:var(--display);font-size:clamp(19px,4.8vw,26px);text-transform:uppercase;color:var(--brand);margin:12px 0 0;line-height:1.05;}
@@ -94,23 +106,56 @@
   #sp-{{ section.id }} .sp-gate-card .sp-btnrow{margin-top:18px;}
   #sp-{{ section.id }} .sp-unlocked{max-width:640px;margin:0 auto;background:#C5E4D4;border:2px solid #2b6b53;color:#2b6b53;border-radius:16px;padding:13px 16px;text-align:center;font-family:var(--display);font-size:13px;letter-spacing:.06em;text-transform:uppercase;}
 
-  /* ABOUT ROWS */
-  #sp-{{ section.id }} .sp-about{padding:26px 0 8px;}
-  #sp-{{ section.id }} .sp-row{display:grid;grid-template-columns:1fr;gap:18px;align-items:center;margin-bottom:26px;}
-  #sp-{{ section.id }} .sp-row img{width:100%;height:auto;display:block;border:var(--rule);border-radius:calc(var(--rad) + 6px);box-shadow:6px 6px 0 var(--rule-c);}
-  #sp-{{ section.id }} .sp-row .txt h3{font-family:var(--display);font-size:clamp(20px,5vw,30px);text-transform:uppercase;color:var(--brand);margin:0;line-height:1.02;}
-  #sp-{{ section.id }} .sp-row .txt p{font-size:15.5px;opacity:.85;margin:10px 0 0;max-width:52ch;}
-  @media(min-width:820px){
-    #sp-{{ section.id }} .sp-row{grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,54px);}
-    #sp-{{ section.id }} .sp-row.flip .media{order:2;}
+  /* ===== LIVE NOW duo — orange band ===== */
+  #sp-{{ section.id }} .sp-live{background:var(--orange);padding:clamp(30px,6vw,56px) 0 clamp(38px,7vw,64px);}
+  #sp-{{ section.id }} .sp-live .sp-head{text-align:center;margin-bottom:24px;}
+  #sp-{{ section.id }} .sp-live .sp-eyebrow{background:var(--paper);}
+  #sp-{{ section.id }} .sp-live .sp-h2{color:#fff;text-shadow:2px 3px 0 rgba(60,36,21,.35);}
+  #sp-{{ section.id }} .sp-live .sp-h2 em{color:#FFE7B8;}
+  #sp-{{ section.id }} .sp-duo{display:grid;grid-template-columns:1fr;gap:18px;max-width:880px;margin:0 auto;}
+  @media(min-width:700px){#sp-{{ section.id }} .sp-duo{grid-template-columns:1fr 1fr;}}
+  #sp-{{ section.id }} .sp-feat{position:relative;display:flex;flex-direction:column;background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 8px);box-shadow:7px 7px 0 var(--rule-c);overflow:hidden;text-decoration:none;color:var(--ink);transition:transform .18s ease,box-shadow .18s ease;}
+  @media(hover:hover){#sp-{{ section.id }} a.sp-feat:hover{transform:translate(-3px,-3px);box-shadow:10px 10px 0 var(--rule-c);}}
+  #sp-{{ section.id }} .sp-feat .ph{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;border-bottom:var(--rule);padding:18px;}
+  #sp-{{ section.id }} .sp-feat:nth-child(1) .ph{background:linear-gradient(160deg,#FFF3DC,var(--gold));}
+  #sp-{{ section.id }} .sp-feat:nth-child(2) .ph{background:linear-gradient(160deg,#EAF6FF,var(--sky));}
+  #sp-{{ section.id }} .sp-feat .ph img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(5px 8px 0 rgba(60,36,21,.18));}
+  #sp-{{ section.id }} .sp-feat .b{padding:18px 16px 20px;text-align:center;display:flex;flex-direction:column;gap:8px;flex:1;}
+  #sp-{{ section.id }} .sp-feat .t{font-family:var(--display);font-size:17px;line-height:1.12;text-transform:uppercase;color:var(--brand);}
+  #sp-{{ section.id }} .sp-feat .p{font-family:var(--display);font-size:19px;color:var(--brand);}
+  #sp-{{ section.id }} .sp-feat .cta{margin-top:auto;font-family:var(--display);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--brand);color:#fff;border:var(--rule);border-radius:999px;padding:13px 18px;box-shadow:3px 3px 0 rgba(0,0,0,.25);}
+  #sp-{{ section.id }} .sp-livebadge{position:absolute;top:11px;left:11px;z-index:2;display:inline-flex;align-items:center;gap:6px;background:var(--pop);color:#fff;border:var(--rule);border-radius:999px;font-family:var(--display);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 11px;}
+  #sp-{{ section.id }} .sp-livebadge .d{width:7px;height:7px;border-radius:50%;background:#fff;animation:sppulse{{ section.id }} 1.6s infinite;}
+  #sp-{{ section.id }} .sp-sfbadge{position:absolute;top:11px;right:11px;z-index:2;background:var(--sky);color:#fff;border:var(--rule);border-radius:999px;font-family:var(--display);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;}
+
+  /* ===== FULL-BLEED PICTURE BANDS ===== */
+  #sp-{{ section.id }} .sp-band{position:relative;}
+  #sp-{{ section.id }} .sp-band img{display:block;width:100%;height:auto;}
+  #sp-{{ section.id }} .sp-band .m{display:none;}
+  @media(max-width:760px){
+    #sp-{{ section.id }} .sp-band .has-m.d{display:none;}
+    #sp-{{ section.id }} .sp-band .m{display:block;}
   }
 
-  /* GRID */
-  #sp-{{ section.id }} .sp-shop{padding:34px 0 60px;scroll-margin-top:80px;}
+  /* ===== ABOUT — espresso band ===== */
+  #sp-{{ section.id }} .sp-about{background:var(--brand);color:var(--bg);padding:clamp(34px,6vw,60px) 0 clamp(26px,5vw,44px);}
+  #sp-{{ section.id }} .sp-about .sp-row{display:grid;grid-template-columns:1fr;gap:18px;align-items:center;margin-bottom:30px;}
+  #sp-{{ section.id }} .sp-about .sp-row:last-child{margin-bottom:0;}
+  #sp-{{ section.id }} .sp-about img{width:100%;height:auto;display:block;border:2px solid var(--bg);border-radius:calc(var(--rad) + 6px);box-shadow:6px 6px 0 var(--orange);}
+  #sp-{{ section.id }} .sp-about .txt h3{font-family:var(--display);font-size:clamp(20px,5vw,30px);text-transform:uppercase;color:#fff;margin:0;line-height:1.02;}
+  #sp-{{ section.id }} .sp-about .txt h3 em{font-family:var(--serif);font-weight:300;font-style:italic;text-transform:none;color:var(--gold);}
+  #sp-{{ section.id }} .sp-about .txt p{font-size:15.5px;opacity:.88;margin:10px 0 0;max-width:52ch;}
+  @media(min-width:820px){
+    #sp-{{ section.id }} .sp-about .sp-row{grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,54px);}
+    #sp-{{ section.id }} .sp-about .sp-row.flip .media{order:2;}
+  }
+
+  /* ===== GRID ===== */
+  #sp-{{ section.id }} .sp-shop{padding:34px 0 60px;scroll-margin-top:80px;background:var(--bg);}
   #sp-{{ section.id }} .sp-head{text-align:center;margin-bottom:18px;}
   #sp-{{ section.id }} .sp-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:18px 0 22px;}
-  #sp-{{ section.id }} .sp-tab{font-family:var(--display);font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:var(--rule);border-radius:999px;padding:10px 18px;background:var(--paper);color:var(--brand);cursor:pointer;transition:transform .12s ease;}
-  #sp-{{ section.id }} .sp-tab.on{background:var(--brand);color:var(--bg);}
+  #sp-{{ section.id }} .sp-tab{font-family:var(--display);font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:var(--rule);border-radius:999px;padding:10px 18px;background:var(--paper);color:var(--brand);cursor:pointer;transition:transform .12s ease;box-shadow:2px 2px 0 var(--rule-c);}
+  #sp-{{ section.id }} .sp-tab.on{background:var(--orange);color:#fff;}
   #sp-{{ section.id }} .sp-tab:active{transform:scale(.96);}
   #sp-{{ section.id }} .sp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
   @media(min-width:640px){#sp-{{ section.id }} .sp-grid{grid-template-columns:repeat(3,1fr);}}
@@ -119,20 +164,31 @@
   @media(hover:hover){#sp-{{ section.id }} a.sp-tile:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--rule-c);}}
   #sp-{{ section.id }} .sp-tile .ph{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;border-bottom:var(--rule);background:var(--bg);padding:12px;}
   #sp-{{ section.id }} .sp-tile .ph img{max-width:100%;max-height:100%;object-fit:contain;}
+  /* rainbow tile backgrounds */
+  #sp-{{ section.id }} .sp-grid .sp-tile:nth-child(6n+1) .ph{background:#FFF3DC;}
+  #sp-{{ section.id }} .sp-grid .sp-tile:nth-child(6n+2) .ph{background:#FFE9DB;}
+  #sp-{{ section.id }} .sp-grid .sp-tile:nth-child(6n+3) .ph{background:#EAF6FF;}
+  #sp-{{ section.id }} .sp-grid .sp-tile:nth-child(6n+4) .ph{background:#FDE7EE;}
+  #sp-{{ section.id }} .sp-grid .sp-tile:nth-child(6n+5) .ph{background:#E9F7EF;}
+  #sp-{{ section.id }} .sp-grid .sp-tile:nth-child(6n+6) .ph{background:#F1EBFB;}
   #sp-{{ section.id }} .sp-tile .b{padding:13px 12px 15px;text-align:center;display:flex;flex-direction:column;gap:6px;flex:1;}
   #sp-{{ section.id }} .sp-tile .t{font-family:var(--display);font-size:13px;line-height:1.15;text-transform:uppercase;letter-spacing:.02em;color:var(--brand);}
   #sp-{{ section.id }} .sp-tile .p{margin-top:auto;font-family:var(--display);font-size:15px;color:var(--brand);}
   #sp-{{ section.id }} .sp-badge{position:absolute;top:9px;left:9px;z-index:2;background:var(--pop);color:#fff;border:var(--rule);border-radius:999px;font-family:var(--display);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px;}
-  #sp-{{ section.id }} .sp-badge.sf{background:#2F7DC4;left:auto;right:9px;}
-  /* locked (not allowed) */
+  #sp-{{ section.id }} .sp-badge.sf{background:var(--sky);left:auto;right:9px;}
   #sp-{{ section.id }} .sp-tile.locked .ph,#sp-{{ section.id }} .sp-tile.locked .b{filter:grayscale(.25);}
   #sp-{{ section.id }} .sp-lockov{position:absolute;inset:0;z-index:3;background:rgba(60,36,21,.45);display:flex;align-items:center;justify-content:center;}
   #sp-{{ section.id }} .sp-lockov span{font-family:var(--display);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--brand);border:2px solid #fff;border-radius:999px;padding:8px 14px;}
-  /* coming soon */
-  #sp-{{ section.id }} .sp-tile.soon .ph{background:var(--orange);}
-  #sp-{{ section.id }} .sp-tile.soon .ph .fl{font-family:var(--display);font-size:clamp(15px,3.4vw,19px);line-height:1.1;text-transform:uppercase;color:#fff;text-align:center;padding:0 10px;text-shadow:1px 2px 0 rgba(60,36,21,.4);}
-  #sp-{{ section.id }} .sp-soonov{position:absolute;inset:0;z-index:3;background:color-mix(in srgb, var(--soon) 55%, transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;}
-  @supports not (background: color-mix(in srgb, red 50%, transparent)){#sp-{{ section.id }} .sp-soonov{background:rgba(60,36,21,.55);}}
+  /* coming soon — colorful name tiles */
+  #sp-{{ section.id }} .sp-tile.soon .ph .fl{font-family:var(--display);font-size:clamp(15px,3.4vw,19px);line-height:1.1;text-transform:uppercase;color:var(--brand);text-align:center;padding:0 10px;}
+  #sp-{{ section.id }} .sp-grid .sp-tile.soon:nth-child(6n+1) .ph{background:var(--gold);}
+  #sp-{{ section.id }} .sp-grid .sp-tile.soon:nth-child(6n+2) .ph{background:var(--peach);}
+  #sp-{{ section.id }} .sp-grid .sp-tile.soon:nth-child(6n+3) .ph{background:var(--sky);}
+  #sp-{{ section.id }} .sp-grid .sp-tile.soon:nth-child(6n+4) .ph{background:var(--pink);}
+  #sp-{{ section.id }} .sp-grid .sp-tile.soon:nth-child(6n+5) .ph{background:var(--mint);}
+  #sp-{{ section.id }} .sp-grid .sp-tile.soon:nth-child(6n+6) .ph{background:var(--lav);}
+  #sp-{{ section.id }} .sp-soonov{position:absolute;inset:0;z-index:3;background:color-mix(in srgb, var(--soon) 45%, transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;}
+  @supports not (background: color-mix(in srgb, red 50%, transparent)){#sp-{{ section.id }} .sp-soonov{background:rgba(60,36,21,.5);}}
   #sp-{{ section.id }} .sp-soonov .cs{font-family:var(--display);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);background:#fff;border:var(--rule);border-radius:999px;padding:8px 14px;}
   #sp-{{ section.id }} .sp-soonov .dt{font-family:var(--display);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#fff;}
   #sp-{{ section.id }} .sp-empty{text-align:center;border:2px dashed var(--rule-c);border-radius:var(--rad);padding:30px 18px;background:var(--paper);opacity:.85;}
@@ -140,7 +196,7 @@
 
   @media (prefers-reduced-motion: reduce){
     #sp-{{ section.id }} .sp-rev{opacity:1;transform:none;}
-    #sp-{{ section.id }} .sp-vipflag .dot{animation:none;}
+    #sp-{{ section.id }} .sp-vipflag .dot,#sp-{{ section.id }} .sp-livebadge .d{animation:none;}
   }
 </style>
 
@@ -148,6 +204,7 @@
 
   {%- comment -%} ===== HERO ===== {%- endcomment -%}
   <div class="sp-hero">
+    <span class="sp-blob b1" aria-hidden="true"></span><span class="sp-blob b2" aria-hidden="true"></span><span class="sp-blob b3" aria-hidden="true"></span>
     <div class="sp-wrap">
       {%- if s.vip_badge != blank -%}<span class="sp-vipflag sp-rev"><span class="dot"></span>{{ s.vip_badge }}</span>{%- endif -%}
       <div class="sp-logo sp-rev">
@@ -156,16 +213,17 @@
       </div>
       {%- if s.hero_sub != blank -%}<p class="sp-sub sp-rev">{{ s.hero_sub }}</p>{%- endif -%}
       <div class="sp-chips sp-rev">
-        {%- if s.chip1 != blank -%}<span class="sp-chip">{{ s.chip1 }}</span>{%- endif -%}
-        {%- if s.chip2 != blank -%}<span class="sp-chip alt">{{ s.chip2 }}</span>{%- endif -%}
-        {%- if s.chip3 != blank -%}<span class="sp-chip">{{ s.chip3 }}</span>{%- endif -%}
+        {%- if s.chip1 != blank -%}<span class="sp-chip c1">{{ s.chip1 }}</span>{%- endif -%}
+        {%- if s.chip2 != blank -%}<span class="sp-chip c2">{{ s.chip2 }}</span>{%- endif -%}
+        {%- if s.chip3 != blank -%}<span class="sp-chip c3">{{ s.chip3 }}</span>{%- endif -%}
       </div>
       <div class="sp-btnrow sp-rev">
-        <a class="sp-btn" href="#sp-shop-{{ section.id }}">{{ s.shop_btn | default: 'Shop now' }}</a>
+        <a class="sp-btn sp-btn--pop" href="#sp-shop-{{ section.id }}">{{ s.shop_btn | default: 'Shop now' }}</a>
         {%- if s.collection_btn_url != blank -%}<a class="sp-btn sp-btn--ghost" href="{{ s.collection_btn_url }}">{{ s.collection_btn_text | default: 'View the collection' }}</a>{%- endif -%}
       </div>
     </div>
   </div>
+  <svg class="sp-wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true" style="background:{{ s.hero_g2 | default: '#FFD9A0' }};"><path d="M0,32 C240,64 480,0 720,30 C960,60 1200,4 1440,32 L1440,60 L0,60 Z" fill="{{ s.color_bg | default: '#FFFBF4' }}"/></svg>
 
   {%- comment -%} ===== VIP GATE / UNLOCKED ===== {%- endcomment -%}
   <div class="sp-gate" id="sp-gate-{{ section.id }}">
@@ -188,7 +246,47 @@
     </div>
   </div>
 
-  {%- comment -%} ===== ABOUT ROWS ===== {%- endcomment -%}
+  {%- comment -%} ===== LIVE NOW — the two live listings ===== {%- endcomment -%}
+  {%- if s.show_featured and f1 != blank or s.show_featured and f2 != blank -%}
+  <svg class="sp-wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true" style="background:{{ s.color_bg | default: '#FFFBF4' }};transform:scaleY(-1);"><path d="M0,32 C240,64 480,0 720,30 C960,60 1200,4 1440,32 L1440,60 L0,60 Z" fill="{{ s.color_orange | default: '#e28f26' }}"/></svg>
+  <div class="sp-live">
+    <div class="sp-wrap">
+      <div class="sp-head sp-rev">
+        {%- if s.feat_eyebrow != blank -%}<span class="sp-eyebrow">{{ s.feat_eyebrow }}</span>{%- endif -%}
+        <h2 class="sp-h2">{{ s.feat_title | default: 'Live now — <em>pre-order today</em>' }}</h2>
+      </div>
+      <div class="sp-duo">
+        {%- for fi in (1..2) -%}
+          {%- if fi == 1 -%}{%- assign fp = f1 -%}{%- else -%}{%- assign fp = f2 -%}{%- endif -%}
+          {%- if fp == blank -%}{%- continue -%}{%- endif -%}
+          {%- assign tdl = fp.title | downcase -%}
+          {%- assign issf = false -%}{%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign issf = true -%}{%- endif -%}
+          {%- if allowed -%}<a class="sp-feat sp-rev" href="{{ fp.url }}">{%- else -%}<a class="sp-feat sp-rev" href="#sp-gate-{{ section.id }}">{%- endif -%}
+            <span class="sp-livebadge"><span class="d"></span>{{ s.live_badge | default: 'Live now' }}</span>
+            {%- if issf -%}<span class="sp-sfbadge">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
+            <span class="ph">{%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 720 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}</span>
+            <span class="b">
+              <span class="t">{{ fp.title | replace: '(USA)', '' | strip }}</span>
+              <span class="p">{{ fp.price | money }}</span>
+              <span class="cta">{% if allowed %}{{ s.preorder_badge | default: 'Pre-order' }} →{% else %}🔒 {{ s.locked_label | default: 'VIP only' }}{% endif %}</span>
+            </span>
+          </a>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  <svg class="sp-wave" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true" style="background:{{ s.color_orange | default: '#e28f26' }};"><path d="M0,32 C240,64 480,0 720,30 C960,60 1200,4 1440,32 L1440,60 L0,60 Z" fill="{{ s.color_bg | default: '#FFFBF4' }}"/></svg>
+  {%- endif -%}
+
+  {%- comment -%} ===== FULL-BLEED PICTURE 1 ===== {%- endcomment -%}
+  {%- if s.band1_img != blank -%}
+  <div class="sp-band">
+    <img class="d {% if s.band1_img_m != blank %}has-m{% endif %}" src="{{ s.band1_img | image_url: width: 2400 }}" alt="{{ s.band1_alt | default: 'Syrup Pouches' | escape }}" loading="lazy">
+    {%- if s.band1_img_m != blank -%}<img class="m" src="{{ s.band1_img_m | image_url: width: 1200 }}" alt="{{ s.band1_alt | default: 'Syrup Pouches' | escape }}" loading="lazy">{%- endif -%}
+  </div>
+  {%- endif -%}
+
+  {%- comment -%} ===== ABOUT — espresso band ===== {%- endcomment -%}
   {%- if s.show_about -%}
   <div class="sp-about">
     <div class="sp-wrap">
@@ -208,6 +306,11 @@
   </div>
   {%- endif -%}
 
+  {%- comment -%} ===== FULL-BLEED PICTURE 2 ===== {%- endcomment -%}
+  {%- if s.band2_img != blank -%}
+  <div class="sp-band"><img src="{{ s.band2_img | image_url: width: 2400 }}" alt="{{ s.band2_alt | default: 'Syrup Pouches' | escape }}" loading="lazy"></div>
+  {%- endif -%}
+
   {%- comment -%} ===== FLAVOR GRID ===== {%- endcomment -%}
   <div class="sp-shop" id="sp-shop-{{ section.id }}">
     <div class="sp-wrap">
@@ -223,10 +326,8 @@
       </div>
       {%- endif -%}
       <div class="sp-grid" data-grid>
-        {%- assign live_count = 0 -%}
         {%- if cl != blank and cl.products.size > 0 -%}
           {%- for pr in cl.products limit: 50 -%}
-            {%- assign live_count = live_count | plus: 1 -%}
             {%- assign tdl = pr.title | downcase -%}
             {%- assign kind = 'reg' -%}
             {%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign kind = 'sf' -%}{%- endif -%}
@@ -243,7 +344,6 @@
             </a>
           {%- endfor -%}
         {%- endif -%}
-        {%- comment -%} coming-soon tiles: "Name | optional date" per line {%- endcomment -%}
         {%- assign lists = 'reg,sf' | split: ',' -%}
         {%- for kindv in lists -%}
           {%- if kindv == 'reg' -%}{%- assign raw = s.upcoming_regular -%}{%- else -%}{%- assign raw = s.upcoming_sf -%}{%- endif -%}
@@ -274,6 +374,11 @@
     </div>
   </div>
 
+  {%- comment -%} ===== FULL-BLEED PICTURE 3 ===== {%- endcomment -%}
+  {%- if s.band3_img != blank -%}
+  <div class="sp-band"><img src="{{ s.band3_img | image_url: width: 2400 }}" alt="{{ s.band3_alt | default: 'Syrup Pouches' | escape }}" loading="lazy"></div>
+  {%- endif -%}
+
 </section>
 
 <script>
@@ -285,17 +390,13 @@
     var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });},{threshold:.1});
     root.querySelectorAll('.sp-rev').forEach(function(el){io.observe(el);});
   } else { root.querySelectorAll('.sp-rev').forEach(function(el){el.classList.add('in');}); }
-
-  // tabs filter
   var tabs=[].slice.call(root.querySelectorAll('.sp-tab'));
   var tiles=[].slice.call(root.querySelectorAll('[data-grid] .sp-tile'));
   tabs.forEach(function(tb){
     tb.addEventListener('click',function(){
       tabs.forEach(function(t){t.classList.toggle('on',t===tb);});
       var f=tb.getAttribute('data-filter');
-      tiles.forEach(function(el){
-        el.style.display=(f==='all'||el.getAttribute('data-kind')===f)?'':'none';
-      });
+      tiles.forEach(function(el){ el.style.display=(f==='all'||el.getAttribute('data-kind')===f)?'':'none'; });
     });
   });
 })();
@@ -323,6 +424,8 @@
     { "type": "header", "content": "Hero" },
     { "type": "image_picker", "id": "logo_top", "label": "Logo — 'Syrup' (defaults to built-in SVG)" },
     { "type": "image_picker", "id": "logo_main", "label": "Logo — 'Pouches' (defaults to built-in SVG)" },
+    { "type": "color", "id": "hero_g1", "label": "Hero gradient top", "default": "#FFF3DC" },
+    { "type": "color", "id": "hero_g2", "label": "Hero gradient bottom", "default": "#FFD9A0" },
     { "type": "textarea", "id": "hero_sub", "label": "Subtitle", "default": "Your favorite Syruvia flavors — now in perfectly portioned, take-anywhere pouches." },
     { "type": "text", "id": "chip1", "label": "Chip 1", "default": "Regular" },
     { "type": "text", "id": "chip2", "label": "Chip 2", "default": "Sugar-Free" },
@@ -330,13 +433,29 @@
     { "type": "text", "id": "shop_btn", "label": "Shop button text", "default": "Shop now" },
     { "type": "url", "id": "collection_btn_url", "label": "Optional: collection button link" },
     { "type": "text", "id": "collection_btn_text", "label": "Collection button text", "default": "View the collection" },
-    { "type": "header", "content": "About rows" },
+    { "type": "header", "content": "Live now — featured duo" },
+    { "type": "checkbox", "id": "show_featured", "label": "Show 'Live now' duo", "default": true },
+    { "type": "product", "id": "feat_prod_1", "label": "Featured product 1 (pick Vanilla)" },
+    { "type": "product", "id": "feat_prod_2", "label": "Featured product 2 (pick Sugar-Free Vanilla)" },
+    { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "First drop" },
+    { "type": "text", "id": "feat_title", "label": "Heading", "default": "Live now — <em>pre-order today</em>" },
+    { "type": "text", "id": "live_badge", "label": "Live badge", "default": "Live now" },
+    { "type": "header", "content": "Full-page pictures" },
+    { "type": "paragraph", "content": "Each band is a full-width picture. Leave empty to hide. Band 1 also takes an optional mobile version." },
+    { "type": "image_picker", "id": "band1_img", "label": "Picture band 1 (after Live now)" },
+    { "type": "image_picker", "id": "band1_img_m", "label": "Picture band 1 — mobile (optional)" },
+    { "type": "text", "id": "band1_alt", "label": "Band 1 alt text", "default": "Syrup Pouches" },
+    { "type": "image_picker", "id": "band2_img", "label": "Picture band 2 (before the grid)" },
+    { "type": "text", "id": "band2_alt", "label": "Band 2 alt text", "default": "Syrup Pouches" },
+    { "type": "image_picker", "id": "band3_img", "label": "Picture band 3 (bottom of page)" },
+    { "type": "text", "id": "band3_alt", "label": "Band 3 alt text", "default": "Syrup Pouches" },
+    { "type": "header", "content": "About rows (espresso band)" },
     { "type": "checkbox", "id": "show_about", "label": "Show about rows", "default": true },
     { "type": "image_picker", "id": "row1_img", "label": "Row 1 image" },
-    { "type": "text", "id": "row1_title", "label": "Row 1 title", "default": "Tear. Pour. Enjoy." },
+    { "type": "text", "id": "row1_title", "label": "Row 1 title", "default": "Tear. Pour. <em>Enjoy.</em>" },
     { "type": "textarea", "id": "row1_text", "label": "Row 1 text", "default": "Every pouch is one perfect serving of café-quality syrup — no bottle, no measuring, no mess. Toss a few in your bag and flavor anything, anywhere." },
     { "type": "image_picker", "id": "row2_img", "label": "Row 2 image" },
-    { "type": "text", "id": "row2_title", "label": "Row 2 title", "default": "Regular & Sugar-Free" },
+    { "type": "text", "id": "row2_title", "label": "Row 2 title", "default": "Regular & <em>Sugar-Free</em>" },
     { "type": "textarea", "id": "row2_text", "label": "Row 2 text", "default": "The full pouch lineup comes in classic and zero-sugar, zero-calorie versions — 50 flavors in total, rolling out now." },
     { "type": "header", "content": "Flavor grid" },
     { "type": "text", "id": "collection_handle", "label": "Live pouches collection handle", "default": "syrup-pouches", "info": "Products in this collection show as live, pre-orderable tiles." },
@@ -351,16 +470,16 @@
     { "type": "header", "content": "Coming-soon flavors" },
     { "type": "paragraph", "content": "One flavor per line. Optional date after a pipe, e.g. “Caramel | August”. A name matching a live product is skipped automatically." },
     { "type": "textarea", "id": "upcoming_regular", "label": "Regular — coming soon", "default": "Caramel\nHazelnut\nFrench Vanilla\nSalted Caramel\nBrown Sugar Cinnamon\nStrawberry\nPeach\nMango\nCoconut\nPineapple\nWatermelon\nBlue Raspberry\nPumpkin Spice\nIrish Cream\nEnglish Toffee\nCookie Butter\nLavender\nCaramel Pecan\nPeppermint\nChocolate\nBanana\nCherry\nRaspberry\nButterscotch" },
-    { "type": "textarea", "id": "upcoming_sf", "label": "Sugar-Free — coming soon", "default": "Vanilla\nCaramel\nHazelnut\nFrench Vanilla\nSalted Caramel\nBrown Sugar Cinnamon\nStrawberry\nPeach\nMango\nCoconut\nPineapple\nWatermelon\nBlue Raspberry\nCookie Butter\nLavender\nChocolate\nPeppermint\nCherry\nRaspberry\nButterscotch\nCaramel Pecan\nEnglish Toffee\nIrish Cream\nPumpkin Spice\nBanana" },
+    { "type": "textarea", "id": "upcoming_sf", "label": "Sugar-Free — coming soon", "default": "Caramel\nHazelnut\nFrench Vanilla\nSalted Caramel\nBrown Sugar Cinnamon\nStrawberry\nPeach\nMango\nCoconut\nPineapple\nWatermelon\nBlue Raspberry\nCookie Butter\nLavender\nChocolate\nPeppermint\nCherry\nRaspberry\nButterscotch\nCaramel Pecan\nEnglish Toffee\nIrish Cream\nPumpkin Spice\nBanana" },
     { "type": "text", "id": "coming_label", "label": "Overlay label", "default": "Coming soon" },
     { "type": "color", "id": "coming_overlay", "label": "Overlay color", "default": "#3c2415" },
     { "type": "text", "id": "grid_note", "label": "Note under grid", "default": "More flavors go live every week — check back soon." },
     { "type": "header", "content": "Brand colors & layout" },
     { "type": "color", "id": "color_ink", "label": "Body text", "default": "#1a1a1a" },
-    { "type": "color", "id": "color_brand", "label": "Headings", "default": "#3c2415" },
+    { "type": "color", "id": "color_brand", "label": "Headings / espresso band", "default": "#3c2415" },
     { "type": "color", "id": "color_bg", "label": "Page background", "default": "#FFFBF4" },
     { "type": "color", "id": "color_paper", "label": "Card background", "default": "#ffffff" },
-    { "type": "color", "id": "color_orange", "label": "Accent (logo orange)", "default": "#e28f26" },
+    { "type": "color", "id": "color_orange", "label": "Accent / Live-now band", "default": "#e28f26" },
     { "type": "color", "id": "color_pop", "label": "Badges / flash", "default": "#C8252B" },
     { "type": "color", "id": "color_rule", "label": "Borders & shadows", "default": "#3c2415" },
     { "type": "range", "id": "wrap_max", "label": "Content width", "min": 900, "max": 1320, "step": 20, "unit": "px", "default": 1120 },
