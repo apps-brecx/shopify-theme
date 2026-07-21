@@ -24,6 +24,7 @@
   data-error-text="{{ section.settings.error_text | escape }}"
   data-default-tab="{{ section.settings.default_tab | default: 'chat' }}"
   data-chat-endpoint="{{ section.settings.chat_endpoint | escape }}"
+  data-customer-email="{% if customer %}{{ customer.email | escape }}{% endif %}"
   data-chat-greeting="{{ section.settings.chat_greeting | escape }}"
   data-chat-fallback="{{ section.settings.chat_fallback | escape }}"
 >
@@ -649,7 +650,9 @@
         });
       }
       async function askLlm(q, history){
-        const data = await fetchJson(llmUrl, { message: q, history: history || [], page: location.href }, 25000);
+        const payload = { message: q, history: history || [], page: location.href };
+        if (root.dataset.customerEmail) payload.customer_email = root.dataset.customerEmail;
+        const data = await fetchJson(llmUrl, payload, 25000);
         if (data && typeof data.reply === 'string' && data.reply) addMsg('bot', data.reply);
         else throw new Error('bad reply');
       }
