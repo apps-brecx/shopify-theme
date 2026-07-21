@@ -146,8 +146,11 @@ body .pd .pd-ing-toggle{display:none!important}
   html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-ing-card > .pd-desc-section{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important}
   html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-ing-card.is-open > .pd-desc-section{overflow:visible!important}
   html body .pd section.pd-description .pd-desc-content .pd-desc-card:not(.pd-ing-card):not(.pd-nf-card) > *:not(.pd-desc-scrollwrap){flex:0 0 auto!important}
-  /* the round expand arrow */
-  html body .pd section.pd-description .pd-desc-content .pd-ing-card .pd-ing-toggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:36px!important;height:36px!important;margin:10px auto 2px!important;flex:0 0 auto!important;border:2px solid #39220f!important;border-radius:50%!important;background:#FFFBF4!important;color:#39220f!important;box-shadow:2px 2px 0 #39220f!important;cursor:pointer!important;padding:0!important}
+  /* the round expand arrow — absolutely positioned at the card's bottom so it
+     can never be clipped away by the 200px preview; the card's extra bottom
+     padding reserves its space in both states */
+  html body .pd section.pd-description .pd-desc-content .pd-desc-card.pd-ing-card{padding-bottom:56px!important}
+  html body .pd section.pd-description .pd-desc-content .pd-ing-card .pd-ing-toggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;position:absolute!important;bottom:10px!important;left:50%!important;transform:translateX(-50%)!important;z-index:3!important;width:36px!important;height:36px!important;margin:0!important;border:2px solid #39220f!important;border-radius:50%!important;background:#FFFBF4!important;color:#39220f!important;box-shadow:2px 2px 0 #39220f!important;cursor:pointer!important;padding:0!important}
   html body .pd .pd-ing-toggle svg{transition:transform .2s ease}
   html body .pd .pd-ing-card.is-open .pd-ing-toggle svg{transform:rotate(180deg)}
 }
@@ -426,6 +429,10 @@ body .pd .pd-ing-toggle{display:none!important}
   } else {
     runAll();
   }
+  /* the ingredients card can be built late on some templates — retry the
+     arrow injection (idempotent) */
+  setTimeout(ensureIngToggle, 400);
+  setTimeout(ensureIngToggle, 1200);
   /* fonts and images can change the nutrition card's natural height after DCL */
   window.addEventListener('load', syncHeights);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ syncHeights(); });
