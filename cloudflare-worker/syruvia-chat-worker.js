@@ -457,6 +457,34 @@ export default {
           } catch (e) {
             orderQuery = { hint: String((e && e.message) || e).slice(0, 120) };
           }
+          /* PII probe: renders the email field on ONE real order. Field-level
+             ACCESS_DENIED (missing "Email" approval under Protected customer
+             data) only appears when a real row renders — the name:#0 probe
+             above can't detect it. Reports success/error codes ONLY, never
+             the email value. */
+          let emailProbe = {};
+          try {
+            const res3 = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN },
+              body: JSON.stringify({ query: '{ orders(first: 1) { nodes { email } } }' }),
+            }, 8000);
+            let d3 = {};
+            try { d3 = await res3.json(); } catch (e) {}
+            const node = d3.data && d3.data.orders && d3.data.orders.nodes && d3.data.orders.nodes[0];
+            emailProbe = {
+              http: res3.status,
+              email_readable: !!(node && node.email) && !d3.errors,
+              error_codes: (d3.errors || []).map(function (er) {
+                return (er.extensions && er.extensions.code) || '';
+              }).slice(0, 3),
+              error_messages: (d3.errors || []).map(function (er) {
+                return String(er.message || '').slice(0, 160);
+              }).slice(0, 3),
+            };
+          } catch (e) {
+            emailProbe = { hint: String((e && e.message) || e).slice(0, 120) };
+          }
           return json({
             token_set: true,
             http: res.status,
@@ -467,6 +495,7 @@ export default {
               return (er.extensions && er.extensions.code) || String(er.message || '').slice(0, 80);
             }).slice(0, 3),
             production_order_query: orderQuery,
+            email_field_probe: emailProbe,
           }, 200, headers);
         } catch (e) {
           return json({ token_set: true, reachable: false, hint: String((e && e.message) || e).slice(0, 120) }, 200, headers);
