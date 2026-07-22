@@ -200,7 +200,7 @@ html body .pd .pd-recs-price{display:flex!important;flex-wrap:wrap!important;ali
       if(c.getAttribute('data-sf')==='1'){
         var reg2=parseInt(c.getAttribute('data-price'),10);
         if(!reg2) continue;
-        var vip=Math.min(699,reg2); /* sugar-free VIP is $6.99 (matches Liquid + modal) */
+        var vip=Math.min(799,reg2); /* flat $7.99 VIP for all syrups, incl. sugar-free (matches Liquid + modal) */
         var pe2=c.querySelector('.pcard-price');
         if(!pe2) continue;
         if(pe2.getAttribute('data-vipfix')===String(vip)) continue;
@@ -221,8 +221,7 @@ html body .pd .pd-recs-price{display:flex!important;flex-wrap:wrap!important;ali
       pill.setAttribute('data-v799','1');
       var kids=Array.prototype.slice.call(pill.childNodes);
       for(var k=0;k<kids.length;k++){ if(kids[k].nodeType===3) pill.removeChild(kids[k]); }
-      var lbl=(card && card.getAttribute('data-sf')==='1') ? ' Unlock VIP $6.99' : ' Unlock VIP $7.99';
-      pill.appendChild(document.createTextNode(lbl));
+      pill.appendChild(document.createTextNode(' Unlock VIP $7.99'));
     }
     /* the modal lede is server-rendered with both prices — no JS rewrite needed */
   }
