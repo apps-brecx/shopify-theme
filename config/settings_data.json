@@ -249,7 +249,6 @@
         "settings": {
           "send_mode": "shopify",
           "webhook_url": "",
-          "chat_endpoint": "https://gentle-shadow-e778.ti-243.workers.dev",
           "button_label": "Contact us",
           "modal_title": "Send us a message",
           "modal_subtext": "We typically reply within a business day.",
@@ -262,14 +261,19 @@
           "submit_label": "Send Message",
           "success_text": "Thanks! We received your message.",
           "error_text": "Something went wrong. Please try again.",
-          "enable_chat": false,
+          "enable_chat": true,
           "default_tab": "chat",
           "chat_tab_label": "Quick help",
           "form_tab_label": "Send message",
           "chat_greeting": "Hi! Pick a question below, or type your own — I’ll answer instantly.",
           "chat_placeholder": "Type a question…",
           "chat_fallback": "I couldn’t find an instant answer for that.",
-          "chat_endpoint": "https://gentle-shadow-e778.ti-243.workers.dev/"
+          "track_label": "Track your package",
+          "chat_endpoint": "https://gentle-shadow-e778.ti-243.workers.dev/",
+          "enable_claim": true,
+          "claim_tab_label": "Claim",
+          "claim_intro": "Something wrong with your order? Tell us and we’ll make it right.",
+          "claim_submit_label": "Submit claim"
         }
       }
     },
