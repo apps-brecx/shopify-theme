@@ -383,7 +383,9 @@
         {%- if section.settings.tagline != blank -%}
           <p class="hero-tag">{{ section.settings.tagline }}</p>
         {%- endif -%}
-        {%- if blurbtext != blank -%}
+        {%- if collection.handle == 'summer-restock-flavors' -%}
+          <p class="hero-blurb">USE CODE: RESTOCK50</p>
+        {%- elsif blurbtext != blank -%}
           <p class="hero-blurb">{{ blurbtext | truncate: 600 }}</p>
         {%- endif -%}
         <div class="hero-meta">
