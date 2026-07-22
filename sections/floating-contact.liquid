@@ -709,12 +709,21 @@
           return { role: m.classList.contains('bb-msg--user') ? 'user' : 'assistant', text: (c.textContent || '').trim() };
         });
       }
+      /* When the AI deflects to human support it flags the reply (show_contact,
+         or a [[CONTACT]] marker in the text) — render the "Send us a message"
+         button under it. The phrase regex is a backstop for older Worker builds
+         that don't send the flag yet. */
+      const NEEDS_HUMAN_RE = /send message|send us a message|contact (us|the team)|reach (out|us|the team)|get in touch|email (us|the team)|support team|customer (service|support)/i;
       async function askLlm(q, history){
         const payload = { message: q, history: history || [], page: location.href };
         if (root.dataset.customerEmail) payload.customer_email = root.dataset.customerEmail;
         const data = await fetchJson(llmUrl, payload, 25000);
-        if (data && typeof data.reply === 'string' && data.reply) addMsg('bot', data.reply);
-        else throw new Error('bad reply');
+        if (!data || typeof data.reply !== 'string' || !data.reply) throw new Error('bad reply');
+        let text = data.reply;
+        const marked = text.indexOf('[[CONTACT]]') !== -1;
+        if (marked) text = text.split('[[CONTACT]]').join(' ').replace(/\s+/g, ' ').trim();
+        const el = addMsg('bot', text || fallbackText);
+        if (data.show_contact || marked || NEEDS_HUMAN_RE.test(text)) addFormLink(el);
       }
 
       if (pills) pills.addEventListener('click', function(e){
