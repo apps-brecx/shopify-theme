@@ -225,6 +225,7 @@
         "settings": {
           "send_mode": "shopify",
           "webhook_url": "",
+          "chat_endpoint": "https://gentle-shadow-e778.ti-243.workers.dev",
           "button_label": "Contact us",
           "modal_title": "Send us a message",
           "modal_subtext": "We typically reply within a business day.",
