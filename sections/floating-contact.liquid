@@ -546,6 +546,9 @@
       ].filter(function(t){ return t.tab && t.panel; });
       if (!tabs.length) return;
       window.bbShowTab = function(name){
+        /* Unknown name (e.g. a sessionStorage-restored "Open a claim" button
+           after the claim tab was disabled) must never hide every panel. */
+        if (!tabs.some(function(t){ return t.name === name; })) name = 'form';
         tabs.forEach(function(t){
           const on = t.name === name;
           t.panel.hidden = !on;
@@ -820,8 +823,10 @@
         const claimMark   = text.indexOf('[[CLAIM]]') !== -1;
         if (contactMark || claimMark) text = text.split('[[CONTACT]]').join(' ').split('[[CLAIM]]').join(' ').replace(/\s+/g, ' ').trim();
         const el = addMsg('bot', text || fallbackText);
+        /* A claim-flagged reply must never dead-end: if the claim tab is
+           disabled, degrade to the message-form button. */
         if ((data.show_claim || claimMark) && document.getElementById('bb-tab-claim')) addClaimLink(el);
-        else if (data.show_contact || contactMark || NEEDS_HUMAN_RE.test(text)) addFormLink(el);
+        else if (data.show_claim || claimMark || data.show_contact || contactMark || NEEDS_HUMAN_RE.test(text)) addFormLink(el);
       }
 
       if (pills) pills.addEventListener('click', function(e){
@@ -924,7 +929,7 @@
       const submitBtn = document.getElementById('bb-claim-submit');
       const statusEl  = document.getElementById('bb-claim-status');
       const submitLabel = submitBtn ? submitBtn.textContent : '';
-      const MAX_FILES = 10, MAX_FILE_BYTES = 10 * 1024 * 1024;
+      const MAX_FILES = 10, MAX_FILE_BYTES = 10 * 1024 * 1024, MAX_TOTAL_BYTES = 35 * 1024 * 1024;
 
       function makeKey(){
         return (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
@@ -933,6 +938,12 @@
       let idemKey = makeKey();
       let picked = [];
       let sending = false;
+      /* The key stays stable across UNCHANGED retries (so a resend after a lost
+         response is deduped upstream) but rotates whenever the content changes —
+         an edited resubmission is a new claim, not a duplicate of the old one. */
+      function contentChanged(){ idemKey = makeKey(); }
+      form.addEventListener('input', contentChanged);
+      function totalPicked(){ return picked.reduce(function(s, f){ return s + f.size; }, 0); }
 
       function status(msg, ok){
         if (!statusEl) return;
@@ -951,7 +962,7 @@
           rm.type = 'button';
           rm.setAttribute('aria-label', 'Remove ' + f.name);
           rm.textContent = '✕';
-          rm.addEventListener('click', function(){ picked.splice(i, 1); renderFiles(); });
+          rm.addEventListener('click', function(){ picked.splice(i, 1); renderFiles(); contentChanged(); });
           row.appendChild(nm);
           row.appendChild(rm);
           fileList.appendChild(row);
@@ -962,8 +973,9 @@
         Array.prototype.forEach.call(filesIn.files, function(f){
           if (picked.length >= MAX_FILES){ status('You can attach up to ' + MAX_FILES + ' photos.'); return; }
           if (f.size > MAX_FILE_BYTES){ status('“' + f.name + '” is over 10 MB — please use a smaller photo.'); return; }
+          if (totalPicked() + f.size > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — “' + f.name + '” doesn’t fit. Remove one or use smaller photos.'); return; }
           const dup = picked.some(function(p){ return p.name === f.name && p.size === f.size; });
-          if (!dup) picked.push(f);
+          if (!dup){ picked.push(f); contentChanged(); }
         });
         filesIn.value = '';
         renderFiles();
@@ -978,6 +990,7 @@
         if (sending) return;
         if (!form.reportValidity()) return;
         if (!endpoint){ status('Claims aren’t set up yet — please use the Send message tab.'); return; }
+        if (totalPicked() > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — please remove one or use smaller photos.'); return; }
         const fields = form.elements;
         const email = fields.namedItem('email').value.trim();
         const fd = new FormData();
@@ -1004,7 +1017,12 @@
             idemKey = makeKey();
             status('Claim received — your reference is ' + data.reference + '. We’ll email you at ' + email + '.', true);
           } else {
-            status((data && data.error) ? data.error : 'Something went wrong — please try again. Resubmitting is safe, it won’t create a duplicate.');
+            /* A not-yet-updated Worker routes /claim into its chat handler,
+               whose raw errors ("invalid json", "payload too large") would
+               confuse customers — replace those with a friendly message. */
+            const raw = (data && data.error) ? String(data.error) : '';
+            const stale = /invalid json|payload too large|empty message|worker secrets|origin not allowed/i.test(raw);
+            status(raw && !stale ? raw : 'Claims aren’t available right now — please try again later, or use the Send message tab.');
           }
         } catch(err){
           status('Something went wrong — please try again. Resubmitting is safe, it won’t create a duplicate.');

@@ -408,9 +408,16 @@ const CLAIM_MAX_FILE_BYTES = 10 * 1024 * 1024;
 const CLAIM_MAX_BODY_BYTES = 40 * 1024 * 1024;
 const CLAIM_RETRY_MSG = 'We couldn’t submit your claim just now. Please try again in a moment — resubmitting is safe, it won’t create a duplicate.';
 
+const CLAIM_SIZE_MSG = 'Photos must be 10 MB or smaller each, and 35 MB all together — please remove one or use smaller photos.';
+
+let claimActive = 0;         // concurrent claim uploads in this isolate
 const claimHits = new Map(); // per-IP claim timestamps (10-minute window)
+const claimGlobalHits = [];  // per-isolate backstop (catches IP rotation, like the chat route's)
 function claimRateLimited(ip) {
   const now = Date.now();
+  while (claimGlobalHits.length && now - claimGlobalHits[0] > 600000) claimGlobalHits.shift();
+  claimGlobalHits.push(now);
+  if (claimGlobalHits.length > 30) return true; // 30 claims / 10 min / isolate
   const arr = (claimHits.get(ip) || []).filter(function (t) { return now - t < 600000; });
   arr.push(now);
   claimHits.set(ip, arr);
@@ -423,14 +430,37 @@ function claimRateLimited(ip) {
   return arr.length > 5; // 5 claims / 10 min / IP
 }
 
+/* Content-Length is client-supplied and legitimately absent on streamed
+   uploads, so the cap is enforced on ACTUAL bytes read — request.formData()
+   can never be handed more than CLAIM_MAX_BODY_BYTES of body. Returns the
+   parsed FormData, or null when the body is missing or over the cap. */
+async function readClaimForm(request) {
+  const declared = parseInt(request.headers.get('Content-Length') || '0', 10);
+  if (declared > CLAIM_MAX_BODY_BYTES) return null;
+  if (!request.body) return null;
+  const reader = request.body.getReader();
+  const chunks = [];
+  let total = 0;
+  while (true) {
+    const r = await reader.read();
+    if (r.done) break;
+    total += r.value.byteLength;
+    if (total > CLAIM_MAX_BODY_BYTES) { try { await reader.cancel(); } catch (e) {} return null; }
+    chunks.push(r.value);
+  }
+  const buf = new Uint8Array(total);
+  let off = 0;
+  for (const c of chunks) { buf.set(c, off); off += c.byteLength; }
+  return new Response(buf, { headers: { 'Content-Type': request.headers.get('Content-Type') || '' } }).formData();
+}
+
 async function handleClaim(request, env, headers, origin) {
   if (!env.SUPPORT_API_KEY) return json({ error: 'Claims aren’t configured yet — please use the Send message tab.' }, 500, headers);
-  const len = parseInt(request.headers.get('Content-Length') || '0', 10);
-  if (len > CLAIM_MAX_BODY_BYTES) return json({ error: 'Your photos are too large all together — keep each under 10 MB.' }, 413, headers);
 
   let form;
-  try { form = await request.formData(); }
+  try { form = await readClaimForm(request); }
   catch (e) { return json({ error: 'invalid form data' }, 400, headers); }
+  if (!form) return json({ error: CLAIM_SIZE_MSG }, 413, headers);
 
   const message = String(form.get('message') || '').trim().slice(0, 8000);
   const email   = String(form.get('email') || '').trim().toLowerCase().slice(0, 200);
@@ -448,7 +478,7 @@ async function handleClaim(request, env, headers, origin) {
   const files = form.getAll('files').filter(function (f) { return f && typeof f === 'object' && typeof f.size === 'number' && f.size > 0; });
   if (files.length > CLAIM_MAX_FILES) return json({ error: 'Attach at most 10 photos.' }, 400, headers);
   for (const f of files) {
-    if (f.size > CLAIM_MAX_FILE_BYTES) return json({ error: 'Each photo must be 10 MB or smaller.' }, 413, headers);
+    if (f.size > CLAIM_MAX_FILE_BYTES) return json({ error: CLAIM_SIZE_MSG }, 413, headers);
   }
 
   const out = new FormData();
@@ -477,7 +507,7 @@ async function handleClaim(request, env, headers, origin) {
       return json({ ok: true, reference: reference, duplicate: !!data.duplicate }, 200, headers);
     }
     console.error('claim upstream HTTP ' + res.status + ': ' + JSON.stringify(data || {}).slice(0, 300));
-    if (res.status === 413) return json({ error: 'Each photo must be 10 MB or smaller.' }, 413, headers);
+    if (res.status === 413) return json({ error: CLAIM_SIZE_MSG }, 413, headers);
     if (res.status === 400 && data && data.error) return json({ error: String(data.error).slice(0, 200) }, 400, headers);
     return json({ error: CLAIM_RETRY_MSG }, 502, headers);
   } catch (e) {
@@ -598,11 +628,16 @@ export default {
        browsers always send Origin on cross-origin fetch. */
     if (ALLOWED_ORIGINS.indexOf(origin) === -1) return json({ error: 'origin not allowed' }, 403, headers);
 
-    /* Claim intake: its own route, secrets, body limits, and rate limit. */
-    if (new URL(request.url).pathname === '/claim') {
+    /* Claim intake: its own route, secrets, body limits, and rate limit.
+       endsWith so a sub-pathed endpoint setting still routes correctly. */
+    if (new URL(request.url).pathname.endsWith('/claim')) {
       const cip = request.headers.get('CF-Connecting-IP') || 'unknown';
       if (claimRateLimited(cip)) return json({ error: 'Too many claims from this connection — please wait a few minutes and try again.' }, 429, headers);
-      return handleClaim(request, env, headers, origin);
+      /* Bound isolate memory: at most 2 claim bodies buffered at once. */
+      if (claimActive >= 2) return json({ error: 'We’re a little busy right now — please try again in a few seconds. Resubmitting is safe.' }, 429, headers);
+      claimActive++;
+      try { return await handleClaim(request, env, headers, origin); }
+      finally { claimActive--; }
     }
 
     if (!env.ANTHROPIC_API_KEY || !env.SHOPIFY_ADMIN_TOKEN) return json({ error: 'worker secrets not configured' }, 500, headers);
