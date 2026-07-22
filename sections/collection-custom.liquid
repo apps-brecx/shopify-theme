@@ -526,7 +526,6 @@
               {%- assign issf = true -%}
             {%- endif -%}
             {%- assign vipprice = 799 -%}
-            {%- if issf -%}{%- assign vipprice = 699 -%}{%- endif -%}
             {%- comment -%} VIP flat pricing applies ONLY to individual syrups: the title
                 must contain "Syrup", and sets/packs/bundles/boba/toppings are excluded
                 by title AND tags (e.g. "Coffee Trend Set", tag "Variety Pack"). {%- endcomment -%}
@@ -722,7 +721,7 @@
       <span class="scol-vip-eyebrow">{{ icVipStar }} VIP Pricing</span>
       <h3 class="scol-vip-h">Become a member — it's free</h3>
       <p class="scol-vip-lede">
-        VIP members unlock our best price on every syrup: <b>$7.99</b> regular &amp; <b>$6.99</b> sugar-free. Create a
+        VIP members unlock our best price on every syrup: a flat <b>$7.99</b> — regular &amp; sugar-free. Create a
         free Syruvia account (or sign in) and the VIP price shows up automatically.
       </p>
       <div class="scol-vip-actions">
