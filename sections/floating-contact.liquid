@@ -176,10 +176,16 @@
             <span>Order number*</span>
             <input type="text" name="order_id" required maxlength="100" placeholder="e.g. 154008587601" autocomplete="off" inputmode="numeric">
           </label>
+          {%- comment -%} The CS API requires an email (the reply is sent there),
+              so the field can only be hidden when the login supplies it. {%- endcomment -%}
+          {%- if customer -%}
+            <input type="hidden" name="email" value="{{ customer.email | escape }}">
+          {%- else -%}
           <label class="bb-field">
             <span>Email* <small class="bb-field-hint">our reply goes here</small></span>
-            <input type="email" name="email" required maxlength="200" autocomplete="email" value="{% if customer %}{{ customer.email | escape }}{% endif %}">
+            <input type="email" name="email" required maxlength="200" autocomplete="email">
           </label>
+          {%- endif -%}
           <label class="bb-field">
             <span>Issue type*</span>
             <select name="type" required>
