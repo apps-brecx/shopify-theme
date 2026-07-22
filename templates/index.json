@@ -16,7 +16,7 @@
           "type": "slide",
           "settings": {
             "image_desktop": "shopify://shop_images/Midsummer_Banner_1.png",
-            "image_mobile": "shopify://shop_images/MidSum_Mobile_1.png",
+            "image_mobile": "shopify://shop_images/MidSum_Mobile_New.webp",
             "video_autoplay": false,
             "alt": "",
             "link": "shopify://collections/summer-restock-flavors",
@@ -238,7 +238,7 @@
       "settings": {
         "autoplay_s": 6,
         "height_d": 80,
-        "height_m": 100
+        "height_m": 90
       }
     },
     "ticker": {
