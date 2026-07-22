@@ -257,14 +257,14 @@
     .bb-panels > .bb-panel[hidden]{display:block!important;visibility:hidden!important;pointer-events:none!important}
     #bb-panel-chat{display:flex;flex-direction:column}
     #bb-panel-chat[hidden]{display:flex!important;visibility:hidden!important;pointer-events:none!important}
-    .bb-chat-log{display:flex;flex-direction:column;gap:8px;flex:1 1 auto;min-height:110px;max-height:340px;overflow-y:auto;padding:4px 2px;margin-bottom:10px;scrollbar-width:thin}
+    .bb-chat-log{display:flex;flex-direction:column;gap:8px;flex:1 1 auto;min-height:110px;max-height:340px;overflow-y:auto;padding:4px 2px;margin-bottom:60px;scrollbar-width:thin}
     .bb-msg{max-width:85%;padding:9px 12px;border-radius:12px;font-size:13.5px;line-height:1.45;overflow-wrap:break-word}
     .bb-msg--plain{white-space:pre-line}
     .bb-msg--bot{align-self:flex-start;background:#F6F1E7;color:#3C2005;border-bottom-left-radius:4px}
     /* AI avatar beside every bot bubble (and the typing dots). Pure CSS so
        messages restored from sessionStorage get it too. */
-    .bb-msg--bot,.bb-typing{position:relative;margin-left:34px;max-width:calc(85% - 34px)}
-    .bb-msg--bot::before,.bb-typing::before{content:'';position:absolute;left:-34px;top:0;width:26px;height:26px;border-radius:50%;background:#fff url('{{ 'chatbot.png' | asset_url }}') center/cover no-repeat;border:1px solid #E8DFC9}
+    .bb-msg--bot,.bb-typing{position:relative;margin-left:68px;max-width:calc(85% - 68px);min-height:60px;display:flex;flex-direction:column;justify-content:center}
+    .bb-msg--bot::before,.bb-typing::before{content:'';position:absolute;left:-68px;top:0;width:60px;height:60px;border-radius:50%;background:#fff url('{{ 'chatbot.png' | asset_url }}') center/cover no-repeat;border:1px solid #E8DFC9}
     .bb-msg--user{align-self:flex-end;background:#3C2005;color:#fff;border-bottom-right-radius:4px}
     .bb-msg--bot p{margin:0 0 6px}
     .bb-msg--bot p:last-child{margin:0}
