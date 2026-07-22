@@ -16,9 +16,6 @@
   assign vip_savings = 0
   for item in cart.items
     assign vipunit = 799
-    if item.product.tags contains 'Sugar-Free' or item.product.tags contains 'sugar-free' or item.product.tags contains 'Sugar Free' or item.product.tags contains 'sugarfree'
-      assign vipunit = 699
-    endif
     assign vipline = vipunit | times: item.quantity
     if item.final_line_price > vipline
       assign diff = item.final_line_price | minus: vipline
