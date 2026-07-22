@@ -501,6 +501,20 @@
       showTab(root.dataset.defaultTab === 'form' ? 'form' : 'chat');
 
       function scrollLog(){ log.scrollTop = log.scrollHeight; }
+
+      /* Persist the conversation for the tab's lifetime so a refresh or page
+         navigation doesn't wipe it. Transient UI (typing dots, the inline track
+         form) is never saved; restored user text stays escaped because it was
+         inserted via textContent. */
+      const LOG_KEY = 'bb-chat-log-v1';
+      function saveLog(){
+        try {
+          const c = log.cloneNode(true);
+          Array.prototype.forEach.call(c.querySelectorAll('.bb-typing, .bb-track-form'), function(n){ n.remove(); });
+          while (c.children.length > 40) c.removeChild(c.firstChild);
+          sessionStorage.setItem(LOG_KEY, c.innerHTML);
+        } catch(e){}
+      }
       function addMsg(who, content, opts){
         const el = document.createElement('div');
         el.className = 'bb-msg bb-msg--' + who;
@@ -508,17 +522,22 @@
         else { el.classList.add('bb-msg--plain'); el.textContent = content; }
         log.appendChild(el);
         scrollLog();
+        saveLog();
         return el;
       }
+      /* Delegated so the button still works on messages restored from sessionStorage. */
+      log.addEventListener('click', function(e){
+        if (e.target.closest && e.target.closest('.bb-msg-link')) showTab('form');
+      });
       function addFormLink(el){
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'bb-msg-link';
         btn.textContent = 'Send us a message instead';
-        btn.addEventListener('click', function(){ showTab('form'); });
         el.appendChild(document.createElement('br'));
         el.appendChild(btn);
         scrollLog();
+        saveLog();
       }
       let typingEl = null;
       function typing(on){
@@ -532,7 +551,22 @@
         if (!on && typingEl){ typingEl.remove(); typingEl = null; }
       }
 
-      if (greeting) addMsg('bot', greeting);
+      let restored = false;
+      try {
+        const saved = (window.Shopify && window.Shopify.designMode) ? null : sessionStorage.getItem(LOG_KEY);
+        if (saved){
+          log.innerHTML = saved;
+          Array.prototype.forEach.call(log.querySelectorAll('.bb-typing, .bb-track-form'), function(n){ n.remove(); });
+          restored = log.children.length > 0;
+        }
+      } catch(e){}
+      if (!restored && greeting) addMsg('bot', greeting);
+
+      /* The log can't scroll while the modal is display:none — re-scroll when it
+         becomes visible (widget opened, or chat tab re-selected). */
+      const floatBtn = document.getElementById('bb-float-btn');
+      if (floatBtn) floatBtn.addEventListener('click', function(){ requestAnimationFrame(scrollLog); });
+      tabChat.addEventListener('click', function(){ requestAnimationFrame(scrollLog); });
 
       const sendBtn = inputRow ? inputRow.querySelector('.bb-chat-send') : null;
       let busy = false;
@@ -618,6 +652,7 @@
         }
         log.appendChild(el);
         scrollLog();
+        saveLog();
       }
       /* Order-status questions can't be answered from the storefront (needs the
          authenticated Admin API via the future AI endpoint) — route them to the
