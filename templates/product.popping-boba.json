@@ -9,20 +9,76 @@
  */
 {
   "sections": {
-    "main": { "type": "pb-hero", "settings": {} },
-    "pb_marquee": { "type": "pb-marquee", "settings": {} },
-    "pb_description": { "type": "pb-description", "settings": {} },
-    "pb_standards": { "type": "pb-standards", "settings": {} },
-    "pb_nutrition": { "type": "pb-nutrition", "settings": {} },
-    "pb_why": { "type": "pb-why", "settings": {} },
-    "pb_reels": { "type": "pb-reels", "settings": {} },
-    "pb_recipe": { "type": "pb-recipe-feature", "settings": {} },
-    "pb_cat_recipes": { "type": "pb-cat-recipes", "settings": {} },
-    "pd_reviews": { "type": "pd-reviews", "settings": {} },
-    "pd_write_review": { "type": "pd-write-review", "settings": {} },
-    "pd_recommended": { "type": "pd-recommended", "settings": {} },
-    "pb_faq": { "type": "pb-faq", "settings": {} },
-    "pd_vip": { "type": "pd-vip", "settings": {} }
+    "main": {
+      "type": "pb-hero",
+      "settings": {}
+    },
+    "pb_marquee": {
+      "type": "pb-marquee",
+      "settings": {}
+    },
+    "pb_description": {
+      "type": "pb-description",
+      "settings": {}
+    },
+    "pb_standards": {
+      "type": "pb-standards",
+      "settings": {}
+    },
+    "pb_nutrition": {
+      "type": "pb-nutrition",
+      "settings": {}
+    },
+    "pb_why": {
+      "type": "pb-why",
+      "settings": {}
+    },
+    "pb_reels": {
+      "type": "pb-reels",
+      "settings": {}
+    },
+    "pb_recipe": {
+      "type": "pb-recipe-feature",
+      "settings": {}
+    },
+    "pd_reviews": {
+      "type": "pd-reviews",
+      "settings": {}
+    },
+    "pd_write_review": {
+      "type": "pd-write-review",
+      "settings": {}
+    },
+    "pd_recommended": {
+      "type": "pd-recommended",
+      "settings": {}
+    },
+    "pb_faq": {
+      "type": "pb-faq",
+      "settings": {}
+    },
+    "pd_vip": {
+      "type": "pd-vip",
+      "settings": {}
+    },
+    "areviews_1784749652_30db11": {
+      "type": "apps",
+      "blocks": {
+        "areviews_reviews_importer_areviews_display_reviews_E61B4F": {
+          "type": "shopify://apps/areviews-reviews-importer/blocks/AreviewsDisplayReviews/ab0ec5fe-c95b-4fd6-bfb8-db2a30d0756f",
+          "settings": {
+            "hide_areviews_title_rating": false,
+            "areviews_theme_font": "inherit",
+            "areviews_stars_colors": "#f3c621",
+            "areviews_write_reviews_botton_color": "#373737"
+          }
+        }
+      },
+      "block_order": [
+        "areviews_reviews_importer_areviews_display_reviews_E61B4F"
+      ],
+      "settings": {}
+    }
   },
   "order": [
     "main",
@@ -33,11 +89,11 @@
     "pb_why",
     "pb_reels",
     "pb_recipe",
-    "pb_cat_recipes",
     "pd_reviews",
     "pd_write_review",
     "pd_recommended",
     "pb_faq",
-    "pd_vip"
+    "pd_vip",
+    "areviews_1784749652_30db11"
   ]
 }
