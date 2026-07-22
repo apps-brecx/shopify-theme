@@ -13,10 +13,10 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272.jpg",
+        "bg_img": "shopify://shop_images/Rectangle_2272_3.png",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
-        "accent_color": "#72305c"
+        "accent_color": "#7C3003"
       }
     },
     "main": {
@@ -479,7 +479,7 @@
         "column_WtABe3": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/4_Flvvor_1.png",
+            "image": "shopify://shop_images/4_Flvvor_2.png",
             "column_link": "",
             "title": "",
             "text": "",
@@ -490,7 +490,7 @@
         "column_k7Ua7t": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/15_9d23c980-97bd-42d1-8f90-9b0d0e6f6b2f.png",
+            "image": "shopify://shop_images/Save.png",
             "column_link": "",
             "title": "",
             "text": "",
@@ -501,7 +501,7 @@
         "column_UrhpMn": {
           "type": "column",
           "settings": {
-            "image": "shopify://shop_images/1_Pack.png",
+            "image": "shopify://shop_images/Easy_Pack.png",
             "column_link": "",
             "title": "",
             "text": "",
@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This week’s Ube Dream Cream Pack brings together four soft, creamy flavors that make homemade drinks feel special. Ube gives it that dreamy purple sweetness, Vanilla keeps it smooth, Pistachio adds a nutty touch, and Almond brings a cozy café-style finish.</p>"
+            "text": "<p>This week’s Nutty Dessert Café Pack brings together four smooth, nutty flavors made for better coffee at home. Almond keeps it soft, Hazelnut adds the classic café touch, Butter Pecan brings a creamy dessert note, and Caramel Pecan gives every sip a rich sweet finish.</p>"
           }
         }
       },
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#72305c"
+        "background_color": "#7C3003"
       }
     },
     "pack_steps_AbyNtH": {
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Ube Dream",
-            "description": "Sweet, creamy, and made for colorful café-style drinks."
+            "title": "Almond Smooth",
+            "description": "Soft, nutty flavor for coffee, lattes, and creamy drinks."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Vanilla Smooth",
-            "description": "Classic flavor that blends easily with coffee, tea, and shakes."
+            "title": "Hazelnut Classic",
+            "description": "A café favorite that makes everyday coffee taste better fast."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Nutty Duo",
-            "description": "Pistachio and Almond add a soft, cozy finish to every sip."
+            "title": "Pecan Dessert Duo",
+            "description": "Butter Pecan and Caramel Pecan bring rich, cozy sweetness to every sip."
           }
         }
       },
@@ -654,8 +654,8 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#72305c",
-        "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
+        "background_color": "#7C3003",
+        "heading": "<h2>Make Coffee<br/>Taste Richer</h2>"
       }
     },
     "trusted_pack_jggqKc": {
@@ -700,7 +700,7 @@
       "settings": {
         "background_color": "#8d4925",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Crafted for smooth mixing, creamy flavor, and easy drinks at home.</p>",
+        "description": "<p>Crafted for smooth mixing, rich flavor, and easy café-style drinks at home.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -755,7 +755,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Ube makes my iced latte look beautiful and taste so creamy. Vanilla and Pistachio make the whole pack feel extra smooth",
+            "quote": "The Hazelnut is perfect in my morning coffee, and Butter Pecan makes iced lattes taste like a dessert drink.",
             "reviewer_initials": "MR",
             "reviewer_name": "Maya R.",
             "reviewer_role": ""
@@ -765,7 +765,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Almond and Pistachio are so good together. I used them in cold brew and milk tea, and both tasted café-level.",
+            "quote": "Caramel Pecan is the one I keep reaching for. It gives cold brew a rich, sweet finish without needing much.",
             "reviewer_initials": "JP",
             "reviewer_name": "Jordan P.",
             "reviewer_role": ""
@@ -775,7 +775,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack feels different from the usual flavors. Ube is fun, Vanilla is classic, and the nutty flavors make it feel premium.",
+            "quote": "This pack feels made for cozy coffee days. Almond is smooth, Hazelnut is classic, and the pecan flavors are so good.",
             "reviewer_initials": "MR",
             "reviewer_name": "Sofia L.",
             "reviewer_role": ""
@@ -785,7 +785,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I made ube milk tea and a pistachio almond latte with this pack. Both were so easy and honestly tasted amazing.",
+            "quote": "This pack feels made for cozy coffee days. Almond is smooth, Hazelnut is classic, and the pecan flavors are so good.",
             "reviewer_initials": "NK",
             "reviewer_name": "Nina K.",
             "reviewer_role": ""
@@ -795,7 +795,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Every flavor brings something special. Ube is creamy, Vanilla is smooth, while Almond and Pistachio make homemade drinks taste café-quality.",
+            "quote": "Caramel Pecan is the one I keep reaching for. It gives cold brew a rich, sweet finish without needing much.",
             "reviewer_initials": "EC",
             "reviewer_name": " Emma C.",
             "reviewer_role": ""
@@ -811,7 +811,7 @@
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Creamy Sip\nFans",
+        "heading": "Coffee Fans\nLove This Pack",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
@@ -836,9 +836,9 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#72305c",
-        "title": "Make Your Next Sip Dreamy",
-        "description": "Ube, Vanilla, Pistachio, and Almond are on deal this week a creamy pack made for better drinks at home.",
+        "background_color": "#7C3003",
+        "title": "Make Coffee Taste Richer",
+        "description": "Almond, Hazelnut, Butter Pecan, and Caramel Pecan are on deal this week — one nutty pack for café-style drinks at home.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"

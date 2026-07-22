@@ -13,10 +13,10 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272.jpg",
+        "bg_img": "shopify://shop_images/Rectangle_2272_3.png",
         "secondary_button_text": "View Regular",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week",
-        "accent_color": "#72305c"
+        "accent_color": "#7C3003"
       }
     },
     "main": {
@@ -532,7 +532,7 @@
         "custom_class1": "",
         "custom_class11": "",
         "custom_class12": "",
-        "title": "<strong>Creamy. Nutty. Sugar Free.</strong>",
+        "title": "<strong> Nutty. Creamy. Sugar Free.</strong>",
         "image_alt_text": "",
         "content": "",
         "additional_text": "",
@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This week’s Sugar-Free Ube Dream Cream Pack brings together four creamy café-style flavors without the sugar. Ube gives it that dreamy purple sip, Vanilla keeps it smooth, Pistachio adds a soft nutty touch, and Almond brings a cozy finish.</p>"
+            "text": "<p>This week’s Sugar-Free Nutty Dessert Café Pack brings together four rich, nutty flavors for better coffee at home. Almond keeps it smooth, Hazelnut adds a classic café taste, Butter Pecan brings a creamy dessert note, and Caramel Pecan gives every sip a sweet nutty finish.</p>"
           }
         }
       },
@@ -590,7 +590,7 @@
         ".page-cst-about-page-sec,.page-cst-mission-page-sec,.line-left,.line-right {display: none;}",
         ".mobile-pad {padding-bottom: 40px !important;}",
         ".rich-text__heading strong {font-family: \"Epilogue\", sans-serif !important;}",
-        ".rich-text__heading em {font-style: normal; color: #72305c;}",
+        ".rich-text__heading em {font-style: normal; color: #7c3003;}",
         ".rich-text__text p {font-family: \"Manrope\", sans-serif !important;}",
         "@media (max-width: 768px) {.head {font-size: 32px !important; }}",
         "@media (max-width: 400px) {.rich-text__text p {font-size: 14px !important; line-height: normal !important; }}"
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#72305c"
+        "background_color": "#7C3003"
       }
     },
     "pack_steps_AbyNtH": {
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Ube Dream",
-            "description": "Creamy purple flavor for fun café-style drinks."
+            "title": "Almond Smooth",
+            "description": "Soft nutty flavor for coffee, lattes, and creamy drinks."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Vanilla Smooth",
-            "description": "Classic, soft, and easy to mix with almost anything."
+            "title": "Hazelnut Classic",
+            "description": "A coffee favorite made for easy everyday drinks."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Nutty Finish",
-            "description": "Pistachio and Almond bring a cozy, premium touch."
+            "title": "Pecan Dessert Duo",
+            "description": "Butter Pecan and Caramel Pecan bring rich dessert-style flavor without the sugar."
           }
         }
       },
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#72305c",
+        "background_color": "#7C3003",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -698,9 +698,9 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#72305c",
+        "background_color": "#7C3003",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Crafted for smooth mixing, creamy flavor, and easy sugar-free drinks at home.</p>",
+        "description": "<p>Crafted for smooth mixing, rich flavor, and easy sugar-free drinks at home.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -755,7 +755,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Sugar Free Ube makes my iced latte look so pretty and still tastes creamy. Vanilla makes it even smoother.",
+            "quote": "The Hazelnut is perfect in my iced coffee, and the Butter Pecan makes my latte taste like a real café drink.",
             "reviewer_initials": "AM",
             "reviewer_name": "Alyssa M.",
             "reviewer_role": ""
@@ -765,7 +765,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Pistachio and Almond together are so good in cold brew. This pack makes sugar-free coffee feel way less boring.",
+            "quote": "Caramel Pecan is the standout for me. It gives cold brew a rich, sweet finish without the sugar.",
             "reviewer_initials": "MD",
             "reviewer_name": "Marcus D.",
             "reviewer_role": ""
@@ -775,7 +775,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I made an ube milk tea with this and loved it. Sweet, creamy, and no sugar exactly what I wanted.",
+            "quote": "I love having all these nutty flavors together. Almond is smooth, Hazelnut is classic, and the pecan flavors feel extra rich.",
             "reviewer_initials": "TR",
             "reviewer_name": "Tina R.",
             "reviewer_role": ""
@@ -785,7 +785,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack feels different from basic sugar-free flavors. Ube is fun, Vanilla is classic, and the nutty flavors make it feel fancy.",
+            "quote": "This pack makes sugar-free coffee way more fun. All four flavors mix well and taste great in iced drinks.",
             "reviewer_initials": "RK",
             "reviewer_name": "Rachel K.",
             "reviewer_role": ""
@@ -795,7 +795,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Four delicious flavors without the sugar. Ube tastes creamy, Vanilla stays smooth, while Almond and Pistachio make every drink café-worthy.",
+            "quote": "Caramel Pecan is the standout for me. It gives cold brew a rich, sweet finish without the sugar.",
             "reviewer_initials": "KS",
             "reviewer_name": "Kayla S.",
             "reviewer_role": ""
@@ -811,7 +811,7 @@
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Sugar Free Sip Fans\nLove This Pack",
+        "heading": "Sugar-Free Coffee Fans\nLove This Pack",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
@@ -836,9 +836,9 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#72305c",
-        "title": "Make Your Next Sip Dreamy,Sugar-Free",
-        "description": "Ube, Vanilla, Pistachio, and Almond are on deal this week a creamy sugar-free pack made for better drinks at home.",
+        "background_color": "#7C3003",
+        "title": "Make Coffee Taste Richer,Sugar-Free",
+        "description": "Almond, Hazelnut, Butter Pecan, and Caramel Pecan are on deal this week  one nutty sugar-free pack for café-style drinks at home.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"

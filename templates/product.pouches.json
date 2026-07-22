@@ -1,0 +1,34 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "pouch-page",
+      "settings": {
+        "accent_color": "#e28f26",
+        "hero_bg": "#FFF3DC",
+        "marquee_bg": "#e28f26",
+        "marquee_text": "#FFFBF4",
+        "breadcrumb_category": "Syrup Pouches",
+        "desc_eyebrow": "About this pouch",
+        "desc_heading_pre": "Flavor that",
+        "desc_heading_emphasis": "goes anywhere",
+        "why_eyebrow": "Why Pouches",
+        "why_heading": "One tear from <em>flavor</em>.",
+        "marquee_items": "Tear. Pour. Enjoy.\nOne Perfect Serving\nTake It Anywhere\nReal Flavor\nGluten-Free\nKosher Certified\nMade in the USA",
+        "show_mini_bundle": false,
+        "show_pouch_band": true
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

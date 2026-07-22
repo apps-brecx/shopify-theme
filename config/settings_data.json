@@ -195,6 +195,27 @@
       "floating-contact": {
         "type": "floating-contact",
         "blocks": {
+          "faq_kkdHgY": {
+            "type": "faq",
+            "settings": {
+              "question": "What are your best-selling products?",
+              "answer": ""
+            }
+          },
+          "faq_8HbJTk": {
+            "type": "faq",
+            "settings": {
+              "question": "How can I contact support?",
+              "answer": ""
+            }
+          },
+          "faq_7zjCeU": {
+            "type": "faq",
+            "settings": {
+              "question": "How do I create an account?",
+              "answer": ""
+            }
+          },
           "faq-ship-countries": {
             "type": "faq",
             "settings": {
@@ -205,7 +226,7 @@
           "faq-delivery-time": {
             "type": "faq",
             "settings": {
-              "question": "How long does delivery take?",
+              "question": "What payment methods do you accept?",
               "answer": ""
             }
           },
@@ -218,6 +239,9 @@
           }
         },
         "block_order": [
+          "faq_kkdHgY",
+          "faq_8HbJTk",
+          "faq_7zjCeU",
           "faq-ship-countries",
           "faq-delivery-time",
           "faq-sugar-free"
@@ -237,7 +261,15 @@
           "offset_right": 24,
           "submit_label": "Send Message",
           "success_text": "Thanks! We received your message.",
-          "error_text": "Something went wrong. Please try again."
+          "error_text": "Something went wrong. Please try again.",
+          "enable_chat": false,
+          "default_tab": "chat",
+          "chat_tab_label": "Quick help",
+          "form_tab_label": "Send message",
+          "chat_greeting": "Hi! Pick a question below, or type your own — I’ll answer instantly.",
+          "chat_placeholder": "Type a question…",
+          "chat_fallback": "I couldn’t find an instant answer for that.",
+          "chat_endpoint": "https://gentle-shadow-e778.ti-243.workers.dev/"
         }
       }
     },

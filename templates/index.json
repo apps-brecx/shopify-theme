@@ -12,6 +12,32 @@
     "hero": {
       "type": "syr-hero",
       "blocks": {
+        "slide_tE9jY7": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Midsummer_Banner_1.png",
+            "image_mobile": "shopify://shop_images/MidSum_Mobile_1.png",
+            "video_autoplay": false,
+            "alt": "",
+            "link": "shopify://collections/summer-restock-flavors",
+            "show_button": false,
+            "btn_text": "Shop Now",
+            "btn_bg": "#c8252b",
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
+          }
+        },
         "slide_eXhJU3": {
           "type": "slide",
           "settings": {
@@ -40,6 +66,7 @@
         },
         "slide_qGkiAB": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "image_desktop": "shopify://shop_images/Web2.png",
             "image_mobile": "shopify://shop_images/Mobile_3_7ddf3a8d-3154-4887-9002-9fc31cfe2969.png",
@@ -199,6 +226,7 @@
         }
       },
       "block_order": [
+        "slide_tE9jY7",
         "slide_eXhJU3",
         "slide_qGkiAB",
         "slide_gUGR4D",
@@ -210,7 +238,7 @@
       "settings": {
         "autoplay_s": 6,
         "height_d": 80,
-        "height_m": 80
+        "height_m": 100
       }
     },
     "ticker": {
@@ -658,11 +686,11 @@
         "v_strawberry": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/e8c5698a0a38444e9204597f21abf5c8/e8c5698a0a38444e9204597f21abf5c8.HD-720p-1.6Mbps-37353311.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/e8c5698a0a38444e9204597f21abf5c8.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_10.m4v?v=1784559618",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_10.m4v?v=1784559618",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Strawberry",
+            "tag_text": "Watermelon",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
@@ -671,75 +699,8 @@
         "v_vanilla": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/922242a0a616441b8823e7ec8ad9d8c5/922242a0a616441b8823e7ec8ad9d8c5.HD-720p-1.6Mbps-37353314.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/922242a0a616441b8823e7ec8ad9d8c5.thumbnail.0000000000.jpg",
-            "video_link": "",
-            "show_tag": true,
-            "tag_text": "Vanilla",
-            "tag_bg": "#fce2a0",
-            "tag_color": "#39220f",
-            "tag_border": "#39220f"
-          }
-        },
-        "v_caramel": {
-          "type": "video",
-          "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/97d5785f2f1e4eb885d2519f5e845679/97d5785f2f1e4eb885d2519f5e845679.HD-720p-1.6Mbps-37353317.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/97d5785f2f1e4eb885d2519f5e845679.thumbnail.0000000000.jpg",
-            "video_link": "",
-            "show_tag": true,
-            "tag_text": "Caramel",
-            "tag_bg": "#fce2a0",
-            "tag_color": "#39220f",
-            "tag_border": "#39220f"
-          }
-        },
-        "v_hazelnut": {
-          "type": "video",
-          "disabled": true,
-          "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/da6127b78f30417ea44e22505d70e0c4/da6127b78f30417ea44e22505d70e0c4.HD-720p-1.6Mbps-37353320.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/da6127b78f30417ea44e22505d70e0c4.thumbnail.0000000000.jpg",
-            "video_link": "",
-            "show_tag": true,
-            "tag_text": "Hazelnut",
-            "tag_bg": "#fce2a0",
-            "tag_color": "#39220f",
-            "tag_border": "#39220f"
-          }
-        },
-        "v_mango": {
-          "type": "video",
-          "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/6b236213f0564257a7eaca77b52ae285/6b236213f0564257a7eaca77b52ae285.HD-720p-1.6Mbps-37353321.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/6b236213f0564257a7eaca77b52ae285.thumbnail.0000000000.jpg",
-            "video_link": "",
-            "show_tag": true,
-            "tag_text": "Mango",
-            "tag_bg": "#fce2a0",
-            "tag_color": "#39220f",
-            "tag_border": "#39220f"
-          }
-        },
-        "v_peach": {
-          "type": "video",
-          "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/440b593a1e454d0dbcc238f2f1eebb15/440b593a1e454d0dbcc238f2f1eebb15.HD-720p-1.6Mbps-37354101.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/440b593a1e454d0dbcc238f2f1eebb15.thumbnail.0000000000.jpg",
-            "video_link": "",
-            "show_tag": true,
-            "tag_text": "Peach",
-            "tag_bg": "#fce2a0",
-            "tag_color": "#39220f",
-            "tag_border": "#39220f"
-          }
-        },
-        "v_blueberry": {
-          "type": "video",
-          "disabled": true,
-          "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/80bf19b8c43e46c4b0041358dd951f66/80bf19b8c43e46c4b0041358dd951f66.HD-720p-1.6Mbps-37354127.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/80bf19b8c43e46c4b0041358dd951f66.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_11.m4v?v=1784559618",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_11.m4v?v=1784559618",
             "video_link": "",
             "show_tag": true,
             "tag_text": "Blueberry",
@@ -748,14 +709,53 @@
             "tag_border": "#39220f"
           }
         },
+        "v_caramel": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_9.m4v?v=1784559424",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_9.m4v?v=1784559424",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Passion Fruit",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_mango": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_1.m4v?v=1784559424",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_1.m4v?v=1784559424",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Lavender",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
+        "v_peach": {
+          "type": "video",
+          "settings": {
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_5.m4v?v=1784559424",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_5.m4v?v=1784559424",
+            "video_link": "",
+            "show_tag": true,
+            "tag_text": "Marshmallow",
+            "tag_bg": "#fce2a0",
+            "tag_color": "#39220f",
+            "tag_border": "#39220f"
+          }
+        },
         "v_cotton_candy": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/16a070f2e2714b14af52161f123586ec/16a070f2e2714b14af52161f123586ec.HD-720p-1.6Mbps-37801303.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/16a070f2e2714b14af52161f123586ec.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_7.m4v?v=1784559423",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_7.m4v?v=1784559423",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Cotton Candy",
+            "tag_text": "Blue Raspberry",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
@@ -764,11 +764,11 @@
         "v_salted_caramel": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/2f180f1fdc5d463e88d3a21b5884b86f/2f180f1fdc5d463e88d3a21b5884b86f.HD-720p-1.6Mbps-38476833.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/2f180f1fdc5d463e88d3a21b5884b86f.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_6.m4v?v=1784559423",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_6.m4v?v=1784559423",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Salted Caramel",
+            "tag_text": "Pumpkin Spice",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
@@ -777,11 +777,11 @@
         "v_banana_nut": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/709be99dc11f42a3b1310e39f2928be2/709be99dc11f42a3b1310e39f2928be2.HD-720p-4.5Mbps-38476837.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/709be99dc11f42a3b1310e39f2928be2.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_4.m4v?v=1784559423",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_4.m4v?v=1784559423",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Banana Nut",
+            "tag_text": "Salted Cookie Butter",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
@@ -790,11 +790,11 @@
         "v_cookie_butter": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/40236e72322c4b8f8887c3274bd6b7e8/40236e72322c4b8f8887c3274bd6b7e8.HD-720p-4.5Mbps-38476835.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/40236e72322c4b8f8887c3274bd6b7e8.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download.m4v?v=1784559422",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download.m4v?v=1784559422",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Cookie Butter",
+            "tag_text": "Strawberry",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
@@ -803,11 +803,11 @@
         "v_pumpkin_spice": {
           "type": "video",
           "settings": {
-            "video_url": "https://cdn.shopify.com/videos/c/vp/c75067903311468bad5e6236c8849ce1/c75067903311468bad5e6236c8849ce1.HD-720p-4.5Mbps-38476836.mp4",
-            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/preview_images/c75067903311468bad5e6236c8849ce1.thumbnail.0000000000.jpg",
+            "video_url": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_8.m4v?v=1784559422",
+            "video_poster": "https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Download_8.m4v?v=1784559422",
             "video_link": "",
             "show_tag": true,
-            "tag_text": "Pumpkin Spice",
+            "tag_text": "French Vanilla",
             "tag_bg": "#fce2a0",
             "tag_color": "#39220f",
             "tag_border": "#39220f"
@@ -818,10 +818,8 @@
         "v_strawberry",
         "v_vanilla",
         "v_caramel",
-        "v_hazelnut",
         "v_mango",
         "v_peach",
-        "v_blueberry",
         "v_cotton_candy",
         "v_salted_caramel",
         "v_banana_nut",

@@ -1,0 +1,1369 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+{% render 'pd-fixes' %}
+{% render 'pd-tweaks' %}
+{% render 'pd-rv2-affordances' %}
+{% render 'pd-reviews-style' %}
+{% render 'pd-color-swap' %}
+{% render 'pd-page-polish-v2' %}
+{% render 'pd-sale-display' %}
+
+{%- comment -%}
+  ═══════════════════════════════════════════════════════════════
+  CSS variable injection from schema settings.
+  Scoped to this section so other instances/templates aren't affected.
+  Loaded inline with HTML — no FOUC on first paint.
+  ═══════════════════════════════════════════════════════════════
+{%- endcomment -%}
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --pd-text: {{ section.settings.text_primary }};
+    --pd-brand: {{ section.settings.text_brand }};
+    --pd-bg: {{ section.settings.bg_section }};
+    --pd-accent: {{ section.settings.accent_color }};
+    --pd-star: {{ section.settings.star_color }};
+    --pd-h1-max: {{ section.settings.h1_font_size_max }}px;
+    --pd-h2: {{ section.settings.h2_font_size }}px;
+    --pd-eyebrow-size: {{ section.settings.eyebrow_font_size }}px;
+    --pd-hero-pad-top: {{ section.settings.hero_padding_top }}px;
+    --pd-hero-pad-bottom: {{ section.settings.hero_padding_bottom }}px;
+    --pd-sec-pad-top: {{ section.settings.section_padding_top }}px;
+    --pd-sec-pad-bottom: {{ section.settings.section_padding_bottom }}px;
+    --pd-wrap: {{ section.settings.wrap_max_width }}px;
+    --pd-cta-bg: {{ section.settings.cta_color_bg }};
+    --pd-cta-text: {{ section.settings.cta_color_text }};
+
+    /* Per-section backgrounds & text */
+    --pd-bc-text: {{ section.settings.breadcrumb_text_color }};
+    --pd-hero-bg: {{ section.settings.hero_bg }};
+    --pd-marquee-bg: {{ section.settings.marquee_bg }};
+    --pd-marquee-text: {{ section.settings.marquee_text }};
+    --pd-desc-bg: {{ section.settings.desc_bg }};
+    --pd-desc-card-bg: {{ section.settings.desc_card_bg }};
+    --pd-desc-text: {{ section.settings.desc_text_color }};
+    --pd-why-bg: {{ section.settings.why_bg }};
+    --pd-why-text: {{ section.settings.why_text_color }};
+    --pd-ugc-bg: {{ section.settings.ugc_bg }};
+    --pd-ugc-text: {{ section.settings.ugc_text_color }};
+    --pd-sticky-bg: {{ section.settings.sticky_bg }};
+    --pd-sticky-text: {{ section.settings.sticky_text_color }};
+    --pd-sale-bg: {{ section.settings.sale_badge_bg }};
+    --pd-sale-text: {{ section.settings.sale_badge_text }};
+    --pd-eyebrow-bg: {{ section.settings.eyebrow_bg }};
+    --pd-eyebrow-text: {{ section.settings.eyebrow_text_color }};
+
+    /* Accent palette (chips, cards, emphasis) — overrides pdp-brand.css tokens */
+    --peach: {{ section.settings.palette_peach }};
+    --butter: {{ section.settings.palette_butter }};
+    --mint: {{ section.settings.palette_mint }};
+    --sky: {{ section.settings.palette_sky }};
+    --blush: {{ section.settings.palette_blush }};
+    --coral: {{ section.settings.palette_coral }};
+  }
+
+  /* Apply variables to page elements */
+  #shopify-section-{{ section.id }} .pd {
+    background: var(--pd-bg) !important;
+    color: var(--pd-text) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-wrap {
+    max-width: var(--pd-wrap) !important;
+  }
+
+  /* Hero spacing */
+  #shopify-section-{{ section.id }} .pd-hero {
+    padding-top: var(--pd-hero-pad-top) !important;
+    padding-bottom: var(--pd-hero-pad-bottom) !important;
+  }
+
+  /* Section spacing (description, why, ugc) */
+  #shopify-section-{{ section.id }} .pd-description,
+  #shopify-section-{{ section.id }} .pd-why,
+  #shopify-section-{{ section.id }} .pd-ugc {
+    padding-top: var(--pd-sec-pad-top) !important;
+    padding-bottom: var(--pd-sec-pad-bottom) !important;
+  }
+
+  /* Typography */
+  #shopify-section-{{ section.id }} .pd-h1 {
+    font-size: clamp(28px, 8vw, var(--pd-h1-max)) !important;
+    color: var(--pd-brand) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-h2 {
+    font-size: var(--pd-h2) !important;
+    color: var(--pd-brand) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-eyebrow {
+    font-size: var(--pd-eyebrow-size) !important;
+  }
+
+  /* Stars */
+  #shopify-section-{{ section.id }} .pd-stars svg {
+    fill: var(--pd-star) !important;
+    stroke: var(--pd-star) !important;
+  }
+
+  /* Add to cart button */
+  #shopify-section-{{ section.id }} .pd-atc,
+  #shopify-section-{{ section.id }} .pd-stickybar .pd-atc {
+    background: var(--pd-cta-bg) !important;
+    color: var(--pd-cta-text) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-atc:hover {
+    filter: brightness(0.92);
+  }
+
+  /* Accent color usage (Read more, links) */
+  #shopify-section-{{ section.id }} .pd-blurb-more,
+  #shopify-section-{{ section.id }} .pd-variant-link strong {
+    color: var(--pd-accent) !important;
+  }
+
+  /* Mobile-only slider (preserved from original) */
+  #shopify-section-{{ section.id }} .pd-slider-mobile { display: none; }
+  #shopify-section-{{ section.id }} .pd-slider-dots { display: none; }
+  @media (max-width: 760px) {
+    #shopify-section-{{ section.id }} .pd-hero-frame { display: none !important; }
+    #shopify-section-{{ section.id }} .pd-thumbs { display: none !important; }
+    #shopify-section-{{ section.id }} .pd-slider-mobile {
+      display: block !important;
+      position: relative;
+      background: var(--pd-bg) !important;
+      border: 2px solid var(--pd-brand) !important;
+      border-radius: 20px;
+      padding: 0;
+      box-shadow: 4px 4px 0 var(--pd-brand) !important;
+      overflow: hidden;
+      max-width: 340px;
+      margin: 0 auto;
+    }
+    #shopify-section-{{ section.id }} .pd-slides {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      width: 100%;
+      position: relative;
+      z-index: 0;
+    }
+    #shopify-section-{{ section.id }} .pd-slides::-webkit-scrollbar { display: none; }
+    #shopify-section-{{ section.id }} .pd-slide { flex: 0 0 100%; scroll-snap-align: start; min-width: 100%; }
+    #shopify-section-{{ section.id }} .pd-slide img {
+      width: 100%;
+      height: auto;
+      display: block;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+    }
+    #shopify-section-{{ section.id }} .pd-slider-dots {
+      display: flex !important;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 10px;
+    }
+  }
+
+  /* Price row alignment (preserved from original) */
+  #shopify-section-{{ section.id }} .pd .pd-price-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+  }
+  #shopify-section-{{ section.id }} .pd .pd-stickybar .pd-price {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+
+  /* ── Per-section background & text overrides ─────────────────── */
+  /* Breadcrumbs */
+  #shopify-section-{{ section.id }} .pd-breadcrumbs,
+  #shopify-section-{{ section.id }} .pd-breadcrumbs a,
+  #shopify-section-{{ section.id }} .pd-breadcrumbs .pd-bc-current {
+    color: var(--pd-bc-text) !important;
+  }
+
+  /* Hero */
+  #shopify-section-{{ section.id }} .pd-hero {
+    background: var(--pd-hero-bg) !important;
+  }
+
+  /* Marquee */
+  #shopify-section-{{ section.id }} .pd-marquee {
+    background: var(--pd-marquee-bg) !important;
+    color: var(--pd-marquee-text) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-marquee-track span {
+    color: var(--pd-marquee-text) !important;
+  }
+
+  /* Description section */
+  #shopify-section-{{ section.id }} .pd-description {
+    background: var(--pd-desc-bg) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-desc-card,
+  #shopify-section-{{ section.id }} .pd-desc-card.pd-ing-card,
+  #shopify-section-{{ section.id }} .pd-desc-card.pd-nf-card {
+    background: var(--pd-desc-card-bg) ;
+  }
+  #shopify-section-{{ section.id }} .pd-desc-label,
+  #shopify-section-{{ section.id }} .pd-desc-text {
+    color: var(--pd-desc-text) !important;
+  }
+
+  /* Why section */
+  #shopify-section-{{ section.id }} .pd-why {
+    background: var(--pd-why-bg) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-why-body {
+    color: var(--pd-why-text) !important;
+  }
+
+  /* UGC section */
+  #shopify-section-{{ section.id }} .pd-ugc {
+    background: var(--pd-ugc-bg) !important;
+    color: var(--pd-ugc-text) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-ugc .pd-h2 {
+    color: var(--pd-ugc-text) !important;
+  }
+
+  /* Sticky bar */
+  #shopify-section-{{ section.id }} .pd-stickybar {
+    background: var(--pd-sticky-bg) !important;
+  }
+  #shopify-section-{{ section.id }} .pd-stickybar .pd-price {
+    color: var(--pd-sticky-text) !important;
+  }
+
+  /* Sale badge */
+  #shopify-section-{{ section.id }} .pd-sale-badge {
+    background: var(--pd-sale-bg) !important;
+    color: var(--pd-sale-text) !important;
+  }
+
+  /* Eyebrow labels */
+  #shopify-section-{{ section.id }} .pd-eyebrow {
+    background: var(--pd-eyebrow-bg) !important;
+    color: var(--pd-eyebrow-text) !important;
+  }
+{% endstyle %}
+
+{%- assign hero_img = product.featured_media.preview_image -%}
+{%- assign hero_src = hero_img | image_url: width: 1400 -%}
+
+<link rel="preload" as="image" href="{{ hero_src }}" imagesrcset="{{ hero_img | image_url: width: 600 }} 600w, {{ hero_img | image_url: width: 1000 }} 1000w, {{ hero_img | image_url: width: 1400 }} 1400w" imagesizes="(max-width: 980px) 100vw, 600px" fetchpriority="high">
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign compare_at = current_variant.compare_at_price -%}
+{%- assign price = current_variant.price -%}
+
+{%- assign is_sf = false -%}
+{%- assign t_lc = product.title | downcase -%}
+{%- if t_lc contains 'sugar-free' or t_lc contains 'sugar free' -%}{%- assign is_sf = true -%}{%- endif -%}
+
+{%- assign is_vip = false -%}
+{%- if customer and customer.tags contains 'VIP' -%}{%- assign is_vip = true -%}{%- endif -%}
+
+{%- assign display_price = price -%}
+{%- if is_vip and price > 799 -%}{%- assign display_price = 799 -%}{%- endif -%}
+
+{%- assign has_sale = false -%}
+{%- if compare_at and compare_at > price -%}{%- assign has_sale = true -%}{%- endif -%}
+{%- assign sale_pct = 0 -%}
+{%- if has_sale -%}
+  {%- assign sale_diff = compare_at | minus: price -%}
+  {%- assign sale_pct = sale_diff | times: 100 | divided_by: compare_at -%}
+{%- endif -%}
+
+{%- comment -%} Counterpart: regular products store it in custom.sugar_free, sugar-free products in custom.regular. {%- endcomment -%}
+{%- if is_sf -%}{%- assign counterpart = product.metafields.custom.regular.value -%}{%- else -%}{%- assign counterpart = product.metafields.custom.sugar_free.value -%}{%- endif -%}
+{%- if counterpart == blank -%}{%- assign counterpart = product.metafields.custom.sugar_free.value | default: product.metafields.custom.regular.value -%}{%- endif -%}
+{%- assign ingredients_field = product.metafields.custom.additionalfield -%}
+{%- assign review_count = product.metafields.reviews.rating_count.value | default: 0 -%}
+
+<div class="pd" data-product-id="{{ product.id }}" data-base-price="{{ display_price }}">
+
+  {%- if section.settings.show_breadcrumbs -%}
+    <nav class="pd-breadcrumbs" aria-label="Breadcrumb">
+      <div class="pd-wrap">
+        <ol>
+          <li><a href="/">{{ section.settings.breadcrumb_home }}</a></li>
+          <li class="pd-bc-sep" aria-hidden="true">/</li>
+          <li><a href="/collections/all">{{ section.settings.breadcrumb_category }}</a></li>
+          <li class="pd-bc-sep" aria-hidden="true">/</li>
+          <li class="pd-bc-current">{{ product.title }}</li>
+        </ol>
+      </div>
+    </nav>
+  {%- endif -%}
+
+  <section class="pd-hero">
+    <div class="pd-wrap">
+      <div class="pd-hero-grid">
+
+        <div class="pd-hero-media">
+          <div class="pd-hero-frame">
+            <img id="pdHeroImg" src="{{ hero_src }}" alt="{{ product.title | escape }}" width="1200" height="1200" fetchpriority="high">
+          </div>
+          {%- if product.images.size > 1 -%}
+            <div class="pd-thumbs">
+              {%- for img in product.images limit: 4 -%}
+                <button type="button" class="pd-thumb{% if forloop.first %} is-active{% endif %}" data-src="{{ img | image_url: width: 1400 }}" aria-label="View image {{ forloop.index }}"><img src="{{ img | image_url: width: 200 }}" alt="" width="200" height="200" loading="lazy"></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+
+          <div class="pd-slider-mobile">
+            <div class="pd-slides" id="pdSlides">
+              {%- for img in product.images -%}
+                <div class="pd-slide" data-idx="{{ forloop.index0 }}">
+                  <img src="{{ img | image_url: width: 1000 }}" alt="{{ product.title | escape }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+                </div>
+              {%- endfor -%}
+            </div>
+          </div>
+          {%- if product.images.size > 1 -%}
+            <div class="pd-slider-dots" id="pdDots">
+              {%- for img in product.images -%}
+                <button type="button" class="pd-dot{% if forloop.first %} is-active{% endif %}" data-idx="{{ forloop.index0 }}" aria-label="View image {{ forloop.index }}"></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="pd-hero-info">
+
+          <a href="#reviews" class="pd-rating-row">
+            <span class="pd-stars" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="{{ section.settings.star_color }}" stroke="{{ section.settings.star_color }}" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="{{ section.settings.star_color }}" stroke="{{ section.settings.star_color }}" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="{{ section.settings.star_color }}" stroke="{{ section.settings.star_color }}" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="{{ section.settings.star_color }}" stroke="{{ section.settings.star_color }}" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="{{ section.settings.star_color }}" stroke="{{ section.settings.star_color }}" stroke-width="1" stroke-linejoin="round"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
+            </span>
+            <span class="pd-rating-text">{{ review_count }} reviews</span>
+          </a>
+
+          <h1 class="pd-h1">{{ product.title | upcase }}</h1>
+
+          <div class="pd-chips">
+            {%- if is_sf -%}
+              <span class="pd-chip pd-chip--blush"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M5 5l14 14"/></svg>Sugar-Free</span>
+            {%- else -%}
+              <span class="pd-chip pd-chip--butter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 C 7 6, 7 14, 12 22 C 17 14, 17 6, 12 2 Z M12 7 V 18"/></svg>Pure Cane Sugar</span>
+            {%- endif -%}
+            <span class="pd-chip pd-chip--mint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 C 7 9, 5 13, 5 16 a 7 7 0 0 0 14 0 c 0 -3 -2 -7 -7 -13 Z"/></svg>30 Pouches Per Bag</span>
+            <span class="pd-chip pd-chip--sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 l4 4 L19 7"/></svg>Gluten-Free · Kosher</span>
+            <span class="pd-chip pd-chip--peach"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22 V 4 l 6 2 l 6 -2 l 4 2 v 14 l -4 -2 l -6 2 l -6 -2 Z"/></svg>Made in USA</span>
+          </div>
+
+          {%- if counterpart != blank -%}
+            <a href="/products/{{ counterpart.handle }}" class="pd-variant-link">
+              {%- if is_sf -%}Prefer the original? <strong>Try Regular</strong>{%- else -%}Prefer no sugar? <strong>Try Sugar-Free</strong>{%- endif -%}
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 h14 M13 6 l6 6 -6 6"/></svg>
+            </a>
+          {%- endif -%}
+
+          {%- form 'product', product, id: 'pdAtcForm', class: 'pd-form' -%}
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+            {% render 'pd-purchase-options' %}
+            <div class="pd-priceqty">
+              <div class="pd-priceblock">
+                <div class="pd-price-row">
+                  <span class="pd-price" id="pdPriceTotal">{{ display_price | money }}</span>
+                  {%- if has_sale -%}
+                    <span class="pd-price-original" id="pdPriceCompareAt">{{ compare_at | money }}</span>
+                    <span class="pd-sale-badge">Save {{ sale_pct }}%</span>
+                  {%- endif -%}
+                  {% render 'pd-vip-pricing', variant: 'main', price: price %}
+                  <span class="pd-price-was" id="pdPriceWas" style="display:none"></span>
+                </div>
+                <span class="pd-save-inline" id="pdSaveTag" style="display:none"></span>
+              </div>
+              <div class="pd-qty" aria-label="Quantity">
+                <button type="button" data-qty="-1" aria-label="Decrease">−</button>
+                <input type="number" name="quantity" value="1" min="1" inputmode="numeric">
+                <button type="button" data-qty="1" aria-label="Increase">+</button>
+              </div>
+            </div>
+            <button type="submit" class="pd-atc pd-atc--full" {% unless product.available %}disabled{% endunless %}>
+              <svg class="pd-atc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 L4 6 V20 a2 2 0 0 0 2 2 H18 a2 2 0 0 0 2 -2 V6 L18 2 Z M4 6 H20 M16 10 a4 4 0 0 1 -8 0"/></svg>
+              <span class="pd-atc-text" id="pdAtcText">{%- if product.available -%}Add to cart{%- else -%}Sold Out{%- endif -%}</span>
+              {%- if product.available -%}<svg class="pd-atc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 H19 M13 6 l6 6 -6 6"/></svg>{%- endif -%}
+            </button>
+          {%- endform -%}
+
+          {%- if section.settings.show_mini_bundle -%}
+            <div class="pd-minibundle">
+              <div class="pd-mb-head">
+                <span class="pd-mb-headline">Add more, save more</span>
+                <span class="pd-mb-sub">Tap a tier to apply</span>
+              </div>
+              <div class="pd-mb-grid">
+                <button type="button" class="pd-mb-cell" data-tier="2">
+                  <span class="pd-mb-num">2</span>
+                  <span class="pd-mb-label">Pouches</span>
+                  <span class="pd-mb-save">Save 5%</span>
+                </button>
+                <button type="button" class="pd-mb-cell" data-tier="3">
+                  <span class="pd-mb-flag">Most Popular</span>
+                  <span class="pd-mb-num">3</span>
+                  <span class="pd-mb-label">Pouches</span>
+                  <span class="pd-mb-save">Save 10%</span>
+                </button>
+                <button type="button" class="pd-mb-cell" data-tier="4">
+                  <span class="pd-mb-num">4+</span>
+                  <span class="pd-mb-label">Pouches</span>
+                  <span class="pd-mb-save">Save 15%</span>
+                </button>
+              </div>
+            </div>
+          {%- endif -%}
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {%- if section.settings.show_marquee -%}
+    <div class="pd-marquee" aria-hidden="true">
+      <div class="pd-marquee-track">
+        {%- assign marquee_lines = section.settings.marquee_items | newline_to_br | split: '<br />' -%}
+        {%- for i in (1..2) -%}
+          {%- for line in marquee_lines -%}
+            {%- assign trimmed = line | strip -%}
+            {%- if trimmed != blank -%}
+              <span>{{ trimmed }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_description -%}
+    <section class="pd-description">
+      <div class="pd-wrap">
+        <div class="pd-desc-head">
+          <span class="pd-eyebrow">{{ section.settings.desc_eyebrow }}</span>
+          <h2 class="pd-h2" style="margin-top:14px;">{{ section.settings.desc_heading_pre }} <em>{{ section.settings.desc_heading_emphasis }}</em>.</h2>
+        </div>
+
+        <div class="pd-desc-content">
+          {%- if product.description and product.description != blank and product.description contains '<li' -%}
+
+            {%- comment -%} Server-side parse of <li> items from product.description {%- endcomment -%}
+            {%- assign items_str = '' -%}
+            {%- assign li_pieces = product.description | split: '<li' -%}
+            {%- for piece in li_pieces -%}
+              {%- unless forloop.first -%}
+                {%- assign after_open = piece | split: '>' | slice: 1, 99 | join: '>' -%}
+                {%- assign item_text = after_open | split: '</li>' | first | strip_html | strip -%}
+                {%- if item_text != blank -%}
+                  {%- assign items_str = items_str | append: item_text | append: '|##|' -%}
+                {%- endif -%}
+              {%- endunless -%}
+            {%- endfor -%}
+            {%- assign items_arr = items_str | split: '|##|' -%}
+            {%- assign item_count = items_arr | size -%}
+
+            <div class="pd-desc-card" data-transformed="1">
+              {%- for item in items_arr -%}
+                <div class="pd-desc-section{% unless forloop.first %} is-hidden{% endunless %}">
+                  <div>
+                    {%- if item contains ':' -%}
+                      {%- assign colon_split = item | split: ':' -%}
+                      {%- assign label = colon_split | first | strip -%}
+                      {%- assign label_len = label | size -%}
+                      {%- assign rest_start = label_len | plus: 1 -%}
+                      {%- assign item_len = item | size -%}
+                      {%- assign desc_text = item | slice: rest_start, item_len | strip -%}
+                      {%- if label != blank and desc_text != blank -%}
+                        <h3 class="pd-desc-label">{{ label }}</h3>
+                        <p class="pd-desc-text">{{ desc_text }}</p>
+                      {%- else -%}
+                        <p class="pd-desc-text">{{ item }}</p>
+                      {%- endif -%}
+                    {%- else -%}
+                      <p class="pd-desc-text">{{ item }}</p>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endfor -%}
+              {%- if item_count > 1 -%}
+                <button type="button" class="pd-desc-toggle">
+                  <span class="pd-desc-toggle-text">Read more</span>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>
+                </button>
+              {%- endif -%}
+            </div>
+
+          {%- elsif product.description and product.description != blank -%}
+            {{ product.description }}
+          {%- else -%}
+            <div class="pd-desc-card" data-transformed="1">
+              <div class="pd-desc-section">
+                <div>
+                  <h3 class="pd-desc-label">Real Flavor</h3>
+                  <p class="pd-desc-text">Café-quality syrup with rich, true-to-source taste in every pouch.</p>
+                </div>
+              </div>
+              <div class="pd-desc-section is-hidden">
+                <div>
+                  <h3 class="pd-desc-label">{% if is_sf %}Sugar-Free{% else %}Pure Cane Sugar{% endif %}</h3>
+                  <p class="pd-desc-text">{% if is_sf %}All the rich flavor, zero sugar — no weird aftertaste.{% else %}No high-fructose corn syrup, no weird aftertaste.{% endif %}</p>
+                </div>
+              </div>
+              <div class="pd-desc-section is-hidden">
+                <div>
+                  <h3 class="pd-desc-label">Long Lasting</h3>
+                  <p class="pd-desc-text">30 single-serving pouches per bag &mdash; 450 ml (15.2 fl oz) total.</p>
+                </div>
+              </div>
+              <div class="pd-desc-section is-hidden">
+                <div>
+                  <h3 class="pd-desc-label">Made in USA</h3>
+                  <p class="pd-desc-text">Kosher certified, gluten free, dietary-friendly.</p>
+                </div>
+              </div>
+              <button type="button" class="pd-desc-toggle">
+                <span class="pd-desc-toggle-text">Read more</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>
+              </button>
+            </div>
+          {%- endif -%}
+
+          <div class="pd-desc-card pd-ing-card">
+            <div class="pd-desc-section">
+              <div>
+                <h3 class="pd-desc-label">Ingredients</h3>
+                <p class="pd-desc-text">
+                  {%- if ingredients_field -%}{{ ingredients_field | metafield_tag | strip_html }}{%- else -%}Pure Cane Sugar, Filtered Water, Natural Flavor, Citric Acid, Potassium Sorbate (preservative).{%- endif -%}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="pd-desc-card pd-nf-card">
+            <button type="button" class="pd-nf-toggle">
+              <span class="pd-nf-toggle-dot" aria-hidden="true"></span>
+              <span class="pd-nf-toggle-text">Nutrition Facts</span>
+              <span class="pd-nf-toggle-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>
+              </span>
+            </button>
+            <div class="pd-nf-body">
+              <div class="pd-nutrition">
+                <div class="pd-nutrition-title">Nutrition Facts</div>
+                <div class="pd-nut-serv">Serving per pack: 1 &middot; Serving size 1 pouch — 15 mL (0.50 fl oz)</div>
+                <div class="pd-nut-rule--thick"></div>
+                <div class="pd-nut-row"><strong>Amount per serving</strong></div>
+                <div class="pd-nut-row" style="font-size:18px;"><strong>Calories</strong><strong>{%- if is_sf -%}0{%- else -%}40{%- endif -%}</strong></div>
+                <div class="pd-nut-rule"></div>
+                <div style="font-size:12px;text-align:right;">% Daily Value*</div>
+                <div class="pd-nut-row"><span><strong>Total Fat</strong> 0g</span><strong>0%</strong></div>
+                <div class="pd-nut-rule"></div>
+                <div class="pd-nut-row"><span><strong>Sodium</strong> 5mg</span><strong>0%</strong></div>
+                <div class="pd-nut-rule"></div>
+                <div class="pd-nut-row"><span><strong>Total Carbohydrate</strong> {%- if is_sf -%}0g{%- else -%}10g{%- endif -%}</span><strong>{%- if is_sf -%}0%{%- else -%}4%{%- endif -%}</strong></div>
+                <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Total Sugars {%- if is_sf -%}0g{%- else -%}10g{%- endif -%}</span><span></span></div>
+                <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Incl. {% if is_sf %}0g{% else %}10g{% endif %} Added Sugars</span><strong>{% if is_sf %}0%{% else %}20%{% endif %}</strong></div>
+                <div class="pd-nut-rule"></div>
+                <div class="pd-nut-row"><span><strong>Protein</strong> 0g</span></div>
+                <div class="pd-nut-rule--med"></div>
+                <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">*% DV based on a 2,000 calorie diet. Not a significant source of saturated fat, trans fat, cholesterol, dietary fiber, vitamin D, calcium, iron and potassium.</div><div style="font-size:11px;line-height:1.35;color:#3a3a3a;margin-top:8px;text-align:left;"><strong>INGREDIENTS:</strong> {% if is_sf %}Water, Natural Flavors, Gum, Sucralose, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate, Potassium Sorbate &amp; Ace K (Preservatives){% else %}Pure Cane Sugar, Water, Natural Flavors, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate &amp; Potassium Sorbate (Preservatives){% endif %}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+    (function(){
+      document.addEventListener('click', function(e){
+        const readMoreBtn = e.target.closest('.pd-desc-toggle');
+        if (readMoreBtn) {
+          const card = readMoreBtn.closest('.pd-desc-card');
+          if (!card) return;
+          const wasExpanded = card.classList.contains('is-expanded');
+          const isExpanded = card.classList.toggle('is-expanded');
+          readMoreBtn.classList.toggle('is-expanded', isExpanded);
+          const textEl = readMoreBtn.querySelector('.pd-desc-toggle-text');
+          if (textEl) textEl.textContent = isExpanded ? 'Show less' : 'Read more';
+          card.querySelectorAll('.pd-desc-section').forEach((s, i) => {
+            if (i > 0) s.classList.toggle('is-hidden', !isExpanded);
+          });
+          if (wasExpanded && !isExpanded) {
+            const desc = document.querySelector('.pd-description');
+            if (desc) {
+              const headerStr = getComputedStyle(document.documentElement).getPropertyValue('--header-height');
+              const headerH = parseInt(headerStr) || 84;
+              const targetY = desc.getBoundingClientRect().top + window.scrollY - headerH - 20;
+              window.scrollTo({top: Math.max(0, targetY), behavior: 'smooth'});
+            }
+          }
+          return;
+        }
+
+        const nfCard = e.target.closest('.pd-nf-card');
+        if (nfCard && !e.target.closest('.pd-nf-body')) {
+          const wasOpen = nfCard.classList.contains('is-open');
+          nfCard.classList.toggle('is-open');
+          if (wasOpen) {
+            const headerStr = getComputedStyle(document.documentElement).getPropertyValue('--header-height');
+            const headerH = parseInt(headerStr) || 84;
+            const targetY = nfCard.getBoundingClientRect().top + window.scrollY - headerH - 20;
+            window.scrollTo({top: Math.max(0, targetY), behavior: 'smooth'});
+          }
+        }
+      });
+    })();
+    </script>
+  {%- endif -%}
+
+  {%- if section.settings.show_pouch_band -%}
+  {%- assign pib_text = section.settings.pib_text | default: '#3c2415' -%}
+  <section class="pd-pib" style="background:{{ section.settings.pib_bg | default: '#e28f26' }};padding:clamp(36px,6vw,64px) 0 clamp(42px,7vw,70px);">
+    <style>
+      html body .pd .pd-pib .pd-pib-wrap{max-width:1080px;margin:0 auto;padding:0 18px;text-align:center;}
+      html body .pd .pd-pib .pd-pib-logo{display:block;background:#fff;border:2px solid #3c2415;border-radius:18px;box-shadow:4px 4px 0 #3c2415;padding:14px 24px 16px;margin:0 auto 22px;width:min(260px,70vw);transform:scale(.82);will-change:transform;transform-origin:center center;}
+      @media (prefers-reduced-motion: reduce){html body .pd .pd-pib .pd-pib-logo{transform:none !important;}}
+      html body .pd .pd-pib .pd-pib-logo img{display:block;width:100%;height:auto;}
+      html body .pd .pd-pib .pd-pib-logo img.top{width:54%;margin:0 auto 4px;}
+      html body .pd .pd-pib .pd-pib-eyerow{display:block;margin-bottom:4px;}
+      html body .pd .pd-pib .pd-pib-title{color:{{ pib_text }} !important;margin-top:10px !important;}
+      html body .pd .pd-pib .pd-pib-sub{font-size:clamp(15px,3.6vw,18px);color:{{ pib_text }};opacity:.92;margin:12px auto 0;max-width:52ch;line-height:1.55;}
+      html body .pd .pd-pib .pd-pib-steps{display:grid;grid-template-columns:1fr;gap:14px;margin-top:28px;}
+      @media(min-width:700px){html body .pd .pd-pib .pd-pib-steps{grid-template-columns:repeat(3,1fr);}}
+      @media(max-width:699px){
+        html body .pd .pd-pib .pd-pib-steps{display:block;}
+        html body .pd .pd-pib .pd-pib-step{position:sticky;top:calc(84px + (var(--i,0) * 16px));margin-bottom:18px;z-index:calc(1 + var(--i,0));}
+        html body .pd .pd-pib .pd-pib-steps::after{content:'';display:block;height:1px;}
+      }
+      html body .pd .pd-pib .pd-pib-step{background:#fff;border:2px solid #3c2415;border-radius:18px;box-shadow:5px 5px 0 #3c2415;padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:9px;}
+      html body .pd .pd-pib .pd-pib-step .n{width:44px;height:44px;border-radius:50%;background:{{ section.settings.pib_bg | default: '#e28f26' }};color:#fff;border:2px solid #3c2415;box-shadow:2px 2px 0 #3c2415;display:flex;align-items:center;justify-content:center;font-family:'Archivo Black','Archivo',sans-serif !important;font-weight:400 !important;font-size:19px;}
+      html body .pd .pd-pib .pd-pib-step h3{font-family:'Archivo Black','Archivo',sans-serif !important;font-weight:400 !important;font-size:16px !important;letter-spacing:.06em;text-transform:uppercase;color:#3c2415;margin:0;}
+      html body .pd .pd-pib .pd-pib-step p{font-size:14px;opacity:.82;margin:0;line-height:1.5;color:#1a1a1a;}
+      html body .pd .pd-pib .pd-pib-chips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px;}
+      html body .pd .pd-pib .pd-pib-chips span{font-family:'Archivo Black','Archivo',sans-serif !important;font-weight:400 !important;font-size:11px !important;letter-spacing:.08em;text-transform:uppercase;border:2px solid #3c2415;border-radius:999px;padding:8px 15px;background:{{ section.settings.pib_chip | default: '#FFF3DC' }};color:#3c2415;box-shadow:2px 2px 0 #3c2415;}
+      /* stacking entrance (staggered) */
+      html body .pd .pd-pib .pd-pib-anim{opacity:0;transform:translateY(30px) scale(.95);transition:opacity .55s ease var(--d,0s),transform .7s cubic-bezier(.2,.7,.2,1.25) var(--d,0s);}
+      html body .pd .pd-pib .pd-pib-anim.in{opacity:1;transform:none;}
+      html body .pd .pd-pib .pd-pib-chips span{opacity:0;transform:translateY(16px);transition:opacity .45s ease var(--d,0s),transform .55s cubic-bezier(.2,.7,.2,1.3) var(--d,0s);}
+      html body .pd .pd-pib .pd-pib-chips.in span{opacity:1;transform:none;}
+      @media (prefers-reduced-motion: reduce){
+        html body .pd .pd-pib .pd-pib-anim,html body .pd .pd-pib .pd-pib-chips span{opacity:1 !important;transform:none !important;transition:none !important;}
+      }
+    </style>
+    <div class="pd-pib-wrap">
+      {%- if section.settings.show_pib_logo -%}
+      <div class="pd-pib-logo" data-pib-grow>
+        {%- if section.settings.pib_logo != blank -%}
+          <img src="{{ section.settings.pib_logo | image_url: width: 600 }}" alt="Syrup Pouches" loading="lazy">
+        {%- else -%}
+          <img class="top" src="{{ 'sp-logo-syrup.svg' | asset_url }}" alt="Syrup" loading="lazy">
+          <img src="{{ 'sp-logo-pouches.svg' | asset_url }}" alt="Pouches" loading="lazy">
+        {%- endif -%}
+      </div>
+      {%- endif -%}
+      {%- if section.settings.pib_eyebrow != blank -%}<div class="pd-pib-eyerow pd-pib-anim" style="--d:.08s;"><span class="pd-eyebrow">{{ section.settings.pib_eyebrow }}</span></div>{%- endif -%}
+      <h2 class="pd-h2 pd-pib-title pd-pib-anim" style="--d:.14s;">{{ section.settings.pib_title | default: 'What&rsquo;s a Syrup Pouch?' }}</h2>
+      {%- if section.settings.pib_sub != blank -%}<p class="pd-pib-sub pd-pib-anim" style="--d:.2s;">{{ section.settings.pib_sub }}</p>{%- endif -%}
+      <div class="pd-pib-steps">
+        <div class="pd-pib-step pd-pib-anim" style="--d:.1s;--i:0;"><span class="n">1</span><h3>{{ section.settings.pib_s1_t | default: 'Tear' }}</h3><p>{{ section.settings.pib_s1_p | default: 'Rip the pouch open — no pump, no bottle, no measuring.' }}</p></div>
+        <div class="pd-pib-step pd-pib-anim" style="--d:.24s;--i:1;"><span class="n">2</span><h3>{{ section.settings.pib_s2_t | default: 'Pour' }}</h3><p>{{ section.settings.pib_s2_p | default: 'One pouch is one perfect 15 ml (0.50 fl oz) serving.' }}</p></div>
+        <div class="pd-pib-step pd-pib-anim" style="--d:.38s;--i:2;"><span class="n">3</span><h3>{{ section.settings.pib_s3_t | default: 'Enjoy' }}</h3><p>{{ section.settings.pib_s3_p | default: 'Coffee, soda, lemonade, desserts — flavor anything, anywhere.' }}</p></div>
+      </div>
+      {%- assign pib_chips = section.settings.pib_chips | default: '30 pouches per bag,450 ml (15.2 fl oz) total,Take it anywhere,Made in the USA' -%}
+      <div class="pd-pib-chips" data-pib-chips>{%- assign pcs = pib_chips | split: ',' -%}{%- for c in pcs -%}<span style="--d:{{ forloop.index0 | times: 0.09 }}s;">{{ c | strip }}</span>{%- endfor -%}</div>
+    </div>
+    <script>
+    (function(){
+      var band=document.currentScript.closest('.pd-pib');
+      if(!band) return;
+      var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var els=[].slice.call(band.querySelectorAll('.pd-pib-anim'));
+      var chips=band.querySelector('[data-pib-chips]');
+      if(!('IntersectionObserver' in window)||reduce){ els.forEach(function(e){e.classList.add('in');}); if(chips)chips.classList.add('in'); var lg=band.querySelector('[data-pib-grow]'); if(lg)lg.style.transform='none'; return; }
+      var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });},{threshold:.15});
+      els.forEach(function(e){io.observe(e);});
+      if(chips)io.observe(chips);
+      var logo=band.querySelector('[data-pib-grow]');
+      if(logo){
+        var ticking=false;
+        function grow(){
+          ticking=false;
+          var r=logo.getBoundingClientRect(), vh=window.innerHeight||document.documentElement.clientHeight;
+          var p=1-((r.top + r.height/2)/vh); p=Math.min(Math.max(p,0),1);
+          var s=0.82 + p*0.36; if(s>1.18)s=1.18;
+          logo.style.transform='scale('+s.toFixed(3)+')';
+        }
+        window.addEventListener('scroll',function(){ if(!ticking){ticking=true;requestAnimationFrame(grow);} },{passive:true});
+        window.addEventListener('resize',grow);
+        grow();
+      }
+    })();
+    </script>
+  </section>
+{%- endif -%}
+
+  <section class="pd-standards" aria-hidden="true">
+    <div class="pd-wrap">
+      <div class="pd-ingredients">
+        <span class="pd-ingredients-label">Ingredients</span>
+        <div>{%- if ingredients_field -%}{{ ingredients_field | metafield_tag | strip_html }}{%- else -%}Pure Cane Sugar, Filtered Water, Natural Flavor, Citric Acid, Potassium Sorbate (preservative).{%- endif -%}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pd-nutrition-wrap" aria-hidden="true">
+    <div class="pd-wrap">
+      <div class="pd-nutrition">
+        <div class="pd-nutrition-title">Nutrition Facts</div>
+        <div class="pd-nut-serv">Serving per pack: 1 &middot; Serving size 1 pouch — 15 mL (0.50 fl oz)</div>
+        <div class="pd-nut-rule--thick"></div>
+        <div class="pd-nut-row"><strong>Amount per serving</strong></div>
+        <div class="pd-nut-row" style="font-size:18px;"><strong>Calories</strong><strong>{%- if is_sf -%}0{%- else -%}40{%- endif -%}</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div style="font-size:12px;text-align:right;">% Daily Value*</div>
+        <div class="pd-nut-row"><span><strong>Total Fat</strong> 0g</span><strong>0%</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>Sodium</strong> 5mg</span><strong>0%</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>Total Carbohydrate</strong> {%- if is_sf -%}0g{%- else -%}10g{%- endif -%}</span><strong>{%- if is_sf -%}0%{%- else -%}4%{%- endif -%}</strong></div>
+        <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Total Sugars {%- if is_sf -%}0g{%- else -%}10g{%- endif -%}</span><span></span></div>
+        <div class="pd-nut-row" style="padding-left:14px;font-size:13px;"><span>Incl. {% if is_sf %}0g{% else %}10g{% endif %} Added Sugars</span><strong>{% if is_sf %}0%{% else %}20%{% endif %}</strong></div>
+        <div class="pd-nut-rule"></div>
+        <div class="pd-nut-row"><span><strong>Protein</strong> 0g</span></div>
+        <div class="pd-nut-rule--med"></div>
+        <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">*% DV based on a 2,000 calorie diet. Not a significant source of saturated fat, trans fat, cholesterol, dietary fiber, vitamin D, calcium, iron and potassium.</div><div style="font-size:11px;line-height:1.35;color:#3a3a3a;margin-top:8px;text-align:left;"><strong>INGREDIENTS:</strong> {% if is_sf %}Water, Natural Flavors, Gum, Sucralose, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate, Potassium Sorbate &amp; Ace K (Preservatives){% else %}Pure Cane Sugar, Water, Natural Flavors, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate &amp; Potassium Sorbate (Preservatives){% endif %}</div>
+      </div>
+    </div>
+  </section>
+
+  {%- if section.settings.show_why_section -%}
+    <section class="pd-why">
+      <div class="pd-wrap pd-why-wrap" style="text-align:center;">
+        <span class="pd-eyebrow">{{ section.settings.why_eyebrow }}</span>
+        <h2 class="pd-h2 pd-why-h2">{{ section.settings.why_heading }}</h2>
+        <div class="pd-why-grid pd-why-grid--spaced">
+          <div class="pd-why-card pd-why-card--peach">
+            <div class="pd-why-icon">
+              {%- if is_sf -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M6.5 17.5 L17.5 6.5"/></svg>
+              {%- else -%}
+                <svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="4.5" width="15" height="15" rx="2"/><path d="M4.5 12 H 19.5 M12 4.5 V 19.5"/></svg>
+              {%- endif -%}
+            </div>
+            <h3 class="pd-why-title">{% if is_sf %}Sugar Free &amp; Keto{% else %}Pure Cane Sugar{% endif %}</h3>
+            <p class="pd-why-body">{% if is_sf %}Zero sugar, zero calories, 0g net carbs — keto friendly with all the café-quality flavor.{% else %}Real cane sugar. Rich, café-quality sweetness in every pour.{% endif %}</p>
+          </div>
+          <div class="pd-why-card pd-why-card--butter">
+            <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 9 H 21 M3 13 H 21 M3 17 H 21"/><rect x="3" y="5" width="9" height="6" fill="#1a1a1a" stroke="none"/></svg></div>
+            <h3 class="pd-why-title">Made in USA</h3>
+            <p class="pd-why-body">Small-batch crafted in New Jersey to café-quality standards.</p>
+          </div>
+          <div class="pd-why-card pd-why-card--mint">
+            <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L20 6 V12 C20 16.5 16.4 20.5 12 22 C7.6 20.5 4 16.5 4 12 V6 L12 3 Z"/><path d="M8.5 12 L11 14.5 L15.5 9.5"/></svg></div>
+            <h3 class="pd-why-title">Kosher &amp; Gluten Free</h3>
+            <p class="pd-why-body">OU certified, gluten free, dietary friendly. Fits any cup.</p>
+          </div>
+          <div class="pd-why-card pd-why-card--sky">
+            <div class="pd-why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4 C 12 4, 5 11, 5 18 C 5 19.2, 5.8 20, 7 20 C 14 20, 21 13, 21 5 C 21 4.4, 20.6 4, 20 4 Z"/><path d="M5 20 L11 14"/></svg></div>
+            <h3 class="pd-why-title">Natural Color</h3>
+            <p class="pd-why-body">No artificial dyes. Rich, deep color from real ingredients only.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
+
+  {% render 'pd-recipes-v2', unit: 'pouch' %}
+
+  {%- if section.settings.show_ugc_section -%}
+    <section class="pd-ugc">
+      <div class="pd-wrap" style="text-align:center;">
+        <span class="pd-eyebrow" style="background:var(--pd-bg) !important;">From the Syruvia jar</span>
+        <h2 class="pd-h2" style="margin-top:14px;">What our <em>regulars</em> are pouring.</h2>
+        <div class="pd-ugc-grid" style="margin-top:36px;">
+          {%- for img in product.images limit: 4 -%}
+            <div class="pd-ugc-tile"><span class="pd-ugc-tile-tag">@syruvia_official</span><img src="{{ img | image_url: width: 600 }}" alt="" loading="lazy"></div>
+          {%- else -%}
+            {%- for i in (1..4) -%}
+              <div class="pd-ugc-tile"><span class="pd-ugc-tile-tag">@syruvia_official</span><img src="{{ product.featured_image | image_url: width: 600 }}" alt="" loading="lazy"></div>
+            {%- endfor -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
+
+  {% render 'pd-reviews-v2' %}
+  {% render 'pd-write-review' %}
+  {% render 'pd-recommended' %}
+  {% render 'pd-faq' %}
+  {% render 'pd-vip-section' %}
+
+  {%- if section.settings.show_sticky_bar -%}
+    <div class="pd-stickybar" id="pdStickybar">
+      <span class="pd-price">
+        <span id="pdStickyPrice">{{ display_price | money }}</span>
+        {%- if has_sale -%}<span class="pd-price-original">{{ compare_at | money }}</span>{%- endif -%}
+        {% render 'pd-vip-pricing', variant: 'sticky', price: price %}
+      </span>
+      <button type="button" class="pd-atc" {% unless product.available %}disabled{% endunless %} onclick="document.getElementById('pdAtcForm').requestSubmit()">{%- if product.available -%}Add to cart{%- else -%}Sold Out{%- endif -%}</button>
+    </div>
+  {%- endif -%}
+
+</div>
+
+{% render 'pd-mb-prices' %}
+
+<script>
+window.PD_BASE_CENTS = {{ display_price }};
+window.PD_COMPARE_AT_CENTS = {{ compare_at | default: 0 }};
+window.PD_HAS_SALE = {% if has_sale %}true{% else %}false{% endif %};
+window.PD_TIERS = [1, 0.95, 0.93, 0.90];
+(function(){
+  var currentBaseCents = window.PD_BASE_CENTS;
+  var compareAtCents = window.PD_COMPARE_AT_CENTS;
+  var hasSale = window.PD_HAS_SALE;
+  const tiers = window.PD_TIERS;
+  const fmt = (c)=>{const d=c/100; return '$' + d.toFixed(2);};
+  function updatePrice(qty){
+    qty = Math.max(1, parseInt(qty)||1);
+    const tierIdx = Math.min(qty-1, tiers.length-1);
+    const discount = tiers[tierIdx];
+    const totalCents = Math.round(currentBaseCents * qty * discount);
+    const origCents = currentBaseCents * qty;
+    const compareCents = compareAtCents * qty;
+    const priceEl = document.getElementById('pdPriceTotal');
+    const wasEl = document.getElementById('pdPriceWas');
+    const saveEl = document.getElementById('pdSaveTag');
+    const stickyPriceEl = document.getElementById('pdStickyPrice');
+    const compareEl = document.getElementById('pdPriceCompareAt');
+    if (priceEl) priceEl.textContent = fmt(totalCents);
+    if (stickyPriceEl) stickyPriceEl.textContent = fmt(totalCents);
+    if (hasSale && compareEl) compareEl.textContent = fmt(compareCents);
+    document.querySelectorAll('.pd-stickybar .pd-price-original').forEach(function(el){ el.textContent = fmt(compareCents); });
+    if (qty > 1) {
+      if (wasEl){wasEl.textContent = fmt(origCents); wasEl.style.display='inline';}
+      if (saveEl){saveEl.textContent = 'Save '+Math.round((1-discount)*100)+'%'; saveEl.style.display='inline-block';}
+    } else {
+      if (wasEl) wasEl.style.display='none';
+      if (saveEl) saveEl.style.display='none';
+    }
+    document.querySelectorAll('.pd-mb-cell').forEach(c=>{
+      const t = parseInt(c.dataset.tier)||1;
+      const match = (qty === t) || (qty >= 4 && t === 4);
+      if (match) c.setAttribute('data-active',''); else c.removeAttribute('data-active');
+    });
+  }
+  function getCurrentQty(){
+    const inp = document.querySelector('.pd-qty input');
+    return inp ? Math.max(1, parseInt(inp.value)||1) : 1;
+  }
+  document.querySelectorAll('.pd-qty [data-qty]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const inp = b.parentElement.querySelector('input');
+      const v = Math.max(1, (parseInt(inp.value)||1) + parseInt(b.dataset.qty));
+      inp.value = v;
+      updatePrice(v);
+    });
+  });
+  document.querySelectorAll('.pd-qty input').forEach(inp=>{
+    inp.addEventListener('change', ()=>updatePrice(parseInt(inp.value)||1));
+    inp.addEventListener('input', ()=>updatePrice(parseInt(inp.value)||1));
+  });
+  document.querySelectorAll('.pd-mb-cell').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      const tier = parseInt(c.dataset.tier)||1;
+      const qtyInp = document.querySelector('.pd-qty input');
+      if (qtyInp) {qtyInp.value = tier; updatePrice(tier);}
+    });
+  });
+  window.addEventListener('pd:purchase-option-changed', function(e){
+    var newBase = e.detail && e.detail.price ? e.detail.price : window.PD_BASE_CENTS;
+    currentBaseCents = newBase;
+    updatePrice(getCurrentQty());
+  });
+  const heroImg = document.getElementById('pdHeroImg');
+  document.querySelectorAll('.pd-thumb').forEach(t=>{
+    t.addEventListener('click', ()=>{document.querySelectorAll('.pd-thumb').forEach(x=>x.classList.remove('is-active'));t.classList.add('is-active');if (heroImg && t.dataset.src) heroImg.src = t.dataset.src;});
+  });
+  const slides = document.getElementById('pdSlides');
+  const dots = document.querySelectorAll('.pd-dot');
+  if (slides && dots.length){
+    let scrollTimer;
+    slides.addEventListener('scroll', ()=>{
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(()=>{
+        const idx = Math.round(slides.scrollLeft / slides.clientWidth);
+        dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+      }, 50);
+    });
+    dots.forEach((d, i)=>d.addEventListener('click', ()=>{
+      slides.scrollTo({left: i * slides.clientWidth, behavior: 'smooth'});
+    }));
+  }
+  const mainAtc = document.querySelector('.pd-atc--full');
+  const stickyBar = document.getElementById('pdStickybar');
+  if (mainAtc && stickyBar && 'IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if (e.isIntersecting){ stickyBar.classList.add('is-hidden'); } else { stickyBar.classList.remove('is-hidden'); } });
+    }, {threshold: 0.15});
+    io.observe(mainAtc);
+  }
+  const dotsContainer = document.getElementById('pdDots');
+  if (dotsContainer) {
+    let raf;
+    function updateDotProminence(){
+      const r = dotsContainer.getBoundingClientRect();
+      if (r.top > 60 && r.top < 380) {
+        dotsContainer.classList.add('is-prominent');
+      } else {
+        dotsContainer.classList.remove('is-prominent');
+      }
+    }
+    window.addEventListener('scroll', ()=>{cancelAnimationFrame(raf); raf = requestAnimationFrame(updateDotProminence);}, {passive: true});
+    updateDotProminence();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Pouch Page",
+  "tag": "section",
+  "class": "section-brand-page",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_primary",
+      "label": "Primary text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "text_brand",
+      "label": "Brand color (headings, borders)",
+      "default": "#39220f"
+    },
+    {
+      "type": "color",
+      "id": "bg_section",
+      "label": "Page background",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color (links, Read more)",
+      "default": "#c58548"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Review star color",
+      "default": "#FF6B5C"
+    },
+    {
+      "type": "header",
+      "content": "Section backgrounds & text"
+    },
+    {
+      "type": "paragraph",
+      "content": "Background and text color for each section. Defaults match the current design, so nothing changes until you edit a value."
+    },
+    {
+      "type": "color",
+      "id": "breadcrumb_text_color",
+      "label": "Breadcrumb text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "hero_bg",
+      "label": "Hero background",
+      "default": "#FFF8EE"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_bg",
+      "label": "Eyebrow label background",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_text_color",
+      "label": "Eyebrow label text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "marquee_bg",
+      "label": "Marquee background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "marquee_text",
+      "label": "Marquee text",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "desc_bg",
+      "label": "Description section background",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "desc_card_bg",
+      "label": "Description card background",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "desc_text_color",
+      "label": "Description card text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "why_bg",
+      "label": "Why section background",
+      "default": "#FFF8EE"
+    },
+    {
+      "type": "color",
+      "id": "why_text_color",
+      "label": "Why card body text",
+      "default": "#3a3a3a"
+    },
+    {
+      "type": "color",
+      "id": "ugc_bg",
+      "label": "UGC section background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "ugc_text_color",
+      "label": "UGC section text",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_bg",
+      "label": "Sale badge background",
+      "default": "#FF6B5C"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_text",
+      "label": "Sale badge text",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "sticky_bg",
+      "label": "Sticky bar background",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "color",
+      "id": "sticky_text_color",
+      "label": "Sticky bar price text",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Accent palette (chips & cards)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Pastel colors used by feature chips, \"Why\" cards and highlights."
+    },
+    {
+      "type": "color",
+      "id": "palette_peach",
+      "label": "Peach",
+      "default": "#FFD4B8"
+    },
+    {
+      "type": "color",
+      "id": "palette_butter",
+      "label": "Butter",
+      "default": "#FCE2A0"
+    },
+    {
+      "type": "color",
+      "id": "palette_mint",
+      "label": "Mint",
+      "default": "#C5E4D4"
+    },
+    {
+      "type": "color",
+      "id": "palette_sky",
+      "label": "Sky",
+      "default": "#B8DCEB"
+    },
+    {
+      "type": "color",
+      "id": "palette_blush",
+      "label": "Blush",
+      "default": "#F5C7BE"
+    },
+    {
+      "type": "color",
+      "id": "palette_coral",
+      "label": "Coral (emphasis words, marquee stars)",
+      "default": "#FF6B5C"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "h1_font_size_max",
+      "label": "H1 font size (max, desktop)",
+      "min": 32,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "h2_font_size",
+      "label": "H2 font size",
+      "min": 20,
+      "max": 56,
+      "step": 1,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_font_size",
+      "label": "Eyebrow label size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Layout"
+    },
+    {
+      "type": "range",
+      "id": "hero_padding_top",
+      "label": "Hero padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "hero_padding_bottom",
+      "label": "Hero padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Section padding top (description, why, ugc)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Section padding bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "wrap_max_width",
+      "label": "Content max width",
+      "min": 900,
+      "max": 1600,
+      "step": 20,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "header",
+      "content": "Add to Cart button"
+    },
+    {
+      "type": "color",
+      "id": "cta_color_bg",
+      "label": "Button background",
+      "default": "#39220f"
+    },
+    {
+      "type": "color",
+      "id": "cta_color_text",
+      "label": "Button text",
+      "default": "#FFFBF4"
+    },
+    {
+      "type": "header",
+      "content": "Breadcrumbs"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show breadcrumbs",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_home",
+      "label": "Home label",
+      "default": "Home"
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_category",
+      "label": "Category label",
+      "default": "Syrups"
+    },
+    {
+      "type": "header",
+      "content": "Description section"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "desc_eyebrow",
+      "label": "Eyebrow label",
+      "default": "About this pouch"
+    },
+    {
+      "type": "text",
+      "id": "desc_heading_pre",
+      "label": "Heading (before emphasis)",
+      "default": "More than a"
+    },
+    {
+      "type": "text",
+      "id": "desc_heading_emphasis",
+      "label": "Heading emphasized word",
+      "default": "sweetener"
+    },
+    {
+      "type": "header",
+      "content": "Why section"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_why_section",
+      "label": "Show why section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "why_eyebrow",
+      "label": "Eyebrow label",
+      "default": "Why Syruvia"
+    },
+    {
+      "type": "text",
+      "id": "why_heading",
+      "label": "Heading (HTML allowed for <em>)",
+      "default": "A better way to <em>pour</em>."
+    },
+    {
+      "type": "header",
+      "content": "Marquee"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_marquee",
+      "label": "Show feature marquee",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "marquee_items",
+      "label": "Marquee items (one per line)",
+      "default": "Tear. Pour. Enjoy.\nOne Perfect Serving\n30 Pouches Per Bag\nGluten-Free\nKosher Certified\nMade in the USA"
+    },
+    {
+      "type": "header",
+      "content": "Other sections"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mini_bundle",
+      "label": "Show \"Add more, save more\" bundle",
+      "default": true
+    },
+    { "type": "header", "content": "Pouch info band (replaces Bundle & Save)" },
+    { "type": "checkbox", "id": "show_pouch_band", "label": "Show pouch info band", "default": true },
+    { "type": "checkbox", "id": "show_pib_logo", "label": "Show Syrup Pouches logo", "default": true },
+    { "type": "image_picker", "id": "pib_logo", "label": "Logo override (optional, replaces built-in)" },
+    { "type": "text", "id": "pib_eyebrow", "label": "Eyebrow", "default": "New format" },
+    { "type": "text", "id": "pib_title", "label": "Title", "default": "What’s a Syrup Pouch?" },
+    { "type": "textarea", "id": "pib_sub", "label": "Subtitle", "default": "All the flavor of our bottles in a pocket-size, single-serving pouch — made to go wherever you do." },
+    { "type": "text", "id": "pib_s1_t", "label": "Step 1 title", "default": "Tear" },
+    { "type": "textarea", "id": "pib_s1_p", "label": "Step 1 text", "default": "Rip the pouch open — no pump, no bottle, no measuring." },
+    { "type": "text", "id": "pib_s2_t", "label": "Step 2 title", "default": "Pour" },
+    { "type": "textarea", "id": "pib_s2_p", "label": "Step 2 text", "default": "One pouch is one perfect 15 ml (0.50 fl oz) serving." },
+    { "type": "text", "id": "pib_s3_t", "label": "Step 3 title", "default": "Enjoy" },
+    { "type": "textarea", "id": "pib_s3_p", "label": "Step 3 text", "default": "Coffee, soda, lemonade, desserts — flavor anything, anywhere." },
+    { "type": "text", "id": "pib_chips", "label": "Chips (comma separated)", "default": "30 pouches per bag,450 ml (15.2 fl oz) total,Take it anywhere,Made in the USA" },
+    { "type": "color", "id": "pib_bg", "label": "Band background", "default": "#e28f26" },
+    { "type": "color", "id": "pib_text", "label": "Band text color", "default": "#3c2415" },
+    { "type": "color", "id": "pib_chip", "label": "Chip background", "default": "#FFF3DC" },
+    {
+      "type": "checkbox",
+      "id": "show_ugc_section",
+      "label": "Show UGC / Instagram section",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sticky_bar",
+      "label": "Show mobile sticky bar",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

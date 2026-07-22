@@ -19,7 +19,7 @@
     /* only true if a syrup is at FULL price with NO discount of any kind (not a bundle, not VIP) */
     for(var i=0;i<c.items.length;i++){ var it=c.items[i]; if(excluded(it.title)) continue;
       var noDisc = (!it.discounts || it.discounts.length===0) && (it.final_price===it.original_price);
-      if(it.final_price>699 && noDisc) return true; }
+      if(it.final_price>799 && noDisc) return true; }
     return false;
   }
   try{
