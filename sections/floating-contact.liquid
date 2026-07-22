@@ -63,10 +63,16 @@
         <button type="button" class="bb-tab" id="bb-tab-chat" role="tab" aria-controls="bb-panel-chat" aria-selected="false">{{ section.settings.chat_tab_label | default: 'Quick help' }}</button>
         <button type="button" class="bb-tab" id="bb-tab-form" role="tab" aria-controls="bb-panel-form" aria-selected="false">{{ section.settings.form_tab_label | default: 'Send message' }}</button>
       </div>
+      {%- endif -%}
 
+      {%- comment -%} Both panels share one grid cell, so the modal keeps the
+          height of the taller (form) tab and never jumps when switching. {%- endcomment -%}
+      <div class="bb-panels">
+      {%- if section.settings.enable_chat -%}
       <div class="bb-panel" id="bb-panel-chat" role="tabpanel" aria-labelledby="bb-tab-chat" hidden>
         <div class="bb-chat-log" id="bb-chat-log" aria-live="polite"></div>
         <div class="bb-chat-pills" id="bb-chat-pills">
+          <button type="button" class="bb-pill bb-pill--track" id="bb-track-btn">{{ section.settings.track_label | default: 'Track your package' }}</button>
           {%- for block in section.blocks -%}
             {%- if block.type == 'faq' -%}
               {%- if block.settings.question != blank -%}
@@ -95,6 +101,7 @@
       {%- comment -%} Chat disabled: the form renders as the whole modal, visible
           without JS (no hidden attribute, no tab roles). {%- endcomment -%}
       <div class="bb-panel" id="bb-panel-form" {% if section.settings.enable_chat %}role="tabpanel" aria-labelledby="bb-tab-form" hidden{% endif %}>
+      {%- comment -%} bb-panels wrapper closes after this panel {%- endcomment -%}
       {% if section.settings.send_mode == 'shopify' %}
         {%- form 'contact', id: 'FloatingContactForm', class: 'bb-form' -%}
           <input type="hidden" name="form_type" value="contact">
@@ -152,6 +159,7 @@
           <div class="bb-status" id="bb-status" aria-live="polite"></div>
         </form>
       {% endif %}
+      </div>
       </div>
     </div>
   </div>
@@ -241,8 +249,15 @@
     .bb-tabs{display:flex;gap:8px;margin:0 0 14px;border-bottom:1px solid #eee;padding-bottom:12px}
     .bb-tab{flex:1;padding:9px 10px;border:1px solid #ddd;border-radius:10px;background:#fff;color:#3C2005;font:inherit;font-weight:700;font-size:13px;cursor:pointer}
     .bb-tab.is-active{background:#3C2005;color:#fff;border-color:#3C2005}
-    .bb-panel[hidden], .bb-faq-answer[hidden]{display:none!important}
-    .bb-chat-log{display:flex;flex-direction:column;gap:8px;min-height:110px;max-height:250px;overflow-y:auto;padding:4px 2px;margin-bottom:10px;scrollbar-width:thin}
+    .bb-faq-answer[hidden]{display:none!important}
+    /* panel stack: both tabs occupy the same grid cell so the card holds the
+       taller (form) height; the inactive one stays laid out but invisible */
+    .bb-panels{display:grid}
+    .bb-panels > .bb-panel{grid-area:1/1;min-width:0}
+    .bb-panels > .bb-panel[hidden]{display:block!important;visibility:hidden!important;pointer-events:none!important}
+    #bb-panel-chat{display:flex;flex-direction:column}
+    #bb-panel-chat[hidden]{display:flex!important;visibility:hidden!important;pointer-events:none!important}
+    .bb-chat-log{display:flex;flex-direction:column;gap:8px;flex:1 1 auto;min-height:110px;max-height:340px;overflow-y:auto;padding:4px 2px;margin-bottom:10px;scrollbar-width:thin}
     .bb-msg{max-width:85%;padding:9px 12px;border-radius:12px;font-size:13.5px;line-height:1.45;overflow-wrap:break-word}
     .bb-msg--plain{white-space:pre-line}
     .bb-msg--bot{align-self:flex-start;background:#F6F1E7;color:#3C2005;border-bottom-left-radius:4px}
@@ -259,6 +274,11 @@
     .bb-pill{padding:7px 12px;border:1px solid #ddd;border-radius:999px;background:#fff;color:#333;font:inherit;font-size:12.5px;cursor:pointer}
     .bb-pill:hover{border-color:#3C2005;color:#3C2005}
     .bb-pill--empty{opacity:.5;font-style:italic}
+    .bb-pill--track{border-color:#3C2005;color:#3C2005;font-weight:700}
+    .bb-track-form{display:flex;flex-direction:column;gap:8px;max-width:85%}
+    .bb-track-row{display:flex;gap:6px}
+    .bb-track-input{flex:1;min-width:0;padding:8px 10px;border-radius:8px;border:1px solid #d5c9b8;font:inherit;font-size:13px}
+    .bb-track-go{padding:8px 14px;border:0;border-radius:8px;background:#3C2005;color:#fff;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
     .bb-chat-send[disabled]{opacity:.55;cursor:default}
     .bb-chat-inputrow input[disabled]{opacity:.7}
     .bb-chat-inputrow{display:flex;gap:8px}
@@ -688,6 +708,50 @@
         ask(q, h);
       });
 
+      /* "Track your package": inline order-number form in the chat; submitting
+         routes through the AI (which asks for / auto-uses the email and looks
+         the order up). */
+      function showTrackForm(){
+        const existing = log.querySelector('.bb-track-form');
+        if (existing){ existing.querySelector('.bb-track-input').focus(); return; }
+        const el = document.createElement('div');
+        el.className = 'bb-msg bb-msg--bot bb-track-form';
+        const label = document.createElement('span');
+        label.textContent = 'Sure — enter your order number:';
+        const row = document.createElement('div');
+        row.className = 'bb-track-row';
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.className = 'bb-track-input';
+        inp.placeholder = 'e.g. 1042';
+        inp.maxLength = 30;
+        inp.autocomplete = 'off';
+        const go = document.createElement('button');
+        go.type = 'button';
+        go.className = 'bb-track-go';
+        go.textContent = 'Track';
+        function submitTrack(){
+          const v = (inp.value || '').trim();
+          if (!v){ inp.focus(); return; }
+          if (busy) return;
+          el.remove();
+          const h = snapshotHistory();
+          addMsg('user', 'Track my package — order ' + v);
+          ask('Track my package. My order number is ' + v + '.', h);
+        }
+        go.addEventListener('click', submitTrack);
+        inp.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); submitTrack(); } });
+        row.appendChild(inp);
+        row.appendChild(go);
+        el.appendChild(label);
+        el.appendChild(row);
+        log.appendChild(el);
+        scrollLog();
+        inp.focus();
+      }
+      const trackBtn = document.getElementById('bb-track-btn');
+      if (trackBtn) trackBtn.addEventListener('click', showTrackForm);
+
       /* Theme editor: selecting the section or a Quick question block opens the
          widget so merchants can see what they're editing. */
       if (window.Shopify && window.Shopify.designMode){
@@ -773,6 +837,7 @@
     { "type": "text", "id": "chat_greeting", "label": "Chat greeting", "default": "Hi! Pick a question below, or type your own — I’ll answer instantly." },
     { "type": "text", "id": "chat_placeholder", "label": "Input placeholder", "default": "Type a question…" },
     { "type": "text", "id": "chat_fallback", "label": "No-answer fallback text", "default": "I couldn’t find an instant answer for that." },
+    { "type": "text", "id": "track_label", "label": "Track-package pill label", "default": "Track your package" },
     { "type": "url", "id": "chat_endpoint", "label": "AI chat endpoint (optional)", "info": "Leave empty to answer typed questions from the store’s built-in policies/FAQ search. Set to your AI Worker URL later to switch to LLM replies." }
   ],
   "max_blocks": 12,
