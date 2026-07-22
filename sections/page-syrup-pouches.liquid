@@ -1,0 +1,542 @@
+{%- comment -%}
+  Syrup Pouches — launch / pre-order page (Syruvia) · v3 "clean premium".
+  Calm, brand-true design: cream background, espresso type (Archivo Black display,
+  Josefin Sans body), one orange accent (SF blue only on sugar-free badges), white
+  cards with the site's thin-rule + small offset shadow, thin espresso rules between
+  sections instead of decorative dividers. Photography leads.
+  Features: full-viewport logo hero with scroll-shrink; subtle falling-pouch parallax
+  (editor image slots, collection-photo fallback); VIP pre-order gating switch;
+  Live-now product duo (pickers, collection fallback); three full-bleed picture bands;
+  editorial about rows; flavor grid (live products + coming-soon lists, tabs).
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign rad = s.card_radius | default: 16 -%}
+{%- assign cl = collections[s.collection_handle] -%}
+
+{%- assign allowed = false -%}
+{%- case s.access_mode -%}
+  {%- when 'everyone' -%}{%- assign allowed = true -%}
+  {%- when 'vip_tag' -%}{%- if customer and customer.tags contains 'VIP' -%}{%- assign allowed = true -%}{%- endif -%}
+  {%- else -%}{%- if customer -%}{%- assign allowed = true -%}{%- endif -%}
+{%- endcase -%}
+
+{%- assign logo_top = 'sp-logo-syrup.svg' | asset_url -%}
+{%- assign logo_main = 'sp-logo-pouches.svg' | asset_url -%}
+{%- if s.logo_top != blank -%}{%- assign logo_top = s.logo_top | image_url: width: 600 -%}{%- endif -%}
+{%- if s.logo_main != blank -%}{%- assign logo_main = s.logo_main | image_url: width: 1000 -%}{%- endif -%}
+
+{%- assign f1 = s.feat_prod_1 -%}
+{%- assign f2 = s.feat_prod_2 -%}
+{%- if f1 == blank and cl != blank and cl.products.size > 0 -%}{%- assign f1 = cl.products[0] -%}{%- endif -%}
+{%- if f2 == blank and cl != blank and cl.products.size > 1 -%}{%- assign f2 = cl.products[1] -%}{%- endif -%}
+
+{%- capture live_titles -%}{%- if cl != blank -%}{%- for p in cl.products limit: 50 -%}{{ p.title | downcase }}|{%- endfor -%}{%- endif -%}{%- endcapture -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:wght@300;400;600;700&display=swap"></noscript>
+
+<style>
+  #sp-{{ section.id }}{
+    --ink:{{ s.color_ink | default: '#1a1a1a' }};
+    --brand:{{ s.color_brand | default: '#3c2415' }};
+    --bg:{{ s.color_bg | default: '#FFFBF4' }};
+    --paper:{{ s.color_paper | default: '#ffffff' }};
+    --orange:{{ s.color_orange | default: '#e28f26' }};
+    --pop:{{ s.color_pop | default: '#C8252B' }};
+    --sf:#2F7DC4;
+    --rule-c:{{ s.color_rule | default: '#3c2415' }};
+    --wrap:{{ s.wrap_max | default: 1120 }}px;
+    --rad:{{ rad }}px;
+    --display:'Archivo Black','Josefin Sans',system-ui,sans-serif;
+    --serif:'Josefin Sans',system-ui,sans-serif;
+    --rule:1.5px solid var(--rule-c);
+    background:var(--bg);color:var(--ink);font-family:var(--serif);position:relative;overflow-x:clip;font-size:16px;line-height:1.6;scroll-behavior:smooth;
+  }
+  #sp-{{ section.id }} *{box-sizing:border-box;}
+  #sp-{{ section.id }} .sp-wrap{max-width:var(--wrap);margin:0 auto;padding:0 22px;}
+  #sp-{{ section.id }} .sp-eyebrow{font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;display:inline-block;padding:6px 14px;border:var(--rule);border-radius:999px;background:var(--paper);color:var(--brand);}
+  #sp-{{ section.id }} .sp-h2{font-family:var(--display);font-weight:400;font-size:clamp(26px,5vw,44px);line-height:1;letter-spacing:-.005em;text-transform:uppercase;margin:14px 0 0;color:var(--brand);text-wrap:balance;}
+  #sp-{{ section.id }} .sp-h2 em{font-family:var(--serif);font-weight:300;font-style:italic;text-transform:none;letter-spacing:0;color:var(--orange);}
+  #sp-{{ section.id }} .sp-lead{font-size:clamp(15px,2vw,17.5px);color:var(--ink);opacity:.8;max-width:56ch;margin:14px auto 0;}
+  #sp-{{ section.id }} .sp-rev{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.7,.2,1);}
+  #sp-{{ section.id }} .sp-rev.in{opacity:1;transform:none;}
+  #sp-{{ section.id }} .sp-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--display);font-weight:400;font-size:13.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:16px 30px;border:var(--rule);border-radius:999px;cursor:pointer;transition:transform .14s ease,box-shadow .14s ease,background .14s ease;background:var(--brand);color:var(--bg);box-shadow:3px 3px 0 rgba(60,36,21,.25);}
+  #sp-{{ section.id }} .sp-btn--ghost{background:var(--paper);color:var(--brand);box-shadow:none;}
+  @media(hover:hover){
+    #sp-{{ section.id }} .sp-btn:hover{transform:translateY(-2px);box-shadow:4px 5px 0 rgba(60,36,21,.28);}
+    #sp-{{ section.id }} .sp-btn--ghost:hover{background:#FFF3DC;}
+  }
+  #sp-{{ section.id }} .sp-btnrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+  @media(max-width:560px){#sp-{{ section.id }} .sp-btnrow .sp-btn{width:100%;}}
+  #sp-{{ section.id }} .sp-sep{border:0;border-top:2px solid var(--rule-c);opacity:.14;margin:0;}
+  #sp-{{ section.id }} .sp-section{padding:clamp(56px,8vw,96px) 0;}
+
+  /* ===== SCENE: hero + gate + live, with subtle falling pouches ===== */
+  #sp-{{ section.id }} .sp-scene{position:relative;overflow:clip;}
+  #sp-{{ section.id }} .sp-rain{position:absolute;inset:0;z-index:1;pointer-events:none;}
+  #sp-{{ section.id }} .sp-rain-item{position:absolute;will-change:transform;filter:drop-shadow(0 10px 18px rgba(60,36,21,.16));}
+  #sp-{{ section.id }} .sp-rain-item img{display:block;width:100%;height:auto;}
+  #sp-{{ section.id }} .sp-rain-item.tile{background:var(--paper);border:var(--rule);border-radius:12px;padding:5px;overflow:hidden;box-shadow:0 8px 20px rgba(60,36,21,.10);}
+  #sp-{{ section.id }} .sp-rain-item.tile img{border-radius:8px;}
+  #sp-{{ section.id }} .sp-rain-item.far{opacity:.55;filter:drop-shadow(0 6px 10px rgba(60,36,21,.10)) blur(1px);}
+  @media(max-width:700px){#sp-{{ section.id }} .sp-rain-item.m-hide{display:none;}}
+  @media (prefers-reduced-motion: reduce){#sp-{{ section.id }} .sp-rain{display:none;}}
+  #sp-{{ section.id }} .sp-scene > *:not(.sp-rain){position:relative;z-index:2;}
+
+  /* HERO — quiet, logo-led */
+  #sp-{{ section.id }} .sp-hero{position:relative;min-height:92svh;display:flex;align-items:center;justify-content:center;padding:clamp(40px,7vw,72px) 0 clamp(64px,9vw,96px);text-align:center;background:linear-gradient(180deg,{{ s.hero_g1 | default: '#FFFBF4' }} 0%,{{ s.hero_g2 | default: '#FFF3DC' }} 100%);}
+  #sp-{{ section.id }} .sp-viptag{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);border:var(--rule);border-radius:999px;background:var(--paper);padding:8px 16px;}
+  #sp-{{ section.id }} .sp-viptag .dot{width:7px;height:7px;border-radius:50%;background:var(--pop);}
+  #sp-{{ section.id }} .sp-logo{margin:26px auto 0;max-width:min(640px,88vw);will-change:transform;transform-origin:center top;}
+  #sp-{{ section.id }} .sp-logo .top{display:block;width:52%;margin:0 auto;}
+  #sp-{{ section.id }} .sp-logo .main{display:block;width:100%;margin:8px auto 0;}
+  #sp-{{ section.id }} .sp-logo img{width:100%;height:auto;display:block;}
+  #sp-{{ section.id }} .sp-sub{font-size:clamp(16px,2.2vw,19px);margin:22px auto 0;max-width:46ch;color:var(--ink);opacity:.82;font-weight:300;}
+  #sp-{{ section.id }} .sp-meta{font-family:var(--display);font-weight:400;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);margin-top:18px;opacity:.75;}
+  #sp-{{ section.id }} .sp-hero .sp-btnrow{margin-top:28px;}
+  #sp-{{ section.id }} .sp-cue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;width:38px;height:38px;border-radius:50%;background:var(--paper);border:var(--rule);display:flex;align-items:center;justify-content:center;animation:spcue{{ section.id }} 2s ease-in-out infinite;}
+  #sp-{{ section.id }} .sp-cue svg{width:15px;height:15px;color:var(--brand);}
+  @keyframes spcue{{ section.id }}{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+  @media (prefers-reduced-motion: reduce){#sp-{{ section.id }} .sp-cue{animation:none;}}
+
+  /* GATE */
+  #sp-{{ section.id }} .sp-gate{padding:clamp(36px,5vw,56px) 0;scroll-margin-top:90px;}
+  #sp-{{ section.id }} .sp-gate-card{max-width:600px;margin:0 auto;background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 6px);box-shadow:4px 4px 0 rgba(60,36,21,.15);padding:34px 28px;text-align:center;}
+  #sp-{{ section.id }} .sp-gate-card .lock{width:46px;height:46px;border-radius:50%;border:var(--rule);background:var(--bg);display:inline-flex;align-items:center;justify-content:center;}
+  #sp-{{ section.id }} .sp-gate-card .lock svg{width:20px;height:20px;color:var(--brand);}
+  #sp-{{ section.id }} .sp-gate-card h2{font-family:var(--display);font-weight:400;font-size:clamp(19px,4vw,25px);text-transform:uppercase;color:var(--brand);margin:14px 0 0;line-height:1.05;}
+  #sp-{{ section.id }} .sp-gate-card p{font-size:14.5px;opacity:.8;margin:12px auto 0;max-width:44ch;}
+  #sp-{{ section.id }} .sp-gate-card .sp-btnrow{margin-top:20px;}
+  #sp-{{ section.id }} .sp-unlocked{max-width:600px;margin:0 auto;border:var(--rule);background:var(--paper);color:var(--brand);border-radius:999px;padding:12px 18px;text-align:center;font-family:var(--display);font-weight:400;font-size:12px;letter-spacing:.1em;text-transform:uppercase;}
+  #sp-{{ section.id }} .sp-unlocked b{color:#2b6b53;}
+
+  /* LIVE NOW — clean cards */
+  #sp-{{ section.id }} .sp-live .sp-head{text-align:center;margin-bottom:34px;}
+  #sp-{{ section.id }} .sp-duo{display:grid;grid-template-columns:1fr;gap:20px;max-width:860px;margin:0 auto;}
+  @media(min-width:700px){#sp-{{ section.id }} .sp-duo{grid-template-columns:1fr 1fr;}}
+  #sp-{{ section.id }} .sp-feat{position:relative;display:flex;flex-direction:column;background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 4px);overflow:hidden;text-decoration:none;color:var(--ink);transition:transform .18s ease,box-shadow .18s ease;box-shadow:3px 3px 0 rgba(60,36,21,.12);}
+  @media(hover:hover){#sp-{{ section.id }} a.sp-feat:hover{transform:translateY(-4px);box-shadow:5px 7px 0 rgba(60,36,21,.16);}}
+  #sp-{{ section.id }} .sp-feat .ph{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;border-bottom:var(--rule);padding:22px;background:var(--bg);}
+  #sp-{{ section.id }} .sp-feat .ph img{max-width:100%;max-height:100%;object-fit:contain;}
+  #sp-{{ section.id }} .sp-feat .b{padding:20px 18px 22px;text-align:center;display:flex;flex-direction:column;gap:8px;flex:1;}
+  #sp-{{ section.id }} .sp-feat .t{font-family:var(--display);font-weight:400;font-size:16px;line-height:1.15;text-transform:uppercase;color:var(--brand);}
+  #sp-{{ section.id }} .sp-feat .p{font-family:var(--display);font-weight:400;font-size:17px;color:var(--brand);}
+  #sp-{{ section.id }} .sp-feat .cta{margin-top:auto;font-family:var(--display);font-weight:400;font-size:12px;letter-spacing:.12em;text-transform:uppercase;background:var(--brand);color:var(--bg);border-radius:999px;padding:13px 18px;}
+  #sp-{{ section.id }} .sp-flag{position:absolute;top:12px;left:12px;z-index:2;font-family:var(--display);font-weight:400;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--pop);border-radius:999px;padding:6px 12px;}
+  #sp-{{ section.id }} .sp-flag.sf{background:var(--sf);left:auto;right:12px;}
+
+  /* PICTURE BANDS */
+  #sp-{{ section.id }} .sp-band img{display:block;width:100%;height:auto;}
+  #sp-{{ section.id }} .sp-band .m{display:none;}
+  @media(max-width:760px){
+    #sp-{{ section.id }} .sp-band .has-m.d{display:none;}
+    #sp-{{ section.id }} .sp-band .m{display:block;}
+  }
+
+  /* ABOUT rows — editorial */
+  #sp-{{ section.id }} .sp-about .sp-row{display:grid;grid-template-columns:1fr;gap:22px;align-items:center;margin-bottom:clamp(40px,6vw,64px);}
+  #sp-{{ section.id }} .sp-about .sp-row:last-child{margin-bottom:0;}
+  #sp-{{ section.id }} .sp-about img{width:100%;height:auto;display:block;border:var(--rule);border-radius:calc(var(--rad) + 4px);}
+  #sp-{{ section.id }} .sp-about .txt h3{font-family:var(--display);font-weight:400;font-size:clamp(22px,3.6vw,32px);text-transform:uppercase;color:var(--brand);margin:0;line-height:1.02;}
+  #sp-{{ section.id }} .sp-about .txt h3 em{font-family:var(--serif);font-weight:300;font-style:italic;text-transform:none;color:var(--orange);}
+  #sp-{{ section.id }} .sp-about .txt p{font-size:15.5px;opacity:.8;margin:12px 0 0;max-width:52ch;}
+  @media(min-width:820px){
+    #sp-{{ section.id }} .sp-about .sp-row{grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,64px);}
+    #sp-{{ section.id }} .sp-about .sp-row.flip .media{order:2;}
+  }
+
+  /* GRID */
+  #sp-{{ section.id }} .sp-shop{scroll-margin-top:80px;}
+  #sp-{{ section.id }} .sp-head{text-align:center;}
+  #sp-{{ section.id }} .sp-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:26px 0 28px;}
+  #sp-{{ section.id }} .sp-tab{font-family:var(--display);font-weight:400;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border:var(--rule);border-radius:999px;padding:10px 20px;background:var(--paper);color:var(--brand);cursor:pointer;transition:background .15s ease,color .15s ease;}
+  #sp-{{ section.id }} .sp-tab.on{background:var(--brand);color:var(--bg);}
+  #sp-{{ section.id }} .sp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  @media(min-width:640px){#sp-{{ section.id }} .sp-grid{grid-template-columns:repeat(3,1fr);}}
+  @media(min-width:960px){#sp-{{ section.id }} .sp-grid{grid-template-columns:repeat(4,1fr);}}
+  #sp-{{ section.id }} .sp-tile{position:relative;display:flex;flex-direction:column;background:var(--paper);border:var(--rule);border-radius:var(--rad);overflow:hidden;text-decoration:none;color:var(--ink);transition:transform .16s ease,box-shadow .16s ease;}
+  @media(hover:hover){#sp-{{ section.id }} a.sp-tile:hover{transform:translateY(-3px);box-shadow:3px 5px 0 rgba(60,36,21,.14);}}
+  #sp-{{ section.id }} .sp-tile .ph{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;border-bottom:var(--rule);background:var(--bg);padding:14px;}
+  #sp-{{ section.id }} .sp-tile .ph img{max-width:100%;max-height:100%;object-fit:contain;}
+  #sp-{{ section.id }} .sp-tile .b{padding:14px 12px 16px;text-align:center;display:flex;flex-direction:column;gap:6px;flex:1;}
+  #sp-{{ section.id }} .sp-tile .t{font-family:var(--display);font-weight:400;font-size:12.5px;line-height:1.2;text-transform:uppercase;letter-spacing:.02em;color:var(--brand);}
+  #sp-{{ section.id }} .sp-tile .p{margin-top:auto;font-family:var(--display);font-weight:400;font-size:14.5px;color:var(--brand);}
+  #sp-{{ section.id }} .sp-badge{position:absolute;top:10px;left:10px;z-index:2;font-family:var(--display);font-weight:400;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--pop);border-radius:999px;padding:5px 10px;}
+  #sp-{{ section.id }} .sp-badge.sf{background:var(--sf);left:auto;right:10px;}
+  #sp-{{ section.id }} .sp-tile.locked .ph,#sp-{{ section.id }} .sp-tile.locked .b{filter:grayscale(.35);opacity:.85;}
+  #sp-{{ section.id }} .sp-lockov{position:absolute;inset:0;z-index:3;background:rgba(255,251,244,.45);display:flex;align-items:center;justify-content:center;}
+  #sp-{{ section.id }} .sp-lockov span{font-family:var(--display);font-weight:400;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--bg);background:var(--brand);border-radius:999px;padding:8px 15px;}
+  /* coming soon — quiet cream tiles */
+  #sp-{{ section.id }} .sp-tile.soon .ph{background:#FFF3DC;}
+  #sp-{{ section.id }} .sp-tile.soon .ph .fl{font-family:var(--display);font-weight:400;font-size:clamp(14px,3vw,17px);line-height:1.15;text-transform:uppercase;color:var(--brand);text-align:center;padding:0 12px;opacity:.85;}
+  #sp-{{ section.id }} .sp-soonov{position:absolute;top:10px;left:10px;z-index:3;}
+  #sp-{{ section.id }} .sp-soonov .cs{font-family:var(--display);font-weight:400;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);background:var(--paper);border:var(--rule);border-radius:999px;padding:5px 10px;}
+  #sp-{{ section.id }} .sp-tile.soon .b .dt{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-family:var(--display);color:var(--orange);}
+  #sp-{{ section.id }} .sp-empty{text-align:center;border:1.5px dashed var(--rule-c);border-radius:var(--rad);padding:30px 18px;background:var(--paper);opacity:.85;}
+  #sp-{{ section.id }} .sp-note{text-align:center;font-size:13px;opacity:.65;margin-top:22px;}
+
+  @media (prefers-reduced-motion: reduce){
+    #sp-{{ section.id }} .sp-rev{opacity:1;transform:none;}
+  }
+</style>
+
+<section id="sp-{{ section.id }}">
+
+  <div class="sp-scene" data-scene>
+    {%- if s.show_rain -%}
+    <div class="sp-rain" aria-hidden="true" data-rain>
+      {%- assign rain_slots = 'rain_1,rain_2,rain_3,rain_4,rain_5,rain_6,rain_7,rain_8' | split: ',' -%}
+      {%- assign cfg_left = '5,80,14,68,89,28,55,9' | split: ',' -%}
+      {%- assign cfg_size = '110,130,88,150,96,120,84,115' | split: ',' -%}
+      {%- assign cfg_speed = '0.26,0.18,0.34,0.14,0.30,0.22,0.38,0.16' | split: ',' -%}
+      {%- assign cfg_rot = '-8,6,-4,9,-11,5,7,-6' | split: ',' -%}
+      {%- assign cfg_top = '-10,-26,-42,-6,-55,-32,-18,-48' | split: ',' -%}
+      {%- assign cfg_far = ',,far,,far,,far,' | split: ',' -%}
+      {%- assign rain_any = false -%}
+      {%- for slot in rain_slots -%}
+        {%- assign img = s[slot] -%}
+        {%- if img != blank -%}{%- assign rain_any = true -%}
+          {%- assign i = forloop.index0 -%}
+          <div class="sp-rain-item {{ cfg_far[i] }}{% if i > 4 %} m-hide{% endif %}" data-speed="{{ cfg_speed[i] }}" data-rot="{{ cfg_rot[i] }}" style="left:{{ cfg_left[i] }}%;top:{{ cfg_top[i] }}%;width:clamp(60px,{{ cfg_size[i] | divided_by: 12 }}vw,{{ cfg_size[i] }}px);transform:rotate({{ cfg_rot[i] }}deg);">
+            <img src="{{ img | image_url: width: 400 }}" alt="" loading="lazy">
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- unless rain_any -%}
+        {%- if cl != blank -%}
+          {%- assign ri = 0 -%}
+          {%- for pr in cl.products limit: 5 -%}
+            {%- if pr.featured_image -%}
+              <div class="sp-rain-item tile {{ cfg_far[ri] }}{% if ri > 3 %} m-hide{% endif %}" data-speed="{{ cfg_speed[ri] }}" data-rot="{{ cfg_rot[ri] }}" style="left:{{ cfg_left[ri] }}%;top:{{ cfg_top[ri] }}%;width:clamp(60px,{{ cfg_size[ri] | divided_by: 12 }}vw,{{ cfg_size[ri] }}px);transform:rotate({{ cfg_rot[ri] }}deg);">
+                <img src="{{ pr.featured_image | image_url: width: 300 }}" alt="" loading="lazy">
+              </div>
+              {%- assign ri = ri | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endunless -%}
+    </div>
+    {%- endif -%}
+
+    {%- comment -%} ===== HERO ===== {%- endcomment -%}
+    <div class="sp-hero">
+      <div class="sp-wrap">
+        {%- if s.vip_badge != blank -%}<span class="sp-viptag sp-rev"><span class="dot"></span>{{ s.vip_badge }}</span>{%- endif -%}
+        <div class="sp-logo sp-rev" data-hero-logo>
+          <span class="top"><img src="{{ logo_top }}" alt="Syrup" loading="eager"></span>
+          <span class="main"><img src="{{ logo_main }}" alt="Pouches" loading="eager"></span>
+        </div>
+        {%- if s.hero_sub != blank -%}<p class="sp-sub sp-rev">{{ s.hero_sub }}</p>{%- endif -%}
+        <p class="sp-meta sp-rev">{{ s.chip1 | default: 'Regular' }} &middot; {{ s.chip2 | default: 'Sugar-Free' }} &middot; {{ s.chip3 | default: '50 flavors' }}</p>
+        <div class="sp-btnrow sp-rev">
+          <a class="sp-btn" href="#sp-shop-{{ section.id }}">{{ s.shop_btn | default: 'Shop now' }}</a>
+          {%- if s.collection_btn_url != blank -%}<a class="sp-btn sp-btn--ghost" href="{{ s.collection_btn_url }}">{{ s.collection_btn_text | default: 'View the collection' }}</a>{%- endif -%}
+        </div>
+      </div>
+      <a class="sp-cue" href="#sp-gate-{{ section.id }}" aria-label="Scroll down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg></a>
+    </div>
+
+    {%- comment -%} ===== VIP GATE / UNLOCKED ===== {%- endcomment -%}
+    <div class="sp-gate" id="sp-gate-{{ section.id }}">
+      <div class="sp-wrap">
+        {%- if allowed -%}
+          {%- if s.access_mode != 'everyone' and s.unlocked_text != blank -%}
+            <div class="sp-unlocked sp-rev"><b>&#10003;</b> {{ s.unlocked_text }}</div>
+          {%- endif -%}
+        {%- else -%}
+          <div class="sp-gate-card sp-rev">
+            <span class="lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11 V8 a4 4 0 0 1 8 0 v3"/></svg></span>
+            <h2>{{ s.gate_title | default: 'Pre-order is VIP-only right now' }}</h2>
+            <p>{{ s.gate_text | default: 'VIP membership is free. Create an account (or sign in) and you can pre-order every pouch flavor before everyone else. Open to all on Monday.' }}</p>
+            <div class="sp-btnrow">
+              <a class="sp-btn" href="{{ routes.account_register_url }}?return_url={{ request.path | url_encode }}">{{ s.gate_join | default: 'Join VIP — it’s free' }}</a>
+              <a class="sp-btn sp-btn--ghost" href="{{ routes.account_login_url }}?return_url={{ request.path | url_encode }}">{{ s.gate_signin | default: 'Sign in' }}</a>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} ===== LIVE NOW ===== {%- endcomment -%}
+    {%- if s.show_featured and f1 != blank or s.show_featured and f2 != blank -%}
+    <div class="sp-live sp-section">
+      <div class="sp-wrap">
+        <div class="sp-head sp-rev">
+          {%- if s.feat_eyebrow != blank -%}<span class="sp-eyebrow">{{ s.feat_eyebrow }}</span>{%- endif -%}
+          <h2 class="sp-h2">{{ s.feat_title | default: 'Live now — <em>pre-order today</em>' }}</h2>
+        </div>
+        <div class="sp-duo">
+          {%- for fi in (1..2) -%}
+            {%- if fi == 1 -%}{%- assign fp = f1 -%}{%- else -%}{%- assign fp = f2 -%}{%- endif -%}
+            {%- if fp == blank -%}{%- continue -%}{%- endif -%}
+            {%- assign tdl = fp.title | downcase -%}
+            {%- assign issf = false -%}{%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign issf = true -%}{%- endif -%}
+            {%- if allowed -%}<a class="sp-feat sp-rev" href="{{ fp.url }}">{%- else -%}<a class="sp-feat sp-rev" href="#sp-gate-{{ section.id }}">{%- endif -%}
+              <span class="sp-flag">{{ s.live_badge | default: 'Live now' }}</span>
+              {%- if issf -%}<span class="sp-flag sf">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
+              <span class="ph">{%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 720 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}</span>
+              <span class="b">
+                <span class="t">{{ fp.title | replace: '(USA)', '' | strip }}</span>
+                <span class="p">{{ fp.price | money }}</span>
+                <span class="cta">{% if allowed %}{{ s.preorder_badge | default: 'Pre-order' }} →{% else %}{{ s.locked_label | default: 'VIP only' }}{% endif %}</span>
+              </span>
+            </a>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+    {%- endif -%}
+  </div>{%- comment -%} /sp-scene {%- endcomment -%}
+
+  {%- comment -%} ===== PICTURE 1 ===== {%- endcomment -%}
+  {%- if s.band1_img != blank -%}
+  <div class="sp-band">
+    <img class="d {% if s.band1_img_m != blank %}has-m{% endif %}" src="{{ s.band1_img | image_url: width: 2400 }}" alt="{{ s.band1_alt | default: 'Syrup Pouches' | escape }}" loading="lazy">
+    {%- if s.band1_img_m != blank -%}<img class="m" src="{{ s.band1_img_m | image_url: width: 1200 }}" alt="{{ s.band1_alt | default: 'Syrup Pouches' | escape }}" loading="lazy">{%- endif -%}
+  </div>
+  {%- endif -%}
+
+  {%- comment -%} ===== ABOUT ===== {%- endcomment -%}
+  {%- if s.show_about -%}
+  <hr class="sp-sep">
+  <div class="sp-about sp-section">
+    <div class="sp-wrap">
+      {%- if s.row1_img != blank or s.row1_title != blank -%}
+      <div class="sp-row sp-rev">
+        <div class="media">{%- if s.row1_img != blank -%}<img src="{{ s.row1_img | image_url: width: 1200 }}" alt="{{ s.row1_title | escape }}" loading="lazy">{%- endif -%}</div>
+        <div class="txt">{%- if s.row1_title != blank -%}<h3>{{ s.row1_title }}</h3>{%- endif -%}{%- if s.row1_text != blank -%}<p>{{ s.row1_text }}</p>{%- endif -%}</div>
+      </div>
+      {%- endif -%}
+      {%- if s.row2_img != blank or s.row2_title != blank -%}
+      <div class="sp-row flip sp-rev">
+        <div class="media">{%- if s.row2_img != blank -%}<img src="{{ s.row2_img | image_url: width: 1200 }}" alt="{{ s.row2_title | escape }}" loading="lazy">{%- endif -%}</div>
+        <div class="txt">{%- if s.row2_title != blank -%}<h3>{{ s.row2_title }}</h3>{%- endif -%}{%- if s.row2_text != blank -%}<p>{{ s.row2_text }}</p>{%- endif -%}</div>
+      </div>
+      {%- endif -%}
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- comment -%} ===== PICTURE 2 ===== {%- endcomment -%}
+  {%- if s.band2_img != blank -%}
+  <div class="sp-band"><img src="{{ s.band2_img | image_url: width: 2400 }}" alt="{{ s.band2_alt | default: 'Syrup Pouches' | escape }}" loading="lazy"></div>
+  {%- endif -%}
+
+  {%- comment -%} ===== GRID ===== {%- endcomment -%}
+  <hr class="sp-sep">
+  <div class="sp-shop sp-section" id="sp-shop-{{ section.id }}">
+    <div class="sp-wrap">
+      <div class="sp-head sp-rev">
+        {%- if s.grid_eyebrow != blank -%}<span class="sp-eyebrow">{{ s.grid_eyebrow }}</span>{%- endif -%}
+        <h2 class="sp-h2">{{ s.grid_title | default: '50 flavors. <em>Pick yours.</em>' }}</h2>
+      </div>
+      {%- if s.show_tabs -%}
+      <div class="sp-tabs sp-rev" role="tablist">
+        <button class="sp-tab on" data-filter="all">{{ s.tab_all | default: 'All' }}</button>
+        <button class="sp-tab" data-filter="reg">{{ s.tab_reg | default: 'Regular' }}</button>
+        <button class="sp-tab" data-filter="sf">{{ s.tab_sf | default: 'Sugar-Free' }}</button>
+      </div>
+      {%- endif -%}
+      <div class="sp-grid" data-grid>
+        {%- if cl != blank and cl.products.size > 0 -%}
+          {%- for pr in cl.products limit: 50 -%}
+            {%- assign tdl = pr.title | downcase -%}
+            {%- assign kind = 'reg' -%}
+            {%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign kind = 'sf' -%}{%- endif -%}
+            {%- if allowed -%}
+            <a class="sp-tile sp-rev" data-kind="{{ kind }}" href="{{ pr.url }}">
+            {%- else -%}
+            <a class="sp-tile locked sp-rev" data-kind="{{ kind }}" href="#sp-gate-{{ section.id }}" aria-label="{{ pr.title | escape }} — VIP only">
+              <span class="sp-lockov"><span>{{ s.locked_label | default: 'VIP only' }}</span></span>
+            {%- endif -%}
+              <span class="sp-badge">{{ s.preorder_badge | default: 'Pre-order' }}</span>
+              {%- if kind == 'sf' -%}<span class="sp-badge sf">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
+              <span class="ph">{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 480 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- endif -%}</span>
+              <span class="b"><span class="t">{{ pr.title | replace: '(USA)', '' | strip }}</span><span class="p">{{ pr.price | money }}</span></span>
+            </a>
+          {%- endfor -%}
+        {%- endif -%}
+        {%- assign lists = 'reg,sf' | split: ',' -%}
+        {%- for kindv in lists -%}
+          {%- if kindv == 'reg' -%}{%- assign raw = s.upcoming_regular -%}{%- else -%}{%- assign raw = s.upcoming_sf -%}{%- endif -%}
+          {%- if raw != blank -%}
+            {%- assign lines = raw | newline_to_br | split: '<br />' -%}
+            {%- for line in lines -%}
+              {%- assign parts = line | strip | split: '|' -%}
+              {%- assign fname = parts[0] | strip -%}
+              {%- if fname == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign fkey = fname | downcase -%}
+              {%- if kindv == 'sf' -%}{%- assign fkey = 'sugar free ' | append: fkey -%}{%- endif -%}
+              {%- if live_titles contains fkey -%}{%- continue -%}{%- endif -%}
+              {%- assign fdate = '' -%}{%- if parts.size > 1 -%}{%- assign fdate = parts[1] | strip -%}{%- endif -%}
+              <div class="sp-tile soon sp-rev" data-kind="{{ kindv }}">
+                <span class="sp-soonov"><span class="cs">{{ s.coming_label | default: 'Coming soon' }}</span></span>
+                {%- if kindv == 'sf' -%}<span class="sp-badge sf">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
+                <span class="ph"><span class="fl">{{ fname }}</span></span>
+                <span class="b"><span class="t">{{ fname }}</span>{%- if fdate != blank -%}<span class="dt">{{ fdate }}</span>{%- endif -%}</span>
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      {%- if cl == blank -%}
+        <div class="sp-empty" style="margin-top:14px;">Set the collection handle in the section settings (“{{ s.collection_handle }}” not found) — live pouch products will appear here automatically.</div>
+      {%- endif -%}
+      {%- if s.grid_note != blank -%}<p class="sp-note">{{ s.grid_note }}</p>{%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} ===== PICTURE 3 ===== {%- endcomment -%}
+  {%- if s.band3_img != blank -%}
+  <div class="sp-band"><img src="{{ s.band3_img | image_url: width: 2400 }}" alt="{{ s.band3_alt | default: 'Syrup Pouches' | escape }}" loading="lazy"></div>
+  {%- endif -%}
+
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('sp-{{ section.id }}');
+  if(!root) return;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if('IntersectionObserver' in window && !reduce){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });},{threshold:.1});
+    root.querySelectorAll('.sp-rev').forEach(function(el){io.observe(el);});
+  } else { root.querySelectorAll('.sp-rev').forEach(function(el){el.classList.add('in');}); }
+
+  var scene=root.querySelector('[data-scene]');
+  if(scene && !reduce){
+    var drops=[].slice.call(scene.querySelectorAll('.sp-rain-item'));
+    var heroLogo=scene.querySelector('[data-hero-logo]');
+    var tick2=false;
+    function fall(){
+      tick2=false;
+      var sr=scene.getBoundingClientRect();
+      var sc=-sr.top; if(sc<0)sc=0;
+      for(var i=0;i<drops.length;i++){
+        var el=drops[i];
+        var sp=parseFloat(el.getAttribute('data-speed'))||0.25;
+        var rot=parseFloat(el.getAttribute('data-rot'))||0;
+        el.style.transform='translateY('+(sc*sp).toFixed(1)+'px) rotate('+(rot + sc*0.008*(rot<0?-1:1)).toFixed(1)+'deg)';
+      }
+      if(heroLogo){
+        var p=Math.min(sc/500,1);
+        heroLogo.style.transform='scale('+(1-p*0.14).toFixed(3)+')';
+        heroLogo.style.opacity=(1-p*0.2).toFixed(2);
+      }
+    }
+    window.addEventListener('scroll',function(){ if(!tick2){tick2=true;requestAnimationFrame(fall);} },{passive:true});
+    window.addEventListener('resize',fall);
+    fall();
+  }
+
+  var tabs=[].slice.call(root.querySelectorAll('.sp-tab'));
+  var tiles=[].slice.call(root.querySelectorAll('[data-grid] .sp-tile'));
+  tabs.forEach(function(tb){
+    tb.addEventListener('click',function(){
+      tabs.forEach(function(t){t.classList.toggle('on',t===tb);});
+      var f=tb.getAttribute('data-filter');
+      tiles.forEach(function(el){ el.style.display=(f==='all'||el.getAttribute('data-kind')===f)?'':'none'; });
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Syrup Pouches Launch",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Who can pre-order" },
+    { "type": "select", "id": "access_mode", "label": "Access", "default": "signed_in", "options": [
+      { "value": "signed_in", "label": "VIP members (any signed-in account)" },
+      { "value": "vip_tag", "label": "Strict: customers with the VIP tag only" },
+      { "value": "everyone", "label": "Everyone (open pre-order)" }
+    ], "info": "Flip to 'Everyone' when pre-order opens to all (Monday)." },
+    { "type": "text", "id": "vip_badge", "label": "Hero badge", "default": "VIP Pre-Order · Open to all Monday" },
+    { "type": "text", "id": "unlocked_text", "label": "Unlocked note (members see this)", "default": "VIP unlocked — happy pre-ordering" },
+    { "type": "header", "content": "VIP gate (non-members)" },
+    { "type": "text", "id": "gate_title", "label": "Gate title", "default": "Pre-order is VIP-only right now" },
+    { "type": "textarea", "id": "gate_text", "label": "Gate text", "default": "VIP membership is free. Create an account (or sign in) and you can pre-order every pouch flavor before everyone else. Open to all on Monday." },
+    { "type": "text", "id": "gate_join", "label": "Join button", "default": "Join VIP — it’s free" },
+    { "type": "text", "id": "gate_signin", "label": "Sign-in button", "default": "Sign in" },
+    { "type": "text", "id": "locked_label", "label": "Locked tile label", "default": "VIP only" },
+    { "type": "header", "content": "Falling pouches (scroll effect)" },
+    { "type": "checkbox", "id": "show_rain", "label": "Show falling pouches", "default": true },
+    { "type": "paragraph", "content": "Add transparent PNG pack renders below (regular + sugar-free mixed). With no images set, the effect falls back to product photos from the collection in small tilted cards." },
+    { "type": "image_picker", "id": "rain_1", "label": "Pouch 1" },
+    { "type": "image_picker", "id": "rain_2", "label": "Pouch 2" },
+    { "type": "image_picker", "id": "rain_3", "label": "Pouch 3" },
+    { "type": "image_picker", "id": "rain_4", "label": "Pouch 4" },
+    { "type": "image_picker", "id": "rain_5", "label": "Pouch 5" },
+    { "type": "image_picker", "id": "rain_6", "label": "Pouch 6" },
+    { "type": "image_picker", "id": "rain_7", "label": "Pouch 7" },
+    { "type": "image_picker", "id": "rain_8", "label": "Pouch 8" },
+    { "type": "header", "content": "Hero" },
+    { "type": "image_picker", "id": "logo_top", "label": "Logo — 'Syrup' (defaults to built-in SVG)" },
+    { "type": "image_picker", "id": "logo_main", "label": "Logo — 'Pouches' (defaults to built-in SVG)" },
+    { "type": "color", "id": "hero_g1", "label": "Hero gradient top", "default": "#FFFBF4" },
+    { "type": "color", "id": "hero_g2", "label": "Hero gradient bottom", "default": "#FFF3DC" },
+    { "type": "textarea", "id": "hero_sub", "label": "Subtitle", "default": "Your favorite Syruvia flavors — now in perfectly portioned, take-anywhere pouches." },
+    { "type": "text", "id": "chip1", "label": "Meta item 1", "default": "Regular" },
+    { "type": "text", "id": "chip2", "label": "Meta item 2", "default": "Sugar-Free" },
+    { "type": "text", "id": "chip3", "label": "Meta item 3", "default": "50 flavors" },
+    { "type": "text", "id": "shop_btn", "label": "Shop button text", "default": "Shop now" },
+    { "type": "url", "id": "collection_btn_url", "label": "Optional: collection button link" },
+    { "type": "text", "id": "collection_btn_text", "label": "Collection button text", "default": "View the collection" },
+    { "type": "header", "content": "Live now — featured duo" },
+    { "type": "checkbox", "id": "show_featured", "label": "Show 'Live now' duo", "default": true },
+    { "type": "product", "id": "feat_prod_1", "label": "Featured product 1 (pick Vanilla)" },
+    { "type": "product", "id": "feat_prod_2", "label": "Featured product 2 (pick Sugar-Free Vanilla)" },
+    { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "First drop" },
+    { "type": "text", "id": "feat_title", "label": "Heading", "default": "Live now — <em>pre-order today</em>" },
+    { "type": "text", "id": "live_badge", "label": "Live badge", "default": "Live now" },
+    { "type": "header", "content": "Full-page pictures" },
+    { "type": "paragraph", "content": "Each band is a full-width picture. Leave empty to hide. Band 1 also takes an optional mobile version." },
+    { "type": "image_picker", "id": "band1_img", "label": "Picture band 1 (after Live now)" },
+    { "type": "image_picker", "id": "band1_img_m", "label": "Picture band 1 — mobile (optional)" },
+    { "type": "text", "id": "band1_alt", "label": "Band 1 alt text", "default": "Syrup Pouches" },
+    { "type": "image_picker", "id": "band2_img", "label": "Picture band 2 (before the grid)" },
+    { "type": "text", "id": "band2_alt", "label": "Band 2 alt text", "default": "Syrup Pouches" },
+    { "type": "image_picker", "id": "band3_img", "label": "Picture band 3 (bottom of page)" },
+    { "type": "text", "id": "band3_alt", "label": "Band 3 alt text", "default": "Syrup Pouches" },
+    { "type": "header", "content": "About rows" },
+    { "type": "checkbox", "id": "show_about", "label": "Show about rows", "default": true },
+    { "type": "image_picker", "id": "row1_img", "label": "Row 1 image" },
+    { "type": "text", "id": "row1_title", "label": "Row 1 title", "default": "Tear. Pour. <em>Enjoy.</em>" },
+    { "type": "textarea", "id": "row1_text", "label": "Row 1 text", "default": "Every pouch is one perfect serving of café-quality syrup — no bottle, no measuring, no mess. Toss a few in your bag and flavor anything, anywhere." },
+    { "type": "image_picker", "id": "row2_img", "label": "Row 2 image" },
+    { "type": "text", "id": "row2_title", "label": "Row 2 title", "default": "Regular & <em>Sugar-Free</em>" },
+    { "type": "textarea", "id": "row2_text", "label": "Row 2 text", "default": "The full pouch lineup comes in classic and zero-sugar, zero-calorie versions — 50 flavors in total, rolling out now." },
+    { "type": "header", "content": "Flavor grid" },
+    { "type": "text", "id": "collection_handle", "label": "Live pouches collection handle", "default": "syrup-pouches", "info": "Products in this collection show as live, pre-orderable tiles." },
+    { "type": "text", "id": "grid_eyebrow", "label": "Eyebrow", "default": "The lineup" },
+    { "type": "text", "id": "grid_title", "label": "Heading", "default": "50 flavors. <em>Pick yours.</em>" },
+    { "type": "checkbox", "id": "show_tabs", "label": "Show Regular / Sugar-Free tabs", "default": true },
+    { "type": "text", "id": "tab_all", "label": "Tab: all", "default": "All" },
+    { "type": "text", "id": "tab_reg", "label": "Tab: regular", "default": "Regular" },
+    { "type": "text", "id": "tab_sf", "label": "Tab: sugar-free", "default": "Sugar-Free" },
+    { "type": "text", "id": "preorder_badge", "label": "Live tile badge", "default": "Pre-order" },
+    { "type": "text", "id": "sf_badge", "label": "Sugar-free tile badge", "default": "0g sugar" },
+    { "type": "header", "content": "Coming-soon flavors" },
+    { "type": "paragraph", "content": "One flavor per line. Optional date after a pipe, e.g. “Caramel | August”. A name matching a live product is skipped automatically." },
+    { "type": "textarea", "id": "upcoming_regular", "label": "Regular — coming soon", "default": "Caramel\nHazelnut\nFrench Vanilla\nSalted Caramel\nBrown Sugar Cinnamon\nStrawberry\nPeach\nMango\nCoconut\nPineapple\nWatermelon\nBlue Raspberry\nPumpkin Spice\nIrish Cream\nEnglish Toffee\nCookie Butter\nLavender\nCaramel Pecan\nPeppermint\nChocolate\nBanana\nCherry\nRaspberry\nButterscotch" },
+    { "type": "textarea", "id": "upcoming_sf", "label": "Sugar-Free — coming soon", "default": "Caramel\nHazelnut\nFrench Vanilla\nSalted Caramel\nBrown Sugar Cinnamon\nStrawberry\nPeach\nMango\nCoconut\nPineapple\nWatermelon\nBlue Raspberry\nCookie Butter\nLavender\nChocolate\nPeppermint\nCherry\nRaspberry\nButterscotch\nCaramel Pecan\nEnglish Toffee\nIrish Cream\nPumpkin Spice\nBanana" },
+    { "type": "text", "id": "coming_label", "label": "Overlay label", "default": "Coming soon" },
+    { "type": "color", "id": "coming_overlay", "label": "(unused) Overlay color", "default": "#3c2415" },
+    { "type": "text", "id": "grid_note", "label": "Note under grid", "default": "More flavors go live every week — check back soon." },
+    { "type": "header", "content": "Brand colors & layout" },
+    { "type": "color", "id": "color_ink", "label": "Body text", "default": "#1a1a1a" },
+    { "type": "color", "id": "color_brand", "label": "Headings", "default": "#3c2415" },
+    { "type": "color", "id": "color_bg", "label": "Page background", "default": "#FFFBF4" },
+    { "type": "color", "id": "color_paper", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "color_orange", "label": "Accent", "default": "#e28f26" },
+    { "type": "color", "id": "color_pop", "label": "Badges", "default": "#C8252B" },
+    { "type": "color", "id": "color_rule", "label": "Borders", "default": "#3c2415" },
+    { "type": "range", "id": "wrap_max", "label": "Content width", "min": 900, "max": 1320, "step": 20, "unit": "px", "default": 1120 },
+    { "type": "range", "id": "card_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 16 }
+  ],
+  "presets": [ { "name": "Syrup Pouches Launch" } ]
+}
+{% endschema %}

@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "page-syrup-pouches",
+      "settings": {
+        "access_mode": "signed_in",
+        "collection_handle": "syrup-pouches"
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -58,15 +58,26 @@
       <h3 class="bb-modal-title" id="bb-modal-title">{{ section.settings.modal_title }}</h3>
       <p class="bb-modal-sub">{{ section.settings.modal_subtext }}</p>
 
-      {%- if section.settings.enable_chat -%}
+      {%- if section.settings.enable_chat or section.settings.enable_claim -%}
       <div class="bb-tabs" role="tablist" aria-label="Contact options">
+        {%- if section.settings.enable_chat -%}
         <button type="button" class="bb-tab" id="bb-tab-chat" role="tab" aria-controls="bb-panel-chat" aria-selected="false">{{ section.settings.chat_tab_label | default: 'Quick help' }}</button>
+        {%- endif -%}
         <button type="button" class="bb-tab" id="bb-tab-form" role="tab" aria-controls="bb-panel-form" aria-selected="false">{{ section.settings.form_tab_label | default: 'Send message' }}</button>
+        {%- if section.settings.enable_claim -%}
+        <button type="button" class="bb-tab" id="bb-tab-claim" role="tab" aria-controls="bb-panel-claim" aria-selected="false">{{ section.settings.claim_tab_label | default: 'Claim' }}</button>
+        {%- endif -%}
       </div>
+      {%- endif -%}
 
+      {%- comment -%} Both panels share one grid cell, so the modal keeps the
+          height of the taller (form) tab and never jumps when switching. {%- endcomment -%}
+      <div class="bb-panels">
+      {%- if section.settings.enable_chat -%}
       <div class="bb-panel" id="bb-panel-chat" role="tabpanel" aria-labelledby="bb-tab-chat" hidden>
         <div class="bb-chat-log" id="bb-chat-log" aria-live="polite"></div>
         <div class="bb-chat-pills" id="bb-chat-pills">
+          <button type="button" class="bb-pill bb-pill--track" id="bb-track-btn">{{ section.settings.track_label | default: 'Track your package' }}</button>
           {%- for block in section.blocks -%}
             {%- if block.type == 'faq' -%}
               {%- if block.settings.question != blank -%}
@@ -92,9 +103,10 @@
 
       {%- endif -%}
 
-      {%- comment -%} Chat disabled: the form renders as the whole modal, visible
-          without JS (no hidden attribute, no tab roles). {%- endcomment -%}
-      <div class="bb-panel" id="bb-panel-form" {% if section.settings.enable_chat %}role="tabpanel" aria-labelledby="bb-tab-form" hidden{% endif %}>
+      {%- comment -%} Chat and claim disabled: the form renders as the whole
+          modal, visible without JS (no hidden attribute, no tab roles). {%- endcomment -%}
+      <div class="bb-panel" id="bb-panel-form" {% if section.settings.enable_chat or section.settings.enable_claim %}role="tabpanel" aria-labelledby="bb-tab-form" hidden{% endif %}>
+      {%- comment -%} bb-panels wrapper closes after this panel {%- endcomment -%}
       {% if section.settings.send_mode == 'shopify' %}
         {%- form 'contact', id: 'FloatingContactForm', class: 'bb-form' -%}
           <input type="hidden" name="form_type" value="contact">
@@ -152,6 +164,50 @@
           <div class="bb-status" id="bb-status" aria-live="polite"></div>
         </form>
       {% endif %}
+      </div>
+
+      {%- if section.settings.enable_claim -%}
+      {%- comment -%} Claim tab: posts multipart to <chat_endpoint>/claim — the
+          Worker holds the Claim API key; the browser never sees it. {%- endcomment -%}
+      <div class="bb-panel" id="bb-panel-claim" role="tabpanel" aria-labelledby="bb-tab-claim" hidden>
+        <p class="bb-claim-intro">{{ section.settings.claim_intro | default: 'Something wrong with your order? Tell us and we’ll make it right.' }}</p>
+        <form class="bb-form" id="bb-claim-form" novalidate>
+          <label class="bb-field">
+            <span>Order number*</span>
+            <input type="text" name="order_id" required maxlength="100" placeholder="e.g. 154008587601" autocomplete="off" inputmode="numeric">
+          </label>
+          {%- comment -%} The CS API requires an email (the reply is sent there),
+              so the field can only be hidden when the login supplies it. {%- endcomment -%}
+          {%- if customer -%}
+            <input type="hidden" name="email" value="{{ customer.email | escape }}">
+          {%- else -%}
+          <label class="bb-field">
+            <span>Email* <small class="bb-field-hint">our reply goes here</small></span>
+            <input type="email" name="email" required maxlength="200" autocomplete="email">
+          </label>
+          {%- endif -%}
+          <label class="bb-field">
+            <span>Issue type*</span>
+            <select name="type" required>
+              <option value="" disabled selected>Choose the issue…</option>
+              {%- assign bb_claim_types = 'Damaged,Wrong item,Missing,Missing pump,Delayed,Bad taste,Partially missing,Partially damaged,Defective,Broken cap,Unsealed,Lost,Expired,FBM Return,OOS,Other' | split: ',' -%}
+              {%- for t in bb_claim_types -%}<option value="{{ t }}">{{ t }}</option>{%- endfor -%}
+            </select>
+          </label>
+          <label class="bb-field">
+            <span>What happened?*</span>
+            <textarea name="message" rows="4" required maxlength="8000"></textarea>
+          </label>
+          <label class="bb-field">
+            <span>Photos (optional, up to 10)</span>
+            <input type="file" id="bb-claim-files" accept="image/*" multiple>
+          </label>
+          <div class="bb-claim-filelist" id="bb-claim-filelist"></div>
+          <button type="submit" class="bb-submit" id="bb-claim-submit">{{ section.settings.claim_submit_label | default: 'Submit claim' }}</button>
+          <div class="bb-status" id="bb-claim-status" aria-live="polite"></div>
+        </form>
+      </div>
+      {%- endif -%}
       </div>
     </div>
   </div>
@@ -226,9 +282,16 @@
 
     /* Form */
     .bb-field { display: grid; gap: 6px; margin-bottom: 12px;  }
-    .bb-field input, .bb-field textarea {
-      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #ddd; font: inherit;
+    .bb-field input, .bb-field textarea, .bb-field select {
+      width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid #ddd; font: inherit; background:#fff;
     }
+    .bb-claim-intro{margin:0 0 12px;color:#555;font-size:13.5px}
+    .bb-field-hint{font-weight:400;color:#888;font-size:12px}
+    .bb-claim-filelist:empty{display:none}
+    .bb-claim-filelist{display:flex;flex-direction:column;gap:4px;margin:-4px 0 12px}
+    .bb-claim-file{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#3C2005;background:#F6F1E7;border-radius:8px;padding:5px 8px}
+    .bb-claim-file span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .bb-claim-file button{border:0;background:none;color:#3C2005;font-weight:700;cursor:pointer;font:inherit;padding:0 2px}
     .bb-submit {
       width: 100%; padding: 12px 14px; border-radius: 10px; border: 0; cursor: pointer;
       font-weight: 700; background: #3C2005; color: {{ section.settings.submit_text }};
@@ -241,11 +304,26 @@
     .bb-tabs{display:flex;gap:8px;margin:0 0 14px;border-bottom:1px solid #eee;padding-bottom:12px}
     .bb-tab{flex:1;padding:9px 10px;border:1px solid #ddd;border-radius:10px;background:#fff;color:#3C2005;font:inherit;font-weight:700;font-size:13px;cursor:pointer}
     .bb-tab.is-active{background:#3C2005;color:#fff;border-color:#3C2005}
-    .bb-panel[hidden], .bb-faq-answer[hidden]{display:none!important}
-    .bb-chat-log{display:flex;flex-direction:column;gap:8px;min-height:110px;max-height:250px;overflow-y:auto;padding:4px 2px;margin-bottom:10px;scrollbar-width:thin}
+    .bb-faq-answer[hidden]{display:none!important}
+    /* panel stack: both tabs occupy the same grid cell so the card holds the
+       taller (form) height; the inactive one stays laid out but invisible */
+    .bb-panels{display:grid}
+    .bb-panels > .bb-panel{grid-area:1/1;min-width:0}
+    .bb-panels > .bb-panel[hidden]{display:block!important;visibility:hidden!important;pointer-events:none!important}
+    #bb-panel-chat{display:flex;flex-direction:column}
+    #bb-panel-chat[hidden]{display:flex!important;visibility:hidden!important;pointer-events:none!important}
+    .bb-chat-log{display:flex;flex-direction:column;gap:8px;flex:1 1 auto;min-height:110px;max-height:340px;overflow-y:auto;padding:4px 2px;margin-bottom:60px;scrollbar-width:thin}
+    /* Never let the log compress its bubbles to fit max-height — scroll instead.
+       (An explicit min-height on bubbles disables the content-based minimum
+       that used to prevent this.) */
+    .bb-chat-log > *{flex-shrink:0}
     .bb-msg{max-width:85%;padding:9px 12px;border-radius:12px;font-size:13.5px;line-height:1.45;overflow-wrap:break-word}
     .bb-msg--plain{white-space:pre-line}
     .bb-msg--bot{align-self:flex-start;background:#F6F1E7;color:#3C2005;border-bottom-left-radius:4px}
+    /* AI avatar beside every bot bubble (and the typing dots). Pure CSS so
+       messages restored from sessionStorage get it too. */
+    .bb-msg--bot,.bb-typing{position:relative;margin-left:68px;max-width:calc(85% - 68px);min-height:60px;display:flex;flex-direction:column;justify-content:center}
+    .bb-msg--bot::before,.bb-typing::before{content:'';position:absolute;left:-68px;top:0;width:60px;height:60px;border-radius:50%;background:#fff url('{{ 'chatbot.png' | asset_url }}') center/cover no-repeat;border:1px solid #E8DFC9}
     .bb-msg--user{align-self:flex-end;background:#3C2005;color:#fff;border-bottom-right-radius:4px}
     .bb-msg--bot p{margin:0 0 6px}
     .bb-msg--bot p:last-child{margin:0}
@@ -258,7 +336,20 @@
     .bb-chat-pills:empty{display:none}
     .bb-pill{padding:7px 12px;border:1px solid #ddd;border-radius:999px;background:#fff;color:#333;font:inherit;font-size:12.5px;cursor:pointer}
     .bb-pill:hover{border-color:#3C2005;color:#3C2005}
+    /* Starter questions vanish once the conversation begins (Track stays). */
+    .bb-chat-pills.is-used .bb-pill[data-faq]{display:none}
+    /* Gentle floating bob, staggered so pills don't move in unison. */
+    @keyframes bb-pill-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+    .bb-pill{animation:bb-pill-float 3.2s ease-in-out infinite}
+    .bb-chat-pills .bb-pill:nth-child(2n){animation-delay:-1.1s}
+    .bb-chat-pills .bb-pill:nth-child(3n){animation-delay:-2.2s}
+    @media (prefers-reduced-motion:reduce){.bb-pill{animation:none}}
     .bb-pill--empty{opacity:.5;font-style:italic}
+    .bb-pill--track{border-color:#3C2005;color:#3C2005;font-weight:700}
+    .bb-track-form{display:flex;flex-direction:column;gap:8px;max-width:85%}
+    .bb-track-row{display:flex;gap:6px}
+    .bb-track-input{flex:1;min-width:0;padding:8px 10px;border-radius:8px;border:1px solid #d5c9b8;font:inherit;font-size:13px}
+    .bb-track-go{padding:8px 14px;border:0;border-radius:8px;background:#3C2005;color:#fff;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
     .bb-chat-send[disabled]{opacity:.55;cursor:default}
     .bb-chat-inputrow input[disabled]{opacity:.7}
     .bb-chat-inputrow{display:flex;gap:8px}
@@ -449,6 +540,33 @@
       setButtonIcon(false);
     })();
 
+    /* ---- Tab controller: chat / form / claim, any combination enabled.
+            Exposed as bbShowTab so the chat and claim scripts can switch. ---- */
+    (function () {
+      const root = document.getElementById('bb-floating-contact');
+      if (!root) return;
+      const tabs = [
+        { name: 'chat',  tab: document.getElementById('bb-tab-chat'),  panel: document.getElementById('bb-panel-chat') },
+        { name: 'form',  tab: document.getElementById('bb-tab-form'),  panel: document.getElementById('bb-panel-form') },
+        { name: 'claim', tab: document.getElementById('bb-tab-claim'), panel: document.getElementById('bb-panel-claim') },
+      ].filter(function(t){ return t.tab && t.panel; });
+      if (!tabs.length) return;
+      window.bbShowTab = function(name){
+        /* Unknown name (e.g. a sessionStorage-restored "Open a claim" button
+           after the claim tab was disabled) must never hide every panel. */
+        if (!tabs.some(function(t){ return t.name === name; })) name = 'form';
+        tabs.forEach(function(t){
+          const on = t.name === name;
+          t.panel.hidden = !on;
+          t.tab.classList.toggle('is-active', on);
+          t.tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+      };
+      tabs.forEach(function(t){ t.tab.addEventListener('click', function(){ window.bbShowTab(t.name); }); });
+      const def = root.dataset.defaultTab === 'form' ? 'form' : 'chat';
+      window.bbShowTab(tabs.some(function(t){ return t.name === def; }) ? def : tabs[0].name);
+    })();
+
     /* ---- Quick-help chat tab (separate from the form logic above) ---- */
     (function () {
       const root = document.getElementById('bb-floating-contact');
@@ -458,47 +576,72 @@
       const inputRow  = document.getElementById('bb-chat-inputrow');
       const input     = document.getElementById('bb-chat-input');
       const tabChat   = document.getElementById('bb-tab-chat');
-      const tabForm   = document.getElementById('bb-tab-form');
       const panelChat = document.getElementById('bb-panel-chat');
-      const panelForm = document.getElementById('bb-panel-form');
-      if (!log || !tabChat || !tabForm || !panelChat || !panelForm) return;
+      if (!log || !tabChat || !panelChat) return;
 
       const greeting     = root.dataset.chatGreeting || '';
       const fallbackText = root.dataset.chatFallback || "I couldn't find an instant answer for that.";
       const llmUrl       = (root.dataset.chatEndpoint || '').trim();
 
-      function showTab(name){
-        const chat = name === 'chat';
-        panelChat.hidden = !chat;
-        panelForm.hidden = chat;
-        tabChat.classList.toggle('is-active', chat);
-        tabForm.classList.toggle('is-active', !chat);
-        tabChat.setAttribute('aria-selected', chat ? 'true' : 'false');
-        tabForm.setAttribute('aria-selected', chat ? 'false' : 'true');
-      }
-      tabChat.addEventListener('click', function(){ showTab('chat'); });
-      tabForm.addEventListener('click', function(){ showTab('form'); });
-      showTab(root.dataset.defaultTab === 'form' ? 'form' : 'chat');
+      function showTab(name){ if (window.bbShowTab) window.bbShowTab(name); }
 
       function scrollLog(){ log.scrollTop = log.scrollHeight; }
+
+      /* Persist the conversation for the tab's lifetime so a refresh or page
+         navigation doesn't wipe it. Transient UI (typing dots, the inline track
+         form) is never saved; restored user text stays escaped because it was
+         inserted via textContent. */
+      const LOG_KEY = 'bb-chat-log-v1';
+      function saveLog(){
+        try {
+          const c = log.cloneNode(true);
+          Array.prototype.forEach.call(c.querySelectorAll('.bb-typing, .bb-track-form'), function(n){ n.remove(); });
+          while (c.children.length > 40) c.removeChild(c.firstChild);
+          sessionStorage.setItem(LOG_KEY, c.innerHTML);
+        } catch(e){}
+      }
+      /* The quick-question pills are conversation starters — once the customer
+         sends anything, hide them (the Track pill stays). Kept visible in the
+         theme editor so merchants can always see the blocks they're editing. */
+      function hideStarters(){
+        if (window.Shopify && window.Shopify.designMode) return;
+        if (pills) pills.classList.add('is-used');
+      }
       function addMsg(who, content, opts){
         const el = document.createElement('div');
         el.className = 'bb-msg bb-msg--' + who;
         if (opts && opts.html){ el.innerHTML = content; }
         else { el.classList.add('bb-msg--plain'); el.textContent = content; }
         log.appendChild(el);
+        if (who === 'user') hideStarters();
         scrollLog();
+        saveLog();
         return el;
       }
+      /* Delegated so the buttons still work on messages restored from sessionStorage. */
+      log.addEventListener('click', function(e){
+        const lnk = e.target.closest ? e.target.closest('.bb-msg-link') : null;
+        if (lnk) showTab(lnk.classList.contains('bb-claim-link') ? 'claim' : 'form');
+      });
       function addFormLink(el){
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'bb-msg-link';
         btn.textContent = 'Send us a message instead';
-        btn.addEventListener('click', function(){ showTab('form'); });
         el.appendChild(document.createElement('br'));
         el.appendChild(btn);
         scrollLog();
+        saveLog();
+      }
+      function addClaimLink(el){
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bb-msg-link bb-claim-link';
+        btn.textContent = 'Open a claim';
+        el.appendChild(document.createElement('br'));
+        el.appendChild(btn);
+        scrollLog();
+        saveLog();
       }
       let typingEl = null;
       function typing(on){
@@ -512,7 +655,23 @@
         if (!on && typingEl){ typingEl.remove(); typingEl = null; }
       }
 
-      if (greeting) addMsg('bot', greeting);
+      let restored = false;
+      try {
+        const saved = (window.Shopify && window.Shopify.designMode) ? null : sessionStorage.getItem(LOG_KEY);
+        if (saved){
+          log.innerHTML = saved;
+          Array.prototype.forEach.call(log.querySelectorAll('.bb-typing, .bb-track-form'), function(n){ n.remove(); });
+          restored = log.children.length > 0;
+        }
+      } catch(e){}
+      if (!restored && greeting) addMsg('bot', greeting);
+      if (restored && log.querySelector('.bb-msg--user')) hideStarters();
+
+      /* The log can't scroll while the modal is display:none — re-scroll when it
+         becomes visible (widget opened, or chat tab re-selected). */
+      const floatBtn = document.getElementById('bb-float-btn');
+      if (floatBtn) floatBtn.addEventListener('click', function(){ requestAnimationFrame(scrollLog); });
+      tabChat.addEventListener('click', function(){ requestAnimationFrame(scrollLog); });
 
       const sendBtn = inputRow ? inputRow.querySelector('.bb-chat-send') : null;
       let busy = false;
@@ -598,6 +757,7 @@
         }
         log.appendChild(el);
         scrollLog();
+        saveLog();
       }
       /* Order-status questions can't be answered from the storefront (needs the
          authenticated Admin API via the future AI endpoint) — route them to the
@@ -654,12 +814,25 @@
           return { role: m.classList.contains('bb-msg--user') ? 'user' : 'assistant', text: (c.textContent || '').trim() };
         });
       }
+      /* When the AI deflects to human support it flags the reply (show_contact,
+         or a [[CONTACT]] marker in the text) — render the "Send us a message"
+         button under it. The phrase regex is a backstop for older Worker builds
+         that don't send the flag yet. */
+      const NEEDS_HUMAN_RE = /send message|send us a message|contact (us|the team)|reach (out|us|the team)|get in touch|email (us|the team)|support team|customer (service|support)/i;
       async function askLlm(q, history){
         const payload = { message: q, history: history || [], page: location.href };
         if (root.dataset.customerEmail) payload.customer_email = root.dataset.customerEmail;
         const data = await fetchJson(llmUrl, payload, 25000);
-        if (data && typeof data.reply === 'string' && data.reply) addMsg('bot', data.reply);
-        else throw new Error('bad reply');
+        if (!data || typeof data.reply !== 'string' || !data.reply) throw new Error('bad reply');
+        let text = data.reply;
+        const contactMark = text.indexOf('[[CONTACT]]') !== -1;
+        const claimMark   = text.indexOf('[[CLAIM]]') !== -1;
+        if (contactMark || claimMark) text = text.split('[[CONTACT]]').join(' ').split('[[CLAIM]]').join(' ').replace(/\s+/g, ' ').trim();
+        const el = addMsg('bot', text || fallbackText);
+        /* A claim-flagged reply must never dead-end: if the claim tab is
+           disabled, degrade to the message-form button. */
+        if ((data.show_claim || claimMark) && document.getElementById('bb-tab-claim')) addClaimLink(el);
+        else if (data.show_claim || claimMark || data.show_contact || contactMark || NEEDS_HUMAN_RE.test(text)) addFormLink(el);
       }
 
       if (pills) pills.addEventListener('click', function(e){
@@ -688,6 +861,50 @@
         ask(q, h);
       });
 
+      /* "Track your package": inline order-number form in the chat; submitting
+         routes through the AI (which asks for / auto-uses the email and looks
+         the order up). */
+      function showTrackForm(){
+        const existing = log.querySelector('.bb-track-form');
+        if (existing){ existing.querySelector('.bb-track-input').focus(); return; }
+        const el = document.createElement('div');
+        el.className = 'bb-msg bb-msg--bot bb-track-form';
+        const label = document.createElement('span');
+        label.textContent = 'Sure — enter your order number:';
+        const row = document.createElement('div');
+        row.className = 'bb-track-row';
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.className = 'bb-track-input';
+        inp.placeholder = 'e.g. 1042';
+        inp.maxLength = 30;
+        inp.autocomplete = 'off';
+        const go = document.createElement('button');
+        go.type = 'button';
+        go.className = 'bb-track-go';
+        go.textContent = 'Track';
+        function submitTrack(){
+          const v = (inp.value || '').trim();
+          if (!v){ inp.focus(); return; }
+          if (busy) return;
+          el.remove();
+          const h = snapshotHistory();
+          addMsg('user', 'Track my package — order ' + v);
+          ask('Track my package. My order number is ' + v + '.', h);
+        }
+        go.addEventListener('click', submitTrack);
+        inp.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); submitTrack(); } });
+        row.appendChild(inp);
+        row.appendChild(go);
+        el.appendChild(label);
+        el.appendChild(row);
+        log.appendChild(el);
+        scrollLog();
+        inp.focus();
+      }
+      const trackBtn = document.getElementById('bb-track-btn');
+      if (trackBtn) trackBtn.addEventListener('click', showTrackForm);
+
       /* Theme editor: selecting the section or a Quick question block opens the
          widget so merchants can see what they're editing. */
       if (window.Shopify && window.Shopify.designMode){
@@ -703,6 +920,123 @@
           if (e.target && e.target.contains(root)){ ensureOpen(); showTab('chat'); }
         });
       }
+    })();
+
+    /* ---- Claim tab: multipart POST to <chat_endpoint>/claim (the Worker adds
+            the secret Claim API key and forwards to the Customer-Support app).
+            An idempotencyKey minted per rendered form makes retries safe. ---- */
+    (function () {
+      const root = document.getElementById('bb-floating-contact');
+      const form = document.getElementById('bb-claim-form');
+      if (!root || !form) return;
+      const endpoint  = (root.dataset.chatEndpoint || '').trim().replace(/\/+$/, '');
+      const filesIn   = document.getElementById('bb-claim-files');
+      const fileList  = document.getElementById('bb-claim-filelist');
+      const submitBtn = document.getElementById('bb-claim-submit');
+      const statusEl  = document.getElementById('bb-claim-status');
+      const submitLabel = submitBtn ? submitBtn.textContent : '';
+      const MAX_FILES = 10, MAX_FILE_BYTES = 10 * 1024 * 1024, MAX_TOTAL_BYTES = 35 * 1024 * 1024;
+
+      function makeKey(){
+        return (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+          : 'ck-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+      }
+      let idemKey = makeKey();
+      let picked = [];
+      let sending = false;
+      /* The key stays stable across UNCHANGED retries (so a resend after a lost
+         response is deduped upstream) but rotates whenever the content changes —
+         an edited resubmission is a new claim, not a duplicate of the old one. */
+      function contentChanged(){ idemKey = makeKey(); }
+      form.addEventListener('input', contentChanged);
+      function totalPicked(){ return picked.reduce(function(s, f){ return s + f.size; }, 0); }
+
+      function status(msg, ok){
+        if (!statusEl) return;
+        statusEl.textContent = msg || '';
+        statusEl.style.color = ok ? '#1a7f37' : '';
+      }
+      function renderFiles(){
+        if (!fileList) return;
+        fileList.textContent = '';
+        picked.forEach(function(f, i){
+          const row = document.createElement('div');
+          row.className = 'bb-claim-file';
+          const nm = document.createElement('span');
+          nm.textContent = f.name + ' (' + (f.size / 1048576).toFixed(1) + ' MB)';
+          const rm = document.createElement('button');
+          rm.type = 'button';
+          rm.setAttribute('aria-label', 'Remove ' + f.name);
+          rm.textContent = '✕';
+          rm.addEventListener('click', function(){ picked.splice(i, 1); renderFiles(); contentChanged(); });
+          row.appendChild(nm);
+          row.appendChild(rm);
+          fileList.appendChild(row);
+        });
+      }
+      if (filesIn) filesIn.addEventListener('change', function(){
+        status('');
+        Array.prototype.forEach.call(filesIn.files, function(f){
+          if (picked.length >= MAX_FILES){ status('You can attach up to ' + MAX_FILES + ' photos.'); return; }
+          if (f.size > MAX_FILE_BYTES){ status('“' + f.name + '” is over 10 MB — please use a smaller photo.'); return; }
+          if (totalPicked() + f.size > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — “' + f.name + '” doesn’t fit. Remove one or use smaller photos.'); return; }
+          const dup = picked.some(function(p){ return p.name === f.name && p.size === f.size; });
+          if (!dup){ picked.push(f); contentChanged(); }
+        });
+        filesIn.value = '';
+        renderFiles();
+      });
+
+      function setSending(on){
+        sending = on;
+        if (submitBtn){ submitBtn.disabled = on; submitBtn.textContent = on ? 'Submitting…' : submitLabel; }
+      }
+      form.addEventListener('submit', async function(e){
+        e.preventDefault();
+        if (sending) return;
+        if (!form.reportValidity()) return;
+        if (!endpoint){ status('Claims aren’t set up yet — please use the Send message tab.'); return; }
+        if (totalPicked() > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — please remove one or use smaller photos.'); return; }
+        const fields = form.elements;
+        const email = fields.namedItem('email').value.trim();
+        const fd = new FormData();
+        fd.set('order_id', fields.namedItem('order_id').value.trim());
+        fd.set('email', email);
+        fd.set('type', fields.namedItem('type').value);
+        fd.set('message', fields.namedItem('message').value.trim());
+        fd.set('page_url', String(location.href).slice(0, 500));
+        fd.set('idempotencyKey', idemKey);
+        picked.forEach(function(f){ fd.append('files', f, f.name); });
+
+        setSending(true);
+        status('Submitting your claim — this can take a few seconds…');
+        const ctrl  = ('AbortController' in window) ? new AbortController() : null;
+        const timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 90000);
+        try {
+          const res = await fetch(endpoint + '/claim', { method: 'POST', body: fd, signal: ctrl ? ctrl.signal : undefined });
+          let data = null;
+          try { data = await res.json(); } catch(err){}
+          if (res.ok && data && data.ok && data.reference){
+            form.reset();
+            picked = [];
+            renderFiles();
+            idemKey = makeKey();
+            status('Claim received — your reference is ' + data.reference + '. We’ll email you at ' + email + '.', true);
+          } else {
+            /* A not-yet-updated Worker routes /claim into its chat handler,
+               whose raw errors ("invalid json", "payload too large") would
+               confuse customers — replace those with a friendly message. */
+            const raw = (data && data.error) ? String(data.error) : '';
+            const stale = /invalid json|payload too large|empty message|worker secrets|origin not allowed/i.test(raw);
+            status(raw && !stale ? raw : 'Claims aren’t available right now — please try again later, or use the Send message tab.');
+          }
+        } catch(err){
+          status('Something went wrong — please try again. Resubmitting is safe, it won’t create a duplicate.');
+        } finally {
+          if (timer) clearTimeout(timer);
+          setSending(false);
+        }
+      });
     })();
   </script>
 </section>
@@ -773,7 +1107,20 @@
     { "type": "text", "id": "chat_greeting", "label": "Chat greeting", "default": "Hi! Pick a question below, or type your own — I’ll answer instantly." },
     { "type": "text", "id": "chat_placeholder", "label": "Input placeholder", "default": "Type a question…" },
     { "type": "text", "id": "chat_fallback", "label": "No-answer fallback text", "default": "I couldn’t find an instant answer for that." },
-    { "type": "url", "id": "chat_endpoint", "label": "AI chat endpoint (optional)", "info": "Leave empty to answer typed questions from the store’s built-in policies/FAQ search. Set to your AI Worker URL later to switch to LLM replies." }
+    { "type": "text", "id": "track_label", "label": "Track-package pill label", "default": "Track your package" },
+    { "type": "url", "id": "chat_endpoint", "label": "AI chat endpoint (optional)", "info": "Leave empty to answer typed questions from the store’s built-in policies/FAQ search. Set to your AI Worker URL later to switch to LLM replies." },
+
+    { "type": "header", "content": "Claim tab" },
+    {
+      "type": "checkbox",
+      "id": "enable_claim",
+      "label": "Enable Claim tab",
+      "default": true,
+      "info": "Claims post through the AI chat endpoint (Worker), which holds the Claim API key."
+    },
+    { "type": "text", "id": "claim_tab_label", "label": "Claim tab label", "default": "Claim" },
+    { "type": "text", "id": "claim_intro", "label": "Claim intro text", "default": "Something wrong with your order? Tell us and we’ll make it right." },
+    { "type": "text", "id": "claim_submit_label", "label": "Claim submit label", "default": "Submit claim" }
   ],
   "max_blocks": 12,
   "blocks": [
