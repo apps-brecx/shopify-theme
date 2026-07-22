@@ -543,7 +543,16 @@ export default {
          the read_orders scope. Returns only status codes and error CODES —
          never order or customer data. */
       if (new URL(request.url).pathname === '/admin-check') {
-        if (!env.SHOPIFY_ADMIN_TOKEN) return json({ token_set: false, hint: 'SHOPIFY_ADMIN_TOKEN secret is missing' }, 200, headers);
+        /* Presence-only env report (never values) — confirms which variables
+           the RUNNING deployment can actually see. */
+        const envSeen = {
+          anthropic_key_set: !!env.ANTHROPIC_API_KEY,
+          shopify_token_set: !!env.SHOPIFY_ADMIN_TOKEN,
+          fbm_login_set: !!(env.FBM_EMAIL && env.FBM_PIN),
+          claims_key_set: !!env.SUPPORT_API_KEY,
+          claims_base: env.SUPPORT_API_BASE || '(default: https://cs.brecx.com)',
+        };
+        if (!env.SHOPIFY_ADMIN_TOKEN) return json({ env_seen: envSeen, token_set: false, hint: 'SHOPIFY_ADMIN_TOKEN secret is missing' }, 200, headers);
         try {
           const res = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
             method: 'POST',
@@ -606,6 +615,7 @@ export default {
             emailProbe = { hint: String((e && e.message) || e).slice(0, 120) };
           }
           return json({
+            env_seen: envSeen,
             token_set: true,
             http: res.status,
             token_valid: res.status === 200,
