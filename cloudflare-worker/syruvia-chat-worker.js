@@ -703,7 +703,7 @@ export default {
     /* Structured tracking for the Track tab (FBM-backed, order number only). */
     if (path.endsWith('/track')) {
       const tip = request.headers.get('CF-Connecting-IP') || 'unknown';
-      if (rateLimited(tip)) return json({ error: 'too many requests' }, 429, headers);
+      if (rateLimited(tip)) return json({ error: 'You’re checking quite fast — please wait a minute and try again.' }, 429, headers);
       return handleTrack(request, env, headers);
     }
 

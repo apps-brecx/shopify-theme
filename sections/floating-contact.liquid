@@ -1072,6 +1072,9 @@
       function rankOf(d){
         if (d.shipping_status === 'delivered') return 7;
         if (d.shipping_status === 'in_transit') return 6;
+        /* awaiting_collection = packed & waiting for pickup (matches the AI's
+           wording) — scans lag, so trust the shipping status first. */
+        if (d.shipping_status === 'awaiting_collection') return 5;
         if (d.scan_status === 'pallet' || d.pallet_at) return 5;
         if (d.packed_at || d.scan_status === 'packed') return 4;
         if (d.label_printed_at) return 3;
@@ -1089,7 +1092,8 @@
       function render(d){
         const rank = rankOf(d);
         currentEl.textContent = (d.order ? d.order + ' — ' : '') + STEPS[rank - 1].label;
-        updatedEl.textContent = d.updated_at ? 'Last updated: ' + fmt(d.updated_at) : '';
+        const updatedTxt = fmt(d.updated_at);
+        updatedEl.textContent = updatedTxt ? 'Last updated: ' + updatedTxt : '';
         stepsEl.textContent = '';
         STEPS.forEach(function(s, i){
           const n = i + 1;
@@ -1147,10 +1151,11 @@
             else statusEl.textContent = 'We couldn’t find a shipment for that order number. Double-check the number — brand-new orders can take a little while to appear.';
           } else {
             /* A not-yet-updated worker answers /track from the chat handler
-               with raw errors — swap those for a friendly message. */
+               with raw errors — swap those (and the terse 429) for a friendly
+               message that doesn't promise quick self-recovery. */
             const raw = (data && data.error) ? String(data.error) : '';
-            const stale = /empty message|invalid json|payload too large|worker secrets/i.test(raw);
-            statusEl.textContent = raw && !stale ? raw : 'Tracking is temporarily unavailable — please try again in a minute.';
+            const stale = /empty message|invalid json|payload too large|worker secrets|^too many requests$/i.test(raw);
+            statusEl.textContent = raw && !stale ? raw : 'Tracking isn’t available right now — please try again later, or ask us via the Send message tab.';
           }
         } catch(err){
           statusEl.textContent = 'Tracking is temporarily unavailable — please try again in a minute.';
