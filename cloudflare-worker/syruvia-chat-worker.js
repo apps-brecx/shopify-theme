@@ -372,6 +372,8 @@ async function handleTrack(request, env, headers) {
       carrier: row.carrier_name || null,
       tracking: (row.packed_tracking_numbers || []).concat(row.pallet_tracking_numbers || []).slice(0, 4),
       is_returning: !!row.is_returning,
+      is_stuck: !!row.is_stuck,
+      is_label_failed: !!row.is_label_failed,
       order_created_at: row.order_created_at || null,
       accepted_at: row.created_at || null,
       label_printed_at: row.print_at || null,
@@ -450,7 +452,8 @@ function rateLimited(ip) {
    the storefront. Extra env vars: SUPPORT_API_KEY (required),
    SUPPORT_API_BASE (optional, default https://cs.brecx.com). */
 
-const CLAIM_TYPES = ['Damaged', 'Wrong item', 'Missing', 'Missing pump', 'Delayed', 'Bad taste', 'Partially missing', 'Partially damaged', 'Defective', 'Broken cap', 'Unsealed', 'Lost', 'Expired', 'FBM Return', 'OOS', 'Other'];
+const CLAIM_TYPES = ['Damaged in transit', 'Wrong item', 'Never received', 'Delayed in transit', 'Other'];
+const CLAIM_PHOTO_REQUIRED = ['Damaged in transit', 'Wrong item'];
 const CLAIM_MAX_FILES = 10;
 const CLAIM_MAX_FILE_BYTES = 10 * 1024 * 1024;
 const CLAIM_MAX_BODY_BYTES = 40 * 1024 * 1024;
@@ -502,6 +505,36 @@ async function readClaimForm(request) {
   return new Response(buf, { headers: { 'Content-Type': request.headers.get('Content-Type') || '' } }).formData();
 }
 
+/* Resolve the customer's email from the Shopify order so guests don't type
+   it on the claim form. Requires the Protected-customer-data "Email" field
+   approval on the app — until granted, this returns null and the form falls
+   back to asking (needs_email). */
+async function shopifyOrderEmail(env, orderId) {
+  const num = String(orderId || '').replace(/[^0-9]/g, '');
+  if (!num || !env.SHOPIFY_ADMIN_TOKEN) return null;
+  try {
+    const res = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN },
+      body: JSON.stringify({
+        query: 'query($q: String!){ orders(first: 5, query: $q){ nodes { name email } } }',
+        variables: { q: 'name:#' + num },
+      }),
+    }, 8000);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const nodes = (data.data && data.data.orders && data.data.orders.nodes) || [];
+    const m = nodes.find(function (o) {
+      return o && String(o.name || '').replace(/[^0-9]/g, '') === num && o.email;
+    });
+    const mail = m ? String(m.email).trim().toLowerCase() : '';
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail) ? mail : null;
+  } catch (e) {
+    console.error('order email lookup failed:', e && e.message ? e.message : e);
+    return null;
+  }
+}
+
 async function handleClaim(request, env, headers, origin) {
   if (!env.SUPPORT_API_KEY) return json({ error: 'Claims aren’t configured yet — please use the Send message tab.' }, 500, headers);
 
@@ -510,15 +543,13 @@ async function handleClaim(request, env, headers, origin) {
   catch (e) { return json({ error: 'invalid form data' }, 400, headers); }
   if (!form) return json({ error: CLAIM_SIZE_MSG }, 413, headers);
 
-  const message = String(form.get('message') || '').trim().slice(0, 8000);
-  const email   = String(form.get('email') || '').trim().toLowerCase().slice(0, 200);
+  let   message = String(form.get('message') || '').trim().slice(0, 8000);
+  let   email   = String(form.get('email') || '').trim().toLowerCase().slice(0, 200);
   const orderId = String(form.get('order_id') || '').trim().slice(0, 100);
   let   type    = String(form.get('type') || '').trim();
   const idem    = String(form.get('idempotencyKey') || '').trim().slice(0, 200);
   let   pageUrl = String(form.get('page_url') || '').trim().slice(0, 500);
 
-  if (!message) return json({ error: 'Please describe what happened.' }, 400, headers);
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: 'A valid email is required — our reply is sent there.' }, 400, headers);
   if (!orderId) return json({ error: 'Please enter your order number.' }, 400, headers);
   if (CLAIM_TYPES.indexOf(type) === -1) type = 'Other';
   if (!/^https:\/\//i.test(pageUrl)) pageUrl = origin || '';
@@ -527,6 +558,23 @@ async function handleClaim(request, env, headers, origin) {
   if (files.length > CLAIM_MAX_FILES) return json({ error: 'Attach at most 10 photos.' }, 400, headers);
   for (const f of files) {
     if (f.size > CLAIM_MAX_FILE_BYTES) return json({ error: CLAIM_SIZE_MSG }, 413, headers);
+  }
+  /* Wizard rules: damaged/wrong-item claims need photo evidence; "Other" is
+     meaningless without the customer's words; remaining types self-describe. */
+  if (CLAIM_PHOTO_REQUIRED.indexOf(type) !== -1 && files.length === 0) {
+    return json({ error: 'Please attach at least one photo of the item — the team needs it to resolve this claim.' }, 400, headers);
+  }
+  if (type === 'Other' && !message) return json({ error: 'Please describe what happened.' }, 400, headers);
+  if (!message) message = type + ' — reported via the claim form on syruvia.com.';
+
+  /* No email on the form: resolve it from the Shopify order (guests), else
+     ask the browser to reveal the email field and resubmit (same
+     idempotencyKey, so no duplicate is created). */
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    email = (await shopifyOrderEmail(env, orderId)) || '';
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return json({ error: 'Please add your email so our reply can reach you.', needs_email: true }, 400, headers);
   }
 
   const out = new FormData();

@@ -169,45 +169,69 @@
       </div>
 
       {%- if section.settings.enable_claim -%}
-      {%- comment -%} Claim tab: posts multipart to <chat_endpoint>/claim — the
-          Worker holds the Claim API key; the browser never sees it. {%- endcomment -%}
+      {%- comment -%} Claim tab: 3-step wizard posting multipart to
+          <chat_endpoint>/claim — the Worker holds the Claim API key. No email
+          field: logged-in uses the account email; guests are resolved from
+          the Shopify order server-side, with an inline fallback prompt only
+          when that lookup can't run (needs_email). {%- endcomment -%}
       <div class="bb-panel" id="bb-panel-claim" role="tabpanel" aria-labelledby="bb-tab-claim" hidden>
         <p class="bb-claim-intro">{{ section.settings.claim_intro | default: 'Something wrong with your order? Tell us and we’ll make it right.' }}</p>
-        <form class="bb-form" id="bb-claim-form" novalidate>
-          <label class="bb-field">
-            <span>Order number*</span>
-            <input type="text" name="order_id" required maxlength="100" placeholder="e.g. 154008587601" autocomplete="off" inputmode="numeric">
-          </label>
-          {%- comment -%} The CS API requires an email (the reply is sent there),
-              so the field can only be hidden when the login supplies it. {%- endcomment -%}
-          {%- if customer -%}
-            <input type="hidden" name="email" value="{{ customer.email | escape }}">
-          {%- else -%}
-          <label class="bb-field">
-            <span>Email* <small class="bb-field-hint">our reply goes here</small></span>
-            <input type="email" name="email" required maxlength="200" autocomplete="email">
-          </label>
-          {%- endif -%}
-          <label class="bb-field">
-            <span>Issue type*</span>
-            <select name="type" required>
-              <option value="" disabled selected>Choose the issue…</option>
-              {%- assign bb_claim_types = 'Damaged,Wrong item,Missing,Missing pump,Delayed,Bad taste,Partially missing,Partially damaged,Defective,Broken cap,Unsealed,Lost,Expired,FBM Return,OOS,Other' | split: ',' -%}
-              {%- for t in bb_claim_types -%}<option value="{{ t }}">{{ t }}</option>{%- endfor -%}
-            </select>
-          </label>
-          <label class="bb-field">
-            <span>What happened?*</span>
-            <textarea name="message" rows="4" required maxlength="8000"></textarea>
-          </label>
-          <label class="bb-field">
-            <span>Photos (optional, up to 10)</span>
-            <input type="file" id="bb-claim-files" accept="image/*" multiple>
-          </label>
-          <div class="bb-claim-filelist" id="bb-claim-filelist"></div>
-          <button type="submit" class="bb-submit" id="bb-claim-submit">{{ section.settings.claim_submit_label | default: 'Submit claim' }}</button>
-          <div class="bb-status" id="bb-claim-status" aria-live="polite"></div>
+        <div class="bb-wiz-dots" id="bb-claim-dots" aria-hidden="true">
+          <span class="bb-wiz-dot is-on">1</span><span class="bb-wiz-bar"></span><span class="bb-wiz-dot">2</span><span class="bb-wiz-bar"></span><span class="bb-wiz-dot">3</span>
+        </div>
+        <form id="bb-claim-form" novalidate>
+          <div class="bb-wiz-step is-active" data-step="1">
+            <label class="bb-field">
+              <span>Your order number</span>
+              <input type="text" id="bb-claim-order" maxlength="100" placeholder="e.g. 154008587601" autocomplete="off" inputmode="numeric" aria-label="Order number">
+            </label>
+            <button type="button" class="bb-submit bb-wiz-next" id="bb-claim-next1">Next</button>
+          </div>
+          <div class="bb-wiz-step" data-step="2">
+            <div class="bb-wiz-q">What went wrong?</div>
+            <div class="bb-claim-types" id="bb-claim-types">
+              <button type="button" class="bb-ctype" data-type="Damaged in transit" data-photo="1"><span class="bb-ctype-ic">📦</span>Damaged in transit</button>
+              <button type="button" class="bb-ctype" data-type="Wrong item" data-photo="1"><span class="bb-ctype-ic">🔄</span>Wrong item</button>
+              <button type="button" class="bb-ctype" data-type="Never received"><span class="bb-ctype-ic">🕵️</span>Never received</button>
+              <button type="button" class="bb-ctype" data-type="Delayed in transit"><span class="bb-ctype-ic">⏳</span>Delayed in transit</button>
+              <button type="button" class="bb-ctype bb-ctype--wide" data-type="Other" data-msg="1"><span class="bb-ctype-ic">💬</span>Something else</button>
+            </div>
+            <div class="bb-wiz-nav">
+              <button type="button" class="bb-wiz-back" data-back="1">← Back</button>
+            </div>
+          </div>
+          <div class="bb-wiz-step" data-step="3">
+            <div class="bb-claim-picked" id="bb-claim-picked"></div>
+            <div class="bb-field" id="bb-claim-photo-field">
+              <span>Photos <b class="bb-req-badge" id="bb-claim-photo-req" hidden>required</b></span>
+              <label class="bb-claim-drop" for="bb-claim-files">📷 Add photos<input type="file" id="bb-claim-files" accept="image/*" multiple hidden></label>
+            </div>
+            <div class="bb-claim-filelist" id="bb-claim-filelist"></div>
+            <label class="bb-field">
+              <span id="bb-claim-msg-lbl">Tell us more <b class="bb-req-badge" id="bb-claim-msg-req" hidden>required</b></span>
+              <textarea id="bb-claim-msg" rows="3" maxlength="8000" placeholder="Anything that helps us fix this faster…"></textarea>
+            </label>
+            {%- if customer -%}
+              <input type="hidden" id="bb-claim-email" value="{{ customer.email | escape }}">
+            {%- else -%}
+              <label class="bb-field" id="bb-claim-email-field" hidden>
+                <span>Your email <small class="bb-field-hint">our reply goes here</small></span>
+                <input type="email" id="bb-claim-email" maxlength="200" autocomplete="email">
+              </label>
+            {%- endif -%}
+            <div class="bb-wiz-nav">
+              <button type="button" class="bb-wiz-back" data-back="2">← Back</button>
+              <button type="submit" class="bb-submit bb-claim-send" id="bb-claim-submit">{{ section.settings.claim_submit_label | default: 'Submit claim' }}</button>
+            </div>
+            <div class="bb-status" id="bb-claim-status" aria-live="polite"></div>
+          </div>
         </form>
+        <div class="bb-claim-done" id="bb-claim-done" hidden>
+          <div class="bb-claim-done-ic">✓</div>
+          <div class="bb-claim-done-h">Claim received</div>
+          <p class="bb-claim-done-p" id="bb-claim-done-text"></p>
+          <button type="button" class="bb-wiz-back" id="bb-claim-again">Submit another claim</button>
+        </div>
       </div>
       {%- endif -%}
 
@@ -315,6 +339,37 @@
     .bb-claim-file{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#3C2005;background:#F6F1E7;border-radius:8px;padding:5px 8px}
     .bb-claim-file span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .bb-claim-file button{border:0;background:none;color:#3C2005;font-weight:700;cursor:pointer;font:inherit;padding:0 2px}
+    /* Claim wizard: progress dots, animated steps, issue-type cards */
+    .bb-wiz-dots{display:flex;align-items:center;gap:6px;margin:0 0 16px}
+    .bb-wiz-dot{width:26px;height:26px;border-radius:50%;border:2px solid #E0D5C2;background:#fff;color:#B9A78D;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;transition:all .25s ease}
+    .bb-wiz-dot.is-on{background:#3C2005;border-color:#3C2005;color:#FCE2A0}
+    .bb-wiz-bar{flex:1;height:2px;background:#E8DFC9;border-radius:2px}
+    .bb-wiz-step{display:none}
+    .bb-wiz-step.is-active{display:block;animation:bb-wiz-in .22s ease}
+    @keyframes bb-wiz-in{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+    @media (prefers-reduced-motion:reduce){.bb-wiz-step.is-active{animation:none}}
+    .bb-wiz-q{font-weight:700;font-size:15px;color:#3C2005;margin:0 0 10px}
+    .bb-wiz-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+    .bb-wiz-nav .bb-submit{width:auto;flex:1;margin:0}
+    .bb-wiz-back{border:0;background:none;color:#8a7a68;font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:8px 4px}
+    .bb-wiz-back:hover{color:#3C2005}
+    .bb-claim-types{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .bb-ctype{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:12px;border:1.5px solid #E0D5C2;border-radius:12px;background:#fff;color:#3C2005;font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:left;transition:transform .12s ease,box-shadow .12s ease,border-color .12s,background .12s}
+    .bb-ctype:hover{border-color:#3C2005;transform:translate(-1px,-1px);box-shadow:3px 3px 0 #3C2005}
+    .bb-ctype.is-picked{background:#FCE2A0;border-color:#3C2005;box-shadow:3px 3px 0 #3C2005}
+    .bb-ctype--wide{grid-column:1 / -1;flex-direction:row;align-items:center}
+    .bb-ctype-ic{font-size:20px;line-height:1}
+    .bb-claim-picked{display:flex;align-items:center;gap:8px;margin:0 0 12px}
+    .bb-claim-picked:empty{display:none}
+    .bb-claim-chip{background:#3C2005;color:#FCE2A0;border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700}
+    .bb-claim-chg{border:0;background:none;color:#8a7a68;font:inherit;font-size:12px;text-decoration:underline;cursor:pointer;padding:0}
+    .bb-req-badge{background:#FF6B5C;color:#fff;border-radius:999px;padding:2px 8px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-left:6px}
+    .bb-claim-drop{display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px dashed #C9BBA4;border-radius:12px;background:#FFFBF4;color:#3C2005;font-weight:700;font-size:13.5px;padding:16px 12px;cursor:pointer;transition:border-color .12s,background .12s}
+    .bb-claim-drop:hover{border-color:#3C2005;background:#FCE2A0}
+    .bb-claim-done{text-align:center;padding:18px 6px 8px;animation:bb-wiz-in .25s ease}
+    .bb-claim-done-ic{width:56px;height:56px;margin:0 auto 10px;border-radius:50%;background:#3C2005;color:#FCE2A0;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 #FF6B5C}
+    .bb-claim-done-h{font-size:19px;font-weight:700;color:#3C2005;margin-bottom:6px}
+    .bb-claim-done-p{margin:0 0 14px;color:#5a4632;font-size:14px}
     .bb-submit {
       width: 100%; padding: 12px 14px; border-radius: 10px; border: 0; cursor: pointer;
       font-weight: 700; background: #3C2005; color: {{ section.settings.submit_text }};
@@ -383,16 +438,27 @@
     .bb-step::before{content:'';position:absolute;left:7px;top:16px;bottom:-2px;width:2px;background:#E8DFC9}
     .bb-step:last-child{padding-bottom:4px}
     .bb-step:last-child::before{display:none}
-    .bb-step-dot{position:absolute;left:0;top:2px;width:16px;height:16px;border-radius:50%;border:2px solid #C9BBA4;background:#fff;box-sizing:border-box}
+    .bb-step-dot{position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50%;border:2px solid #C9BBA4;background:#fff;box-sizing:border-box;display:flex;align-items:center;justify-content:center;transition:all .25s ease}
     .bb-step.is-done::before{background:#3C2005}
-    .bb-step.is-done .bb-step-dot{border-color:#3C2005;background:#3C2005;box-shadow:inset 0 0 0 3px #FCE2A0}
-    .bb-step.is-current .bb-step-dot{border-color:#3C2005;background:#FF6B5C;box-shadow:none}
+    .bb-step.is-done .bb-step-dot{border-color:#3C2005;background:#3C2005}
+    .bb-step.is-done .bb-step-dot::after{content:'✓';color:#FCE2A0;font-size:11px;font-weight:700;line-height:1}
+    .bb-step.is-current .bb-step-dot{border-color:#3C2005;background:#FF6B5C;animation:bb-pulse 1.6s ease-in-out infinite}
+    .bb-step.is-current.is-done .bb-step-dot{background:#3C2005;animation:none}
+    @keyframes bb-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,92,.45)}50%{box-shadow:0 0 0 6px rgba(255,107,92,0)}}
+    @media (prefers-reduced-motion:reduce){.bb-step.is-current .bb-step-dot{animation:none}}
     .bb-step-lbl{font-size:14px;color:#8a7a68}
     .bb-step.is-done .bb-step-lbl{color:#3C2005}
     .bb-step.is-current .bb-step-lbl{font-weight:700;color:#3C2005}
     .bb-step-at{margin-left:auto;font-size:11.5px;color:#a3907a;white-space:nowrap}
+    /* Delivery-issue node */
+    .bb-step.is-fail{background:#FDECEA;border-radius:12px;padding:10px 10px 10px 34px;margin:2px 0 8px;align-items:center;flex-wrap:wrap}
+    .bb-step.is-fail::before{display:none}
+    .bb-step.is-fail .bb-step-dot{left:10px;top:12px;border-color:#c0392b;background:#c0392b}
+    .bb-step.is-fail .bb-step-dot::after{content:'!';color:#fff;font-size:11px;font-weight:700}
+    .bb-step.is-fail .bb-step-lbl{color:#8a2b1d;font-weight:700;font-size:13px}
+    .bb-step-fail-btn{margin-left:auto;border:1.5px solid #c0392b;border-radius:999px;background:#fff;color:#c0392b;font:inherit;font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer}
+    .bb-step-fail-btn:hover{background:#c0392b;color:#fff}
     .bb-track-meta{margin-top:12px;font-size:12.5px;color:#5a4632;overflow-wrap:break-word}
-    .bb-track-warn{margin-top:8px;background:#FDECEA;color:#8a2b1d;border-radius:8px;padding:8px 10px;font-size:12.5px}
     .bb-chat-send[disabled]{opacity:.55;cursor:default}
     .bb-chat-inputrow input[disabled]{opacity:.7}
     .bb-chat-inputrow{display:flex;gap:8px}
@@ -925,19 +991,35 @@
       }
     })();
 
-    /* ---- Claim tab: multipart POST to <chat_endpoint>/claim (the Worker adds
-            the secret Claim API key and forwards to the Customer-Support app).
-            An idempotencyKey minted per rendered form makes retries safe. ---- */
+    /* ---- Claim tab: 3-step wizard → multipart POST to <chat_endpoint>/claim.
+            Step 1 order number, step 2 issue-type cards, step 3 evidence.
+            No email field: logged-in uses the hidden account email; guests are
+            resolved server-side from the order, and only a needs_email reply
+            reveals the inline email prompt. idempotencyKey stays stable across
+            unchanged retries, rotates on any edit. ---- */
     (function () {
       const root = document.getElementById('bb-floating-contact');
       const form = document.getElementById('bb-claim-form');
       if (!root || !form) return;
-      const endpoint  = (root.dataset.chatEndpoint || '').trim().replace(/\/+$/, '');
-      const filesIn   = document.getElementById('bb-claim-files');
-      const fileList  = document.getElementById('bb-claim-filelist');
-      const submitBtn = document.getElementById('bb-claim-submit');
-      const statusEl  = document.getElementById('bb-claim-status');
-      const submitLabel = submitBtn ? submitBtn.textContent : '';
+      const endpoint   = (root.dataset.chatEndpoint || '').trim().replace(/\/+$/, '');
+      const dots       = document.getElementById('bb-claim-dots');
+      const orderIn    = document.getElementById('bb-claim-order');
+      const next1      = document.getElementById('bb-claim-next1');
+      const typesWrap  = document.getElementById('bb-claim-types');
+      const pickedEl   = document.getElementById('bb-claim-picked');
+      const photoReq   = document.getElementById('bb-claim-photo-req');
+      const msgReq     = document.getElementById('bb-claim-msg-req');
+      const msgIn      = document.getElementById('bb-claim-msg');
+      const emailIn    = document.getElementById('bb-claim-email');
+      const emailField = document.getElementById('bb-claim-email-field');
+      const filesIn    = document.getElementById('bb-claim-files');
+      const fileList   = document.getElementById('bb-claim-filelist');
+      const submitBtn  = document.getElementById('bb-claim-submit');
+      const statusEl   = document.getElementById('bb-claim-status');
+      const doneEl     = document.getElementById('bb-claim-done');
+      const doneText   = document.getElementById('bb-claim-done-text');
+      const againBtn   = document.getElementById('bb-claim-again');
+      const submitLabel = submitBtn ? submitBtn.textContent : 'Submit claim';
       const MAX_FILES = 10, MAX_FILE_BYTES = 10 * 1024 * 1024, MAX_TOTAL_BYTES = 35 * 1024 * 1024;
 
       function makeKey(){
@@ -947,18 +1029,67 @@
       let idemKey = makeKey();
       let picked = [];
       let sending = false;
-      /* The key stays stable across UNCHANGED retries (so a resend after a lost
-         response is deduped upstream) but rotates whenever the content changes —
-         an edited resubmission is a new claim, not a duplicate of the old one. */
+      let chosenType = '';
+      let needPhoto = false, needMsg = false;
+
       function contentChanged(){ idemKey = makeKey(); }
       form.addEventListener('input', contentChanged);
       function totalPicked(){ return picked.reduce(function(s, f){ return s + f.size; }, 0); }
-
       function status(msg, ok){
         if (!statusEl) return;
         statusEl.textContent = msg || '';
         statusEl.style.color = ok ? '#1a7f37' : '';
       }
+      function goStep(n){
+        Array.prototype.forEach.call(form.querySelectorAll('.bb-wiz-step'), function(s){
+          s.classList.toggle('is-active', s.getAttribute('data-step') === String(n));
+        });
+        if (dots) Array.prototype.forEach.call(dots.querySelectorAll('.bb-wiz-dot'), function(d, i){
+          d.classList.toggle('is-on', i < n);
+        });
+        status('');
+      }
+
+      if (next1) next1.addEventListener('click', function(){
+        if (!(orderIn.value || '').trim()){ status('Please enter your order number.'); orderIn.focus(); return; }
+        goStep(2);
+      });
+      if (orderIn) orderIn.addEventListener('keydown', function(e){
+        if (e.key === 'Enter'){ e.preventDefault(); if (next1) next1.click(); }
+      });
+      form.addEventListener('click', function(e){
+        const b = e.target.closest ? e.target.closest('.bb-wiz-back') : null;
+        if (b && b.dataset.back) goStep(parseInt(b.dataset.back, 10));
+      });
+
+      if (typesWrap) typesWrap.addEventListener('click', function(e){
+        const card = e.target.closest ? e.target.closest('.bb-ctype') : null;
+        if (!card) return;
+        Array.prototype.forEach.call(typesWrap.querySelectorAll('.bb-ctype'), function(c){
+          c.classList.toggle('is-picked', c === card);
+        });
+        chosenType = card.dataset.type || 'Other';
+        needPhoto = card.dataset.photo === '1';
+        needMsg = card.dataset.msg === '1';
+        if (photoReq) photoReq.hidden = !needPhoto;
+        if (msgReq) msgReq.hidden = !needMsg;
+        if (pickedEl){
+          pickedEl.textContent = '';
+          const chip = document.createElement('span');
+          chip.className = 'bb-claim-chip';
+          chip.textContent = chosenType;
+          const chg = document.createElement('button');
+          chg.type = 'button';
+          chg.className = 'bb-claim-chg';
+          chg.textContent = 'change';
+          chg.addEventListener('click', function(){ goStep(2); });
+          pickedEl.appendChild(chip);
+          pickedEl.appendChild(chg);
+        }
+        contentChanged();
+        goStep(3);
+      });
+
       function renderFiles(){
         if (!fileList) return;
         fileList.textContent = '';
@@ -997,16 +1128,26 @@
       form.addEventListener('submit', async function(e){
         e.preventDefault();
         if (sending) return;
-        if (!form.reportValidity()) return;
         if (!endpoint){ status('Claims aren’t set up yet — please use the Send message tab.'); return; }
+        const orderVal = (orderIn.value || '').trim();
+        if (!orderVal){ goStep(1); status('Please enter your order number.'); return; }
+        if (!chosenType){ goStep(2); status('Please pick what went wrong.'); return; }
+        if (needPhoto && picked.length === 0){ status('Please attach at least one photo of the item — the team needs it to resolve this.'); return; }
+        const msgVal = (msgIn ? msgIn.value : '').trim();
+        if (needMsg && !msgVal){ status('Please tell us what happened.'); if (msgIn) msgIn.focus(); return; }
         if (totalPicked() > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — please remove one or use smaller photos.'); return; }
-        const fields = form.elements;
-        const email = fields.namedItem('email').value.trim();
+        const emailVal = emailIn ? (emailIn.value || '').trim() : '';
+        if (emailField && !emailField.hidden && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)){
+          status('Please enter a valid email.');
+          if (emailIn) emailIn.focus();
+          return;
+        }
+
         const fd = new FormData();
-        fd.set('order_id', fields.namedItem('order_id').value.trim());
-        fd.set('email', email);
-        fd.set('type', fields.namedItem('type').value);
-        fd.set('message', fields.namedItem('message').value.trim());
+        fd.set('order_id', orderVal);
+        fd.set('type', chosenType);
+        fd.set('message', msgVal);
+        if (emailVal) fd.set('email', emailVal);
         fd.set('page_url', String(location.href).slice(0, 500));
         fd.set('idempotencyKey', idemKey);
         picked.forEach(function(f){ fd.append('files', f, f.name); });
@@ -1020,17 +1161,23 @@
           let data = null;
           try { data = await res.json(); } catch(err){}
           if (res.ok && data && data.ok && data.reference){
-            form.reset();
-            picked = [];
-            renderFiles();
-            idemKey = makeKey();
-            status('Claim received — your reference is ' + data.reference + '. We’ll email you at ' + email + '.', true);
+            form.hidden = true;
+            if (dots) dots.hidden = true;
+            if (doneEl){
+              doneEl.hidden = false;
+              if (doneText) doneText.textContent = 'Your reference is ' + data.reference + '.'
+                + (emailVal ? ' We’ll email you at ' + emailVal + '.' : ' Our reply goes to the email on your order.');
+            }
+            status('');
+          } else if (data && data.needs_email && emailField){
+            emailField.hidden = false;
+            status('One more thing — add your email so our reply can reach you, then submit again.');
+            if (emailIn) emailIn.focus();
           } else {
             /* A not-yet-updated Worker routes /claim into its chat handler,
-               whose raw errors ("invalid json", "payload too large") would
-               confuse customers — replace those with a friendly message. */
+               whose raw errors would confuse customers — replace those. */
             const raw = (data && data.error) ? String(data.error) : '';
-            const stale = /invalid json|payload too large|empty message|worker secrets|origin not allowed/i.test(raw);
+            const stale = /invalid json|payload too large|empty message|worker secrets|origin not allowed|^too many requests$/i.test(raw);
             status(raw && !stale ? raw : 'Claims aren’t available right now — please try again later, or use the Send message tab.');
           }
         } catch(err){
@@ -1039,6 +1186,25 @@
           if (timer) clearTimeout(timer);
           setSending(false);
         }
+      });
+
+      if (againBtn) againBtn.addEventListener('click', function(){
+        form.reset();
+        picked = [];
+        renderFiles();
+        chosenType = '';
+        needPhoto = false;
+        needMsg = false;
+        if (photoReq) photoReq.hidden = true;
+        if (msgReq) msgReq.hidden = true;
+        if (pickedEl) pickedEl.textContent = '';
+        if (typesWrap) Array.prototype.forEach.call(typesWrap.querySelectorAll('.bb-ctype'), function(c){ c.classList.remove('is-picked'); });
+        idemKey = makeKey();
+        form.hidden = false;
+        if (dots) dots.hidden = false;
+        if (doneEl) doneEl.hidden = true;
+        if (emailField) emailField.hidden = true;
+        goStep(1);
       });
     })();
 
@@ -1061,23 +1227,24 @@
       let busy = false;
 
       const STEPS = [
-        { label: 'Order placed',            at: 'order_created_at' },
-        { label: 'Accepted by warehouse',   at: 'accepted_at' },
-        { label: 'Preparing shipment',      at: 'label_printed_at' },
-        { label: 'Packed',                  at: 'packed_at' },
-        { label: 'Awaiting carrier pickup', at: 'pallet_at' },
-        { label: 'On the way',              at: null },
-        { label: 'Delivered',               at: null },
+        { label: 'Order placed',                at: 'order_created_at' },
+        { label: 'Accepted',                    at: 'accepted_at' },
+        { label: 'Preparing shipment / Packed', at: 'prep_at' },
+        { label: 'Handed over to carrier',      at: 'pallet_at' },
+        { label: 'On the way',                  at: null },
+        { label: 'Out for delivery',            at: null },
+        { label: 'Delivered',                   at: null },
       ];
       function rankOf(d){
         if (d.shipping_status === 'delivered') return 7;
-        if (d.shipping_status === 'in_transit') return 6;
-        /* awaiting_collection = packed & waiting for pickup (matches the AI's
-           wording) — scans lag, so trust the shipping status first. */
-        if (d.shipping_status === 'awaiting_collection') return 5;
-        if (d.scan_status === 'pallet' || d.pallet_at) return 5;
-        if (d.packed_at || d.scan_status === 'packed') return 4;
-        if (d.label_printed_at) return 3;
+        /* FBM has no out-for-delivery signal (step 6) — it fills in only once
+           delivered. in_transit maps to "On the way". */
+        if (d.shipping_status === 'in_transit') return 5;
+        /* awaiting_collection = packed & staged for the carrier; scans lag, so
+           trust the shipping status before the warehouse scans. */
+        if (d.shipping_status === 'awaiting_collection') return 4;
+        if (d.scan_status === 'pallet' || d.pallet_at) return 4;
+        if (d.packed_at || d.scan_status === 'packed' || d.label_printed_at) return 3;
         return 2;
       }
       function fmt(iso){
@@ -1090,8 +1257,10 @@
         } catch(e){ return ''; }
       }
       function render(d){
+        d.prep_at = d.packed_at || d.label_printed_at;
         const rank = rankOf(d);
-        currentEl.textContent = (d.order ? d.order + ' — ' : '') + STEPS[rank - 1].label;
+        const trouble = !!(d.is_returning || d.is_stuck || d.is_label_failed);
+        currentEl.textContent = (d.order ? d.order + ' — ' : '') + (trouble ? 'Needs attention' : STEPS[rank - 1].label);
         const updatedTxt = fmt(d.updated_at);
         updatedEl.textContent = updatedTxt ? 'Last updated: ' + updatedTxt : '';
         stepsEl.textContent = '';
@@ -1112,16 +1281,29 @@
           }
           stepsEl.appendChild(li);
         });
+        /* Delivery-problem branch (returning / stuck / label failed): a red
+           node right after the current step, pointing at human help. */
+        if (trouble){
+          const li = document.createElement('li');
+          li.className = 'bb-step is-fail';
+          const dot = document.createElement('span'); dot.className = 'bb-step-dot';
+          const lbl = document.createElement('span'); lbl.className = 'bb-step-lbl';
+          lbl.textContent = 'There’s a delivery issue with this shipment';
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'bb-step-fail-btn';
+          btn.textContent = 'Contact support';
+          btn.addEventListener('click', function(){ if (window.bbShowTab) window.bbShowTab('form'); });
+          li.appendChild(dot);
+          li.appendChild(lbl);
+          li.appendChild(btn);
+          const after = stepsEl.children[rank];
+          if (after) stepsEl.insertBefore(li, after); else stepsEl.appendChild(li);
+        }
         const bits = [];
         if (d.carrier) bits.push('Carrier: ' + String(d.carrier).toUpperCase());
         if (d.tracking && d.tracking.length) bits.push('Tracking: ' + d.tracking.join(', '));
         metaEl.textContent = bits.join('  ·  ');
-        if (d.is_returning){
-          const warn = document.createElement('div');
-          warn.className = 'bb-track-warn';
-          warn.textContent = 'This shipment is on its way back to us — please reach out via the Send message tab.';
-          metaEl.appendChild(warn);
-        }
         resultEl.hidden = false;
       }
 
