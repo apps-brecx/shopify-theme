@@ -58,7 +58,7 @@
       <h3 class="bb-modal-title" id="bb-modal-title">{{ section.settings.modal_title }}</h3>
       <p class="bb-modal-sub">{{ section.settings.modal_subtext }}</p>
 
-      {%- if section.settings.enable_chat or section.settings.enable_claim -%}
+      {%- if section.settings.enable_chat or section.settings.enable_claim or section.settings.enable_track -%}
       <div class="bb-tabs" role="tablist" aria-label="Contact options">
         {%- if section.settings.enable_chat -%}
         <button type="button" class="bb-tab" id="bb-tab-chat" role="tab" aria-controls="bb-panel-chat" aria-selected="false">{{ section.settings.chat_tab_label | default: 'Quick help' }}</button>
@@ -66,6 +66,9 @@
         <button type="button" class="bb-tab" id="bb-tab-form" role="tab" aria-controls="bb-panel-form" aria-selected="false">{{ section.settings.form_tab_label | default: 'Send message' }}</button>
         {%- if section.settings.enable_claim -%}
         <button type="button" class="bb-tab" id="bb-tab-claim" role="tab" aria-controls="bb-panel-claim" aria-selected="false">{{ section.settings.claim_tab_label | default: 'Claim' }}</button>
+        {%- endif -%}
+        {%- if section.settings.enable_track -%}
+        <button type="button" class="bb-tab" id="bb-tab-track" role="tab" aria-controls="bb-panel-track" aria-selected="false">{{ section.settings.track_tab_label | default: 'Track package' }}</button>
         {%- endif -%}
       </div>
       {%- endif -%}
@@ -77,7 +80,6 @@
       <div class="bb-panel" id="bb-panel-chat" role="tabpanel" aria-labelledby="bb-tab-chat" hidden>
         <div class="bb-chat-log" id="bb-chat-log" aria-live="polite"></div>
         <div class="bb-chat-pills" id="bb-chat-pills">
-          <button type="button" class="bb-pill bb-pill--track" id="bb-track-btn">{{ section.settings.track_label | default: 'Track your package' }}</button>
           {%- for block in section.blocks -%}
             {%- if block.type == 'faq' -%}
               {%- if block.settings.question != blank -%}
@@ -105,7 +107,7 @@
 
       {%- comment -%} Chat and claim disabled: the form renders as the whole
           modal, visible without JS (no hidden attribute, no tab roles). {%- endcomment -%}
-      <div class="bb-panel" id="bb-panel-form" {% if section.settings.enable_chat or section.settings.enable_claim %}role="tabpanel" aria-labelledby="bb-tab-form" hidden{% endif %}>
+      <div class="bb-panel" id="bb-panel-form" {% if section.settings.enable_chat or section.settings.enable_claim or section.settings.enable_track %}role="tabpanel" aria-labelledby="bb-tab-form" hidden{% endif %}>
       {%- comment -%} bb-panels wrapper closes after this panel {%- endcomment -%}
       {% if section.settings.send_mode == 'shopify' %}
         {%- form 'contact', id: 'FloatingContactForm', class: 'bb-form' -%}
@@ -208,6 +210,27 @@
         </form>
       </div>
       {%- endif -%}
+
+      {%- if section.settings.enable_track -%}
+      {%- comment -%} Track tab: order number -> <chat_endpoint>/track (FBM-backed)
+          -> step timeline. Statuses/timestamps only; no personal data. {%- endcomment -%}
+      <div class="bb-panel" id="bb-panel-track" role="tabpanel" aria-labelledby="bb-tab-track" hidden>
+        <p class="bb-track-intro">{{ section.settings.track_intro | default: 'Enter your order number to see exactly where your package is.' }}</p>
+        <form class="bb-trackform" id="bb-track-form" novalidate>
+          <input type="text" id="bb-track-num" placeholder="e.g. 154008587601" maxlength="30" autocomplete="off" inputmode="numeric" aria-label="Order number">
+          <button type="submit" class="bb-submit bb-track-go" id="bb-track-go">{{ section.settings.track_button_label | default: 'Track' }}</button>
+        </form>
+        <div class="bb-track-status" id="bb-track-status" aria-live="polite"></div>
+        <div class="bb-track-result" id="bb-track-result" hidden>
+          <div class="bb-track-head">
+            <div class="bb-track-current" id="bb-track-current"></div>
+            <div class="bb-track-updated" id="bb-track-updated"></div>
+          </div>
+          <ol class="bb-steps" id="bb-track-steps"></ol>
+          <div class="bb-track-meta" id="bb-track-meta"></div>
+        </div>
+      </div>
+      {%- endif -%}
       </div>
     </div>
   </div>
@@ -302,7 +325,7 @@
 
     /* Tabs + chat */
     .bb-tabs{display:flex;gap:8px;margin:0 0 14px;border-bottom:1px solid #eee;padding-bottom:12px}
-    .bb-tab{flex:1;padding:9px 10px;border:1px solid #ddd;border-radius:10px;background:#fff;color:#3C2005;font:inherit;font-weight:700;font-size:13px;cursor:pointer}
+    .bb-tab{flex:1;padding:9px 6px;border:1px solid #ddd;border-radius:10px;background:#fff;color:#3C2005;font:inherit;font-weight:700;font-size:12px;cursor:pointer}
     .bb-tab.is-active{background:#3C2005;color:#fff;border-color:#3C2005}
     .bb-faq-answer[hidden]{display:none!important}
     /* panel stack: both tabs occupy the same grid cell so the card holds the
@@ -345,11 +368,31 @@
     .bb-chat-pills .bb-pill:nth-child(3n){animation-delay:-2.2s}
     @media (prefers-reduced-motion:reduce){.bb-pill{animation:none}}
     .bb-pill--empty{opacity:.5;font-style:italic}
-    .bb-pill--track{border-color:#3C2005;color:#3C2005;font-weight:700}
-    .bb-track-form{display:flex;flex-direction:column;gap:8px;max-width:85%}
-    .bb-track-row{display:flex;gap:6px}
-    .bb-track-input{flex:1;min-width:0;padding:8px 10px;border-radius:8px;border:1px solid #d5c9b8;font:inherit;font-size:13px}
-    .bb-track-go{padding:8px 14px;border:0;border-radius:8px;background:#3C2005;color:#fff;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+    /* Track tab: input row + step timeline */
+    .bb-track-intro{margin:0 0 12px;color:#555;font-size:13.5px}
+    .bb-trackform{display:flex;gap:8px;margin-bottom:12px}
+    .bb-trackform input{flex:1;min-width:0;padding:10px 12px;border-radius:10px;border:1px solid #ddd;font:inherit}
+    .bb-submit.bb-track-go{width:auto;padding:10px 20px;margin:0;flex:0 0 auto}
+    .bb-track-go[disabled]{opacity:.6;cursor:default}
+    .bb-track-status{min-height:18px;font-size:13.5px;color:#3C2005}
+    .bb-track-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:8px 0 2px}
+    .bb-track-current{font-weight:700;font-size:16.5px;color:#3C2005}
+    .bb-track-updated{font-size:12px;color:#8a7a68}
+    .bb-steps{list-style:none;margin:12px 0 0;padding:0 0 0 4px}
+    .bb-step{position:relative;display:flex;align-items:baseline;gap:10px;padding:0 0 22px 24px}
+    .bb-step::before{content:'';position:absolute;left:7px;top:16px;bottom:-2px;width:2px;background:#E8DFC9}
+    .bb-step:last-child{padding-bottom:4px}
+    .bb-step:last-child::before{display:none}
+    .bb-step-dot{position:absolute;left:0;top:2px;width:16px;height:16px;border-radius:50%;border:2px solid #C9BBA4;background:#fff;box-sizing:border-box}
+    .bb-step.is-done::before{background:#3C2005}
+    .bb-step.is-done .bb-step-dot{border-color:#3C2005;background:#3C2005;box-shadow:inset 0 0 0 3px #FCE2A0}
+    .bb-step.is-current .bb-step-dot{border-color:#3C2005;background:#FF6B5C;box-shadow:none}
+    .bb-step-lbl{font-size:14px;color:#8a7a68}
+    .bb-step.is-done .bb-step-lbl{color:#3C2005}
+    .bb-step.is-current .bb-step-lbl{font-weight:700;color:#3C2005}
+    .bb-step-at{margin-left:auto;font-size:11.5px;color:#a3907a;white-space:nowrap}
+    .bb-track-meta{margin-top:12px;font-size:12.5px;color:#5a4632;overflow-wrap:break-word}
+    .bb-track-warn{margin-top:8px;background:#FDECEA;color:#8a2b1d;border-radius:8px;padding:8px 10px;font-size:12.5px}
     .bb-chat-send[disabled]{opacity:.55;cursor:default}
     .bb-chat-inputrow input[disabled]{opacity:.7}
     .bb-chat-inputrow{display:flex;gap:8px}
@@ -549,6 +592,7 @@
         { name: 'chat',  tab: document.getElementById('bb-tab-chat'),  panel: document.getElementById('bb-panel-chat') },
         { name: 'form',  tab: document.getElementById('bb-tab-form'),  panel: document.getElementById('bb-panel-form') },
         { name: 'claim', tab: document.getElementById('bb-tab-claim'), panel: document.getElementById('bb-panel-claim') },
+        { name: 'track', tab: document.getElementById('bb-tab-track'), panel: document.getElementById('bb-panel-track') },
       ].filter(function(t){ return t.tab && t.panel; });
       if (!tabs.length) return;
       window.bbShowTab = function(name){
@@ -861,49 +905,8 @@
         ask(q, h);
       });
 
-      /* "Track your package": inline order-number form in the chat; submitting
-         routes through the AI (which asks for / auto-uses the email and looks
-         the order up). */
-      function showTrackForm(){
-        const existing = log.querySelector('.bb-track-form');
-        if (existing){ existing.querySelector('.bb-track-input').focus(); return; }
-        const el = document.createElement('div');
-        el.className = 'bb-msg bb-msg--bot bb-track-form';
-        const label = document.createElement('span');
-        label.textContent = 'Sure — enter your order number:';
-        const row = document.createElement('div');
-        row.className = 'bb-track-row';
-        const inp = document.createElement('input');
-        inp.type = 'text';
-        inp.className = 'bb-track-input';
-        inp.placeholder = 'e.g. 1042';
-        inp.maxLength = 30;
-        inp.autocomplete = 'off';
-        const go = document.createElement('button');
-        go.type = 'button';
-        go.className = 'bb-track-go';
-        go.textContent = 'Track';
-        function submitTrack(){
-          const v = (inp.value || '').trim();
-          if (!v){ inp.focus(); return; }
-          if (busy) return;
-          el.remove();
-          const h = snapshotHistory();
-          addMsg('user', 'Track my package — order ' + v);
-          ask('Track my package. My order number is ' + v + '.', h);
-        }
-        go.addEventListener('click', submitTrack);
-        inp.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); submitTrack(); } });
-        row.appendChild(inp);
-        row.appendChild(go);
-        el.appendChild(label);
-        el.appendChild(row);
-        log.appendChild(el);
-        scrollLog();
-        inp.focus();
-      }
-      const trackBtn = document.getElementById('bb-track-btn');
-      if (trackBtn) trackBtn.addEventListener('click', showTrackForm);
+      /* Tracking moved to its own tab (bb-panel-track); typed "where is my
+         order" questions still go through the AI's track_package tool. */
 
       /* Theme editor: selecting the section or a Quick question block opens the
          widget so merchants can see what they're editing. */
@@ -1038,6 +1041,126 @@
         }
       });
     })();
+
+    /* ---- Track tab: order number -> <chat_endpoint>/track -> step timeline.
+            The worker returns FBM statuses + timestamps; the step rank is
+            derived here so display tweaks only need a theme deploy. ---- */
+    (function () {
+      const root = document.getElementById('bb-floating-contact');
+      const form = document.getElementById('bb-track-form');
+      if (!root || !form) return;
+      const endpoint  = (root.dataset.chatEndpoint || '').trim().replace(/\/+$/, '');
+      const numIn     = document.getElementById('bb-track-num');
+      const goBtn     = document.getElementById('bb-track-go');
+      const statusEl  = document.getElementById('bb-track-status');
+      const resultEl  = document.getElementById('bb-track-result');
+      const currentEl = document.getElementById('bb-track-current');
+      const updatedEl = document.getElementById('bb-track-updated');
+      const stepsEl   = document.getElementById('bb-track-steps');
+      const metaEl    = document.getElementById('bb-track-meta');
+      let busy = false;
+
+      const STEPS = [
+        { label: 'Order placed',            at: 'order_created_at' },
+        { label: 'Accepted by warehouse',   at: 'accepted_at' },
+        { label: 'Preparing shipment',      at: 'label_printed_at' },
+        { label: 'Packed',                  at: 'packed_at' },
+        { label: 'Awaiting carrier pickup', at: 'pallet_at' },
+        { label: 'On the way',              at: null },
+        { label: 'Delivered',               at: null },
+      ];
+      function rankOf(d){
+        if (d.shipping_status === 'delivered') return 7;
+        if (d.shipping_status === 'in_transit') return 6;
+        if (d.scan_status === 'pallet' || d.pallet_at) return 5;
+        if (d.packed_at || d.scan_status === 'packed') return 4;
+        if (d.label_printed_at) return 3;
+        return 2;
+      }
+      function fmt(iso){
+        if (!iso) return '';
+        const dt = new Date(iso);
+        if (isNaN(dt.getTime())) return '';
+        try {
+          return dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ', '
+               + dt.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+        } catch(e){ return ''; }
+      }
+      function render(d){
+        const rank = rankOf(d);
+        currentEl.textContent = (d.order ? d.order + ' — ' : '') + STEPS[rank - 1].label;
+        updatedEl.textContent = d.updated_at ? 'Last updated: ' + fmt(d.updated_at) : '';
+        stepsEl.textContent = '';
+        STEPS.forEach(function(s, i){
+          const n = i + 1;
+          const li = document.createElement('li');
+          li.className = 'bb-step'
+            + (n < rank ? ' is-done' : '')
+            + (n === rank ? (rank === 7 ? ' is-done is-current' : ' is-current') : '');
+          const dot = document.createElement('span'); dot.className = 'bb-step-dot';
+          const lbl = document.createElement('span'); lbl.className = 'bb-step-lbl'; lbl.textContent = s.label;
+          li.appendChild(dot);
+          li.appendChild(lbl);
+          const when = (n <= rank && s.at) ? fmt(d[s.at]) : '';
+          if (when){
+            const t = document.createElement('span'); t.className = 'bb-step-at'; t.textContent = when;
+            li.appendChild(t);
+          }
+          stepsEl.appendChild(li);
+        });
+        const bits = [];
+        if (d.carrier) bits.push('Carrier: ' + String(d.carrier).toUpperCase());
+        if (d.tracking && d.tracking.length) bits.push('Tracking: ' + d.tracking.join(', '));
+        metaEl.textContent = bits.join('  ·  ');
+        if (d.is_returning){
+          const warn = document.createElement('div');
+          warn.className = 'bb-track-warn';
+          warn.textContent = 'This shipment is on its way back to us — please reach out via the Send message tab.';
+          metaEl.appendChild(warn);
+        }
+        resultEl.hidden = false;
+      }
+
+      form.addEventListener('submit', async function(e){
+        e.preventDefault();
+        if (busy) return;
+        const v = (numIn.value || '').trim();
+        if (!v){ numIn.focus(); return; }
+        if (!endpoint){ statusEl.textContent = 'Tracking isn’t set up yet — please ask us via the Send message tab.'; return; }
+        busy = true;
+        if (goBtn) goBtn.disabled = true;
+        resultEl.hidden = true;
+        statusEl.textContent = 'Looking up your order…';
+        const ctrl  = ('AbortController' in window) ? new AbortController() : null;
+        const timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 30000);
+        try {
+          const res = await fetch(endpoint + '/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_number: v }),
+            signal: ctrl ? ctrl.signal : undefined
+          });
+          let data = null;
+          try { data = await res.json(); } catch(err){}
+          if (res.ok && data && data.ok){
+            if (data.found){ statusEl.textContent = ''; render(data); }
+            else statusEl.textContent = 'We couldn’t find a shipment for that order number. Double-check the number — brand-new orders can take a little while to appear.';
+          } else {
+            /* A not-yet-updated worker answers /track from the chat handler
+               with raw errors — swap those for a friendly message. */
+            const raw = (data && data.error) ? String(data.error) : '';
+            const stale = /empty message|invalid json|payload too large|worker secrets/i.test(raw);
+            statusEl.textContent = raw && !stale ? raw : 'Tracking is temporarily unavailable — please try again in a minute.';
+          }
+        } catch(err){
+          statusEl.textContent = 'Tracking is temporarily unavailable — please try again in a minute.';
+        } finally {
+          if (timer) clearTimeout(timer);
+          busy = false;
+          if (goBtn) goBtn.disabled = false;
+        }
+      });
+    })();
   </script>
 </section>
 
@@ -1107,7 +1230,17 @@
     { "type": "text", "id": "chat_greeting", "label": "Chat greeting", "default": "Hi! Pick a question below, or type your own — I’ll answer instantly." },
     { "type": "text", "id": "chat_placeholder", "label": "Input placeholder", "default": "Type a question…" },
     { "type": "text", "id": "chat_fallback", "label": "No-answer fallback text", "default": "I couldn’t find an instant answer for that." },
-    { "type": "text", "id": "track_label", "label": "Track-package pill label", "default": "Track your package" },
+    { "type": "header", "content": "Track-package tab" },
+    {
+      "type": "checkbox",
+      "id": "enable_track",
+      "label": "Enable Track-package tab",
+      "default": true,
+      "info": "Live shipment steps from the fulfillment system, via the AI chat endpoint (Worker)."
+    },
+    { "type": "text", "id": "track_tab_label", "label": "Track tab label", "default": "Track package" },
+    { "type": "text", "id": "track_intro", "label": "Track intro text", "default": "Enter your order number to see exactly where your package is." },
+    { "type": "text", "id": "track_button_label", "label": "Track button label", "default": "Track" },
     { "type": "url", "id": "chat_endpoint", "label": "AI chat endpoint (optional)", "info": "Leave empty to answer typed questions from the store’s built-in policies/FAQ search. Set to your AI Worker URL later to switch to LLM replies." },
 
     { "type": "header", "content": "Claim tab" },
