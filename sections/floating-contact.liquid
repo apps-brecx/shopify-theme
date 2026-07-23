@@ -63,13 +63,13 @@
         {%- if section.settings.enable_chat -%}
         <button type="button" class="bb-tab" id="bb-tab-chat" role="tab" aria-controls="bb-panel-chat" aria-selected="false">{{ section.settings.chat_tab_label | default: 'Quick help' }}</button>
         {%- endif -%}
-        <button type="button" class="bb-tab" id="bb-tab-form" role="tab" aria-controls="bb-panel-form" aria-selected="false">{{ section.settings.form_tab_label | default: 'Send message' }}</button>
-        {%- if section.settings.enable_claim -%}
-        <button type="button" class="bb-tab" id="bb-tab-claim" role="tab" aria-controls="bb-panel-claim" aria-selected="false">{{ section.settings.claim_tab_label | default: 'Claim' }}</button>
-        {%- endif -%}
         {%- if section.settings.enable_track -%}
         <button type="button" class="bb-tab" id="bb-tab-track" role="tab" aria-controls="bb-panel-track" aria-selected="false">{{ section.settings.track_tab_label | default: 'Track package' }}</button>
         {%- endif -%}
+        {%- if section.settings.enable_claim -%}
+        <button type="button" class="bb-tab" id="bb-tab-claim" role="tab" aria-controls="bb-panel-claim" aria-selected="false">{{ section.settings.claim_tab_label | default: 'Claim' }}</button>
+        {%- endif -%}
+        <button type="button" class="bb-tab" id="bb-tab-form" role="tab" aria-controls="bb-panel-form" aria-selected="false">{{ section.settings.form_tab_label | default: 'Send message' }}</button>
       </div>
       {%- endif -%}
 
@@ -171,9 +171,9 @@
       {%- if section.settings.enable_claim -%}
       {%- comment -%} Claim tab: 3-step wizard posting multipart to
           <chat_endpoint>/claim — the Worker holds the Claim API key. No email
-          field: logged-in uses the account email; guests are resolved from
-          the Shopify order server-side, with an inline fallback prompt only
-          when that lookup can't run (needs_email). {%- endcomment -%}
+          field at all: the intake API accepts claims without one. Logged-in
+          customers still send their account email invisibly; guests are
+          resolved from the Shopify order server-side when possible. {%- endcomment -%}
       <div class="bb-panel" id="bb-panel-claim" role="tabpanel" aria-labelledby="bb-tab-claim" hidden>
         <p class="bb-claim-intro">{{ section.settings.claim_intro | default: 'Something wrong with your order? Tell us and we’ll make it right.' }}</p>
         <div class="bb-wiz-dots" id="bb-claim-dots" aria-hidden="true">
@@ -185,7 +185,7 @@
               <span>Your order number</span>
               <input type="text" id="bb-claim-order" maxlength="100" placeholder="e.g. 154008587601" autocomplete="off" inputmode="numeric" aria-label="Order number">
             </label>
-            <button type="button" class="bb-submit bb-wiz-next" id="bb-claim-next1">Next</button>
+            <button type="button" class="bb-submit bb-wiz-next" id="bb-claim-next1" disabled>Next</button>
           </div>
           <div class="bb-wiz-step" data-step="2">
             <div class="bb-wiz-q">What went wrong?</div>
@@ -203,25 +203,20 @@
           <div class="bb-wiz-step" data-step="3">
             <div class="bb-claim-picked" id="bb-claim-picked"></div>
             <div class="bb-field" id="bb-claim-photo-field">
-              <span>Photos <b class="bb-req-badge" id="bb-claim-photo-req" hidden>required</b></span>
+              <span>Photos <b class="bb-req-badge is-opt" id="bb-claim-photo-req">optional</b></span>
               <label class="bb-claim-drop" for="bb-claim-files">📷 Add photos<input type="file" id="bb-claim-files" class="bb-vhide" accept="image/*" multiple></label>
             </div>
             <div class="bb-claim-filelist" id="bb-claim-filelist"></div>
             <label class="bb-field">
-              <span id="bb-claim-msg-lbl">Tell us more <b class="bb-req-badge" id="bb-claim-msg-req" hidden>required</b></span>
+              <span id="bb-claim-msg-lbl">Tell us more <b class="bb-req-badge is-opt" id="bb-claim-msg-req">optional</b></span>
               <textarea id="bb-claim-msg" rows="3" maxlength="8000" placeholder="Anything that helps us fix this faster…"></textarea>
             </label>
             {%- if customer -%}
               <input type="hidden" id="bb-claim-email" value="{{ customer.email | escape }}">
-            {%- else -%}
-              <label class="bb-field" id="bb-claim-email-field" hidden>
-                <span>Your email <small class="bb-field-hint">our reply goes here</small></span>
-                <input type="email" id="bb-claim-email" maxlength="200" autocomplete="email">
-              </label>
             {%- endif -%}
             <div class="bb-wiz-nav">
               <button type="button" class="bb-wiz-back" data-back="2">← Back</button>
-              <button type="submit" class="bb-submit bb-claim-send" id="bb-claim-submit">{{ section.settings.claim_submit_label | default: 'Submit claim' }}</button>
+              <button type="submit" class="bb-submit bb-claim-send" id="bb-claim-submit" disabled>{{ section.settings.claim_submit_label | default: 'Submit claim' }}</button>
             </div>
           </div>
           {%- comment -%} Outside the step divs so step-1/2 validation messages
@@ -374,6 +369,7 @@
     .bb-claim-chip{background:#3C2005;color:#FCE2A0;border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700}
     .bb-claim-chg{border:0;background:none;color:#8a7a68;font:inherit;font-size:12px;text-decoration:underline;cursor:pointer;padding:0}
     .bb-req-badge{background:#FF6B5C;color:#fff;border-radius:999px;padding:2px 8px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-left:6px}
+    .bb-req-badge.is-opt{background:#EDE6D6;color:#7a6a55}
     .bb-claim-drop{display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px dashed #C9BBA4;border-radius:12px;background:#FFFBF4;color:#3C2005;font-weight:700;font-size:13.5px;padding:16px 12px;cursor:pointer;transition:border-color .12s,background .12s}
     .bb-claim-drop:hover{border-color:#3C2005;background:#FCE2A0}
     .bb-claim-done{text-align:center;padding:18px 6px 8px;animation:bb-wiz-in .25s ease}
@@ -384,6 +380,7 @@
       width: 100%; padding: 12px 14px; border-radius: 10px; border: 0; cursor: pointer;
       font-weight: 700; background: #3C2005; color: {{ section.settings.submit_text }};
     }
+    .bb-submit[disabled]{opacity:.45;cursor:not-allowed}
     .bb-modal-title { margin: 0 0 6px; font-size: 20px; font-family: Helvetica !important ;}
     .bb-modal-sub   { margin: 0 0 16px; color: #555; font-size: 14px; font-family: Helvetica !important ; }
     .bb-status      { margin-top: 10px; min-height: 18px; font-size: 14px; }
@@ -398,6 +395,12 @@
     .bb-panels{display:grid}
     .bb-panels > .bb-panel{grid-area:1/1;min-width:0}
     .bb-panels > .bb-panel[hidden]{display:block!important;visibility:hidden!important;pointer-events:none!important}
+    /* Inactive panels are only visibility:hidden (they hold the card's height),
+       so a child caught mid-transition lingers over the shown tab. The wizard
+       and step dots carry transition:all, which delays their inherited
+       visibility:hidden ~0.25s — kill transitions on hidden-panel descendants
+       so they hide instantly. */
+    .bb-panels > .bb-panel[hidden] *{transition:none!important}
     #bb-panel-chat{display:flex;flex-direction:column}
     #bb-panel-chat[hidden]{display:flex!important;visibility:hidden!important;pointer-events:none!important}
     .bb-chat-log{display:flex;flex-direction:column;gap:8px;flex:1 1 auto;min-height:110px;max-height:340px;overflow-y:auto;padding:4px 2px;margin-bottom:60px;scrollbar-width:thin}
@@ -468,7 +471,12 @@
     .bb-step.is-fail .bb-step-lbl{color:#8a2b1d;font-weight:700;font-size:13px}
     .bb-step-fail-btn{margin-left:auto;border:1.5px solid #c0392b;border-radius:999px;background:#fff;color:#c0392b;font:inherit;font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer}
     .bb-step-fail-btn:hover{background:#c0392b;color:#fff}
-    .bb-track-meta{margin-top:12px;font-size:12.5px;color:#5a4632;overflow-wrap:break-word}
+    .bb-track-meta{margin-top:12px;font-size:12.5px;color:#5a4632;overflow-wrap:break-word;display:flex;flex-direction:column;gap:6px}
+    .bb-track-meta:empty{display:none}
+    .bb-carrier{display:flex;align-items:center;gap:8px;font-weight:700;color:#3C2005}
+    .bb-carrier-logo{width:22px;height:22px;display:block;flex:0 0 auto}
+    .bb-track-link{color:#3C2005;font-weight:700;text-decoration:underline;overflow-wrap:anywhere}
+    .bb-track-link:hover{color:#FF6B5C}
     .bb-chat-send[disabled]{opacity:.55;cursor:default}
     .bb-chat-inputrow input[disabled]{opacity:.7}
     .bb-chat-inputrow{display:flex;gap:8px}
@@ -1003,10 +1011,12 @@
 
     /* ---- Claim tab: 3-step wizard → multipart POST to <chat_endpoint>/claim.
             Step 1 order number, step 2 issue-type cards, step 3 evidence.
-            No email field: logged-in uses the hidden account email; guests are
-            resolved server-side from the order, and only a needs_email reply
-            reveals the inline email prompt. idempotencyKey stays stable across
-            unchanged retries, rotates on any edit. ---- */
+            No email field (the intake API doesn't require one): logged-in
+            customers send the hidden account email; guests are resolved
+            server-side from the order when possible. Next stays disabled until
+            the order number is typed; Submit stays disabled until the picked
+            type's requirements (photo / message) are met. idempotencyKey stays
+            stable across unchanged retries, rotates on any edit. ---- */
     (function () {
       const root = document.getElementById('bb-floating-contact');
       const form = document.getElementById('bb-claim-form');
@@ -1021,7 +1031,6 @@
       const msgReq     = document.getElementById('bb-claim-msg-req');
       const msgIn      = document.getElementById('bb-claim-msg');
       const emailIn    = document.getElementById('bb-claim-email');
-      const emailField = document.getElementById('bb-claim-email-field');
       const filesIn    = document.getElementById('bb-claim-files');
       const fileList   = document.getElementById('bb-claim-filelist');
       const submitBtn  = document.getElementById('bb-claim-submit');
@@ -1043,8 +1052,25 @@
       let needPhoto = false, needMsg = false;
 
       function contentChanged(){ if (!sending) idemKey = makeKey(); }
-      form.addEventListener('input', contentChanged);
       function totalPicked(){ return picked.reduce(function(s, f){ return s + f.size; }, 0); }
+      /* Requirement badges flip between a muted "optional" and the coral
+         "required" as issue types are picked. */
+      function setBadge(el, req){
+        if (!el) return;
+        el.textContent = req ? 'required' : 'optional';
+        el.classList.toggle('is-opt', !req);
+      }
+      /* Buttons gate on their step's requirements: Next needs the order
+         number; Submit needs the picked type's evidence rules satisfied. */
+      function syncNext(){ if (next1) next1.disabled = !(orderIn && (orderIn.value || '').trim()); }
+      function canSubmit(){
+        if (!chosenType) return false;
+        if (needPhoto && picked.length === 0) return false;
+        if (needMsg && !((msgIn && msgIn.value) || '').trim()) return false;
+        return true;
+      }
+      function syncSubmit(){ if (submitBtn && !sending) submitBtn.disabled = !canSubmit(); }
+      form.addEventListener('input', function(){ contentChanged(); syncNext(); syncSubmit(); });
       function status(msg, ok){
         if (!statusEl) return;
         statusEl.textContent = msg || '';
@@ -1087,8 +1113,8 @@
         chosenType = newType;
         needPhoto = card.dataset.photo === '1';
         needMsg = card.dataset.msg === '1';
-        if (photoReq) photoReq.hidden = !needPhoto;
-        if (msgReq) msgReq.hidden = !needMsg;
+        setBadge(photoReq, needPhoto);
+        setBadge(msgReq, needMsg);
         if (pickedEl){
           pickedEl.textContent = '';
           const chip = document.createElement('span');
@@ -1103,6 +1129,7 @@
           pickedEl.appendChild(chg);
         }
         if (changed) contentChanged();
+        syncSubmit();
         goStep(3);
       });
 
@@ -1123,6 +1150,7 @@
           row.appendChild(rm);
           fileList.appendChild(row);
         });
+        syncSubmit();
       }
       if (filesIn) filesIn.addEventListener('change', function(){
         status('');
@@ -1140,7 +1168,10 @@
       function setSending(on){
         sending = on;
         form.classList.toggle('is-sending', on);
-        if (submitBtn){ submitBtn.disabled = on; submitBtn.textContent = on ? 'Submitting…' : submitLabel; }
+        if (submitBtn){
+          submitBtn.textContent = on ? 'Submitting…' : submitLabel;
+          if (on) submitBtn.disabled = true; else syncSubmit();
+        }
       }
       form.addEventListener('submit', async function(e){
         e.preventDefault();
@@ -1154,11 +1185,6 @@
         if (needMsg && !msgVal){ status('Please tell us what happened.'); if (msgIn) msgIn.focus(); return; }
         if (totalPicked() > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — please remove one or use smaller photos.'); return; }
         const emailVal = emailIn ? (emailIn.value || '').trim() : '';
-        if (emailField && !emailField.hidden && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)){
-          status('Please enter a valid email.');
-          if (emailIn) emailIn.focus();
-          return;
-        }
 
         const fd = new FormData();
         fd.set('order_id', orderVal);
@@ -1188,19 +1214,11 @@
             status('');
           } else {
             const raw = (data && data.error) ? String(data.error) : '';
-            /* Reveal the guest email prompt on the explicit needs_email flag
-               OR any 400 that mentions email — an older deployed worker says
-               "A valid email is required…" without the flag. */
-            if (emailField && ((data && data.needs_email) || (res.status === 400 && /email/i.test(raw)))){
-              emailField.hidden = false;
-              status('One more thing — add your email so our reply can reach you, then submit again.');
-              if (emailIn) emailIn.focus();
-            } else {
-              /* A not-yet-updated Worker routes /claim into its chat handler,
-                 whose raw errors would confuse customers — replace those. */
-              const stale = /invalid json|payload too large|empty message|worker secrets|origin not allowed|^too many requests$/i.test(raw);
-              status(raw && !stale ? raw : 'Claims aren’t available right now — please try again later, or use the Send message tab.');
-            }
+            /* A not-yet-updated Worker routes /claim into its chat handler
+               (raw errors) or still demands an email the form no longer has —
+               both would confuse customers, so map them to a friendly line. */
+            const stale = /invalid json|payload too large|empty message|worker secrets|origin not allowed|^too many requests$|email/i.test(raw);
+            status(raw && !stale ? raw : 'Claims aren’t available right now — please try again later, or use the Send message tab.');
           }
         } catch(err){
           status('Something went wrong — please try again. Resubmitting is safe, it won’t create a duplicate.');
@@ -1213,21 +1231,26 @@
       if (againBtn) againBtn.addEventListener('click', function(){
         form.reset();
         picked = [];
-        renderFiles();
         chosenType = '';
         needPhoto = false;
         needMsg = false;
-        if (photoReq) photoReq.hidden = true;
-        if (msgReq) msgReq.hidden = true;
+        renderFiles();
+        setBadge(photoReq, false);
+        setBadge(msgReq, false);
         if (pickedEl) pickedEl.textContent = '';
         if (typesWrap) Array.prototype.forEach.call(typesWrap.querySelectorAll('.bb-ctype'), function(c){ c.classList.remove('is-picked'); });
         idemKey = makeKey();
         form.hidden = false;
         if (dots) dots.hidden = false;
         if (doneEl) doneEl.hidden = true;
-        if (emailField) emailField.hidden = true;
+        syncNext();
         goStep(1);
       });
+
+      /* Initial gate state (also covers browsers that restore form values on
+         back-navigation, which the markup's static disabled can't know about). */
+      syncNext();
+      syncSubmit();
     })();
 
     /* ---- Track tab: order number -> <chat_endpoint>/track -> step timeline.
@@ -1278,6 +1301,35 @@
                + dt.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
         } catch(e){ return ''; }
       }
+
+      /* Carrier logos (theme assets) + official tracking pages. Unknown
+         carriers fall back to plain text and a web search link. */
+      const CARRIERS = {
+        usps:  { name: 'USPS',  logo: "{{ 'carrier-usps.svg'  | asset_url }}", url: 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' },
+        ups:   { name: 'UPS',   logo: "{{ 'carrier-ups.svg'   | asset_url }}", url: 'https://www.ups.com/track?tracknum=' },
+        fedex: { name: 'FedEx', logo: "{{ 'carrier-fedex.svg' | asset_url }}", url: 'https://www.fedex.com/fedextrack/?trknbr=' },
+        dhl:   { name: 'DHL',   logo: "{{ 'carrier-dhl.svg'   | asset_url }}", url: 'https://www.dhl.com/us-en/home/tracking.html?tracking-id=' }
+      };
+      function carrierByName(name){
+        name = String(name || '');
+        if (/usps|postal/i.test(name)) return 'usps';
+        if (/ups/i.test(name)) return 'ups';
+        if (/fedex|fdx/i.test(name)) return 'fedex';
+        if (/dhl/i.test(name)) return 'dhl';
+        return '';
+      }
+      /* The pallet numbers can belong to a different carrier than the row's
+         carrier_name, so the number format wins when it's unambiguous. */
+      function carrierByNum(n){
+        if (/^1Z/i.test(n)) return 'ups';
+        if (/^9[2-5]\d{18,}$/.test(n) || /^420\d{5,9}9[2-5]\d{18,}$/.test(n)) return 'usps';
+        return '';
+      }
+      function trackUrl(n, nameKey){
+        const key = carrierByNum(n) || nameKey;
+        return key ? CARRIERS[key].url + encodeURIComponent(n)
+                   : 'https://www.google.com/search?q=' + encodeURIComponent(n + ' tracking');
+      }
       function render(d){
         d.prep_at = d.packed_at || d.label_printed_at;
         const rank = rankOf(d);
@@ -1322,10 +1374,42 @@
           const after = stepsEl.children[rank];
           if (after) stepsEl.insertBefore(li, after); else stepsEl.appendChild(li);
         }
-        const bits = [];
-        if (d.carrier) bits.push('Carrier: ' + String(d.carrier).toUpperCase());
-        if (d.tracking && d.tracking.length) bits.push('Tracking: ' + d.tracking.join(', '));
-        metaEl.textContent = bits.join('  ·  ');
+        metaEl.textContent = '';
+        const nameKey = carrierByName(d.carrier);
+        if (d.carrier){
+          const crow = document.createElement('div');
+          crow.className = 'bb-carrier';
+          const info = CARRIERS[nameKey];
+          if (info){
+            const img = document.createElement('img');
+            img.src = info.logo;
+            img.alt = '';
+            img.width = 22; img.height = 22;
+            img.className = 'bb-carrier-logo';
+            crow.appendChild(img);
+          }
+          const nm = document.createElement('span');
+          nm.textContent = 'Shipped with ' + (info ? info.name : String(d.carrier).toUpperCase());
+          crow.appendChild(nm);
+          metaEl.appendChild(crow);
+        }
+        if (d.tracking && d.tracking.length){
+          const trow = document.createElement('div');
+          trow.className = 'bb-track-links';
+          trow.appendChild(document.createTextNode('Tracking: '));
+          d.tracking.forEach(function(num, i){
+            const n = String(num);
+            if (i) trow.appendChild(document.createTextNode(', '));
+            const a = document.createElement('a');
+            a.className = 'bb-track-link';
+            a.href = trackUrl(n, nameKey);
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.textContent = n;
+            trow.appendChild(a);
+          });
+          metaEl.appendChild(trow);
+        }
         resultEl.hidden = false;
       }
 

@@ -19,7 +19,7 @@
  *
  * Theme contract (already wired in sections/floating-contact.liquid):
  *   POST {message, history:[{role:'user'|'assistant', text}...], page} -> {reply, show_contact, show_claim}
- *   POST /claim (multipart: order_id, email, type, message, files[], idempotencyKey) -> {ok, reference}
+ *   POST /claim (multipart: order_id, type, message, email?, files[], idempotencyKey) -> {ok, reference}
  *   POST /track {order_number} -> {ok, found, shipping_status, scan_status, carrier, tracking[], ...timestamps}
  *
  * Abuse limits: browser Origin is REQUIRED and allowlisted, per-IP and
@@ -507,8 +507,9 @@ async function readClaimForm(request) {
 
 /* Resolve the customer's email from the Shopify order so guests don't type
    it on the claim form. Requires the Protected-customer-data "Email" field
-   approval on the app — until granted, this returns null and the form falls
-   back to asking (needs_email). */
+   approval on the app — until granted, this returns null and the claim goes
+   through without an email (the intake API doesn't require one; the team
+   replies via the order record). */
 async function shopifyOrderEmail(env, orderId) {
   const num = String(orderId || '').replace(/[^0-9]/g, '');
   if (!num || !env.SHOPIFY_ADMIN_TOKEN) return null;
@@ -567,16 +568,14 @@ async function handleClaim(request, env, headers, origin) {
   if (type === 'Other' && !message) return json({ error: 'Please describe what happened.' }, 400, headers);
   if (!message) message = type + ' — reported via the claim form on syruvia.com.';
 
-  /* No email on the form: resolve it from the Shopify order (guests), else
-     ask the browser to reveal the email field and resubmit (same
-     idempotencyKey, so no duplicate is created). */
+  /* Email is OPTIONAL at the intake API. Prefer the form value (the hidden
+     account email of a logged-in customer); else try resolving it from the
+     Shopify order (needs the PCD "Email" approval — null until granted);
+     else forward the claim without one and the team replies via the order. */
   let emailResolved = false;
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     email = (await shopifyOrderEmail(env, orderId)) || '';
     emailResolved = !!email;
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return json({ error: 'Please add your email so our reply can reach you.', needs_email: true }, 400, headers);
   }
   /* Triage signal for agents: this claim's contact email came from the order
      lookup, not from the submitter — the submitter only proved they know the
@@ -585,7 +584,7 @@ async function handleClaim(request, env, headers, origin) {
 
   const out = new FormData();
   out.set('message', message);
-  out.set('email', email);
+  if (email) out.set('email', email);
   out.set('order_id', orderId);
   out.set('type', type);
   if (pageUrl) out.set('page_url', pageUrl);
