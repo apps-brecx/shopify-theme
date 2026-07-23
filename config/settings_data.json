@@ -261,7 +261,7 @@
           "submit_label": "Send Message",
           "success_text": "Thanks! We received your message.",
           "error_text": "Something went wrong. Please try again.",
-          "enable_chat": true,
+          "enable_chat": false,
           "default_tab": "chat",
           "chat_tab_label": "Quick help",
           "form_tab_label": "Send message",
@@ -270,7 +270,7 @@
           "chat_fallback": "I couldn’t find an instant answer for that.",
           "track_label": "Track your package",
           "chat_endpoint": "https://gentle-shadow-e778.ti-243.workers.dev/",
-          "enable_claim": true,
+          "enable_claim": false,
           "claim_tab_label": "Claim",
           "claim_intro": "Something wrong with your order? Tell us and we’ll make it right.",
           "claim_submit_label": "Submit claim"

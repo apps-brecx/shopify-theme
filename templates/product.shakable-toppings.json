@@ -9,20 +9,80 @@
  */
 {
   "sections": {
-    "main": { "type": "st-hero", "settings": {} },
-    "st_marquee": { "type": "st-marquee", "settings": {} },
-    "st_description": { "type": "st-description", "settings": {} },
-    "st_standards": { "type": "st-standards", "settings": {} },
-    "st_nutrition": { "type": "st-nutrition", "settings": {} },
-    "st_why": { "type": "st-why", "settings": {} },
-    "st_reels": { "type": "st-reels", "settings": {} },
-    "st_recipe": { "type": "st-recipe-feature", "settings": {} },
-    "st_cat_recipes": { "type": "st-cat-recipes", "settings": {} },
-    "pd_reviews": { "type": "pd-reviews", "settings": {} },
-    "pd_write_review": { "type": "pd-write-review", "settings": {} },
-    "pd_recommended": { "type": "pd-recommended", "settings": {} },
-    "st_faq": { "type": "st-faq", "settings": {} },
-    "pd_vip": { "type": "pd-vip", "settings": {} }
+    "main": {
+      "type": "st-hero",
+      "settings": {}
+    },
+    "st_marquee": {
+      "type": "st-marquee",
+      "settings": {}
+    },
+    "st_description": {
+      "type": "st-description",
+      "settings": {}
+    },
+    "st_standards": {
+      "type": "st-standards",
+      "settings": {}
+    },
+    "st_nutrition": {
+      "type": "st-nutrition",
+      "settings": {}
+    },
+    "st_why": {
+      "type": "st-why",
+      "settings": {}
+    },
+    "st_reels": {
+      "type": "st-reels",
+      "settings": {}
+    },
+    "st_recipe": {
+      "type": "st-recipe-feature",
+      "settings": {}
+    },
+    "st_cat_recipes": {
+      "type": "st-cat-recipes",
+      "settings": {}
+    },
+    "pd_reviews": {
+      "type": "pd-reviews",
+      "settings": {}
+    },
+    "pd_write_review": {
+      "type": "pd-write-review",
+      "settings": {}
+    },
+    "pd_recommended": {
+      "type": "pd-recommended",
+      "settings": {}
+    },
+    "st_faq": {
+      "type": "st-faq",
+      "settings": {}
+    },
+    "pd_vip": {
+      "type": "pd-vip",
+      "settings": {}
+    },
+    "areviews_1784749656_30db11": {
+      "type": "apps",
+      "blocks": {
+        "areviews_reviews_importer_areviews_display_reviews_49FAFE": {
+          "type": "shopify://apps/areviews-reviews-importer/blocks/AreviewsDisplayReviews/ab0ec5fe-c95b-4fd6-bfb8-db2a30d0756f",
+          "settings": {
+            "hide_areviews_title_rating": false,
+            "areviews_theme_font": "inherit",
+            "areviews_stars_colors": "#f3c621",
+            "areviews_write_reviews_botton_color": "#373737"
+          }
+        }
+      },
+      "block_order": [
+        "areviews_reviews_importer_areviews_display_reviews_49FAFE"
+      ],
+      "settings": {}
+    }
   },
   "order": [
     "main",
@@ -38,6 +98,7 @@
     "pd_write_review",
     "pd_recommended",
     "st_faq",
-    "pd_vip"
+    "pd_vip",
+    "areviews_1784749656_30db11"
   ]
 }

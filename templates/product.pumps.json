@@ -9,18 +9,72 @@
  */
 {
   "sections": {
-    "main": { "type": "pmp-hero", "settings": {} },
-    "pmp_marquee": { "type": "pmp-marquee", "settings": {} },
-    "pmp_description": { "type": "pmp-description", "settings": {} },
-    "pmp_howto": { "type": "pmp-howto", "settings": {} },
-    "pmp_specs": { "type": "pmp-specs", "settings": {} },
-    "pmp_why": { "type": "pmp-why", "settings": {} },
-    "pmp_reels": { "type": "pmp-reels", "settings": {} },
-    "pd_reviews": { "type": "pd-reviews", "settings": {} },
-    "pd_write_review": { "type": "pd-write-review", "settings": {} },
-    "pd_recommended": { "type": "pd-recommended", "settings": {} },
-    "pmp_faq": { "type": "pmp-faq", "settings": {} },
-    "pd_vip": { "type": "pd-vip", "settings": {} }
+    "main": {
+      "type": "pmp-hero",
+      "settings": {}
+    },
+    "pmp_marquee": {
+      "type": "pmp-marquee",
+      "settings": {}
+    },
+    "pmp_description": {
+      "type": "pmp-description",
+      "settings": {}
+    },
+    "pmp_howto": {
+      "type": "pmp-howto",
+      "settings": {}
+    },
+    "pmp_specs": {
+      "type": "pmp-specs",
+      "settings": {}
+    },
+    "pmp_why": {
+      "type": "pmp-why",
+      "settings": {}
+    },
+    "pmp_reels": {
+      "type": "pmp-reels",
+      "settings": {}
+    },
+    "pd_reviews": {
+      "type": "pd-reviews",
+      "settings": {}
+    },
+    "pd_write_review": {
+      "type": "pd-write-review",
+      "settings": {}
+    },
+    "pd_recommended": {
+      "type": "pd-recommended",
+      "settings": {}
+    },
+    "pmp_faq": {
+      "type": "pmp-faq",
+      "settings": {}
+    },
+    "pd_vip": {
+      "type": "pd-vip",
+      "settings": {}
+    },
+    "areviews_1784749655_30db11": {
+      "type": "apps",
+      "blocks": {
+        "areviews_reviews_importer_areviews_display_reviews_703FC4": {
+          "type": "shopify://apps/areviews-reviews-importer/blocks/AreviewsDisplayReviews/ab0ec5fe-c95b-4fd6-bfb8-db2a30d0756f",
+          "settings": {
+            "hide_areviews_title_rating": false,
+            "areviews_theme_font": "inherit",
+            "areviews_stars_colors": "#f3c621",
+            "areviews_write_reviews_botton_color": "#373737"
+          }
+        }
+      },
+      "block_order": [
+        "areviews_reviews_importer_areviews_display_reviews_703FC4"
+      ],
+      "settings": {}
+    }
   },
   "order": [
     "main",
@@ -34,6 +88,7 @@
     "pd_write_review",
     "pd_recommended",
     "pmp_faq",
-    "pd_vip"
+    "pd_vip",
+    "areviews_1784749655_30db11"
   ]
 }

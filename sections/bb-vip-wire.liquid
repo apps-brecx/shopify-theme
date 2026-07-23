@@ -195,7 +195,7 @@
         if(addedQty>0){
           try{localStorage.removeItem(KEY);}catch(e){}
           var code=bestCode(addedQty);
-          window.location.href=code?('/discount/'+encodeURIComponent(code)+'?redirect=/cart'):'/cart';
+          bbFinish(code);
         } else {
           btn.disabled=false; btn.textContent='Add case to cart';
           bbToast('Those flavors just sold out \u2014 your case is saved');
@@ -203,11 +203,44 @@
         return;
       }
       var it=payload[i++];
+      (window.__PD_OWN_ADDS=window.__PD_OWN_ADDS||[]).push({fam:'SKIP',t:Date.now()});
       fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:[{id:it.id,quantity:it.quantity}]})})
         .then(function(r){ if(r.ok){ addedQty+=it.quantity; } else { failed++; markSoldOutById(it.id); } })
         .catch(function(){ failed++; markSoldOutById(it.id); })
         .then(seq);
     })();
+  }
+
+  /* This bundle add navigates straight to /discount, so the site-wide
+     managed-discount guard can't win the race to strip a stale code. Do it
+     here instead: before leaving, clear any managed QTY or BUNDLE code (a
+     leftover product-page QTY, or a previous case's BUNDLE) while preserving
+     the customer's own coupons, then apply only THIS bundle's code and go to
+     cart. The whole cleanup is awaited before navigation, so nothing races it. */
+  var BB_MANAGED=/^(QTY|BUNDLE)[0-9]+(TEST)?$/i;
+  function bbApplyEach(list,i){
+    if(i>=list.length) return Promise.resolve();
+    return fetch('/discount/'+encodeURIComponent(list[i])+'?redirect=/cart.js',{headers:{'Accept':'application/json'},credentials:'same-origin'})
+      .then(function(){return bbApplyEach(list,i+1);},function(){return bbApplyEach(list,i+1);});
+  }
+  function bbFinish(code){
+    fetch('/cart.js',{headers:{'Accept':'application/json'},credentials:'same-origin'})
+      .then(function(r){return r.json();})
+      .then(function(c){
+        var codes=(c&&c.discount_codes)||[];
+        var managed=codes.filter(function(d){return BB_MANAGED.test(String(d&&d.code||''));});
+        if(!managed.length){
+          window.location.href=code?('/discount/'+encodeURIComponent(code)+'?redirect=/cart'):'/cart';
+          return;
+        }
+        var keep=codes.filter(function(d){return d&&d.code&&!BB_MANAGED.test(String(d.code));}).map(function(d){return String(d.code);});
+        if(code) keep.push(code);
+        var go=function(){window.location.href='/cart';};
+        fetch('/cart/update.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},credentials:'same-origin',body:JSON.stringify({discount:''})})
+          .then(function(){return bbApplyEach(keep,0);})
+          .then(go,go);
+      })
+      .catch(function(){ window.location.href=code?('/discount/'+encodeURIComponent(code)+'?redirect=/cart'):'/cart'; });
   }
 
   root.addEventListener('click', function(e){
@@ -224,13 +257,15 @@
     var n=0; payload.forEach(function(p){ n+=p.quantity; });
     btn.disabled=true; btn.textContent='Adding\u2026';
     /* Append the case to the existing cart \u2014 never clear it; whatever the customer
-       already had in the cart stays. */
+       already had in the cart stays. Tell the managed-discount guard to skip
+       this add (bbFinish below owns the code cleanup). */
+    (window.__PD_OWN_ADDS=window.__PD_OWN_ADDS||[]).push({fam:'SKIP',t:Date.now()});
     fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({items:payload})})
       .then(function(r){
         if(r.ok){
           try{localStorage.removeItem(KEY);}catch(e){}
           var code=bestCode(n);
-          window.location.href=code?('/discount/'+encodeURIComponent(code)+'?redirect=/cart'):'/cart';
+          bbFinish(code);
           return;
         }
         /* A flavor went out of stock since load, so the batch add was rejected as a

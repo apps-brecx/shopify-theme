@@ -36,10 +36,11 @@
   if pct > 100
     assign pct = 100
   endif
+  comment
+    Shipping is settled at checkout — the drawer button always shows the
+    subtotal (matches the cart page since the 2026-07-22 change).
+  endcomment
   assign checkout_total = payable
-  if remain > 0
-    assign checkout_total = payable | plus: SHIP_COST
-  endif
 -%}
 
 <style>
@@ -429,7 +430,7 @@
     if(e.target.closest('[data-syr-close]')){ e.preventDefault(); close(); return; }
     if(e.target.closest('[data-syr-checkout]')){ e.preventDefault(); window.location.href='/checkout'; return; }
     var addBtn = e.target.closest('[data-syr-add]');
-    if(addBtn){ e.preventDefault(); var vid=addBtn.getAttribute('data-syr-add'); addBtn.disabled=true; addVariant(vid,1).then(function(it){ lastAdded=null; return refresh(); }).then(open).then(function(){ bumpBubble(); }).catch(function(){ addBtn.disabled=false; }); return; }
+    if(addBtn){ e.preventDefault(); var vid=addBtn.getAttribute('data-syr-add'); addBtn.disabled=true; addVariant(vid,1).then(function(it){ lastAdded=null; try{ document.dispatchEvent(new CustomEvent('syr:cart:added',{detail:{item:it,quantity:1}})); }catch(e2){} return refresh(); }).then(open).then(function(){ bumpBubble(); }).catch(function(){ addBtn.disabled=false; }); return; }
     var line = e.target.closest('.d-line');
     if(line){
       var idx = parseInt(line.getAttribute('data-line'),10);

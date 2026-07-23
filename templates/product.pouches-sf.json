@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -16,14 +25,33 @@
         "marquee_items": "Zero Sugar\nZero Calories\nKeto Friendly\nTear. Pour. Enjoy.\nOne Perfect Serving\nTake It Anywhere\nGluten-Free\nKosher Certified\nMade in the USA",
         "show_mini_bundle": false,
         "show_pouch_band": true,
-        "pib_bg": "#2F7DC4",
-        "pib_chip": "#EAF6FF",
         "pib_chips": "0g sugar · 0 calories,Keto friendly,30 pouches per bag,450 ml (15.2 fl oz) total,Take it anywhere",
-        "pib_text": "#FFFBF4"
+        "pib_bg": "#2F7DC4",
+        "pib_text": "#FFFBF4",
+        "pib_chip": "#EAF6FF"
       }
+    },
+    "areviews_1784749653_30db11": {
+      "type": "apps",
+      "blocks": {
+        "areviews_reviews_importer_areviews_display_reviews_58DE98": {
+          "type": "shopify://apps/areviews-reviews-importer/blocks/AreviewsDisplayReviews/ab0ec5fe-c95b-4fd6-bfb8-db2a30d0756f",
+          "settings": {
+            "hide_areviews_title_rating": false,
+            "areviews_theme_font": "inherit",
+            "areviews_stars_colors": "#f3c621",
+            "areviews_write_reviews_botton_color": "#373737"
+          }
+        }
+      },
+      "block_order": [
+        "areviews_reviews_importer_areviews_display_reviews_58DE98"
+      ],
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "areviews_1784749653_30db11"
   ]
 }
