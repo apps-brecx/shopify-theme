@@ -13,7 +13,7 @@
 <script>
 (function(){
   var MYTIERS=[1,0.95,0.93,0.90];           /* qty 1/2/3/4+ -> 0/5/7/10% (display) */
-  var QCODES={2:'QTY2TEST',3:'QTY3TEST',4:'QTY4TEST'};
+  var QCODES={2:'QTY2',3:'QTY3',4:'QTY4'};
   var SAVE={'3':'Save 7%','4':'Save 10%'};
   function money(c){return '$'+(c/100).toFixed(2);}
   function getQty(){var qi=document.querySelector('#pdAtcForm input[name="quantity"]')||document.querySelector('.pd-qty input');return qi?Math.max(1,parseInt(qi.value,10)||1):1;}
@@ -26,14 +26,6 @@
     var st=document.getElementById('pdStickyPrice'); if(st) st.textContent=money(total);
     var saveEl=document.getElementById('pdSaveTag'); if(saveEl && q>1){ saveEl.textContent='Save '+Math.round((1-tier)*100)+'%'; }
   }
-  /* Apply a manual order-discount code to the current cart (sets the cart discount cookie),
-     then re-render the drawer. Silent + non-blocking. */
-  function applyCode(code){
-    if(!code) return Promise.resolve();
-    return fetch('/discount/'+encodeURIComponent(code)+'?redirect=/cart.js',{headers:{'Accept':'application/json'},credentials:'same-origin'})
-      .then(function(){ if(window.SyrCD && typeof window.SyrCD.refresh==='function'){ return window.SyrCD.refresh(); } })
-      .catch(function(){});
-  }
   function init(){
     /* ---------- tier price display ---------- */
     document.querySelectorAll('.pd-mb-cell').forEach(function(cell){var t=cell.getAttribute('data-tier');var s=cell.querySelector('.pd-mb-save');if(s&&SAVE[t])s.textContent=SAVE[t];});
@@ -43,25 +35,23 @@
 
     /* ---------- discount application ---------- */
     if(document.getElementById('SyrCD')){
-      /* Drawer present: it owns the add. Remember the qty chosen when the ATC is pressed,
-         then apply the matching code once the item is in the cart. */
-      var pending={code:'',t:0};
+      /* Drawer present: it owns the add and fires syr:cart:added. We only FLAG
+         this as the product page's own add (family QTY + the tier code, when a
+         tier actually applies at qty >= 2). managed-discount-guard.liquid is
+         the single authority that applies the QTY code and strips codes owned
+         by other pages — so nothing here races it over the cart's discounts. */
       document.addEventListener('click',function(e){
-        if(e.target.closest('.pd-atc, .pd-atc--full')){ pending={code:codeForQty(getQty()),t:Date.now()}; }
-      }, true);
-      var busy=false;
-      document.addEventListener('syr:cart:added',function(e){
-        var q=(e && e.detail && e.detail.quantity)||0;
-        var code=q?codeForQty(q):'';
-        if(!code){
-          var fresh=pending.code && (Date.now()-pending.t)<8000;
-          code=fresh?pending.code:'';
+        if(e.target.closest('.pd-atc, .pd-atc--full')){
+          var c=codeForQty(getQty());
+          if(c){
+            /* Push ONE own intent per click (family QTY + the tier code). The
+               guard consumes one per add, so a double-click keeps the code. */
+            var q=(window.__PD_OWN_ADDS=window.__PD_OWN_ADDS||[]);
+            q.push({fam:'QTY',code:c,t:Date.now()});
+            if(q.length>8) q.shift();
+          }
         }
-        pending={code:'',t:0};
-        if(!code || busy) return;
-        busy=true;
-        applyCode(code).then(function(){ busy=false; }, function(){ busy=false; });
-      });
+      }, true);
     } else {
       /* No drawer: intercept the submit and apply via the /discount/{code} redirect. */
       var form=document.getElementById('pdAtcForm');

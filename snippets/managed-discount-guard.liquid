@@ -1,0 +1,125 @@
+{%- comment -%}
+  Managed-discount guard (site-wide) — SINGLE authority over the two families
+  of order-level discount code that are each "owned" by one page:
+    • QTY2 / QTY3 / QTY4  — the product-page quantity tiers (pd-qty-wire.liquid)
+    • BUNDLE…             — the Build-your-bundle page (bundle-builder.liquid)
+
+  These amount-off-order codes cling to the whole cart and even STACK with each
+  other (verified live: QTY2 + BUNDLE2 both persist in cart.discount_codes). The
+  rule: each family's code is valid only on its origin page. The moment a
+  product is added from anywhere else, that family's code is stripped — a
+  product-page add drops any BUNDLE, a bundle-page add drops any QTY, an add
+  from any other template drops both. A code the customer applied themselves
+  (e.g. RESTOCK50) is not a managed family and is always preserved.
+
+  Own-add matching — the important part. Each origin-page add pushes ONE "own
+  intent" onto window.__PD_OWN_ADDS (the product page includes the tier code;
+  the bundle page passes none and applies BUNDLE via its own checkout redirect).
+  Every 'syr:cart:added' consumes exactly ONE intent. So a fast DOUBLE-CLICK
+  (two clicks -> two intents -> two adds) is matched intent-for-add and both
+  count as own — the just-applied code is never stripped by the second add.
+  This is deterministic: it does NOT depend on network timing (an earlier
+  wall-clock "grace" version could expire mid-apply on slow mobile and strip the
+  code it had just applied). A genuine external add finds no intent -> null ->
+  strips as intended.
+
+  This guard is the ONLY thing that applies or removes these codes, so nothing
+  races it. Adds are processed one at a time (a job queue), each re-reading a
+  FRESH /cart.js, so overlapping adds never act on a stale snapshot.
+
+  Verified primitives: POST /cart/update.js {"discount":""} clears ALL codes
+  (even applicable); GET /discount/CODE?redirect=/cart.js applies one.
+
+  Depends on the SyrCD drawer's `syr:cart:added` event; rendered right after it
+  in theme.liquid. Inert if that event never fires.
+{%- endcomment -%}
+<script>
+(function(){
+  var OWN_MS = 9000;          // an own intent older than this is treated as stale
+  var running = false;
+  var jobs = [];              // captured own-context per pending add, in order
+
+  /* Match the real tier codes only — QTY2/QTY3/QTY4 (and the QTY…TEST staging
+     variants), BUNDLE2…BUNDLE12 (and the live BUNDLE…TEST variants). The digit
+     requirement + end anchor keep customer coupons like BUNDLEUP15 or QTYLOVE
+     out of the managed families so they are never stripped. */
+  function familyOf(code){
+    code = String(code || '');
+    if(/^QTY[0-9]+(TEST)?$/i.test(code)) return 'QTY';
+    if(/^BUNDLE[0-9]+(TEST)?$/i.test(code)) return 'BUNDLE';
+    return '';
+  }
+  /* Consume the oldest still-fresh own intent (or null for an external add). */
+  function takeOwn(){
+    var q = window.__PD_OWN_ADDS;
+    if(!Array.isArray(q)) return null;
+    var now = Date.now();
+    while(q.length){
+      var o = q.shift();
+      if(o && o.fam && (now - (+o.t || 0)) < OWN_MS) return o;
+    }
+    return null;
+  }
+  function refresh(){
+    if(window.SyrCD && typeof window.SyrCD.refresh === 'function') return window.SyrCD.refresh();
+  }
+  function applyCodes(codes, i){
+    if(i >= codes.length) return Promise.resolve();
+    return fetch('/discount/' + encodeURIComponent(codes[i]) + '?redirect=/cart.js',
+        { headers:{'Accept':'application/json'}, credentials:'same-origin' })
+      .then(function(){ return applyCodes(codes, i+1); }, function(){ return applyCodes(codes, i+1); });
+  }
+  function runOnce(own){
+    /* The bundle wire (bb-vip-wire) applies AND clears its own codes just
+       before navigating, so it tells us to stay out of that add entirely. */
+    if(own && own.fam === 'SKIP') return Promise.resolve();
+    var ownFam  = own ? own.fam : '';
+    var ownCode = (own && own.code) ? String(own.code) : '';
+    return fetch('/cart.js', { headers:{'Accept':'application/json'}, credentials:'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(c){
+        var codes = (c && c.discount_codes) || [];
+        var present = codes.map(function(d){ return String(d && d.code || ''); });
+        /* Strip a managed code unless it is THIS add's own code:
+             - different family                          -> strip
+             - same family but a different code (QTY tier change) -> strip
+             - same family, no specific own code (bundle) -> keep
+           Customer coupons (unmanaged) are always kept. */
+        var strip = codes.filter(function(d){
+          var code = String(d && d.code || '');
+          var f = familyOf(code);
+          if(!f) return false;
+          if(f !== ownFam) return true;
+          return ownCode ? (code !== ownCode) : false;
+        });
+        var needApply = ownCode && present.indexOf(ownCode) === -1;
+        if(!strip.length){
+          /* Nothing to remove — just make sure this page's own code is on. */
+          return needApply ? applyCodes([ownCode], 0).then(refresh) : undefined;
+        }
+        var keep = codes
+          .filter(function(d){ return strip.indexOf(d) === -1; })
+          .map(function(d){ return String(d.code); });
+        if(ownCode && keep.indexOf(ownCode) === -1) keep.push(ownCode);
+        return fetch('/cart/update.js',
+            { method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+              credentials:'same-origin', body:JSON.stringify({ discount:'' }) })
+          .then(function(){ return applyCodes(keep, 0); })
+          .then(refresh);
+      });
+  }
+  function drain(){
+    if(!jobs.length){ running = false; return; }
+    var own = jobs.shift();
+    runOnce(own).then(step, step);
+    function step(){ drain(); }
+  }
+  function guard(){
+    jobs.push(takeOwn());       // capture THIS add's own intent immediately, in order
+    if(running) return;
+    running = true;
+    drain();
+  }
+  document.addEventListener('syr:cart:added', guard);
+})();
+</script>
