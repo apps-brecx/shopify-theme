@@ -570,12 +570,18 @@ async function handleClaim(request, env, headers, origin) {
   /* No email on the form: resolve it from the Shopify order (guests), else
      ask the browser to reveal the email field and resubmit (same
      idempotencyKey, so no duplicate is created). */
+  let emailResolved = false;
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     email = (await shopifyOrderEmail(env, orderId)) || '';
+    emailResolved = !!email;
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ error: 'Please add your email so our reply can reach you.', needs_email: true }, 400, headers);
   }
+  /* Triage signal for agents: this claim's contact email came from the order
+     lookup, not from the submitter — the submitter only proved they know the
+     order number. */
+  if (emailResolved) message += '\n\n[Storefront: customer email auto-resolved from the order — submitted with order number only.]';
 
   const out = new FormData();
   out.set('message', message);

@@ -204,7 +204,7 @@
             <div class="bb-claim-picked" id="bb-claim-picked"></div>
             <div class="bb-field" id="bb-claim-photo-field">
               <span>Photos <b class="bb-req-badge" id="bb-claim-photo-req" hidden>required</b></span>
-              <label class="bb-claim-drop" for="bb-claim-files">📷 Add photos<input type="file" id="bb-claim-files" accept="image/*" multiple hidden></label>
+              <label class="bb-claim-drop" for="bb-claim-files">📷 Add photos<input type="file" id="bb-claim-files" class="bb-vhide" accept="image/*" multiple></label>
             </div>
             <div class="bb-claim-filelist" id="bb-claim-filelist"></div>
             <label class="bb-field">
@@ -223,8 +223,10 @@
               <button type="button" class="bb-wiz-back" data-back="2">← Back</button>
               <button type="submit" class="bb-submit bb-claim-send" id="bb-claim-submit">{{ section.settings.claim_submit_label | default: 'Submit claim' }}</button>
             </div>
-            <div class="bb-status" id="bb-claim-status" aria-live="polite"></div>
           </div>
+          {%- comment -%} Outside the step divs so step-1/2 validation messages
+              are visible (and announced) on every step. {%- endcomment -%}
+          <div class="bb-status" id="bb-claim-status" aria-live="polite"></div>
         </form>
         <div class="bb-claim-done" id="bb-claim-done" hidden>
           <div class="bb-claim-done-ic">✓</div>
@@ -339,7 +341,15 @@
     .bb-claim-file{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#3C2005;background:#F6F1E7;border-radius:8px;padding:5px 8px}
     .bb-claim-file span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .bb-claim-file button{border:0;background:none;color:#3C2005;font-weight:700;cursor:pointer;font:inherit;padding:0 2px}
-    /* Claim wizard: progress dots, animated steps, issue-type cards */
+    /* Claim wizard: progress dots, animated steps, issue-type cards.
+       The [hidden] overrides matter: .bb-field/.bb-wiz-dots set display, which
+       would otherwise beat the UA's [hidden]{display:none}. */
+    .bb-field[hidden]{display:none!important}
+    .bb-wiz-dots[hidden]{display:none!important}
+    .bb-vhide{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+    .bb-claim-drop{position:relative}
+    .bb-claim-drop:focus-within{border-color:#3C2005;background:#FCE2A0;outline:2px solid #3C2005;outline-offset:2px}
+    #bb-claim-form.is-sending{pointer-events:none;opacity:.75}
     .bb-wiz-dots{display:flex;align-items:center;gap:6px;margin:0 0 16px}
     .bb-wiz-dot{width:26px;height:26px;border-radius:50%;border:2px solid #E0D5C2;background:#fff;color:#B9A78D;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;transition:all .25s ease}
     .bb-wiz-dot.is-on{background:#3C2005;border-color:#3C2005;color:#FCE2A0}
@@ -1032,7 +1042,7 @@
       let chosenType = '';
       let needPhoto = false, needMsg = false;
 
-      function contentChanged(){ idemKey = makeKey(); }
+      function contentChanged(){ if (!sending) idemKey = makeKey(); }
       form.addEventListener('input', contentChanged);
       function totalPicked(){ return picked.reduce(function(s, f){ return s + f.size; }, 0); }
       function status(msg, ok){
@@ -1058,17 +1068,23 @@
         if (e.key === 'Enter'){ e.preventDefault(); if (next1) next1.click(); }
       });
       form.addEventListener('click', function(e){
+        if (sending) return;
         const b = e.target.closest ? e.target.closest('.bb-wiz-back') : null;
         if (b && b.dataset.back) goStep(parseInt(b.dataset.back, 10));
       });
 
       if (typesWrap) typesWrap.addEventListener('click', function(e){
+        if (sending) return;
         const card = e.target.closest ? e.target.closest('.bb-ctype') : null;
         if (!card) return;
         Array.prototype.forEach.call(typesWrap.querySelectorAll('.bb-ctype'), function(c){
           c.classList.toggle('is-picked', c === card);
         });
-        chosenType = card.dataset.type || 'Other';
+        const newType = card.dataset.type || 'Other';
+        /* Re-picking the same card is NOT a content change — the key must
+           survive it so an unchanged resubmission still dedupes upstream. */
+        const changed = newType !== chosenType;
+        chosenType = newType;
         needPhoto = card.dataset.photo === '1';
         needMsg = card.dataset.msg === '1';
         if (photoReq) photoReq.hidden = !needPhoto;
@@ -1082,11 +1098,11 @@
           chg.type = 'button';
           chg.className = 'bb-claim-chg';
           chg.textContent = 'change';
-          chg.addEventListener('click', function(){ goStep(2); });
+          chg.addEventListener('click', function(){ if (!sending) goStep(2); });
           pickedEl.appendChild(chip);
           pickedEl.appendChild(chg);
         }
-        contentChanged();
+        if (changed) contentChanged();
         goStep(3);
       });
 
@@ -1123,6 +1139,7 @@
 
       function setSending(on){
         sending = on;
+        form.classList.toggle('is-sending', on);
         if (submitBtn){ submitBtn.disabled = on; submitBtn.textContent = on ? 'Submitting…' : submitLabel; }
       }
       form.addEventListener('submit', async function(e){
@@ -1169,16 +1186,21 @@
                 + (emailVal ? ' We’ll email you at ' + emailVal + '.' : ' Our reply goes to the email on your order.');
             }
             status('');
-          } else if (data && data.needs_email && emailField){
-            emailField.hidden = false;
-            status('One more thing — add your email so our reply can reach you, then submit again.');
-            if (emailIn) emailIn.focus();
           } else {
-            /* A not-yet-updated Worker routes /claim into its chat handler,
-               whose raw errors would confuse customers — replace those. */
             const raw = (data && data.error) ? String(data.error) : '';
-            const stale = /invalid json|payload too large|empty message|worker secrets|origin not allowed|^too many requests$/i.test(raw);
-            status(raw && !stale ? raw : 'Claims aren’t available right now — please try again later, or use the Send message tab.');
+            /* Reveal the guest email prompt on the explicit needs_email flag
+               OR any 400 that mentions email — an older deployed worker says
+               "A valid email is required…" without the flag. */
+            if (emailField && ((data && data.needs_email) || (res.status === 400 && /email/i.test(raw)))){
+              emailField.hidden = false;
+              status('One more thing — add your email so our reply can reach you, then submit again.');
+              if (emailIn) emailIn.focus();
+            } else {
+              /* A not-yet-updated Worker routes /claim into its chat handler,
+                 whose raw errors would confuse customers — replace those. */
+              const stale = /invalid json|payload too large|empty message|worker secrets|origin not allowed|^too many requests$/i.test(raw);
+              status(raw && !stale ? raw : 'Claims aren’t available right now — please try again later, or use the Send message tab.');
+            }
           }
         } catch(err){
           status('Something went wrong — please try again. Resubmitting is safe, it won’t create a duplicate.');
@@ -1229,7 +1251,7 @@
       const STEPS = [
         { label: 'Order placed',                at: 'order_created_at' },
         { label: 'Accepted',                    at: 'accepted_at' },
-        { label: 'Preparing shipment / Packed', at: 'prep_at' },
+        { label: 'Packed', at: 'prep_at' },
         { label: 'Handed over to carrier',      at: 'pallet_at' },
         { label: 'On the way',                  at: null },
         { label: 'Out for delivery',            at: null },
