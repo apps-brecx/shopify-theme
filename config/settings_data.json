@@ -195,6 +195,13 @@
       "floating-contact": {
         "type": "floating-contact",
         "blocks": {
+          "faq_49A6dD": {
+            "type": "faq",
+            "settings": {
+              "question": "Can you check the status of my shipment?",
+              "answer": ""
+            }
+          },
           "faq_kkdHgY": {
             "type": "faq",
             "settings": {
@@ -239,6 +246,7 @@
           }
         },
         "block_order": [
+          "faq_49A6dD",
           "faq_kkdHgY",
           "faq_8HbJTk",
           "faq_7zjCeU",
