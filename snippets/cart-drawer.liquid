@@ -36,10 +36,11 @@
   if pct > 100
     assign pct = 100
   endif
+  comment
+    Shipping is settled at checkout — the drawer button always shows the
+    subtotal (matches the cart page since the 2026-07-22 change).
+  endcomment
   assign checkout_total = payable
-  if remain > 0
-    assign checkout_total = payable | plus: SHIP_COST
-  endif
 -%}
 
 <style>
