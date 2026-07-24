@@ -15,6 +15,8 @@
         "access_mode": "signed_in",
         "vip_badge": "",
         "unlocked_text": "VIP unlocked — happy pre-ordering",
+        "lock_banner": "shopify://shop_images/Banner_3.png",
+        "lock_banner_m": "shopify://shop_images/Banner_3_Mobile.png",
         "gate_title": "Pre-order is VIP-only right now",
         "gate_text": "VIP membership is free. Create an account (or sign in) and you can pre-order every pouch flavor before everyone else. Open to all on Monday.",
         "lock_cta": "Shop now",
