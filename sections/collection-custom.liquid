@@ -601,6 +601,8 @@
             {%- assign rnext = rfull | plus: 1 -%}
             {%- capture starrow -%}{%- for s in (1..5) -%}{%- if s <= rfull -%}{{ starFull }}{%- elsif rhalf and s == rnext -%}{{ starHalf }}{%- else -%}{{ starEmpty }}{%- endif -%}{%- endfor -%}{%- endcapture -%}
             {%- assign dd = forloop.index0 | modulo: 12 | times: 45 -%}
+            {%- assign is_preorder = false -%}
+            {%- for _t in product.tags -%}{%- assign _td = _t | downcase | strip -%}{%- if _td == 'preorder' or _td == 'pre-order' -%}{%- assign is_preorder = true -%}{%- break -%}{%- endif -%}{%- endfor -%}
             <article
               class="pcard{% unless avail %} pcard--soldout{% endunless %}"
               data-card
@@ -611,6 +613,7 @@
               data-price="{{ v.price }}"
               data-cap="{{ v.compare_at_price | default: 0 }}"
               data-id="{{ v.id }}"
+              data-preorder="{% if is_preorder %}1{% else %}0{% endif %}"
               data-img="{{ product.featured_image | image_url: width: 420 }}"
               data-rt="{{ rt }}"
               data-rdisp="{{ rdisp }}"
@@ -655,7 +658,7 @@
                 </div>
                 <div class="pcard-hoverbar">
                   {%- if avail -%}
-                    <button class="quick-add" data-add>{{ icPlus }} Add to cart</button>
+                    <button class="quick-add" data-add>{{ icPlus }} {% if is_preorder %}Preorder{% else %}Add to cart{% endif %}</button>
                   {%- else -%}
                     <button class="quick-add is-soldout" disabled>Sold out</button>
                   {%- endif -%}
@@ -697,7 +700,7 @@
                   </span>
                   {%- if avail -%}
                     <button class="foot-add" data-add aria-label="Add to cart">
-                      <span class="foot-add-ic">{{ icPlus }}</span><span class="foot-add-label">Add to cart</span>
+                      <span class="foot-add-ic">{{ icPlus }}</span><span class="foot-add-label">{% if is_preorder %}Preorder{% else %}Add to cart{% endif %}</span>
                     </button>
            
                   {%- endif -%}
@@ -1012,10 +1015,12 @@
       qty = qty || 1;
       var id = +card.dataset.id;
       fly(card);
+      var item = { id: id, quantity: qty };
+      if (card.dataset.preorder === '1') { item.properties = { Preorder: 'Yes' }; }
       fetch('/cart/add.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ items: [{ id: id, quantity: qty }] }),
+        body: JSON.stringify({ items: [ item ] }),
       })
         .then(function (r) {
           return r.json();
