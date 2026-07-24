@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Almond Smooth",
-            "description": "Soft, nutty flavor for coffee, lattes, and creamy drinks."
+            "title": "Punch-Style Trio",
+            "description": "Cherry, Blue Raspberry, and Pomegranate in one easy fruit drink pack."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Hazelnut Classic",
-            "description": "A café favorite that makes everyday coffee taste better fast."
+            "title": "Made For Fun Drinks",
+            "description": "Perfect for lemonades, sodas, iced teas, mocktails, and colorful refreshers."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Pecan Dessert Duo",
-            "description": "Butter Pecan and Caramel Pecan bring rich, cozy sweetness to every sip."
+            "title": "Save This Week",
+            "description": "Get the Cherry Blue Punch Pack for $19.99 instead of $31.99."
           }
         }
       },
