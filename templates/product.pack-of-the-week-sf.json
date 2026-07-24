@@ -755,7 +755,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Hazelnut is perfect in my iced coffee, and the Butter Pecan makes my latte taste like a real café drink.",
+            "quote": "The Cherry and Blue Raspberry taste so good together, and Pomegranate makes it feel more like a real fruit punch.",
             "reviewer_initials": "AM",
             "reviewer_name": "Alyssa M.",
             "reviewer_role": ""
@@ -765,7 +765,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Caramel Pecan is the standout for me. It gives cold brew a rich, sweet finish without the sugar.",
+            "quote": "I used this pack with sparkling water and lemonade. The colors are fun, and the flavors still taste bold without sugar.",
             "reviewer_initials": "MD",
             "reviewer_name": "Marcus D.",
             "reviewer_role": ""
@@ -775,7 +775,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I love having all these nutty flavors together. Almond is smooth, Hazelnut is classic, and the pecan flavors feel extra rich.",
+            "quote": "Blue Raspberry is my favorite, but Cherry and Pomegranate make the pack taste fuller. It is perfect for sugar-free mocktails.",
             "reviewer_initials": "TR",
             "reviewer_name": "Tina R.",
             "reviewer_role": ""
@@ -785,7 +785,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack makes sugar-free coffee way more fun. All four flavors mix well and taste great in iced drinks.",
+            "quote": "This pack makes plain drinks way more exciting. I like that it is fruity, colorful, and still sugar-free.",
             "reviewer_initials": "RK",
             "reviewer_name": "Rachel K.",
             "reviewer_role": ""
@@ -795,7 +795,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Caramel Pecan is the standout for me. It gives cold brew a rich, sweet finish without the sugar.",
+            "quote": "I used this pack with sparkling water and lemonade. The colors are fun, and the flavors still taste bold without sugar.",
             "reviewer_initials": "KS",
             "reviewer_name": "Kayla S.",
             "reviewer_role": ""
@@ -811,7 +811,7 @@
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Sugar-Free Coffee Fans\nLove This Pack",
+        "heading": "Sugar-Free Drink Fans\nLove This Pack",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
