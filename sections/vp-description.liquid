@@ -13,6 +13,44 @@
 {%- if flavor_count < 2 -%}{%- assign flavor_count = 4 -%}{%- endif -%}
 {%- capture flavor_csv -%}{%- for f in pf_arr -%}{{ f | strip }}{%- unless forloop.last %}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
 
+{%- comment -%} ===== Per-flavor Ingredients + Nutrition Facts =====
+  A variety pack holds several products, so each needs its own ingredients and
+  nutrition panel. Both are rendered here as sliders, one slide per flavor, and
+  the slide title comes from pf_arr above (the same flavor list pd-flavor-stack uses).
+
+  INGREDIENTS (custom.additionalfield): products are separated by '|', ingredients
+  within a product by ','.  e.g.  "Sugar, Water | Sugar, Cocoa | Water, Vanilla"
+
+  NUTRITION (custom.nutrition_facts): products are separated by a line containing
+  ONLY a comma. Within a product the existing format is unchanged ('---' splits
+  sections, '|' makes label|value|%DV rows, 'key: value' lines, '- ' indents a row).
+  Splitting on a lone-comma LINE (not any comma) matters because the footnote text
+  itself contains commas ("saturated fat, trans fat, ...") — a naive split on ','
+  would shred it. We walk the lines and use sentinels instead.
+{%- endcomment -%}
+
+{%- assign ing_raw = '' -%}
+{%- if product.metafields.custom.additionalfield -%}
+  {%- assign ing_raw = product.metafields.custom.additionalfield | metafield_tag | strip_html | strip -%}
+{%- endif -%}
+{%- if ing_raw == blank -%}{%- assign ing_raw = section.settings.ingredients_fallback | strip -%}{%- endif -%}
+{%- assign ing_products = ing_raw | split: '|' -%}
+
+{%- assign nutrition_raw = product.metafields.custom.nutrition_facts.value | default: '' -%}
+{%- assign nf_joined = '' -%}
+{%- if nutrition_raw != blank -%}
+  {%- assign nf_lines = nutrition_raw | newline_to_br | split: '<br />' -%}
+  {%- for l in nf_lines -%}
+    {%- assign ls = l | strip -%}
+    {%- if ls == ',' -%}
+      {%- assign nf_joined = nf_joined | append: '~~PROD~~' -%}
+    {%- elsif ls != blank -%}
+      {%- assign nf_joined = nf_joined | append: ls | append: '~~NL~~' -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- assign nf_products = nf_joined | split: '~~PROD~~' -%}
+
 {%- if section.settings.section_bg != blank -%}
 {% style %}
   #shopify-section-{{ section.id }} .pd-description { background: {{ section.settings.section_bg }} !important; }
@@ -41,10 +79,240 @@
             <li>{{ section.settings.fb5 }}</li>
           </ul>
         {%- endif -%}
+
+        {%- comment -%} Ingredients — one slide per flavor. Server-rendering .pd-ing-card here
+           makes pd-mb-prices' buildExtras() skip its own single-product builder. {%- endcomment -%}
+        {%- if ing_products.size > 0 and ing_raw != blank -%}
+          <div class="pd-desc-card pd-ing-card">
+            <div class="pd-desc-section">
+              <div>
+                <h3 class="pd-desc-label">{{ section.settings.ingredients_label }}</h3>
+                <div class="vp-slider" data-vp-slider>
+                  {%- if ing_products.size > 1 -%}
+                    <div class="vp-slider-head">
+                      <button type="button" class="vp-slider-nav" data-vp-prev aria-label="Previous flavor">&lsaquo;</button>
+                      <span class="vp-slider-name" data-vp-name></span>
+                      <button type="button" class="vp-slider-nav" data-vp-next aria-label="Next flavor">&rsaquo;</button>
+                    </div>
+                  {%- endif -%}
+                  <div class="vp-slider-track" data-vp-track>
+                    {%- for ing in ing_products -%}
+                      {%- assign ing_i = forloop.index0 -%}
+                      {%- assign ing_name = pf_arr[ing_i] | strip -%}
+                      {%- if ing_name == blank -%}{%- capture ing_name -%}Flavor {{ forloop.index }}{%- endcapture -%}{%- endif -%}
+                      <div class="vp-slide" data-vp-slide data-vp-slide-name="{{ ing_name | escape }}">
+                        {%- if ing_products.size == 1 -%}<h4 class="vp-slide-title">{{ ing_name }}</h4>{%- endif -%}
+                        {%- assign ing_bits = ing | split: ',' -%}
+                        {%- if ing_bits.size > 1 -%}
+                          <ul class="pd-desc-text pd-ing-list">
+                            {%- for bit in ing_bits -%}
+                              {%- assign b = bit | strip -%}
+                              {%- if forloop.last -%}
+                                {%- assign blast = b | slice: -1, 1 -%}
+                                {%- if blast == '.' -%}{%- assign blen = b.size | minus: 1 -%}{%- assign b = b | slice: 0, blen -%}{%- endif -%}
+                              {%- endif -%}
+                              {%- if b != blank -%}<li>{{ b }}</li>{%- endif -%}
+                            {%- endfor -%}
+                          </ul>
+                        {%- else -%}
+                          <p class="pd-desc-text">{{ ing | strip }}</p>
+                        {%- endif -%}
+                      </div>
+                    {%- endfor -%}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Nutrition Facts — one slide per flavor. Server-rendering .pd-nf-card
+           makes pd-mb-prices' buildExtras() skip cloning the single hidden vp-nutrition panel. {%- endcomment -%}
+        {%- if nutrition_raw != blank -%}
+          <div class="pd-desc-card pd-nf-card">
+            <button type="button" class="pd-nf-toggle">
+              <span class="pd-nf-toggle-dot" aria-hidden="true"></span>
+              <span class="pd-nf-toggle-text">{{ section.settings.nf_toggle_text }}</span>
+              <span class="pd-nf-toggle-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>
+              </span>
+            </button>
+            <div class="pd-nf-body">
+              <div class="vp-slider" data-vp-slider>
+                {%- if nf_products.size > 1 -%}
+                  <div class="vp-slider-head">
+                    <button type="button" class="vp-slider-nav" data-vp-prev aria-label="Previous flavor">&lsaquo;</button>
+                    <span class="vp-slider-name" data-vp-name></span>
+                    <button type="button" class="vp-slider-nav" data-vp-next aria-label="Next flavor">&rsaquo;</button>
+                  </div>
+                {%- endif -%}
+                <div class="vp-slider-track" data-vp-track>
+                  {%- for nf_product in nf_products -%}
+                    {%- assign nf_i = forloop.index0 -%}
+                    {%- assign nf_name = pf_arr[nf_i] | strip -%}
+                    {%- if nf_name == blank -%}{%- capture nf_name -%}Flavor {{ forloop.index }}{%- endcapture -%}{%- endif -%}
+                    <div class="vp-slide" data-vp-slide data-vp-slide-name="{{ nf_name | escape }}">
+                      <div class="pd-nutrition">
+                        <div class="pd-nutrition-title">{{ section.settings.nf_title }}</div>
+                        <div class="vp-nut-flavor">{{ nf_name }}</div>
+                        {%- assign nf_sections = nf_product | split: '---~~NL~~' -%}
+                        {%- for nf_section in nf_sections -%}
+                          <div class="pd-nut-section">
+                            {%- assign section_lines = nf_section | split: '~~NL~~' -%}
+                            {%- for line_raw in section_lines -%}
+                              {%- assign line = line_raw | strip -%}
+                              {%- if line == blank -%}{%- continue -%}{%- endif -%}
+                              {%- assign first_two = line | slice: 0, 2 -%}
+                              {%- assign is_indented = false -%}
+                              {%- if first_two == '- ' -%}
+                                {%- assign is_indented = true -%}
+                                {%- assign line_len = line | size -%}
+                                {%- assign line = line | slice: 2, line_len | strip -%}
+                              {%- endif -%}
+                              {%- assign first_char = line | slice: 0, 1 -%}
+                              {%- if first_char == '*' -%}
+                                <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">{{ line }}</div>
+                              {%- elsif line contains '|' -%}
+                                {%- assign parts = line | split: '|' -%}
+                                {%- assign row_label = parts[0] | default: '' | strip -%}
+                                {%- assign row_value = parts[1] | default: '' | strip -%}
+                                {%- assign row_dv = parts[2] | default: '' | strip -%}
+                                {%- if is_indented -%}
+                                  <div class="pd-nut-row pd-nut-row--indent">
+                                    <span>{{ row_label }}{% if row_value != blank %} {{ row_value }}{% endif %}</span>
+                                    {%- if row_dv != blank -%}<strong>{{ row_dv }}</strong>{%- endif -%}
+                                  </div>
+                                {%- else -%}
+                                  <div class="pd-nut-row">
+                                    <span><strong>{{ row_label }}</strong>{% if row_value != blank %} {{ row_value }}{% endif %}</span>
+                                    {%- if row_dv != blank -%}<strong>{{ row_dv }}</strong>{%- endif -%}
+                                  </div>
+                                {%- endif -%}
+                              {%- elsif line contains ':' -%}
+                                {%- assign kv = line | split: ':' -%}
+                                {%- assign kv_label = kv[0] | strip -%}
+                                {%- assign kv_value = kv | slice: 1, 99 | join: ':' | strip -%}
+                                {%- if kv_label == 'Serving Size' or kv_label == 'Serving size' -%}
+                                  <div class="pd-nut-serv">{{ kv_label }} {{ kv_value }}</div>
+                                  <div class="pd-nut-row"><strong>Amount per serving</strong></div>
+                                {%- elsif kv_label == 'Calories' -%}
+                                  <div class="pd-nut-row" style="font-size:18px;"><strong>{{ kv_label }}</strong><strong>{{ kv_value }}</strong></div>
+                                  <div style="font-size:12px;text-align:right;">% Daily Value*</div>
+                                {%- else -%}
+                                  <div class="pd-nut-row"><span><strong>{{ kv_label }}</strong> {{ kv_value }}</span></div>
+                                {%- endif -%}
+                              {%- else -%}
+                                <div class="pd-nut-row" style="font-size:13px;line-height:1.4;padding:4px 0;">{{ line }}</div>
+                              {%- endif -%}
+                            {%- endfor -%}
+                          </div>
+                        {%- endfor -%}
+                      </div>
+                    </div>
+                  {%- endfor -%}
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
       </div>
     </div>
   </section>
 </div>
+
+<style>
+  /* Per-flavor sliders inside the Ingredients / Nutrition cards */
+  #shopify-section-{{ section.id }} .vp-slider { position: relative; }
+  #shopify-section-{{ section.id }} .vp-slider-head { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; }
+  #shopify-section-{{ section.id }} .vp-slider-name { flex: 1 1 auto; min-width: 0; font-family: 'Archivo Black','Archivo',sans-serif; font-weight: 400; font-size: 12.5px; letter-spacing: .03em; text-transform: uppercase; color: #39220f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+  #shopify-section-{{ section.id }} .vp-slider-nav { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; border: 2px solid #39220f; background: #FFFBF4; color: #39220f; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'Archivo',sans-serif; font-size: 16px; line-height: 1; padding: 0; box-shadow: 2px 2px 0 #39220f; transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease; }
+  #shopify-section-{{ section.id }} .vp-slider-nav:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 #39220f; }
+  #shopify-section-{{ section.id }} .vp-slider-nav:disabled { opacity: .35; cursor: default; box-shadow: none; transform: none; }
+  /* One slide fills the card; horizontal scroll-snap, scrollbar hidden */
+  #shopify-section-{{ section.id }} .vp-slider-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; }
+  #shopify-section-{{ section.id }} .vp-slider-track::-webkit-scrollbar { display: none; }
+  #shopify-section-{{ section.id }} .vp-slide { flex: 0 0 100%; width: 100%; min-width: 100%; scroll-snap-align: start; }
+  #shopify-section-{{ section.id }} .vp-slide-title { font-family: 'Archivo Black','Archivo',sans-serif; font-weight: 400; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #39220f; margin: 0 0 8px; }
+  #shopify-section-{{ section.id }} .vp-nut-flavor { font-family: 'Archivo Black','Archivo',sans-serif; font-weight: 400; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #39220f; border-bottom: 1px solid #39220f; padding-bottom: 4px; margin: 0 0 6px; text-align: left; }
+  /* pdp-brand.css doesn't define these two (they lived only in pd-description) */
+  #shopify-section-{{ section.id }} .pd-nut-section:not(:last-child) .pd-nut-row:last-child { border-bottom: 1px solid #39220f; margin-bottom: 10px; }
+  #shopify-section-{{ section.id }} .pd-nut-row--indent { padding-left: 14px; font-size: 13px; }
+</style>
+
+<script>
+(function(){
+  function init(root){
+    var track = root.querySelector('[data-vp-track]');
+    if (!track) return;
+    var slides = Array.prototype.slice.call(track.querySelectorAll('[data-vp-slide]'));
+    if (!slides.length) return;
+    var nameEl = root.querySelector('[data-vp-name]');
+    var prev = root.querySelector('[data-vp-prev]');
+    var next = root.querySelector('[data-vp-next]');
+    var i = 0;
+    function render(){
+      if (nameEl) nameEl.textContent = slides[i].getAttribute('data-vp-slide-name') || '';
+      if (prev) prev.disabled = i <= 0;
+      if (next) next.disabled = i >= slides.length - 1;
+    }
+    function go(n){
+      i = Math.max(0, Math.min(slides.length - 1, n));
+      track.scrollTo({ left: slides[i].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+      render();
+    }
+    /* These arrows sit inside .pd-nf-card / .pd-ing-card, whose ancestors listen for
+       clicks to collapse the card — keep the click local. */
+    function guard(e){ e.pdDescHandled = true; e.stopPropagation(); }
+    if (prev) prev.addEventListener('click', function(e){ guard(e); go(i - 1); });
+    if (next) next.addEventListener('click', function(e){ guard(e); go(i + 1); });
+    var t;
+    track.addEventListener('scroll', function(){
+      clearTimeout(t);
+      t = setTimeout(function(){
+        var best = 0, bestD = Infinity;
+        for (var k = 0; k < slides.length; k++){
+          var d = Math.abs(slides[k].offsetLeft - track.offsetLeft - track.scrollLeft);
+          if (d < bestD){ bestD = d; best = k; }
+        }
+        i = best; render();
+      }, 60);
+    }, { passive: true });
+    render();
+  }
+  function boot(){
+    var roots = document.querySelectorAll('#shopify-section-{{ section.id }} [data-vp-slider]');
+    for (var n = 0; n < roots.length; n++) init(roots[n]);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+
+  /* Nutrition card toggle. pd-mb-prices binds its toggle INSIDE the
+     `if (!document.querySelector('.pd-nf-card'))` branch of buildExtras() — the very
+     branch our server-rendered card makes it skip — and this template has no
+     pd-description section to supply the delegated fallback. Without this handler
+     nothing ever adds `is-open`, so on <=760px the card stays pinned at the 200px
+     clip (pd-mb-prices restores height:auto only for .pd-nf-card.is-open) and the
+     whole nutrition table is unreachable. Mirrors sections/pd-description.liquid. */
+  if (!window.__vpNfToggleBound){
+    window.__vpNfToggleBound = true;
+    var isDesk = function(){ return window.matchMedia('(min-width:761px)').matches; };
+    document.addEventListener('click', function(e){
+      if (e.pdDescHandled) return;
+      var nfCard = e.target.closest('.pd-nf-card');
+      if (!nfCard || e.target.closest('.pd-nf-body')) return;  /* slider arrows live in the body */
+      if (isDesk()) return;                                    /* always open on desktop */
+      var wasOpen = nfCard.classList.contains('is-open');
+      nfCard.classList.toggle('is-open');
+      if (wasOpen){
+        var headerStr = getComputedStyle(document.documentElement).getPropertyValue('--header-height');
+        var headerH = parseInt(headerStr) || 84;
+        var targetY = nfCard.getBoundingClientRect().top + window.scrollY - headerH - 20;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      }
+    });
+  }
+})();
+</script>
 
 {% schema %}
 {
@@ -67,6 +335,12 @@
     { "type": "text", "id": "fb3", "label": "Bullet 3", "default": "Gift-Ready: Comes packed and presentable. Hand it off as-is to a coffee fan, or split between friends." },
     { "type": "text", "id": "fb4", "label": "Bullet 4", "default": "Same Real Flavor: Same Syruvia recipes inside, made with pure cane sugar and real fruit and natural notes." },
     { "type": "text", "id": "fb5", "label": "Bullet 5", "default": "Café-Quality: 50+ servings per bottle. Roughly 200+ drinks per pack." },
+    { "type": "header", "content": "Ingredients card (per flavor)" },
+    { "type": "text", "id": "ingredients_label", "label": "Ingredients heading", "default": "Ingredients" },
+    { "type": "textarea", "id": "ingredients_fallback", "label": "Ingredients (fallback)", "info": "Used only when the product has no custom.additionalfield metafield. Separate FLAVORS with | and ingredients with , — e.g. Sugar, Water | Sugar, Cocoa" },
+    { "type": "header", "content": "Nutrition Facts card (per flavor)" },
+    { "type": "text", "id": "nf_toggle_text", "label": "Toggle button text", "default": "Nutrition Facts" },
+    { "type": "text", "id": "nf_title", "label": "Panel title", "default": "Nutrition Facts" },
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "section_bg", "label": "Section background", "info": "Leave blank to keep the theme default." }
   ],
