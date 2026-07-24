@@ -698,9 +698,9 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#8d4925",
+        "background_color": "#BD1022",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Crafted for smooth mixing, rich flavor, and easy café-style drinks at home.</p>",
+        "description": "<p>Crafted for smooth mixing, bold fruit flavor, and easy homemade drinks.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
