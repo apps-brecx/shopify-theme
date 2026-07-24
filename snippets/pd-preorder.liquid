@@ -1,0 +1,59 @@
+{%- comment -%}
+  Preorder wiring — tag-driven, works on every product template.
+
+  When the current product carries the `preorder` tag:
+   • Relabel the PDP add-to-cart buttons (.pd-atc / .pd-atc--full, incl. the
+     sticky bar) from "Add to cart" to "Preorder". The full button keeps its
+     cart icon + arrow — only the .pd-atc-text label changes.
+   • Add a `Preorder` line-item property to the main product form (#pdAtcForm)
+     so every add is flagged. The SyrCD drawer serializes the form via
+     FormData, so the hidden input rides along into /cart/add.js; the property
+     then shows on the cart line, at checkout, and on the order.
+
+  Rendered once from layout/theme.liquid right after content_for_layout, so the
+  form + buttons already exist when this runs (no click can beat the inject).
+  Inert off product pages and on products without the tag. Disabled/sold-out
+  buttons are left untouched.
+{%- endcomment -%}
+{%- assign _is_preorder = false -%}
+{%- if request.page_type == 'product' -%}
+  {%- for _t in product.tags -%}
+    {%- assign _td = _t | downcase | strip -%}
+    {%- if _td == 'preorder' or _td == 'pre-order' -%}{%- assign _is_preorder = true -%}{%- break -%}{%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- if _is_preorder -%}
+<script>
+(function(){
+  var LABEL = 'Preorder';
+  var PROP  = 'Preorder';   // line-item property name
+  var VAL   = 'Yes';        // line-item property value
+
+  function injectProp(){
+    var form = document.getElementById('pdAtcForm');
+    if(!form) return;
+    if(form.querySelector('input[name="properties[' + PROP + ']"]')) return;
+    var inp = document.createElement('input');
+    inp.type = 'hidden';
+    inp.name = 'properties[' + PROP + ']';
+    inp.value = VAL;
+    form.appendChild(inp);
+  }
+  function relabel(){
+    var btns = document.querySelectorAll('.pd-atc, .pd-atc--full');
+    for(var i=0;i<btns.length;i++){
+      var b = btns[i];
+      if(b.disabled) continue;                       // leave a sold-out button alone
+      var t = b.querySelector('.pd-atc-text');        // full button: keep icon + arrow
+      if(t){ if(t.textContent !== LABEL) t.textContent = LABEL; continue; }
+      if(!b.querySelector('svg')){                    // text-only button (sticky bar)
+        if((b.textContent || '').trim() !== LABEL) b.textContent = LABEL;
+      }
+    }
+  }
+  function run(){ injectProp(); relabel(); }
+  run();                                              // form + buttons are above this script
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', run); }
+}());
+</script>
+{%- endif -%}
