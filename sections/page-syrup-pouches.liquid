@@ -263,6 +263,18 @@
   #sp-{{ section.id }} .sp-empty{text-align:center;border:1.5px dashed var(--rule-c);border-radius:var(--rad);padding:30px 18px;background:var(--paper);opacity:.85;}
   #sp-{{ section.id }} .sp-note{text-align:center;font-size:13px;opacity:.65;margin-top:22px;}
 
+  /* mobile — center everything */
+  @media(max-width:760px){
+    #sp-{{ section.id }} .sp-about .txt{text-align:center;}
+    #sp-{{ section.id }} .sp-about .txt p{margin-left:auto;margin-right:auto;}
+    #sp-{{ section.id }} .cc-left{text-align:center;}
+    #sp-{{ section.id }} .cc-earn-h{text-align:center;}
+    #sp-{{ section.id }} .cc-earn{max-width:340px;margin-left:auto;margin-right:auto;}
+    #sp-{{ section.id }} .cc-btns{justify-content:center;}
+    #sp-{{ section.id }} .cc-join{margin-left:auto;margin-right:auto;}
+    #sp-{{ section.id }} .sp-lead,#sp-{{ section.id }} .sp-note{margin-left:auto;margin-right:auto;}
+  }
+
   @media (prefers-reduced-motion: reduce){
     #sp-{{ section.id }} .sp-rev{opacity:1;transform:none;}
   }
@@ -504,16 +516,33 @@
       {%- endif -%}
       <div class="sp-grid" data-grid>
         {%- if cl != blank and cl.products.size > 0 -%}
+          {%- comment -%} two passes: in-stock first (buyable), then out-of-stock as Coming Soon {%- endcomment -%}
+          {%- assign passes = 'live,soon' | split: ',' -%}
+          {%- for pass in passes -%}
           {%- for pr in cl.products limit: 50 -%}
+            {%- if pass == 'live' -%}{%- unless pr.available -%}{%- continue -%}{%- endunless -%}
+            {%- else -%}{%- if pr.available -%}{%- continue -%}{%- endif -%}{%- endif -%}
             {%- assign tdl = pr.title | downcase -%}
             {%- assign kind = 'reg' -%}
             {%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign kind = 'sf' -%}{%- endif -%}
+            {%- assign disp = pr.title | replace: '(USA)', '' | replace: 'Syrup Pouches', '' | replace_first: 'Sugar Free ', '' | replace_first: 'Sugar-Free ', '' | strip -%}
+            {%- if disp == blank -%}{%- assign disp = pr.title -%}{%- endif -%}
+            {%- if pr.available -%}
             <a class="sp-tile sp-rev" data-kind="{{ kind }}" href="{{ pr.url }}">
               <span class="sp-badge">{{ s.preorder_badge | default: 'Pre-order' }}</span>
               {%- if kind == 'sf' -%}<span class="sp-badge sf">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
               <span class="ph">{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 480 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- endif -%}</span>
-              <span class="b"><span class="t">{{ pr.title | replace: '(USA)', '' | strip }}</span><span class="p">{{ pr.price | money }}</span></span>
+              <span class="b"><span class="t">{{ disp }}</span><span class="p">{{ pr.price | money }}</span></span>
             </a>
+            {%- else -%}
+            <div class="sp-tile soon sp-rev" data-kind="{{ kind }}">
+              <span class="sp-soonov"><span class="cs">{{ s.coming_label | default: 'Coming soon' }}</span></span>
+              {%- if kind == 'sf' -%}<span class="sp-badge sf">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
+              <span class="ph">{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 480 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- else -%}<span class="fl">{{ disp }}</span>{%- endif -%}</span>
+              <span class="b"><span class="t">{{ disp }}</span><span class="dt">{{ s.coming_label | default: 'Coming soon' }}</span></span>
+            </div>
+            {%- endif -%}
+          {%- endfor -%}
           {%- endfor -%}
         {%- endif -%}
         {%- assign lists = 'reg,sf' | split: ',' -%}
@@ -533,7 +562,7 @@
                 <span class="sp-soonov"><span class="cs">{{ s.coming_label | default: 'Coming soon' }}</span></span>
                 {%- if kindv == 'sf' -%}<span class="sp-badge sf">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
                 <span class="ph"><span class="fl">{{ fname }}</span></span>
-                <span class="b"><span class="t">{{ fname }}</span>{%- if fdate != blank -%}<span class="dt">{{ fdate }}</span>{%- endif -%}</span>
+                <span class="b"><span class="dt">{% if fdate != blank %}{{ fdate }}{% else %}{{ s.coming_label | default: 'Coming soon' }}{% endif %}</span></span>
               </div>
             {%- endfor -%}
           {%- endif -%}
