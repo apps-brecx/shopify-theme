@@ -836,12 +836,12 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#BD1022",
-        "title": "Make Every Drink Pop,Sugar-Free",
-        "description": "Cherry, Blue Raspberry, and Pomegranate are on deal this week — one bold sugar-free fruit pack for colorful refreshers, lemonades, sodas, and mocktails.",
+        "background_color": "#7c3003",
+        "title": "Make Coffee Taste Richer,Sugar-Free",
+        "description": "Almond, Hazelnut, Butter Pecan, and Caramel Pecan are on deal this week  one nutty sugar-free pack for café-style drinks at home.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
-        "bottom_text": "FREE SHIPPING ON ORDERS OVER $36"
+        "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"
       }
     }
   },
