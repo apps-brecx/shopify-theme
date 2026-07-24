@@ -81,7 +81,10 @@
                       {%- if property_size != 0 -%}
                         {%- for property in line_item.properties -%}
                           {% assign property_first_char = property.first | slice: 0 %}
-                          {%- if property.last != blank and property_first_char != '_' -%}
+                          {%- assign property_key_lower = property.first | downcase -%}
+                          {%- if property.last != blank and property_first_char != '_' and property_key_lower == 'preorder' -%}
+                            <span class="order-flag">{{ property.first }}</span>
+                          {%- elsif property.last != blank and property_first_char != '_' -%}
                             <span>{{ property.first }}:</span>
                             <span>
                               {%- if property.last contains '/uploads/' -%}
