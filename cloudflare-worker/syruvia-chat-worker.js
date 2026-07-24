@@ -19,7 +19,8 @@
  *
  * Theme contract (already wired in sections/floating-contact.liquid):
  *   POST {message, history:[{role:'user'|'assistant', text}...], page} -> {reply, show_contact, show_claim}
- *   POST /claim (multipart: order_id, email, type, message, files[], idempotencyKey) -> {ok, reference}
+ *   POST /claim (multipart: order_id, type, message, email?, files[], idempotencyKey) -> {ok, reference}
+ *   POST /track {order_number} -> {ok, found, shipping_status, scan_status, carrier, tracking[], ...timestamps}
  *
  * Abuse limits: browser Origin is REQUIRED and allowlisted, per-IP and
  * per-isolate rate limits apply, input sizes are capped, and every upstream
@@ -295,16 +296,19 @@ async function fbmSearch(env, q) {
   const data = await res.json();
   return (data && data.data) || [];
 }
+/* exact digits match + the syruvia (shopify) channel only — the q search is
+   fuzzy and the feed holds other stores' orders */
+async function fbmFindRow(env, num) {
+  const rows = await fbmSearch(env, num);
+  return rows.find(function (r) {
+    return r && String(r.channel_name || '').toLowerCase() === 'shopify'
+      && String(r.order_id || '').replace(/[^0-9]/g, '') === num;
+  }) || null;
+}
 async function fbmShipment(env, orderNumber) {
   const num = String(orderNumber || '').replace(/[^0-9]/g, '');
   if (!num) return null;
-  const rows = await fbmSearch(env, num);
-  /* exact digits match + the syruvia (shopify) channel only — the q search is
-     fuzzy and the feed holds other stores' orders */
-  const row = rows.find(function (r) {
-    return r && String(r.channel_name || '').toLowerCase() === 'shopify'
-      && String(r.order_id || '').replace(/[^0-9]/g, '') === num;
-  });
+  const row = await fbmFindRow(env, num);
   if (!row) return null;
   return {
     shipment_status: row.shipping_status,
@@ -334,6 +338,52 @@ async function trackPackage(env, orderNumber) {
   } catch (e) {
     console.error('fbm lookup failed:', e && e.message ? e.message : e);
     return 'The tracking system is temporarily unavailable (it may be waking up) — ask the customer to try again in about a minute.';
+  }
+}
+
+/* Structured tracking for the theme's Track tab: statuses, timestamps,
+   carrier and tracking numbers ONLY — never names, addresses, or order
+   contents. The theme maps these onto its step timeline. */
+async function handleTrack(request, env, headers) {
+  if (!env.FBM_EMAIL || !env.FBM_PIN) return json({ error: 'Tracking is not configured yet.' }, 500, headers);
+  let body;
+  try {
+    const raw = await request.text();
+    if (raw.length > 2000) return json({ error: 'payload too large' }, 413, headers);
+    body = JSON.parse(raw);
+  } catch (e) { return json({ error: 'invalid json' }, 400, headers); }
+  const num = String((body && body.order_number) || '').replace(/[^0-9]/g, '');
+  if (!num || num.length < 4 || num.length > 20) return json({ error: 'Please enter a valid order number.' }, 400, headers);
+  try {
+    /* hard cap over the 10s per-call FBM timeouts (Render cold-starts) */
+    const row = await Promise.race([
+      fbmFindRow(env, num),
+      new Promise(function (resolve, reject) {
+        setTimeout(function () { reject(new Error('fbm time budget exceeded')); }, 15000);
+      }),
+    ]);
+    if (!row) return json({ ok: true, found: false }, 200, headers);
+    return json({
+      ok: true,
+      found: true,
+      order: '#' + num,
+      shipping_status: row.shipping_status || null,
+      scan_status: row.scan_status || null,
+      carrier: row.carrier_name || null,
+      tracking: (row.packed_tracking_numbers || []).concat(row.pallet_tracking_numbers || []).slice(0, 4),
+      is_returning: !!row.is_returning,
+      is_stuck: !!row.is_stuck,
+      is_label_failed: !!row.is_label_failed,
+      order_created_at: row.order_created_at || null,
+      accepted_at: row.created_at || null,
+      label_printed_at: row.print_at || null,
+      packed_at: row.packed_at || null,
+      pallet_at: row.pallet_at || null,
+      updated_at: row.updated_at || null,
+    }, 200, headers);
+  } catch (e) {
+    console.error('track failed:', e && e.message ? e.message : e);
+    return json({ error: 'Tracking is temporarily unavailable — it may be waking up. Please try again in a minute.' }, 502, headers);
   }
 }
 
@@ -402,7 +452,8 @@ function rateLimited(ip) {
    the storefront. Extra env vars: SUPPORT_API_KEY (required),
    SUPPORT_API_BASE (optional, default https://cs.brecx.com). */
 
-const CLAIM_TYPES = ['Damaged', 'Wrong item', 'Missing', 'Missing pump', 'Delayed', 'Bad taste', 'Partially missing', 'Partially damaged', 'Defective', 'Broken cap', 'Unsealed', 'Lost', 'Expired', 'FBM Return', 'OOS', 'Other'];
+const CLAIM_TYPES = ['Damaged in transit', 'Wrong item', 'Never received', 'Delayed in transit', 'Other'];
+const CLAIM_PHOTO_REQUIRED = ['Damaged in transit', 'Wrong item'];
 const CLAIM_MAX_FILES = 10;
 const CLAIM_MAX_FILE_BYTES = 10 * 1024 * 1024;
 const CLAIM_MAX_BODY_BYTES = 40 * 1024 * 1024;
@@ -454,6 +505,37 @@ async function readClaimForm(request) {
   return new Response(buf, { headers: { 'Content-Type': request.headers.get('Content-Type') || '' } }).formData();
 }
 
+/* Resolve the customer's email from the Shopify order so guests don't type
+   it on the claim form. Requires the Protected-customer-data "Email" field
+   approval on the app — until granted, this returns null and the claim goes
+   through without an email (the intake API doesn't require one; the team
+   replies via the order record). */
+async function shopifyOrderEmail(env, orderId) {
+  const num = String(orderId || '').replace(/[^0-9]/g, '');
+  if (!num || !env.SHOPIFY_ADMIN_TOKEN) return null;
+  try {
+    const res = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN },
+      body: JSON.stringify({
+        query: 'query($q: String!){ orders(first: 5, query: $q){ nodes { name email } } }',
+        variables: { q: 'name:#' + num },
+      }),
+    }, 8000);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const nodes = (data.data && data.data.orders && data.data.orders.nodes) || [];
+    const m = nodes.find(function (o) {
+      return o && String(o.name || '').replace(/[^0-9]/g, '') === num && o.email;
+    });
+    const mail = m ? String(m.email).trim().toLowerCase() : '';
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail) ? mail : null;
+  } catch (e) {
+    console.error('order email lookup failed:', e && e.message ? e.message : e);
+    return null;
+  }
+}
+
 async function handleClaim(request, env, headers, origin) {
   if (!env.SUPPORT_API_KEY) return json({ error: 'Claims aren’t configured yet — please use the Send message tab.' }, 500, headers);
 
@@ -462,15 +544,13 @@ async function handleClaim(request, env, headers, origin) {
   catch (e) { return json({ error: 'invalid form data' }, 400, headers); }
   if (!form) return json({ error: CLAIM_SIZE_MSG }, 413, headers);
 
-  const message = String(form.get('message') || '').trim().slice(0, 8000);
-  const email   = String(form.get('email') || '').trim().toLowerCase().slice(0, 200);
+  let   message = String(form.get('message') || '').trim().slice(0, 8000);
+  let   email   = String(form.get('email') || '').trim().toLowerCase().slice(0, 200);
   const orderId = String(form.get('order_id') || '').trim().slice(0, 100);
   let   type    = String(form.get('type') || '').trim();
   const idem    = String(form.get('idempotencyKey') || '').trim().slice(0, 200);
   let   pageUrl = String(form.get('page_url') || '').trim().slice(0, 500);
 
-  if (!message) return json({ error: 'Please describe what happened.' }, 400, headers);
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: 'A valid email is required — our reply is sent there.' }, 400, headers);
   if (!orderId) return json({ error: 'Please enter your order number.' }, 400, headers);
   if (CLAIM_TYPES.indexOf(type) === -1) type = 'Other';
   if (!/^https:\/\//i.test(pageUrl)) pageUrl = origin || '';
@@ -480,10 +560,31 @@ async function handleClaim(request, env, headers, origin) {
   for (const f of files) {
     if (f.size > CLAIM_MAX_FILE_BYTES) return json({ error: CLAIM_SIZE_MSG }, 413, headers);
   }
+  /* Wizard rules: damaged/wrong-item claims need photo evidence; "Other" is
+     meaningless without the customer's words; remaining types self-describe. */
+  if (CLAIM_PHOTO_REQUIRED.indexOf(type) !== -1 && files.length === 0) {
+    return json({ error: 'Please attach at least one photo of the item — the team needs it to resolve this claim.' }, 400, headers);
+  }
+  if (type === 'Other' && !message) return json({ error: 'Please describe what happened.' }, 400, headers);
+  if (!message) message = type + ' — reported via the claim form on syruvia.com.';
+
+  /* Email is OPTIONAL at the intake API. Prefer the form value (the hidden
+     account email of a logged-in customer); else try resolving it from the
+     Shopify order (needs the PCD "Email" approval — null until granted);
+     else forward the claim without one and the team replies via the order. */
+  let emailResolved = false;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    email = (await shopifyOrderEmail(env, orderId)) || '';
+    emailResolved = !!email;
+  }
+  /* Triage signal for agents: this claim's contact email came from the order
+     lookup, not from the submitter — the submitter only proved they know the
+     order number. */
+  if (emailResolved) message += '\n\n[Storefront: customer email auto-resolved from the order — submitted with order number only.]';
 
   const out = new FormData();
   out.set('message', message);
-  out.set('email', email);
+  if (email) out.set('email', email);
   out.set('order_id', orderId);
   out.set('type', type);
   if (pageUrl) out.set('page_url', pageUrl);
@@ -638,9 +739,11 @@ export default {
        browsers always send Origin on cross-origin fetch. */
     if (ALLOWED_ORIGINS.indexOf(origin) === -1) return json({ error: 'origin not allowed' }, 403, headers);
 
-    /* Claim intake: its own route, secrets, body limits, and rate limit.
-       endsWith so a sub-pathed endpoint setting still routes correctly. */
-    if (new URL(request.url).pathname.endsWith('/claim')) {
+    /* Sub-routes (endsWith so a sub-pathed endpoint setting still routes). */
+    const path = new URL(request.url).pathname;
+
+    /* Claim intake: its own route, secrets, body limits, and rate limit. */
+    if (path.endsWith('/claim')) {
       const cip = request.headers.get('CF-Connecting-IP') || 'unknown';
       if (claimRateLimited(cip)) return json({ error: 'Too many claims from this connection — please wait a few minutes and try again.' }, 429, headers);
       /* Bound isolate memory: at most 2 claim bodies buffered at once. */
@@ -648,6 +751,13 @@ export default {
       claimActive++;
       try { return await handleClaim(request, env, headers, origin); }
       finally { claimActive--; }
+    }
+
+    /* Structured tracking for the Track tab (FBM-backed, order number only). */
+    if (path.endsWith('/track')) {
+      const tip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      if (rateLimited(tip)) return json({ error: 'You’re checking quite fast — please wait a minute and try again.' }, 429, headers);
+      return handleTrack(request, env, headers);
     }
 
     if (!env.ANTHROPIC_API_KEY || !env.SHOPIFY_ADMIN_TOKEN) return json({ error: 'worker secrets not configured' }, 500, headers);
