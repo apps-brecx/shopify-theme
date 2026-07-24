@@ -13,10 +13,10 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272_3.png",
+        "bg_img": "shopify://shop_images/Rectangle_2272_1.jpg",
         "secondary_button_text": "View Regular",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week",
-        "accent_color": "#BD1022"
+        "accent_color": "#bd1022"
       }
     },
     "main": {
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#BD1022",
+        "background_color": "#bd1022",
         "heading": "<h2>A smarter way to<br/><em>Choose</em></h2>"
       }
     },
@@ -698,7 +698,7 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#BD1022",
+        "background_color": "#bd1022",
         "title": "<h2>Trusted Quality </h2>",
         "description": "<p>Crafted for smooth mixing, bold fruit flavor, and easy sugar-free drinks at home.</p>",
         "button_text": "Shop The Pack",
