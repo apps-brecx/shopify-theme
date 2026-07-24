@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This week’s Sugar-Free Nutty Dessert Café Pack brings together four rich, nutty flavors for better coffee at home. Almond keeps it smooth, Hazelnut adds a classic café taste, Butter Pecan brings a creamy dessert note, and Caramel Pecan gives every sip a sweet nutty finish.</p>"
+            "text": "<p>This week’s Sugar-Free Cherry Blue Punch Pack brings together three bright fruit flavors for fun, colorful drinks without sugar. Cherry gives it a classic punch-style taste, Blue Raspberry adds the bold blue refresher vibe, and Pomegranate brings a rich fruity finish.</p>"
           }
         }
       },
@@ -590,7 +590,7 @@
         ".page-cst-about-page-sec,.page-cst-mission-page-sec,.line-left,.line-right {display: none;}",
         ".mobile-pad {padding-bottom: 40px !important;}",
         ".rich-text__heading strong {font-family: \"Epilogue\", sans-serif !important;}",
-        ".rich-text__heading em {font-style: normal; color: #7c3003;}",
+        ".rich-text__heading em {font-style: normal; color: #bd1022;}",
         ".rich-text__text p {font-family: \"Manrope\", sans-serif !important;}",
         "@media (max-width: 768px) {.head {font-size: 32px !important; }}",
         "@media (max-width: 400px) {.rich-text__text p {font-size: 14px !important; line-height: normal !important; }}"
