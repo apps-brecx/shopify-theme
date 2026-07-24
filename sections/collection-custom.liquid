@@ -1016,7 +1016,7 @@
       var id = +card.dataset.id;
       fly(card);
       var item = { id: id, quantity: qty };
-      if (card.dataset.preorder === '1') { item.properties = { Preorder: 'Yes' }; }
+      if (card.dataset.preorder === '1') { item.properties = { Preorder: 'Ships when available' }; }
       fetch('/cart/add.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
