@@ -11,6 +11,7 @@
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 {%- assign rad = s.card_radius | default: 16 -%}
+{%- assign ccbg = s.cc_bg | default: '#3c2415' -%}
 {%- assign cl = collections[s.collection_handle] -%}
 
 {%- assign allowed = false -%}
@@ -63,7 +64,7 @@
     --paper:{{ s.color_paper | default: '#ffffff' }};
     --orange:{{ s.color_orange | default: '#e28f26' }};
     --pop:{{ s.color_pop | default: '#C8252B' }};
-    --butter:#FCE2A0;
+    --butter:{{ s.cc_gold | default: '#FCE2A0' }};
     --sf:#2F7DC4;
     --rule-c:{{ s.color_rule | default: '#3c2415' }};
     --wrap:{{ s.wrap_max | default: 1120 }}px;
@@ -125,6 +126,7 @@
 
   /* HERO — headline flanked by floating sticks */
   #sp-{{ section.id }} .sp-hero{position:relative;min-height:92svh;display:flex;align-items:center;justify-content:center;padding:clamp(40px,7vw,72px) 0 clamp(64px,9vw,96px);text-align:center;background:linear-gradient(180deg,{{ s.hero_g1 | default: '#FFFBF4' }} 0%,{{ s.hero_g2 | default: '#FFF3DC' }} 100%);}
+  #sp-{{ section.id }} .sp-hero .sp-wrap{position:relative;z-index:2;}
   #sp-{{ section.id }} .sp-viptag{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);border:var(--rule);border-radius:999px;background:var(--paper);padding:8px 16px;}
   #sp-{{ section.id }} .sp-viptag .dot{width:7px;height:7px;border-radius:50%;background:var(--pop);}
   #sp-{{ section.id }} .sp-logo{margin:24px auto 0;max-width:min(380px,64vw);will-change:transform;transform-origin:center top;}
@@ -136,8 +138,9 @@
   #sp-{{ section.id }} .sp-sub{font-size:clamp(16px,2.2vw,19px);margin:20px auto 0;max-width:46ch;color:var(--ink);opacity:.82;font-weight:300;}
   #sp-{{ section.id }} .sp-meta{font-family:var(--display);font-weight:400;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);margin-top:18px;opacity:.75;}
   #sp-{{ section.id }} .sp-hero .sp-btnrow{margin-top:26px;}
-  #sp-{{ section.id }} .sp-ptsline{display:inline-flex;align-items:center;gap:7px;margin-top:18px;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);text-decoration:none;border-bottom:2px solid var(--orange);padding-bottom:3px;}
-  #sp-{{ section.id }} .sp-ptsline b{color:var(--orange);}
+  #sp-{{ section.id }} .sp-ptsline{display:inline-block;margin-top:18px;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);text-decoration:none;background:var(--paper);border:var(--rule);border-radius:999px;padding:11px 18px;line-height:1.7;max-width:100%;box-shadow:2px 2px 0 rgba(60,36,21,.14);transition:transform .14s ease;}
+  #sp-{{ section.id }} .sp-ptsline b{color:var(--orange);font-size:13px;}
+  @media(hover:hover){#sp-{{ section.id }} .sp-ptsline:hover{transform:translateY(-2px);}}
   #sp-{{ section.id }} .sp-stick{position:absolute;z-index:1;pointer-events:none;will-change:transform;}
   #sp-{{ section.id }} .sp-stick .in{display:block;animation:spbob{{ section.id }} 5.6s ease-in-out infinite alternate;filter:drop-shadow(0 16px 24px rgba(60,36,21,.20));}
   #sp-{{ section.id }} .sp-stick img{width:100%;height:auto;display:block;}
@@ -150,10 +153,11 @@
   #sp-{{ section.id }} .sp-stick.s3{left:86%;top:11%;width:clamp(58px,11vw,150px);}
   #sp-{{ section.id }} .sp-stick.s4{left:81%;top:58%;width:clamp(68px,13vw,182px);}
   @media(max-width:700px){
-    #sp-{{ section.id }} .sp-stick.s1{left:-3%;top:7%;}
-    #sp-{{ section.id }} .sp-stick.s2{left:1%;top:74%;}
-    #sp-{{ section.id }} .sp-stick.s3{left:78%;top:6%;}
-    #sp-{{ section.id }} .sp-stick.s4{left:74%;top:70%;}
+    #sp-{{ section.id }} .sp-stick.s1{left:-6%;top:4%;width:clamp(58px,17vw,84px);}
+    #sp-{{ section.id }} .sp-stick.s2{left:-7%;top:auto;bottom:4%;width:clamp(52px,15vw,74px);}
+    #sp-{{ section.id }} .sp-stick.s3{left:auto;right:-6%;top:4%;width:clamp(56px,16vw,80px);}
+    #sp-{{ section.id }} .sp-stick.s4{left:auto;right:-7%;top:auto;bottom:7%;width:clamp(60px,18vw,90px);}
+    #sp-{{ section.id }} .sp-stick.m-off{display:none;}
   }
   @media (prefers-reduced-motion: reduce){#sp-{{ section.id }} .sp-stick .in{animation:none;}}
   #sp-{{ section.id }} .sp-cue{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:3;width:38px;height:38px;border-radius:50%;background:var(--paper);border:var(--rule);display:flex;align-items:center;justify-content:center;animation:spcue{{ section.id }} 2s ease-in-out infinite;}
@@ -191,9 +195,10 @@
 
   /* CREDITS — membership card */
   #sp-{{ section.id }} .sp-cred .sp-head{text-align:center;margin-bottom:34px;}
-  #sp-{{ section.id }} .sp-cred-card{position:relative;max-width:960px;margin:0 auto;color:#FFFBF4;background:radial-gradient(130% 160% at 88% -12%, #6a4426, var(--brand) 55%, #2c1a0e);border:var(--rule);border-radius:calc(var(--rad) + 10px);box-shadow:6px 6px 0 rgba(60,36,21,.22);overflow:hidden;transition:transform .25s ease;will-change:transform;}
+  #sp-{{ section.id }} .sp-cred-card{position:relative;max-width:960px;margin:0 auto;color:#FFFBF4;background:radial-gradient(130% 160% at 88% -12%, {{ ccbg | color_lighten: 12 }}, {{ ccbg }} 55%, {{ ccbg | color_darken: 8 }});border:var(--rule);border-radius:calc(var(--rad) + 10px);box-shadow:6px 6px 0 rgba(60,36,21,.22);overflow:hidden;transition:transform .25s ease;will-change:transform;}
   #sp-{{ section.id }} .sp-cred-card .grain{position:absolute;inset:0;opacity:.35;mix-blend-mode:soft-light;background-image:radial-gradient(rgba(255,255,255,.5) 1px, transparent 1.4px);background-size:11px 11px;pointer-events:none;}
   #sp-{{ section.id }} .sp-cred-card .deco{position:absolute;right:-26px;bottom:-34px;width:clamp(110px,16vw,190px);transform:rotate(-14deg);opacity:.9;pointer-events:none;filter:drop-shadow(0 12px 20px rgba(0,0,0,.3));}
+  @media(max-width:600px){#sp-{{ section.id }} .sp-cred-card .deco{width:92px;right:-20px;bottom:-24px;opacity:.5;}}
   #sp-{{ section.id }} .cc-grid{position:relative;display:grid;grid-template-columns:1fr;gap:26px;padding:clamp(26px,4.5vw,44px);}
   @media(min-width:780px){#sp-{{ section.id }} .cc-grid{grid-template-columns:1.05fr 1fr;gap:clamp(26px,4vw,52px);align-items:center;}}
   #sp-{{ section.id }} .cc-chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--display);font-weight:400;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);background:var(--butter);border-radius:999px;padding:7px 14px;}
@@ -300,10 +305,11 @@
     {%- comment -%} ===== HERO ===== {%- endcomment -%}
     <div class="sp-hero">
       {%- if s.show_sticks -%}
-      <div class="sp-stick s1" data-pspeed="0.16" aria-hidden="true"><span class="in" style="--r:-10deg;"><img src="{{ st1 }}" alt="" loading="eager"></span></div>
-      <div class="sp-stick s2" data-pspeed="0.30" aria-hidden="true"><span class="in" style="--r:8deg;"><img src="{{ st2 }}" alt="" loading="eager"></span></div>
-      <div class="sp-stick s3" data-pspeed="0.22" aria-hidden="true"><span class="in" style="--r:10deg;"><img src="{{ st3 }}" alt="" loading="eager"></span></div>
-      <div class="sp-stick s4" data-pspeed="0.12" aria-hidden="true"><span class="in" style="--r:-7deg;"><img src="{{ st4 }}" alt="" loading="eager"></span></div>
+      {%- assign moff = '' -%}{%- unless s.sticks_mobile -%}{%- assign moff = ' m-off' -%}{%- endunless -%}
+      <div class="sp-stick s1{{ moff }}" data-pspeed="0.16" aria-hidden="true"><span class="in" style="--r:-10deg;"><img src="{{ st1 }}" alt="" loading="eager"></span></div>
+      <div class="sp-stick s2{{ moff }}" data-pspeed="0.30" aria-hidden="true"><span class="in" style="--r:8deg;"><img src="{{ st2 }}" alt="" loading="eager"></span></div>
+      <div class="sp-stick s3{{ moff }}" data-pspeed="0.22" aria-hidden="true"><span class="in" style="--r:10deg;"><img src="{{ st3 }}" alt="" loading="eager"></span></div>
+      <div class="sp-stick s4{{ moff }}" data-pspeed="0.12" aria-hidden="true"><span class="in" style="--r:-7deg;"><img src="{{ st4 }}" alt="" loading="eager"></span></div>
       {%- endif -%}
       <div class="sp-wrap">
         {%- if s.vip_badge != blank -%}<span class="sp-viptag sp-rev"><span class="dot"></span>{{ s.vip_badge }}</span>{%- endif -%}
@@ -319,7 +325,9 @@
           {%- if s.collection_btn_url != blank -%}<a class="sp-btn sp-btn--ghost" href="{{ s.collection_btn_url }}">{{ s.collection_btn_text | default: 'View the collection' }}</a>{%- endif -%}
         </div>
         {%- if customer and s.show_credits -%}
-        <div class="sp-rev"><a class="sp-ptsline" href="#sp-cred-{{ section.id }}">&#9733; You&rsquo;ve got <b>{{ vip_pts }}</b> credits &mdash; see what they do</a></div>
+        {%- capture pts_b -%}<b>{{ vip_pts }}</b>{%- endcapture -%}
+        {%- assign teaser = s.pts_teaser | default: 'You’ve got {points} credits — see what they do' -%}
+        <div class="sp-rev"><a class="sp-ptsline" href="#sp-cred-{{ section.id }}">&#9733; {{ teaser | replace: '{points}', pts_b }}</a></div>
         {%- endif -%}
       </div>
       <a class="sp-cue" href="#sp-say-{{ section.id }}" aria-label="Scroll down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg></a>
@@ -411,7 +419,7 @@
         <img class="deco" src="{{ st4 }}" alt="" loading="lazy" aria-hidden="true">
         <div class="cc-grid">
           <div class="cc-left">
-            <span class="cc-chip">&#9733; VIP member{% if customer.first_name != blank %} &middot; {{ customer.first_name }}{% endif %}</span>
+            <span class="cc-chip">&#9733; {{ s.cc_member_label | default: 'VIP member' }}{% if customer.first_name != blank %} &middot; {{ customer.first_name }}{% endif %}</span>
             {%- if customer -%}
               <div class="cc-num" data-count="{{ vip_pts }}">0</div>
               <div class="cc-lbl">{{ s.credits_unit | default: 'Syruvia Credits' }}</div>
@@ -698,6 +706,7 @@
     { "type": "text", "id": "collection_btn_text", "label": "Collection button text", "default": "View the collection" },
     { "type": "header", "content": "Hero side sticks" },
     { "type": "checkbox", "id": "show_sticks", "label": "Show floating pouch sticks", "default": true },
+    { "type": "checkbox", "id": "sticks_mobile", "label": "Show sticks on mobile too", "default": true },
     { "type": "paragraph", "content": "Default to your uploaded stick renders. Replace any of them here." },
     { "type": "image_picker", "id": "stick_1", "label": "Stick 1 (top left)" },
     { "type": "image_picker", "id": "stick_2", "label": "Stick 2 (bottom left)" },
@@ -721,6 +730,10 @@
     { "type": "text", "id": "credits_eyebrow", "label": "Eyebrow", "default": "Members earn" },
     { "type": "text", "id": "credits_title", "label": "Heading", "default": "Your <em>Syruvia Credits</em>" },
     { "type": "text", "id": "credits_unit", "label": "Points label", "default": "Syruvia Credits" },
+    { "type": "text", "id": "cc_member_label", "label": "Member chip label", "default": "VIP member" },
+    { "type": "text", "id": "pts_teaser", "label": "Hero teaser ({points} = balance)", "default": "You’ve got {points} credits — see what they do" },
+    { "type": "color", "id": "cc_bg", "label": "Card color", "default": "#3c2415" },
+    { "type": "color", "id": "cc_gold", "label": "Card gold accent", "default": "#FCE2A0" },
     { "type": "text", "id": "credits_lifetime_label", "label": "Lifetime label", "default": "Earned all-time:" },
     { "type": "text", "id": "earn_title", "label": "Earn list title", "default": "Get more credits" },
     { "type": "text", "id": "earn1", "label": "Earn item 1", "default": "Shop — every order earns credits" },
