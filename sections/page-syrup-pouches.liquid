@@ -153,10 +153,9 @@
   #sp-{{ section.id }} .sp-stick.s3{left:86%;top:11%;width:clamp(58px,11vw,150px);}
   #sp-{{ section.id }} .sp-stick.s4{left:81%;top:58%;width:clamp(68px,13vw,182px);}
   @media(max-width:700px){
-    #sp-{{ section.id }} .sp-stick.s1{left:-6%;top:4%;width:clamp(58px,17vw,84px);}
-    #sp-{{ section.id }} .sp-stick.s2{left:-7%;top:auto;bottom:4%;width:clamp(52px,15vw,74px);}
-    #sp-{{ section.id }} .sp-stick.s3{left:auto;right:-6%;top:4%;width:clamp(56px,16vw,80px);}
-    #sp-{{ section.id }} .sp-stick.s4{left:auto;right:-7%;top:auto;bottom:7%;width:clamp(60px,18vw,90px);}
+    #sp-{{ section.id }} .sp-stick.s1{left:-5%;top:3%;width:clamp(52px,15vw,76px);}
+    #sp-{{ section.id }} .sp-stick.s3{left:auto;right:-5%;top:3%;width:clamp(50px,14vw,72px);}
+    #sp-{{ section.id }} .sp-stick.s2,#sp-{{ section.id }} .sp-stick.s4{display:none;}
     #sp-{{ section.id }} .sp-stick.m-off{display:none;}
   }
   @media (prefers-reduced-motion: reduce){#sp-{{ section.id }} .sp-stick .in{animation:none;}}
@@ -263,6 +262,21 @@
   #sp-{{ section.id }} .sp-empty{text-align:center;border:1.5px dashed var(--rule-c);border-radius:var(--rad);padding:30px 18px;background:var(--paper);opacity:.85;}
   #sp-{{ section.id }} .sp-note{text-align:center;font-size:13px;opacity:.65;margin-top:22px;}
 
+  /* mobile — collection-style list rows for the lineup */
+  @media(max-width:640px){
+    #sp-{{ section.id }} .sp-grid{grid-template-columns:1fr;gap:12px;}
+    #sp-{{ section.id }} .sp-tile{flex-direction:row;align-items:stretch;border-radius:calc(var(--rad) + 2px);}
+    #sp-{{ section.id }} .sp-tile .ph{width:118px;min-width:118px;aspect-ratio:1/1;border-bottom:none;border-right:var(--rule);padding:10px;}
+    #sp-{{ section.id }} .sp-tile .b{flex:1;justify-content:center;align-items:center;padding:14px 12px;gap:7px;}
+    #sp-{{ section.id }} .sp-tile .t{font-size:14.5px;}
+    #sp-{{ section.id }} .sp-tile .p{margin-top:0;font-size:15.5px;}
+    #sp-{{ section.id }} .sp-tile.soon .b .dt{margin-top:0;}
+    #sp-{{ section.id }} .sp-tile.soon .ph .fl{font-size:12.5px;}
+    #sp-{{ section.id }} .sp-badge{top:8px;left:8px;}
+    #sp-{{ section.id }} .sp-badge.sf{left:auto;right:8px;}
+    #sp-{{ section.id }} .sp-soonov{top:8px;left:8px;}
+  }
+
   /* mobile — center everything */
   @media(max-width:760px){
     #sp-{{ section.id }} .sp-about .txt{text-align:center;}
@@ -291,14 +305,14 @@
       {%- assign cfg_size = '110,130,88,150,96,120,84,115' | split: ',' -%}
       {%- assign cfg_speed = '0.26,0.18,0.34,0.14,0.30,0.22,0.38,0.16' | split: ',' -%}
       {%- assign cfg_rot = '-8,6,-4,9,-11,5,7,-6' | split: ',' -%}
-      {%- assign cfg_top = '18,32,55,44,70,26,60,80' | split: ',' -%}
+      {%- assign cfg_top = '44,52,60,48,74,56,66,84' | split: ',' -%}
       {%- assign cfg_far = ',,far,,far,,far,' | split: ',' -%}
       {%- assign rain_any = false -%}
       {%- for slot in rain_slots -%}
         {%- assign img = s[slot] -%}
         {%- if img != blank -%}{%- assign rain_any = true -%}
           {%- assign i = forloop.index0 -%}
-          <div class="sp-rain-item {{ cfg_far[i] }}{% if i > 4 %} m-hide{% endif %}" data-speed="{{ cfg_speed[i] }}" data-rot="{{ cfg_rot[i] }}" style="left:{{ cfg_left[i] }}%;top:{{ cfg_top[i] }}%;width:clamp(60px,{{ cfg_size[i] | divided_by: 12 }}vw,{{ cfg_size[i] }}px);transform:rotate({{ cfg_rot[i] }}deg);">
+          <div class="sp-rain-item {{ cfg_far[i] }}{% if i > 2 %} m-hide{% endif %}" data-speed="{{ cfg_speed[i] }}" data-rot="{{ cfg_rot[i] }}" style="left:{{ cfg_left[i] }}%;top:{{ cfg_top[i] }}%;width:clamp(60px,{{ cfg_size[i] | divided_by: 12 }}vw,{{ cfg_size[i] }}px);transform:rotate({{ cfg_rot[i] }}deg);">
             <img src="{{ img | image_url: width: 400 }}" alt="" loading="lazy">
           </div>
         {%- endif -%}
@@ -306,7 +320,7 @@
       {%- unless rain_any -%}
         {%- for i in (0..7) -%}
           {%- assign m4 = i | modulo: 4 -%}
-          <div class="sp-rain-item {{ cfg_far[i] }}{% if i > 4 %} m-hide{% endif %}" data-speed="{{ cfg_speed[i] }}" data-rot="{{ cfg_rot[i] }}" style="left:{{ cfg_left[i] }}%;top:{{ cfg_top[i] }}%;width:clamp(52px,{{ cfg_size[i] | divided_by: 14 }}vw,{{ cfg_size[i] | times: 0.8 | round }}px);transform:rotate({{ cfg_rot[i] }}deg);">
+          <div class="sp-rain-item {{ cfg_far[i] }}{% if i > 2 %} m-hide{% endif %}" data-speed="{{ cfg_speed[i] }}" data-rot="{{ cfg_rot[i] }}" style="left:{{ cfg_left[i] }}%;top:{{ cfg_top[i] }}%;width:clamp(52px,{{ cfg_size[i] | divided_by: 14 }}vw,{{ cfg_size[i] | times: 0.8 | round }}px);transform:rotate({{ cfg_rot[i] }}deg);">
             <img src="{{ stick_defaults[m4] }}" alt="" loading="lazy">
           </div>
         {%- endfor -%}
@@ -318,10 +332,10 @@
     <div class="sp-hero">
       {%- if s.show_sticks -%}
       {%- assign moff = '' -%}{%- unless s.sticks_mobile -%}{%- assign moff = ' m-off' -%}{%- endunless -%}
-      <div class="sp-stick s1{{ moff }}" data-pspeed="0.16" aria-hidden="true"><span class="in" style="--r:-10deg;"><img src="{{ st1 }}" alt="" loading="eager"></span></div>
-      <div class="sp-stick s2{{ moff }}" data-pspeed="0.30" aria-hidden="true"><span class="in" style="--r:8deg;"><img src="{{ st2 }}" alt="" loading="eager"></span></div>
-      <div class="sp-stick s3{{ moff }}" data-pspeed="0.22" aria-hidden="true"><span class="in" style="--r:10deg;"><img src="{{ st3 }}" alt="" loading="eager"></span></div>
-      <div class="sp-stick s4{{ moff }}" data-pspeed="0.12" aria-hidden="true"><span class="in" style="--r:-7deg;"><img src="{{ st4 }}" alt="" loading="eager"></span></div>
+      <div class="sp-stick s1{{ moff }}" data-pspeed="0.16" data-pour="1" aria-hidden="true"><span class="in" style="--r:-10deg;"><img src="{{ st1 }}" alt="" loading="eager"></span></div>
+      <div class="sp-stick s2{{ moff }}" data-pspeed="0.30" data-pour="1" aria-hidden="true"><span class="in" style="--r:8deg;"><img src="{{ st2 }}" alt="" loading="eager"></span></div>
+      <div class="sp-stick s3{{ moff }}" data-pspeed="0.22" data-pour="-1" aria-hidden="true"><span class="in" style="--r:10deg;"><img src="{{ st3 }}" alt="" loading="eager"></span></div>
+      <div class="sp-stick s4{{ moff }}" data-pspeed="0.12" data-pour="-1" aria-hidden="true"><span class="in" style="--r:-7deg;"><img src="{{ st4 }}" alt="" loading="eager"></span></div>
       {%- endif -%}
       <div class="sp-wrap">
         {%- if s.vip_badge != blank -%}<span class="sp-viptag sp-rev"><span class="dot"></span>{{ s.vip_badge }}</span>{%- endif -%}
@@ -631,12 +645,15 @@
         var el=drops[i];
         var sp=parseFloat(el.getAttribute('data-speed'))||0.25;
         var rot=parseFloat(el.getAttribute('data-rot'))||0;
-        el.style.transform='translateY('+(sc*sp).toFixed(1)+'px) rotate('+(rot + sc*0.008*(rot<0?-1:1)).toFixed(1)+'deg)';
+        el.style.transform='translateY('+(sc*sp).toFixed(1)+'px) rotate('+(rot + sc*0.024*(rot<0?-1:1)).toFixed(1)+'deg)';
       }
       for(var j=0;j<sticks.length;j++){
         var stEl=sticks[j];
         var psp=parseFloat(stEl.getAttribute('data-pspeed'))||0.2;
-        stEl.style.transform='translateY('+(-sc*psp).toFixed(1)+'px)';
+        var dir=parseFloat(stEl.getAttribute('data-pour'))||1;
+        var pour=Math.min(sc/560,1);
+        pour=1-Math.pow(1-pour,2);
+        stEl.style.transform='translateY('+(-sc*psp).toFixed(1)+'px) rotate('+(pour*82*dir).toFixed(1)+'deg)';
       }
       for(var k=0;k<drifts.length;k++){
         var dEl=drifts[k];
@@ -814,8 +831,8 @@
     { "type": "text", "id": "sf_badge", "label": "Sugar-free tile badge", "default": "0g sugar" },
     { "type": "header", "content": "Coming-soon flavors" },
     { "type": "paragraph", "content": "One flavor per line. Optional date after a pipe, e.g. “Caramel | August”. A name matching a live product is skipped automatically." },
-    { "type": "textarea", "id": "upcoming_regular", "label": "Regular — coming soon", "default": "Caramel\nHazelnut\nFrench Vanilla\nSalted Caramel\nBrown Sugar Cinnamon\nStrawberry\nPeach\nMango\nCoconut\nPineapple\nWatermelon\nBlue Raspberry\nPumpkin Spice\nIrish Cream\nEnglish Toffee\nCookie Butter\nLavender\nCaramel Pecan\nPeppermint\nChocolate\nBanana\nCherry\nRaspberry\nButterscotch" },
-    { "type": "textarea", "id": "upcoming_sf", "label": "Sugar-Free — coming soon", "default": "Caramel\nHazelnut\nFrench Vanilla\nSalted Caramel\nBrown Sugar Cinnamon\nStrawberry\nPeach\nMango\nCoconut\nPineapple\nWatermelon\nBlue Raspberry\nCookie Butter\nLavender\nChocolate\nPeppermint\nCherry\nRaspberry\nButterscotch\nCaramel Pecan\nEnglish Toffee\nIrish Cream\nPumpkin Spice\nBanana" },
+    { "type": "textarea", "id": "upcoming_regular", "label": "Regular — extra coming-soon flavors (optional)", "info": "Leave empty to show only real products." },
+    { "type": "textarea", "id": "upcoming_sf", "label": "Sugar-Free — extra coming-soon flavors (optional)", "info": "Leave empty to show only real products." },
     { "type": "text", "id": "coming_label", "label": "Overlay label", "default": "Coming soon" },
     { "type": "text", "id": "grid_note", "label": "Note under grid", "default": "More flavors go live every week — check back soon." },
     { "type": "header", "content": "Brand colors & layout" },
