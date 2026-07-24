@@ -118,6 +118,16 @@
     color: var(--pd-accent) !important;
   }
 
+  /* Desktop thumbnail slider (same as pd-hero): the 4-up grid from pdp-brand.css
+     becomes a horizontal scroll-snap strip flanked by round arrow buttons. */
+  #shopify-section-{{ section.id }} .pd-thumbs-wrap { margin-top: 14px; display: flex; align-items: center; gap: 8px; }
+  html body #shopify-section-{{ section.id }} .pd .pd-thumbs { margin-top: 0 !important; display: flex !important; grid-template-columns: none !important; gap: 10px !important; flex: 1 1 auto; min-width: 0; overflow: hidden; scroll-behavior: smooth; scroll-snap-type: x mandatory; }
+  html body #shopify-section-{{ section.id }} .pd .pd-thumb { flex: 0 0 calc((100% - 30px) / 4) !important; scroll-snap-align: start; }
+  #shopify-section-{{ section.id }} .pd-thumbs-nav { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--pd-brand); background: #FFFBF4; color: var(--pd-brand); cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'Archivo', sans-serif; font-size: 18px; line-height: 1; box-shadow: 2px 2px 0 var(--pd-brand); transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease; padding: 0; }
+  #shopify-section-{{ section.id }} .pd-thumbs-nav:hover { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--pd-brand); }
+  #shopify-section-{{ section.id }} .pd-thumbs-nav:disabled { cursor: default; box-shadow: none; transform: none; }
+  @media (max-width: 760px) { #shopify-section-{{ section.id }} .pd-thumbs-wrap { display: none !important; } }
+
   /* Mobile-only slider (preserved from original) */
   #shopify-section-{{ section.id }} .pd-slider-mobile { display: none; }
   #shopify-section-{{ section.id }} .pd-slider-dots { display: none; }
@@ -212,6 +222,17 @@
   #shopify-section-{{ section.id }} .pd-desc-label,
   #shopify-section-{{ section.id }} .pd-desc-text {
     color: var(--pd-desc-text) !important;
+  }
+
+  /* Metafield-driven Nutrition Facts: pdp-brand.css styles .pd-nut-row/-rule/-serv,
+     but not these two (they only existed in sections/pd-description.liquid). */
+  #shopify-section-{{ section.id }} .pd-nut-section:not(:last-child) .pd-nut-row:last-child {
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 10px;
+  }
+  #shopify-section-{{ section.id }} .pd-nut-row--indent {
+    padding-left: 14px;
+    font-size: 13px;
   }
 
   /* Why section */
@@ -309,11 +330,17 @@
           <div class="pd-hero-frame">
             <img id="pdHeroImg" src="{{ hero_src }}" alt="{{ product.title | escape }}" width="1200" height="1200" fetchpriority="high">
           </div>
+          {%- comment -%} Desktop thumbnails are a scroll-snap slider with arrows (same as pd-hero).
+             No `limit` here — every image goes in the strip and the arrows page through them. {%- endcomment -%}
           {%- if product.images.size > 1 -%}
-            <div class="pd-thumbs">
-              {%- for img in product.images limit: 4 -%}
-                <button type="button" class="pd-thumb{% if forloop.first %} is-active{% endif %}" data-src="{{ img | image_url: width: 1400 }}" aria-label="View image {{ forloop.index }}"><img src="{{ img | image_url: width: 200 }}" alt="" width="200" height="200" loading="lazy"></button>
-              {%- endfor -%}
+            <div class="pd-thumbs-wrap">
+              {%- if product.images.size > 4 -%}<button type="button" class="pd-thumbs-nav pd-thumbs-prev" aria-label="Previous thumbnails">&lsaquo;</button>{%- endif -%}
+              <div class="pd-thumbs">
+                {%- for img in product.images -%}
+                  <button type="button" class="pd-thumb{% if forloop.first %} is-active{% endif %}" data-src="{{ img | image_url: width: 1400 }}" aria-label="View image {{ forloop.index }}"><img src="{{ img | image_url: width: 200 }}" alt="" width="200" height="200" loading="lazy"></button>
+                {%- endfor -%}
+              </div>
+              {%- if product.images.size > 4 -%}<button type="button" class="pd-thumbs-nav pd-thumbs-next" aria-label="Next thumbnails">&rsaquo;</button>{%- endif -%}
             </div>
           {%- endif -%}
 
@@ -541,9 +568,30 @@
             <div class="pd-desc-section">
               <div>
                 <h3 class="pd-desc-label">Ingredients</h3>
-                <p class="pd-desc-text">
-                  {%- if ingredients_field -%}{{ ingredients_field | metafield_tag | strip_html }}{%- else -%}Pure Cane Sugar, Filtered Water, Natural Flavor, Citric Acid, Potassium Sorbate (preservative).{%- endif -%}
-                </p>
+                {%- comment -%} Comma-separated ingredients render as a bullet list (same as sections/pd-description.liquid); a single-item value stays a paragraph. {%- endcomment -%}
+                {%- if ingredients_field -%}
+                  {%- assign ing_text = ingredients_field | metafield_tag | strip_html -%}
+                {%- else -%}
+                  {%- assign ing_text = 'Pure Cane Sugar, Filtered Water, Natural Flavor, Citric Acid, Potassium Sorbate (preservative).' -%}
+                {%- endif -%}
+                {%- assign ing_parts = ing_text | split: ',' -%}
+                {%- if ing_parts.size > 1 -%}
+                  <ul class="pd-desc-text pd-ing-list">
+                    {%- for part in ing_parts -%}
+                      {%- assign p = part | strip -%}
+                      {%- if forloop.last -%}
+                        {%- assign lastchar = p | slice: -1, 1 -%}
+                        {%- if lastchar == '.' -%}
+                          {%- assign plen = p.size | minus: 1 -%}
+                          {%- assign p = p | slice: 0, plen -%}
+                        {%- endif -%}
+                      {%- endif -%}
+                      {%- if p != blank -%}<li>{{ p }}</li>{%- endif -%}
+                    {%- endfor -%}
+                  </ul>
+                {%- else -%}
+                  <p class="pd-desc-text">{{ ing_text }}</p>
+                {%- endif -%}
               </div>
             </div>
           </div>
@@ -557,6 +605,67 @@
               </span>
             </button>
             <div class="pd-nf-body">
+              {%- comment -%} Metafield-driven Nutrition Facts (custom.nutrition_facts) — same parser as
+                 sections/pd-description.liquid. Falls back to the built-in pouch panel below when the
+                 metafield is empty, so a product without the metafield never loses its nutrition table. {%- endcomment -%}
+              {%- assign nutrition_raw = product.metafields.custom.nutrition_facts.value | default: '' -%}
+              {%- if nutrition_raw != blank -%}
+              <div class="pd-nutrition">
+                <div class="pd-nutrition-title">Nutrition Facts</div>
+                {%- assign nf_sections = nutrition_raw | split: '---' -%}
+                {%- for nf_section in nf_sections -%}
+                  <div class="pd-nut-section">
+                    {%- assign section_lines = nf_section | strip | newline_to_br | split: '<br />' -%}
+                    {%- for line_raw in section_lines -%}
+                      {%- assign line = line_raw | strip -%}
+                      {%- if line == blank -%}{%- continue -%}{%- endif -%}
+                      {%- assign first_two = line | slice: 0, 2 -%}
+                      {%- assign is_indented = false -%}
+                      {%- if first_two == '- ' -%}
+                        {%- assign is_indented = true -%}
+                        {%- assign line_len = line | size -%}
+                        {%- assign line = line | slice: 2, line_len | strip -%}
+                      {%- endif -%}
+                      {%- assign first_char = line | slice: 0, 1 -%}
+                      {%- if first_char == '*' -%}
+                        <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">{{ line }}</div>
+                      {%- elsif line contains '|' -%}
+                        {%- assign parts = line | split: '|' -%}
+                        {%- assign row_label = parts[0] | default: '' | strip -%}
+                        {%- assign row_value = parts[1] | default: '' | strip -%}
+                        {%- assign row_dv = parts[2] | default: '' | strip -%}
+                        {%- if is_indented -%}
+                          <div class="pd-nut-row pd-nut-row--indent">
+                            <span>{{ row_label }}{% if row_value != blank %} {{ row_value }}{% endif %}</span>
+                            {%- if row_dv != blank -%}<strong>{{ row_dv }}</strong>{%- endif -%}
+                          </div>
+                        {%- else -%}
+                          <div class="pd-nut-row">
+                            <span><strong>{{ row_label }}</strong>{% if row_value != blank %} {{ row_value }}{% endif %}</span>
+                            {%- if row_dv != blank -%}<strong>{{ row_dv }}</strong>{%- endif -%}
+                          </div>
+                        {%- endif -%}
+                      {%- elsif line contains ':' -%}
+                        {%- assign kv = line | split: ':' -%}
+                        {%- assign kv_label = kv[0] | strip -%}
+                        {%- assign kv_value = kv | slice: 1, 99 | join: ':' | strip -%}
+                        {%- if kv_label == 'Serving Size' or kv_label == 'Serving size' -%}
+                          <div class="pd-nut-serv">{{ kv_label }} {{ kv_value }}</div>
+                          <div class="pd-nut-row"><strong>Amount per serving</strong></div>
+                        {%- elsif kv_label == 'Calories' -%}
+                          <div class="pd-nut-row" style="font-size:18px;"><strong>{{ kv_label }}</strong><strong>{{ kv_value }}</strong></div>
+                          <div style="font-size:12px;text-align:right;">% Daily Value*</div>
+                        {%- else -%}
+                          <div class="pd-nut-row"><span><strong>{{ kv_label }}</strong> {{ kv_value }}</span></div>
+                        {%- endif -%}
+                      {%- else -%}
+                        <div class="pd-nut-row" style="font-size:13px;line-height:1.4;padding:4px 0;">{{ line }}</div>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                {%- endfor -%}
+              </div>
+              {%- else -%}
               <div class="pd-nutrition">
                 <div class="pd-nutrition-title">Nutrition Facts</div>
                 <div class="pd-nut-serv">Serving per pack: 1 &middot; Serving size 1 pouch — 15 mL (0.50 fl oz)</div>
@@ -577,6 +686,7 @@
                 <div class="pd-nut-rule--med"></div>
                 <div style="font-size:11px;line-height:1.3;color:#3a3a3a;margin-top:6px;text-align:left;">*% DV based on a 2,000 calorie diet. Not a significant source of saturated fat, trans fat, cholesterol, dietary fiber, vitamin D, calcium, iron and potassium.</div><div style="font-size:11px;line-height:1.35;color:#3a3a3a;margin-top:8px;text-align:left;"><strong>INGREDIENTS:</strong> {% if is_sf %}Water, Natural Flavors, Gum, Sucralose, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate, Potassium Sorbate &amp; Ace K (Preservatives){% else %}Pure Cane Sugar, Water, Natural Flavors, Sodium Acid Sulfate (Preservative), Citric Acid (Freshness), Sodium Benzoate &amp; Potassium Sorbate (Preservatives){% endif %}</div>
               </div>
+              {%- endif -%}
             </div>
           </div>
         </div>
@@ -585,9 +695,30 @@
 
     <script>
     (function(){
+      function isDesk(){ return window.matchMedia('(min-width:761px)').matches; }
+      /* Desktop: Read more toggles ONE shared scroll state across the clipped
+         description + ingredients cards (the nutrition card stays fully open).
+         pd-mb-prices exposes the canonical toggle; fall back to a local copy.
+         Mobile keeps the per-card expand below. Mirrors sections/pd-description.liquid. */
+      function deskToggle(){
+        const c = document.querySelector('.pd-desc-content');
+        const open = !(c && c.classList.contains('is-open'));
+        if (window.__pdSetDeskOpen){ window.__pdSetDeskOpen(open); return; }
+        if (!c) return;
+        c.classList.toggle('is-open', open);
+        const btn = c.querySelector('.pd-desc-toggle');
+        if (btn){
+          btn.classList.toggle('is-expanded', open);
+          const t = btn.querySelector('.pd-desc-toggle-text');
+          if (t) t.textContent = open ? 'Show less' : 'Read more';
+        }
+        if (!open) c.querySelectorAll('.pd-desc-scrollwrap, .pd-ing-card .pd-desc-section').forEach(function(s){ s.scrollTop = 0; });
+      }
       document.addEventListener('click', function(e){
+        if (e.pdDescHandled) return; /* already handled by pd-mb-prices' direct listeners */
         const readMoreBtn = e.target.closest('.pd-desc-toggle');
         if (readMoreBtn) {
+          if (isDesk()){ deskToggle(); return; }
           const card = readMoreBtn.closest('.pd-desc-card');
           if (!card) return;
           const wasExpanded = card.classList.contains('is-expanded');
@@ -896,6 +1027,20 @@ window.PD_TIERS = [1, 0.95, 0.93, 0.90];
   document.querySelectorAll('.pd-thumb').forEach(t=>{
     t.addEventListener('click', ()=>{document.querySelectorAll('.pd-thumb').forEach(x=>x.classList.remove('is-active'));t.classList.add('is-active');if (heroImg && t.dataset.src) heroImg.src = t.dataset.src;});
   });
+  /* Desktop thumbnail slider — arrow controls (same as pd-hero) */
+  (function(){
+    var strip = document.querySelector('.pd-thumbs');
+    var prev = document.querySelector('.pd-thumbs-prev');
+    var next = document.querySelector('.pd-thumbs-next');
+    if (!strip || !prev || !next) return;
+    function upd(){ var max = strip.scrollWidth - strip.clientWidth - 2; prev.disabled = strip.scrollLeft <= 2; next.disabled = strip.scrollLeft >= max; }
+    function step(){ return Math.max(strip.clientWidth * 0.8, 120); }
+    prev.addEventListener('click', function(){ strip.scrollBy({left: -step(), behavior: 'smooth'}); });
+    next.addEventListener('click', function(){ strip.scrollBy({left: step(), behavior: 'smooth'}); });
+    strip.addEventListener('scroll', upd, {passive: true});
+    window.addEventListener('resize', upd);
+    upd();
+  })();
   const slides = document.getElementById('pdSlides');
   const dots = document.querySelectorAll('.pd-dot');
   if (slides && dots.length){
