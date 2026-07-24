@@ -16,7 +16,7 @@
         "bg_img": "shopify://shop_images/Rectangle_2272_3.png",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
-        "accent_color": "#7C3003"
+        "accent_color": "#BD1022"
       }
     },
     "main": {
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#7C3003"
+        "background_color": "#7c3003"
       }
     },
     "pack_steps_AbyNtH": {
@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#7C3003",
+        "background_color": "#7c3003",
         "heading": "<h2>Make Coffee<br/>Taste Richer</h2>"
       }
     },
@@ -836,7 +836,7 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#7C3003",
+        "background_color": "#7c3003",
         "title": "Make Coffee Taste Richer",
         "description": "Almond, Hazelnut, Butter Pecan, and Caramel Pecan are on deal this week — one nutty pack for café-style drinks at home.",
         "button_text": "Shop This Pack",
