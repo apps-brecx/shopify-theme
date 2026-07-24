@@ -836,9 +836,9 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#7c3003",
-        "title": "Make Coffee Taste Richer",
-        "description": "Almond, Hazelnut, Butter Pecan, and Caramel Pecan are on deal this week — one nutty pack for café-style drinks at home.",
+        "background_color": "#BD1022",
+        "title": "Make Every Drink Pop",
+        "description": "Cherry, Blue Raspberry, and Pomegranate are on deal this week one bold fruit pack for colorful refreshers, lemonades, sodas, and mocktails.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $34"
