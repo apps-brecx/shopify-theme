@@ -243,7 +243,13 @@
   /* GRID */
   #sp-{{ section.id }} .sp-shop{scroll-margin-top:80px;}
   #sp-{{ section.id }} .sp-head{text-align:center;}
-  #sp-{{ section.id }} .sp-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:26px 0 28px;}
+  #sp-{{ section.id }} .sp-search{max-width:420px;margin:24px auto 0;position:relative;}
+  #sp-{{ section.id }} .sp-search svg{position:absolute;left:17px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--brand);opacity:.55;pointer-events:none;}
+  #sp-{{ section.id }} .sp-search input{width:100%;font-family:var(--serif);font-size:15px;padding:13px 20px 13px 45px;border:var(--rule);border-radius:999px;background:var(--paper);color:var(--ink);outline:none;transition:box-shadow .15s ease;-webkit-appearance:none;}
+  #sp-{{ section.id }} .sp-search input:focus{box-shadow:2px 2px 0 rgba(60,36,21,.16);}
+  #sp-{{ section.id }} .sp-search input::placeholder{color:var(--ink);opacity:.45;}
+  #sp-{{ section.id }} .sp-noresults{display:none;text-align:center;border:1.5px dashed var(--rule-c);border-radius:var(--rad);padding:26px 18px;background:var(--paper);opacity:.8;margin-top:4px;}
+  #sp-{{ section.id }} .sp-tabs{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:18px 0 26px;}
   #sp-{{ section.id }} .sp-tab{font-family:var(--display);font-weight:400;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;border:var(--rule);border-radius:999px;padding:10px 20px;background:var(--paper);color:var(--brand);cursor:pointer;transition:background .15s ease,color .15s ease;}
   #sp-{{ section.id }} .sp-tab.on{background:var(--brand);color:var(--bg);}
   #sp-{{ section.id }} .sp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
@@ -530,6 +536,12 @@
         {%- if s.grid_eyebrow != blank -%}<span class="sp-eyebrow">{{ s.grid_eyebrow }}</span>{%- endif -%}
         <h2 class="sp-h2">{{ s.grid_title | default: '50 flavors. <em>Pick yours.</em>' }}</h2>
       </div>
+      {%- if s.show_search -%}
+      <div class="sp-search sp-rev">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="search" data-spsearch placeholder="{{ s.search_placeholder | default: 'Search flavors…' | escape }}" aria-label="Search flavors" autocomplete="off">
+      </div>
+      {%- endif -%}
       {%- if s.show_tabs -%}
       <div class="sp-tabs sp-rev" role="tablist">
         <button class="sp-tab on" data-filter="all">{{ s.tab_all | default: 'All' }}</button>
@@ -539,26 +551,29 @@
       {%- endif -%}
       <div class="sp-grid" data-grid>
         {%- if cl != blank and cl.products.size > 0 -%}
-          {%- comment -%} two passes: in-stock first (buyable), then out-of-stock as Coming Soon {%- endcomment -%}
+          {%- comment -%} in-stock first in collection order (Best Selling), then out-of-stock A→Z
+              by full title so all Sugar Free flavors group together under S {%- endcomment -%}
+          {%- assign soon_sorted = cl.products | sort: 'title' -%}
           {%- assign passes = 'live,soon' | split: ',' -%}
           {%- for pass in passes -%}
-          {%- for pr in cl.products limit: 50 -%}
+          {%- if pass == 'live' -%}{%- assign plist = cl.products -%}{%- else -%}{%- assign plist = soon_sorted -%}{%- endif -%}
+          {%- for pr in plist limit: 50 -%}
             {%- if pass == 'live' -%}{%- unless pr.available -%}{%- continue -%}{%- endunless -%}
             {%- else -%}{%- if pr.available -%}{%- continue -%}{%- endif -%}{%- endif -%}
             {%- assign tdl = pr.title | downcase -%}
             {%- assign kind = 'reg' -%}
             {%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign kind = 'sf' -%}{%- endif -%}
-            {%- assign disp = pr.title | replace: '(USA)', '' | replace: 'Syrup Pouches', '' | replace_first: 'Sugar Free ', '' | replace_first: 'Sugar-Free ', '' | strip -%}
+            {%- assign disp = pr.title | replace: '(USA)', '' | replace: 'Syrup Pouches', '' | strip -%}
             {%- if disp == blank -%}{%- assign disp = pr.title -%}{%- endif -%}
             {%- if pr.available -%}
-            <a class="sp-tile sp-rev" data-kind="{{ kind }}" href="{{ pr.url }}">
+            <a class="sp-tile sp-rev" data-kind="{{ kind }}" data-name="{{ tdl | escape }}" href="{{ pr.url }}">
               <span class="sp-badge">{{ s.preorder_badge | default: 'Pre-order' }}</span>
               {%- if kind == 'sf' -%}<span class="sp-badge sf">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
               <span class="ph">{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 480 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- endif -%}</span>
               <span class="b"><span class="t">{{ disp }}</span><span class="p">{{ pr.price | money }}</span></span>
             </a>
             {%- else -%}
-            <div class="sp-tile soon sp-rev" data-kind="{{ kind }}">
+            <div class="sp-tile soon sp-rev" data-kind="{{ kind }}" data-name="{{ tdl | escape }}">
               <span class="sp-soonov"><span class="cs">{{ s.coming_label | default: 'Coming soon' }}</span></span>
               {%- if kind == 'sf' -%}<span class="sp-badge sf">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
               <span class="ph">{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 480 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- else -%}<span class="fl">{{ disp }}</span>{%- endif -%}</span>
@@ -581,7 +596,7 @@
               {%- if kindv == 'sf' -%}{%- assign fkey = 'sugar free ' | append: fkey -%}{%- endif -%}
               {%- if live_titles contains fkey -%}{%- continue -%}{%- endif -%}
               {%- assign fdate = '' -%}{%- if parts.size > 1 -%}{%- assign fdate = parts[1] | strip -%}{%- endif -%}
-              <div class="sp-tile soon sp-rev" data-kind="{{ kindv }}">
+              <div class="sp-tile soon sp-rev" data-kind="{{ kindv }}" data-name="{{ fname | downcase | escape }}">
                 <span class="sp-soonov"><span class="cs">{{ s.coming_label | default: 'Coming soon' }}</span></span>
                 {%- if kindv == 'sf' -%}<span class="sp-badge sf">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
                 <span class="ph"><span class="fl">{{ fname }}</span></span>
@@ -591,6 +606,7 @@
           {%- endif -%}
         {%- endfor -%}
       </div>
+      <div class="sp-noresults" data-noresults>{{ s.search_empty | default: 'No flavors match your search — try another name.' }}</div>
       {%- if cl == blank -%}
         <div class="sp-empty" style="margin-top:14px;">Set the collection handle in the section settings (&ldquo;{{ s.collection_handle }}&rdquo; not found) &mdash; live pouch products will appear here automatically.</div>
       {%- endif -%}
@@ -711,15 +727,33 @@
     tc.addEventListener('pointerleave',function(){ tc.style.transform=''; });
   }
 
+  /* lineup filtering — tabs + search combine */
   var tabs=[].slice.call(root.querySelectorAll('.sp-tab'));
   var tiles=[].slice.call(root.querySelectorAll('[data-grid] .sp-tile'));
+  var searchEl=root.querySelector('[data-spsearch]');
+  var noRes=root.querySelector('[data-noresults]');
+  var curF='all', q='';
+  function applyFilter(){
+    var shown=0;
+    tiles.forEach(function(el){
+      var okKind=(curF==='all'||el.getAttribute('data-kind')===curF);
+      var okQ=!q||(el.getAttribute('data-name')||'').indexOf(q)!==-1;
+      var show=okKind&&okQ;
+      el.style.display=show?'':'none';
+      if(show)shown++;
+    });
+    if(noRes)noRes.style.display=shown?'none':'block';
+  }
   tabs.forEach(function(tb){
     tb.addEventListener('click',function(){
       tabs.forEach(function(t){t.classList.toggle('on',t===tb);});
-      var f=tb.getAttribute('data-filter');
-      tiles.forEach(function(el){ el.style.display=(f==='all'||el.getAttribute('data-kind')===f)?'':'none'; });
+      curF=tb.getAttribute('data-filter');
+      applyFilter();
     });
   });
+  if(searchEl){
+    searchEl.addEventListener('input',function(){ q=searchEl.value.trim().toLowerCase(); applyFilter(); });
+  }
 })();
 </script>
 
@@ -832,6 +866,9 @@
     { "type": "text", "id": "collection_handle", "label": "Live pouches collection handle", "default": "syrup-pouches", "info": "Products in this collection show as live, pre-orderable tiles." },
     { "type": "text", "id": "grid_eyebrow", "label": "Eyebrow", "default": "The lineup" },
     { "type": "text", "id": "grid_title", "label": "Heading", "default": "50 flavors. <em>Pick yours.</em>" },
+    { "type": "checkbox", "id": "show_search", "label": "Show flavor search bar", "default": true },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search flavors…" },
+    { "type": "text", "id": "search_empty", "label": "No-results message", "default": "No flavors match your search — try another name." },
     { "type": "checkbox", "id": "show_tabs", "label": "Show Regular / Sugar-Free tabs", "default": true },
     { "type": "text", "id": "tab_all", "label": "Tab: all", "default": "All" },
     { "type": "text", "id": "tab_reg", "label": "Tab: regular", "default": "Regular" },
