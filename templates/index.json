@@ -14,6 +14,7 @@
       "blocks": {
         "slide_tE9jY7": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "image_desktop": "shopify://shop_images/Midsummer_Banner_1.png",
             "image_mobile": "shopify://shop_images/MidSum_Mobile_New.webp",
