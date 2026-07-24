@@ -65,19 +65,69 @@
         <h2 class="pd-h2" style="margin-top:14px;">{{ section.settings.heading_pre }}<em>{{ section.settings.heading_em }}</em>{{ section.settings.heading_post }}</h2>
       </div>
       <div class="pd-desc-content">
-        {%- if section.settings.description_override != blank -%}
-          {{ section.settings.description_override }}
+        {%- comment -%} Description card, server-rendered (like sections/pd-description.liquid).
+           Previously this was a bare <ul> that pd-mb-prices' transformDesc() converted into a
+           card AFTER load — with two sibling cards now beside it that produced a visible
+           broken-layout flash on every page load. Emitting the finished card here means all
+           three cards exist at first paint, and transformDesc() finds no bare <ul> to convert
+           (it skips any <ul> inside a .pd-desc-card, which covers the ingredients list). {%- endcomment -%}
+        {%- assign items_str = '' -%}
+        {%- if section.settings.description_override contains '<li' -%}
+          {%- assign li_pieces = section.settings.description_override | split: '<li' -%}
+          {%- for piece in li_pieces -%}
+            {%- unless forloop.first -%}
+              {%- assign after_open = piece | split: '>' | slice: 1, 99 | join: '>' -%}
+              {%- assign item_text = after_open | split: '</li>' | first | strip_html | strip -%}
+              {%- if item_text != blank -%}{%- assign items_str = items_str | append: item_text | append: '|##|' -%}{%- endif -%}
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- elsif section.settings.description_override != blank -%}
+          {%- assign items_str = section.settings.description_override | strip_html | strip | append: '|##|' -%}
         {%- else -%}
-          <ul>
-            {%- if pf_arr.size >= 2 -%}
-              <li><strong>{{ section.settings.flavors_label }}</strong> {{ flavor_csv }}.</li>
+          {%- if pf_arr.size >= 2 -%}
+            {%- assign items_str = items_str | append: section.settings.flavors_label | append: ' ' | append: flavor_csv | append: '.|##|' -%}
+          {%- endif -%}
+          {%- if section.settings.fb1 != blank -%}{%- assign items_str = items_str | append: section.settings.fb1 | append: '|##|' -%}{%- endif -%}
+          {%- if section.settings.fb2 != blank -%}{%- assign items_str = items_str | append: section.settings.fb2 | append: '|##|' -%}{%- endif -%}
+          {%- if section.settings.fb3 != blank -%}{%- assign items_str = items_str | append: section.settings.fb3 | append: '|##|' -%}{%- endif -%}
+          {%- if section.settings.fb4 != blank -%}{%- assign items_str = items_str | append: section.settings.fb4 | append: '|##|' -%}{%- endif -%}
+          {%- if section.settings.fb5 != blank -%}{%- assign items_str = items_str | append: section.settings.fb5 | append: '|##|' -%}{%- endif -%}
+        {%- endif -%}
+        {%- assign desc_items = items_str | split: '|##|' -%}
+
+        {%- if desc_items.size > 0 -%}
+          <div class="pd-desc-card" data-transformed="1">
+            <div class="pd-desc-scrollwrap">
+              {%- for item in desc_items -%}
+                <div class="pd-desc-section{% unless forloop.first %} is-hidden{% endunless %}">
+                  <div>
+                    {%- if item contains ':' -%}
+                      {%- assign colon_split = item | split: ':' -%}
+                      {%- assign label = colon_split | first | strip -%}
+                      {%- assign label_len = label | size -%}
+                      {%- assign rest_start = label_len | plus: 1 -%}
+                      {%- assign item_len = item | size -%}
+                      {%- assign desc_text = item | slice: rest_start, item_len | strip -%}
+                      {%- if label != blank and desc_text != blank -%}
+                        <h3 class="pd-desc-label">{{ label }}</h3>
+                        <p class="pd-desc-text">{{ desc_text }}</p>
+                      {%- else -%}
+                        <p class="pd-desc-text">{{ item }}</p>
+                      {%- endif -%}
+                    {%- else -%}
+                      <p class="pd-desc-text">{{ item }}</p>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+            {%- if desc_items.size > 1 -%}
+              <button type="button" class="pd-desc-toggle">
+                <span class="pd-desc-toggle-text">Read more</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg>
+              </button>
             {%- endif -%}
-            <li>{{ section.settings.fb1 }}</li>
-            <li>{{ section.settings.fb2 }}</li>
-            <li>{{ section.settings.fb3 }}</li>
-            <li>{{ section.settings.fb4 }}</li>
-            <li>{{ section.settings.fb5 }}</li>
-          </ul>
+          </div>
         {%- endif -%}
 
         {%- comment -%} Ingredients — one slide per flavor. Server-rendering .pd-ing-card here
@@ -222,6 +272,15 @@
 
 <style>
   /* Per-flavor sliders inside the Ingredients / Nutrition cards */
+  /* A flex item defaults to min-width:auto, so without these the slider's
+     min-content width props the card open and it wraps to its own row instead of
+     sitting 3-in-a-row (pd-page-polish-v2 lays the cards out as flex:1 1 320px). */
+  #shopify-section-{{ section.id }} .pd-desc-content .pd-desc-card { min-width: 0 !important; }
+  #shopify-section-{{ section.id }} .vp-slider,
+  #shopify-section-{{ section.id }} .vp-slider-track,
+  #shopify-section-{{ section.id }} .vp-slide,
+  #shopify-section-{{ section.id }} .pd-nf-body,
+  #shopify-section-{{ section.id }} .pd-desc-section { min-width: 0; }
   #shopify-section-{{ section.id }} .vp-slider { position: relative; }
   #shopify-section-{{ section.id }} .vp-slider-head { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; }
   #shopify-section-{{ section.id }} .vp-slider-name { flex: 1 1 auto; min-width: 0; font-family: 'Archivo Black','Archivo',sans-serif; font-weight: 400; font-size: 12.5px; letter-spacing: .03em; text-transform: uppercase; color: #39220f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
@@ -293,22 +352,59 @@
      nothing ever adds `is-open`, so on <=760px the card stays pinned at the 200px
      clip (pd-mb-prices restores height:auto only for .pd-nf-card.is-open) and the
      whole nutrition table is unreachable. Mirrors sections/pd-description.liquid. */
-  if (!window.__vpNfToggleBound){
-    window.__vpNfToggleBound = true;
+  if (!window.__vpDescBound){
+    window.__vpDescBound = true;
     var isDesk = function(){ return window.matchMedia('(min-width:761px)').matches; };
+    var scrollBackTo = function(el){
+      var headerStr = getComputedStyle(document.documentElement).getPropertyValue('--header-height');
+      var headerH = parseInt(headerStr) || 84;
+      var targetY = el.getBoundingClientRect().top + window.scrollY - headerH - 20;
+      window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+    };
+    var deskToggle = function(){
+      var c = document.querySelector('.pd-desc-content');
+      var open = !(c && c.classList.contains('is-open'));
+      if (window.__pdSetDeskOpen){ window.__pdSetDeskOpen(open); return; }
+      if (!c) return;
+      c.classList.toggle('is-open', open);
+      var b = c.querySelector('.pd-desc-toggle');
+      if (b){
+        b.classList.toggle('is-expanded', open);
+        var bt = b.querySelector('.pd-desc-toggle-text');
+        if (bt) bt.textContent = open ? 'Show less' : 'Read more';
+      }
+    };
     document.addEventListener('click', function(e){
       if (e.pdDescHandled) return;
+
+      /* "Read more". pd-mb-prices binds this only inside transformDesc(), i.e. only to
+         the card IT builds from a bare <ul> — our card is server-rendered, so we bind it. */
+      var moreBtn = e.target.closest('.pd-desc-toggle');
+      if (moreBtn){
+        if (isDesk()){ deskToggle(); return; }
+        var card = moreBtn.closest('.pd-desc-card');
+        if (!card) return;
+        var wasEx = card.classList.contains('is-expanded');
+        var isEx = card.classList.toggle('is-expanded');
+        moreBtn.classList.toggle('is-expanded', isEx);
+        var t = moreBtn.querySelector('.pd-desc-toggle-text');
+        if (t) t.textContent = isEx ? 'Show less' : 'Read more';
+        var secs = card.querySelectorAll('.pd-desc-section');
+        for (var s = 0; s < secs.length; s++){ if (s > 0) secs[s].classList.toggle('is-hidden', !isEx); }
+        if (wasEx && !isEx){ var d = document.querySelector('.pd-description'); if (d) scrollBackTo(d); }
+        return;
+      }
+
+      /* Nutrition card. Same gap: pd-mb-prices attaches its toggle inside the
+         `!document.querySelector('.pd-nf-card')` branch our server card makes it skip,
+         and this template has no pd-description section to delegate for us. Without
+         this the card stays pinned at the 200px mobile clip. */
       var nfCard = e.target.closest('.pd-nf-card');
       if (!nfCard || e.target.closest('.pd-nf-body')) return;  /* slider arrows live in the body */
       if (isDesk()) return;                                    /* always open on desktop */
       var wasOpen = nfCard.classList.contains('is-open');
       nfCard.classList.toggle('is-open');
-      if (wasOpen){
-        var headerStr = getComputedStyle(document.documentElement).getPropertyValue('--header-height');
-        var headerH = parseInt(headerStr) || 84;
-        var targetY = nfCard.getBoundingClientRect().top + window.scrollY - headerH - 20;
-        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-      }
+      if (wasOpen) scrollBackTo(nfCard);
     });
   }
 })();
