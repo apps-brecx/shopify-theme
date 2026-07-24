@@ -262,6 +262,9 @@
   #sp-{{ section.id }} .sp-tile .b{padding:14px 12px 16px;text-align:center;display:flex;flex-direction:column;gap:6px;flex:1;}
   #sp-{{ section.id }} .sp-tile .t{font-family:var(--display);font-weight:400;font-size:12.5px;line-height:1.2;text-transform:uppercase;letter-spacing:.02em;color:var(--brand);}
   #sp-{{ section.id }} .sp-tile .p{margin-top:auto;font-family:var(--display);font-weight:400;font-size:14.5px;color:var(--brand);}
+  #sp-{{ section.id }} .sp-deal{display:inline-flex;align-items:center;gap:5px;font-family:var(--display);font-weight:400;font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:var(--orange);color:#fff;border-radius:999px;padding:5px 11px;line-height:1.3;}
+  #sp-{{ section.id }} .sp-tile .sp-deal{margin:2px auto 0;}
+  #sp-{{ section.id }} .sp-feat .sp-deal{margin:0 auto;}
   #sp-{{ section.id }} .sp-badge{position:absolute;top:10px;left:10px;z-index:2;font-family:var(--display);font-weight:400;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--pop);border-radius:999px;padding:5px 10px;}
   #sp-{{ section.id }} .sp-badge.sf{background:var(--sf);left:auto;right:10px;}
   /* coming soon — photo shown but visibly muted (tint overlay + soft grayscale) */
@@ -406,6 +409,7 @@
           <span class="b">
             <span class="t">{{ fp.title | replace: '(USA)', '' | strip }}</span>
             <span class="p">{{ fp.price | money }}</span>
+            {%- if s.show_deal and s.deal_text != blank -%}<span class="sp-deal">{{ s.deal_text }}</span>{%- endif -%}
             <span class="cta">{{ s.preorder_badge | default: 'Pre-order' }} &rarr;</span>
           </span>
         </a>
@@ -426,6 +430,7 @@
             <span class="b">
               <span class="t">{{ fp.title | replace: '(USA)', '' | strip }}</span>
               <span class="p">{{ fp.price | money }}</span>
+              {%- if s.show_deal and s.deal_text != blank -%}<span class="sp-deal">{{ s.deal_text }}</span>{%- endif -%}
               <span class="cta">{{ s.preorder_badge | default: 'Pre-order' }} &rarr;</span>
             </span>
           </a>
@@ -570,14 +575,14 @@
               <span class="sp-badge">{{ s.preorder_badge | default: 'Pre-order' }}</span>
               {%- if kind == 'sf' -%}<span class="sp-badge sf">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
               <span class="ph">{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 480 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- endif -%}</span>
-              <span class="b"><span class="t">{{ disp }}</span><span class="p">{{ pr.price | money }}</span></span>
+              <span class="b"><span class="t">{{ disp }}</span><span class="p">{{ pr.price | money }}</span>{%- if s.show_deal and s.deal_text != blank -%}<span class="sp-deal">{{ s.deal_text }}</span>{%- endif -%}</span>
             </a>
             {%- else -%}
             <div class="sp-tile soon sp-rev" data-kind="{{ kind }}" data-name="{{ tdl | escape }}">
               <span class="sp-soonov"><span class="cs">{{ s.coming_label | default: 'Coming soon' }}</span></span>
               {%- if kind == 'sf' -%}<span class="sp-badge sf">{{ s.sf_badge | default: '0g sugar' }}</span>{%- endif -%}
               <span class="ph">{%- if pr.featured_image -%}<img src="{{ pr.featured_image | image_url: width: 480 }}" alt="{{ pr.title | escape }}" loading="lazy">{%- else -%}<span class="fl">{{ disp }}</span>{%- endif -%}</span>
-              <span class="b"><span class="t">{{ disp }}</span><span class="dt">{{ s.coming_label | default: 'Coming soon' }}</span></span>
+              <span class="b"><span class="t">{{ disp }}</span><span class="dt">{{ s.coming_label | default: 'Coming soon' }}</span>{%- if s.show_deal and s.deal_text != blank -%}<span class="sp-deal">{{ s.deal_text }}</span>{%- endif -%}</span>
             </div>
             {%- endif -%}
           {%- endfor -%}
@@ -874,6 +879,8 @@
     { "type": "text", "id": "tab_reg", "label": "Tab: regular", "default": "Regular" },
     { "type": "text", "id": "tab_sf", "label": "Tab: sugar-free", "default": "Sugar-Free" },
     { "type": "text", "id": "preorder_badge", "label": "Live tile badge", "default": "Pre-order" },
+    { "type": "checkbox", "id": "show_deal", "label": "Show deal badge on every product", "default": true },
+    { "type": "text", "id": "deal_text", "label": "Deal badge text", "default": "40% OFF for VIP members" },
     { "type": "text", "id": "sf_badge", "label": "Sugar-free tile badge", "default": "0g sugar" },
     { "type": "header", "content": "Coming-soon flavors" },
     { "type": "paragraph", "content": "One flavor per line. Optional date after a pipe, e.g. “Caramel | August”. A name matching a live product is skipped automatically." },
