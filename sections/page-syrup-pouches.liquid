@@ -253,8 +253,12 @@
   #sp-{{ section.id }} .sp-tile .p{margin-top:auto;font-family:var(--display);font-weight:400;font-size:14.5px;color:var(--brand);}
   #sp-{{ section.id }} .sp-badge{position:absolute;top:10px;left:10px;z-index:2;font-family:var(--display);font-weight:400;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--pop);border-radius:999px;padding:5px 10px;}
   #sp-{{ section.id }} .sp-badge.sf{background:var(--sf);left:auto;right:10px;}
-  /* coming soon — quiet cream tiles */
-  #sp-{{ section.id }} .sp-tile.soon .ph{background:#FFF3DC;}
+  /* coming soon — photo shown but visibly muted (tint overlay + soft grayscale) */
+  #sp-{{ section.id }} .sp-tile.soon .ph{background:#FFF3DC;position:relative;}
+  #sp-{{ section.id }} .sp-tile.soon .ph img{filter:grayscale(.55) contrast(.94);opacity:.6;}
+  #sp-{{ section.id }} .sp-tile.soon .ph::after{content:'';position:absolute;inset:0;background:{{ s.soon_tint | default: '#FFF3DC' }};opacity:.35;pointer-events:none;}
+  #sp-{{ section.id }} .sp-tile.soon .b{background:{{ s.soon_tint | default: '#FFF3DC' }};}
+  #sp-{{ section.id }} .sp-tile.soon .b .t{opacity:.75;}
   #sp-{{ section.id }} .sp-tile.soon .ph .fl{font-family:var(--display);font-weight:400;font-size:clamp(14px,3vw,17px);line-height:1.15;text-transform:uppercase;color:var(--brand);text-align:center;padding:0 12px;opacity:.85;}
   #sp-{{ section.id }} .sp-soonov{position:absolute;top:10px;left:10px;z-index:3;}
   #sp-{{ section.id }} .sp-soonov .cs{font-family:var(--display);font-weight:400;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);background:var(--paper);border:var(--rule);border-radius:999px;padding:5px 10px;}
@@ -834,6 +838,7 @@
     { "type": "textarea", "id": "upcoming_regular", "label": "Regular — extra coming-soon flavors (optional)", "info": "Leave empty to show only real products." },
     { "type": "textarea", "id": "upcoming_sf", "label": "Sugar-Free — extra coming-soon flavors (optional)", "info": "Leave empty to show only real products." },
     { "type": "text", "id": "coming_label", "label": "Overlay label", "default": "Coming soon" },
+    { "type": "color", "id": "soon_tint", "label": "Coming-soon tint color", "default": "#FFF3DC" },
     { "type": "text", "id": "grid_note", "label": "Note under grid", "default": "More flavors go live every week — check back soon." },
     { "type": "header", "content": "Brand colors & layout" },
     { "type": "color", "id": "color_ink", "label": "Body text", "default": "#1a1a1a" },
