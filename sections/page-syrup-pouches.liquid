@@ -361,8 +361,8 @@
         </div>
         {%- if customer and s.show_credits -%}
         {%- capture pts_b -%}<b>{{ vip_pts }}</b>{%- endcapture -%}
-        {%- assign teaser = s.pts_teaser | default: 'You’ve got {points} credits — see what they do' -%}
-        <div class="sp-rev"><a class="sp-ptsline" href="#sp-cred-{{ section.id }}">&#9733; {{ teaser | replace: '{points}', pts_b }}</a></div>
+        {%- assign teaser = s.pts_teaser | default: 'You’ve got [points] credits — see what they do' -%}
+        <div class="sp-rev"><a class="sp-ptsline" href="#sp-cred-{{ section.id }}">&#9733; {{ teaser | replace: '[points]', pts_b }}</a></div>
         {%- endif -%}
       </div>
       <a class="sp-cue" href="#sp-say-{{ section.id }}" aria-label="Scroll down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9 l6 6 6-6"/></svg></a>
@@ -786,7 +786,7 @@
     { "type": "text", "id": "credits_title", "label": "Heading", "default": "Your <em>Syruvia Credits</em>" },
     { "type": "text", "id": "credits_unit", "label": "Points label", "default": "Syruvia Credits" },
     { "type": "text", "id": "cc_member_label", "label": "Member chip label", "default": "VIP member" },
-    { "type": "text", "id": "pts_teaser", "label": "Hero teaser ({points} = balance)", "default": "You’ve got {points} credits — see what they do" },
+    { "type": "text", "id": "pts_teaser", "label": "Hero teaser ([points] = balance)", "default": "You’ve got [points] credits — see what they do" },
     { "type": "color", "id": "cc_bg", "label": "Card color", "default": "#3c2415" },
     { "type": "color", "id": "cc_gold", "label": "Card gold accent", "default": "#FCE2A0" },
     { "type": "text", "id": "credits_lifetime_label", "label": "Lifetime label", "default": "Earned all-time:" },
