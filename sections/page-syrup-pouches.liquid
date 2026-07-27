@@ -244,6 +244,7 @@
   @media(max-width:560px){#sp-{{ section.id }} .cc-btns .sp-btn{width:100%;}}
 
   /* PICTURE BANDS */
+  #sp-{{ section.id }} .sp-band a{display:block;line-height:0;}
   #sp-{{ section.id }} .sp-band img{display:block;width:100%;height:auto;}
   #sp-{{ section.id }} .sp-band .m{display:none;}
   @media(max-width:760px){
@@ -411,6 +412,16 @@
     <div class="sp-mq" aria-hidden="true"><div class="tr">{%- for i in (1..4) -%}<span>{{ mqi }}</span>{%- endfor -%}{%- for i in (1..4) -%}<span>{{ mqi }}</span>{%- endfor -%}</div></div>
     {%- endif -%}
 
+    {%- comment -%} ===== TOP BANNER ===== {%- endcomment -%}
+    {%- if s.banner_top != blank -%}
+    <div class="sp-band">
+      {%- if s.banner_top_link != blank -%}<a href="{{ s.banner_top_link }}">{%- endif -%}
+      <img class="d {% if s.banner_top_m != blank %}has-m{% endif %}" src="{{ s.banner_top | image_url: width: 2400 }}" alt="{{ s.banner_top_alt | default: 'Syrup Pouches' | escape }}" loading="lazy">
+      {%- if s.banner_top_m != blank -%}<img class="m" src="{{ s.banner_top_m | image_url: width: 1200 }}" alt="{{ s.banner_top_alt | default: 'Syrup Pouches' | escape }}" loading="lazy">{%- endif -%}
+      {%- if s.banner_top_link != blank -%}</a>{%- endif -%}
+    </div>
+    {%- endif -%}
+
     {%- comment -%} ===== STATEMENT ===== {%- endcomment -%}
     {%- if s.show_statement -%}
     <div class="sp-say" id="sp-say-{{ section.id }}">
@@ -475,6 +486,11 @@
           <h2 class="sp-h2">{{ s.feat_title | default: 'Live now — <em>shop the drop</em>' }}</h2>
         </div>
         <div class="sp-duo{% if picks_count > 2 %} wide{% endif %}">{{ picks_html }}</div>
+        {%- if s.feat_seeall != blank -%}
+        <div class="sp-btnrow sp-rev" style="margin-top:30px;">
+          <a class="sp-btn sp-btn--ghost" href="{{ s.feat_seeall_url | default: '/collections/syrup-pouches' }}">{{ s.feat_seeall }} &rarr;</a>
+        </div>
+        {%- endif -%}
       </div>
     </div>
     {%- endif -%}
@@ -897,6 +913,14 @@
     { "type": "text", "id": "feat_title", "label": "Heading", "default": "Live now — <em>shop the drop</em>" },
     { "type": "text", "id": "live_badge", "label": "Live badge", "default": "Live now" },
     { "type": "text", "id": "feat_cta", "label": "Featured card button", "default": "Shop now" },
+    { "type": "text", "id": "feat_seeall", "label": "See-all button text", "default": "See all flavors" },
+    { "type": "text", "id": "feat_seeall_url", "label": "See-all button link", "default": "/collections/syrup-pouches" },
+    { "type": "header", "content": "Top banner" },
+    { "type": "paragraph", "content": "Full-width banner between the hero and the big statement. Leave empty to hide." },
+    { "type": "image_picker", "id": "banner_top", "label": "Banner — desktop" },
+    { "type": "image_picker", "id": "banner_top_m", "label": "Banner — mobile (optional)" },
+    { "type": "url", "id": "banner_top_link", "label": "Banner link (optional)" },
+    { "type": "text", "id": "banner_top_alt", "label": "Banner alt text", "default": "Syrup Pouches" },
     { "type": "header", "content": "VIP credits" },
     { "type": "checkbox", "id": "show_credits", "label": "Show Syruvia Credits card", "default": true },
     { "type": "text", "id": "credits_eyebrow", "label": "Eyebrow", "default": "Members earn" },
