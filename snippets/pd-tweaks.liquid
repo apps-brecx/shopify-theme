@@ -163,10 +163,13 @@ html body .pd .pd-reels-head .pd-eyebrow{
 }
 html body .pd .pd-reels-h2{margin:0 auto 16px!important;text-align:center!important}
 html body .pd .pd-reels-lede{font-family:'Josefin Sans','Josefin',sans-serif!important;font-size:16px!important;line-height:1.6!important;color:#3a3a3a!important;margin:0 auto 44px!important;font-weight:500!important;text-align:center!important;max-width:42ch!important}
-html body .pd .pd-reels-marquee{position:relative!important;width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;padding:8px 0 24px!important;-webkit-mask-image:linear-gradient(to right, transparent, #000 6%, #000 94%, transparent)!important;mask-image:linear-gradient(to right, transparent, #000 6%, #000 94%, transparent)!important;scrollbar-width:none!important;-ms-overflow-style:none!important;-webkit-overflow-scrolling:touch!important;cursor:grab!important;touch-action:pan-x!important;overscroll-behavior-x:contain!important;scroll-behavior:auto!important}
+/* Marquee shell only — the reels strip is a CSS-animated marquee owned by
+   snippets/pd-reels-section.liquid (the track holds each reel TWICE and slides
+   0 → -50% for a seamless loop). It must NOT be manually scrollable: the old
+   overflow-x:auto!important here let customers drag past the first set and SEE
+   the duplicate copy, which read as "the reels are repeating". */
+html body .pd .pd-reels-marquee{position:relative!important;width:100%!important;overflow:hidden!important;padding:8px 0 24px!important;-webkit-mask-image:linear-gradient(to right, transparent, #000 6%, #000 94%, transparent)!important;mask-image:linear-gradient(to right, transparent, #000 6%, #000 94%, transparent)!important;scrollbar-width:none!important;-ms-overflow-style:none!important;cursor:default!important;touch-action:pan-y!important}
 html body .pd .pd-reels-marquee::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
-html body .pd .pd-reels-marquee.is-dragging{cursor:grabbing!important;user-select:none!important}
-html body .pd .pd-reels-marquee.is-dragging *{user-select:none!important;pointer-events:none!important}
 html body .pd .pd-reels-track{display:flex!important;flex-wrap:nowrap!important;gap:18px!important;width:max-content!important;padding-left:8px!important;padding-right:8px!important}
 html body .pd .pd-reels-card{flex:0 0 280px!important;width:280px!important;aspect-ratio:9/16!important;position:relative!important;display:block!important;border:2px solid #1a1a1a!important;border-radius:24px!important;box-shadow:5px 5px 0 #1a1a1a!important;overflow:hidden!important;background:#1a1a1a!important;text-decoration:none!important;transition:transform .2s ease, box-shadow .2s ease!important;cursor:pointer!important;-webkit-user-drag:none!important}
 html body .pd .pd-reels-card:hover{transform:translate(-3px,-3px)!important;box-shadow:8px 8px 0 #1a1a1a!important}
