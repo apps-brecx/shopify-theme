@@ -116,7 +116,7 @@
         "lock_cta": "Shop now",
         "gate_join": "Join free",
         "count_enable": true,
-        "count_start": "2026-07-27",
+        "count_start": "2026-07-27 18:00",
         "count_hours": 72,
         "count_tz": "-04:00",
         "count_label": "Launch deal ends in",
