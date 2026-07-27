@@ -58,21 +58,27 @@
           "type": "box",
           "settings": {
             "title": "One perfect serving",
-            "text": "Every stick is pre-measured café-quality syrup — 15 ml, no pump, no bottle, no guessing."
+            "text": "Every stick is pre-measured café-quality syrup — 15 ml, no pump, no bottle, no guessing.",
+            "bg": "#e28f26",
+            "tx": "#ffffff"
           }
         },
         "box2": {
           "type": "box",
           "settings": {
             "title": "Tear. Pour. Enjoy.",
-            "text": "Coffee, soda, lemonade, water — flavor anything in seconds, anywhere you are."
+            "text": "Coffee, soda, lemonade, water — flavor anything in seconds, anywhere you are.",
+            "bg": "#FCE2A0",
+            "tx": "#3c2415"
           }
         },
         "box3": {
           "type": "box",
           "settings": {
             "title": "Regular & Sugar-Free",
-            "text": "Every flavor comes classic or with 0g sugar and 0 calories — keto friendly."
+            "text": "Every flavor comes classic or with 0g sugar and 0 calories — keto friendly.",
+            "bg": "#2F7DC4",
+            "tx": "#ffffff"
           }
         }
       },
