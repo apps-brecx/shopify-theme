@@ -1,0 +1,364 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Standalone "Track order" page — same functionality as the floating-contact
+  widget's Track tab (order number -> <endpoint>/track -> step timeline, FBM
+  statuses), restyled in the brand's neubrutalist page language (Archivo Black,
+  ink borders, hard shadows on cream — tokens from pdp-brand.css).
+
+  All classes are tp-* and lookups are root-scoped — the floating widget (which
+  renders on every page, bb-* ids) can coexist untouched. The worker endpoint
+  comes from this section's setting when set, else it reuses the endpoint the
+  floating widget is configured with, so there's one source of truth by default.
+  Dead ends offer "Send us a message instead": it opens the widget's form tab
+  when the widget exists, else it navigates to the contact page.
+{%- endcomment -%}
+
+<div class="pd">
+  <section class="sy-tpage" data-sy-track-root data-endpoint="{{ section.settings.chat_endpoint | escape }}" data-contact-url="{{ section.settings.contact_url | default: '/pages/contact-us' | escape }}">
+    <div class="pd-wrap">
+      <div class="tp-hero">
+        <span class="pd-eyebrow">{{ section.settings.eyebrow | default: 'Order status' }}</span>
+        <h1 class="tp-h1">{{ section.settings.heading | default: 'Track your order' }}</h1>
+        <p class="tp-lede">{{ section.settings.lede | default: 'Enter your order number to see exactly where your package is.' }}</p>
+      </div>
+
+      <div class="tp-card">
+        <form class="tp-form" novalidate>
+          <input type="text" class="tp-num" placeholder="e.g. 154008587601" maxlength="30" autocomplete="off" inputmode="numeric" aria-label="Order number">
+          <button type="submit" class="tp-btn tp-go">{{ section.settings.button_label | default: 'Track' }}</button>
+        </form>
+        <div class="tp-status" aria-live="polite"></div>
+        <div class="tp-result" hidden>
+          <div class="tp-head">
+            <div class="tp-current"></div>
+            <div class="tp-updated"></div>
+          </div>
+          <ol class="tp-steps"></ol>
+          <div class="tp-meta"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .sy-tpage{padding:56px 0 88px;background:var(--cream)}
+  .sy-tpage .tp-hero{text-align:center;max-width:680px;margin:0 auto 40px}
+  .sy-tpage .tp-h1{font-family:var(--display);font-weight:900;font-size:clamp(34px,6vw,60px);line-height:.95;letter-spacing:-.01em;text-transform:uppercase;margin:18px 0 12px;text-wrap:balance}
+  .sy-tpage .tp-lede{font-family:var(--serif);font-size:clamp(15px,1.5vw,17.5px);line-height:1.55;color:var(--ink-2);margin:0 auto;max-width:48ch}
+
+  .sy-tpage .tp-card{max-width:640px;margin:0 auto;background:var(--paper);border:var(--rule-2);border-radius:var(--r-card);box-shadow:6px 6px 0 var(--ink);padding:28px}
+  .sy-tpage .tp-form{display:flex;gap:10px;margin-bottom:12px}
+  .sy-tpage .tp-num{flex:1;min-width:0;padding:13px 14px;border:var(--rule-2);border-radius:12px;background:#fff;font-family:var(--serif);font-size:15px;color:var(--ink)}
+  .sy-tpage .tp-num:focus{outline:3px solid var(--coral);outline-offset:2px}
+  .sy-tpage .tp-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 24px;border:var(--rule-2);border-radius:var(--r-pill);background:var(--ink);color:var(--paper);font-family:var(--display);font-weight:400;font-size:13px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .12s ease,box-shadow .12s ease}
+  .sy-tpage .tp-btn:hover{transform:translate(-1.5px,-1.5px);box-shadow:4.5px 4.5px 0 var(--ink)}
+  .sy-tpage .tp-btn[disabled]{opacity:.55;cursor:default;transform:none;box-shadow:var(--shadow-sm)}
+  .sy-tpage .tp-status{min-height:20px;font-family:var(--serif);font-size:14.5px;color:var(--ink)}
+  .sy-tpage .tp-cta{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:10px 18px;border:var(--rule-2);border-radius:var(--r-pill);background:var(--ink);color:var(--butter);font-family:var(--display);font-weight:400;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .12s ease,box-shadow .12s ease}
+  .sy-tpage .tp-cta::after{content:'→';font-size:13px;line-height:1}
+  .sy-tpage .tp-cta:hover{transform:translate(-1.5px,-1.5px);box-shadow:4.5px 4.5px 0 var(--ink)}
+  .sy-tpage .tp-cta:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+
+  .sy-tpage .tp-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:14px 0 2px}
+  .sy-tpage .tp-current{font-family:var(--display);font-weight:400;font-size:18px;text-transform:uppercase;letter-spacing:.02em;color:var(--ink)}
+  .sy-tpage .tp-updated{font-family:var(--serif);font-size:12.5px;color:#8a7a68}
+  .sy-tpage .tp-steps{list-style:none;margin:16px 0 0;padding:0 0 0 4px}
+  .sy-tpage .tp-step{position:relative;display:flex;align-items:baseline;gap:10px;padding:0 0 24px 30px;font-family:var(--serif)}
+  .sy-tpage .tp-step::before{content:'';position:absolute;left:9px;top:20px;bottom:-2px;width:2.5px;background:#E3D8C4}
+  .sy-tpage .tp-step:last-child{padding-bottom:4px}
+  .sy-tpage .tp-step:last-child::before{display:none}
+  .sy-tpage .tp-step-dot{position:absolute;left:0;top:1px;width:21px;height:21px;border-radius:50%;border:2px solid var(--ink);background:#fff;box-sizing:border-box;display:flex;align-items:center;justify-content:center;transition:all .25s ease}
+  .sy-tpage .tp-step.is-done::before{background:var(--ink)}
+  .sy-tpage .tp-step.is-done .tp-step-dot{background:var(--ink)}
+  .sy-tpage .tp-step.is-done .tp-step-dot::after{content:'✓';color:var(--butter);font-size:12px;font-weight:700;line-height:1}
+  .sy-tpage .tp-step.is-current .tp-step-dot{background:var(--coral);animation:tp-pulse 1.6s ease-in-out infinite}
+  .sy-tpage .tp-step.is-current.is-done .tp-step-dot{background:var(--ink);animation:none}
+  @keyframes tp-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,92,.45)}50%{box-shadow:0 0 0 7px rgba(255,107,92,0)}}
+  @media (prefers-reduced-motion:reduce){.sy-tpage .tp-step.is-current .tp-step-dot{animation:none}}
+  .sy-tpage .tp-step-lbl{font-size:15px;color:#8a7a68}
+  .sy-tpage .tp-step.is-done .tp-step-lbl{color:var(--ink)}
+  .sy-tpage .tp-step.is-current .tp-step-lbl{font-weight:700;color:var(--ink)}
+  .sy-tpage .tp-step-at{margin-left:auto;font-size:12px;color:#a3907a;white-space:nowrap}
+  .sy-tpage .tp-step.is-fail{background:#FDECEA;border:1.5px solid #c0392b;border-radius:14px;padding:12px 12px 12px 38px;margin:2px 0 10px;align-items:center;flex-wrap:wrap}
+  .sy-tpage .tp-step.is-fail::before{display:none}
+  .sy-tpage .tp-step.is-fail .tp-step-dot{left:10px;top:13px;border-color:#c0392b;background:#c0392b}
+  .sy-tpage .tp-step.is-fail .tp-step-dot::after{content:'!';color:#fff;font-size:12px;font-weight:700}
+  .sy-tpage .tp-step.is-fail .tp-step-lbl{color:#8a2b1d;font-weight:700;font-size:13.5px}
+  .sy-tpage .tp-fail-btn{margin-left:auto;border:1.5px solid #c0392b;border-radius:var(--r-pill);background:#fff;color:#c0392b;font-family:var(--display);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:7px 14px;cursor:pointer}
+  .sy-tpage .tp-fail-btn:hover{background:#c0392b;color:#fff}
+  .sy-tpage .tp-meta{margin-top:16px;font-family:var(--serif);font-size:13.5px;color:#5a4632;overflow-wrap:break-word;display:flex;flex-direction:column;gap:7px}
+  .sy-tpage .tp-meta:empty{display:none}
+  .sy-tpage .tp-carrier{display:flex;align-items:center;gap:9px;font-weight:700;color:var(--ink)}
+  .sy-tpage .tp-carrier-logo{width:24px;height:24px;display:block;flex:0 0 auto}
+  .sy-tpage .tp-link{color:var(--ink);font-weight:700;text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}
+  .sy-tpage .tp-link:hover{color:var(--coral)}
+
+  @media (max-width:560px){
+    .sy-tpage{padding:40px 0 64px}
+    .sy-tpage .tp-card{padding:20px 16px;box-shadow:4px 4px 0 var(--ink)}
+    .sy-tpage .tp-form{flex-direction:column}
+    .sy-tpage .tp-btn{width:100%}
+  }
+</style>
+
+<script>
+(function(){
+  function init(root){
+    var form      = root.querySelector('.tp-form');
+    if (!form || form.dataset.syInit) return;
+    form.dataset.syInit = '1';
+    var numIn     = root.querySelector('.tp-num');
+    var goBtn     = root.querySelector('.tp-go');
+    var statusEl  = root.querySelector('.tp-status');
+    var resultEl  = root.querySelector('.tp-result');
+    var currentEl = root.querySelector('.tp-current');
+    var updatedEl = root.querySelector('.tp-updated');
+    var stepsEl   = root.querySelector('.tp-steps');
+    var metaEl    = root.querySelector('.tp-meta');
+    var busy = false;
+
+    /* Endpoint: section setting, else whatever the floating widget is configured
+       with (single source of truth by default). */
+    var endpoint = (root.dataset.endpoint || '').trim();
+    if (!endpoint){
+      var w = document.getElementById('bb-floating-contact');
+      endpoint = w ? (w.dataset.chatEndpoint || '').trim() : '';
+    }
+    endpoint = endpoint.replace(/\/+$/, '');
+    var contactUrl = root.dataset.contactUrl || '/pages/contact-us';
+
+    /* "Send us a message instead": open the floating widget's form tab when the
+       widget is on the page; else fall back to the contact page. */
+    function openMessage(){
+      var btn = document.getElementById('bb-float-btn');
+      var modal = document.getElementById('bb-contact-modal');
+      if (btn && modal && window.bbShowTab){
+        if (modal.hidden) btn.click();
+        window.bbShowTab('form');
+        return;
+      }
+      window.location.href = contactUrl;
+    }
+    function statusCta(msg){
+      statusEl.textContent = '';
+      statusEl.appendChild(document.createTextNode(msg + ' '));
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'tp-cta';
+      btn.textContent = 'Send us a message instead';
+      btn.addEventListener('click', openMessage);
+      statusEl.appendChild(btn);
+    }
+
+    var STEPS = [
+      { label: 'Order placed',           at: 'order_created_at' },
+      { label: 'Accepted',               at: 'accepted_at' },
+      { label: 'Packed',                 at: 'prep_at' },
+      { label: 'Handed over to carrier', at: 'pallet_at' },
+      { label: 'On the way',             at: null },
+      { label: 'Out for delivery',       at: null },
+      { label: 'Delivered',              at: null }
+    ];
+    function rankOf(d){
+      if (d.shipping_status === 'delivered') return 7;
+      /* FBM has no out-for-delivery signal (step 6) — it fills in only once
+         delivered. in_transit maps to "On the way". */
+      if (d.shipping_status === 'in_transit') return 5;
+      /* awaiting_collection = packed & staged for the carrier; scans lag, so
+         trust the shipping status before the warehouse scans. */
+      if (d.shipping_status === 'awaiting_collection') return 4;
+      if (d.scan_status === 'pallet' || d.pallet_at) return 4;
+      if (d.packed_at || d.scan_status === 'packed' || d.label_printed_at) return 3;
+      return 2;
+    }
+    function fmt(iso){
+      if (!iso) return '';
+      var dt = new Date(iso);
+      if (isNaN(dt.getTime())) return '';
+      try {
+        return dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ', '
+             + dt.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+      } catch(e){ return ''; }
+    }
+
+    /* Carrier logos (theme assets) + official tracking pages. Unknown carriers
+       fall back to plain text and a web search link. */
+    var CARRIERS = {
+      usps:  { name: 'USPS',  logo: "{{ 'carrier-usps.svg'  | asset_url }}", url: 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' },
+      ups:   { name: 'UPS',   logo: "{{ 'carrier-ups.svg'   | asset_url }}", url: 'https://www.ups.com/track?tracknum=' },
+      fedex: { name: 'FedEx', logo: "{{ 'carrier-fedex.svg' | asset_url }}", url: 'https://www.fedex.com/fedextrack/?trknbr=' },
+      dhl:   { name: 'DHL',   logo: "{{ 'carrier-dhl.svg'   | asset_url }}", url: 'https://www.dhl.com/us-en/home/tracking.html?tracking-id=' }
+    };
+    function carrierByName(name){
+      name = String(name || '');
+      if (/usps|postal/i.test(name)) return 'usps';
+      if (/ups/i.test(name)) return 'ups';
+      if (/fedex|fdx/i.test(name)) return 'fedex';
+      if (/dhl/i.test(name)) return 'dhl';
+      return '';
+    }
+    /* The pallet numbers can belong to a different carrier than the row's
+       carrier_name, so the number format wins when it's unambiguous. */
+    function carrierByNum(n){
+      if (/^1Z/i.test(n)) return 'ups';
+      if (/^9[2-5]\d{18,}$/.test(n) || /^420\d{5,9}9[2-5]\d{18,}$/.test(n)) return 'usps';
+      return '';
+    }
+    function trackUrl(n, nameKey){
+      var key = carrierByNum(n) || nameKey;
+      return key ? CARRIERS[key].url + encodeURIComponent(n)
+                 : 'https://www.google.com/search?q=' + encodeURIComponent(n + ' tracking');
+    }
+
+    function render(d){
+      d.prep_at = d.packed_at || d.label_printed_at;
+      var rank = rankOf(d);
+      var trouble = !!(d.is_returning || d.is_stuck || d.is_label_failed);
+      currentEl.textContent = (d.order ? d.order + ' — ' : '') + (trouble ? 'Needs attention' : STEPS[rank - 1].label);
+      var updatedTxt = fmt(d.updated_at);
+      updatedEl.textContent = updatedTxt ? 'Last updated: ' + updatedTxt : '';
+      stepsEl.textContent = '';
+      STEPS.forEach(function(s, i){
+        var n = i + 1;
+        var li = document.createElement('li');
+        li.className = 'tp-step'
+          + (n < rank ? ' is-done' : '')
+          + (n === rank ? (rank === 7 ? ' is-done is-current' : ' is-current') : '');
+        var dot = document.createElement('span'); dot.className = 'tp-step-dot';
+        var lbl = document.createElement('span'); lbl.className = 'tp-step-lbl'; lbl.textContent = s.label;
+        li.appendChild(dot);
+        li.appendChild(lbl);
+        var when = (n <= rank && s.at) ? fmt(d[s.at]) : '';
+        if (when){
+          var t = document.createElement('span'); t.className = 'tp-step-at'; t.textContent = when;
+          li.appendChild(t);
+        }
+        stepsEl.appendChild(li);
+      });
+      /* Delivery-problem branch (returning / stuck / label failed): a red node
+         right after the current step, pointing at human help. */
+      if (trouble){
+        var li = document.createElement('li');
+        li.className = 'tp-step is-fail';
+        var dot = document.createElement('span'); dot.className = 'tp-step-dot';
+        var lbl = document.createElement('span'); lbl.className = 'tp-step-lbl';
+        lbl.textContent = 'There’s a delivery issue with this shipment';
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'tp-fail-btn';
+        btn.textContent = 'Contact support';
+        btn.addEventListener('click', openMessage);
+        li.appendChild(dot);
+        li.appendChild(lbl);
+        li.appendChild(btn);
+        var after = stepsEl.children[rank];
+        if (after) stepsEl.insertBefore(li, after); else stepsEl.appendChild(li);
+      }
+      metaEl.textContent = '';
+      var nameKey = carrierByName(d.carrier);
+      if (d.carrier){
+        var crow = document.createElement('div');
+        crow.className = 'tp-carrier';
+        var info = CARRIERS[nameKey];
+        if (info){
+          var img = document.createElement('img');
+          img.src = info.logo;
+          img.alt = '';
+          img.width = 24; img.height = 24;
+          img.className = 'tp-carrier-logo';
+          crow.appendChild(img);
+        }
+        var nm = document.createElement('span');
+        nm.textContent = 'Shipped with ' + (info ? info.name : String(d.carrier).toUpperCase());
+        crow.appendChild(nm);
+        metaEl.appendChild(crow);
+      }
+      if (d.tracking && d.tracking.length){
+        var trow = document.createElement('div');
+        trow.appendChild(document.createTextNode('Tracking: '));
+        d.tracking.forEach(function(num, i){
+          var n = String(num);
+          if (i) trow.appendChild(document.createTextNode(', '));
+          var a = document.createElement('a');
+          a.className = 'tp-link';
+          a.href = trackUrl(n, nameKey);
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.textContent = n;
+          trow.appendChild(a);
+        });
+        metaEl.appendChild(trow);
+      }
+      resultEl.hidden = false;
+    }
+
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      if (busy) return;
+      var v = (numIn.value || '').trim();
+      if (!v){ numIn.focus(); return; }
+      if (!endpoint){ statusCta('Tracking isn’t set up yet.'); return; }
+      busy = true;
+      if (goBtn) goBtn.disabled = true;
+      resultEl.hidden = true;
+      statusEl.textContent = 'Looking up your order…';
+      var ctrl  = ('AbortController' in window) ? new AbortController() : null;
+      var timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 30000);
+      try {
+        var res = await fetch(endpoint + '/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order_number: v }),
+          signal: ctrl ? ctrl.signal : undefined
+        });
+        var data = null;
+        try { data = await res.json(); } catch(err){}
+        if (res.ok && data && data.ok){
+          if (data.found){ statusEl.textContent = ''; render(data); }
+          else statusCta('We couldn’t find a shipment for that order number. Double-check the number — brand-new orders can take a little while to appear.');
+        } else {
+          /* A not-yet-updated worker answers /track from the chat handler with
+             raw errors — swap those (and the terse 429) for a friendly message. */
+          var raw = (data && data.error) ? String(data.error) : '';
+          var stale = /empty message|invalid json|payload too large|worker secrets|^too many requests$/i.test(raw);
+          if (raw && !stale) statusEl.textContent = raw;
+          else statusCta('Tracking isn’t available right now — please try again later.');
+        }
+      } catch(err){
+        statusEl.textContent = 'Tracking is temporarily unavailable — please try again in a minute.';
+      } finally {
+        if (timer) clearTimeout(timer);
+        busy = false;
+        if (goBtn) goBtn.disabled = false;
+      }
+    });
+  }
+  function boot(){
+    Array.prototype.forEach.call(document.querySelectorAll('[data-sy-track-root]'), init);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Track Order Page",
+  "tag": "section",
+  "class": "section-track-order-page",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Order status" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Track your order" },
+    { "type": "text", "id": "lede", "label": "Intro text", "default": "Enter your order number to see exactly where your package is." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Track" },
+    { "type": "header", "content": "Wiring" },
+    { "type": "text", "id": "chat_endpoint", "label": "Worker endpoint (optional)", "info": "Leave blank to reuse the floating chat widget's endpoint." },
+    { "type": "url", "id": "contact_url", "label": "Contact page (fallback)", "info": "Used by “Send us a message” when the floating widget isn't on the page." }
+  ],
+  "presets": [{ "name": "Track Order Page" }]
+}
+{% endschema %}
