@@ -456,16 +456,16 @@
     .bb-track-current{font-weight:700;font-size:16.5px;color:#3C2005}
     .bb-track-updated{font-size:12px;color:#8a7a68}
     .bb-steps{list-style:none;margin:12px 0 0;padding:0 0 0 4px}
-    .bb-step{position:relative;display:flex;align-items:baseline;gap:10px;padding:0 0 22px 24px}
-    .bb-step::before{content:'';position:absolute;left:7px;top:16px;bottom:-2px;width:2px;background:#E8DFC9}
+    .bb-step{position:relative;display:flex;align-items:baseline;gap:10px;padding:0 0 22px 30px}
+    .bb-step::before{content:'';position:absolute;left:10px;top:20px;bottom:-2px;width:2px;background:#E8DFC9}
     .bb-step:last-child{padding-bottom:4px}
     .bb-step:last-child::before{display:none}
-    .bb-step-dot{position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50%;border:2px solid #C9BBA4;background:#fff;box-sizing:border-box;display:flex;align-items:center;justify-content:center;transition:all .25s ease}
+    .bb-step-dot{position:absolute;left:0;top:-1px;width:22px;height:22px;border-radius:50%;border:2px solid #C9BBA4;background:#fff;color:#B9A78D;box-sizing:border-box;display:flex;align-items:center;justify-content:center;transition:all .25s ease}
+    .bb-step-dot svg{width:12px;height:12px;display:block}
     .bb-step.is-done::before{background:#3C2005}
-    .bb-step.is-done .bb-step-dot{border-color:#3C2005;background:#3C2005}
-    .bb-step.is-done .bb-step-dot::after{content:'✓';color:#FCE2A0;font-size:11px;font-weight:700;line-height:1}
-    .bb-step.is-current .bb-step-dot{border-color:#3C2005;background:#FF6B5C;animation:bb-pulse 1.6s ease-in-out infinite}
-    .bb-step.is-current.is-done .bb-step-dot{background:#3C2005;animation:none}
+    .bb-step.is-done .bb-step-dot{border-color:#3C2005;background:#3C2005;color:#FCE2A0}
+    .bb-step.is-current .bb-step-dot{border-color:#3C2005;background:#FF6B5C;color:#fff;animation:bb-pulse 1.6s ease-in-out infinite}
+    .bb-step.is-current.is-done .bb-step-dot{background:#3C2005;color:#FCE2A0;animation:none}
     @keyframes bb-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,92,.45)}50%{box-shadow:0 0 0 6px rgba(255,107,92,0)}}
     @media (prefers-reduced-motion:reduce){.bb-step.is-current .bb-step-dot{animation:none}}
     .bb-step-lbl{font-size:14px;color:#8a7a68}
@@ -473,9 +473,9 @@
     .bb-step.is-current .bb-step-lbl{font-weight:700;color:#3C2005}
     .bb-step-at{margin-left:auto;font-size:11.5px;color:#a3907a;white-space:nowrap}
     /* Delivery-issue node */
-    .bb-step.is-fail{background:#FDECEA;border-radius:12px;padding:10px 10px 10px 34px;margin:2px 0 8px;align-items:center;flex-wrap:wrap}
+    .bb-step.is-fail{background:#FDECEA;border-radius:12px;padding:10px 10px 10px 40px;margin:2px 0 8px;align-items:center;flex-wrap:wrap}
     .bb-step.is-fail::before{display:none}
-    .bb-step.is-fail .bb-step-dot{left:10px;top:12px;border-color:#c0392b;background:#c0392b}
+    .bb-step.is-fail .bb-step-dot{left:10px;top:10px;border-color:#c0392b;background:#c0392b}
     .bb-step.is-fail .bb-step-dot::after{content:'!';color:#fff;font-size:11px;font-weight:700}
     .bb-step.is-fail .bb-step-lbl{color:#8a2b1d;font-weight:700;font-size:13px}
     .bb-step-fail-btn{margin-left:auto;border:1.5px solid #c0392b;border-radius:999px;background:#fff;color:#c0392b;font:inherit;font-size:12px;font-weight:700;padding:6px 12px;cursor:pointer}
@@ -1405,6 +1405,20 @@
         { label: 'Out for delivery',            at: null },
         { label: 'Delivered',                   at: null },
       ];
+      /* One relatable icon per step (static stroke SVGs — bag, clipboard-check,
+         package, truck, route, map-pin, home). Injected into the step dots;
+         the delivery-issue node keeps its '!' badge instead. Kept in sync with
+         sections/track-order-page.liquid. */
+      const SVG_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+      const STEP_ICONS = [
+        SVG_OPEN + '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+        SVG_OPEN + '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>',
+        SVG_OPEN + '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>',
+        SVG_OPEN + '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>',
+        SVG_OPEN + '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg>',
+        SVG_OPEN + '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>',
+        SVG_OPEN + '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>'
+      ];
       function rankOf(d){
         if (d.shipping_status === 'delivered') return 7;
         /* FBM has no out-for-delivery signal (step 6) — it fills in only once
@@ -1470,6 +1484,7 @@
             + (n < rank ? ' is-done' : '')
             + (n === rank ? (rank === 7 ? ' is-done is-current' : ' is-current') : '');
           const dot = document.createElement('span'); dot.className = 'bb-step-dot';
+          dot.innerHTML = STEP_ICONS[i] || '';
           const lbl = document.createElement('span'); lbl.className = 'bb-step-lbl'; lbl.textContent = s.label;
           li.appendChild(dot);
           li.appendChild(lbl);

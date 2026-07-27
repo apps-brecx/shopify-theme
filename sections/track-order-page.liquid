@@ -65,25 +65,25 @@
   .sy-tpage .tp-current{font-family:var(--display);font-weight:400;font-size:18px;text-transform:uppercase;letter-spacing:.02em;color:var(--ink)}
   .sy-tpage .tp-updated{font-family:var(--serif);font-size:12.5px;color:#8a7a68}
   .sy-tpage .tp-steps{list-style:none;margin:16px 0 0;padding:0 0 0 4px}
-  .sy-tpage .tp-step{position:relative;display:flex;align-items:baseline;gap:10px;padding:0 0 24px 30px;font-family:var(--serif)}
-  .sy-tpage .tp-step::before{content:'';position:absolute;left:9px;top:20px;bottom:-2px;width:2.5px;background:#E3D8C4}
+  .sy-tpage .tp-step{position:relative;display:flex;align-items:baseline;gap:10px;padding:0 0 24px 38px;font-family:var(--serif)}
+  .sy-tpage .tp-step::before{content:'';position:absolute;left:12px;top:26px;bottom:-2px;width:2.5px;background:#E3D8C4}
   .sy-tpage .tp-step:last-child{padding-bottom:4px}
   .sy-tpage .tp-step:last-child::before{display:none}
-  .sy-tpage .tp-step-dot{position:absolute;left:0;top:1px;width:21px;height:21px;border-radius:50%;border:2px solid var(--ink);background:#fff;box-sizing:border-box;display:flex;align-items:center;justify-content:center;transition:all .25s ease}
+  .sy-tpage .tp-step-dot{position:absolute;left:0;top:-2px;width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);background:#fff;color:#B9A78D;box-sizing:border-box;display:flex;align-items:center;justify-content:center;transition:all .25s ease}
+  .sy-tpage .tp-step-dot svg{width:14px;height:14px;display:block}
   .sy-tpage .tp-step.is-done::before{background:var(--ink)}
-  .sy-tpage .tp-step.is-done .tp-step-dot{background:var(--ink)}
-  .sy-tpage .tp-step.is-done .tp-step-dot::after{content:'✓';color:var(--butter);font-size:12px;font-weight:700;line-height:1}
-  .sy-tpage .tp-step.is-current .tp-step-dot{background:var(--coral);animation:tp-pulse 1.6s ease-in-out infinite}
-  .sy-tpage .tp-step.is-current.is-done .tp-step-dot{background:var(--ink);animation:none}
+  .sy-tpage .tp-step.is-done .tp-step-dot{background:var(--ink);color:var(--butter)}
+  .sy-tpage .tp-step.is-current .tp-step-dot{background:var(--coral);color:#fff;animation:tp-pulse 1.6s ease-in-out infinite}
+  .sy-tpage .tp-step.is-current.is-done .tp-step-dot{background:var(--ink);color:var(--butter);animation:none}
   @keyframes tp-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,92,.45)}50%{box-shadow:0 0 0 7px rgba(255,107,92,0)}}
   @media (prefers-reduced-motion:reduce){.sy-tpage .tp-step.is-current .tp-step-dot{animation:none}}
   .sy-tpage .tp-step-lbl{font-size:15px;color:#8a7a68}
   .sy-tpage .tp-step.is-done .tp-step-lbl{color:var(--ink)}
   .sy-tpage .tp-step.is-current .tp-step-lbl{font-weight:700;color:var(--ink)}
   .sy-tpage .tp-step-at{margin-left:auto;font-size:12px;color:#a3907a;white-space:nowrap}
-  .sy-tpage .tp-step.is-fail{background:#FDECEA;border:1.5px solid #c0392b;border-radius:14px;padding:12px 12px 12px 38px;margin:2px 0 10px;align-items:center;flex-wrap:wrap}
+  .sy-tpage .tp-step.is-fail{background:#FDECEA;border:1.5px solid #c0392b;border-radius:14px;padding:12px 12px 12px 44px;margin:2px 0 10px;align-items:center;flex-wrap:wrap}
   .sy-tpage .tp-step.is-fail::before{display:none}
-  .sy-tpage .tp-step.is-fail .tp-step-dot{left:10px;top:13px;border-color:#c0392b;background:#c0392b}
+  .sy-tpage .tp-step.is-fail .tp-step-dot{left:10px;top:10px;border-color:#c0392b;background:#c0392b}
   .sy-tpage .tp-step.is-fail .tp-step-dot::after{content:'!';color:#fff;font-size:12px;font-weight:700}
   .sy-tpage .tp-step.is-fail .tp-step-lbl{color:#8a2b1d;font-weight:700;font-size:13.5px}
   .sy-tpage .tp-fail-btn{margin-left:auto;border:1.5px solid #c0392b;border-radius:var(--r-pill);background:#fff;color:#c0392b;font-family:var(--display);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:7px 14px;cursor:pointer}
@@ -161,6 +161,19 @@
       { label: 'Out for delivery',       at: null },
       { label: 'Delivered',              at: null }
     ];
+    /* One relatable icon per step (static stroke SVGs — bag, clipboard-check,
+       package, truck, route, map-pin, home). Injected into the step dots;
+       the delivery-issue node keeps its '!' badge instead. */
+    var SVG_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+    var STEP_ICONS = [
+      SVG_OPEN + '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+      SVG_OPEN + '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg>',
+      SVG_OPEN + '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>',
+      SVG_OPEN + '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>',
+      SVG_OPEN + '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg>',
+      SVG_OPEN + '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>',
+      SVG_OPEN + '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>'
+    ];
     function rankOf(d){
       if (d.shipping_status === 'delivered') return 7;
       /* FBM has no out-for-delivery signal (step 6) — it fills in only once
@@ -227,6 +240,7 @@
           + (n < rank ? ' is-done' : '')
           + (n === rank ? (rank === 7 ? ' is-done is-current' : ' is-current') : '');
         var dot = document.createElement('span'); dot.className = 'tp-step-dot';
+        dot.innerHTML = STEP_ICONS[i] || '';
         var lbl = document.createElement('span'); lbl.className = 'tp-step-lbl'; lbl.textContent = s.label;
         li.appendChild(dot);
         li.appendChild(lbl);
