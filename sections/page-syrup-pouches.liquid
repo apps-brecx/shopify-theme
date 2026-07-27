@@ -459,6 +459,7 @@
   var cb=root.querySelector('[data-count-bar]');
   if(cb){
     var cst=(cb.getAttribute('data-start')||'').trim();
+    if(/^\d{4}-\d{2}-\d{2}$/.test(cst)) cst+=' 00:00';
     var ctz=cb.getAttribute('data-tz')||'-04:00';
     var chrs=parseFloat(cb.getAttribute('data-hours'))||72;
     var startMs=Date.parse(cst.replace(' ','T')+ctz);
