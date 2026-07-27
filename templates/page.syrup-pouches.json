@@ -14,9 +14,12 @@
       "blocks": {
         "pick1": { "type": "product", "settings": { "product": "vanilla-syrup-pouches" } },
         "pick2": { "type": "product", "settings": { "product": "caramel-syrup-pouches" } },
-        "pick3": { "type": "product", "settings": { "product": "cookie-butter-syrup-pouches" } }
+        "pick3": { "type": "product", "settings": { "product": "cookie-butter-syrup-pouches" } },
+        "box1": { "type": "box", "settings": { "title": "One perfect serving", "text": "Every stick is pre-measured café-quality syrup — 15 ml, no pump, no bottle, no guessing." } },
+        "box2": { "type": "box", "settings": { "title": "Tear. Pour. Enjoy.", "text": "Coffee, soda, lemonade, water — flavor anything in seconds, anywhere you are." } },
+        "box3": { "type": "box", "settings": { "title": "Regular & Sugar-Free", "text": "Every flavor comes classic or with 0g sugar and 0 calories — keto friendly." } }
       },
-      "block_order": ["pick1", "pick2", "pick3"],
+      "block_order": ["pick1", "pick2", "pick3", "box1", "box2", "box3"],
       "settings": {
         "access_mode": "everyone",
         "collection_handle": "syrup-pouches",
