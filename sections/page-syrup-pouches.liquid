@@ -203,18 +203,15 @@
   {%- endif -%}
 
   {%- comment -%} ===== TOP BANNER (hero) ===== {%- endcomment -%}
+  {%- assign hero_href = '/collections/syrup-pouches' -%}
+  {%- if s.feat_seeall_url != blank -%}{%- assign hero_href = s.feat_seeall_url -%}{%- endif -%}
+  {%- if s.hero_link != blank -%}{%- assign hero_href = s.hero_link -%}{%- endif -%}
   <div class="sp-hero">
-    {%- if s.hero_link != blank -%}<a href="{{ s.hero_link }}" aria-label="{{ s.hero_alt | default: 'Syrup Pouches' | escape }}">{%- endif -%}
-    <img class="d" src="{{ banner_d }}" alt="{{ s.hero_alt | default: 'Syrup Pouches' | escape }}" loading="eager">
-    <img class="m" src="{{ banner_m }}" alt="{{ s.hero_alt | default: 'Syrup Pouches' | escape }}" loading="eager">
-    {%- if s.hero_link != blank -%}</a>{%- endif -%}
+    <a href="{{ hero_href }}" aria-label="{{ s.hero_alt | default: 'Syrup Pouches' | escape }}">
+      <img class="d" src="{{ banner_d }}" alt="{{ s.hero_alt | default: 'Syrup Pouches' | escape }}" loading="eager">
+      <img class="m" src="{{ banner_m }}" alt="{{ s.hero_alt | default: 'Syrup Pouches' | escape }}" loading="eager">
+    </a>
   </div>
-  {%- if s.hero_btn != blank -%}
-  <div class="sp-hero-btn sp-rev">
-    <a class="sp-btn" href="{% if s.hero_link != blank %}{{ s.hero_link }}{% else %}#sp-shop-{{ section.id }}{% endif %}">{{ s.hero_btn }}</a>
-  </div>
-  {%- endif -%}
-
   {%- if s.show_marquee -%}
   {%- assign mqi = s.marquee_text | default: 'Just dropped · Syrup Pouches · Flavor On The Go' -%}
   <div class="sp-mq" aria-hidden="true"><div class="tr">{%- for i in (1..4) -%}<span>{{ mqi }}</span>{%- endfor -%}{%- for i in (1..4) -%}<span>{{ mqi }}</span>{%- endfor -%}</div></div>
@@ -259,72 +256,13 @@
 
   {%- comment -%} ===== PRODUCT LISTINGS ===== {%- endcomment -%}
   {%- assign prod_count = 0 -%}
-  {%- capture prods_html -%}
-    {%- for block in section.blocks -%}
-      {%- if block.type != 'product' -%}{%- continue -%}{%- endif -%}
-      {%- assign fp = block.settings.product -%}
-      {%- if fp == blank -%}{%- continue -%}{%- endif -%}
-      {%- assign prod_count = prod_count | plus: 1 -%}
-      {%- assign tdl = fp.title | downcase -%}
-      {%- assign issf = false -%}{%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign issf = true -%}{%- endif -%}
-      {%- assign disp = fp.title | replace: '(USA)', '' | replace: 'Syrup Pouches', '' | strip -%}
-      {%- if disp == blank -%}{%- assign disp = fp.title -%}{%- endif -%}
-      <div class="sp-card sp-rev" {{ block.shopify_attributes }}>
-        {%- if fp.available -%}
-        <span class="sp-flag">{{ block.settings.badge | default: s.live_badge | default: 'New' }}</span>
-        {%- else -%}
-        <span class="sp-flag soonf">{{ s.coming_label | default: 'Coming soon' }}</span>
-        {%- endif -%}
-        <a class="ph" href="{{ fp.url }}">{%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 720 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}</a>
-        <div class="b">
-          {%- if issf -%}<span class="kick">{{ s.sf_badge | default: 'Sugar-Free · 0g' }}</span>{%- endif -%}
-          <a class="t" href="{{ fp.url }}">{{ disp }}</a>
-          <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
-          {%- if s.show_deal and s.deal_text != blank -%}<span class="sp-deal">{{ s.deal_text }}</span>{%- endif -%}
-          {%- if fp.available -%}
-          {%- form 'product', fp -%}
-            <input type="hidden" name="id" value="{{ fp.selected_or_first_available_variant.id }}">
-            <button type="submit" class="atc">{{ s.atc_label | default: 'Add to cart' }}</button>
-          {%- endform -%}
-          {%- else -%}
-          <form><button type="button" class="atc" disabled>{{ s.coming_label | default: 'Coming soon' }}</button></form>
-          {%- endif -%}
-        </div>
-      </div>
-    {%- endfor -%}
-  {%- endcapture -%}
-  {%- if prod_count == 0 and cl != blank -%}
-    {%- capture prods_html -%}
-      {%- for fp in cl.products limit: 6 -%}
-        {%- assign prod_count = prod_count | plus: 1 -%}
-        {%- assign tdl = fp.title | downcase -%}
-        {%- assign issf = false -%}{%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign issf = true -%}{%- endif -%}
-        {%- assign disp = fp.title | replace: '(USA)', '' | replace: 'Syrup Pouches', '' | strip -%}
-        {%- if disp == blank -%}{%- assign disp = fp.title -%}{%- endif -%}
-        <div class="sp-card sp-rev">
-          {%- if fp.available -%}
-          <span class="sp-flag">{{ s.live_badge | default: 'New' }}</span>
-          {%- else -%}
-          <span class="sp-flag soonf">{{ s.coming_label | default: 'Coming soon' }}</span>
-          {%- endif -%}
-          <a class="ph" href="{{ fp.url }}">{%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 720 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}</a>
-          <div class="b">
-            {%- if issf -%}<span class="kick">{{ s.sf_badge | default: 'Sugar-Free · 0g' }}</span>{%- endif -%}
-            <a class="t" href="{{ fp.url }}">{{ disp }}</a>
-            <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
-            {%- if s.show_deal and s.deal_text != blank -%}<span class="sp-deal">{{ s.deal_text }}</span>{%- endif -%}
-            {%- if fp.available -%}
-            {%- form 'product', fp -%}
-              <input type="hidden" name="id" value="{{ fp.selected_or_first_available_variant.id }}">
-              <button type="submit" class="atc">{{ s.atc_label | default: 'Add to cart' }}</button>
-            {%- endform -%}
-            {%- else -%}
-            <form><button type="button" class="atc" disabled>{{ s.coming_label | default: 'Coming soon' }}</button></form>
-            {%- endif -%}
-          </div>
-        </div>
-      {%- endfor -%}
-    {%- endcapture -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'product' and block.settings.product != blank -%}{%- assign prod_count = prod_count | plus: 1 -%}{%- endif -%}
+  {%- endfor -%}
+  {%- assign use_fallback = false -%}
+  {%- if prod_count == 0 and cl != blank and cl.products.size > 0 -%}
+    {%- assign use_fallback = true -%}
+    {%- assign prod_count = cl.products.size -%}
   {%- endif -%}
   {%- if prod_count > 0 -%}
   <hr class="sp-sep">
@@ -334,7 +272,70 @@
         {%- if s.feat_eyebrow != blank -%}<span class="sp-eyebrow">{{ s.feat_eyebrow }}</span>{%- endif -%}
         <h2 class="sp-h2">{{ s.feat_title | default: 'Shop <em>Pouches</em>' }}</h2>
       </div>
-      <div class="sp-prods">{{ prods_html }}</div>
+      <div class="sp-prods">
+      {%- if use_fallback -%}
+        {%- for fp in cl.products limit: 6 -%}
+          {%- assign tdl = fp.title | downcase -%}
+          {%- assign issf = false -%}{%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign issf = true -%}{%- endif -%}
+          {%- assign disp = fp.title | replace: '(USA)', '' | replace: 'Syrup Pouches', '' | strip -%}
+          {%- if disp == blank -%}{%- assign disp = fp.title -%}{%- endif -%}
+          <div class="sp-card sp-rev">
+            {%- if fp.available -%}
+            <span class="sp-flag">{{ s.live_badge | default: 'New' }}</span>
+            {%- else -%}
+            <span class="sp-flag soonf">{{ s.coming_label | default: 'Coming soon' }}</span>
+            {%- endif -%}
+            <a class="ph" href="{{ fp.url }}">{%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 720 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}</a>
+            <div class="b">
+              {%- if issf -%}<span class="kick">{{ s.sf_badge | default: 'Sugar-Free · 0g' }}</span>{%- endif -%}
+              <a class="t" href="{{ fp.url }}">{{ disp }}</a>
+              <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
+              {%- if s.show_deal and s.deal_text != blank -%}<span class="sp-deal">{{ s.deal_text }}</span>{%- endif -%}
+              {%- if fp.available -%}
+              {%- form 'product', fp -%}
+                <input type="hidden" name="id" value="{{ fp.selected_or_first_available_variant.id }}">
+                <button type="submit" class="atc">{{ s.atc_label | default: 'Add to cart' }}</button>
+              {%- endform -%}
+              {%- else -%}
+              <form><button type="button" class="atc" disabled>{{ s.coming_label | default: 'Coming soon' }}</button></form>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type != 'product' -%}{%- continue -%}{%- endif -%}
+          {%- assign fp = block.settings.product -%}
+          {%- if fp == blank -%}{%- continue -%}{%- endif -%}
+          {%- assign tdl = fp.title | downcase -%}
+          {%- assign issf = false -%}{%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign issf = true -%}{%- endif -%}
+          {%- assign disp = fp.title | replace: '(USA)', '' | replace: 'Syrup Pouches', '' | strip -%}
+          {%- if disp == blank -%}{%- assign disp = fp.title -%}{%- endif -%}
+          <div class="sp-card sp-rev" {{ block.shopify_attributes }}>
+            {%- if fp.available -%}
+            <span class="sp-flag">{{ block.settings.badge | default: s.live_badge | default: 'New' }}</span>
+            {%- else -%}
+            <span class="sp-flag soonf">{{ s.coming_label | default: 'Coming soon' }}</span>
+            {%- endif -%}
+            <a class="ph" href="{{ fp.url }}">{%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 720 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}</a>
+            <div class="b">
+              {%- if issf -%}<span class="kick">{{ s.sf_badge | default: 'Sugar-Free · 0g' }}</span>{%- endif -%}
+              <a class="t" href="{{ fp.url }}">{{ disp }}</a>
+              <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
+              {%- if s.show_deal and s.deal_text != blank -%}<span class="sp-deal">{{ s.deal_text }}</span>{%- endif -%}
+              {%- if fp.available -%}
+              {%- form 'product', fp -%}
+                <input type="hidden" name="id" value="{{ fp.selected_or_first_available_variant.id }}">
+                <button type="submit" class="atc">{{ s.atc_label | default: 'Add to cart' }}</button>
+              {%- endform -%}
+              {%- else -%}
+              <form><button type="button" class="atc" disabled>{{ s.coming_label | default: 'Coming soon' }}</button></form>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+      </div>
       {%- if s.feat_seeall != blank -%}
       <div class="sp-btnrow sp-seeall sp-rev">
         <a class="sp-btn sp-btn--ghost" href="{{ s.feat_seeall_url | default: '/collections/syrup-pouches' }}">{{ s.feat_seeall }} &rarr;</a>
@@ -548,8 +549,7 @@
     { "type": "paragraph", "content": "The page opens with this full-width banner. Defaults to your uploaded Banner 3 — replace any time." },
     { "type": "image_picker", "id": "hero_banner", "label": "Banner — desktop" },
     { "type": "image_picker", "id": "hero_banner_m", "label": "Banner — mobile" },
-    { "type": "url", "id": "hero_link", "label": "Banner link (optional)" },
-    { "type": "text", "id": "hero_btn", "label": "Button under banner", "default": "Shop the drop", "info": "Uses the banner link, or scrolls to the products if no link is set." },
+    { "type": "url", "id": "hero_link", "label": "Banner link — the whole banner is the button" },
     { "type": "text", "id": "hero_alt", "label": "Banner alt text", "default": "Syrup Pouches" },
     { "type": "header", "content": "Launch effects" },
     { "type": "checkbox", "id": "show_marquee", "label": "Show scrolling launch ribbon", "default": true },
