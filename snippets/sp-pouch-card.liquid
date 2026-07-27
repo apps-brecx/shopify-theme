@@ -1,0 +1,31 @@
+{%- comment -%}
+  Syrup Pouches launch page — one product card.
+  Params: fp (product), sett (section settings), badge_override (optional), attrs (optional shopify_attributes).
+  In stock → badge + price + add-to-cart; out of stock → Coming Soon flag + disabled button.
+{%- endcomment -%}
+{%- assign tdl = fp.title | downcase -%}
+{%- assign issf = false -%}{%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign issf = true -%}{%- endif -%}
+{%- assign disp = fp.title | replace: '(USA)', '' | replace: 'Syrup Pouches', '' | strip -%}
+{%- if disp == blank -%}{%- assign disp = fp.title -%}{%- endif -%}
+<div class="sp-card sp-rev" {{ attrs }}>
+  {%- if fp.available -%}
+  <span class="sp-flag">{{ badge_override | default: sett.live_badge | default: 'New' }}</span>
+  {%- else -%}
+  <span class="sp-flag soonf">{{ sett.coming_label | default: 'Coming soon' }}</span>
+  {%- endif -%}
+  <a class="ph" href="{{ fp.url }}">{%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 720 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}</a>
+  <div class="b">
+    {%- if issf -%}<span class="kick">{{ sett.sf_badge | default: 'Sugar-Free · 0g' }}</span>{%- endif -%}
+    <a class="t" href="{{ fp.url }}">{{ disp }}</a>
+    <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
+    {%- if sett.show_deal and sett.deal_text != blank -%}<span class="sp-deal">{{ sett.deal_text }}</span>{%- endif -%}
+    {%- if fp.available -%}
+    {%- form 'product', fp -%}
+      <input type="hidden" name="id" value="{{ fp.selected_or_first_available_variant.id }}">
+      <button type="submit" class="atc">{{ sett.atc_label | default: 'Add to cart' }}</button>
+    {%- endform -%}
+    {%- else -%}
+    <form><button type="button" class="atc" disabled>{{ sett.coming_label | default: 'Coming soon' }}</button></form>
+    {%- endif -%}
+  </div>
+</div>
