@@ -15,42 +15,56 @@
         "pick1": {
           "type": "product",
           "settings": {
-            "product": "vanilla-syrup-pouches",
+            "product": "sugar-free-caramel-syrup-pouches",
             "badge": ""
           }
         },
         "pick2": {
           "type": "product",
           "settings": {
-            "product": "caramel-syrup-pouches",
+            "product": "sugar-free-hazelnut-syrup-pouches",
             "badge": ""
           }
         },
         "pick3": {
           "type": "product",
           "settings": {
-            "product": "cookie-butter-syrup-pouches",
+            "product": "sugar-free-mango-syrup-pouches",
             "badge": ""
           }
         },
         "pick4": {
           "type": "product",
           "settings": {
-            "product": "sugar-free-vanilla-syrup-pouches",
+            "product": "sugar-free-strawberry-syrup-pouches",
             "badge": ""
           }
         },
         "pick5": {
           "type": "product",
           "settings": {
-            "product": "hazelnut-syrup-pouches",
+            "product": "sugar-free-pistachio-syrup-pouches",
             "badge": ""
           }
         },
         "pick6": {
           "type": "product",
           "settings": {
-            "product": "salted-caramel-syrup-pouches",
+            "product": "sugar-free-smores-syrup-pouches",
+            "badge": ""
+          }
+        },
+        "pick7": {
+          "type": "product",
+          "settings": {
+            "product": "vanilla-syrup-pouches",
+            "badge": ""
+          }
+        },
+        "pick8": {
+          "type": "product",
+          "settings": {
+            "product": "caramel-syrup-pouches",
             "badge": ""
           }
         },
@@ -89,6 +103,8 @@
         "pick4",
         "pick5",
         "pick6",
+        "pick7",
+        "pick8",
         "box1",
         "box2",
         "box3"
