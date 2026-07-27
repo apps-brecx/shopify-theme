@@ -1,0 +1,506 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Standalone "Open a claim" page — same functionality as the floating-contact
+  widget's Claim tab (3-step wizard -> multipart POST to <endpoint>/claim),
+  restyled in the brand's neubrutalist page language (tokens from pdp-brand.css).
+
+  Functionality ported verbatim:
+   • Step 1 order number: Next validates against the same /track lookup the
+     Track page uses. Definitive "not found" blocks the step and offers the
+     message form; network/worker trouble fails OPEN (the claim intake
+     re-validates server-side). Last good number is cached.
+   • Step 2 issue-type cards set the photo/message requirements; Submit gates
+     on them. idempotencyKey stays stable across unchanged retries, rotates on
+     any edit. No email field: logged-in customers send the account email
+     invisibly; guests are resolved from the order server-side.
+
+  All classes are cp-* and lookups root-scoped, so the floating widget (bb-*)
+  coexists untouched. Endpoint: section setting, else the widget's endpoint.
+{%- endcomment -%}
+
+<div class="pd">
+  <section class="sy-cpage" data-sy-claim-root data-endpoint="{{ section.settings.chat_endpoint | escape }}" data-contact-url="{{ section.settings.contact_url | default: '/pages/contact-us' | escape }}">
+    <div class="pd-wrap">
+      <div class="cp-hero">
+        <span class="pd-eyebrow">{{ section.settings.eyebrow | default: 'Support' }}</span>
+        <h1 class="cp-h1">{{ section.settings.heading | default: 'Open a claim' }}</h1>
+        <p class="cp-lede">{{ section.settings.lede | default: 'Something wrong with your order? Tell us and we’ll make it right.' }}</p>
+      </div>
+
+      <div class="cp-card">
+        <div class="cp-dots" aria-hidden="true">
+          <span class="cp-dot is-on">1</span><span class="cp-bar"></span><span class="cp-dot">2</span><span class="cp-bar"></span><span class="cp-dot">3</span>
+        </div>
+        <form class="cp-form" novalidate>
+          <div class="cp-step is-active" data-step="1">
+            <label class="cp-field">
+              <span>Your order number</span>
+              <input type="text" class="cp-order" maxlength="100" placeholder="e.g. 154008587601" autocomplete="off" inputmode="numeric" aria-label="Order number">
+            </label>
+            <button type="button" class="cp-btn cp-next" disabled>Next</button>
+          </div>
+          <div class="cp-step" data-step="2">
+            <div class="cp-q">What went wrong?</div>
+            <div class="cp-types">
+              <button type="button" class="cp-type" data-type="Damaged in transit" data-photo="1"><span class="cp-type-ic">📦</span>Damaged in transit</button>
+              <button type="button" class="cp-type" data-type="Wrong item" data-photo="1"><span class="cp-type-ic">🔄</span>Wrong item</button>
+              <button type="button" class="cp-type" data-type="Never received"><span class="cp-type-ic">🕵️</span>Never received</button>
+              <button type="button" class="cp-type" data-type="Delayed in transit"><span class="cp-type-ic">⏳</span>Delayed in transit</button>
+              <button type="button" class="cp-type cp-type--wide" data-type="Other" data-msg="1"><span class="cp-type-ic">💬</span>Something else</button>
+            </div>
+            <div class="cp-nav">
+              <button type="button" class="cp-back" data-back="1">← Back</button>
+            </div>
+          </div>
+          <div class="cp-step" data-step="3">
+            <div class="cp-picked"></div>
+            <div class="cp-field">
+              <span>Photos <b class="cp-badge is-opt" data-badge="photo">optional</b></span>
+              <label class="cp-drop" for="cp-files-{{ section.id }}">📷 Add photos<input type="file" id="cp-files-{{ section.id }}" class="cp-files cp-vhide" accept="image/*" multiple></label>
+            </div>
+            <div class="cp-filelist"></div>
+            <label class="cp-field">
+              <span>Tell us more <b class="cp-badge is-opt" data-badge="msg">optional</b></span>
+              <textarea class="cp-msg" rows="4" maxlength="8000" placeholder="Anything that helps us fix this faster…"></textarea>
+            </label>
+            {%- if customer -%}
+              <input type="hidden" class="cp-email" value="{{ customer.email | escape }}">
+            {%- endif -%}
+            <div class="cp-nav">
+              <button type="button" class="cp-back" data-back="2">← Back</button>
+              <button type="submit" class="cp-btn cp-submit" disabled>{{ section.settings.submit_label | default: 'Submit claim' }}</button>
+            </div>
+          </div>
+          {%- comment -%} Outside the step divs so step-1/2 validation messages
+              are visible (and announced) on every step. {%- endcomment -%}
+          <div class="cp-status" aria-live="polite"></div>
+        </form>
+        <div class="cp-done" hidden>
+          <div class="cp-done-ic">✓</div>
+          <div class="cp-done-h">Claim received</div>
+          <p class="cp-done-p"></p>
+          <button type="button" class="cp-again">Submit another claim</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .sy-cpage{padding:56px 0 88px;background:var(--cream)}
+  .sy-cpage .cp-hero{text-align:center;max-width:680px;margin:0 auto 40px}
+  .sy-cpage .cp-h1{font-family:var(--display);font-weight:900;font-size:clamp(34px,6vw,60px);line-height:.95;letter-spacing:-.01em;text-transform:uppercase;margin:18px 0 12px;text-wrap:balance}
+  .sy-cpage .cp-lede{font-family:var(--serif);font-size:clamp(15px,1.5vw,17.5px);line-height:1.55;color:var(--ink-2);margin:0 auto;max-width:48ch}
+
+  .sy-cpage .cp-card{max-width:640px;margin:0 auto;background:var(--paper);border:var(--rule-2);border-radius:var(--r-card);box-shadow:6px 6px 0 var(--ink);padding:28px;font-family:var(--serif)}
+  .sy-cpage .cp-dots{display:flex;align-items:center;gap:8px;margin:0 0 20px}
+  .sy-cpage .cp-dots[hidden]{display:none!important}
+  .sy-cpage .cp-dot{width:30px;height:30px;border-radius:50%;border:2px solid #E0D5C2;background:#fff;color:#B9A78D;font-family:var(--display);font-size:13px;display:inline-flex;align-items:center;justify-content:center;transition:all .25s ease}
+  .sy-cpage .cp-dot.is-on{background:var(--ink);border-color:var(--ink);color:var(--butter)}
+  .sy-cpage .cp-bar{flex:1;height:2.5px;background:#E8DFC9;border-radius:2px}
+  .sy-cpage .cp-step{display:none}
+  .sy-cpage .cp-step.is-active{display:block;animation:cp-in .22s ease}
+  @keyframes cp-in{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.sy-cpage .cp-step.is-active{animation:none}}
+
+  .sy-cpage .cp-field{display:block;margin:0 0 14px;font-size:14.5px;color:var(--ink)}
+  .sy-cpage .cp-field > span{display:block;font-family:var(--display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px}
+  .sy-cpage .cp-field[hidden]{display:none!important}
+  .sy-cpage .cp-order,.sy-cpage .cp-msg{width:100%;box-sizing:border-box;padding:13px 14px;border:var(--rule-2);border-radius:12px;background:#fff;font-family:var(--serif);font-size:15px;color:var(--ink)}
+  .sy-cpage .cp-order:focus,.sy-cpage .cp-msg:focus{outline:3px solid var(--coral);outline-offset:2px}
+  .sy-cpage .cp-msg{resize:vertical}
+
+  .sy-cpage .cp-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 24px;border:var(--rule-2);border-radius:var(--r-pill);background:var(--ink);color:var(--paper);font-family:var(--display);font-weight:400;font-size:13px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .12s ease,box-shadow .12s ease}
+  .sy-cpage .cp-btn:hover{transform:translate(-1.5px,-1.5px);box-shadow:4.5px 4.5px 0 var(--ink)}
+  .sy-cpage .cp-btn[disabled]{opacity:.5;cursor:not-allowed;transform:none;box-shadow:var(--shadow-sm)}
+  .sy-cpage .cp-q{font-family:var(--display);font-size:16px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);margin:0 0 12px}
+  .sy-cpage .cp-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+  .sy-cpage .cp-nav .cp-btn{width:auto;flex:1}
+  .sy-cpage .cp-back{border:0;background:none;color:#8a7a68;font-family:var(--serif);font-size:13.5px;font-weight:700;cursor:pointer;padding:8px 4px}
+  .sy-cpage .cp-back:hover{color:var(--ink)}
+
+  .sy-cpage .cp-types{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .sy-cpage .cp-type{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:14px;border:var(--rule-2);border-radius:14px;background:#fff;color:var(--ink);font-family:var(--serif);font-size:13.5px;font-weight:700;cursor:pointer;text-align:left;transition:transform .12s ease,box-shadow .12s ease,background .12s}
+  .sy-cpage .cp-type:hover{transform:translate(-1.5px,-1.5px);box-shadow:var(--shadow-sm)}
+  .sy-cpage .cp-type.is-picked{background:var(--butter);box-shadow:var(--shadow-sm)}
+  .sy-cpage .cp-type--wide{grid-column:1 / -1;flex-direction:row;align-items:center}
+  .sy-cpage .cp-type-ic{font-size:20px;line-height:1}
+
+  .sy-cpage .cp-picked{display:flex;align-items:center;gap:8px;margin:0 0 14px}
+  .sy-cpage .cp-picked:empty{display:none}
+  .sy-cpage .cp-chip{background:var(--ink);color:var(--butter);border-radius:var(--r-pill);padding:7px 14px;font-family:var(--display);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase}
+  .sy-cpage .cp-chg{border:0;background:none;color:#8a7a68;font-family:var(--serif);font-size:12.5px;text-decoration:underline;cursor:pointer;padding:0}
+  .sy-cpage .cp-badge{background:var(--coral);color:#fff;border-radius:var(--r-pill);padding:2.5px 9px;font-size:10px;letter-spacing:.05em;margin-left:6px}
+  .sy-cpage .cp-badge.is-opt{background:#EDE6D6;color:#7a6a55}
+  .sy-cpage .cp-drop{display:flex;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--ink);border-radius:14px;background:#fff;color:var(--ink);font-weight:700;font-size:14px;padding:18px 12px;cursor:pointer;transition:background .12s}
+  .sy-cpage .cp-drop:hover,.sy-cpage .cp-drop:focus-within{background:var(--butter)}
+  .sy-cpage .cp-vhide{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+  .sy-cpage .cp-filelist{display:flex;flex-direction:column;gap:5px;margin:-4px 0 14px}
+  .sy-cpage .cp-filelist:empty{display:none}
+  .sy-cpage .cp-file{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink);background:var(--shell);border:1.5px solid var(--ink);border-radius:10px;padding:6px 10px}
+  .sy-cpage .cp-file span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sy-cpage .cp-file button{border:0;background:none;color:var(--ink);font-weight:700;cursor:pointer;font:inherit;padding:0 2px}
+
+  .sy-cpage .cp-status{margin-top:12px;min-height:20px;font-size:14.5px;color:var(--ink)}
+  .sy-cpage .cp-cta{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:10px 18px;border:var(--rule-2);border-radius:var(--r-pill);background:var(--ink);color:var(--butter);font-family:var(--display);font-weight:400;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .12s ease,box-shadow .12s ease}
+  .sy-cpage .cp-cta::after{content:'→';font-size:13px;line-height:1}
+  .sy-cpage .cp-cta:hover{transform:translate(-1.5px,-1.5px);box-shadow:4.5px 4.5px 0 var(--ink)}
+  .sy-cpage .cp-cta:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+  .sy-cpage .cp-form.is-sending{pointer-events:none;opacity:.75}
+  .sy-cpage .cp-form[hidden]{display:none!important}
+
+  .sy-cpage .cp-done{text-align:center;padding:20px 6px 8px;animation:cp-in .25s ease}
+  .sy-cpage .cp-done[hidden]{display:none!important}
+  .sy-cpage .cp-done-ic{width:64px;height:64px;margin:0 auto 12px;border-radius:50%;background:var(--ink);color:var(--butter);font-size:30px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 var(--coral)}
+  .sy-cpage .cp-done-h{font-family:var(--display);font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);margin-bottom:8px}
+  .sy-cpage .cp-done-p{margin:0 0 16px;color:#5a4632;font-size:15px}
+  .sy-cpage .cp-again{border:var(--rule-2);border-radius:var(--r-pill);background:#fff;color:var(--ink);font-family:var(--display);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;padding:10px 18px;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .12s ease,box-shadow .12s ease}
+  .sy-cpage .cp-again:hover{transform:translate(-1.5px,-1.5px);box-shadow:4.5px 4.5px 0 var(--ink)}
+
+  @media (max-width:560px){
+    .sy-cpage{padding:40px 0 64px}
+    .sy-cpage .cp-card{padding:20px 16px;box-shadow:4px 4px 0 var(--ink)}
+    .sy-cpage .cp-types{grid-template-columns:1fr}
+    .sy-cpage .cp-type--wide{grid-column:auto}
+  }
+</style>
+
+<script>
+(function(){
+  function init(root){
+    var form = root.querySelector('.cp-form');
+    if (!form || form.dataset.syInit) return;
+    form.dataset.syInit = '1';
+    var dots      = root.querySelector('.cp-dots');
+    var orderIn   = root.querySelector('.cp-order');
+    var next1     = root.querySelector('.cp-next');
+    var typesWrap = root.querySelector('.cp-types');
+    var pickedEl  = root.querySelector('.cp-picked');
+    var photoReq  = root.querySelector('[data-badge="photo"]');
+    var msgReq    = root.querySelector('[data-badge="msg"]');
+    var msgIn     = root.querySelector('.cp-msg');
+    var emailIn   = root.querySelector('.cp-email');
+    var filesIn   = root.querySelector('.cp-files');
+    var fileList  = root.querySelector('.cp-filelist');
+    var submitBtn = root.querySelector('.cp-submit');
+    var statusEl  = root.querySelector('.cp-status');
+    var doneEl    = root.querySelector('.cp-done');
+    var doneText  = root.querySelector('.cp-done-p');
+    var againBtn  = root.querySelector('.cp-again');
+    var submitLabel = submitBtn ? submitBtn.textContent : 'Submit claim';
+    var MAX_FILES = 10, MAX_FILE_BYTES = 10 * 1024 * 1024, MAX_TOTAL_BYTES = 35 * 1024 * 1024;
+
+    /* Endpoint: section setting, else the floating widget's configured one. */
+    var endpoint = (root.dataset.endpoint || '').trim();
+    if (!endpoint){
+      var w = document.getElementById('bb-floating-contact');
+      endpoint = w ? (w.dataset.chatEndpoint || '').trim() : '';
+    }
+    endpoint = endpoint.replace(/\/+$/, '');
+    var contactUrl = root.dataset.contactUrl || '/pages/contact-us';
+
+    function openMessage(){
+      var btn = document.getElementById('bb-float-btn');
+      var modal = document.getElementById('bb-contact-modal');
+      if (btn && modal && window.bbShowTab){
+        if (modal.hidden) btn.click();
+        window.bbShowTab('form');
+        return;
+      }
+      window.location.href = contactUrl;
+    }
+
+    function makeKey(){
+      return (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+        : 'ck-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+    }
+    var idemKey = makeKey();
+    var picked = [];
+    var sending = false;
+    var chosenType = '';
+    var needPhoto = false, needMsg = false;
+
+    function contentChanged(){ if (!sending) idemKey = makeKey(); }
+    function totalPicked(){ return picked.reduce(function(s, f){ return s + f.size; }, 0); }
+    function setBadge(el, req){
+      if (!el) return;
+      el.textContent = req ? 'required' : 'optional';
+      el.classList.toggle('is-opt', !req);
+    }
+    function syncNext(){ if (next1) next1.disabled = !(orderIn && (orderIn.value || '').trim()); }
+    function canSubmit(){
+      if (!chosenType) return false;
+      if (needPhoto && picked.length === 0) return false;
+      if (needMsg && !((msgIn && msgIn.value) || '').trim()) return false;
+      return true;
+    }
+    function syncSubmit(){ if (submitBtn && !sending) submitBtn.disabled = !canSubmit(); }
+    form.addEventListener('input', function(){ contentChanged(); syncNext(); syncSubmit(); });
+    function status(msg, ok){
+      if (!statusEl) return;
+      statusEl.textContent = msg || '';
+      statusEl.style.color = ok ? '#1a7f37' : '';
+    }
+    function goStep(n){
+      Array.prototype.forEach.call(form.querySelectorAll('.cp-step'), function(s){
+        s.classList.toggle('is-active', s.getAttribute('data-step') === String(n));
+      });
+      if (dots) Array.prototype.forEach.call(dots.querySelectorAll('.cp-dot'), function(d, i){
+        d.classList.toggle('is-on', i < n);
+      });
+      status('');
+    }
+
+    /* Step 1 → 2 only after the order number checks out against the same
+       /track lookup the Track page uses. A definitive "not found" blocks the
+       step and points at the message form; network/worker trouble fails OPEN
+       (the claim intake re-validates server-side). Cached so Back→Next
+       doesn't re-fetch. */
+    var checking = false;
+    var okOrder = null;
+    function claimCta(msg){
+      if (!statusEl) return;
+      statusEl.style.color = '';
+      statusEl.textContent = '';
+      statusEl.appendChild(document.createTextNode(msg + ' '));
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'cp-cta';
+      btn.textContent = 'Send us a message instead';
+      btn.addEventListener('click', openMessage);
+      statusEl.appendChild(btn);
+    }
+    async function checkOrder(v){
+      var ctrl  = ('AbortController' in window) ? new AbortController() : null;
+      var timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 12000);
+      try {
+        var res = await fetch(endpoint + '/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order_number: v }),
+          signal: ctrl ? ctrl.signal : undefined
+        });
+        var data = null;
+        try { data = await res.json(); } catch(e){}
+        if (res.ok && data && data.ok) return !!data.found;
+        return null;              /* worker error → unknown, fail open */
+      } catch(e){
+        return null;              /* network error → unknown, fail open */
+      } finally {
+        if (timer) clearTimeout(timer);
+      }
+    }
+    if (next1) next1.addEventListener('click', async function(){
+      if (checking) return;
+      var v = (orderIn.value || '').trim();
+      if (!v){ status('Please enter your order number.'); orderIn.focus(); return; }
+      if (!endpoint || v === okOrder){ goStep(2); return; }
+      checking = true;
+      var lbl = next1.textContent;
+      next1.disabled = true;
+      next1.textContent = 'Checking…';
+      status('');
+      var found = await checkOrder(v);
+      checking = false;
+      next1.textContent = lbl;
+      next1.disabled = false;
+      syncNext();
+      if (found === false){
+        claimCta('We couldn’t find that order number. Double-check it — brand-new orders can take a little while to appear.');
+        orderIn.focus();
+        return;
+      }
+      okOrder = v;
+      goStep(2);
+    });
+    if (orderIn) orderIn.addEventListener('keydown', function(e){
+      if (e.key === 'Enter'){ e.preventDefault(); if (next1) next1.click(); }
+    });
+    form.addEventListener('click', function(e){
+      if (sending) return;
+      var b = e.target.closest ? e.target.closest('.cp-back') : null;
+      if (b && b.dataset.back) goStep(parseInt(b.dataset.back, 10));
+    });
+
+    if (typesWrap) typesWrap.addEventListener('click', function(e){
+      if (sending) return;
+      var card = e.target.closest ? e.target.closest('.cp-type') : null;
+      if (!card) return;
+      Array.prototype.forEach.call(typesWrap.querySelectorAll('.cp-type'), function(c){
+        c.classList.toggle('is-picked', c === card);
+      });
+      var newType = card.dataset.type || 'Other';
+      /* Re-picking the same card is NOT a content change — the key must
+         survive it so an unchanged resubmission still dedupes upstream. */
+      var changed = newType !== chosenType;
+      chosenType = newType;
+      needPhoto = card.dataset.photo === '1';
+      needMsg = card.dataset.msg === '1';
+      setBadge(photoReq, needPhoto);
+      setBadge(msgReq, needMsg);
+      if (pickedEl){
+        pickedEl.textContent = '';
+        var chip = document.createElement('span');
+        chip.className = 'cp-chip';
+        chip.textContent = chosenType;
+        var chg = document.createElement('button');
+        chg.type = 'button';
+        chg.className = 'cp-chg';
+        chg.textContent = 'change';
+        chg.addEventListener('click', function(){ if (!sending) goStep(2); });
+        pickedEl.appendChild(chip);
+        pickedEl.appendChild(chg);
+      }
+      if (changed) contentChanged();
+      syncSubmit();
+      goStep(3);
+    });
+
+    function renderFiles(){
+      if (!fileList) return;
+      fileList.textContent = '';
+      picked.forEach(function(f, i){
+        var row = document.createElement('div');
+        row.className = 'cp-file';
+        var nm = document.createElement('span');
+        nm.textContent = f.name + ' (' + (f.size / 1048576).toFixed(1) + ' MB)';
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.setAttribute('aria-label', 'Remove ' + f.name);
+        rm.textContent = '✕';
+        rm.addEventListener('click', function(){ picked.splice(i, 1); renderFiles(); contentChanged(); });
+        row.appendChild(nm);
+        row.appendChild(rm);
+        fileList.appendChild(row);
+      });
+      syncSubmit();
+    }
+    if (filesIn) filesIn.addEventListener('change', function(){
+      status('');
+      Array.prototype.forEach.call(filesIn.files, function(f){
+        if (picked.length >= MAX_FILES){ status('You can attach up to ' + MAX_FILES + ' photos.'); return; }
+        if (f.size > MAX_FILE_BYTES){ status('“' + f.name + '” is over 10 MB — please use a smaller photo.'); return; }
+        if (totalPicked() + f.size > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — “' + f.name + '” doesn’t fit. Remove one or use smaller photos.'); return; }
+        var dup = picked.some(function(p){ return p.name === f.name && p.size === f.size; });
+        if (!dup){ picked.push(f); contentChanged(); }
+      });
+      filesIn.value = '';
+      renderFiles();
+    });
+
+    function setSending(on){
+      sending = on;
+      form.classList.toggle('is-sending', on);
+      if (submitBtn){
+        submitBtn.textContent = on ? 'Submitting…' : submitLabel;
+        if (on) submitBtn.disabled = true; else syncSubmit();
+      }
+    }
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      if (sending) return;
+      if (!endpoint){ claimCta('Claims aren’t set up yet.'); return; }
+      var orderVal = (orderIn.value || '').trim();
+      if (!orderVal){ goStep(1); status('Please enter your order number.'); return; }
+      if (!chosenType){ goStep(2); status('Please pick what went wrong.'); return; }
+      if (needPhoto && picked.length === 0){ status('Please attach at least one photo of the item — the team needs it to resolve this.'); return; }
+      var msgVal = (msgIn ? msgIn.value : '').trim();
+      if (needMsg && !msgVal){ status('Please tell us what happened.'); if (msgIn) msgIn.focus(); return; }
+      if (totalPicked() > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — please remove one or use smaller photos.'); return; }
+      var emailVal = emailIn ? (emailIn.value || '').trim() : '';
+
+      var fd = new FormData();
+      fd.set('order_id', orderVal);
+      fd.set('type', chosenType);
+      fd.set('message', msgVal);
+      if (emailVal) fd.set('email', emailVal);
+      fd.set('page_url', String(location.href).slice(0, 500));
+      fd.set('idempotencyKey', idemKey);
+      picked.forEach(function(f){ fd.append('files', f, f.name); });
+
+      setSending(true);
+      status('Submitting your claim — this can take a few seconds…');
+      var ctrl  = ('AbortController' in window) ? new AbortController() : null;
+      var timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 90000);
+      try {
+        var res = await fetch(endpoint + '/claim', { method: 'POST', body: fd, signal: ctrl ? ctrl.signal : undefined });
+        var data = null;
+        try { data = await res.json(); } catch(err){}
+        if (res.ok && data && data.ok && data.reference){
+          form.hidden = true;
+          if (dots) dots.hidden = true;
+          if (doneEl){
+            doneEl.hidden = false;
+            if (doneText) doneText.textContent = 'Your reference is ' + data.reference + '.'
+              + (emailVal ? ' We’ll email you at ' + emailVal + '.' : ' Our reply goes to the email on your order.');
+          }
+          status('');
+        } else {
+          var raw = (data && data.error) ? String(data.error) : '';
+          /* A not-yet-updated Worker routes /claim into its chat handler (raw
+             errors) or still demands an email the form no longer has — both
+             would confuse customers, so map them to a friendly line. */
+          var stale = /invalid json|payload too large|empty message|worker secrets|origin not allowed|^too many requests$|email/i.test(raw);
+          if (raw && !stale) status(raw);
+          else claimCta('Claims aren’t available right now — please try again later.');
+        }
+      } catch(err){
+        status('Something went wrong — please try again. Resubmitting is safe, it won’t create a duplicate.');
+      } finally {
+        if (timer) clearTimeout(timer);
+        setSending(false);
+      }
+    });
+
+    if (againBtn) againBtn.addEventListener('click', function(){
+      form.reset();
+      picked = [];
+      chosenType = '';
+      needPhoto = false;
+      needMsg = false;
+      renderFiles();
+      setBadge(photoReq, false);
+      setBadge(msgReq, false);
+      if (pickedEl) pickedEl.textContent = '';
+      if (typesWrap) Array.prototype.forEach.call(typesWrap.querySelectorAll('.cp-type'), function(c){ c.classList.remove('is-picked'); });
+      idemKey = makeKey();
+      form.hidden = false;
+      if (dots) dots.hidden = false;
+      if (doneEl) doneEl.hidden = true;
+      syncNext();
+      goStep(1);
+    });
+
+    /* Initial gate state (also covers browsers that restore form values on
+       back-navigation, which the markup's static disabled can't know about). */
+    syncNext();
+    syncSubmit();
+  }
+  function boot(){
+    Array.prototype.forEach.call(document.querySelectorAll('[data-sy-claim-root]'), init);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Claim Page",
+  "tag": "section",
+  "class": "section-claim-page",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Support" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Open a claim" },
+    { "type": "text", "id": "lede", "label": "Intro text", "default": "Something wrong with your order? Tell us and we’ll make it right." },
+    { "type": "text", "id": "submit_label", "label": "Submit button label", "default": "Submit claim" },
+    { "type": "header", "content": "Wiring" },
+    { "type": "text", "id": "chat_endpoint", "label": "Worker endpoint (optional)", "info": "Leave blank to reuse the floating chat widget's endpoint." },
+    { "type": "url", "id": "contact_url", "label": "Contact page (fallback)", "info": "Used by “Send us a message” when the floating widget isn't on the page." }
+  ],
+  "presets": [{ "name": "Claim Page" }]
+}
+{% endschema %}
