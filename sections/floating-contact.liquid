@@ -64,7 +64,7 @@
         <button type="button" class="bb-tab" id="bb-tab-chat" role="tab" aria-controls="bb-panel-chat" aria-selected="false">{{ section.settings.chat_tab_label | default: 'Quick help' }}</button>
         {%- endif -%}
         {%- if section.settings.enable_track -%}
-        <button type="button" class="bb-tab" id="bb-tab-track" role="tab" aria-controls="bb-panel-track" aria-selected="false">{{ section.settings.track_tab_label | default: 'Track package' }}</button>
+        <button type="button" class="bb-tab" id="bb-tab-track" role="tab" aria-controls="bb-panel-track" aria-selected="false">{{ section.settings.track_tab_label | default: 'Track order' }}</button>
         {%- endif -%}
         {%- if section.settings.enable_claim -%}
         <button type="button" class="bb-tab" id="bb-tab-claim" role="tab" aria-controls="bb-panel-claim" aria-selected="false">{{ section.settings.claim_tab_label | default: 'Claim' }}</button>
@@ -965,6 +965,42 @@
          button under it. The phrase regex is a backstop for older Worker builds
          that don't send the flag yet. */
       const NEEDS_HUMAN_RE = /send message|send us a message|contact (us|the team)|reach (out|us|the team)|get in touch|email (us|the team)|support team|customer (service|support)/i;
+      /* Tracking numbers inside AI replies become carrier links — the same
+         number-format detection the Track tab uses (UPS 1Z…, USPS 92–95…).
+         Only unambiguous formats are linked; plain digit runs stay text
+         because they're usually order numbers. Links are plain <a>, so they
+         survive the sessionStorage restore with no extra wiring. */
+      const TRACK_SPLIT = /\b(1Z[0-9A-Z]{8,18}|420\d{5,9}9[2-5]\d{18,}|9[2-5]\d{18,})\b/g;
+      const TRACK_ONE   = /^(1Z[0-9A-Z]{8,18}|420\d{5,9}9[2-5]\d{18,}|9[2-5]\d{18,})$/;
+      function trackHref(n){
+        return /^1Z/i.test(n)
+          ? 'https://www.ups.com/track?tracknum=' + encodeURIComponent(n)
+          : 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' + encodeURIComponent(n);
+      }
+      function linkifyTracking(el){
+        Array.prototype.slice.call(el.childNodes).forEach(function(node){
+          if (node.nodeType !== 3 || !node.nodeValue) return;
+          const parts = node.nodeValue.split(TRACK_SPLIT);
+          if (parts.length < 2) return;
+          const frag = document.createDocumentFragment();
+          parts.forEach(function(part){
+            if (!part) return;
+            if (TRACK_ONE.test(part)){
+              const a = document.createElement('a');
+              a.className = 'bb-track-link';
+              a.href = trackHref(part);
+              a.target = '_blank';
+              a.rel = 'noopener noreferrer';
+              a.textContent = part;
+              frag.appendChild(a);
+            } else {
+              frag.appendChild(document.createTextNode(part));
+            }
+          });
+          el.replaceChild(frag, node);
+        });
+        saveLog();
+      }
       async function askLlm(q, history){
         const payload = { message: q, history: history || [], page: location.href };
         if (root.dataset.customerEmail) payload.customer_email = root.dataset.customerEmail;
@@ -975,6 +1011,7 @@
         const claimMark   = text.indexOf('[[CLAIM]]') !== -1;
         if (contactMark || claimMark) text = text.split('[[CONTACT]]').join(' ').split('[[CLAIM]]').join(' ').replace(/\s+/g, ' ').trim();
         const el = addMsg('bot', text || fallbackText);
+        linkifyTracking(el);
         /* A claim-flagged reply must never dead-end: if the claim tab is
            disabled, degrade to the message-form button. */
         if ((data.show_claim || claimMark) && document.getElementById('bb-tab-claim')) addClaimLink(el);
@@ -1104,8 +1141,67 @@
         status('');
       }
 
-      if (next1) next1.addEventListener('click', function(){
-        if (!(orderIn.value || '').trim()){ status('Please enter your order number.'); orderIn.focus(); return; }
+      /* Step 1 → 2 only after the order number checks out against the same
+         /track lookup the Track tab uses. A definitive "not found" blocks the
+         step and points at the message form; network/worker trouble fails OPEN
+         (the claim intake re-validates server-side), so a tracker outage never
+         blocks a claim. The last good number is cached so Back→Next doesn't
+         re-fetch. */
+      let checking = false;
+      let okOrder = null;
+      function claimCta(msg){
+        if (!statusEl) return;
+        statusEl.style.color = '';
+        statusEl.textContent = '';
+        statusEl.appendChild(document.createTextNode(msg + ' '));
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bb-msg-link';
+        btn.textContent = 'Send us a message instead';
+        btn.addEventListener('click', function(){ if (window.bbShowTab) window.bbShowTab('form'); });
+        statusEl.appendChild(btn);
+      }
+      async function checkOrder(v){
+        const ctrl  = ('AbortController' in window) ? new AbortController() : null;
+        const timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 12000);
+        try {
+          const res = await fetch(endpoint + '/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_number: v }),
+            signal: ctrl ? ctrl.signal : undefined
+          });
+          let data = null;
+          try { data = await res.json(); } catch(e){}
+          if (res.ok && data && data.ok) return !!data.found;
+          return null;              /* worker error → unknown, fail open */
+        } catch(e){
+          return null;              /* network error → unknown, fail open */
+        } finally {
+          if (timer) clearTimeout(timer);
+        }
+      }
+      if (next1) next1.addEventListener('click', async function(){
+        if (checking) return;
+        const v = (orderIn.value || '').trim();
+        if (!v){ status('Please enter your order number.'); orderIn.focus(); return; }
+        if (!endpoint || v === okOrder){ goStep(2); return; }
+        checking = true;
+        const lbl = next1.textContent;
+        next1.disabled = true;
+        next1.textContent = 'Checking…';
+        status('');
+        const found = await checkOrder(v);
+        checking = false;
+        next1.textContent = lbl;
+        next1.disabled = false;
+        syncNext();
+        if (found === false){
+          claimCta('We couldn’t find that order number. Double-check it — brand-new orders can take a little while to appear.');
+          orderIn.focus();
+          return;
+        }
+        okOrder = v;
         goStep(2);
       });
       if (orderIn) orderIn.addEventListener('keydown', function(e){
@@ -1288,6 +1384,17 @@
       const stepsEl   = document.getElementById('bb-track-steps');
       const metaEl    = document.getElementById('bb-track-meta');
       let busy = false;
+      /* Dead ends route to a human: message + the same CTA button the chat uses. */
+      function statusCta(msg){
+        statusEl.textContent = '';
+        statusEl.appendChild(document.createTextNode(msg + ' '));
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'bb-msg-link';
+        btn.textContent = 'Send us a message instead';
+        btn.addEventListener('click', function(){ if (window.bbShowTab) window.bbShowTab('form'); });
+        statusEl.appendChild(btn);
+      }
 
       const STEPS = [
         { label: 'Order placed',                at: 'order_created_at' },
@@ -1436,7 +1543,7 @@
         if (busy) return;
         const v = (numIn.value || '').trim();
         if (!v){ numIn.focus(); return; }
-        if (!endpoint){ statusEl.textContent = 'Tracking isn’t set up yet — please ask us via the Send message tab.'; return; }
+        if (!endpoint){ statusCta('Tracking isn’t set up yet.'); return; }
         busy = true;
         if (goBtn) goBtn.disabled = true;
         resultEl.hidden = true;
@@ -1454,14 +1561,15 @@
           try { data = await res.json(); } catch(err){}
           if (res.ok && data && data.ok){
             if (data.found){ statusEl.textContent = ''; render(data); }
-            else statusEl.textContent = 'We couldn’t find a shipment for that order number. Double-check the number — brand-new orders can take a little while to appear.';
+            else statusCta('We couldn’t find a shipment for that order number. Double-check the number — brand-new orders can take a little while to appear.');
           } else {
             /* A not-yet-updated worker answers /track from the chat handler
                with raw errors — swap those (and the terse 429) for a friendly
                message that doesn't promise quick self-recovery. */
             const raw = (data && data.error) ? String(data.error) : '';
             const stale = /empty message|invalid json|payload too large|worker secrets|^too many requests$/i.test(raw);
-            statusEl.textContent = raw && !stale ? raw : 'Tracking isn’t available right now — please try again later, or ask us via the Send message tab.';
+            if (raw && !stale) statusEl.textContent = raw;
+            else statusCta('Tracking isn’t available right now — please try again later.');
           }
         } catch(err){
           statusEl.textContent = 'Tracking is temporarily unavailable — please try again in a minute.';
@@ -1549,7 +1657,7 @@
       "default": true,
       "info": "Live shipment steps from the fulfillment system, via the AI chat endpoint (Worker)."
     },
-    { "type": "text", "id": "track_tab_label", "label": "Track tab label", "default": "Track package" },
+    { "type": "text", "id": "track_tab_label", "label": "Track tab label", "default": "Track order" },
     { "type": "text", "id": "track_intro", "label": "Track intro text", "default": "Enter your order number to see exactly where your package is." },
     { "type": "text", "id": "track_button_label", "label": "Track button label", "default": "Track" },
     { "type": "url", "id": "chat_endpoint", "label": "AI chat endpoint (optional)", "info": "Leave empty to answer typed questions from the store’s built-in policies/FAQ search. Set to your AI Worker URL later to switch to LLM replies." },
