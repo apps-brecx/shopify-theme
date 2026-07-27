@@ -173,6 +173,33 @@
   #sp-{{ section.id }} .sp-unlocked{max-width:600px;margin:0 auto 8px;border:var(--rule);background:var(--paper);color:var(--brand);border-radius:999px;padding:12px 18px;text-align:center;font-family:var(--display);font-weight:400;font-size:12px;letter-spacing:.1em;text-transform:uppercase;}
   #sp-{{ section.id }} .sp-unlocked b{color:#2b6b53;}
 
+  /* COUNTDOWN BAR — sticky launch timer */
+  #sp-{{ section.id }} .sp-count{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:center;gap:8px 14px;flex-wrap:wrap;background:var(--brand);color:var(--bg);padding:10px 16px;border-bottom:var(--rule);text-align:center;}
+  #sp-{{ section.id }} .sp-count .lb{font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.14em;text-transform:uppercase;}
+  #sp-{{ section.id }} .sp-count .tm{font-family:var(--display);font-weight:400;font-size:17px;letter-spacing:.08em;color:var(--butter);font-variant-numeric:tabular-nums;}
+
+  /* BANNER BUTTON */
+  #sp-{{ section.id }} .sp-band-btn{text-align:center;padding:18px 22px 0;}
+
+  /* INFO BOXES */
+  #sp-{{ section.id }} .sp-boxes .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:32px;}
+  @media(min-width:760px){#sp-{{ section.id }} .sp-boxes .grid{grid-template-columns:repeat(3,1fr);}}
+  #sp-{{ section.id }} .sp-box{background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 4px);box-shadow:3px 3px 0 rgba(60,36,21,.12);padding:28px 20px;text-align:center;}
+  #sp-{{ section.id }} .sp-box .n{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--orange);color:#fff;border:var(--rule);font-family:var(--display);font-size:15px;margin-bottom:14px;}
+  #sp-{{ section.id }} .sp-box h3{font-family:var(--display);font-weight:400;font-size:16px;text-transform:uppercase;color:var(--brand);margin:0;line-height:1.15;}
+  #sp-{{ section.id }} .sp-box p{font-size:14.5px;opacity:.8;margin:10px 0 0;line-height:1.55;}
+
+  /* STICK GALLERY — snap carousel */
+  #sp-{{ section.id }} .sp-gal .rail{display:flex;gap:18px;overflow-x:auto;padding:14px 22px 20px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  #sp-{{ section.id }} .sp-gal .rail::-webkit-scrollbar{display:none;}
+  #sp-{{ section.id }} .sp-gal .rail > :first-child{margin-left:auto;}
+  #sp-{{ section.id }} .sp-gal .rail > :last-child{margin-right:auto;}
+  #sp-{{ section.id }} .sp-gal .card{flex:0 0 auto;width:min(230px,60vw);scroll-snap-align:center;background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 4px);padding:20px 16px;box-shadow:3px 3px 0 rgba(60,36,21,.12);transform:rotate(-2.2deg);transition:transform .25s ease;}
+  #sp-{{ section.id }} .sp-gal .card:nth-child(even){transform:rotate(2.2deg);}
+  @media(hover:hover){#sp-{{ section.id }} .sp-gal .card:hover{transform:rotate(0deg) translateY(-6px);}}
+  #sp-{{ section.id }} .sp-gal .card img{width:100%;height:auto;display:block;}
+  #sp-{{ section.id }} .sp-gal .note{text-align:center;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);opacity:.7;margin-top:12px;padding:0 22px;}
+
   /* LAUNCH RIBBON — scrolling marquee */
   #sp-{{ section.id }} .sp-mq{overflow:hidden;background:var(--orange);border-top:var(--rule);border-bottom:var(--rule);padding:11px 0;}
   #sp-{{ section.id }} .sp-mq .tr{display:flex;gap:40px;white-space:nowrap;width:max-content;animation:spmq{{ section.id }} 24s linear infinite;}
@@ -341,6 +368,13 @@
 
   {%- if s.show_progress -%}<div class="sp-pourbar" data-pour-bar aria-hidden="true"></div>{%- endif -%}
 
+  {%- if s.count_enable and s.count_start != blank -%}
+  <div class="sp-count" data-count-bar data-start="{{ s.count_start | strip }}" data-tz="{{ s.count_tz | default: '-04:00' }}" data-hours="{{ s.count_hours | default: 72 }}">
+    <span class="lb">{{ s.count_label | default: 'Launch deal ends in' }}</span>
+    <span class="tm" data-count-time>--:--:--</span>
+  </div>
+  {%- endif -%}
+
   <div class="sp-scene" data-scene>
     {%- if s.show_rain -%}
     <div class="sp-rain" aria-hidden="true" data-rain>
@@ -391,7 +425,7 @@
         {%- if s.hero_sub != blank -%}<p class="sp-sub sp-rev">{{ s.hero_sub }}</p>{%- endif -%}
         <p class="sp-meta sp-rev">{{ s.chip1 | default: 'Regular' }} &middot; {{ s.chip2 | default: 'Sugar-Free' }} &middot; {{ s.chip3 | default: '50 flavors' }}</p>
         <div class="sp-btnrow sp-rev">
-          <a class="sp-btn" href="#sp-shop-{{ section.id }}">{{ s.shop_btn | default: 'Shop now' }}</a>
+          <a class="sp-btn" href="{% if s.show_grid %}#sp-shop-{{ section.id }}{% else %}#sp-live-{{ section.id }}{% endif %}">{{ s.shop_btn | default: 'Shop now' }}</a>
           {%- if s.collection_btn_url != blank -%}<a class="sp-btn sp-btn--ghost" href="{{ s.collection_btn_url }}">{{ s.collection_btn_text | default: 'View the collection' }}</a>{%- endif -%}
         </div>
         {%- if customer and s.show_credits -%}
@@ -419,6 +453,9 @@
       <img class="d {% if s.banner_top_m != blank %}has-m{% endif %}" src="{{ s.banner_top | image_url: width: 2400 }}" alt="{{ s.banner_top_alt | default: 'Syrup Pouches' | escape }}" loading="lazy">
       {%- if s.banner_top_m != blank -%}<img class="m" src="{{ s.banner_top_m | image_url: width: 1200 }}" alt="{{ s.banner_top_alt | default: 'Syrup Pouches' | escape }}" loading="lazy">{%- endif -%}
       {%- if s.banner_top_link != blank -%}</a>{%- endif -%}
+      {%- if s.banner_top_link != blank and s.banner_btn != blank -%}
+      <div class="sp-band-btn sp-rev"><a class="sp-btn" href="{{ s.banner_top_link }}">{{ s.banner_btn }}</a></div>
+      {%- endif -%}
     </div>
     {%- endif -%}
 
@@ -438,6 +475,7 @@
     {%- assign picks_count = 0 -%}
     {%- capture picks_html -%}
       {%- for block in section.blocks -%}
+        {%- if block.type != 'product' -%}{%- continue -%}{%- endif -%}
         {%- assign fp = block.settings.product -%}
         {%- if fp == blank -%}{%- continue -%}{%- endif -%}
         {%- assign picks_count = picks_count | plus: 1 -%}
@@ -479,11 +517,11 @@
       {%- endcapture -%}
     {%- endif -%}
     {%- if picks_count > 0 -%}
-    <div class="sp-live sp-section">
+    <div class="sp-live sp-section" id="sp-live-{{ section.id }}">
       <div class="sp-wrap">
         <div class="sp-head sp-rev">
           {%- if s.feat_eyebrow != blank -%}<span class="sp-eyebrow">{{ s.feat_eyebrow }}</span>{%- endif -%}
-          <h2 class="sp-h2">{{ s.feat_title | default: 'Live now — <em>shop the drop</em>' }}</h2>
+          <h2 class="sp-h2">{{ s.feat_title | default: 'Shop <em>Pouches</em>' }}</h2>
         </div>
         <div class="sp-duo{% if picks_count > 2 %} wide{% endif %}">{{ picks_html }}</div>
         {%- if s.feat_seeall != blank -%}
@@ -496,6 +534,72 @@
     {%- endif -%}
     {%- endif -%}
   </div>{%- comment -%} /sp-scene {%- endcomment -%}
+
+  {%- comment -%} ===== INFO BOXES ===== {%- endcomment -%}
+  {%- assign box_count = 0 -%}
+  {%- capture boxes_html -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type != 'box' -%}{%- continue -%}{%- endif -%}
+      {%- assign box_count = box_count | plus: 1 -%}
+      <div class="sp-box sp-rev" {{ block.shopify_attributes }}>
+        <span class="n">{{ box_count }}</span>
+        {%- if block.settings.title != blank -%}<h3>{{ block.settings.title }}</h3>{%- endif -%}
+        {%- if block.settings.text != blank -%}<p>{{ block.settings.text }}</p>{%- endif -%}
+      </div>
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if box_count > 0 -%}
+  <hr class="sp-sep">
+  <div class="sp-boxes sp-section">
+    <div class="sp-wrap">
+      <div class="sp-head sp-rev">
+        {%- if s.boxes_eyebrow != blank -%}<span class="sp-eyebrow">{{ s.boxes_eyebrow }}</span>{%- endif -%}
+        <h2 class="sp-h2">{{ s.boxes_title | default: 'Little pouch. <em>Big flavor.</em>' }}</h2>
+      </div>
+      <div class="grid">{{ boxes_html }}</div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- comment -%} ===== STICK GALLERY ===== {%- endcomment -%}
+  {%- if s.show_gallery -%}
+  <hr class="sp-sep">
+  <div class="sp-gal sp-section">
+    <div class="sp-head sp-rev" style="padding:0 22px;">
+      {%- if s.gallery_eyebrow != blank -%}<span class="sp-eyebrow">{{ s.gallery_eyebrow }}</span>{%- endif -%}
+      <h2 class="sp-h2">{{ s.gallery_title | default: 'This is the stick' }}</h2>
+      {%- if s.gallery_sub != blank -%}<p class="sp-lead">{{ s.gallery_sub }}</p>{%- endif -%}
+    </div>
+    <div class="rail sp-rev" style="margin-top:26px;">
+      {%- assign gal_any = false -%}
+      {%- assign gal_slots = 'gal_1,gal_2,gal_3,gal_4,gal_5,gal_6' | split: ',' -%}
+      {%- for slot in gal_slots -%}
+        {%- assign gimg = s[slot] -%}
+        {%- if gimg != blank -%}{%- assign gal_any = true -%}
+        <div class="card"><img src="{{ gimg | image_url: width: 600 }}" alt="Syrup Pouch stick" loading="lazy"></div>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- unless gal_any -%}
+        {%- for i in (0..3) -%}
+        <div class="card"><img src="{{ stick_defaults[i] }}" alt="Syrup Pouch stick" loading="lazy"></div>
+        {%- endfor -%}
+      {%- endunless -%}
+    </div>
+    {%- if s.gallery_note != blank -%}<p class="note">{{ s.gallery_note }}</p>{%- endif -%}
+  </div>
+  {%- endif -%}
+
+  {%- comment -%} ===== MORE FLAVORS COMING SOON ===== {%- endcomment -%}
+  {%- if s.soon_title != blank -%}
+  <hr class="sp-sep">
+  <div class="sp-section">
+    <div class="sp-wrap sp-head sp-rev">
+      {%- if s.soon_eyebrow != blank -%}<span class="sp-eyebrow">{{ s.soon_eyebrow }}</span>{%- endif -%}
+      <h2 class="sp-h2">{{ s.soon_title }}</h2>
+      {%- if s.soon_sub != blank -%}<p class="sp-lead">{{ s.soon_sub }}</p>{%- endif -%}
+    </div>
+  </div>
+  {%- endif -%}
 
   {%- comment -%} ===== VIP CREDITS ===== {%- endcomment -%}
   {%- if s.show_credits -%}
@@ -580,6 +684,7 @@
   {%- endif -%}
 
   {%- comment -%} ===== GRID ===== {%- endcomment -%}
+  {%- if s.show_grid -%}
   <hr class="sp-sep">
   <div class="sp-shop sp-section" id="sp-shop-{{ section.id }}">
     <div class="sp-wrap">
@@ -664,6 +769,7 @@
       {%- if s.grid_note != blank -%}<p class="sp-note">{{ s.grid_note }}</p>{%- endif -%}
     </div>
   </div>
+  {%- endif -%}
 
   {%- comment -%} ===== PICTURE 3 ===== {%- endcomment -%}
   {%- if s.band3_img != blank -%}
@@ -747,6 +853,31 @@
     window.addEventListener('scroll',function(){ if(!tick2){tick2=true;requestAnimationFrame(fall);} },{passive:true});
     window.addEventListener('resize',fall);
     fall();
+  }
+
+  /* 72h countdown bar */
+  var cb=root.querySelector('[data-count-bar]');
+  if(cb){
+    var cst=(cb.getAttribute('data-start')||'').trim();
+    var ctz=cb.getAttribute('data-tz')||'-04:00';
+    var chrs=parseFloat(cb.getAttribute('data-hours'))||72;
+    var startMs=Date.parse(cst.replace(' ','T')+ctz);
+    var tEl=cb.querySelector('[data-count-time]');
+    if(isNaN(startMs)||!tEl){ cb.style.display='none'; }
+    else{
+      var endMs=startMs+chrs*3600000;
+      var capMs=chrs*3600000;
+      var two=function(n){return n<10?'0'+n:''+n;};
+      var tickC=function(){
+        var left=endMs-Date.now();
+        if(left<=0){ cb.style.display='none'; return; }
+        if(left>capMs)left=capMs;
+        var h=Math.floor(left/3600000),m=Math.floor(left%3600000/60000),s2=Math.floor(left%60000/1000);
+        tEl.textContent=two(h)+':'+two(m)+':'+two(s2);
+        setTimeout(tickC,1000);
+      };
+      tickC();
+    }
   }
 
   /* syrup progress bar — fills as you scroll the page */
@@ -894,6 +1025,12 @@
     { "type": "image_picker", "id": "stick_2", "label": "Stick 2 (bottom left)" },
     { "type": "image_picker", "id": "stick_3", "label": "Stick 3 (top right)" },
     { "type": "image_picker", "id": "stick_4", "label": "Stick 4 (bottom right)" },
+    { "type": "header", "content": "72-hour countdown" },
+    { "type": "checkbox", "id": "count_enable", "label": "Countdown on (check when the clock starts)", "default": false },
+    { "type": "text", "id": "count_start", "label": "Start date & time", "info": "Format: 2026-07-27 18:00 (your store's time). Timer runs for the hours below from this moment." },
+    { "type": "range", "id": "count_hours", "label": "Countdown length (hours)", "min": 12, "max": 96, "step": 12, "default": 72 },
+    { "type": "text", "id": "count_tz", "label": "Timezone offset", "default": "-04:00", "info": "-04:00 = New York summer time" },
+    { "type": "text", "id": "count_label", "label": "Countdown label", "default": "Launch deal ends in" },
     { "type": "header", "content": "Launch effects" },
     { "type": "checkbox", "id": "show_marquee", "label": "Show scrolling launch ribbon", "default": true },
     { "type": "text", "id": "marquee_text", "label": "Ribbon text", "default": "Just dropped · Syrup Pouches · Flavor On The Go" },
@@ -909,8 +1046,8 @@
     { "type": "checkbox", "id": "show_featured", "label": "Show featured pouches", "default": true },
     { "type": "product", "id": "feat_prod_1", "label": "Fallback product 1" },
     { "type": "product", "id": "feat_prod_2", "label": "Fallback product 2" },
-    { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "First drop" },
-    { "type": "text", "id": "feat_title", "label": "Heading", "default": "Live now — <em>shop the drop</em>" },
+    { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "Live now" },
+    { "type": "text", "id": "feat_title", "label": "Heading", "default": "Shop <em>Pouches</em>" },
     { "type": "text", "id": "live_badge", "label": "Live badge", "default": "Live now" },
     { "type": "text", "id": "feat_cta", "label": "Featured card button", "default": "Shop now" },
     { "type": "text", "id": "feat_seeall", "label": "See-all button text", "default": "See all flavors" },
@@ -920,7 +1057,29 @@
     { "type": "image_picker", "id": "banner_top", "label": "Banner — desktop" },
     { "type": "image_picker", "id": "banner_top_m", "label": "Banner — mobile (optional)" },
     { "type": "url", "id": "banner_top_link", "label": "Banner link (optional)" },
+    { "type": "text", "id": "banner_btn", "label": "Button under banner (needs a link)", "default": "Shop now" },
     { "type": "text", "id": "banner_top_alt", "label": "Banner alt text", "default": "Syrup Pouches" },
+    { "type": "header", "content": "Info boxes" },
+    { "type": "paragraph", "content": "Add 'Info box' blocks in the sidebar — each is a numbered card with title + text." },
+    { "type": "text", "id": "boxes_eyebrow", "label": "Eyebrow", "default": "Why pouches" },
+    { "type": "text", "id": "boxes_title", "label": "Heading", "default": "Little pouch. <em>Big flavor.</em>" },
+    { "type": "header", "content": "Stick gallery" },
+    { "type": "checkbox", "id": "show_gallery", "label": "Show stick gallery", "default": true },
+    { "type": "text", "id": "gallery_eyebrow", "label": "Eyebrow", "default": "Up close" },
+    { "type": "text", "id": "gallery_title", "label": "Heading", "default": "This is the <em>stick</em>" },
+    { "type": "textarea", "id": "gallery_sub", "label": "Subtext", "default": "Pocket-size, pre-measured, ready anywhere. Swipe through." },
+    { "type": "text", "id": "gallery_note", "label": "Note under gallery", "default": "One stick = one serving · 15 ml (0.5 fl oz)" },
+    { "type": "paragraph", "content": "Gallery images default to your stick renders — override below." },
+    { "type": "image_picker", "id": "gal_1", "label": "Stick photo 1" },
+    { "type": "image_picker", "id": "gal_2", "label": "Stick photo 2" },
+    { "type": "image_picker", "id": "gal_3", "label": "Stick photo 3" },
+    { "type": "image_picker", "id": "gal_4", "label": "Stick photo 4" },
+    { "type": "image_picker", "id": "gal_5", "label": "Stick photo 5" },
+    { "type": "image_picker", "id": "gal_6", "label": "Stick photo 6" },
+    { "type": "header", "content": "More flavors coming soon" },
+    { "type": "text", "id": "soon_eyebrow", "label": "Eyebrow", "default": "The lineup grows" },
+    { "type": "text", "id": "soon_title", "label": "Heading", "default": "More flavors <em>coming soon</em>" },
+    { "type": "textarea", "id": "soon_sub", "label": "Subtext", "default": "New pouches drop all the time — 50 flavors on the way, regular and sugar-free." },
     { "type": "header", "content": "VIP credits" },
     { "type": "checkbox", "id": "show_credits", "label": "Show Syruvia Credits card", "default": true },
     { "type": "text", "id": "credits_eyebrow", "label": "Eyebrow", "default": "Members earn" },
@@ -962,7 +1121,7 @@
     { "type": "image_picker", "id": "band3_img", "label": "Picture band 3 (bottom of page)" },
     { "type": "text", "id": "band3_alt", "label": "Band 3 alt text", "default": "Syrup Pouches" },
     { "type": "header", "content": "About rows" },
-    { "type": "checkbox", "id": "show_about", "label": "Show about rows", "default": true },
+    { "type": "checkbox", "id": "show_about", "label": "Show about rows", "default": false },
     { "type": "image_picker", "id": "row1_img", "label": "Row 1 image" },
     { "type": "text", "id": "row1_title", "label": "Row 1 title", "default": "Tear. Pour. <em>Enjoy.</em>" },
     { "type": "textarea", "id": "row1_text", "label": "Row 1 text", "default": "Every pouch is one perfect serving of café-quality syrup — no bottle, no measuring, no mess. Toss a few in your bag and flavor anything, anywhere." },
@@ -970,7 +1129,8 @@
     { "type": "text", "id": "row2_title", "label": "Row 2 title", "default": "Regular & <em>Sugar-Free</em>" },
     { "type": "textarea", "id": "row2_text", "label": "Row 2 text", "default": "The full pouch lineup comes in classic and zero-sugar, zero-calorie versions — 50 flavors in total, rolling out now." },
     { "type": "header", "content": "Flavor grid" },
-    { "type": "text", "id": "collection_handle", "label": "Live pouches collection handle", "default": "syrup-pouches", "info": "Products in this collection show as live, pre-orderable tiles." },
+    { "type": "checkbox", "id": "show_grid", "label": "Show full flavor grid on this page", "default": false, "info": "Off by default — the See-all button sends people to the collection page instead." },
+    { "type": "text", "id": "collection_handle", "label": "Live pouches collection handle", "default": "syrup-pouches", "info": "Products in this collection show as live tiles." },
     { "type": "text", "id": "grid_eyebrow", "label": "Eyebrow", "default": "The lineup" },
     { "type": "text", "id": "grid_title", "label": "Heading", "default": "50 flavors. <em>Pick yours.</em>" },
     { "type": "checkbox", "id": "show_search", "label": "Show flavor search bar", "default": true },
@@ -1006,6 +1166,10 @@
     { "type": "product", "name": "Featured pouch", "settings": [
       { "type": "product", "id": "product", "label": "Product" },
       { "type": "text", "id": "badge", "label": "Badge override (optional)" }
+    ] },
+    { "type": "box", "name": "Info box", "settings": [
+      { "type": "text", "id": "title", "label": "Title", "default": "One perfect serving" },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Every stick is pre-measured café-quality syrup — no pump, no bottle, no mess." }
     ] }
   ],
   "max_blocks": 8,
