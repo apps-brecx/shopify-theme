@@ -11,9 +11,16 @@
   "sections": {
     "main": {
       "type": "page-syrup-pouches",
+      "blocks": {
+        "pick1": { "type": "product", "settings": { "product": "vanilla-syrup-pouches" } },
+        "pick2": { "type": "product", "settings": { "product": "caramel-syrup-pouches" } },
+        "pick3": { "type": "product", "settings": { "product": "cookie-butter-syrup-pouches" } }
+      },
+      "block_order": ["pick1", "pick2", "pick3"],
       "settings": {
         "access_mode": "everyone",
-        "collection_handle": "syrup-pouches"
+        "collection_handle": "syrup-pouches",
+        "show_credits": false
       }
     }
   },
