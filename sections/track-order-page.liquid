@@ -70,7 +70,9 @@
   .sy-tpage .tp-step:last-child{padding-bottom:4px}
   .sy-tpage .tp-step:last-child::before{display:none}
   .sy-tpage .tp-step-dot{position:absolute;left:0;top:-4px;width:30px;height:30px;border-radius:50%;border:2px solid var(--ink);background:#fff;color:#B9A78D;box-sizing:border-box;display:flex;align-items:center;justify-content:center;transition:all .25s ease}
-  .sy-tpage .tp-step-dot svg{width:16px;height:16px;display:block}
+  .sy-tpage .tp-step-dot svg{width:18px;height:18px;display:block;stroke-width:2.6}
+  .sy-tpage .tp-step.is-done .tp-step-dot svg,
+  .sy-tpage .tp-step.is-current .tp-step-dot svg{color:#fff!important;stroke:#fff!important}
   .sy-tpage .tp-step.is-done::before{background:var(--ink)}
   .sy-tpage .tp-step.is-done .tp-step-dot{background:var(--ink);color:#fff}
   .sy-tpage .tp-step.is-current .tp-step-dot{background:var(--coral);color:#fff;animation:tp-pulse 1.6s ease-in-out infinite}
