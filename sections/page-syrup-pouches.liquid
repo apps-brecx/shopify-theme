@@ -105,10 +105,15 @@
   /* INFO BOXES */
   #sp-{{ section.id }} .sp-boxes .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:32px;}
   @media(min-width:760px){#sp-{{ section.id }} .sp-boxes .grid{grid-template-columns:repeat(3,1fr);}}
-  #sp-{{ section.id }} .sp-box{background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 4px);box-shadow:3px 3px 0 rgba(60,36,21,.12);padding:28px 20px;text-align:center;}
-  #sp-{{ section.id }} .sp-box .n{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--orange);color:#fff;border:var(--rule);font-family:var(--display);font-size:15px;margin-bottom:14px;}
-  #sp-{{ section.id }} .sp-box h3{font-family:var(--display);font-weight:400;font-size:16px;text-transform:uppercase;color:var(--brand);margin:0;line-height:1.15;}
-  #sp-{{ section.id }} .sp-box p{font-size:14.5px;opacity:.8;margin:10px 0 0;line-height:1.55;}
+  #sp-{{ section.id }} .sp-box{background:var(--bxbg,var(--paper));color:var(--bxtx,var(--ink));border:var(--rule);border-radius:calc(var(--rad) + 4px);box-shadow:4px 4px 0 rgba(60,36,21,.18);padding:28px 20px;text-align:center;}
+  #sp-{{ section.id }} .sp-box .n{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--paper);color:var(--brand);border:var(--rule);font-family:var(--display);font-size:15px;margin-bottom:14px;box-shadow:2px 2px 0 rgba(60,36,21,.2);}
+  #sp-{{ section.id }} .sp-box h3{font-family:var(--display);font-weight:400;font-size:16px;text-transform:uppercase;color:var(--bxtx,var(--brand));margin:0;line-height:1.15;}
+  #sp-{{ section.id }} .sp-box p{font-size:14.5px;opacity:.9;margin:10px 0 0;line-height:1.55;}
+  /* mobile — sticky stacking cards */
+  @media(max-width:759px){
+    #sp-{{ section.id }} .sp-boxes .grid{gap:18px;}
+    #sp-{{ section.id }} .sp-box{position:sticky;top:calc(96px + (var(--i,0) * 16px));box-shadow:0 -8px 22px rgba(60,36,21,.14);}
+  }
 
   /* STATEMENT */
   #sp-{{ section.id }} .sp-say{padding:clamp(56px,9vw,110px) 0;text-align:center;overflow:clip;}
@@ -223,7 +228,7 @@
     {%- for block in section.blocks -%}
       {%- if block.type != 'box' -%}{%- continue -%}{%- endif -%}
       {%- assign box_count = box_count | plus: 1 -%}
-      <div class="sp-box sp-rev" {{ block.shopify_attributes }}>
+      <div class="sp-box sp-rev" style="--bxbg:{{ block.settings.bg | default: '#e28f26' }};--bxtx:{{ block.settings.tx | default: '#ffffff' }};--i:{{ box_count | minus: 1 }};" {{ block.shopify_attributes }}>
         <span class="n">{{ box_count }}</span>
         {%- if block.settings.title != blank -%}<h3>{{ block.settings.title }}</h3>{%- endif -%}
         {%- if block.settings.text != blank -%}<p>{{ block.settings.text }}</p>{%- endif -%}
@@ -621,7 +626,9 @@
     ] },
     { "type": "box", "name": "Info box", "settings": [
       { "type": "text", "id": "title", "label": "Title", "default": "One perfect serving" },
-      { "type": "textarea", "id": "text", "label": "Text", "default": "Every stick is pre-measured café-quality syrup — no pump, no bottle, no mess." }
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Every stick is pre-measured café-quality syrup — no pump, no bottle, no mess." },
+      { "type": "color", "id": "bg", "label": "Box color", "default": "#e28f26" },
+      { "type": "color", "id": "tx", "label": "Text color", "default": "#ffffff" }
     ] }
   ],
   "max_blocks": 12,
