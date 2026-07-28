@@ -122,6 +122,7 @@
   #syrn-{{ section.id }} .syrn-ic{ position:relative; width:var(--icon-btn-size, 42px); height:var(--icon-btn-size, 42px); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background:transparent; border:0; color:var(--icon); text-decoration:none; cursor:pointer; transition:background .15s ease, color .15s ease; }
   #syrn-{{ section.id }} .syrn-ic:hover{ background:var(--hover); color:var(--icon-hover); }
   #syrn-{{ section.id }} .syrn-ic svg{ width:var(--icon-size, 21px); height:var(--icon-size, 21px); stroke-width:var(--icon-stroke, 1.9); }
+  #syrn-{{ section.id }} .syrn-ic-custom img{ width:100%; height:100%; object-fit:contain; display:block; }
   #syrn-{{ section.id }} .syrn-badge{ position:absolute; top:5px; right:5px; background:var(--accent); color:var(--bg); font-family:'Archivo Black','Archivo Black Fallback','Arial Black',sans-serif !important; font-size:9.5px; min-width:17px; height:17px; padding:0 4px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; }
   @media (max-width:900px){
     #syrn-{{ section.id }} .syrn-wrap{ padding:0 14px; height:{{ section.settings.nav_height_mobile | default: 64 }}px; gap:8px; }
@@ -185,6 +186,11 @@
       {%- else -%}<span class="syrn-logo-text">{{ shop.name }}</span>{%- endif -%}
     </a>
     <div class="syrn-icons">
+      {%- if section.settings.custom_icon_image -%}
+        <a class="syrn-ic syrn-ic-custom" href="{{ section.settings.custom_icon_url | default: '#' }}" aria-label="{{ section.settings.custom_icon_image.alt | default: 'Link' | escape }}">
+          <img src="{{ section.settings.custom_icon_image | image_url: width: 72 }}" alt="" width="36" height="36" loading="lazy">
+        </a>
+      {%- endif -%}
       {%- if section.settings.show_search -%}<a class="syrn-ic syrn-ic-search" href="{{ routes.search_url }}" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></a>{%- endif -%}
       {%- if section.settings.show_account -%}<a class="syrn-ic syrn-ic-account" href="{{ section.settings.account_url | default: routes.account_url }}" aria-label="Account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></a>{%- endif -%}
       {%- if section.settings.show_wishlist -%}<a class="syrn-ic syrn-ic-wish" href="{{ section.settings.wishlist_url | default: '/pages/swym-wishlist' }}" aria-label="Wishlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></a>{%- endif -%}
@@ -304,6 +310,8 @@
     { "type": "range", "id": "icon_button_size", "label": "Icon button size", "min": 32, "max": 60, "step": 2, "unit": "px", "default": 42 },
 
     { "type": "header", "content": "Icons visibility + links" },
+    { "type": "image_picker", "id": "custom_icon_image", "label": "Custom icon image", "info": "Shown before the other icons. Square images work best." },
+    { "type": "url", "id": "custom_icon_url", "label": "Custom icon link" },
     { "type": "checkbox", "id": "show_search", "label": "Show search", "default": true },
     { "type": "checkbox", "id": "show_account", "label": "Show account", "default": true },
     { "type": "url", "id": "account_url", "label": "Account link" },
