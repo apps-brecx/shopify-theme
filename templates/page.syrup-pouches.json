@@ -33,41 +33,6 @@
             "badge": ""
           }
         },
-        "pick4": {
-          "type": "product",
-          "settings": {
-            "product": "sugar-free-strawberry-syrup-pouches",
-            "badge": ""
-          }
-        },
-        "pick5": {
-          "type": "product",
-          "settings": {
-            "product": "sugar-free-pistachio-syrup-pouches",
-            "badge": ""
-          }
-        },
-        "pick6": {
-          "type": "product",
-          "settings": {
-            "product": "sugar-free-smores-syrup-pouches",
-            "badge": ""
-          }
-        },
-        "pick7": {
-          "type": "product",
-          "settings": {
-            "product": "vanilla-syrup-pouches",
-            "badge": ""
-          }
-        },
-        "pick8": {
-          "type": "product",
-          "settings": {
-            "product": "caramel-syrup-pouches",
-            "badge": ""
-          }
-        },
         "box1": {
           "type": "box",
           "settings": {
@@ -136,11 +101,6 @@
         "pick1",
         "pick2",
         "pick3",
-        "pick4",
-        "pick5",
-        "pick6",
-        "pick7",
-        "pick8",
         "box1",
         "box2",
         "box3",
@@ -160,8 +120,8 @@
         "count_hours": 72,
         "count_tz": "-04:00",
         "count_label": "Launch deal ends in",
-        "hero_banner": "shopify://shop_images/Banner_17.png",
-        "hero_banner_m": "shopify://shop_images/Banner_Mobile_5.png",
+        "hero_banner": "shopify://shop_images/Banner_40_off.png",
+        "hero_banner_m": "shopify://shop_images/Banner_Mobile_40_OFF.png",
         "hero_link": "",
         "hero_alt": "Syrup Pouches",
         "show_marquee": true,
