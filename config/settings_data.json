@@ -277,12 +277,12 @@
           "chat_placeholder": "Type a question…",
           "chat_fallback": "I couldn’t find an instant answer for that.",
           "enable_track": true,
-          "track_tab_label": "Track package",
+          "track_tab_label": "Track Order",
           "track_intro": "Enter your order number to see exactly where your package is.",
           "track_button_label": "Track",
           "chat_endpoint": "https://gentle-shadow-e778.ti-243.workers.dev/",
           "enable_claim": true,
-          "claim_tab_label": "Claim",
+          "claim_tab_label": "Open Claim",
           "claim_intro": "Something wrong with your order? Tell us and we’ll make it right.",
           "claim_submit_label": "Submit claim"
         }
