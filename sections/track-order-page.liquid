@@ -74,9 +74,9 @@
   .sy-tpage .tp-step.is-done .tp-step-dot svg,
   .sy-tpage .tp-step.is-current .tp-step-dot svg{color:#fff!important;stroke:#fff!important}
   .sy-tpage .tp-step.is-done::before{background:var(--ink)}
-  .sy-tpage .tp-step.is-done .tp-step-dot{background:var(--ink);color:#fff}
+  .sy-tpage .tp-step.is-done .tp-step-dot{border-color:#1a7f37;background:#1a7f37;color:#fff}
   .sy-tpage .tp-step.is-current .tp-step-dot{background:var(--coral);color:#fff;animation:tp-pulse 1.6s ease-in-out infinite}
-  .sy-tpage .tp-step.is-current.is-done .tp-step-dot{background:var(--ink);color:#fff;animation:none}
+  .sy-tpage .tp-step.is-current.is-done .tp-step-dot{border-color:#1a7f37;background:#1a7f37;color:#fff;animation:none}
   @keyframes tp-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,92,.45)}50%{box-shadow:0 0 0 7px rgba(255,107,92,0)}}
   @media (prefers-reduced-motion:reduce){.sy-tpage .tp-step.is-current .tp-step-dot{animation:none}}
   .sy-tpage .tp-step-lbl{font-size:15px;color:#8a7a68}
@@ -291,10 +291,13 @@
         crow.appendChild(nm);
         metaEl.appendChild(crow);
       }
-      if (d.tracking && d.tracking.length){
+      /* FBM appends internal pallet refs (e.g. "PLT-UPS-1") to the tracking
+         list — warehouse labels, not customer tracking numbers. Never show them. */
+      var nums = (d.tracking || []).filter(function(n){ return !/^PLT[-_ ]/i.test(String(n)); });
+      if (nums.length){
         var trow = document.createElement('div');
         trow.appendChild(document.createTextNode('Tracking: '));
-        d.tracking.forEach(function(num, i){
+        nums.forEach(function(num, i){
           var n = String(num);
           if (i) trow.appendChild(document.createTextNode(', '));
           var a = document.createElement('a');

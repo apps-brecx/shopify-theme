@@ -314,10 +314,19 @@ async function fbmShipment(env, orderNumber) {
     shipment_status: row.shipping_status,
     status_meaning: FBM_STATUS_HINTS[row.shipping_status],
     carrier: row.carrier_name,
-    tracking_numbers: (row.packed_tracking_numbers || []).concat(row.pallet_tracking_numbers || []).slice(0, 4),
+    tracking_numbers: fbmCustomerTracking(row),
     packed_at: row.packed_at || undefined,
     shipped_at: row.shipped_at || undefined,
   };
+}
+/* Customer-facing tracking numbers only. FBM's pallet list carries internal
+   warehouse refs like "PLT-UPS-1" alongside real carrier master numbers —
+   the PLT-prefixed labels mean nothing to a customer and are dropped. */
+function fbmCustomerTracking(row) {
+  return (row.packed_tracking_numbers || [])
+    .concat(row.pallet_tracking_numbers || [])
+    .filter(function (n) { return !/^PLT[-_ ]/i.test(String(n)); })
+    .slice(0, 4);
 }
 async function trackPackage(env, orderNumber) {
   if (!env.FBM_EMAIL || !env.FBM_PIN) return 'Package tracking is not configured yet.';
@@ -370,7 +379,7 @@ async function handleTrack(request, env, headers) {
       shipping_status: row.shipping_status || null,
       scan_status: row.scan_status || null,
       carrier: row.carrier_name || null,
-      tracking: (row.packed_tracking_numbers || []).concat(row.pallet_tracking_numbers || []).slice(0, 4),
+      tracking: fbmCustomerTracking(row),
       is_returning: !!row.is_returning,
       is_stuck: !!row.is_stuck,
       is_label_failed: !!row.is_label_failed,
