@@ -115,6 +115,11 @@
     transition:opacity .15s ease, color .15s ease;
   }
   #syr-foot-{{ section.id }} .syr-foot-col a:hover{ opacity:1; color:var(--accent); }
+  /* Placeholder links (href="#") render as bold, non-clickable headings-in-list */
+  #syr-foot-{{ section.id }} .syr-foot-col li a[href="#"]{
+    font-weight:700; opacity:1;
+    pointer-events:none; cursor:default;
+  }
 
   #syr-foot-{{ section.id }} .syr-foot-bottom{
     display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;

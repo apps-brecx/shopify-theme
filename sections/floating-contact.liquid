@@ -463,11 +463,11 @@
     .bb-step-dot{position:absolute;left:0;top:-3px;width:26px;height:26px;border-radius:50%;border:2px solid #C9BBA4;background:#fff;color:#B9A78D;box-sizing:border-box;display:flex;align-items:center;justify-content:center;transition:all .25s ease}
     .bb-step-dot svg{width:16px;height:16px;display:block;stroke-width:2.6}
     .bb-step.is-done::before{background:#3C2005}
-    .bb-step.is-done .bb-step-dot{border-color:#3C2005;background:#3C2005;color:#fff}
+    .bb-step.is-done .bb-step-dot{border-color:#1a7f37;background:#1a7f37;color:#fff}
     .bb-step.is-done .bb-step-dot svg{color:#fff!important;stroke:#fff!important}
     .bb-step.is-current .bb-step-dot svg{color:#fff!important;stroke:#fff!important}
     .bb-step.is-current .bb-step-dot{border-color:#3C2005;background:#FF6B5C;color:#fff;animation:bb-pulse 1.6s ease-in-out infinite}
-    .bb-step.is-current.is-done .bb-step-dot{background:#3C2005;color:#fff;animation:none}
+    .bb-step.is-current.is-done .bb-step-dot{border-color:#1a7f37;background:#1a7f37;color:#fff;animation:none}
     @keyframes bb-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,92,.45)}50%{box-shadow:0 0 0 6px rgba(255,107,92,0)}}
     @media (prefers-reduced-motion:reduce){.bb-step.is-current .bb-step-dot{animation:none}}
     .bb-step-lbl{font-size:14px;color:#8a7a68}
@@ -968,16 +968,17 @@
          that don't send the flag yet. */
       const NEEDS_HUMAN_RE = /send message|send us a message|contact (us|the team)|reach (out|us|the team)|get in touch|email (us|the team)|support team|customer (service|support)/i;
       /* Tracking numbers inside AI replies become carrier links — the same
-         number-format detection the Track tab uses (UPS 1Z…, USPS 92–95…).
-         Only unambiguous formats are linked; plain digit runs stay text
-         because they're usually order numbers. Links are plain <a>, so they
-         survive the sessionStorage restore with no extra wiring. */
-      const TRACK_SPLIT = /\b(1Z[0-9A-Z]{8,18}|420\d{5,9}9[2-5]\d{18,}|9[2-5]\d{18,})\b/g;
-      const TRACK_ONE   = /^(1Z[0-9A-Z]{8,18}|420\d{5,9}9[2-5]\d{18,}|9[2-5]\d{18,})$/;
+         number-format detection the Track tab uses (UPS 1Z…, USPS 92–95…,
+         Amazon Logistics TBA…). Only unambiguous formats are linked; plain
+         digit runs stay text because they're usually order numbers. Links are
+         plain <a>, so they survive the sessionStorage restore with no extra
+         wiring. */
+      const TRACK_SPLIT = /\b(1Z[0-9A-Z]{8,18}|420\d{5,9}9[2-5]\d{18,}|9[2-5]\d{18,}|TBA[0-9]{9,15})\b/g;
+      const TRACK_ONE   = /^(1Z[0-9A-Z]{8,18}|420\d{5,9}9[2-5]\d{18,}|9[2-5]\d{18,}|TBA[0-9]{9,15})$/;
       function trackHref(n){
-        return /^1Z/i.test(n)
-          ? 'https://www.ups.com/track?tracknum=' + encodeURIComponent(n)
-          : 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' + encodeURIComponent(n);
+        if (/^1Z/i.test(n))  return 'https://www.ups.com/track?tracknum=' + encodeURIComponent(n);
+        if (/^TBA/i.test(n)) return 'https://track.amazon.com/tracking/' + encodeURIComponent(n);
+        return 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' + encodeURIComponent(n);
       }
       function linkifyTracking(el){
         Array.prototype.slice.call(el.childNodes).forEach(function(node){
@@ -1163,6 +1164,10 @@
         btn.addEventListener('click', function(){ if (window.bbShowTab) window.bbShowTab('form'); });
         statusEl.appendChild(btn);
       }
+      /* Classify the /track answer. found/notfound are definitive; a 400 is
+         the worker REJECTING the input as not-an-order-number (definitive —
+         must block, NOT fail open); a 429 is the rate limit (block and ask to
+         wait). Only genuine worker/network trouble stays fail-open. */
       async function checkOrder(v){
         const ctrl  = ('AbortController' in window) ? new AbortController() : null;
         const timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 12000);
@@ -1175,10 +1180,12 @@
           });
           let data = null;
           try { data = await res.json(); } catch(e){}
-          if (res.ok && data && data.ok) return !!data.found;
-          return null;              /* worker error → unknown, fail open */
+          if (res.ok && data && data.ok) return { state: data.found ? 'found' : 'notfound' };
+          if (res.status === 400) return { state: 'invalid', msg: (data && data.error) || 'Please enter a valid order number.' };
+          if (res.status === 429) return { state: 'busy' };
+          return { state: 'unknown' };   /* worker error → fail open */
         } catch(e){
-          return null;              /* network error → unknown, fail open */
+          return { state: 'unknown' };   /* network error → fail open */
         } finally {
           if (timer) clearTimeout(timer);
         }
@@ -1187,22 +1194,33 @@
         if (checking) return;
         const v = (orderIn.value || '').trim();
         if (!v){ status('Please enter your order number.'); orderIn.focus(); return; }
+        /* Format gate BEFORE any network: order numbers are 4-20 digits (the
+           worker's own rule). Without this, garbage input rode the fail-open
+           path straight past verification. */
+        const digits = v.replace(/[^0-9]/g, '');
+        if (digits.length < 4 || digits.length > 20){
+          status('Hmm, that doesn’t look like an order number — it’s the long number from your confirmation email, like 154008582984.');
+          orderIn.focus();
+          return;
+        }
         if (!endpoint || v === okOrder){ goStep(2); return; }
         checking = true;
         const lbl = next1.textContent;
         next1.disabled = true;
         next1.textContent = 'Checking…';
         status('');
-        const found = await checkOrder(v);
+        const check = await checkOrder(v);
         checking = false;
         next1.textContent = lbl;
         next1.disabled = false;
         syncNext();
-        if (found === false){
+        if (check.state === 'notfound'){
           claimCta('We couldn’t find that order number. Double-check it — brand-new orders can take a little while to appear.');
           orderIn.focus();
           return;
         }
+        if (check.state === 'invalid'){ status(check.msg); orderIn.focus(); return; }
+        if (check.state === 'busy'){ status('That’s a few checks in a row — give it a minute, then try again.'); return; }
         okOrder = v;
         goStep(2);
       });
@@ -1403,9 +1421,9 @@
         { label: 'Accepted',                    at: 'accepted_at' },
         { label: 'Packed', at: 'prep_at' },
         { label: 'Handed over to carrier',      at: 'pallet_at' },
-        { label: 'On the way',                  at: null },
-        { label: 'Out for delivery',            at: null },
-        { label: 'Delivered',                   at: null },
+        { label: 'On the way',                  at: 'in_transit_at' },
+        { label: 'Out for delivery',            at: 'out_for_delivery_at' },
+        { label: 'Delivered',                   at: 'delivered_at' },
       ];
       /* One relatable icon per step (static stroke SVGs — bag, clipboard-check,
          package, truck, route, map-pin, home). Injected into the step dots;
@@ -1422,10 +1440,11 @@
         SVG_OPEN + '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>'
       ];
       function rankOf(d){
-        if (d.shipping_status === 'delivered') return 7;
-        /* FBM has no out-for-delivery signal (step 6) — it fills in only once
-           delivered. in_transit maps to "On the way". */
-        if (d.shipping_status === 'in_transit') return 5;
+        if (d.shipping_status === 'delivered' || d.delivered_at) return 7;
+        /* out_for_delivery_at comes from the Veeqo carrier events (the worker's
+           optional enrichment) — FBM alone has no out-for-delivery signal. */
+        if (d.out_for_delivery_at) return 6;
+        if (d.shipping_status === 'in_transit' || d.in_transit_at) return 5;
         /* awaiting_collection = packed & staged for the carrier; scans lag, so
            trust the shipping status before the warehouse scans. */
         if (d.shipping_status === 'awaiting_collection') return 4;
@@ -1446,13 +1465,15 @@
       /* Carrier logos (theme assets) + official tracking pages. Unknown
          carriers fall back to plain text and a web search link. */
       const CARRIERS = {
-        usps:  { name: 'USPS',  logo: "{{ 'carrier-usps.svg'  | asset_url }}", url: 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' },
-        ups:   { name: 'UPS',   logo: "{{ 'carrier-ups.svg'   | asset_url }}", url: 'https://www.ups.com/track?tracknum=' },
-        fedex: { name: 'FedEx', logo: "{{ 'carrier-fedex.svg' | asset_url }}", url: 'https://www.fedex.com/fedextrack/?trknbr=' },
-        dhl:   { name: 'DHL',   logo: "{{ 'carrier-dhl.svg'   | asset_url }}", url: 'https://www.dhl.com/us-en/home/tracking.html?tracking-id=' }
+        usps:   { name: 'USPS',   logo: "{{ 'carrier-usps.svg'   | asset_url }}", url: 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' },
+        ups:    { name: 'UPS',    logo: "{{ 'carrier-ups.svg'    | asset_url }}", url: 'https://www.ups.com/track?tracknum=' },
+        fedex:  { name: 'FedEx',  logo: "{{ 'carrier-fedex.svg'  | asset_url }}", url: 'https://www.fedex.com/fedextrack/?trknbr=' },
+        dhl:    { name: 'DHL',    logo: "{{ 'carrier-dhl.svg'    | asset_url }}", url: 'https://www.dhl.com/us-en/home/tracking.html?tracking-id=' },
+        amazon: { name: 'Amazon', logo: "{{ 'carrier-amazon.svg' | asset_url }}", url: 'https://track.amazon.com/tracking/' }
       };
       function carrierByName(name){
         name = String(name || '');
+        if (/amzn|amazon/i.test(name)) return 'amazon';   /* FBM reports e.g. "amzn_us" */
         if (/usps|postal/i.test(name)) return 'usps';
         if (/ups/i.test(name)) return 'ups';
         if (/fedex|fdx/i.test(name)) return 'fedex';
@@ -1463,6 +1484,7 @@
          carrier_name, so the number format wins when it's unambiguous. */
       function carrierByNum(n){
         if (/^1Z/i.test(n)) return 'ups';
+        if (/^TBA\d{9,}/i.test(n)) return 'amazon';       /* Amazon Logistics */
         if (/^9[2-5]\d{18,}$/.test(n) || /^420\d{5,9}9[2-5]\d{18,}$/.test(n)) return 'usps';
         return '';
       }
@@ -1535,11 +1557,14 @@
           crow.appendChild(nm);
           metaEl.appendChild(crow);
         }
-        if (d.tracking && d.tracking.length){
+        /* FBM appends internal pallet refs (e.g. "PLT-UPS-1") to the tracking
+           list — warehouse labels, not customer tracking numbers. Never show them. */
+        const nums = (d.tracking || []).filter(function(n){ return !/^PLT[-_ ]/i.test(String(n)); });
+        if (nums.length){
           const trow = document.createElement('div');
           trow.className = 'bb-track-links';
           trow.appendChild(document.createTextNode('Tracking: '));
-          d.tracking.forEach(function(num, i){
+          nums.forEach(function(num, i){
             const n = String(num);
             if (i) trow.appendChild(document.createTextNode(', '));
             const a = document.createElement('a');
