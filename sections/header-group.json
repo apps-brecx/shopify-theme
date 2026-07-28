@@ -14,11 +14,21 @@
     "syr_announcement": {
       "type": "syr-announcement-bar",
       "blocks": {
+        "icon_kXFyj8": {
+          "type": "icon",
+          "settings": {
+            "img": "shopify://shop_images/pouches.svg",
+            "size": 26,
+            "url": "",
+            "round": false,
+            "alt": ""
+          }
+        },
         "text_ni7exB": {
           "type": "text",
           "settings": {
             "text": "SYRUP POUCHES ARE HERE - 40% OFF",
-            "color": "#FFFFFF",
+            "color": "#ffffff",
             "bold": true,
             "italic": false
           }
@@ -28,7 +38,7 @@
           "settings": {
             "text": "Shop now",
             "url": "shopify://pages/vip-syrup-pouches",
-            "bg_color": "#FFB15D",
+            "bg_color": "#ffb15d",
             "text_color": "#1f1813",
             "border_color": "#000000"
           }
@@ -45,13 +55,14 @@
         }
       },
       "block_order": [
+        "icon_kXFyj8",
         "text_ni7exB",
         "button_3Vr4UX",
         "text_BcA97p"
       ],
       "settings": {
         "show": true,
-        "bg_color": "#1f1813",
+        "bg_color": "#375ED3",
         "text_color": "#faf3e9",
         "border_top_color": "",
         "border_bottom_color": "",
