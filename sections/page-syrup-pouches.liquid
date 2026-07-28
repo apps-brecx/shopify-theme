@@ -582,7 +582,7 @@
     var W=cv.width=window.innerWidth,H=cv.height=window.innerHeight;
     var cols=['#e28f26','#3c2415','#FCE2A0','#C8252B','#2F7DC4','#ffffff'];
     var ps=[];
-    for(var ci=0;ci<90;ci++){ ps.push({x:Math.random()*W,y:-30-Math.random()*H*0.6,w:5+Math.random()*6,h:8+Math.random()*8,c:cols[ci%cols.length],v:2.4+Math.random()*3.2,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.22,sw:Math.random()*6}); }
+    for(var ci=0;ci<90;ci++){ ps.push({x:Math.random()*W,y:-30-Math.random()*H*1.7,w:5+Math.random()*6,h:8+Math.random()*8,c:cols[ci%cols.length],v:1.5+Math.random()*2.1,r:Math.random()*Math.PI,vr:(Math.random()-.5)*.22,sw:Math.random()*6}); }
     var ct0=null;
     function ctick(ts){
       if(!ct0)ct0=ts;
@@ -590,7 +590,7 @@
       cxx.clearRect(0,0,W,H);
       for(var i=0;i<ps.length;i++){ var p=ps[i]; p.y+=p.v; p.x+=Math.sin(el/320+p.sw)*1.15; p.r+=p.vr;
         cxx.save(); cxx.translate(p.x,p.y); cxx.rotate(p.r); cxx.fillStyle=p.c; cxx.fillRect(-p.w/2,-p.h/2,p.w,p.h); cxx.restore(); }
-      if(el<2600){ requestAnimationFrame(ctick); } else { cv.remove(); }
+      if(el<{{ s.confetti_secs | default: 5 | times: 1000 }}){ requestAnimationFrame(ctick); } else { cv.remove(); }
     }
     requestAnimationFrame(ctick);
   }
@@ -629,6 +629,7 @@
     { "type": "checkbox", "id": "show_marquee", "label": "Show scrolling launch ribbon", "default": true },
     { "type": "text", "id": "marquee_text", "label": "Ribbon text", "default": "Just dropped · Syrup Pouches · Flavor On The Go" },
     { "type": "checkbox", "id": "show_confetti", "label": "Confetti burst on arrival (once per visit)", "default": true },
+    { "type": "range", "id": "confetti_secs", "label": "Confetti duration", "min": 2, "max": 12, "step": 1, "default": 5, "unit": "s" },
     { "type": "checkbox", "id": "show_progress", "label": "Syrup scroll progress bar", "default": true },
     { "type": "header", "content": "Info boxes" },
     { "type": "paragraph", "content": "Add 'Info box' blocks in the sidebar — numbered cards with title + text." },
