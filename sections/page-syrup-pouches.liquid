@@ -318,11 +318,11 @@
         </div>
         <div class="sp-stat c2">
           <div class="nrow"><span data-statnum="{{ s.stat2_n | default: '15' }}">{{ s.stat2_n | default: '15' }}</span><span class="u">{{ s.stat2_u | default: 'ml' }}</span></div>
-          {%- assign l2 = s.stat2_l | default: 'Per stick — one perfect serving' -%}{%- if l2 != blank -%}<div class="lb">{{ l2 }}</div>{%- endif -%}
+          {%- assign l2 = s.stat2_l | default: 'Per stick · one perfect serving' -%}{%- if l2 != blank -%}<div class="lb">{{ l2 }}</div>{%- endif -%}
         </div>
         <div class="sp-stat c3">
           <div class="nrow"><span data-statnum="{{ s.stat3_n | default: '450' }}">{{ s.stat3_n | default: '450' }}</span><span class="u">{{ s.stat3_u | default: 'ml' }}</span></div>
-          {%- assign l3 = s.stat3_l | default: 'Per bag — 15.2 fl oz total' -%}{%- if l3 != blank -%}<div class="lb">{{ l3 }}</div>{%- endif -%}
+          {%- assign l3 = s.stat3_l | default: 'Per bag · 15.2 fl oz total' -%}{%- if l3 != blank -%}<div class="lb">{{ l3 }}</div>{%- endif -%}
         </div>
         <div class="sp-stat c4">
           <div class="nrow"><span data-statnum="{{ s.stat4_n | default: '0' }}">{{ s.stat4_n | default: '0' }}</span><span class="u">{{ s.stat4_u | default: 'g' }}</span></div>
@@ -644,10 +644,10 @@
     { "type": "text", "id": "stat1_l", "label": "Stat 1 — label", "default": "Pouches in every bag" },
     { "type": "text", "id": "stat2_n", "label": "Stat 2 — number", "default": "15" },
     { "type": "text", "id": "stat2_u", "label": "Stat 2 — unit", "default": "ml" },
-    { "type": "text", "id": "stat2_l", "label": "Stat 2 — label", "default": "Per stick — one perfect serving" },
+    { "type": "text", "id": "stat2_l", "label": "Stat 2 — label", "default": "Per stick · one perfect serving" },
     { "type": "text", "id": "stat3_n", "label": "Stat 3 — number", "default": "450" },
     { "type": "text", "id": "stat3_u", "label": "Stat 3 — unit", "default": "ml" },
-    { "type": "text", "id": "stat3_l", "label": "Stat 3 — label", "default": "Per bag — 15.2 fl oz total" },
+    { "type": "text", "id": "stat3_l", "label": "Stat 3 — label", "default": "Per bag · 15.2 fl oz total" },
     { "type": "text", "id": "stat4_n", "label": "Stat 4 — number", "default": "0" },
     { "type": "text", "id": "stat4_u", "label": "Stat 4 — unit", "default": "g" },
     { "type": "text", "id": "stat4_l", "label": "Stat 4 — label", "default": "Sugar in the sugar-free line" },
@@ -655,7 +655,7 @@
     { "type": "checkbox", "id": "show_statement", "label": "Show 'Flavor On The Go!' statement", "default": true },
     { "type": "text", "id": "statement_l1", "label": "Line 1 (solid)", "default": "Flavor" },
     { "type": "text", "id": "statement_l2", "label": "Line 2 (outlined)", "default": "On The Go!" },
-    { "type": "textarea", "id": "statement_sub", "label": "Statement subtext", "default": "One pouch, one perfect serving — coffee, soda, lemonade, anywhere you are." },
+    { "type": "textarea", "id": "statement_sub", "label": "Statement subtext", "default": "One pouch, one perfect serving. Coffee, soda, lemonade, anywhere you are." },
     { "type": "header", "content": "Product listings" },
     { "type": "paragraph", "content": "Add 'Featured pouch' blocks to choose the listings. With no blocks, the first 6 from the collection show automatically." },
     { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "Live now" },
@@ -685,7 +685,7 @@
     { "type": "header", "content": "More flavors coming soon" },
     { "type": "text", "id": "soon_eyebrow", "label": "Eyebrow", "default": "The lineup grows" },
     { "type": "text", "id": "soon_title", "label": "Heading", "default": "More flavors <em>coming soon</em>" },
-    { "type": "textarea", "id": "soon_sub", "label": "Subtext", "default": "New pouches drop all the time — 50 flavors on the way, regular and sugar-free." },
+    { "type": "textarea", "id": "soon_sub", "label": "Subtext", "default": "New pouches drop all the time. 50 flavors on the way, regular and sugar-free." },
     { "type": "text", "id": "soon_btn", "label": "Button (links to See-all link)", "default": "Browse the collection" },
     { "type": "header", "content": "Extra picture bands (bottom)" },
     { "type": "image_picker", "id": "band1_img", "label": "Picture band 1" },
@@ -711,14 +711,14 @@
     ] },
     { "type": "box", "name": "Info box", "settings": [
       { "type": "text", "id": "title", "label": "Title", "default": "One perfect serving" },
-      { "type": "textarea", "id": "text", "label": "Text", "default": "Every stick is pre-measured café-quality syrup — no pump, no bottle, no mess." },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Every stick is pre-measured café-quality syrup. No pump, no bottle, no mess." },
       { "type": "color", "id": "bg", "label": "Box color", "default": "#e28f26" },
       { "type": "color", "id": "tx", "label": "Text color", "default": "#ffffff" }
     ] },
     { "type": "story", "name": "Story row", "settings": [
       { "type": "text", "id": "chip", "label": "Corner chip (optional)" },
       { "type": "text", "id": "big", "label": "Big line (<em> = italic orange)", "default": "Same syrup. <em>Now in pouches.</em>" },
-      { "type": "textarea", "id": "sub", "label": "Supporting text", "default": "The exact café-quality syrup from our bottles — nothing changed but the size." },
+      { "type": "textarea", "id": "sub", "label": "Supporting text", "default": "The exact café-quality syrup from our bottles. Nothing changed but the size." },
       { "type": "image_picker", "id": "img", "label": "Lifestyle photo" },
       { "type": "text", "id": "hint", "label": "Editor-only photo idea (shown until an image is set)", "default": "Upload a lifestyle photo here." }
     ] }

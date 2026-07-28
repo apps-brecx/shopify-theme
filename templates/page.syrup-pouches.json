@@ -37,7 +37,7 @@
           "type": "box",
           "settings": {
             "title": "One perfect serving",
-            "text": "Every stick is pre-measured café-quality syrup — 15 ml, no pump, no bottle, no guessing.",
+            "text": "Every stick is pre-measured café-quality syrup. 15 ml, no pump, no bottle, no guessing.",
             "bg": "#e28f26",
             "tx": "#ffffff"
           }
@@ -46,7 +46,7 @@
           "type": "box",
           "settings": {
             "title": "Tear. Pour. Enjoy.",
-            "text": "Coffee, soda, lemonade, water — flavor anything in seconds, anywhere you are.",
+            "text": "Coffee, soda, lemonade, water. Flavor anything in seconds, anywhere you are.",
             "bg": "#fce2a0",
             "tx": "#3c2415"
           }
@@ -55,7 +55,7 @@
           "type": "box",
           "settings": {
             "title": "Regular & Sugar-Free",
-            "text": "Every flavor comes classic or with 0g sugar and 0 calories — keto friendly.",
+            "text": "Every flavor comes classic or with 0g sugar and 0 calories. Keto friendly.",
             "bg": "#2f7dc4",
             "tx": "#ffffff"
           }
@@ -65,7 +65,7 @@
           "settings": {
             "chip": "x 30",
             "big": "Same syrup. <em>Now in pouches.</em>",
-            "sub": "The exact café-quality syrup you know from our bottles — now in perfectly measured 15 ml sticks. Every bag holds 30 of them (450 ml / 15.2 fl oz).",
+            "sub": "The exact café-quality syrup you know from our bottles, now in perfectly measured 15 ml sticks. Every bag holds 30 of them (450 ml / 15.2 fl oz).",
             "img": "shopify://shop_images/05_de777e32-d7da-4abf-a1b6-62c67e475daa.png",
             "hint": "Photo idea: a Syruvia bottle standing next to a pouch bag, with a few sticks fanned out in front."
           }
@@ -75,7 +75,7 @@
           "settings": {
             "chip": "15 ml each",
             "big": "15 ml. One perfect pour.",
-            "sub": "Every stick holds exactly 15 ml (0.5 fl oz) — one serving, pre-measured. No pump, no measuring, no sticky bottle. Tear, pour, done.",
+            "sub": "Every stick holds exactly 15 ml (0.5 fl oz). One serving, pre-measured. No pump, no measuring, no sticky bottle. Tear, pour, done.",
             "img": "shopify://shop_images/20_8fa7285e-384d-4d44-9285-b830ada26b6d.png",
             "hint": "Photo idea: close-up of a hand tearing a stick over an iced coffee, mid-pour."
           }
@@ -87,7 +87,7 @@
             "big": "Take it anywhere",
             "sub": "Purse, car, desk drawer, gym bag, carry-on. If your drink made it there, your flavor did too.",
             "img": "shopify://shop_images/03_a984ba2c-97f8-44b3-9281-1a5158b5f672.png",
-            "hint": "Photo idea: lifestyle shot — sticks in a tote bag or a car cupholder next to a to-go cup."
+            "hint": "Photo idea: lifestyle shot: sticks in a tote bag or a car cupholder next to a to-go cup."
           }
         },
         "story4": {
@@ -95,7 +95,7 @@
           "settings": {
             "chip": "OG recipe",
             "big": "Same taste <em>you love</em>",
-            "sub": "The same recipes as the bottles on your shelf — available in regular and zero-sugar, zero-calorie sugar-free.",
+            "sub": "The same recipes as the bottles on your shelf, available in regular and zero-sugar, zero-calorie sugar-free.",
             "hint": "Photo idea: your best-selling bottle next to its pouch twin, syrup swirling into a drink."
           }
         }
@@ -141,17 +141,17 @@
         "stat1_l": "Pouches in every bag",
         "stat2_n": "15",
         "stat2_u": "ml",
-        "stat2_l": "Per stick — one perfect serving",
+        "stat2_l": "Per stick · one perfect serving",
         "stat3_n": "450",
         "stat3_u": "ml",
-        "stat3_l": "Per bag — 15.2 fl oz total",
+        "stat3_l": "Per bag · 15.2 fl oz total",
         "stat4_n": "0",
         "stat4_u": "g",
         "stat4_l": "Sugar in the sugar-free line",
         "show_statement": true,
         "statement_l1": "Flavor",
         "statement_l2": "On The Go!",
-        "statement_sub": "One pouch, one perfect serving — coffee, soda, lemonade, anywhere you are.",
+        "statement_sub": "One pouch, one perfect serving. Coffee, soda, lemonade, anywhere you are.",
         "feat_eyebrow": "Live now",
         "feat_title": "Shop Pouches",
         "live_badge": "New",
@@ -170,7 +170,7 @@
         "gallery_note": "One stick = one serving · 15 ml (0.5 fl oz)",
         "soon_eyebrow": "The lineup grows",
         "soon_title": "More flavors coming soon",
-        "soon_sub": "New pouches drop all the time — 50 flavors on the way, regular and sugar-free.",
+        "soon_sub": "New pouches drop all the time. 50 flavors on the way, regular and sugar-free.",
         "soon_btn": "Browse the collection",
         "band1_alt": "Syrup Pouches",
         "band2_alt": "Syrup Pouches",
