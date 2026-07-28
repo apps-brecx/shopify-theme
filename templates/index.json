@@ -493,7 +493,7 @@
           "settings": {
             "coll": "syrup-pouches",
             "name": "Pouches",
-            "cta": "Shop",
+            "cta": "Shop Pouches",
             "bot_shadow": true,
             "chip_show": true,
             "chip_text": "",
