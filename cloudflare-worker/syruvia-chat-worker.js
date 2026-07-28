@@ -735,7 +735,23 @@ export default {
           fbm_login_set: !!(env.FBM_EMAIL && env.FBM_PIN),
           claims_key_set: !!env.SUPPORT_API_KEY,
           claims_base: env.SUPPORT_API_BASE || '(default: https://cs.brecx.com)',
+          /* prefix check only, never the key: Veeqo keys must start "Vqt/" */
+          veeqo_key_set: !!env.VEEQO_API_KEY,
+          veeqo_key_has_vqt_prefix: !!(env.VEEQO_API_KEY && /^Vqt\//.test(env.VEEQO_API_KEY)),
         };
+        /* Live Veeqo auth probe — status code only, no data. */
+        let veeqoProbe = null;
+        if (env.VEEQO_API_KEY) {
+          try {
+            const vres = await timedFetch('https://api.veeqo.com/orders?page_size=1', {
+              headers: { 'x-api-key': env.VEEQO_API_KEY, 'Content-Type': 'application/json' },
+            }, 6000);
+            veeqoProbe = { http: vres.status, key_valid: vres.status === 200 };
+          } catch (e) {
+            veeqoProbe = { hint: String((e && e.message) || e).slice(0, 120) };
+          }
+        }
+        envSeen.veeqo_probe = veeqoProbe;
         if (!env.SHOPIFY_ADMIN_TOKEN) return json({ env_seen: envSeen, token_set: false, hint: 'SHOPIFY_ADMIN_TOKEN secret is missing' }, 200, headers);
         try {
           const res = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
