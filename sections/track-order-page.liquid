@@ -74,9 +74,9 @@
   .sy-tpage .tp-step.is-done .tp-step-dot svg,
   .sy-tpage .tp-step.is-current .tp-step-dot svg{color:#fff!important;stroke:#fff!important}
   .sy-tpage .tp-step.is-done::before{background:var(--ink)}
-  .sy-tpage .tp-step.is-done .tp-step-dot{background:var(--ink);color:#fff}
+  .sy-tpage .tp-step.is-done .tp-step-dot{border-color:#1a7f37;background:#1a7f37;color:#fff}
   .sy-tpage .tp-step.is-current .tp-step-dot{background:var(--coral);color:#fff;animation:tp-pulse 1.6s ease-in-out infinite}
-  .sy-tpage .tp-step.is-current.is-done .tp-step-dot{background:var(--ink);color:#fff;animation:none}
+  .sy-tpage .tp-step.is-current.is-done .tp-step-dot{border-color:#1a7f37;background:#1a7f37;color:#fff;animation:none}
   @keyframes tp-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,92,.45)}50%{box-shadow:0 0 0 7px rgba(255,107,92,0)}}
   @media (prefers-reduced-motion:reduce){.sy-tpage .tp-step.is-current .tp-step-dot{animation:none}}
   .sy-tpage .tp-step-lbl{font-size:15px;color:#8a7a68}
@@ -159,9 +159,9 @@
       { label: 'Accepted',               at: 'accepted_at' },
       { label: 'Packed',                 at: 'prep_at' },
       { label: 'Handed over to carrier', at: 'pallet_at' },
-      { label: 'On the way',             at: null },
-      { label: 'Out for delivery',       at: null },
-      { label: 'Delivered',              at: null }
+      { label: 'On the way',             at: 'in_transit_at' },
+      { label: 'Out for delivery',       at: 'out_for_delivery_at' },
+      { label: 'Delivered',              at: 'delivered_at' }
     ];
     /* One relatable icon per step (static stroke SVGs — bag, clipboard-check,
        package, truck, route, map-pin, home). Injected into the step dots;
@@ -177,10 +177,11 @@
       SVG_OPEN + '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>'
     ];
     function rankOf(d){
-      if (d.shipping_status === 'delivered') return 7;
-      /* FBM has no out-for-delivery signal (step 6) — it fills in only once
-         delivered. in_transit maps to "On the way". */
-      if (d.shipping_status === 'in_transit') return 5;
+      if (d.shipping_status === 'delivered' || d.delivered_at) return 7;
+      /* out_for_delivery_at comes from the Veeqo carrier events (the worker's
+         optional enrichment) — FBM alone has no out-for-delivery signal. */
+      if (d.out_for_delivery_at) return 6;
+      if (d.shipping_status === 'in_transit' || d.in_transit_at) return 5;
       /* awaiting_collection = packed & staged for the carrier; scans lag, so
          trust the shipping status before the warehouse scans. */
       if (d.shipping_status === 'awaiting_collection') return 4;
@@ -201,13 +202,15 @@
     /* Carrier logos (theme assets) + official tracking pages. Unknown carriers
        fall back to plain text and a web search link. */
     var CARRIERS = {
-      usps:  { name: 'USPS',  logo: "{{ 'carrier-usps.svg'  | asset_url }}", url: 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' },
-      ups:   { name: 'UPS',   logo: "{{ 'carrier-ups.svg'   | asset_url }}", url: 'https://www.ups.com/track?tracknum=' },
-      fedex: { name: 'FedEx', logo: "{{ 'carrier-fedex.svg' | asset_url }}", url: 'https://www.fedex.com/fedextrack/?trknbr=' },
-      dhl:   { name: 'DHL',   logo: "{{ 'carrier-dhl.svg'   | asset_url }}", url: 'https://www.dhl.com/us-en/home/tracking.html?tracking-id=' }
+      usps:   { name: 'USPS',   logo: "{{ 'carrier-usps.svg'   | asset_url }}", url: 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' },
+      ups:    { name: 'UPS',    logo: "{{ 'carrier-ups.svg'    | asset_url }}", url: 'https://www.ups.com/track?tracknum=' },
+      fedex:  { name: 'FedEx',  logo: "{{ 'carrier-fedex.svg'  | asset_url }}", url: 'https://www.fedex.com/fedextrack/?trknbr=' },
+      dhl:    { name: 'DHL',    logo: "{{ 'carrier-dhl.svg'    | asset_url }}", url: 'https://www.dhl.com/us-en/home/tracking.html?tracking-id=' },
+      amazon: { name: 'Amazon', logo: "{{ 'carrier-amazon.svg' | asset_url }}", url: 'https://track.amazon.com/tracking/' }
     };
     function carrierByName(name){
       name = String(name || '');
+      if (/amzn|amazon/i.test(name)) return 'amazon';   /* FBM reports e.g. "amzn_us" */
       if (/usps|postal/i.test(name)) return 'usps';
       if (/ups/i.test(name)) return 'ups';
       if (/fedex|fdx/i.test(name)) return 'fedex';
@@ -218,6 +221,7 @@
        carrier_name, so the number format wins when it's unambiguous. */
     function carrierByNum(n){
       if (/^1Z/i.test(n)) return 'ups';
+      if (/^TBA\d{9,}/i.test(n)) return 'amazon';       /* Amazon Logistics */
       if (/^9[2-5]\d{18,}$/.test(n) || /^420\d{5,9}9[2-5]\d{18,}$/.test(n)) return 'usps';
       return '';
     }
@@ -291,10 +295,13 @@
         crow.appendChild(nm);
         metaEl.appendChild(crow);
       }
-      if (d.tracking && d.tracking.length){
+      /* FBM appends internal pallet refs (e.g. "PLT-UPS-1") to the tracking
+         list — warehouse labels, not customer tracking numbers. Never show them. */
+      var nums = (d.tracking || []).filter(function(n){ return !/^PLT[-_ ]/i.test(String(n)); });
+      if (nums.length){
         var trow = document.createElement('div');
         trow.appendChild(document.createTextNode('Tracking: '));
-        d.tracking.forEach(function(num, i){
+        nums.forEach(function(num, i){
           var n = String(num);
           if (i) trow.appendChild(document.createTextNode(', '));
           var a = document.createElement('a');
