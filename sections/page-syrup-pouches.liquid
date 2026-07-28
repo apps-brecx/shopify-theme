@@ -115,6 +115,24 @@
     #sp-{{ section.id }} .sp-box{position:sticky;top:calc(96px + (var(--i,0) * 16px));box-shadow:0 -8px 22px rgba(60,36,21,.14);}
   }
 
+  /* POUCH STORY — big statements + lifestyle image slots */
+  #sp-{{ section.id }} .sp-story .srow{display:grid;grid-template-columns:1fr;gap:22px;align-items:center;margin-top:clamp(40px,6vw,64px);}
+  @media(min-width:820px){
+    #sp-{{ section.id }} .sp-story .srow{grid-template-columns:1.05fr 1fr;gap:clamp(28px,5vw,64px);}
+    #sp-{{ section.id }} .sp-story .srow:nth-child(even) .smedia{order:-1;}
+  }
+  #sp-{{ section.id }} .sp-story .sbig{font-family:var(--display);font-weight:400;font-size:clamp(32px,6.4vw,58px);line-height:.98;letter-spacing:-.005em;text-transform:uppercase;color:var(--brand);margin:0;text-wrap:balance;}
+  #sp-{{ section.id }} .sp-story .sbig em{font-family:var(--serif);font-style:italic;font-weight:300;text-transform:none;letter-spacing:0;color:var(--orange);}
+  #sp-{{ section.id }} .sp-story .ssub{font-size:clamp(15px,2vw,17.5px);opacity:.82;margin:14px 0 0;max-width:46ch;line-height:1.6;}
+  #sp-{{ section.id }} .sp-story .smedia img{width:100%;height:auto;display:block;border:var(--rule);border-radius:calc(var(--rad) + 6px);box-shadow:4px 4px 0 rgba(60,36,21,.14);}
+  #sp-{{ section.id }} .sp-story .sph{border:1.5px dashed var(--rule-c);border-radius:calc(var(--rad) + 6px);background:var(--paper);min-height:220px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:13.5px;opacity:.6;}
+  #sp-{{ section.id }} .sp-story .srow.noimg{grid-template-columns:1fr;text-align:center;}
+  #sp-{{ section.id }} .sp-story .srow.noimg .ssub{margin-left:auto;margin-right:auto;}
+  @media(max-width:819px){
+    #sp-{{ section.id }} .sp-story .srow{text-align:center;}
+    #sp-{{ section.id }} .sp-story .ssub{margin-left:auto;margin-right:auto;}
+  }
+
   /* STATEMENT */
   #sp-{{ section.id }} .sp-say{padding:clamp(56px,9vw,110px) 0;text-align:center;overflow:clip;}
   #sp-{{ section.id }} .sp-say .l1,#sp-{{ section.id }} .sp-say .l2{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:.92;will-change:transform;}
@@ -243,6 +261,39 @@
         <h2 class="sp-h2">{{ s.boxes_title | default: 'Little pouch. <em>Big flavor.</em>' }}</h2>
       </div>
       <div class="grid">{{ boxes_html }}</div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  {%- comment -%} ===== POUCH STORY ===== {%- endcomment -%}
+  {%- assign story_count = 0 -%}
+  {%- capture story_html -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type != 'story' -%}{%- continue -%}{%- endif -%}
+      {%- assign story_count = story_count | plus: 1 -%}
+      {%- assign simg = block.settings.img -%}
+      <div class="srow sp-rev{% if simg == blank and request.design_mode != true %} noimg{% endif %}" {{ block.shopify_attributes }}>
+        <div class="stxt">
+          {%- if block.settings.big != blank -%}<h3 class="sbig">{{ block.settings.big }}</h3>{%- endif -%}
+          {%- if block.settings.sub != blank -%}<p class="ssub">{{ block.settings.sub }}</p>{%- endif -%}
+        </div>
+        {%- if simg != blank -%}
+        <div class="smedia"><img src="{{ simg | image_url: width: 1200 }}" alt="{{ block.settings.big | strip_html | escape }}" loading="lazy"></div>
+        {%- elsif request.design_mode -%}
+        <div class="smedia"><div class="sph">{{ block.settings.hint | default: 'Upload a lifestyle photo here.' }}</div></div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if story_count > 0 -%}
+  <hr class="sp-sep">
+  <div class="sp-story sp-section">
+    <div class="sp-wrap">
+      <div class="sp-head sp-rev">
+        {%- if s.story_eyebrow != blank -%}<span class="sp-eyebrow">{{ s.story_eyebrow }}</span>{%- endif -%}
+        <h2 class="sp-h2">{{ s.story_title | default: 'Your favorite syrup. <em>Now in your pocket.</em>' }}</h2>
+      </div>
+      {{ story_html }}
     </div>
   </div>
   {%- endif -%}
@@ -529,6 +580,10 @@
     { "type": "paragraph", "content": "Add 'Info box' blocks in the sidebar — numbered cards with title + text." },
     { "type": "text", "id": "boxes_eyebrow", "label": "Eyebrow", "default": "Why pouches" },
     { "type": "text", "id": "boxes_title", "label": "Heading", "default": "Little pouch. <em>Big flavor.</em>" },
+    { "type": "header", "content": "Pouch story" },
+    { "type": "paragraph", "content": "Big bottle-to-pouch statements with lifestyle photo slots. Add 'Story row' blocks — photo hints show in the editor only." },
+    { "type": "text", "id": "story_eyebrow", "label": "Eyebrow", "default": "From the brand you know" },
+    { "type": "text", "id": "story_title", "label": "Heading", "default": "Your favorite syrup. <em>Now in your pocket.</em>" },
     { "type": "header", "content": "Big statement" },
     { "type": "checkbox", "id": "show_statement", "label": "Show 'Flavor On The Go!' statement", "default": true },
     { "type": "text", "id": "statement_l1", "label": "Line 1 (solid)", "default": "Flavor" },
@@ -592,9 +647,15 @@
       { "type": "textarea", "id": "text", "label": "Text", "default": "Every stick is pre-measured café-quality syrup — no pump, no bottle, no mess." },
       { "type": "color", "id": "bg", "label": "Box color", "default": "#e28f26" },
       { "type": "color", "id": "tx", "label": "Text color", "default": "#ffffff" }
+    ] },
+    { "type": "story", "name": "Story row", "settings": [
+      { "type": "text", "id": "big", "label": "Big line (<em> = italic orange)", "default": "1 bottle = <em>30 pouches</em>" },
+      { "type": "textarea", "id": "sub", "label": "Supporting text", "default": "The exact café-quality syrup from our bottles — nothing changed but the size." },
+      { "type": "image_picker", "id": "img", "label": "Lifestyle photo" },
+      { "type": "text", "id": "hint", "label": "Editor-only photo idea (shown until an image is set)", "default": "Upload a lifestyle photo here." }
     ] }
   ],
-  "max_blocks": 12,
+  "max_blocks": 24,
   "presets": [ { "name": "Syrup Pouches Launch" } ]
 }
 {% endschema %}
