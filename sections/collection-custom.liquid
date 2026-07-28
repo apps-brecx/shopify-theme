@@ -1,3 +1,6 @@
+{%- comment -%} Pouches are in production, not gone — this collection says Coming Soon instead of Sold out {%- endcomment -%}
+{%- assign oos_label = 'Sold out' -%}
+{%- if collection.handle == 'syrup-pouches' -%}{%- assign oos_label = 'Coming soon' -%}{%- endif -%}
 {%- comment -%} Syruvia — Collection (custom, reusable v7 + syrup spill) {%- endcomment -%}
 {%- liquid
   assign heading = section.settings.heading | default: collection.title
@@ -630,7 +633,7 @@
               <div class="pcard-media" data-quick>
                 <div class="pcard-badges">
                   {%- unless avail -%}
-                    <span class="badge soldout">Sold out</span>
+                    <span class="badge soldout">{{ oos_label }}</span>
                   {%- endunless -%}
                   {% if best -%}
                     <span class="badge best">Best seller</span>
@@ -660,7 +663,7 @@
                   {%- if avail -%}
                     <button class="quick-add" data-add>{{ icPlus }} {% if is_preorder %}Preorder{% else %}Add to cart{% endif %}</button>
                   {%- else -%}
-                    <button class="quick-add is-soldout" disabled>Sold out</button>
+                    <button class="quick-add is-soldout" disabled>{{ oos_label }}</button>
                   {%- endif -%}
                 </div>
               </div>
