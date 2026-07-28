@@ -248,6 +248,66 @@
         </div>
       </a>
     {%- endfor -%}
+    {%- comment -%} Extra cards added as blocks — same options as the fixed 6, unlimited {%- endcomment -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type != 'card' -%}{%- continue -%}{%- endif -%}
+      {%- assign coll = block.settings.coll -%}
+      {%- if coll == blank or coll == empty -%}{%- continue -%}{%- endif -%}
+      {%- assign cat_name = block.settings.name | default: coll.title -%}
+      {%- assign cta_text = block.settings.cta | default: 'Shop' -%}
+      {%- assign bg = block.settings.bg | default: '#FCE2A0' -%}
+      {%- assign btn_bg = block.settings.btn_bg | default: '#39220f' -%}
+      {%- assign btn_color = block.settings.btn_color | default: '#FFFBF4' -%}
+      {%- assign img_left = block.settings.img_left -%}
+      {%- assign img_center = block.settings.img_center -%}
+      {%- assign img_right = block.settings.img_right -%}
+      {%- assign override_count = block.settings.count -%}
+      {%- assign chip_show = block.settings.chip_show -%}
+      {%- assign chip_text = block.settings.chip_text -%}
+      {%- assign chip_suffix = block.settings.chip_suffix | default: 'flavors' -%}
+      {%- assign chip_bg = block.settings.chip_bg | default: '#39220f' -%}
+      {%- assign chip_color = block.settings.chip_color | default: '#FFFBF4' -%}
+      {%- assign bot_shadow = block.settings.bot_shadow -%}
+      {%- assign live_count = coll.all_products_count -%}
+      {%- if live_count == 0 or live_count == blank -%}{%- assign live_count = coll.products_count -%}{%- endif -%}
+      {%- assign flavor_count = override_count | default: live_count | default: 100 -%}
+      {%- assign use_manual = false -%}
+      {%- if img_left != blank or img_center != blank or img_right != blank -%}{%- assign use_manual = true -%}{%- endif -%}
+      <a class="syr-cat-card{% unless bot_shadow %} syr-no-bot-shadow{% endunless %}" href="{{ coll.url | default: '/collections/all' }}" style="background:{{ bg }} !important;" {{ block.shopify_attributes }}>
+        {%- if chip_show -%}
+          {%- if chip_text != blank -%}
+            <span class="syr-cat-count" style="background:{{ chip_bg }} !important; color:{{ chip_color }} !important; border:2px solid {{ chip_bg }} !important;">{{ chip_text }}</span>
+          {%- else -%}
+            <span class="syr-cat-count" style="background:{{ chip_bg }} !important; color:{{ chip_color }} !important; border:2px solid {{ chip_bg }} !important;"><strong>{{ flavor_count }}+</strong> {{ chip_suffix }}</span>
+          {%- endif -%}
+        {%- endif -%}
+        <div class="syr-cat-bottles">
+          {%- if use_manual -%}
+            {%- if img_left != blank -%}<img class="syr-cat-bot b-left" src="{{ img_left | image_url: width: 540 }}" alt="{{ cat_name | escape }}" loading="lazy">{%- endif -%}
+            {%- if img_center != blank -%}<img class="syr-cat-bot b-center" src="{{ img_center | image_url: width: 540 }}" alt="{{ cat_name | escape }}" loading="lazy">{%- endif -%}
+            {%- if img_right != blank -%}<img class="syr-cat-bot b-right" src="{{ img_right | image_url: width: 540 }}" alt="{{ cat_name | escape }}" loading="lazy">{%- endif -%}
+          {%- else -%}
+            {%- assign shown = 0 -%}
+            {%- assign positions = 'b-left,b-center,b-right' | split: ',' -%}
+            {%- for p in coll.products limit: 3 -%}
+              {%- if p.featured_media -%}
+                {%- assign pos = positions[shown] -%}
+                <img class="syr-cat-bot {{ pos }}" src="{{ p.featured_media | image_url: width: 540 }}" alt="{{ p.title | escape }}" loading="lazy">
+                {%- assign shown = shown | plus: 1 -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if shown == 0 -%}<div class="syr-cat-bottles-fb"></div>{%- endif -%}
+          {%- endif -%}
+        </div>
+        <div class="syr-cat-info">
+          <h3 class="syr-cat-name">{{ cat_name }}</h3>
+          <span class="syr-cat-cta" style="background:{{ btn_bg }} !important; color:{{ btn_color }} !important; border:2px solid {{ btn_bg }} !important; box-shadow:3px 3px 0 rgba(57,34,15,.25);">
+            {{ cta_text }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </div>
+      </a>
+    {%- endfor -%}
   </div>
 </section>
 
@@ -429,8 +489,33 @@
     { "type": "header", "content": "Card 6 colors" },
     { "type": "color", "id": "c6_bg", "label": "Card background", "default": "#FFD4B8" },
     { "type": "color", "id": "c6_btn_bg", "label": "Button background", "default": "#39220f" },
-    { "type": "color", "id": "c6_btn_color", "label": "Button text color", "default": "#FFFBF4" }
+    { "type": "color", "id": "c6_btn_color", "label": "Button text color", "default": "#FFFBF4" },
+    { "type": "paragraph", "content": "Need more than 6 cards? Add 'Extra card' blocks in the sidebar — same options, unlimited." }
   ],
+  "blocks": [
+    { "type": "card", "name": "Extra card", "settings": [
+      { "type": "collection", "id": "coll", "label": "Pick collection (required)" },
+      { "type": "text", "id": "name", "label": "Card title" },
+      { "type": "text", "id": "cta", "label": "Button text", "default": "Shop" },
+      { "type": "checkbox", "id": "bot_shadow", "label": "Show bottle drop-shadow", "default": true },
+      { "type": "header", "content": "Chip badge" },
+      { "type": "checkbox", "id": "chip_show", "label": "Show chip badge", "default": true },
+      { "type": "text", "id": "chip_text", "label": "Custom chip text (e.g. 50% OFF)", "info": "If filled, shows ONLY this text. Leave blank to auto-pull count." },
+      { "type": "text", "id": "count", "label": "Auto: count override (number)" },
+      { "type": "text", "id": "chip_suffix", "label": "Auto: word after count", "default": "flavors" },
+      { "type": "color", "id": "chip_bg", "label": "Chip background", "default": "#39220f" },
+      { "type": "color", "id": "chip_color", "label": "Chip text color", "default": "#FFFBF4" },
+      { "type": "header", "content": "Bottle images" },
+      { "type": "image_picker", "id": "img_left", "label": "Left bottle" },
+      { "type": "image_picker", "id": "img_center", "label": "Center bottle" },
+      { "type": "image_picker", "id": "img_right", "label": "Right bottle" },
+      { "type": "header", "content": "Colors" },
+      { "type": "color", "id": "bg", "label": "Card background", "default": "#FCE2A0" },
+      { "type": "color", "id": "btn_bg", "label": "Button background", "default": "#39220f" },
+      { "type": "color", "id": "btn_color", "label": "Button text color", "default": "#FFFBF4" }
+    ] }
+  ],
+  "max_blocks": 20,
   "presets": [ { "name": "Categories" } ]
 }
 {% endschema %}
