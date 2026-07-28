@@ -159,9 +159,9 @@
       { label: 'Accepted',               at: 'accepted_at' },
       { label: 'Packed',                 at: 'prep_at' },
       { label: 'Handed over to carrier', at: 'pallet_at' },
-      { label: 'On the way',             at: null },
-      { label: 'Out for delivery',       at: null },
-      { label: 'Delivered',              at: null }
+      { label: 'On the way',             at: 'in_transit_at' },
+      { label: 'Out for delivery',       at: 'out_for_delivery_at' },
+      { label: 'Delivered',              at: 'delivered_at' }
     ];
     /* One relatable icon per step (static stroke SVGs — bag, clipboard-check,
        package, truck, route, map-pin, home). Injected into the step dots;
@@ -177,10 +177,11 @@
       SVG_OPEN + '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></svg>'
     ];
     function rankOf(d){
-      if (d.shipping_status === 'delivered') return 7;
-      /* FBM has no out-for-delivery signal (step 6) — it fills in only once
-         delivered. in_transit maps to "On the way". */
-      if (d.shipping_status === 'in_transit') return 5;
+      if (d.shipping_status === 'delivered' || d.delivered_at) return 7;
+      /* out_for_delivery_at comes from the Veeqo carrier events (the worker's
+         optional enrichment) — FBM alone has no out-for-delivery signal. */
+      if (d.out_for_delivery_at) return 6;
+      if (d.shipping_status === 'in_transit' || d.in_transit_at) return 5;
       /* awaiting_collection = packed & staged for the carrier; scans lag, so
          trust the shipping status before the warehouse scans. */
       if (d.shipping_status === 'awaiting_collection') return 4;

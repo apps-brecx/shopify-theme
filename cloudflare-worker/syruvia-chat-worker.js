@@ -15,12 +15,18 @@
  *   FBM_EMAIL             — FBM API login email
  *   FBM_PIN               — FBM API login pin
  *
+ * Optional (adds carrier timestamps — on the way / out for delivery /
+ * delivered — to the Track tab timeline):
+ *   VEEQO_API_KEY         — Veeqo API key (Vqt/…) from Veeqo settings
+ *
  * Never put the secret values in this file, the theme, or git.
  *
  * Theme contract (already wired in sections/floating-contact.liquid):
  *   POST {message, history:[{role:'user'|'assistant', text}...], page} -> {reply, show_contact, show_claim}
  *   POST /claim (multipart: order_id, type, message, email?, files[], idempotencyKey) -> {ok, reference}
- *   POST /track {order_number} -> {ok, found, shipping_status, scan_status, carrier, tracking[], ...timestamps}
+ *   POST /track {order_number} -> {ok, found, shipping_status, scan_status, carrier, tracking[],
+ *     ...warehouse timestamps, and (with VEEQO_API_KEY) carrier timestamps:
+ *     collected_at, in_transit_at, out_for_delivery_at, delivered_at}
  *
  * Abuse limits: browser Origin is REQUIRED and allowlisted, per-IP and
  * per-isolate rate limits apply, input sizes are capped, and every upstream
@@ -350,6 +356,65 @@ async function trackPackage(env, orderNumber) {
   }
 }
 
+/* ---------- Veeqo tracking events (optional timeline enrichment) ----------
+   FBM has no timestamps for in-transit / out-for-delivery / delivered — the
+   Veeqo shipment's tracking_events supply them. Requires VEEQO_API_KEY
+   (worker secret). Silently skipped when unset or on ANY failure: base
+   tracking must never break because enrichment did. Only status timestamps
+   leave this function — never addresses or event locations. */
+async function veeqoTrackingTimes(env, fbmRow, orderNum) {
+  if (!env.VEEQO_API_KEY) return null;
+  const H = { 'x-api-key': env.VEEQO_API_KEY, 'Content-Type': 'application/json' };
+  try {
+    /* Prefer a shipment id straight off the FBM row; else look the order up in
+       Veeqo (exact digits match — the query search is fuzzy). */
+    let ids = [fbmRow.shipment_id, fbmRow.shipping_id, fbmRow.veeqo_shipment_id]
+      .filter(function (v) { return v != null && /^\d+$/.test(String(v)); });
+    if (!ids.length) {
+      const res = await timedFetch('https://api.veeqo.com/orders?query=' + encodeURIComponent(orderNum) + '&page_size=5', { headers: H }, 6000);
+      if (!res.ok) return null;
+      const orders = await res.json();
+      const order = (Array.isArray(orders) ? orders : []).find(function (o) {
+        return o && String(o.number || '').replace(/[^0-9]/g, '') === orderNum;
+      });
+      if (!order) return null;
+      for (const a of order.allocations || []) {
+        if (a && a.shipment && a.shipment.id) ids.push(a.shipment.id);
+      }
+    }
+    ids = ids.slice(0, 3);
+    if (!ids.length) return null;
+    /* earliest in_transit / out_for_delivery / collected; latest delivered */
+    const out = { collected_at: null, in_transit_at: null, out_for_delivery_at: null, delivered_at: null };
+    const seen = {};
+    for (const id of ids) {
+      const res = await timedFetch('https://api.veeqo.com/shipping/tracking_events/' + id, { headers: H }, 6000);
+      if (!res.ok) continue;
+      const events = await res.json();
+      for (const ev of (Array.isArray(events) ? events : [])) {
+        if (!ev || !ev.timestamp) continue;
+        const t = Date.parse(ev.timestamp);
+        if (isNaN(t)) continue;
+        const s = String(ev.status || '').toLowerCase();
+        const key = s === 'collected' ? 'collected_at'
+          : s === 'in_transit' ? 'in_transit_at'
+          : s === 'out_for_delivery' ? 'out_for_delivery_at'
+          : s === 'delivered' ? 'delivered_at' : '';
+        if (!key) continue;
+        const keepLatest = key === 'delivered_at';
+        if (out[key] == null || (keepLatest ? t > seen[key] : t < seen[key])) {
+          out[key] = new Date(t).toISOString();
+          seen[key] = t;
+        }
+      }
+    }
+    return out;
+  } catch (e) {
+    console.error('veeqo enrichment failed:', e && e.message ? e.message : e);
+    return null;
+  }
+}
+
 /* Structured tracking for the theme's Track tab: statuses, timestamps,
    carrier and tracking numbers ONLY — never names, addresses, or order
    contents. The theme maps these onto its step timeline. */
@@ -372,6 +437,11 @@ async function handleTrack(request, env, headers) {
       }),
     ]);
     if (!row) return json({ ok: true, found: false }, 200, headers);
+    /* Carrier-side timestamps from Veeqo (8s cap, null on any trouble). */
+    const veeqo = await Promise.race([
+      veeqoTrackingTimes(env, row, num),
+      new Promise(function (resolve) { setTimeout(function () { resolve(null); }, 8000); }),
+    ]);
     return json({
       ok: true,
       found: true,
@@ -388,6 +458,10 @@ async function handleTrack(request, env, headers) {
       label_printed_at: row.print_at || null,
       packed_at: row.packed_at || null,
       pallet_at: row.pallet_at || null,
+      collected_at: (veeqo && veeqo.collected_at) || null,
+      in_transit_at: (veeqo && veeqo.in_transit_at) || null,
+      out_for_delivery_at: (veeqo && veeqo.out_for_delivery_at) || null,
+      delivered_at: (veeqo && veeqo.delivered_at) || null,
       updated_at: row.updated_at || null,
     }, 200, headers);
   } catch (e) {
