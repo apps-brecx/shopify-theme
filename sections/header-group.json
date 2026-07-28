@@ -14,6 +14,16 @@
     "syr_announcement": {
       "type": "syr-announcement-bar",
       "blocks": {
+        "icon_xgYE3x": {
+          "type": "icon",
+          "settings": {
+            "img": "shopify://shop_images/pouches.svg",
+            "size": 30,
+            "url": "",
+            "round": false,
+            "alt": ""
+          }
+        },
         "text_BcA97p": {
           "type": "text",
           "settings": {
@@ -25,11 +35,12 @@
         }
       },
       "block_order": [
+        "icon_xgYE3x",
         "text_BcA97p"
       ],
       "settings": {
         "show": true,
-        "bg_color": "#1f1813",
+        "bg_color": "#A69081",
         "text_color": "#faf3e9",
         "border_top_color": "",
         "border_bottom_color": "",
@@ -326,6 +337,7 @@
         "icon_size": 22,
         "icon_stroke_width": 2.3,
         "icon_button_size": 40,
+        "custom_icon_url": "",
         "show_search": true,
         "show_account": true,
         "account_url": "",
