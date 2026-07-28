@@ -47,7 +47,7 @@
           "settings": {
             "title": "Tear. Pour. Enjoy.",
             "text": "Coffee, soda, lemonade, water — flavor anything in seconds, anywhere you are.",
-            "bg": "#FCE2A0",
+            "bg": "#fce2a0",
             "tx": "#3c2415"
           }
         },
@@ -56,7 +56,7 @@
           "settings": {
             "title": "Regular & Sugar-Free",
             "text": "Every flavor comes classic or with 0g sugar and 0 calories — keto friendly.",
-            "bg": "#2F7DC4",
+            "bg": "#2f7dc4",
             "tx": "#ffffff"
           }
         },
@@ -64,8 +64,9 @@
           "type": "story",
           "settings": {
             "chip": "x 30",
-            "big": "1 bottle = <em>30 pouches</em>",
+            "big": "1 bottle = 30 pouches",
             "sub": "You know our syrup from the bottle. This is the same café-quality syrup — just split into 30 perfectly measured sticks. One bag = 450 ml (15.2 fl oz) of the good stuff.",
+            "img": "shopify://shop_images/05_de777e32-d7da-4abf-a1b6-62c67e475daa.png",
             "hint": "Photo idea: a Syruvia bottle standing next to a pouch bag, with a few sticks fanned out in front."
           }
         },
@@ -73,8 +74,9 @@
           "type": "story",
           "settings": {
             "chip": "15 ml each",
-            "big": "15 ml. <em>One perfect pour.</em>",
+            "big": "15 ml. One perfect pour.",
             "sub": "Every stick holds exactly 15 ml (0.5 fl oz) — one serving, pre-measured. No pump, no measuring, no sticky bottle. Tear, pour, done.",
+            "img": "shopify://shop_images/20_8fa7285e-384d-4d44-9285-b830ada26b6d.png",
             "hint": "Photo idea: close-up of a hand tearing a stick over an iced coffee, mid-pour."
           }
         },
@@ -82,8 +84,9 @@
           "type": "story",
           "settings": {
             "chip": "To go",
-            "big": "Take it <em>anywhere</em>",
+            "big": "Take it anywhere",
             "sub": "Purse, car, desk drawer, gym bag, carry-on. If your drink made it there, your flavor did too.",
+            "img": "shopify://shop_images/03_a984ba2c-97f8-44b3-9281-1a5158b5f672.png",
             "hint": "Photo idea: lifestyle shot — sticks in a tote bag or a car cupholder next to a to-go cup."
           }
         },
@@ -130,6 +133,21 @@
         "show_progress": true,
         "boxes_eyebrow": "Why pouches",
         "boxes_title": "Little pouch. Big flavor.",
+        "story_eyebrow": "From the brand you know",
+        "story_title": "Your favorite syrup. Now in your pocket.",
+        "show_stats": true,
+        "stat1_n": "30",
+        "stat1_u": "",
+        "stat1_l": "Pouches in every bag",
+        "stat2_n": "15",
+        "stat2_u": "ml",
+        "stat2_l": "Per stick — one perfect serving",
+        "stat3_n": "450",
+        "stat3_u": "ml",
+        "stat3_l": "Per bag — 15.2 fl oz total",
+        "stat4_n": "0",
+        "stat4_u": "g",
+        "stat4_l": "Sugar in the sugar-free line",
         "show_statement": true,
         "statement_l1": "Flavor",
         "statement_l2": "On The Go!",
