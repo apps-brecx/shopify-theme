@@ -94,6 +94,38 @@
             "bg": "#2F7DC4",
             "tx": "#ffffff"
           }
+        },
+        "story1": {
+          "type": "story",
+          "settings": {
+            "big": "1 bottle = <em>30 pouches</em>",
+            "sub": "You know our syrup from the bottle. This is the same café-quality syrup — just split into 30 perfectly measured sticks. One bag = 450 ml (15.2 fl oz) of the good stuff.",
+            "hint": "Photo idea: a Syruvia bottle standing next to a pouch bag, with a few sticks fanned out in front."
+          }
+        },
+        "story2": {
+          "type": "story",
+          "settings": {
+            "big": "15 ml. <em>One perfect pour.</em>",
+            "sub": "Every stick holds exactly 15 ml (0.5 fl oz) — one serving, pre-measured. No pump, no measuring, no sticky bottle. Tear, pour, done.",
+            "hint": "Photo idea: close-up of a hand tearing a stick over an iced coffee, mid-pour."
+          }
+        },
+        "story3": {
+          "type": "story",
+          "settings": {
+            "big": "Take it <em>anywhere</em>",
+            "sub": "Purse, car, desk drawer, gym bag, carry-on. If your drink made it there, your flavor did too.",
+            "hint": "Photo idea: lifestyle shot — sticks in a tote bag or a car cupholder next to a to-go cup."
+          }
+        },
+        "story4": {
+          "type": "story",
+          "settings": {
+            "big": "Same taste <em>you love</em>",
+            "sub": "The same recipes as the bottles on your shelf — available in regular and zero-sugar, zero-calorie sugar-free.",
+            "hint": "Photo idea: your best-selling bottle next to its pouch twin, syrup swirling into a drink."
+          }
         }
       },
       "block_order": [
@@ -107,7 +139,11 @@
         "pick8",
         "box1",
         "box2",
-        "box3"
+        "box3",
+        "story1",
+        "story2",
+        "story3",
+        "story4"
       ],
       "settings": {
         "access_mode": "everyone",
