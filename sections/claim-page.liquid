@@ -271,6 +271,10 @@
       btn.addEventListener('click', openMessage);
       statusEl.appendChild(btn);
     }
+    /* Classify the /track answer. found/notfound are definitive; a 400 is the
+       worker REJECTING the input as not-an-order-number (definitive — must
+       block, NOT fail open); a 429 is the rate limit (block and ask to wait).
+       Only genuine worker/network trouble stays fail-open. */
     async function checkOrder(v){
       var ctrl  = ('AbortController' in window) ? new AbortController() : null;
       var timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 12000);
@@ -283,10 +287,12 @@
         });
         var data = null;
         try { data = await res.json(); } catch(e){}
-        if (res.ok && data && data.ok) return !!data.found;
-        return null;              /* worker error → unknown, fail open */
+        if (res.ok && data && data.ok) return { state: data.found ? 'found' : 'notfound' };
+        if (res.status === 400) return { state: 'invalid', msg: (data && data.error) || 'Please enter a valid order number.' };
+        if (res.status === 429) return { state: 'busy' };
+        return { state: 'unknown' };   /* worker error → fail open */
       } catch(e){
-        return null;              /* network error → unknown, fail open */
+        return { state: 'unknown' };   /* network error → fail open */
       } finally {
         if (timer) clearTimeout(timer);
       }
@@ -295,22 +301,33 @@
       if (checking) return;
       var v = (orderIn.value || '').trim();
       if (!v){ status('Please enter your order number.'); orderIn.focus(); return; }
+      /* Format gate BEFORE any network: order numbers are 4-20 digits (the
+         worker's own rule). Without this, garbage input rode the fail-open
+         path straight past verification. */
+      var digits = v.replace(/[^0-9]/g, '');
+      if (digits.length < 4 || digits.length > 20){
+        status('Hmm, that doesn’t look like an order number — it’s the long number from your confirmation email, like 154008582984.');
+        orderIn.focus();
+        return;
+      }
       if (!endpoint || v === okOrder){ goStep(2); return; }
       checking = true;
       var lbl = next1.textContent;
       next1.disabled = true;
       next1.textContent = 'Checking…';
       status('');
-      var found = await checkOrder(v);
+      var check = await checkOrder(v);
       checking = false;
       next1.textContent = lbl;
       next1.disabled = false;
       syncNext();
-      if (found === false){
+      if (check.state === 'notfound'){
         claimCta('We couldn’t find that order number. Double-check it — brand-new orders can take a little while to appear.');
         orderIn.focus();
         return;
       }
+      if (check.state === 'invalid'){ status(check.msg); orderIn.focus(); return; }
+      if (check.state === 'busy'){ status('That’s a few checks in a row — give it a minute, then try again.'); return; }
       okOrder = v;
       goStep(2);
     });
