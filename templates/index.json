@@ -12,8 +12,61 @@
     "hero": {
       "type": "syr-hero",
       "blocks": {
+        "slide_aUR3KP": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Banner_40_off.png",
+            "image_mobile": "shopify://shop_images/Banner_Mobile_40_OFF.png",
+            "video_autoplay": false,
+            "alt": "",
+            "link": "shopify://pages/vip-syrup-pouches",
+            "show_button": false,
+            "btn_text": "Shop Now",
+            "btn_bg": "#c8252b",
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
+          }
+        },
+        "slide_kXgLVq": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Banner_17.png",
+            "image_mobile": "shopify://shop_images/Banner_Mobile_5.png",
+            "video_autoplay": true,
+            "alt": "",
+            "link": "https://syruvia.com/pages/vip-syrup-pouches",
+            "show_button": false,
+            "btn_text": "Shop Now",
+            "btn_bg": "#c8252b",
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
+          }
+        },
         "slide_tE9jY7": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "image_desktop": "shopify://shop_images/Midsummer_Banner_1.png",
             "image_mobile": "shopify://shop_images/MidSum_Mobile_New.webp",
@@ -40,6 +93,7 @@
         },
         "slide_eXhJU3": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "image_desktop": "shopify://shop_images/Banner_2.png",
             "image_mobile": "shopify://shop_images/Mobile_5.png",
@@ -226,6 +280,8 @@
         }
       },
       "block_order": [
+        "slide_aUR3KP",
+        "slide_kXgLVq",
         "slide_tE9jY7",
         "slide_eXhJU3",
         "slide_qGkiAB",
