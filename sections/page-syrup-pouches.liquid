@@ -115,22 +115,37 @@
     #sp-{{ section.id }} .sp-box{position:sticky;top:calc(96px + (var(--i,0) * 16px));box-shadow:0 -8px 22px rgba(60,36,21,.14);}
   }
 
-  /* POUCH STORY — big statements + lifestyle image slots */
-  #sp-{{ section.id }} .sp-story .srow{display:grid;grid-template-columns:1fr;gap:22px;align-items:center;margin-top:clamp(40px,6vw,64px);}
+  /* POUCH STORY — numbers strip + boxed statement cards */
+  #sp-{{ section.id }} .sp-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:34px;}
+  @media(min-width:760px){#sp-{{ section.id }} .sp-stats{grid-template-columns:repeat(4,1fr);gap:16px;}}
+  #sp-{{ section.id }} .sp-stat{border:var(--rule);border-radius:calc(var(--rad) + 4px);box-shadow:4px 4px 0 rgba(60,36,21,.18);padding:24px 12px 20px;text-align:center;}
+  #sp-{{ section.id }} .sp-stat .nrow{font-family:var(--display);font-weight:400;font-size:clamp(36px,8vw,56px);line-height:1;font-variant-numeric:tabular-nums;}
+  #sp-{{ section.id }} .sp-stat .u{font-size:.45em;margin-left:3px;text-transform:uppercase;}
+  #sp-{{ section.id }} .sp-stat .lb{font-family:var(--display);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;margin-top:9px;opacity:.9;line-height:1.45;padding:0 4px;}
+  #sp-{{ section.id }} .sp-stat.c1{background:var(--orange);color:#fff;}
+  #sp-{{ section.id }} .sp-stat.c2{background:var(--butter);color:var(--brand);}
+  #sp-{{ section.id }} .sp-stat.c3{background:var(--sf);color:#fff;}
+  #sp-{{ section.id }} .sp-stat.c4{background:var(--brand);color:var(--butter);}
+  #sp-{{ section.id }} .sp-story .srow{position:relative;display:grid;grid-template-columns:1fr;gap:22px;align-items:center;margin-top:clamp(34px,5vw,52px);background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 8px);box-shadow:4px 4px 0 rgba(60,36,21,.14);padding:clamp(24px,4.5vw,44px);}
+  #sp-{{ section.id }} .sp-story .srow.alt{background:#FFF3DC;}
   @media(min-width:820px){
-    #sp-{{ section.id }} .sp-story .srow{grid-template-columns:1.05fr 1fr;gap:clamp(28px,5vw,64px);}
-    #sp-{{ section.id }} .sp-story .srow:nth-child(even) .smedia{order:-1;}
+    #sp-{{ section.id }} .sp-story .srow{grid-template-columns:1.05fr 1fr;gap:clamp(28px,5vw,60px);}
+    #sp-{{ section.id }} .sp-story .srow.alt .smedia{order:-1;}
   }
-  #sp-{{ section.id }} .sp-story .sbig{font-family:var(--display);font-weight:400;font-size:clamp(32px,6.4vw,58px);line-height:.98;letter-spacing:-.005em;text-transform:uppercase;color:var(--brand);margin:0;text-wrap:balance;}
+  #sp-{{ section.id }} .sp-story .schip{position:absolute;top:-15px;left:24px;z-index:2;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--orange);color:#fff;border:var(--rule);border-radius:999px;padding:7px 15px;box-shadow:2px 2px 0 rgba(60,36,21,.2);}
+  #sp-{{ section.id }} .sp-story .srow.alt .schip{background:var(--sf);}
+  #sp-{{ section.id }} .sp-story .sbig{font-family:var(--display);font-weight:400;font-size:clamp(30px,6vw,54px);line-height:.98;letter-spacing:-.005em;text-transform:uppercase;color:var(--brand);margin:0;text-wrap:balance;}
   #sp-{{ section.id }} .sp-story .sbig em{font-family:var(--serif);font-style:italic;font-weight:300;text-transform:none;letter-spacing:0;color:var(--orange);}
+  #sp-{{ section.id }} .sp-story .srow.alt .sbig em{color:var(--sf);}
   #sp-{{ section.id }} .sp-story .ssub{font-size:clamp(15px,2vw,17.5px);opacity:.82;margin:14px 0 0;max-width:46ch;line-height:1.6;}
-  #sp-{{ section.id }} .sp-story .smedia img{width:100%;height:auto;display:block;border:var(--rule);border-radius:calc(var(--rad) + 6px);box-shadow:4px 4px 0 rgba(60,36,21,.14);}
-  #sp-{{ section.id }} .sp-story .sph{border:1.5px dashed var(--rule-c);border-radius:calc(var(--rad) + 6px);background:var(--paper);min-height:220px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:13.5px;opacity:.6;}
+  #sp-{{ section.id }} .sp-story .smedia img{width:100%;height:auto;display:block;border:var(--rule);border-radius:calc(var(--rad) + 2px);box-shadow:3px 3px 0 rgba(60,36,21,.12);}
+  #sp-{{ section.id }} .sp-story .sph{border:1.5px dashed var(--rule-c);border-radius:calc(var(--rad) + 2px);background:rgba(255,255,255,.55);min-height:200px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:13.5px;opacity:.65;}
   #sp-{{ section.id }} .sp-story .srow.noimg{grid-template-columns:1fr;text-align:center;}
   #sp-{{ section.id }} .sp-story .srow.noimg .ssub{margin-left:auto;margin-right:auto;}
   @media(max-width:819px){
     #sp-{{ section.id }} .sp-story .srow{text-align:center;}
     #sp-{{ section.id }} .sp-story .ssub{margin-left:auto;margin-right:auto;}
+    #sp-{{ section.id }} .sp-story .schip{left:50%;transform:translateX(-50%);}
   }
 
   /* STATEMENT */
@@ -272,7 +287,9 @@
       {%- if block.type != 'story' -%}{%- continue -%}{%- endif -%}
       {%- assign story_count = story_count | plus: 1 -%}
       {%- assign simg = block.settings.img -%}
-      <div class="srow sp-rev{% if simg == blank and request.design_mode != true %} noimg{% endif %}" {{ block.shopify_attributes }}>
+      {%- assign alt_row = story_count | modulo: 2 -%}
+      <div class="srow sp-rev{% if alt_row == 0 %} alt{% endif %}{% if simg == blank and request.design_mode != true %} noimg{% endif %}" {{ block.shopify_attributes }}>
+        {%- if block.settings.chip != blank -%}<span class="schip">{{ block.settings.chip }}</span>{%- endif -%}
         <div class="stxt">
           {%- if block.settings.big != blank -%}<h3 class="sbig">{{ block.settings.big }}</h3>{%- endif -%}
           {%- if block.settings.sub != blank -%}<p class="ssub">{{ block.settings.sub }}</p>{%- endif -%}
@@ -293,6 +310,26 @@
         {%- if s.story_eyebrow != blank -%}<span class="sp-eyebrow">{{ s.story_eyebrow }}</span>{%- endif -%}
         <h2 class="sp-h2">{{ s.story_title | default: 'Your favorite syrup. <em>Now in your pocket.</em>' }}</h2>
       </div>
+      {%- if s.show_stats -%}
+      <div class="sp-stats sp-rev">
+        <div class="sp-stat c1">
+          <div class="nrow"><span data-statnum="{{ s.stat1_n | default: '30' }}">{{ s.stat1_n | default: '30' }}</span>{%- if s.stat1_u != blank -%}<span class="u">{{ s.stat1_u }}</span>{%- endif -%}</div>
+          {%- assign l1 = s.stat1_l | default: 'Pouches in every bag' -%}{%- if l1 != blank -%}<div class="lb">{{ l1 }}</div>{%- endif -%}
+        </div>
+        <div class="sp-stat c2">
+          <div class="nrow"><span data-statnum="{{ s.stat2_n | default: '15' }}">{{ s.stat2_n | default: '15' }}</span><span class="u">{{ s.stat2_u | default: 'ml' }}</span></div>
+          {%- assign l2 = s.stat2_l | default: 'Per stick — one perfect serving' -%}{%- if l2 != blank -%}<div class="lb">{{ l2 }}</div>{%- endif -%}
+        </div>
+        <div class="sp-stat c3">
+          <div class="nrow"><span data-statnum="{{ s.stat3_n | default: '450' }}">{{ s.stat3_n | default: '450' }}</span><span class="u">{{ s.stat3_u | default: 'ml' }}</span></div>
+          {%- assign l3 = s.stat3_l | default: 'Per bag — 15.2 fl oz total' -%}{%- if l3 != blank -%}<div class="lb">{{ l3 }}</div>{%- endif -%}
+        </div>
+        <div class="sp-stat c4">
+          <div class="nrow"><span data-statnum="{{ s.stat4_n | default: '0' }}">{{ s.stat4_n | default: '0' }}</span><span class="u">{{ s.stat4_u | default: 'g' }}</span></div>
+          {%- assign l4 = s.stat4_l | default: 'Sugar in the sugar-free line' -%}{%- if l4 != blank -%}<div class="lb">{{ l4 }}</div>{%- endif -%}
+        </div>
+      </div>
+      {%- endif -%}
       {{ story_html }}
     </div>
   </div>
@@ -500,6 +537,23 @@
     }
   }
 
+  /* numbers strip — count up when visible */
+  var stats=[].slice.call(root.querySelectorAll('[data-statnum]'));
+  if(stats.length){
+    var runS=function(el){
+      var raw=el.getAttribute('data-statnum');
+      var t=parseFloat(raw);
+      if(isNaN(t)||reduce){ el.textContent=raw; return; }
+      var s0=null,d=1200;
+      function st(ts){ if(!s0)s0=ts; var p=Math.min((ts-s0)/d,1); p=1-Math.pow(1-p,3); el.textContent=Math.round(t*p); if(p<1){requestAnimationFrame(st);}else{el.textContent=raw;} }
+      requestAnimationFrame(st);
+    };
+    if('IntersectionObserver' in window){
+      var io3=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ runS(e.target); io3.unobserve(e.target); } });},{threshold:.6});
+      stats.forEach(function(n){io3.observe(n);});
+    } else { stats.forEach(runS); }
+  }
+
   /* syrup progress bar */
   var pourBar=root.querySelector('[data-pour-bar]');
   if(pourBar){
@@ -584,6 +638,19 @@
     { "type": "paragraph", "content": "Big bottle-to-pouch statements with lifestyle photo slots. Add 'Story row' blocks — photo hints show in the editor only." },
     { "type": "text", "id": "story_eyebrow", "label": "Eyebrow", "default": "From the brand you know" },
     { "type": "text", "id": "story_title", "label": "Heading", "default": "Your favorite syrup. <em>Now in your pocket.</em>" },
+    { "type": "checkbox", "id": "show_stats", "label": "Show the numbers strip", "default": true },
+    { "type": "text", "id": "stat1_n", "label": "Stat 1 — number", "default": "30" },
+    { "type": "text", "id": "stat1_u", "label": "Stat 1 — unit" },
+    { "type": "text", "id": "stat1_l", "label": "Stat 1 — label", "default": "Pouches in every bag" },
+    { "type": "text", "id": "stat2_n", "label": "Stat 2 — number", "default": "15" },
+    { "type": "text", "id": "stat2_u", "label": "Stat 2 — unit", "default": "ml" },
+    { "type": "text", "id": "stat2_l", "label": "Stat 2 — label", "default": "Per stick — one perfect serving" },
+    { "type": "text", "id": "stat3_n", "label": "Stat 3 — number", "default": "450" },
+    { "type": "text", "id": "stat3_u", "label": "Stat 3 — unit", "default": "ml" },
+    { "type": "text", "id": "stat3_l", "label": "Stat 3 — label", "default": "Per bag — 15.2 fl oz total" },
+    { "type": "text", "id": "stat4_n", "label": "Stat 4 — number", "default": "0" },
+    { "type": "text", "id": "stat4_u", "label": "Stat 4 — unit", "default": "g" },
+    { "type": "text", "id": "stat4_l", "label": "Stat 4 — label", "default": "Sugar in the sugar-free line" },
     { "type": "header", "content": "Big statement" },
     { "type": "checkbox", "id": "show_statement", "label": "Show 'Flavor On The Go!' statement", "default": true },
     { "type": "text", "id": "statement_l1", "label": "Line 1 (solid)", "default": "Flavor" },
@@ -649,6 +716,7 @@
       { "type": "color", "id": "tx", "label": "Text color", "default": "#ffffff" }
     ] },
     { "type": "story", "name": "Story row", "settings": [
+      { "type": "text", "id": "chip", "label": "Corner chip (optional)" },
       { "type": "text", "id": "big", "label": "Big line (<em> = italic orange)", "default": "1 bottle = <em>30 pouches</em>" },
       { "type": "textarea", "id": "sub", "label": "Supporting text", "default": "The exact café-quality syrup from our bottles — nothing changed but the size." },
       { "type": "image_picker", "id": "img", "label": "Lifestyle photo" },
