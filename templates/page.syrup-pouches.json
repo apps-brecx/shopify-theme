@@ -64,8 +64,8 @@
           "type": "story",
           "settings": {
             "chip": "x 30",
-            "big": "1 bottle = 30 pouches",
-            "sub": "You know our syrup from the bottle. This is the same café-quality syrup — just split into 30 perfectly measured sticks. One bag = 450 ml (15.2 fl oz) of the good stuff.",
+            "big": "Same syrup. <em>Now in pouches.</em>",
+            "sub": "The exact café-quality syrup you know from our bottles — now in perfectly measured 15 ml sticks. Every bag holds 30 of them (450 ml / 15.2 fl oz).",
             "img": "shopify://shop_images/05_de777e32-d7da-4abf-a1b6-62c67e475daa.png",
             "hint": "Photo idea: a Syruvia bottle standing next to a pouch bag, with a few sticks fanned out in front."
           }
