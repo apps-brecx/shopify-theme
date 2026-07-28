@@ -80,6 +80,9 @@
     opacity:0.5;
     font-weight:400;
   }
+  #syr-ann-{{ section.id }} .ann-ico img{ display:block; width:auto; }
+  #syr-ann-{{ section.id }} a.ann-ico{ transition:transform .12s ease; }
+  #syr-ann-{{ section.id }} a.ann-ico:hover{ transform:translateY(-1px); }
 
   @media (max-width:480px){
     #syr-ann-{{ section.id }}{
@@ -106,6 +109,12 @@
                 <a class="ann-seg ann-btn" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }} style="background:{{ block.settings.bg_color }};color:{{ block.settings.text_color }};border-color:{{ block.settings.border_color }};">{{ block.settings.text }}</a>
               {%- when 'separator' -%}
                 <span class="ann-seg ann-sep" {{ block.shopify_attributes }} style="{% if block.settings.color != blank %}color:{{ block.settings.color }};{% endif %}">{%- case block.settings.style -%}{%- when 'dot' -%}·{%- when 'bullet' -%}•{%- when 'star' -%}★{%- when 'sparkle' -%}✦{%- when 'pipe' -%}|{%- when 'arrow' -%}→{%- when 'slash' -%}/{%- endcase -%}</span>
+              {%- when 'icon' -%}
+                {%- if block.settings.img != blank -%}
+                  {%- if block.settings.url != blank -%}<a class="ann-seg ann-ico" href="{{ block.settings.url }}" {{ block.shopify_attributes }}>{%- else -%}<span class="ann-seg ann-ico" {{ block.shopify_attributes }}>{%- endif -%}
+                  <img src="{{ block.settings.img | image_url: width: 160 }}" alt="{{ block.settings.alt | default: '' | escape }}" style="height:{{ block.settings.size | default: 18 }}px;{% if block.settings.round %}border-radius:50%;{% endif %}" loading="lazy">
+                  {%- if block.settings.url != blank -%}</a>{%- else -%}</span>{%- endif -%}
+                {%- endif -%}
             {%- endcase -%}
           {%- endfor -%}
         {%- endfor -%}
@@ -125,6 +134,12 @@
             <a class="ann-seg ann-btn" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }} style="background:{{ block.settings.bg_color }};color:{{ block.settings.text_color }};border-color:{{ block.settings.border_color }};">{{ block.settings.text }}</a>
           {%- when 'separator' -%}
             <span class="ann-seg ann-sep" {{ block.shopify_attributes }} style="{% if block.settings.color != blank %}color:{{ block.settings.color }};{% endif %}">{%- case block.settings.style -%}{%- when 'dot' -%}·{%- when 'bullet' -%}•{%- when 'star' -%}★{%- when 'sparkle' -%}✦{%- when 'pipe' -%}|{%- when 'arrow' -%}→{%- when 'slash' -%}/{%- endcase -%}</span>
+          {%- when 'icon' -%}
+            {%- if block.settings.img != blank -%}
+              {%- if block.settings.url != blank -%}<a class="ann-seg ann-ico" href="{{ block.settings.url }}" {{ block.shopify_attributes }}>{%- else -%}<span class="ann-seg ann-ico" {{ block.shopify_attributes }}>{%- endif -%}
+              <img src="{{ block.settings.img | image_url: width: 160 }}" alt="{{ block.settings.alt | default: '' | escape }}" style="height:{{ block.settings.size | default: 18 }}px;{% if block.settings.round %}border-radius:50%;{% endif %}" loading="lazy">
+              {%- if block.settings.url != blank -%}</a>{%- else -%}</span>{%- endif -%}
+            {%- endif -%}
         {%- endcase -%}
       {%- endfor -%}
     </div>
@@ -235,6 +250,17 @@
         { "type": "color", "id": "bg_color", "label": "Background", "default": "#FCE2A0" },
         { "type": "color", "id": "text_color", "label": "Text color", "default": "#1F1813" },
         { "type": "color", "id": "border_color", "label": "Border color", "default": "#1F1813" }
+      ]
+    },
+    {
+      "type": "icon",
+      "name": "Icon (image)",
+      "settings": [
+        { "type": "image_picker", "id": "img", "label": "Icon image", "info": "Transparent PNG or SVG looks best" },
+        { "type": "range", "id": "size", "label": "Icon height", "min": 10, "max": 40, "step": 1, "default": 18, "unit": "px" },
+        { "type": "url", "id": "url", "label": "Link (optional)" },
+        { "type": "checkbox", "id": "round", "label": "Round (circle crop)", "default": false },
+        { "type": "text", "id": "alt", "label": "Alt text (optional)" }
       ]
     },
     {
