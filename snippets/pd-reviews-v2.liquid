@@ -4,7 +4,7 @@
 {%- assign rating_count = product.metafields.reviews.rating_count.value | default: 0 -%}
 {%- assign jdgm_html    = product.metafields.judgeme.widget -%}
 
-{%- assign rating_num = '5.0' -%}
+{%- assign rating_num = '0.0' -%}
 {%- if product.metafields.reviews.rating.value.rating -%}
   {%- assign rating_num = product.metafields.reviews.rating.value.rating -%}
 {%- endif -%}
@@ -15,6 +15,11 @@
 {%- if has_anything -%}
 
 {%- assign rating_int = rating_num | times: 1 | round -%}
+{%- comment -%} 0.0 = rated by nobody yet: the hero shows "No reviews yet" instead
+   of a scary 0.0 score, the stars are dropped, and the All-reviews list is hidden. {%- endcomment -%}
+{%- assign rating_val = rating_num | times: 1.0 -%}
+{%- assign no_reviews = false -%}
+{%- if rating_val == 0 -%}{%- assign no_reviews = true -%}{%- endif -%}
 
 <section class="pd-reviews-v2"
          id="reviews"
@@ -31,16 +36,21 @@
 
   <div class="pd-wrap">
     <div class="pd-rvw-hero">
-      <div class="pd-rvw-hero-num">{{ rating_num }}</div>
-      <div class="pd-rvw-hero-stars" aria-label="{{ rating_num }} out of 5">
-        {% for i in (1..5) %}
-          {% if i <= rating_int %}
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="#FF6B5C" stroke="#FF6B5C" stroke-width="1" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
-          {% else %}
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linejoin="round" opacity=".25" aria-hidden="true"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
-          {% endif %}
-        {% endfor %}
-      </div>
+      {%- if no_reviews -%}
+        <style>html body .pd .pd-rvw-hero-num.pd-rvw-hero-num--empty{font-size:clamp(26px,4vw,40px)!important;letter-spacing:0!important;text-transform:uppercase!important}</style>
+        <div class="pd-rvw-hero-num pd-rvw-hero-num--empty">No reviews yet</div>
+      {%- else -%}
+        <div class="pd-rvw-hero-num">{{ rating_num }}</div>
+        <div class="pd-rvw-hero-stars" aria-label="{{ rating_num }} out of 5">
+          {% for i in (1..5) %}
+            {% if i <= rating_int %}
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="#FF6B5C" stroke="#FF6B5C" stroke-width="1" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
+            {% else %}
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linejoin="round" opacity=".25" aria-hidden="true"><path d="M12 2 L14.6 8.4 L21.5 9 L16.3 13.6 L17.9 20.4 L12 16.9 L6.1 20.4 L7.7 13.6 L2.5 9 L9.4 8.4 Z"/></svg>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {%- endif -%}
       <div class="pd-rvw-hero-text">Based on {{ rating_count }} verified reviews</div>
       <a href="#jdgm-write-rev" class="pd-rvw-hero-cta">
         Write a review
@@ -60,7 +70,7 @@
     </div>
   </div>
 
-  {%- if jdgm_html != blank -%}
+  {%- if jdgm_html != blank and no_reviews == false -%}
     {% render 'pd-rvw-jdgm-visible' %}
     <div class="pd-wrap pd-rvw-all">
       <div class="pd-rvw-all-heading">
