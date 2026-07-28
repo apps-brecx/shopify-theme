@@ -968,16 +968,17 @@
          that don't send the flag yet. */
       const NEEDS_HUMAN_RE = /send message|send us a message|contact (us|the team)|reach (out|us|the team)|get in touch|email (us|the team)|support team|customer (service|support)/i;
       /* Tracking numbers inside AI replies become carrier links — the same
-         number-format detection the Track tab uses (UPS 1Z…, USPS 92–95…).
-         Only unambiguous formats are linked; plain digit runs stay text
-         because they're usually order numbers. Links are plain <a>, so they
-         survive the sessionStorage restore with no extra wiring. */
-      const TRACK_SPLIT = /\b(1Z[0-9A-Z]{8,18}|420\d{5,9}9[2-5]\d{18,}|9[2-5]\d{18,})\b/g;
-      const TRACK_ONE   = /^(1Z[0-9A-Z]{8,18}|420\d{5,9}9[2-5]\d{18,}|9[2-5]\d{18,})$/;
+         number-format detection the Track tab uses (UPS 1Z…, USPS 92–95…,
+         Amazon Logistics TBA…). Only unambiguous formats are linked; plain
+         digit runs stay text because they're usually order numbers. Links are
+         plain <a>, so they survive the sessionStorage restore with no extra
+         wiring. */
+      const TRACK_SPLIT = /\b(1Z[0-9A-Z]{8,18}|420\d{5,9}9[2-5]\d{18,}|9[2-5]\d{18,}|TBA[0-9]{9,15})\b/g;
+      const TRACK_ONE   = /^(1Z[0-9A-Z]{8,18}|420\d{5,9}9[2-5]\d{18,}|9[2-5]\d{18,}|TBA[0-9]{9,15})$/;
       function trackHref(n){
-        return /^1Z/i.test(n)
-          ? 'https://www.ups.com/track?tracknum=' + encodeURIComponent(n)
-          : 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' + encodeURIComponent(n);
+        if (/^1Z/i.test(n))  return 'https://www.ups.com/track?tracknum=' + encodeURIComponent(n);
+        if (/^TBA/i.test(n)) return 'https://track.amazon.com/tracking/' + encodeURIComponent(n);
+        return 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' + encodeURIComponent(n);
       }
       function linkifyTracking(el){
         Array.prototype.slice.call(el.childNodes).forEach(function(node){
@@ -1446,13 +1447,15 @@
       /* Carrier logos (theme assets) + official tracking pages. Unknown
          carriers fall back to plain text and a web search link. */
       const CARRIERS = {
-        usps:  { name: 'USPS',  logo: "{{ 'carrier-usps.svg'  | asset_url }}", url: 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' },
-        ups:   { name: 'UPS',   logo: "{{ 'carrier-ups.svg'   | asset_url }}", url: 'https://www.ups.com/track?tracknum=' },
-        fedex: { name: 'FedEx', logo: "{{ 'carrier-fedex.svg' | asset_url }}", url: 'https://www.fedex.com/fedextrack/?trknbr=' },
-        dhl:   { name: 'DHL',   logo: "{{ 'carrier-dhl.svg'   | asset_url }}", url: 'https://www.dhl.com/us-en/home/tracking.html?tracking-id=' }
+        usps:   { name: 'USPS',   logo: "{{ 'carrier-usps.svg'   | asset_url }}", url: 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' },
+        ups:    { name: 'UPS',    logo: "{{ 'carrier-ups.svg'    | asset_url }}", url: 'https://www.ups.com/track?tracknum=' },
+        fedex:  { name: 'FedEx',  logo: "{{ 'carrier-fedex.svg'  | asset_url }}", url: 'https://www.fedex.com/fedextrack/?trknbr=' },
+        dhl:    { name: 'DHL',    logo: "{{ 'carrier-dhl.svg'    | asset_url }}", url: 'https://www.dhl.com/us-en/home/tracking.html?tracking-id=' },
+        amazon: { name: 'Amazon', logo: "{{ 'carrier-amazon.svg' | asset_url }}", url: 'https://track.amazon.com/tracking/' }
       };
       function carrierByName(name){
         name = String(name || '');
+        if (/amzn|amazon/i.test(name)) return 'amazon';   /* FBM reports e.g. "amzn_us" */
         if (/usps|postal/i.test(name)) return 'usps';
         if (/ups/i.test(name)) return 'ups';
         if (/fedex|fdx/i.test(name)) return 'fedex';
@@ -1463,6 +1466,7 @@
          carrier_name, so the number format wins when it's unambiguous. */
       function carrierByNum(n){
         if (/^1Z/i.test(n)) return 'ups';
+        if (/^TBA\d{9,}/i.test(n)) return 'amazon';       /* Amazon Logistics */
         if (/^9[2-5]\d{18,}$/.test(n) || /^420\d{5,9}9[2-5]\d{18,}$/.test(n)) return 'usps';
         return '';
       }

@@ -201,13 +201,15 @@
     /* Carrier logos (theme assets) + official tracking pages. Unknown carriers
        fall back to plain text and a web search link. */
     var CARRIERS = {
-      usps:  { name: 'USPS',  logo: "{{ 'carrier-usps.svg'  | asset_url }}", url: 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' },
-      ups:   { name: 'UPS',   logo: "{{ 'carrier-ups.svg'   | asset_url }}", url: 'https://www.ups.com/track?tracknum=' },
-      fedex: { name: 'FedEx', logo: "{{ 'carrier-fedex.svg' | asset_url }}", url: 'https://www.fedex.com/fedextrack/?trknbr=' },
-      dhl:   { name: 'DHL',   logo: "{{ 'carrier-dhl.svg'   | asset_url }}", url: 'https://www.dhl.com/us-en/home/tracking.html?tracking-id=' }
+      usps:   { name: 'USPS',   logo: "{{ 'carrier-usps.svg'   | asset_url }}", url: 'https://tools.usps.com/go/TrackConfirmAction?tLabels=' },
+      ups:    { name: 'UPS',    logo: "{{ 'carrier-ups.svg'    | asset_url }}", url: 'https://www.ups.com/track?tracknum=' },
+      fedex:  { name: 'FedEx',  logo: "{{ 'carrier-fedex.svg'  | asset_url }}", url: 'https://www.fedex.com/fedextrack/?trknbr=' },
+      dhl:    { name: 'DHL',    logo: "{{ 'carrier-dhl.svg'    | asset_url }}", url: 'https://www.dhl.com/us-en/home/tracking.html?tracking-id=' },
+      amazon: { name: 'Amazon', logo: "{{ 'carrier-amazon.svg' | asset_url }}", url: 'https://track.amazon.com/tracking/' }
     };
     function carrierByName(name){
       name = String(name || '');
+      if (/amzn|amazon/i.test(name)) return 'amazon';   /* FBM reports e.g. "amzn_us" */
       if (/usps|postal/i.test(name)) return 'usps';
       if (/ups/i.test(name)) return 'ups';
       if (/fedex|fdx/i.test(name)) return 'fedex';
@@ -218,6 +220,7 @@
        carrier_name, so the number format wins when it's unambiguous. */
     function carrierByNum(n){
       if (/^1Z/i.test(n)) return 'ups';
+      if (/^TBA\d{9,}/i.test(n)) return 'amazon';       /* Amazon Logistics */
       if (/^9[2-5]\d{18,}$/.test(n) || /^420\d{5,9}9[2-5]\d{18,}$/.test(n)) return 'usps';
       return '';
     }
