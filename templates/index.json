@@ -487,6 +487,32 @@
     },
     "categories": {
       "type": "syr-categories",
+      "blocks": {
+        "card_EWpPAG": {
+          "type": "card",
+          "settings": {
+            "coll": "syrup-pouches",
+            "name": "Pouches",
+            "cta": "Shop",
+            "bot_shadow": true,
+            "chip_show": true,
+            "chip_text": "",
+            "count": "",
+            "chip_suffix": "flavors",
+            "chip_bg": "#39220f",
+            "chip_color": "#fffbf4",
+            "img_left": "shopify://shop_images/download.webp",
+            "img_center": "shopify://shop_images/download_88658fdd-259a-4df4-9e35-3b7fdd7c5b62.webp",
+            "img_right": "shopify://shop_images/download_3b0e558e-fc82-425f-bb49-0f3fc1ca978d.webp",
+            "bg": "#fce2a0",
+            "btn_bg": "#39220f",
+            "btn_color": "#fffbf4"
+          }
+        }
+      },
+      "block_order": [
+        "card_EWpPAG"
+      ],
       "settings": {
         "headline": "Pick your syrup",
         "sub": "Over 250+ Flavors for you to pick from",
