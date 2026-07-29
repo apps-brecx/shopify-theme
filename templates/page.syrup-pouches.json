@@ -11,11 +11,182 @@
   "sections": {
     "main": {
       "type": "page-syrup-pouches",
+      "blocks": {
+        "pick1": {
+          "type": "product",
+          "settings": {
+            "product": "sugar-free-caramel-syrup-pouches",
+            "badge": ""
+          }
+        },
+        "pick2": {
+          "type": "product",
+          "settings": {
+            "product": "sugar-free-hazelnut-syrup-pouches",
+            "badge": ""
+          }
+        },
+        "pick3": {
+          "type": "product",
+          "settings": {
+            "product": "sugar-free-mango-syrup-pouches",
+            "badge": ""
+          }
+        },
+        "box1": {
+          "type": "box",
+          "settings": {
+            "title": "One perfect serving",
+            "text": "Every stick is pre-measured café-quality syrup. 15 ml, no pump, no bottle, no guessing.",
+            "bg": "#e28f26",
+            "tx": "#ffffff"
+          }
+        },
+        "box2": {
+          "type": "box",
+          "settings": {
+            "title": "Tear. Pour. Enjoy.",
+            "text": "Coffee, soda, lemonade, water. Flavor anything in seconds, anywhere you are.",
+            "bg": "#fce2a0",
+            "tx": "#3c2415"
+          }
+        },
+        "box3": {
+          "type": "box",
+          "settings": {
+            "title": "Regular & Sugar-Free",
+            "text": "Every flavor comes classic or with 0g sugar and 0 calories. Keto friendly.",
+            "bg": "#2f7dc4",
+            "tx": "#ffffff"
+          }
+        },
+        "story1": {
+          "type": "story",
+          "settings": {
+            "chip": "x 30",
+            "big": "Same syrup. <em>Now in pouches.</em>",
+            "sub": "The exact café-quality syrup you know from our bottles, now in perfectly measured 15 ml sticks. Every bag holds 30 of them (450 ml / 15.2 fl oz).",
+            "img": "shopify://shop_images/05_de777e32-d7da-4abf-a1b6-62c67e475daa.png",
+            "hint": "Photo idea: a Syruvia bottle standing next to a pouch bag, with a few sticks fanned out in front."
+          }
+        },
+        "story2": {
+          "type": "story",
+          "settings": {
+            "chip": "15 ml each",
+            "big": "15 ml. One perfect pour.",
+            "sub": "Every stick holds exactly 15 ml (0.5 fl oz). One serving, pre-measured. No pump, no measuring, no sticky bottle. Tear, pour, done.",
+            "img": "shopify://shop_images/20_8fa7285e-384d-4d44-9285-b830ada26b6d.png",
+            "hint": "Photo idea: close-up of a hand tearing a stick over an iced coffee, mid-pour."
+          }
+        },
+        "story3": {
+          "type": "story",
+          "settings": {
+            "chip": "To go",
+            "big": "Take it anywhere",
+            "sub": "Purse, car, desk drawer, gym bag, carry-on. If your drink made it there, your flavor did too.",
+            "img": "shopify://shop_images/03_a984ba2c-97f8-44b3-9281-1a5158b5f672.png",
+            "hint": "Photo idea: lifestyle shot: sticks in a tote bag or a car cupholder next to a to-go cup."
+          }
+        },
+        "story4": {
+          "type": "story",
+          "settings": {
+            "chip": "OG recipe",
+            "big": "Same taste <em>you love</em>",
+            "sub": "The same recipes as the bottles on your shelf, available in regular and zero-sugar, zero-calorie sugar-free.",
+            "hint": "Photo idea: your best-selling bottle next to its pouch twin, syrup swirling into a drink."
+          }
+        }
+      },
+      "block_order": [
+        "pick1",
+        "pick2",
+        "pick3",
+        "box1",
+        "box2",
+        "box3",
+        "story1",
+        "story2",
+        "story3",
+        "story4"
+      ],
       "settings": {
-        "access_mode": "signed_in",
-        "collection_handle": "syrup-pouches"
+        "access_mode": "everyone",
+        "gate_title": "This drop is members-only right now",
+        "gate_text": "Membership is free. Create an account (or sign in) to shop the drop.",
+        "lock_cta": "Shop now",
+        "gate_join": "Join free",
+        "count_enable": true,
+        "count_start": "2026-07-27 18:00",
+        "count_hours": 72,
+        "count_tz": "-04:00",
+        "count_label": "Launch deal ends in",
+        "hero_banner": "shopify://shop_images/Banner_40_off.png",
+        "hero_banner_m": "shopify://shop_images/Banner_Mobile_40_OFF.png",
+        "hero_link": "",
+        "hero_alt": "Syrup Pouches",
+        "show_marquee": true,
+        "marquee_text": "Just dropped · Syrup Pouches · Flavor On The Go",
+        "show_confetti": true,
+        "show_progress": true,
+        "boxes_eyebrow": "Why pouches",
+        "boxes_title": "Little pouch. Big flavor.",
+        "story_eyebrow": "From the brand you know",
+        "story_title": "Your favorite syrup. Now in your pocket.",
+        "show_stats": true,
+        "stat1_n": "30",
+        "stat1_u": "",
+        "stat1_l": "Pouches in every bag",
+        "stat2_n": "15",
+        "stat2_u": "ml",
+        "stat2_l": "Per stick · one perfect serving",
+        "stat3_n": "450",
+        "stat3_u": "ml",
+        "stat3_l": "Per bag · 15.2 fl oz total",
+        "stat4_n": "0",
+        "stat4_u": "g",
+        "stat4_l": "Sugar in the sugar-free line",
+        "show_statement": true,
+        "statement_l1": "Flavor",
+        "statement_l2": "On The Go!",
+        "statement_sub": "One pouch, one perfect serving. Coffee, soda, lemonade, anywhere you are.",
+        "feat_eyebrow": "Live now",
+        "feat_title": "Shop Pouches",
+        "live_badge": "New",
+        "coming_label": "Coming soon",
+        "atc_label": "Add to cart",
+        "sf_badge": "Sugar-Free · 0g",
+        "show_deal": true,
+        "deal_text": "40% OFF",
+        "feat_seeall": "See all flavors",
+        "feat_seeall_url": "/collections/syrup-pouches",
+        "collection_handle": "syrup-pouches",
+        "show_gallery": true,
+        "gallery_eyebrow": "Up close",
+        "gallery_title": "This is the stick",
+        "gallery_sub": "Pocket-size, pre-measured, ready anywhere. Swipe through.",
+        "gallery_note": "One stick = one serving · 15 ml (0.5 fl oz)",
+        "soon_eyebrow": "The lineup grows",
+        "soon_title": "More flavors coming soon",
+        "soon_sub": "New pouches drop all the time. 50 flavors on the way, regular and sugar-free.",
+        "soon_btn": "Browse the collection",
+        "band1_alt": "Syrup Pouches",
+        "band2_alt": "Syrup Pouches",
+        "color_ink": "#1a1a1a",
+        "color_brand": "#3c2415",
+        "color_bg": "#fffbf4",
+        "color_paper": "#ffffff",
+        "color_orange": "#e28f26",
+        "color_pop": "#c8252b",
+        "color_rule": "#3c2415",
+        "wrap_max": 1120,
+        "card_radius": 16
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
