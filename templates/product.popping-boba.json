@@ -59,7 +59,10 @@
     },
     "pd_vip": {
       "type": "pd-vip",
-      "settings": {}
+      "settings": {
+        "lede_text": "Create a free Syruvia account to unlock VIP pricing on every bag of popping boba, forever.",
+        "perk1_text": "1 LB $6.99 · 2 LB $12.99 · 7 LB $24.99"
+      }
     },
     "areviews_1784749652_30db11": {
       "type": "apps",

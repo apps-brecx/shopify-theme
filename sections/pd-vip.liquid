@@ -13,6 +13,12 @@
 
 {%- assign vsec_vip_price = 799 -%}
 {%- if vsec_is_sf -%}{%- assign vsec_vip_price = 799 -%}{%- endif -%}
+{%- assign vsec_t = product.title | downcase -%}
+{%- if vsec_t contains 'popping boba' -%}
+  {%- assign vsec_vip_price = 1299 -%}
+  {%- if vsec_t contains '1 lb' -%}{%- assign vsec_vip_price = 699 -%}{%- endif -%}
+  {%- if vsec_t contains '7 lb' -%}{%- assign vsec_vip_price = 2499 -%}{%- endif -%}
+{%- endif -%}
 
 {%- assign vsec_savings = vsec_base | minus: vsec_vip_price -%}
 
