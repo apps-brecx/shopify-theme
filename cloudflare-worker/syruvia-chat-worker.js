@@ -59,6 +59,7 @@ Voice:
 Rules:
 - Keep replies short (1-4 sentences), warm, and PLAIN TEXT only — no markdown, no asterisks, no bullet lists, no headings. You may include URLs as plain text.
 - Use the tools to answer questions about products, prices, availability, policies, and orders. Never invent prices, policies, stock, or delivery times — if a tool doesn't return it, say you're not sure and point the customer to the "Send message" tab of this widget.
+- When you suggest products found with search_catalog, the customer automatically sees them under your message as tappable cards with photo, name, and price — so keep your reply short and inviting ("Here are a few you might love!") and never paste product URLs or repeat prices in the text.
 - For shipping times, processing times, delivery estimates, returns, refunds, damaged or lost packages, privacy, or terms: call get_policy FIRST — it returns the store's complete written policy text. search_policies_faqs only has short structured answers and often misses these.
 - Shipping: Syruvia ships within the United States only.
 - Package tracking: for "where is my order / track my package" questions use track_package — it needs ONLY the order number, no email. If it finds no shipment, the number may be mistyped or the order is very new.
@@ -152,6 +153,7 @@ async function searchCatalog(query) {
         price: p.price_range && p.price_range.min
           ? (p.price_range.min.amount / 100).toFixed(2) + ' ' + (p.price_range.min.currency || 'USD')
           : undefined,
+        image: (p.media && p.media[0] && p.media[0].type === 'image') ? p.media[0].url : undefined,
         description: p.description && p.description.html
           ? String(p.description.html).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 200)
           : undefined,
@@ -476,11 +478,22 @@ async function handleTrack(request, env, headers) {
 }
 
 /* Returns {content, isError} — raw exception details go to the worker log,
-   never to the model or the customer. */
-async function runTool(env, name, input) {
+   never to the model or the customer. `picks` (per-request array) collects the
+   products search_catalog found so the theme can render them as tappable
+   cards under the reply — the model only writes the text. */
+async function runTool(env, name, input, picks) {
   try {
     let out;
-    if (name === 'search_catalog') out = await searchCatalog(String(input.query || ''));
+    if (name === 'search_catalog') {
+      out = await searchCatalog(String(input.query || ''));
+      if (picks && Array.isArray(out)) {
+        for (const p of out) {
+          if (!p || !p.url || picks.some(function (q) { return q.url === p.url; })) continue;
+          if (picks.length >= 4) break;
+          picks.push({ title: p.title, url: p.url, price: p.price, image: p.image });
+        }
+      }
+    }
     else if (name === 'search_policies_faqs') out = await searchPoliciesFaqs(String(input.query || ''));
     else if (name === 'get_policy') out = await getPolicy(String(input.policy || ''));
     else if (name === 'get_order_status') out = await getOrderStatus(env, input.order_number, input.email);
@@ -905,6 +918,7 @@ export default {
     try {
       const deadline = Date.now() + TOTAL_DEADLINE_MS;
       let reply = '';
+      const picks = [];   /* products search_catalog surfaced — rendered as cards by the theme */
       for (let turn = 0; turn < MAX_TURNS; turn++) {
         const resp = await claude(env, messages);
         if (resp.stop_reason === 'tool_use') {
@@ -914,7 +928,7 @@ export default {
           const results = [];
           for (const block of resp.content) {
             if (block.type === 'tool_use') {
-              const out = await runTool(env, block.name, block.input || {});
+              const out = await runTool(env, block.name, block.input || {}, picks);
               results.push({ type: 'tool_result', tool_use_id: block.id, content: out.content, is_error: out.isError });
             }
           }
@@ -938,7 +952,7 @@ export default {
         if (!reply) reply = 'I couldn’t find an answer for that — the team can help you directly.';
       }
       if (!reply) { reply = 'Sorry — that took longer than expected. Please try again, or use the Send message tab to reach the team.'; showContact = true; }
-      return json({ reply: reply, show_contact: showContact, show_claim: showClaim }, 200, headers);
+      return json({ reply: reply, show_contact: showContact, show_claim: showClaim, products: picks.slice(0, 4) }, 200, headers);
     } catch (e) {
       console.error('request failed:', e && e.message ? e.message : e);
       /* detail is only ever our own constructed message (e.g. "anthropic HTTP 401")
