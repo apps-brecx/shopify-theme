@@ -81,6 +81,27 @@
 {%- if current_size == '1lb' -%}{%- assign handle_stem = product.handle | remove_first: '1-lb-' -%}{%- endif -%}
 {%- if current_size == '7lb' -%}{%- assign handle_stem = product.handle | remove_first: '7-lb-' -%}{%- endif -%}
 
+{%- comment -%} Boba VIP pricing (beta): 1 LB $9.99 / 2 LB $12.99 / 7 LB $18.99. Signed-in members see the VIP price; guests see an unlock pill. {%- endcomment -%}
+{%- assign boba_vip_price = 1299 -%}
+{%- if current_size == '1lb' -%}{%- assign boba_vip_price = 999 -%}{%- endif -%}
+{%- if current_size == '7lb' -%}{%- assign boba_vip_price = 1899 -%}{%- endif -%}
+{%- assign boba_vip_applied = false -%}
+{%- assign boba_vip_cta = false -%}
+{%- if boba_vip_price < price -%}
+  {%- if customer -%}
+    {%- assign boba_vip_applied = true -%}
+    {%- assign display_price = boba_vip_price -%}
+  {%- else -%}
+    {%- assign boba_vip_cta = true -%}
+  {%- endif -%}
+{%- endif -%}
+<style>
+#shopify-section-{{ section.id }} .pd-vip-was-s{opacity:.45;font-size:.72em;text-decoration:line-through;margin-left:8px;font-weight:400;}
+#shopify-section-{{ section.id }} .pd-vipbadge-s{display:inline-flex;align-items:center;gap:4px;background:#c58548;color:#FFFBF4;border-radius:999px;padding:3px 10px;font-family:'Archivo Black','Arial Black',sans-serif;font-weight:400;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;margin-left:8px;vertical-align:middle;}
+#shopify-section-{{ section.id }} .pd-vip-unlock{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#2F7DC4;background:#eaf2fb;border:1.5px solid #2F7DC4;border-radius:999px;padding:5px 12px;text-decoration:none;transition:transform .14s,box-shadow .14s;}
+#shopify-section-{{ section.id }} .pd-vip-unlock:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 #2F7DC4;}
+</style>
+
 <div class="pd" data-product-id="{{ product.id }}" data-base-price="{{ display_price }}">
 
   {%- if section.settings.show_breadcrumbs -%}
@@ -169,10 +190,11 @@
             <div class="pd-priceqty">
               <div class="pd-priceblock">
                 <div class="pd-price-row">
-                  <span class="pd-price" id="pdPriceTotal">{{ display_price | money }}</span>
+                  <span class="pd-price" id="pdPriceTotal">{{ display_price | money }}</span>{%- if boba_vip_applied -%}<s class="pd-vip-was-s">{{ price | money }}</s><span class="pd-vipbadge-s">&#9733; VIP</span>{%- endif -%}
                   <span class="pd-price-was" id="pdPriceWas" style="display:none"></span>
                 </div>
                 <span class="pd-save-inline" id="pdSaveTag" style="display:none"></span>
+                {%- if boba_vip_cta -%}<a class="pd-vip-unlock" href="{{ routes.account_register_url }}?return_url={{ product.url | url_encode }}">&#9733; VIP price {{ boba_vip_price | money }} &middot; join free</a>{%- endif -%}
               </div>
               <div class="pd-qty" aria-label="Quantity">
                 <button type="button" data-qty="-1" aria-label="Decrease">−</button>
