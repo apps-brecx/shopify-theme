@@ -640,7 +640,7 @@
                  opens in a new tab (and middle/right-click work like a normal link).
                  Interactive controls sit above it on z-index 3; the delegated JS click
                  handler bails when the click lands here so it can't double-navigate. {%- endcomment -%}
-              <a class="pcard-link" href="{{ product.url }}" target="_blank" rel="noopener" aria-label="{{ nm | escape }}"></a>
+              <a class="pcard-link" href="{{ product.url }}"  rel="noopener" aria-label="{{ nm | escape }}"></a>
               <div class="pcard-media" data-quick>
                 <div class="pcard-badges">
                   {%- unless avail -%}
