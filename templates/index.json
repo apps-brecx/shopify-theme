@@ -12,6 +12,32 @@
     "hero": {
       "type": "syr-hero",
       "blocks": {
+        "slide_f8cggJ": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Banner_4.png",
+            "image_mobile": "shopify://shop_images/Banner_Mobile.png",
+            "video_autoplay": false,
+            "alt": "",
+            "link": "shopify://pages/vip-syrup-pouches",
+            "show_button": false,
+            "btn_text": "Shop Now",
+            "btn_bg": "#c8252b",
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
+          }
+        },
         "slide_aUR3KP": {
           "type": "slide",
           "settings": {
@@ -224,33 +250,6 @@
             "sub_size_m": 15
           }
         },
-        "slide_tw9mi8": {
-          "type": "slide",
-          "disabled": true,
-          "settings": {
-            "image_desktop": "shopify://shop_images/Fruit_Pack.png",
-            "image_mobile": "shopify://shop_images/Mobile_4ff1ea90-bd14-4164-a49b-3d61dfb87334.png",
-            "video_autoplay": true,
-            "alt": "",
-            "link": "shopify://pages/july-4",
-            "show_button": false,
-            "btn_text": "Shop Now",
-            "btn_bg": "#c8252b",
-            "btn_color": "#ffffff",
-            "show_text": false,
-            "text_heading": "",
-            "text_sub": "",
-            "text_font": "josefin_sans_n4",
-            "text_color": "#ffffff",
-            "text_shadow": true,
-            "text_position": "center",
-            "text_align": "center",
-            "heading_size_d": 48,
-            "heading_size_m": 30,
-            "sub_size_d": 20,
-            "sub_size_m": 15
-          }
-        },
         "slide_3L9aTR": {
           "type": "slide",
           "disabled": true,
@@ -280,6 +279,7 @@
         }
       },
       "block_order": [
+        "slide_f8cggJ",
         "slide_aUR3KP",
         "slide_kXgLVq",
         "slide_tE9jY7",
@@ -288,7 +288,6 @@
         "slide_gUGR4D",
         "slide_TeK4MJ",
         "slide_F8daTC",
-        "slide_tw9mi8",
         "slide_3L9aTR"
       ],
       "settings": {
