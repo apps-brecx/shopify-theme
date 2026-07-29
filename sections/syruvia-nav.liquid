@@ -322,6 +322,7 @@
                 <a class="syrnav-dwr-cat" href="{{ block.settings.url | default: '#' }}"><span class="syrnav-dwr-cat-media">{%- if block.settings.image != blank -%}<img src="{{ block.settings.image | image_url: width: 400 }}" alt="{{ block.settings.label | escape }}" loading="lazy">{%- endif -%}</span><span class="syrnav-dwr-cat-lbl">{{ block.settings.label }}</span></a>
               {%- endif -%}{%- endfor -%}
             {%- else -%}
+             <a class="syrnav-dwr-cat" href="https://syruvia.com/pages/vip-syrup-pouches"><span class="syrnav-dwr-cat-media"><img src="https://cdn.shopify.com/s/files/1/0861/1106/0252/files/Pouches.jpg?v=1785257119" alt="Coffee" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">pouches</span></a>
               <a class="syrnav-dwr-cat" href="/collections/coffee"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-coffee.webp' | asset_url }}" alt="Coffee" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Coffee Syrup</span></a>
               <a class="syrnav-dwr-cat" href="/collections/collections-original-syrups"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-original.webp' | asset_url }}" alt="Original" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Original Syrups</span></a>
               <a class="syrnav-dwr-cat" href="/collections/sugar-free"><span class="syrnav-dwr-cat-media"><img src="{{ 'syr-nav-sugarfree.webp' | asset_url }}" alt="SF" loading="lazy"></span><span class="syrnav-dwr-cat-lbl">Sugar-Free</span></a>
