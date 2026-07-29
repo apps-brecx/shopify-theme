@@ -14,18 +14,38 @@
     "syr_announcement": {
       "type": "syr-announcement-bar",
       "blocks": {
-        "icon_xgYE3x": {
+        "icon_kXFyj8": {
           "type": "icon",
           "settings": {
             "img": "shopify://shop_images/pouches.svg",
-            "size": 30,
+            "size": 26,
             "url": "",
             "round": false,
             "alt": ""
           }
         },
+        "text_ni7exB": {
+          "type": "text",
+          "settings": {
+            "text": "SYRUP POUCHES ARE HERE - 40% OFF",
+            "color": "#ffffff",
+            "bold": true,
+            "italic": false
+          }
+        },
+        "button_3Vr4UX": {
+          "type": "button",
+          "settings": {
+            "text": "Shop now",
+            "url": "shopify://pages/vip-syrup-pouches",
+            "bg_color": "#ffb15d",
+            "text_color": "#1f1813",
+            "border_color": "#000000"
+          }
+        },
         "text_BcA97p": {
           "type": "text",
+          "disabled": true,
           "settings": {
             "text": "Get VIP PRICING - $7.99 EVERY BOTTLE",
             "color": "#ffffff",
@@ -35,12 +55,14 @@
         }
       },
       "block_order": [
-        "icon_xgYE3x",
+        "icon_kXFyj8",
+        "text_ni7exB",
+        "button_3Vr4UX",
         "text_BcA97p"
       ],
       "settings": {
         "show": true,
-        "bg_color": "#A69081",
+        "bg_color": "#375ED3",
         "text_color": "#faf3e9",
         "border_top_color": "",
         "border_bottom_color": "",
@@ -337,7 +359,8 @@
         "icon_size": 22,
         "icon_stroke_width": 2.3,
         "icon_button_size": 40,
-        "custom_icon_url": "",
+        "custom_icon_image": "shopify://shop_images/Asset_2_2-V2.png",
+        "custom_icon_url": "shopify://pages/vip-syrup-pouches",
         "show_search": true,
         "show_account": true,
         "account_url": "",
