@@ -128,6 +128,12 @@
     .scol .wish.on{ color:var(--accent); background:var(--blush); }
     .scol .wish svg{ width:16px; height:16px; }
     .scol .wish-f{ display:none; } .scol .wish.on .wish-f{ display:block; } .scol .wish.on .wish-o{ display:none; }
+    /* Stretched product link: covers the card at z-2; every interactive control
+       (hoverbar z-3, wishlist, VIP, foot-add) stacks above it. */
+    .scol .pcard-link{ position:absolute; inset:0; z-index:2; }
+    .scol .pcard .swym-button{ z-index:3; }
+    .scol .pcard-vip-cta{ position:relative; z-index:3; }
+    .scol .pcard .foot-add{ position:relative; z-index:3; }
     .scol .pcard-hoverbar{ position:absolute; left:12px; right:12px; bottom:12px; z-index:3; display:flex; gap:8px; opacity:0; transform:translateY(12px); transition:all .25s cubic-bezier(.3,1,.5,1); }
     .scol .pcard:hover .pcard-hoverbar{ opacity:1; transform:none; }
     .scol .quick-add{ flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px; height:42px; background:var(--ink); color:var(--bg); border:var(--rule-1); border-radius:999px; font-family:var(--font-head); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; transition:background .18s,color .18s; }
@@ -630,6 +636,11 @@
               style="--tint:{{ tintBg }};--tint-ink:{{ tintInk }};--d:{{ dd }}ms"
             >
         
+              {%- comment -%} Stretched link: real <a> over the whole card so the product
+                 opens in a new tab (and middle/right-click work like a normal link).
+                 Interactive controls sit above it on z-index 3; the delegated JS click
+                 handler bails when the click lands here so it can't double-navigate. {%- endcomment -%}
+              <a class="pcard-link" href="{{ product.url }}" target="_blank" rel="noopener" aria-label="{{ nm | escape }}"></a>
               <div class="pcard-media" data-quick>
                 <div class="pcard-badges">
                   {%- unless avail -%}
@@ -1193,6 +1204,10 @@
     });
     grid.addEventListener('click', function (e) {
       if (e.target.closest('.promo-card')) return;
+      /* The stretched .pcard-link is a real anchor — let the browser handle it
+         (new tab). Without this bail the fallback below would ALSO navigate
+         the current tab, leaving the collection page behind. */
+      if (e.target.closest('.pcard-link')) return;
       var card = e.target.closest('[data-card]');
       if (!card) return;
       if (e.target.closest('[data-vip]')) {
