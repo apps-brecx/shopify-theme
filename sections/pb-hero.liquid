@@ -81,10 +81,10 @@
 {%- if current_size == '1lb' -%}{%- assign handle_stem = product.handle | remove_first: '1-lb-' -%}{%- endif -%}
 {%- if current_size == '7lb' -%}{%- assign handle_stem = product.handle | remove_first: '7-lb-' -%}{%- endif -%}
 
-{%- comment -%} Boba VIP pricing (beta): 1 LB $9.99 / 2 LB $12.99 / 7 LB $18.99. Signed-in members see the VIP price; guests see an unlock pill. {%- endcomment -%}
+{%- comment -%} Boba VIP pricing: 1 LB $6.99 / 2 LB $12.99 / 7 LB $24.99 (matches the live checkout discounts). Signed-in members see the VIP price; guests see an unlock pill. {%- endcomment -%}
 {%- assign boba_vip_price = 1299 -%}
-{%- if current_size == '1lb' -%}{%- assign boba_vip_price = 999 -%}{%- endif -%}
-{%- if current_size == '7lb' -%}{%- assign boba_vip_price = 1899 -%}{%- endif -%}
+{%- if current_size == '1lb' -%}{%- assign boba_vip_price = 699 -%}{%- endif -%}
+{%- if current_size == '7lb' -%}{%- assign boba_vip_price = 2499 -%}{%- endif -%}
 {%- assign boba_vip_applied = false -%}
 {%- assign boba_vip_cta = false -%}
 {%- if boba_vip_price < price -%}
