@@ -584,6 +584,13 @@
             {%- if tg contains 'variety' or tg contains 'boba' or tg contains 'topping' or tg contains 'bundle' -%}
               {%- assign vip_ok = false -%}
             {%- endif -%}
+            {%- comment -%} Boba VIP: popping boba gets size-based VIP prices — 1 LB $6.99 / 2 LB $12.99 / 7 LB $24.99 (matches live checkout discounts) {%- endcomment -%}
+            {%- if tl contains 'popping boba' -%}
+              {%- assign vip_ok = true -%}
+              {%- assign vipprice = 1299 -%}
+              {%- if tl contains '1 lb' -%}{%- assign vipprice = 699 -%}{%- endif -%}
+              {%- if tl contains '7 lb' -%}{%- assign vipprice = 2499 -%}{%- endif -%}
+            {%- endif -%}
             {%- assign has_vip = false -%}
             {%- if vip_ok and vipprice < v.price -%}{%- assign has_vip = true -%}{%- endif -%}
             {%- assign pdesc = product.description | strip_html | truncate: 180 -%}
@@ -632,6 +639,7 @@
               data-new="{% if isnew %}1{% else %}0{% endif %}"
               data-sf="{% if issf %}1{% else %}0{% endif %}"
               data-vipok="{% if vip_ok %}1{% else %}0{% endif %}"
+              data-vipcap="{{ vipprice }}"
               data-desc="{{ pdesc | escape }}"
               style="--tint:{{ tintBg }};--tint-ink:{{ tintInk }};--d:{{ dd }}ms"
             >

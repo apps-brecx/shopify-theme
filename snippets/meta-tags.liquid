@@ -216,12 +216,13 @@ html body .pd .pd-recs-price{display:flex!important;flex-wrap:wrap!important;ali
       var card=pill.closest('article.pcard');
       if(card && isNonSyrup(card)){ if(pill.parentNode) pill.parentNode.removeChild(pill); continue; }
       var reg=card?parseInt(card.getAttribute('data-price'),10):0;
-      if(reg && 799>=reg){ if(pill.parentNode) pill.parentNode.removeChild(pill); continue; }
+      var cap=card?(parseInt(card.getAttribute('data-vipcap'),10)||799):799;
+      if(reg && cap>=reg){ if(pill.parentNode) pill.parentNode.removeChild(pill); continue; }
       if(pill.getAttribute('data-v799')==='1') continue;
       pill.setAttribute('data-v799','1');
       var kids=Array.prototype.slice.call(pill.childNodes);
       for(var k=0;k<kids.length;k++){ if(kids[k].nodeType===3) pill.removeChild(kids[k]); }
-      pill.appendChild(document.createTextNode(' Unlock VIP $7.99'));
+      pill.appendChild(document.createTextNode(' Unlock VIP '+money(cap)));
     }
     /* the modal lede is server-rendered with both prices — no JS rewrite needed */
   }
