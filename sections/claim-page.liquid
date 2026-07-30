@@ -43,8 +43,9 @@
           <div class="cp-step" data-step="2">
             <div class="cp-q">What went wrong?</div>
             <div class="cp-types">
-              <button type="button" class="cp-type" data-type="Damaged in transit" data-photo="1"><span class="cp-type-ic">📦</span>Damaged in transit</button>
-              <button type="button" class="cp-type" data-type="Wrong item" data-photo="1"><span class="cp-type-ic">🔄</span>Wrong item</button>
+              <button type="button" class="cp-type" data-type="Damaged in transit" data-photo="1" data-pick="1"><span class="cp-type-ic">📦</span>Damaged in transit</button>
+              <button type="button" class="cp-type" data-type="Wrong item" data-photo="1" data-pick="1"><span class="cp-type-ic">🔄</span>Wrong item</button>
+              <button type="button" class="cp-type" data-type="Missing item" data-pick="1"><span class="cp-type-ic">📭</span>Missing item</button>
               <button type="button" class="cp-type" data-type="Never received"><span class="cp-type-ic">🕵️</span>Never received</button>
               <button type="button" class="cp-type" data-type="Delayed in transit"><span class="cp-type-ic">⏳</span>Delayed in transit</button>
               <button type="button" class="cp-type cp-type--wide" data-type="Other" data-msg="1"><span class="cp-type-ic">💬</span>Something else</button>
@@ -82,6 +83,20 @@
           <p class="cp-done-p"></p>
           <button type="button" class="cp-again">Submit another claim</button>
         </div>
+        {%- comment -%} Product picker: shown after choosing a product-related
+            issue type — checkboxes for the order's line items (+ Select all).
+            The chosen titles ride the claim message as a bullet list. {%- endcomment -%}
+        <div class="cp-pick" hidden>
+          <div class="cp-pick-card" role="dialog" aria-modal="true">
+            <div class="cp-pick-title">Which product is damaged?</div>
+            <label class="cp-pick-all"><input type="checkbox" class="cp-pick-allcb"> Select all</label>
+            <div class="cp-pick-list"></div>
+            <div class="cp-pick-nav">
+              <button type="button" class="cp-back cp-pick-skip">Skip</button>
+              <button type="button" class="cp-btn cp-pick-ok">Continue</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -93,7 +108,22 @@
   .sy-cpage .cp-h1{font-family:var(--display);font-weight:900;font-size:clamp(34px,6vw,60px);line-height:.95;letter-spacing:-.01em;text-transform:uppercase;margin:18px 0 12px;text-wrap:balance}
   .sy-cpage .cp-lede{font-family:var(--serif);font-size:clamp(15px,1.5vw,17.5px);line-height:1.55;color:var(--ink-2);margin:0 auto;max-width:48ch}
 
-  .sy-cpage .cp-card{max-width:640px;margin:0 auto;background:var(--paper);border:var(--rule-2);border-radius:var(--r-card);box-shadow:6px 6px 0 var(--ink);padding:28px;font-family:var(--serif)}
+  .sy-cpage .cp-card{position:relative;max-width:640px;margin:0 auto;background:var(--paper);border:var(--rule-2);border-radius:var(--r-card);box-shadow:6px 6px 0 var(--ink);padding:28px;font-family:var(--serif)}
+  /* Product picker popup — "which product is damaged / wrong / missing?" */
+  .sy-cpage .cp-pick{position:absolute;inset:0;z-index:6;display:flex;align-items:center;justify-content:center;background:rgba(26,26,26,.30);border-radius:var(--r-card);padding:14px}
+  .sy-cpage .cp-pick[hidden]{display:none!important}
+  .sy-cpage .cp-pick-card{width:100%;max-width:400px;max-height:100%;overflow:auto;background:var(--paper);border:var(--rule-2);border-radius:16px;padding:18px;box-shadow:var(--shadow);animation:cp-in .22s ease}
+  @media (prefers-reduced-motion:reduce){.sy-cpage .cp-pick-card{animation:none}}
+  .sy-cpage .cp-pick-title{font-family:var(--display);font-size:15px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);margin:0 0 12px}
+  .sy-cpage .cp-pick-all{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:var(--ink);padding:7px 8px;border-bottom:1.5px solid #E3D8C4;margin-bottom:6px;cursor:pointer}
+  .sy-cpage .cp-pick-list{display:flex;flex-direction:column;gap:2px;max-height:230px;overflow-y:auto;scrollbar-width:thin}
+  .sy-cpage .cp-pick-row{display:flex;align-items:center;gap:9px;font-size:14.5px;color:var(--ink);padding:8px;border-radius:9px;cursor:pointer}
+  .sy-cpage .cp-pick-row:hover{background:var(--butter)}
+  .sy-cpage .cp-pick-row input,.sy-cpage .cp-pick-all input{width:17px;height:17px;accent-color:var(--ink);flex:0 0 auto}
+  .sy-cpage .cp-pick-qty{color:#8a7a68;font-size:12.5px;margin-left:auto;white-space:nowrap}
+  .sy-cpage .cp-pick-empty{font-size:14px;color:#8a7a68;padding:8px}
+  .sy-cpage .cp-pick-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+  .sy-cpage .cp-pick-nav .cp-btn{width:auto;flex:1}
   .sy-cpage .cp-dots{display:flex;align-items:center;gap:8px;margin:0 0 20px}
   .sy-cpage .cp-dots[hidden]{display:none!important}
   .sy-cpage .cp-dot{width:30px;height:30px;border-radius:50%;border:2px solid #E0D5C2;background:#fff;color:#B9A78D;font-family:var(--display);font-size:13px;display:inline-flex;align-items:center;justify-content:center;transition:all .25s ease}
@@ -328,7 +358,12 @@
       }
       if (check.state === 'invalid'){ status(check.msg); orderIn.focus(); return; }
       if (check.state === 'busy'){ status('That’s a few checks in a row — give it a minute, then try again.'); return; }
+      /* A different order = a different product list. Stale selections must
+         never ride into the new order's claim (the picker's silent-skip
+         path would otherwise submit order A's bullets on order B). */
+      if (selItems.length){ selItems = []; contentChanged(); updateChip(); }
       okOrder = v;
+      prefetchItems(v);   /* warm the product picker while they pick a type */
       goStep(2);
     });
     if (orderIn) orderIn.addEventListener('keydown', function(e){
@@ -340,6 +375,21 @@
       if (b && b.dataset.back) goStep(parseInt(b.dataset.back, 10));
     });
 
+    function updateChip(){
+      if (!pickedEl) return;
+      pickedEl.textContent = '';
+      if (!chosenType) return;
+      var chip = document.createElement('span');
+      chip.className = 'cp-chip';
+      chip.textContent = chosenType + (selItems.length ? ' · ' + selItems.length + (selItems.length === 1 ? ' product' : ' products') : '');
+      var chg = document.createElement('button');
+      chg.type = 'button';
+      chg.className = 'cp-chg';
+      chg.textContent = 'change';
+      chg.addEventListener('click', function(){ if (!sending) goStep(2); });
+      pickedEl.appendChild(chip);
+      pickedEl.appendChild(chg);
+    }
     if (typesWrap) typesWrap.addEventListener('click', function(e){
       if (sending) return;
       var card = e.target.closest ? e.target.closest('.cp-type') : null;
@@ -356,23 +406,123 @@
       needMsg = card.dataset.msg === '1';
       setBadge(photoReq, needPhoto);
       setBadge(msgReq, needMsg);
-      if (pickedEl){
-        pickedEl.textContent = '';
-        var chip = document.createElement('span');
-        chip.className = 'cp-chip';
-        chip.textContent = chosenType;
-        var chg = document.createElement('button');
-        chg.type = 'button';
-        chg.className = 'cp-chg';
-        chg.textContent = 'change';
-        chg.addEventListener('click', function(){ if (!sending) goStep(2); });
-        pickedEl.appendChild(chip);
-        pickedEl.appendChild(chg);
-      }
-      if (changed) contentChanged();
+      if (changed){ selItems = []; contentChanged(); }
+      updateChip();
       syncSubmit();
-      goStep(3);
+      /* Product-related types detour through the "which product?" picker. */
+      if (card.dataset.pick === '1'){ openPicker(); } else { goStep(3); }
     });
+
+    /* ---- "Which product?" picker. Line items come from <endpoint>/order-items
+       (order number only, titles + quantities — nothing else). Prefetched right
+       after the order verifies so the popup usually opens instantly. ANY
+       trouble fetching (outage, not found, empty) skips the popup — it can
+       never block a claim. Chosen titles ride the message as a bullet list. */
+    var pickEl    = root.querySelector('.cp-pick');
+    var pickTitle = root.querySelector('.cp-pick-title');
+    var pickList  = root.querySelector('.cp-pick-list');
+    var pickAll   = root.querySelector('.cp-pick-allcb');
+    var pickOk    = root.querySelector('.cp-pick-ok');
+    var pickSkip  = root.querySelector('.cp-pick-skip');
+    var selItems = [];
+    var itemsCache = null, itemsFor = '', itemsLoading = null;
+    var PICK_TITLES = {
+      'Damaged in transit': 'Which product is damaged?',
+      'Wrong item': 'Which product arrived wrong?',
+      'Missing item': 'Which product is missing?'
+    };
+    async function loadItems(orderNum){
+      if (itemsFor === orderNum && itemsCache) return itemsCache;
+      if (!endpoint) return null;
+      var ctrl  = ('AbortController' in window) ? new AbortController() : null;
+      var timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 12000);
+      try {
+        var res = await fetch(endpoint + '/order-items', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order_number: orderNum }),
+          signal: ctrl ? ctrl.signal : undefined
+        });
+        var data = await res.json();
+        if (res.ok && data && data.ok && data.found && Array.isArray(data.items) && data.items.length){
+          itemsCache = data.items;
+          itemsFor = orderNum;
+          return itemsCache;
+        }
+        return null;
+      } catch(e){ return null; }
+      finally { if (timer) clearTimeout(timer); }
+    }
+    function prefetchItems(orderNum){
+      itemsLoading = loadItems(orderNum);
+      itemsLoading.catch(function(){});
+    }
+    function renderPickList(items){
+      pickList.textContent = '';
+      items.forEach(function(it){
+        var row = document.createElement('label');
+        row.className = 'cp-pick-row';
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = it.title;
+        cb.checked = selItems.indexOf(it.title) !== -1;
+        cb.addEventListener('change', syncPickAll);
+        row.appendChild(cb);
+        row.appendChild(document.createTextNode(it.title));
+        if (it.quantity > 1){
+          var q = document.createElement('span');
+          q.className = 'cp-pick-qty';
+          q.textContent = '× ' + it.quantity;
+          row.appendChild(q);
+        }
+        pickList.appendChild(row);
+      });
+      syncPickAll();
+    }
+    function pickBoxes(){ return Array.prototype.slice.call(pickList.querySelectorAll('input[type="checkbox"]')); }
+    function syncPickAll(){
+      var boxes = pickBoxes();
+      if (pickAll) pickAll.checked = boxes.length > 0 && boxes.every(function(b){ return b.checked; });
+    }
+    if (pickAll) pickAll.addEventListener('change', function(){
+      pickBoxes().forEach(function(b){ b.checked = pickAll.checked; });
+    });
+    var pickGen = 0;   /* invalidates in-flight opens — a stale continuation must never touch a newer popup */
+    async function openPicker(){
+      if (!pickEl){ goStep(3); return; }
+      var gen = ++pickGen;
+      var orderNum = (orderIn.value || '').trim();
+      pickTitle.textContent = PICK_TITLES[chosenType] || 'Which product?';
+      pickList.innerHTML = '<div class="cp-pick-empty">Loading your order…</div>';
+      if (pickAll) pickAll.checked = false;
+      pickEl.hidden = false;
+      var items = await (itemsLoading || loadItems(orderNum)) || await loadItems(orderNum);
+      if (gen !== pickGen || !pickEl || pickEl.hidden) return;   /* superseded or skipped while loading */
+      if (!items || !items.length){
+        /* No list for THIS order — never keep an earlier order's selection. */
+        if (selItems.length){ selItems = []; contentChanged(); updateChip(); }
+        pickEl.hidden = true; goStep(3); return;
+      }
+      renderPickList(items);
+    }
+    function closePicker(commit){
+      if (!pickEl) return;
+      pickGen++;          /* any in-flight open is now stale */
+      if (commit){
+        var next = pickBoxes().filter(function(b){ return b.checked; }).map(function(b){ return b.value; });
+        if (String(next) !== String(selItems)) contentChanged();
+        selItems = next;
+      } else {
+        if (selItems.length) contentChanged();
+        selItems = [];
+      }
+      pickEl.hidden = true;
+      updateChip();
+      goStep(3);
+    }
+    if (pickOk) pickOk.addEventListener('click', function(){ closePicker(true); });
+    if (pickSkip) pickSkip.addEventListener('click', function(){ closePicker(false); });
+    if (pickEl) pickEl.addEventListener('click', function(e){ if (e.target === pickEl) closePicker(false); });
 
     function renderFiles(){
       if (!fileList) return;
@@ -427,10 +577,19 @@
       if (totalPicked() > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — please remove one or use smaller photos.'); return; }
       var emailVal = emailIn ? (emailIn.value || '').trim() : '';
 
+      /* The picker's chosen products lead the message as a bullet list so
+         the claim email names exactly which items are affected. */
+      var msgOut = msgVal;
+      if (selItems.length){
+        var head = chosenType === 'Damaged in transit' ? 'Damaged product(s):'
+          : chosenType === 'Wrong item' ? 'Wrong product(s) received:'
+          : chosenType === 'Missing item' ? 'Missing product(s):' : 'Product(s):';
+        msgOut = head + '\n' + selItems.map(function(t){ return '• ' + t; }).join('\n') + (msgVal ? '\n\n' + msgVal : '');
+      }
       var fd = new FormData();
       fd.set('order_id', orderVal);
       fd.set('type', chosenType);
-      fd.set('message', msgVal);
+      fd.set('message', msgOut);
       if (emailVal) fd.set('email', emailVal);
       fd.set('page_url', String(location.href).slice(0, 500));
       fd.set('idempotencyKey', idemKey);
@@ -473,6 +632,7 @@
     if (againBtn) againBtn.addEventListener('click', function(){
       form.reset();
       picked = [];
+      selItems = [];
       chosenType = '';
       needPhoto = false;
       needMsg = false;
