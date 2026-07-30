@@ -190,8 +190,9 @@
           <div class="bb-wiz-step" data-step="2">
             <div class="bb-wiz-q">What went wrong?</div>
             <div class="bb-claim-types" id="bb-claim-types">
-              <button type="button" class="bb-ctype" data-type="Damaged in transit" data-photo="1"><span class="bb-ctype-ic">📦</span>Damaged in transit</button>
-              <button type="button" class="bb-ctype" data-type="Wrong item" data-photo="1"><span class="bb-ctype-ic">🔄</span>Wrong item</button>
+              <button type="button" class="bb-ctype" data-type="Damaged in transit" data-photo="1" data-pick="1"><span class="bb-ctype-ic">📦</span>Damaged in transit</button>
+              <button type="button" class="bb-ctype" data-type="Wrong item" data-photo="1" data-pick="1"><span class="bb-ctype-ic">🔄</span>Wrong item</button>
+              <button type="button" class="bb-ctype" data-type="Missing item" data-pick="1"><span class="bb-ctype-ic">📭</span>Missing item</button>
               <button type="button" class="bb-ctype" data-type="Never received"><span class="bb-ctype-ic">🕵️</span>Never received</button>
               <button type="button" class="bb-ctype" data-type="Delayed in transit"><span class="bb-ctype-ic">⏳</span>Delayed in transit</button>
               <button type="button" class="bb-ctype bb-ctype--wide" data-type="Other" data-msg="1"><span class="bb-ctype-ic">💬</span>Something else</button>
@@ -228,6 +229,20 @@
           <div class="bb-claim-done-h">Claim received</div>
           <p class="bb-claim-done-p" id="bb-claim-done-text"></p>
           <button type="button" class="bb-wiz-back" id="bb-claim-again">Submit another claim</button>
+        </div>
+        {%- comment -%} Product picker: shown after choosing a product-related
+            issue type — checkboxes for the order's line items (+ Select all).
+            The chosen titles ride the claim message as a bullet list. {%- endcomment -%}
+        <div class="bb-cpick" id="bb-cpick" hidden>
+          <div class="bb-cpick-card" role="dialog" aria-modal="true" aria-labelledby="bb-cpick-title">
+            <div class="bb-cpick-title" id="bb-cpick-title">Which product is damaged?</div>
+            <label class="bb-cpick-all"><input type="checkbox" id="bb-cpick-allcb"> Select all</label>
+            <div class="bb-cpick-list" id="bb-cpick-list"></div>
+            <div class="bb-cpick-nav">
+              <button type="button" class="bb-wiz-back" id="bb-cpick-skip">Skip</button>
+              <button type="button" class="bb-submit bb-cpick-ok" id="bb-cpick-ok">Continue</button>
+            </div>
+          </div>
         </div>
       </div>
       {%- endif -%}
@@ -376,6 +391,22 @@
     .bb-claim-done-ic{width:56px;height:56px;margin:0 auto 10px;border-radius:50%;background:#3C2005;color:#FCE2A0;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 #FF6B5C}
     .bb-claim-done-h{font-size:19px;font-weight:700;color:#3C2005;margin-bottom:6px}
     .bb-claim-done-p{margin:0 0 14px;color:#5a4632;font-size:14px}
+    /* Product picker popup — "which product is damaged / wrong / missing?" */
+    #bb-panel-claim{position:relative}
+    .bb-cpick{position:absolute;inset:0;z-index:6;display:flex;align-items:center;justify-content:center;background:rgba(60,32,5,.28);border-radius:12px;padding:10px}
+    .bb-cpick[hidden]{display:none!important}
+    .bb-cpick-card{width:100%;max-width:340px;max-height:100%;overflow:auto;background:#FFFBF4;border:1.5px solid #3C2005;border-radius:14px;padding:16px;box-shadow:4px 4px 0 rgba(60,32,5,.35);animation:bb-wiz-in .22s ease}
+    @media (prefers-reduced-motion:reduce){.bb-cpick-card{animation:none}}
+    .bb-cpick-title{font-weight:700;font-size:15px;color:#3C2005;margin:0 0 10px}
+    .bb-cpick-all{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#3C2005;padding:6px 8px;border-bottom:1.5px solid #E8DFC9;margin-bottom:6px;cursor:pointer}
+    .bb-cpick-list{display:flex;flex-direction:column;gap:2px;max-height:200px;overflow-y:auto;scrollbar-width:thin}
+    .bb-cpick-row{display:flex;align-items:center;gap:8px;font-size:13.5px;color:#3C2005;padding:7px 8px;border-radius:8px;cursor:pointer}
+    .bb-cpick-row:hover{background:#FCE2A0}
+    .bb-cpick-row input,.bb-cpick-all input{width:16px;height:16px;accent-color:#3C2005;flex:0 0 auto}
+    .bb-cpick-qty{color:#8a7a68;font-size:12px;margin-left:auto;white-space:nowrap}
+    .bb-cpick-empty{font-size:13px;color:#8a7a68;padding:8px}
+    .bb-cpick-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+    .bb-cpick-nav .bb-submit{width:auto;flex:1;margin:0}
     .bb-submit {
       width: 100%; padding: 12px 14px; border-radius: 10px; border: 0; cursor: pointer;
       font-weight: 700; background: #3C2005; color: {{ section.settings.submit_text }};
@@ -1273,7 +1304,12 @@
         }
         if (check.state === 'invalid'){ status(check.msg); orderIn.focus(); return; }
         if (check.state === 'busy'){ status('That’s a few checks in a row — give it a minute, then try again.'); return; }
+        /* A different order = a different product list. Stale selections must
+           never ride into the new order's claim (the picker's silent-skip
+           path would otherwise submit order A's bullets on order B). */
+        if (selItems.length){ selItems = []; contentChanged(); updateChip(); }
         okOrder = v;
+        prefetchItems(v);   /* warm the product picker while they pick a type */
         goStep(2);
       });
       if (orderIn) orderIn.addEventListener('keydown', function(e){
@@ -1285,6 +1321,21 @@
         if (b && b.dataset.back) goStep(parseInt(b.dataset.back, 10));
       });
 
+      function updateChip(){
+        if (!pickedEl) return;
+        pickedEl.textContent = '';
+        if (!chosenType) return;
+        const chip = document.createElement('span');
+        chip.className = 'bb-claim-chip';
+        chip.textContent = chosenType + (selItems.length ? ' · ' + selItems.length + (selItems.length === 1 ? ' product' : ' products') : '');
+        const chg = document.createElement('button');
+        chg.type = 'button';
+        chg.className = 'bb-claim-chg';
+        chg.textContent = 'change';
+        chg.addEventListener('click', function(){ if (!sending) goStep(2); });
+        pickedEl.appendChild(chip);
+        pickedEl.appendChild(chg);
+      }
       if (typesWrap) typesWrap.addEventListener('click', function(e){
         if (sending) return;
         const card = e.target.closest ? e.target.closest('.bb-ctype') : null;
@@ -1301,23 +1352,124 @@
         needMsg = card.dataset.msg === '1';
         setBadge(photoReq, needPhoto);
         setBadge(msgReq, needMsg);
-        if (pickedEl){
-          pickedEl.textContent = '';
-          const chip = document.createElement('span');
-          chip.className = 'bb-claim-chip';
-          chip.textContent = chosenType;
-          const chg = document.createElement('button');
-          chg.type = 'button';
-          chg.className = 'bb-claim-chg';
-          chg.textContent = 'change';
-          chg.addEventListener('click', function(){ if (!sending) goStep(2); });
-          pickedEl.appendChild(chip);
-          pickedEl.appendChild(chg);
-        }
-        if (changed) contentChanged();
+        if (changed){ selItems = []; contentChanged(); }
+        updateChip();
         syncSubmit();
-        goStep(3);
+        /* Product-related types detour through the "which product?" picker. */
+        if (card.dataset.pick === '1'){ openPicker(); } else { goStep(3); }
       });
+
+      /* ---- "Which product?" picker. Line items come from <endpoint>/order-items
+         (order number only, titles + quantities — nothing else). The order was
+         already verified in step 1, and the list is prefetched right after so
+         the popup usually opens instantly. ANY trouble fetching (outage, not
+         found, empty order) skips the popup — the picker can never block a
+         claim. Chosen titles ride the message as a bullet list on submit. */
+      const pickEl    = document.getElementById('bb-cpick');
+      const pickTitle = document.getElementById('bb-cpick-title');
+      const pickList  = document.getElementById('bb-cpick-list');
+      const pickAll   = document.getElementById('bb-cpick-allcb');
+      const pickOk    = document.getElementById('bb-cpick-ok');
+      const pickSkip  = document.getElementById('bb-cpick-skip');
+      let selItems = [];
+      let itemsCache = null, itemsFor = '', itemsLoading = null;
+      const PICK_TITLES = {
+        'Damaged in transit': 'Which product is damaged?',
+        'Wrong item': 'Which product arrived wrong?',
+        'Missing item': 'Which product is missing?'
+      };
+      async function loadItems(orderNum){
+        if (itemsFor === orderNum && itemsCache) return itemsCache;
+        if (!endpoint) return null;
+        const ctrl  = ('AbortController' in window) ? new AbortController() : null;
+        const timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 12000);
+        try {
+          const res = await fetch(endpoint + '/order-items', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_number: orderNum }),
+            signal: ctrl ? ctrl.signal : undefined
+          });
+          const data = await res.json();
+          if (res.ok && data && data.ok && data.found && Array.isArray(data.items) && data.items.length){
+            itemsCache = data.items;
+            itemsFor = orderNum;
+            return itemsCache;
+          }
+          return null;
+        } catch(e){ return null; }
+        finally { if (timer) clearTimeout(timer); }
+      }
+      function prefetchItems(orderNum){
+        itemsLoading = loadItems(orderNum);
+        itemsLoading.catch(function(){});
+      }
+      function renderPickList(items){
+        pickList.textContent = '';
+        items.forEach(function(it){
+          const row = document.createElement('label');
+          row.className = 'bb-cpick-row';
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.value = it.title;
+          cb.checked = selItems.indexOf(it.title) !== -1;
+          cb.addEventListener('change', syncPickAll);
+          row.appendChild(cb);
+          row.appendChild(document.createTextNode(it.title));
+          if (it.quantity > 1){
+            const q = document.createElement('span');
+            q.className = 'bb-cpick-qty';
+            q.textContent = '× ' + it.quantity;
+            row.appendChild(q);
+          }
+          pickList.appendChild(row);
+        });
+        syncPickAll();
+      }
+      function pickBoxes(){ return Array.prototype.slice.call(pickList.querySelectorAll('input[type="checkbox"]')); }
+      function syncPickAll(){
+        const boxes = pickBoxes();
+        if (pickAll) pickAll.checked = boxes.length > 0 && boxes.every(function(b){ return b.checked; });
+      }
+      if (pickAll) pickAll.addEventListener('change', function(){
+        pickBoxes().forEach(function(b){ b.checked = pickAll.checked; });
+      });
+      let pickGen = 0;   /* invalidates in-flight opens — a stale continuation must never touch a newer popup */
+      async function openPicker(){
+        if (!pickEl){ goStep(3); return; }
+        const gen = ++pickGen;
+        const orderNum = (orderIn.value || '').trim();
+        pickTitle.textContent = PICK_TITLES[chosenType] || 'Which product?';
+        pickList.innerHTML = '<div class="bb-cpick-empty">Loading your order…</div>';
+        if (pickAll) pickAll.checked = false;
+        pickEl.hidden = false;
+        const items = await (itemsLoading || loadItems(orderNum)) || await loadItems(orderNum);
+        if (gen !== pickGen || !pickEl || pickEl.hidden) return;   /* superseded or skipped while loading */
+        if (!items || !items.length){
+          /* No list for THIS order — never keep an earlier order's selection. */
+          if (selItems.length){ selItems = []; contentChanged(); updateChip(); }
+          pickEl.hidden = true; goStep(3); return;
+        }
+        renderPickList(items);
+      }
+      function closePicker(commit){
+        if (!pickEl) return;
+        pickGen++;          /* any in-flight open is now stale */
+        if (commit){
+          const next = pickBoxes().filter(function(b){ return b.checked; }).map(function(b){ return b.value; });
+          if (String(next) !== String(selItems)) contentChanged();
+          selItems = next;
+        } else {
+          if (selItems.length) contentChanged();
+          selItems = [];
+        }
+        pickEl.hidden = true;
+        updateChip();
+        goStep(3);
+      }
+      if (pickOk) pickOk.addEventListener('click', function(){ closePicker(true); });
+      if (pickSkip) pickSkip.addEventListener('click', function(){ closePicker(false); });
+      if (pickEl) pickEl.addEventListener('click', function(e){ if (e.target === pickEl) closePicker(false); });
 
       function renderFiles(){
         if (!fileList) return;
@@ -1372,10 +1524,19 @@
         if (totalPicked() > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — please remove one or use smaller photos.'); return; }
         const emailVal = emailIn ? (emailIn.value || '').trim() : '';
 
+        /* The picker's chosen products lead the message as a bullet list so
+           the claim email names exactly which items are affected. */
+        let msgOut = msgVal;
+        if (selItems.length){
+          const head = chosenType === 'Damaged in transit' ? 'Damaged product(s):'
+            : chosenType === 'Wrong item' ? 'Wrong product(s) received:'
+            : chosenType === 'Missing item' ? 'Missing product(s):' : 'Product(s):';
+          msgOut = head + '\n' + selItems.map(function(t){ return '• ' + t; }).join('\n') + (msgVal ? '\n\n' + msgVal : '');
+        }
         const fd = new FormData();
         fd.set('order_id', orderVal);
         fd.set('type', chosenType);
-        fd.set('message', msgVal);
+        fd.set('message', msgOut);
         if (emailVal) fd.set('email', emailVal);
         fd.set('page_url', String(location.href).slice(0, 500));
         fd.set('idempotencyKey', idemKey);
@@ -1417,6 +1578,7 @@
       if (againBtn) againBtn.addEventListener('click', function(){
         form.reset();
         picked = [];
+        selItems = [];
         chosenType = '';
         needPhoto = false;
         needMsg = false;

@@ -584,7 +584,7 @@
             {%- if tg contains 'variety' or tg contains 'boba' or tg contains 'topping' or tg contains 'bundle' -%}
               {%- assign vip_ok = false -%}
             {%- endif -%}
-            {%- comment -%} Boba VIP (beta): popping boba gets size-based VIP prices — 1 LB $6.99 / 2 LB $12.99 / 7 LB $24.99 (matches live checkout discounts) {%- endcomment -%}
+            {%- comment -%} Boba VIP: popping boba gets size-based VIP prices — 1 LB $6.99 / 2 LB $12.99 / 7 LB $24.99 (matches live checkout discounts) {%- endcomment -%}
             {%- if tl contains 'popping boba' -%}
               {%- assign vip_ok = true -%}
               {%- assign vipprice = 1299 -%}
@@ -648,7 +648,7 @@
                  opens in a new tab (and middle/right-click work like a normal link).
                  Interactive controls sit above it on z-index 3; the delegated JS click
                  handler bails when the click lands here so it can't double-navigate. {%- endcomment -%}
-              <a class="pcard-link" href="{{ product.url }}" target="_blank" rel="noopener" aria-label="{{ nm | escape }}"></a>
+              <a class="pcard-link" href="{{ product.url }}"  rel="noopener" aria-label="{{ nm | escape }}"></a>
               <div class="pcard-media" data-quick>
                 <div class="pcard-badges">
                   {%- unless avail -%}

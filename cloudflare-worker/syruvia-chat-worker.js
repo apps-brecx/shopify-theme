@@ -27,6 +27,8 @@
  *   POST /track {order_number} -> {ok, found, shipping_status, scan_status, carrier, tracking[],
  *     ...warehouse timestamps, and (with VEEQO_API_KEY) carrier timestamps:
  *     collected_at, in_transit_at, out_for_delivery_at, delivered_at}
+ *   POST /order-items {order_number} -> {ok, found, items:[{title, quantity}]}
+ *     (claim wizard's "which product?" picker — titles + quantities only)
  *
  * Abuse limits: browser Origin is REQUIRED and allowlisted, per-IP and
  * per-isolate rate limits apply, input sizes are capped, and every upstream
@@ -477,6 +479,54 @@ async function handleTrack(request, env, headers) {
   }
 }
 
+/* Order line items for the claim wizard's "which product?" picker. Keyed by
+   order number alone (the same owner decision as /track); returns product
+   TITLES and quantities only — never prices, addresses, emails, or any other
+   order data. Digits-exact match on the order name (the search is fuzzy). */
+async function handleOrderItems(request, env, headers) {
+  if (!env.SHOPIFY_ADMIN_TOKEN) return json({ error: 'not configured' }, 500, headers);
+  let body;
+  try {
+    const raw = await request.text();
+    if (raw.length > 2000) return json({ error: 'payload too large' }, 413, headers);
+    body = JSON.parse(raw);
+  } catch (e) { return json({ error: 'invalid json' }, 400, headers); }
+  const num = String((body && body.order_number) || '').replace(/[^0-9]/g, '');
+  if (!num || num.length < 4 || num.length > 20) return json({ error: 'Please enter a valid order number.' }, 400, headers);
+  try {
+    const res = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN },
+      body: JSON.stringify({
+        query: 'query($q: String!){ orders(first: 5, query: $q){ nodes { name lineItems(first: 30){ nodes { title quantity } } } } }',
+        variables: { q: 'name:#' + num },
+      }),
+    }, 8000);
+    if (!res.ok) return json({ ok: false }, 502, headers);
+    const data = await res.json();
+    const nodes = (data.data && data.data.orders && data.data.orders.nodes) || [];
+    const match = nodes.find(function (o) {
+      return o && String(o.name || '').replace(/[^0-9]/g, '') === num;
+    });
+    if (!match) return json({ ok: true, found: false }, 200, headers);
+    /* Merge duplicate titles (an order can hold the same product on several
+       lines) — the picker keys checkboxes by title, so duplicates would
+       conflate into phantom checks and doubled bullets. */
+    const items = [];
+    for (const li of (match.lineItems && match.lineItems.nodes) || []) {
+      const title = String((li && li.title) || '').slice(0, 200);
+      if (!title) continue;
+      const hit = items.find(function (m) { return m.title === title; });
+      if (hit) hit.quantity += (li && li.quantity) || 1;
+      else if (items.length < 30) items.push({ title: title, quantity: (li && li.quantity) || 1 });
+    }
+    return json({ ok: true, found: true, items: items }, 200, headers);
+  } catch (e) {
+    console.error('order-items failed:', e && e.message ? e.message : e);
+    return json({ ok: false }, 502, headers);
+  }
+}
+
 /* Returns {content, isError} — raw exception details go to the worker log,
    never to the model or the customer. `picks` (per-request array) collects the
    products search_catalog found so the theme can render them as tappable
@@ -553,7 +603,7 @@ function rateLimited(ip) {
    the storefront. Extra env vars: SUPPORT_API_KEY (required),
    SUPPORT_API_BASE (optional, default https://cs.brecx.com). */
 
-const CLAIM_TYPES = ['Damaged in transit', 'Wrong item', 'Never received', 'Delayed in transit', 'Other'];
+const CLAIM_TYPES = ['Damaged in transit', 'Wrong item', 'Missing item', 'Never received', 'Delayed in transit', 'Other'];
 const CLAIM_PHOTO_REQUIRED = ['Damaged in transit', 'Wrong item'];
 const CLAIM_MAX_FILES = 10;
 const CLAIM_MAX_FILE_BYTES = 10 * 1024 * 1024;
@@ -875,6 +925,13 @@ export default {
       const tip = request.headers.get('CF-Connecting-IP') || 'unknown';
       if (rateLimited(tip)) return json({ error: 'You’re checking quite fast — please wait a minute and try again.' }, 429, headers);
       return handleTrack(request, env, headers);
+    }
+
+    /* Order line items for the claim wizard's product picker. */
+    if (path.endsWith('/order-items')) {
+      const oip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      if (rateLimited(oip)) return json({ error: 'too many requests' }, 429, headers);
+      return handleOrderItems(request, env, headers);
     }
 
     if (!env.ANTHROPIC_API_KEY || !env.SHOPIFY_ADMIN_TOKEN) return json({ error: 'worker secrets not configured' }, 500, headers);
