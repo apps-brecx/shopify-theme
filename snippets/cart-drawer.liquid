@@ -87,6 +87,7 @@
   #SyrCD .d-ship-top svg{ color:var(--sf-ink); flex:0 0 auto; }
   #SyrCD .d-ship-top b{ color:var(--ink); font-family:var(--fh); font-weight:400; }
   #SyrCD .d-ship-top .done{ display:inline-flex; align-items:center; gap:6px; color:var(--sf-ink); font-weight:700; }
+  #SyrCD .d-ship-top [hidden]{ display:none !important; }
   #SyrCD .d-ship-track{ height:9px; border-radius:999px; background:var(--bg-2); border:var(--rule-1); overflow:hidden; }
   #SyrCD .d-ship-fill{ height:100%; background:repeating-linear-gradient(45deg, var(--mint), var(--mint) 7px, #b6dcc8 7px, #b6dcc8 14px); transition:width .5s cubic-bezier(.3,1,.5,1); }
   #SyrCD .d-vip{ position:relative; overflow:hidden; border:var(--rule); border-radius:16px; box-shadow:var(--shadow-sm); padding:14px 16px; color:#fff; text-align:left; width:100%;
@@ -214,14 +215,14 @@
       {%- else -%}
         <div class="scd-body">
           {%- comment -%} free-ship progress {%- endcomment -%}
-          <div class="d-ship">
+          {%- comment -%} Both message states render; JS re-computes the bar
+             from the DISPLAYED total (.d-sub .v) so it always matches what
+             the customer sees, discount codes included. {%- endcomment -%}
+          <div class="d-ship" data-ship data-free="{{ FREE_SHIP }}">
             <div class="d-ship-top">
               {{ icon_truck }}
-              {%- if remain > 0 -%}
-                <span>You're <b>{{ remain | money }}</b> from <b>free shipping</b></span>
-              {%- else -%}
-                <span class="done">{{ icon_check }} You've unlocked free shipping</span>
-              {%- endif -%}
+              <span data-ship-remain{% if remain <= 0 %} hidden{% endif %}>You're <b data-ship-amt>{{ remain | money }}</b> from <b>free shipping</b></span>
+              <span class="done" data-ship-done{% if remain > 0 %} hidden{% endif %}>{{ icon_check }} You've unlocked free shipping</span>
             </div>
             <div class="d-ship-track"><div class="d-ship-fill" style="width:{{ pct }}%"></div></div>
           </div>
@@ -478,6 +479,34 @@
       }
       return p;
     };
+  }
+
+  /* Free-shipping bar follows the DISPLAYED total (.d-sub .v), so whatever
+     that number shows — discount codes included — is exactly what the bar
+     compares against. The observer covers every drawer re-render; change-
+     guarded writes keep it from re-triggering itself. */
+  function moneyToCents(t){ var n=parseFloat(String(t||'').replace(/[^0-9.]/g,'')); return isNaN(n)?null:Math.round(n*100); }
+  function adjustShip(){
+    var r=root(); if(!r) return;
+    var bar=r.querySelector('[data-ship]'); if(!bar) return;
+    var tEl=r.querySelector('.d-sub .v');
+    var cents=moneyToCents(tEl&&tEl.textContent); if(cents==null) return;
+    var free=parseInt(bar.getAttribute('data-free'),10)||3500;
+    var remain=free-cents; if(remain<0) remain=0;
+    var pct=cents>0?Math.min(100,cents*100/free):0;
+    var w=pct.toFixed(1)+'%';
+    var fill=bar.querySelector('.d-ship-fill'); if(fill&&fill.style.width!==w) fill.style.width=w;
+    var rEl=bar.querySelector('[data-ship-remain]'), dEl=bar.querySelector('[data-ship-done]');
+    var showR=remain>0;
+    if(rEl&&rEl.hidden!==!showR) rEl.hidden=!showR;
+    if(dEl&&dEl.hidden!==showR) dEl.hidden=showR;
+    if(rEl&&showR){ var a=rEl.querySelector('[data-ship-amt]'); var txt='$'+(remain/100).toFixed(2); if(a&&a.textContent!==txt) a.textContent=txt; }
+  }
+  adjustShip();
+  if('MutationObserver' in window){
+    var scdShipMo=new MutationObserver(function(){ adjustShip(); });
+    var scdEl=document.getElementById('SyrCD');
+    if(scdEl) scdShipMo.observe(scdEl,{childList:true,subtree:true,characterData:true});
   }
 
   /* expose a small API so other scripts can refresh / open the drawer after mutating the cart */

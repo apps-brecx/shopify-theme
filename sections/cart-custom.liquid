@@ -60,6 +60,7 @@
   .scart .ship-top b{ color:var(--ink); font-family:var(--font-head); font-weight:400; }
   .scart .ship-top svg{ color:var(--sf-ink); flex:0 0 auto; }
   .scart .ship-top .done{ color:var(--sf-ink); font-weight:700; display:inline-flex; align-items:center; gap:7px; }
+  .scart .ship-top [hidden]{ display:none !important; }
   .scart .ship-track{ height:10px; border-radius:999px; background:var(--bg-2); border:var(--rule-1); overflow:hidden; }
   .scart .ship-fill{ height:100%; background:repeating-linear-gradient(45deg,var(--mint),var(--mint) 7px,#b6dcc8 7px,#b6dcc8 14px); transition:width .5s cubic-bezier(.3,1,.5,1); }
   .scart .cart-layout{ display:grid; grid-template-columns:1.62fr .95fr; gap:34px; align-items:start; }
@@ -207,14 +208,14 @@
     {%- else -%}
       <span class="cart-count">{{ cart.item_count }} item{% if cart.item_count != 1 %}s{% endif %} in your cart</span>
 
-      <div class="ship-bar">
+      {%- comment -%} Both message states render; JS re-computes the bar from the
+         DISPLAYED Total (.sum-total .val) so it always matches what the customer
+         sees, discount codes included. {%- endcomment -%}
+      <div class="ship-bar" data-ship data-free="{{ FREE_SHIP }}">
         <div class="ship-top">
           {{ icTruck }}
-          {%- if remain > 0 -%}
-            <span>You're <b>{{ remain | money }}</b> away from <b>free shipping</b></span>
-          {%- else -%}
-            <span class="done">{{ icCheck }} You've unlocked free shipping</span>
-          {%- endif -%}
+          <span data-ship-remain{% if remain <= 0 %} hidden{% endif %}>You're <b data-ship-amt>{{ remain | money }}</b> away from <b>free shipping</b></span>
+          <span class="done" data-ship-done{% if remain > 0 %} hidden{% endif %}>{{ icCheck }} You've unlocked free shipping</span>
         </div>
         <div class="ship-track"><div class="ship-fill" data-shipfill style="width:{{ pct }}%"></div></div>
       </div>
@@ -363,6 +364,32 @@
     else if(e.target.closest('[data-dec]')){ if(qty>1) change(line, qty-1, item, false); }
     else if(e.target.closest('[data-remove]')){ item.classList.add('removing'); change(line, 0, item, true); }
   });
+
+  /* Free-shipping bar follows the DISPLAYED Total (.sum-total .val), so
+     whatever that number shows — discount codes included — is exactly what
+     the bar compares against. Change-guarded writes keep the observer from
+     re-triggering itself. */
+  function moneyToCents(t){ var n=parseFloat(String(t||'').replace(/[^0-9.]/g,'')); return isNaN(n)?null:Math.round(n*100); }
+  function adjustShip(){
+    var bar=root.querySelector('[data-ship]'); if(!bar) return;
+    var tEl=root.querySelector('.sum-total .val');
+    var cents=moneyToCents(tEl&&tEl.textContent); if(cents==null) return;
+    var free=parseInt(bar.getAttribute('data-free'),10)||3500;
+    var remain=free-cents; if(remain<0) remain=0;
+    var pct=cents>0?Math.min(100,cents*100/free):0;
+    var w=pct.toFixed(1)+'%';
+    var fill=bar.querySelector('.ship-fill'); if(fill&&fill.style.width!==w) fill.style.width=w;
+    var rEl=bar.querySelector('[data-ship-remain]'), dEl=bar.querySelector('[data-ship-done]');
+    var showR=remain>0;
+    if(rEl&&rEl.hidden!==!showR) rEl.hidden=!showR;
+    if(dEl&&dEl.hidden!==showR) dEl.hidden=showR;
+    if(rEl&&showR){ var a=rEl.querySelector('[data-ship-amt]'); var txt='$'+(remain/100).toFixed(2); if(a&&a.textContent!==txt) a.textContent=txt; }
+  }
+  adjustShip();
+  if('MutationObserver' in window){
+    var shipMo=new MutationObserver(function(){ adjustShip(); });
+    shipMo.observe(root,{childList:true,subtree:true,characterData:true});
+  }
 })();
 </script>
 
