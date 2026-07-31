@@ -25,23 +25,13 @@
 
   assign member_saved = cart.original_total_price | minus: cart.total_price
   assign payable = cart.total_price
-  comment
-    VIP prices apply AT CHECKOUT, so for VIP members cart.total_price still
-    holds the full non-VIP amount. The free-shipping bar must run on what the
-    member will actually pay — payable minus their VIP savings — or it reads
-    as if it were computed from the subtotal.
-  endcomment
-  assign ship_basis = payable
-  if is_vip and vip_savings > 0
-    assign ship_basis = payable | minus: vip_savings
-  endif
-  assign remain = FREE_SHIP | minus: ship_basis
+  assign remain = FREE_SHIP | minus: payable
   if remain < 0
     assign remain = 0
   endif
   assign pct = 0
-  if ship_basis > 0
-    assign pct = ship_basis | times: 100 | divided_by: FREE_SHIP
+  if payable > 0
+    assign pct = payable | times: 100 | divided_by: FREE_SHIP
   endif
   if pct > 100
     assign pct = 100
