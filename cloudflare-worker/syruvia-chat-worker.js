@@ -500,10 +500,57 @@ async function handleTrack(request, env, headers) {
   }
 }
 
+/* Merge duplicate titles (an order can hold the same product on several
+   lines) — the picker keys checkboxes by title, so duplicates would
+   conflate into phantom checks and doubled bullets. */
+function mergeItems(list) {
+  const items = [];
+  for (const it of list) {
+    if (!it || !it.title) continue;
+    const hit = items.find(function (m) { return m.title === it.title; });
+    if (hit) hit.quantity += it.quantity || 1;
+    else if (items.length < 30) items.push({ title: it.title, quantity: it.quantity || 1 });
+  }
+  return items;
+}
+
+/* Veeqo fallback for the picker: covers orders Shopify Admin can't see —
+   marketplace channels and anything older than its ~60-day window (without
+   read_all_orders). Same output contract: titles + quantities ONLY. */
+async function veeqoOrderItems(env, num, rawNum) {
+  if (!env.VEEQO_API_KEY) return null;
+  const H = { 'x-api-key': env.VEEQO_API_KEY, 'Content-Type': 'application/json' };
+  const raw = String(rawNum || '').replace(/[^0-9A-Za-z-]/g, '').slice(0, 40);
+  const queries = (raw && raw !== num) ? [raw, num] : [num];
+  if (/^\d{17}$/.test(num)) {
+    const amz = num.replace(/^(\d{3})(\d{7})(\d{7})$/, '$1-$2-$3');
+    if (queries.indexOf(amz) === -1) queries.push(amz);
+  }
+  try {
+    for (const q of queries) {
+      const res = await timedFetch('https://api.veeqo.com/orders?query=' + encodeURIComponent(q) + '&page_size=5', { headers: H }, 6000);
+      if (!res.ok) continue;
+      const orders = await res.json();
+      const order = (Array.isArray(orders) ? orders : []).find(function (o) {
+        return o && String(o.number || '').replace(/[^0-9]/g, '') === num;
+      });
+      if (!order) continue;
+      const items = mergeItems((order.line_items || []).map(function (li) {
+        const s = (li && li.sellable) || {};
+        const title = String(s.full_title || s.product_title || (li && li.title) || '').slice(0, 200);
+        return { title: /^default title$/i.test(title) ? '' : title, quantity: (li && li.quantity) || 1 };
+      }));
+      if (items.length) return items;
+    }
+    return null;
+  } catch (e) { return null; }
+}
+
 /* Order line items for the claim wizard's "which product?" picker. Keyed by
    order number alone (the same owner decision as /track); returns product
    TITLES and quantities only — never prices, addresses, emails, or any other
-   order data. Digits-exact match on the order name (the search is fuzzy). */
+   order data. Shopify Admin first (digits-exact match on the order name),
+   Veeqo as fallback so marketplace and >60-day orders get a list too. */
 async function handleOrderItems(request, env, headers) {
   if (!env.SHOPIFY_ADMIN_TOKEN) return json({ error: 'not configured' }, 500, headers);
   let body;
@@ -512,35 +559,35 @@ async function handleOrderItems(request, env, headers) {
     if (raw.length > 2000) return json({ error: 'payload too large' }, 413, headers);
     body = JSON.parse(raw);
   } catch (e) { return json({ error: 'invalid json' }, 400, headers); }
-  const num = String((body && body.order_number) || '').replace(/[^0-9]/g, '');
+  const rawNum = String((body && body.order_number) || '');
+  const num = rawNum.replace(/[^0-9]/g, '');
   if (!num || num.length < 4 || num.length > 20) return json({ error: 'Please enter a valid order number.' }, 400, headers);
   try {
-    const res = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN },
-      body: JSON.stringify({
-        query: 'query($q: String!){ orders(first: 5, query: $q){ nodes { name lineItems(first: 30){ nodes { title quantity } } } } }',
-        variables: { q: 'name:#' + num },
-      }),
-    }, 8000);
-    if (!res.ok) return json({ ok: false }, 502, headers);
-    const data = await res.json();
-    const nodes = (data.data && data.data.orders && data.data.orders.nodes) || [];
-    const match = nodes.find(function (o) {
-      return o && String(o.name || '').replace(/[^0-9]/g, '') === num;
-    });
-    if (!match) return json({ ok: true, found: false }, 200, headers);
-    /* Merge duplicate titles (an order can hold the same product on several
-       lines) — the picker keys checkboxes by title, so duplicates would
-       conflate into phantom checks and doubled bullets. */
-    const items = [];
-    for (const li of (match.lineItems && match.lineItems.nodes) || []) {
-      const title = String((li && li.title) || '').slice(0, 200);
-      if (!title) continue;
-      const hit = items.find(function (m) { return m.title === title; });
-      if (hit) hit.quantity += (li && li.quantity) || 1;
-      else if (items.length < 30) items.push({ title: title, quantity: (li && li.quantity) || 1 });
-    }
+    let items = null;
+    try {
+      const res = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN },
+        body: JSON.stringify({
+          query: 'query($q: String!){ orders(first: 5, query: $q){ nodes { name lineItems(first: 30){ nodes { title quantity } } } } }',
+          variables: { q: 'name:#' + num },
+        }),
+      }, 8000);
+      if (res.ok) {
+        const data = await res.json();
+        const nodes = (data.data && data.data.orders && data.data.orders.nodes) || [];
+        const match = nodes.find(function (o) {
+          return o && String(o.name || '').replace(/[^0-9]/g, '') === num;
+        });
+        if (match) {
+          items = mergeItems(((match.lineItems && match.lineItems.nodes) || []).map(function (li) {
+            return { title: String((li && li.title) || '').slice(0, 200), quantity: (li && li.quantity) || 1 };
+          }));
+        }
+      }
+    } catch (e) { /* fall through to the Veeqo fallback */ }
+    if (!items || !items.length) items = await veeqoOrderItems(env, num, rawNum);
+    if (!items || !items.length) return json({ ok: true, found: false }, 200, headers);
     return json({ ok: true, found: true, items: items }, 200, headers);
   } catch (e) {
     console.error('order-items failed:', e && e.message ? e.message : e);
