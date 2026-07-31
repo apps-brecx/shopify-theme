@@ -236,7 +236,17 @@
       var rank = rankOf(d);
       var trouble = !!(d.is_returning || d.is_stuck || d.is_label_failed);
       currentEl.textContent = (d.order ? d.order + ' — ' : '') + (trouble ? 'Needs attention' : STEPS[rank - 1].label);
-      var updatedTxt = fmt(d.updated_at);
+      /* "Last updated" mirrors the newest REACHED step's timestamp (what the
+         customer sees on the timeline) — not FBM's internal row-update time,
+         which syncs can bump days after delivery. Falls back to updated_at
+         when no step carries a time. */
+      var lastAt = null;
+      STEPS.forEach(function(s, i){
+        if (i + 1 > rank || !s.at || !d[s.at]) return;
+        var t = new Date(d[s.at]).getTime();
+        if (!isNaN(t) && (lastAt == null || t > lastAt)) lastAt = t;
+      });
+      var updatedTxt = fmt(lastAt != null ? new Date(lastAt).toISOString() : d.updated_at);
       updatedEl.textContent = updatedTxt ? 'Last updated: ' + updatedTxt : '';
       stepsEl.textContent = '';
       STEPS.forEach(function(s, i){

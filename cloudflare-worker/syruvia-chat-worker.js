@@ -102,7 +102,7 @@ const TOOLS = [
   },
   {
     name: 'track_package',
-    description: 'Track a package by order number alone (no email needed). Returns live shipment progress from the fulfillment system: status (being prepared / packed / in transit / delivered), carrier, tracking numbers, packed/shipped timestamps. Preferred for "where is my order/package" questions.',
+    description: 'Track a package by order number alone (no email needed). Works for orders from any sales channel (the syruvia.com shop, Amazon, Walmart, etc. — digits-only match, so dashes in marketplace order numbers are fine). Returns live shipment progress from the fulfillment system: status (being prepared / packed / in transit / delivered), carrier, tracking numbers, packed/shipped timestamps. Preferred for "where is my order/package" questions.',
     input_schema: {
       type: 'object',
       properties: { order_number: { type: 'string' } },
@@ -272,10 +272,10 @@ async function getOrderStatus(env, orderNumber, email) {
 /* ---------- FBM shipment tracking (fbm-api-1z6h.onrender.com) ----------
    The fulfillment system is the source of truth for shipment status; per the
    store owner's decision, tracking is keyed by ORDER NUMBER ALONE (no email
-   gate). The feed contains every channel's orders with customer names and
-   addresses, so only the syruvia store's channel (channel_name "shopify") is
-   matched and only sanitized shipment fields are ever returned — never
-   names, addresses, or order contents. */
+   gate) and matches orders from EVERY channel in the feed (Shopify, Amazon,
+   Walmart, …). The feed rows carry customer names and addresses, so only
+   sanitized shipment fields are ever returned — never names, addresses, or
+   order contents. */
 const FBM_BASE = 'https://fbm-api-1z6h.onrender.com';
 const FBM_STATUS_HINTS = {
   created: 'order received — being prepared at the warehouse',
@@ -311,19 +311,39 @@ async function fbmSearch(env, q) {
   const data = await res.json();
   return (data && data.data) || [];
 }
-/* exact digits match + the syruvia (shopify) channel only — the q search is
-   fuzzy and the feed holds other stores' orders */
-async function fbmFindRow(env, num) {
-  const rows = await fbmSearch(env, num);
-  return rows.find(function (r) {
-    return r && String(r.channel_name || '').toLowerCase() === 'shopify'
-      && String(r.order_id || '').replace(/[^0-9]/g, '') === num;
-  }) || null;
+/* Exact digits match across ALL channels (owner decision 2026-07-31: Amazon /
+   Walmart / etc. order numbers are trackable too, not just the Shopify shop).
+   Marketplace ids are stored WITH separators ("113-6194189-1234567"), and
+   FBM's q search may not match them from a digits-only string — so search
+   with the customer's raw formatting first, then digits, while the row match
+   stays digits-exact either way. If the same digit string ever exists on two
+   channels, the Shopify row wins for determinism. Only sanitized shipment
+   fields ever leave the worker regardless of channel. */
+async function fbmFindRow(env, num, rawQuery) {
+  const raw = String(rawQuery || '').replace(/[^0-9A-Za-z-]/g, '').slice(0, 40);
+  const queries = (raw && raw !== num) ? [raw, num] : [num];
+  /* 17 digits in 3-7-7 = an Amazon order id typed without its dashes — also
+     try the dashed form FBM actually stores. */
+  if (/^\d{17}$/.test(num)) {
+    const amz = num.replace(/^(\d{3})(\d{7})(\d{7})$/, '$1-$2-$3');
+    if (queries.indexOf(amz) === -1) queries.push(amz);
+  }
+  for (const q of queries) {
+    const rows = await fbmSearch(env, q);
+    const matches = rows.filter(function (r) {
+      return r && String(r.order_id || '').replace(/[^0-9]/g, '') === num;
+    });
+    const hit = matches.find(function (r) {
+      return String(r.channel_name || '').toLowerCase() === 'shopify';
+    }) || matches[0];
+    if (hit) return hit;
+  }
+  return null;
 }
 async function fbmShipment(env, orderNumber) {
   const num = String(orderNumber || '').replace(/[^0-9]/g, '');
   if (!num) return null;
-  const row = await fbmFindRow(env, num);
+  const row = await fbmFindRow(env, num, orderNumber);
   if (!row) return null;
   return {
     shipment_status: row.shipping_status,
@@ -435,12 +455,13 @@ async function handleTrack(request, env, headers) {
     if (raw.length > 2000) return json({ error: 'payload too large' }, 413, headers);
     body = JSON.parse(raw);
   } catch (e) { return json({ error: 'invalid json' }, 400, headers); }
-  const num = String((body && body.order_number) || '').replace(/[^0-9]/g, '');
+  const rawNum = String((body && body.order_number) || '');
+  const num = rawNum.replace(/[^0-9]/g, '');
   if (!num || num.length < 4 || num.length > 20) return json({ error: 'Please enter a valid order number.' }, 400, headers);
   try {
     /* hard cap over the 10s per-call FBM timeouts (Render cold-starts) */
     const row = await Promise.race([
-      fbmFindRow(env, num),
+      fbmFindRow(env, num, rawNum),
       new Promise(function (resolve, reject) {
         setTimeout(function () { reject(new Error('fbm time budget exceeded')); }, 15000);
       }),
