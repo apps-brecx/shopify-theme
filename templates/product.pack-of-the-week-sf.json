@@ -664,28 +664,28 @@
         "item_X9cE6d": {
           "type": "item",
           "settings": {
-            "icon": "shopify://shop_images/sugar-free_d9fecf16-f729-4501-85f1-1350f85167f4.png",
+            "icon": "shopify://shop_images/sugar-free_b656222a-1d42-4c89-a91f-22422675856c.png",
             "text": "Sugar Free"
           }
         },
         "item_XgLWHj": {
           "type": "item",
           "settings": {
-            "icon": "shopify://shop_images/U.png",
+            "icon": "shopify://shop_images/U_1.png",
             "text": "Kosher"
           }
         },
         "item_LWQDPF": {
           "type": "item",
           "settings": {
-            "icon": "shopify://shop_images/gluten-free.png",
+            "icon": "shopify://shop_images/gluten-free_2.png",
             "text": "Gluten Free"
           }
         },
         "item_Fd6MBH": {
           "type": "item",
           "settings": {
-            "icon": "shopify://shop_images/united-states.png",
+            "icon": "shopify://shop_images/united-states_1.png",
             "text": "Made in USA"
           }
         }
