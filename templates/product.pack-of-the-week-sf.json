@@ -700,7 +700,7 @@
       "settings": {
         "background_color": "#bd1022",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Crafted for smooth mixing, bold fruit flavor, and easy sugar-free drinks at home.</p>",
+        "description": "<p>Crafted for smooth mixing, bright fruit flavor, and easy sugar-free drinks at home.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -758,7 +758,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Cherry and Blue Raspberry taste so good together, and Pomegranate makes it feel more like a real fruit punch.",
+            "quote": "I used this with sparkling water and lemonade. It tastes fruity, tropical, and light perfect for hot days.",
             "reviewer_initials": "AM",
             "reviewer_name": "Alyssa M.",
             "reviewer_role": ""
@@ -768,7 +768,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I used this pack with sparkling water and lemonade. The colors are fun, and the flavors still taste bold without sugar.",
+            "quote": "The Mango tastes bright, the Watermelon is super refreshing, and Coconut makes the drink feel smooth without sugar.",
             "reviewer_initials": "MD",
             "reviewer_name": "Marcus D.",
             "reviewer_role": ""
@@ -778,7 +778,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Blue Raspberry is my favorite, but Cherry and Pomegranate make the pack taste fuller. It is perfect for sugar-free mocktails.",
+            "quote": "This pack makes sugar-free drinks way more fun. Mango and Watermelon taste fresh, and Coconut gives it a nice soft finish.",
             "reviewer_initials": "TR",
             "reviewer_name": "Tina R.",
             "reviewer_role": ""
@@ -788,7 +788,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack makes plain drinks way more exciting. I like that it is fruity, colorful, and still sugar-free.",
+            "quote": "I like that the flavors do not taste boring. It is easy to mix and makes my iced drinks feel more exciting.",
             "reviewer_initials": "RK",
             "reviewer_name": "Rachel K.",
             "reviewer_role": ""
@@ -814,7 +814,7 @@
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Sugar-Free Drink Fans\nLove This Pack",
+        "heading": "Sugar-Free Summer Sippers\nLove This Pack",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
