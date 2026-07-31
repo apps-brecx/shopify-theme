@@ -13,7 +13,7 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272_1.jpg",
+        "bg_img": "shopify://shop_images/Rectangle_2272_b3c2137e-537b-4edb-bd6e-b7d7da22c6f3.png",
         "secondary_button_text": "View Regular",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week",
         "accent_color": "#bd1022"
@@ -532,7 +532,7 @@
         "custom_class1": "",
         "custom_class11": "",
         "custom_class12": "",
-        "title": "<strong>Bold Flavor. Zero Sugar.</strong>",
+        "title": "<strong>Nutty. Creamy. Sugar-Free.</strong>",
         "image_alt_text": "",
         "content": "",
         "additional_text": "",
@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This week’s Sugar-Free Cherry Blue Punch Pack brings together three bright fruit flavors for fun, colorful drinks without sugar. Cherry gives it a classic punch-style taste, Blue Raspberry adds the bold blue refresher vibe, and Pomegranate brings a rich fruity finish.</p>"
+            "text": "<p>This week’s Sugar Free Mango Coconut Chill Pack brings together juicy Mango, smooth Coconut, and fresh Watermelon for bright summer drinks without sugar. It is made for customers who want tropical flavor that feels light, fun, and easy to mix.</p>"
           }
         }
       },
@@ -714,6 +714,9 @@
             "show_sample_reviews": true,
             "reviews_selection": "current_product",
             "products": [],
+            "filter_pinned": false,
+            "filter_featured": false,
+            "filter_custom_tags": "",
             "star_rating": "all",
             "show_review_media": true,
             "display_order": "media_first",
