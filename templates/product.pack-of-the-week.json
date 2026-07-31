@@ -13,7 +13,7 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272_1.jpg",
+        "bg_img": "shopify://shop_images/Rectangle_2272_b3c2137e-537b-4edb-bd6e-b7d7da22c6f3.png",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
         "accent_color": "#bd1022"
@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This week’s Cherry Blue Punch Pack brings together three bold fruit flavors for drinks that look fun and taste refreshing. Cherry gives it that classic sweet punch base, Blue Raspberry adds the bright blue drink vibe, and Pomegranate brings a rich fruity finish.</p>"
+            "text": "<p>This week’s Mango Coconut Chill Pack brings together juicy Mango, smooth Coconut, and refreshing Watermelon for drinks that feel bright, cool, and easy to enjoy. It is made for customers who want tropical flavor without making drinks complicated.</p>"
           }
         }
       },
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Punch-Style Trio",
-            "description": "Cherry, Blue Raspberry, and Pomegranate in one easy fruit drink pack."
+            "title": "Tropical Mix",
+            "description": "Mango, Coconut, and Watermelon create a smooth summer flavor combo."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Made For Fun Drinks",
-            "description": "Perfect for lemonades, sodas, iced teas, mocktails, and colorful refreshers."
+            "title": "Refreshing Drinks",
+            "description": "Made for lemonades, teas, sparkling drinks, sodas, and mocktails."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
             "title": "Save This Week",
-            "description": "Get the Cherry Blue Punch Pack for $19.99 instead of $31.99."
+            "description": "Get the Mango Coconut Chill Pack for $19.99 instead of $31.99."
           }
         }
       },
@@ -714,6 +714,9 @@
             "show_sample_reviews": true,
             "reviews_selection": "current_product",
             "products": [],
+            "filter_pinned": false,
+            "filter_featured": false,
+            "filter_custom_tags": "",
             "star_rating": "all",
             "show_review_media": true,
             "display_order": "media_first",
