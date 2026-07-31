@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#BD1022"
+        "background_color": "#bd1022"
       }
     },
     "pack_steps_AbyNtH": {
@@ -798,9 +798,9 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I mixed this pack into sparkling water and lemonade, and it worked great. The vibrant colors are fun, and the sugar-free flavors are still rich and refreshing.",
-            "reviewer_initials": "KS",
-            "reviewer_name": "Kayla S.",
+            "quote": "This pack is perfect for summer drinks. The Mango is juicy, Watermelon tastes refreshing, and Coconut adds a smooth tropical finish without any sugar.",
+            "reviewer_initials": "JP",
+            "reviewer_name": "Jessica P.",
             "reviewer_role": ""
           }
         }
