@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Punch-Style Trio",
-            "description": "Sugar Free Cherry, Blue Raspberry, and Pomegranate in one easy fruit drink pack."
+            "title": "Tropical Trio",
+            "description": "Mango, Coconut, and Watermelon create a smooth sugar-free summer mix."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Made For Fun Drinks",
-            "description": "Perfect for sugar-free lemonades, sodas, iced teas, mocktails, and colorful refreshers."
+            "title": "Cool Refreshers",
+            "description": "Made for lemonades, teas, sparkling drinks, sodas, and mocktails."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
             "title": "Save This Week",
-            "description": "Get the Sugar-Free Cherry Blue Punch Pack for $16.99 instead of $27.99."
+            "description": "Get the Sugar-Free Mango Coconut Chill Pack for $16.99 instead of $27.99."
           }
         }
       },
