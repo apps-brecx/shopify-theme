@@ -29,6 +29,9 @@
  *     collected_at, in_transit_at, out_for_delivery_at, delivered_at}
  *   POST /order-items {order_number} -> {ok, found, items:[{title, quantity}]}
  *     (claim wizard's "which product?" picker — titles + quantities only)
+ *   POST /feedback {token, rating?, comment?, ticket_id?, order_id?} -> {ok}
+ *     ("How did we do?" survey landing page relay — attaches the CS key and
+ *      forwards to /api/external/feedback; re-submits safely overwrite)
  *
  * Abuse limits: browser Origin is REQUIRED and allowlisted, per-IP and
  * per-isolate rate limits apply, input sizes are capped, and every upstream
@@ -500,47 +503,119 @@ async function handleTrack(request, env, headers) {
   }
 }
 
+/* Merge duplicate titles (an order can hold the same product on several
+   lines) — the picker keys checkboxes by title, so duplicates would
+   conflate into phantom checks and doubled bullets. */
+function mergeItems(list) {
+  const items = [];
+  for (const it of list) {
+    if (!it || !it.title) continue;
+    const hit = items.find(function (m) { return m.title === it.title; });
+    if (hit) hit.quantity += it.quantity || 1;
+    else if (items.length < 30) items.push({ title: it.title, quantity: it.quantity || 1 });
+  }
+  return items;
+}
+
+/* FBM items for the picker — the PRIMARY source (owner decision 2026-08-01):
+   the fulfillment feed knows what actually shipped, covers every channel and
+   full history, and its row is already warm from the step-1 /track verify.
+   Output contract: titles + quantities ONLY. */
+async function fbmOrderItems(env, num, rawNum) {
+  if (!env.FBM_EMAIL || !env.FBM_PIN) return null;
+  try {
+    const row = await Promise.race([
+      fbmFindRow(env, num, rawNum),
+      new Promise(function (resolve) { setTimeout(function () { resolve(null); }, 12000); }),
+    ]);
+    if (!row || !Array.isArray(row.items)) return null;
+    /* catalog_product_title is the clean name FBM's own UI shows; items[].title
+       is the raw sales-channel listing title — abbreviated ("SF Pumpkin
+       Spice"), typo'd, or a full Amazon-length listing string. Owner decision
+       2026-08-01: show the FBM catalog title. */
+    const items = mergeItems(row.items.map(function (it) {
+      const t = (it && (it.catalog_product_title || it.catalog_product_name || it.title)) || '';
+      return { title: String(t).trim().slice(0, 200), quantity: (it && it.quantity) || 1 };
+    }));
+    return items.length ? items : null;
+  } catch (e) { return null; }
+}
+
+/* Veeqo fallback for the picker: covers orders Shopify Admin can't see —
+   marketplace channels and anything older than its ~60-day window (without
+   read_all_orders). Same output contract: titles + quantities ONLY. */
+async function veeqoOrderItems(env, num, rawNum) {
+  if (!env.VEEQO_API_KEY) return null;
+  const H = { 'x-api-key': env.VEEQO_API_KEY, 'Content-Type': 'application/json' };
+  const raw = String(rawNum || '').replace(/[^0-9A-Za-z-]/g, '').slice(0, 40);
+  const queries = (raw && raw !== num) ? [raw, num] : [num];
+  if (/^\d{17}$/.test(num)) {
+    const amz = num.replace(/^(\d{3})(\d{7})(\d{7})$/, '$1-$2-$3');
+    if (queries.indexOf(amz) === -1) queries.push(amz);
+  }
+  try {
+    for (const q of queries) {
+      const res = await timedFetch('https://api.veeqo.com/orders?query=' + encodeURIComponent(q) + '&page_size=5', { headers: H }, 6000);
+      if (!res.ok) continue;
+      const orders = await res.json();
+      const order = (Array.isArray(orders) ? orders : []).find(function (o) {
+        return o && String(o.number || '').replace(/[^0-9]/g, '') === num;
+      });
+      if (!order) continue;
+      const items = mergeItems((order.line_items || []).map(function (li) {
+        const s = (li && li.sellable) || {};
+        const title = String(s.full_title || s.product_title || (li && li.title) || '').slice(0, 200);
+        return { title: /^default title$/i.test(title) ? '' : title, quantity: (li && li.quantity) || 1 };
+      }));
+      if (items.length) return items;
+    }
+    return null;
+  } catch (e) { return null; }
+}
+
 /* Order line items for the claim wizard's "which product?" picker. Keyed by
    order number alone (the same owner decision as /track); returns product
    TITLES and quantities only — never prices, addresses, emails, or any other
-   order data. Digits-exact match on the order name (the search is fuzzy). */
+   order data. Source order: FBM (fulfillment truth, all channels, full
+   history) -> Shopify Admin -> Veeqo. */
 async function handleOrderItems(request, env, headers) {
-  if (!env.SHOPIFY_ADMIN_TOKEN) return json({ error: 'not configured' }, 500, headers);
   let body;
   try {
     const raw = await request.text();
     if (raw.length > 2000) return json({ error: 'payload too large' }, 413, headers);
     body = JSON.parse(raw);
   } catch (e) { return json({ error: 'invalid json' }, 400, headers); }
-  const num = String((body && body.order_number) || '').replace(/[^0-9]/g, '');
+  const rawNum = String((body && body.order_number) || '');
+  const num = rawNum.replace(/[^0-9]/g, '');
   if (!num || num.length < 4 || num.length > 20) return json({ error: 'Please enter a valid order number.' }, 400, headers);
   try {
-    const res = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN },
-      body: JSON.stringify({
-        query: 'query($q: String!){ orders(first: 5, query: $q){ nodes { name lineItems(first: 30){ nodes { title quantity } } } } }',
-        variables: { q: 'name:#' + num },
-      }),
-    }, 8000);
-    if (!res.ok) return json({ ok: false }, 502, headers);
-    const data = await res.json();
-    const nodes = (data.data && data.data.orders && data.data.orders.nodes) || [];
-    const match = nodes.find(function (o) {
-      return o && String(o.name || '').replace(/[^0-9]/g, '') === num;
-    });
-    if (!match) return json({ ok: true, found: false }, 200, headers);
-    /* Merge duplicate titles (an order can hold the same product on several
-       lines) — the picker keys checkboxes by title, so duplicates would
-       conflate into phantom checks and doubled bullets. */
-    const items = [];
-    for (const li of (match.lineItems && match.lineItems.nodes) || []) {
-      const title = String((li && li.title) || '').slice(0, 200);
-      if (!title) continue;
-      const hit = items.find(function (m) { return m.title === title; });
-      if (hit) hit.quantity += (li && li.quantity) || 1;
-      else if (items.length < 30) items.push({ title: title, quantity: (li && li.quantity) || 1 });
-    }
+    let items = await fbmOrderItems(env, num, rawNum);
+    if (items && items.length) return json({ ok: true, found: true, items: items }, 200, headers);
+    try {
+      if (!env.SHOPIFY_ADMIN_TOKEN) throw new Error('no admin token');
+      const res = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN },
+        body: JSON.stringify({
+          query: 'query($q: String!){ orders(first: 5, query: $q){ nodes { name lineItems(first: 30){ nodes { title quantity } } } } }',
+          variables: { q: 'name:#' + num },
+        }),
+      }, 8000);
+      if (res.ok) {
+        const data = await res.json();
+        const nodes = (data.data && data.data.orders && data.data.orders.nodes) || [];
+        const match = nodes.find(function (o) {
+          return o && String(o.name || '').replace(/[^0-9]/g, '') === num;
+        });
+        if (match) {
+          items = mergeItems(((match.lineItems && match.lineItems.nodes) || []).map(function (li) {
+            return { title: String((li && li.title) || '').slice(0, 200), quantity: (li && li.quantity) || 1 };
+          }));
+        }
+      }
+    } catch (e) { /* fall through to the Veeqo fallback */ }
+    if (!items || !items.length) items = await veeqoOrderItems(env, num, rawNum);
+    if (!items || !items.length) return json({ ok: true, found: false }, 200, headers);
     return json({ ok: true, found: true, items: items }, 200, headers);
   } catch (e) {
     console.error('order-items failed:', e && e.message ? e.message : e);
@@ -789,6 +864,57 @@ async function handleClaim(request, env, headers, origin) {
   }
 }
 
+/* ------- "How did we do?" feedback relay -------
+   The CS email's five options land on the theme's /pages/feedback page with
+   ?ticket&order&token&rating; the page confirms the rating + optional comment
+   and posts here. We attach the secret key and forward to the CS API — the
+   key never reaches the storefront. Re-submitting the same token safely
+   overwrites its own rating/comment upstream. */
+async function handleFeedback(request, env, headers) {
+  if (!env.SUPPORT_API_KEY) return json({ error: 'Feedback isn’t set up yet — please try again later.' }, 500, headers);
+  let body;
+  try {
+    const raw = await request.text();
+    if (raw.length > 6000) return json({ error: 'payload too large' }, 413, headers);
+    body = JSON.parse(raw);
+  } catch (e) { return json({ error: 'invalid json' }, 400, headers); }
+  const token = String((body && body.token) || '').trim().slice(0, 200);
+  const ticketId = parseInt((body && body.ticket_id) || '', 10);
+  if (!token && !(ticketId > 0)) return json({ error: 'This feedback link is missing its code — please use the link from your email.' }, 400, headers);
+  let rating;
+  if (body && body.rating != null && body.rating !== '') {
+    rating = parseInt(body.rating, 10);
+    if (!(rating >= 1 && rating <= 5)) return json({ error: 'Please pick a rating.' }, 400, headers);
+  }
+  const comment = String((body && body.comment) || '').trim().slice(0, 4000);
+  if (!rating && !comment) return json({ error: 'Pick a rating or write a comment first.' }, 400, headers);
+  const out = {};
+  if (token) out.token = token;
+  if (ticketId > 0) out.ticket_id = ticketId;
+  if (rating) out.rating = rating;
+  if (comment) out.comment = comment;
+  const orderId = String((body && body.order_id) || '').trim().slice(0, 100);
+  if (orderId) out.order_id = orderId;
+  const base = (env.SUPPORT_API_BASE || 'https://cs.brecx.com').replace(/\/+$/, '');
+  try {
+    const res = await timedFetch(base + '/api/external/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + env.SUPPORT_API_KEY },
+      body: JSON.stringify(out),
+    }, 15000);
+    let data = null;
+    try { data = await res.json(); } catch (e) {}
+    if (res.ok && data && data.ok) return json({ ok: true }, 200, headers);
+    if (res.status === 404) return json({ error: 'This feedback link has expired or was already replaced — no worries, your earlier response is safe with us.' }, 404, headers);
+    if (res.status === 400 && data && data.error) return json({ error: String(data.error).slice(0, 200) }, 400, headers);
+    console.error('feedback upstream HTTP ' + res.status + ': ' + JSON.stringify(data || {}).slice(0, 200));
+    return json({ error: 'We couldn’t save your feedback just now — please try again in a moment.' }, 502, headers);
+  } catch (e) {
+    console.error('feedback submit failed:', e && e.message ? e.message : e);
+    return json({ error: 'We couldn’t save your feedback just now — please try again in a moment.' }, 502, headers);
+  }
+}
+
 /* ---------------- HTTP ---------------- */
 
 function corsHeaders(origin) {
@@ -953,6 +1079,13 @@ export default {
       const oip = request.headers.get('CF-Connecting-IP') || 'unknown';
       if (rateLimited(oip)) return json({ error: 'too many requests' }, 429, headers);
       return handleOrderItems(request, env, headers);
+    }
+
+    /* "How did we do?" survey submissions from the feedback landing page. */
+    if (path.endsWith('/feedback')) {
+      const fip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      if (rateLimited(fip)) return json({ error: 'too many requests' }, 429, headers);
+      return handleFeedback(request, env, headers);
     }
 
     if (!env.ANTHROPIC_API_KEY || !env.SHOPIFY_ADMIN_TOKEN) return json({ error: 'worker secrets not configured' }, 500, headers);
