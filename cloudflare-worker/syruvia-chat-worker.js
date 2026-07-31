@@ -526,8 +526,13 @@ async function fbmOrderItems(env, num, rawNum) {
       new Promise(function (resolve) { setTimeout(function () { resolve(null); }, 12000); }),
     ]);
     if (!row || !Array.isArray(row.items)) return null;
+    /* catalog_product_title is the clean name FBM's own UI shows; items[].title
+       is the raw sales-channel listing title — abbreviated ("SF Pumpkin
+       Spice"), typo'd, or a full Amazon-length listing string. Owner decision
+       2026-08-01: show the FBM catalog title. */
     const items = mergeItems(row.items.map(function (it) {
-      return { title: String((it && it.title) || '').slice(0, 200), quantity: (it && it.quantity) || 1 };
+      const t = (it && (it.catalog_product_title || it.catalog_product_name || it.title)) || '';
+      return { title: String(t).trim().slice(0, 200), quantity: (it && it.quantity) || 1 };
     }));
     return items.length ? items : null;
   } catch (e) { return null; }
