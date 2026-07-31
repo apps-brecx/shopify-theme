@@ -514,6 +514,25 @@ function mergeItems(list) {
   return items;
 }
 
+/* FBM items for the picker — the PRIMARY source (owner decision 2026-08-01):
+   the fulfillment feed knows what actually shipped, covers every channel and
+   full history, and its row is already warm from the step-1 /track verify.
+   Output contract: titles + quantities ONLY. */
+async function fbmOrderItems(env, num, rawNum) {
+  if (!env.FBM_EMAIL || !env.FBM_PIN) return null;
+  try {
+    const row = await Promise.race([
+      fbmFindRow(env, num, rawNum),
+      new Promise(function (resolve) { setTimeout(function () { resolve(null); }, 12000); }),
+    ]);
+    if (!row || !Array.isArray(row.items)) return null;
+    const items = mergeItems(row.items.map(function (it) {
+      return { title: String((it && it.title) || '').slice(0, 200), quantity: (it && it.quantity) || 1 };
+    }));
+    return items.length ? items : null;
+  } catch (e) { return null; }
+}
+
 /* Veeqo fallback for the picker: covers orders Shopify Admin can't see —
    marketplace channels and anything older than its ~60-day window (without
    read_all_orders). Same output contract: titles + quantities ONLY. */
@@ -549,10 +568,9 @@ async function veeqoOrderItems(env, num, rawNum) {
 /* Order line items for the claim wizard's "which product?" picker. Keyed by
    order number alone (the same owner decision as /track); returns product
    TITLES and quantities only — never prices, addresses, emails, or any other
-   order data. Shopify Admin first (digits-exact match on the order name),
-   Veeqo as fallback so marketplace and >60-day orders get a list too. */
+   order data. Source order: FBM (fulfillment truth, all channels, full
+   history) -> Shopify Admin -> Veeqo. */
 async function handleOrderItems(request, env, headers) {
-  if (!env.SHOPIFY_ADMIN_TOKEN) return json({ error: 'not configured' }, 500, headers);
   let body;
   try {
     const raw = await request.text();
@@ -563,8 +581,10 @@ async function handleOrderItems(request, env, headers) {
   const num = rawNum.replace(/[^0-9]/g, '');
   if (!num || num.length < 4 || num.length > 20) return json({ error: 'Please enter a valid order number.' }, 400, headers);
   try {
-    let items = null;
+    let items = await fbmOrderItems(env, num, rawNum);
+    if (items && items.length) return json({ ok: true, found: true, items: items }, 200, headers);
     try {
+      if (!env.SHOPIFY_ADMIN_TOKEN) throw new Error('no admin token');
       const res = await timedFetch('https://' + STORE_DOMAIN + '/admin/api/' + ADMIN_API_VERSION + '/graphql.json', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': env.SHOPIFY_ADMIN_TOKEN },
