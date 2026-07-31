@@ -1,0 +1,229 @@
+{{ 'pdp-brand.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  "How did we do?" survey landing page. The CS app's feedback email links its
+  five options (and the comment link) here with ?ticket&order&token&rating.
+  The page pre-selects the clicked rating, lets the customer change it and add
+  an optional comment, and POSTs {token, ticket_id, order_id, rating, comment}
+  to <worker endpoint>/feedback — the Cloudflare worker attaches the secret CS
+  key server-side and forwards to /api/external/feedback (the key never
+  reaches the browser; same relay pattern as claims). Re-submitting the same
+  token safely overwrites its own rating/comment upstream.
+
+  Brand neubrutalist styling (tokens from pdp-brand.css), fy-* namespaced.
+  Without a token or ticket in the URL the form is replaced by a friendly
+  invalid-link note.
+{%- endcomment -%}
+
+<div class="pd">
+  <section class="sy-fpage" data-sy-feedback-root data-endpoint="{{ section.settings.chat_endpoint | escape }}">
+    <div class="pd-wrap">
+      <div class="fy-hero">
+        <span class="pd-eyebrow">{{ section.settings.eyebrow | default: 'How did we do?' }}</span>
+        <h1 class="fy-h1">{{ section.settings.heading | default: 'Tell us how we did' }}</h1>
+        <p class="fy-lede">{{ section.settings.lede | default: 'Your feedback goes straight to the person who helped you — it takes ten seconds and makes us better.' }}</p>
+      </div>
+
+      <div class="fy-card">
+        <div class="fy-order" hidden></div>
+        <div class="fy-form">
+          <div class="fy-q">Your rating</div>
+          <div class="fy-ratings" role="radiogroup" aria-label="Rating">
+            <button type="button" class="fy-rate" data-rate="5"><span class="fy-rate-ic">😍</span><span>Extremely satisfied</span></button>
+            <button type="button" class="fy-rate" data-rate="4"><span class="fy-rate-ic">🙂</span><span>Somewhat satisfied</span></button>
+            <button type="button" class="fy-rate" data-rate="3"><span class="fy-rate-ic">😐</span><span>Neither satisfied nor dissatisfied</span></button>
+            <button type="button" class="fy-rate" data-rate="2"><span class="fy-rate-ic">🙁</span><span>Somewhat dissatisfied</span></button>
+            <button type="button" class="fy-rate" data-rate="1"><span class="fy-rate-ic">😠</span><span>Extremely dissatisfied</span></button>
+          </div>
+          <label class="fy-field">
+            <span>Add a comment <b class="fy-opt">optional</b></span>
+            <textarea class="fy-comment" rows="4" maxlength="4000" placeholder="Anything you’d like the team to know…"></textarea>
+          </label>
+          <button type="button" class="fy-btn fy-send">{{ section.settings.submit_label | default: 'Send feedback' }}</button>
+          <div class="fy-status" aria-live="polite"></div>
+        </div>
+        <div class="fy-done" hidden>
+          <div class="fy-done-ic">💛</div>
+          <div class="fy-done-h">Thank you!</div>
+          <p class="fy-done-p">Your feedback has been received — it means a lot to us.</p>
+          <a class="fy-btn fy-home" href="/">Back to the shop</a>
+        </div>
+        <div class="fy-invalid" hidden>
+          <div class="fy-done-h">Hmm, this link looks incomplete</div>
+          <p class="fy-done-p">Please use the feedback link from your email — or just reply to it and tell us there, we read everything.</p>
+          <a class="fy-btn fy-home" href="/">Back to the shop</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .sy-fpage{padding:56px 0 88px;background:var(--cream)}
+  .sy-fpage .fy-hero{text-align:center;max-width:680px;margin:0 auto 40px}
+  .sy-fpage .fy-h1{font-family:var(--display);font-weight:900;font-size:clamp(32px,5.5vw,54px);line-height:.95;letter-spacing:-.01em;text-transform:uppercase;margin:18px 0 12px;text-wrap:balance}
+  .sy-fpage .fy-lede{font-family:var(--serif);font-size:clamp(15px,1.5vw,17.5px);line-height:1.55;color:var(--ink-2);margin:0 auto;max-width:52ch}
+
+  .sy-fpage .fy-card{max-width:560px;margin:0 auto;background:var(--paper);border:var(--rule-2);border-radius:var(--r-card);box-shadow:6px 6px 0 var(--ink);padding:28px;font-family:var(--serif)}
+  .sy-fpage .fy-order{font-family:var(--display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:var(--butter);border:1.5px solid var(--ink);border-radius:var(--r-pill);display:inline-block;padding:7px 14px;margin:0 0 18px}
+  .sy-fpage .fy-order[hidden]{display:none!important}
+  .sy-fpage .fy-q{font-family:var(--display);font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);margin:0 0 10px}
+  .sy-fpage .fy-ratings{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+  .sy-fpage .fy-rate{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border:var(--rule-2);border-radius:14px;background:#fff;color:var(--ink);font-family:var(--serif);font-size:15px;font-weight:700;cursor:pointer;text-align:left;transition:transform .12s ease,box-shadow .12s ease,background .12s}
+  .sy-fpage .fy-rate:hover{transform:translate(-1.5px,-1.5px);box-shadow:var(--shadow-sm)}
+  .sy-fpage .fy-rate.is-on{background:var(--butter);box-shadow:var(--shadow-sm)}
+  .sy-fpage .fy-rate-ic{font-size:22px;line-height:1;flex:0 0 auto}
+  .sy-fpage .fy-field{display:block;margin:0 0 16px;font-size:14.5px;color:var(--ink)}
+  .sy-fpage .fy-field > span{display:block;font-family:var(--display);font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px}
+  .sy-fpage .fy-opt{background:#EDE6D6;color:#7a6a55;border-radius:var(--r-pill);padding:2.5px 9px;font-size:10px;letter-spacing:.05em;margin-left:6px}
+  .sy-fpage .fy-comment{width:100%;box-sizing:border-box;padding:13px 14px;border:var(--rule-2);border-radius:12px;background:#fff;font-family:var(--serif);font-size:15px;color:var(--ink);resize:vertical}
+  .sy-fpage .fy-comment:focus{outline:3px solid var(--coral);outline-offset:2px}
+  .sy-fpage .fy-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 24px;border:var(--rule-2);border-radius:var(--r-pill);background:var(--ink);color:var(--paper);font-family:var(--display);font-weight:400;font-size:13px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none;box-shadow:var(--shadow-sm);transition:transform .12s ease,box-shadow .12s ease}
+  .sy-fpage .fy-btn:hover{transform:translate(-1.5px,-1.5px);box-shadow:4.5px 4.5px 0 var(--ink)}
+  .sy-fpage .fy-btn[disabled]{opacity:.55;cursor:default;transform:none;box-shadow:var(--shadow-sm)}
+  .sy-fpage .fy-status{margin-top:12px;min-height:20px;font-size:14.5px;color:var(--ink)}
+  .sy-fpage .fy-form[hidden],.sy-fpage .fy-done[hidden],.sy-fpage .fy-invalid[hidden]{display:none!important}
+  .sy-fpage .fy-done,.sy-fpage .fy-invalid{text-align:center;padding:16px 6px 8px}
+  .sy-fpage .fy-done-ic{width:64px;height:64px;margin:0 auto 12px;border-radius:50%;background:var(--ink);font-size:28px;display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 var(--coral)}
+  .sy-fpage .fy-done-h{font-family:var(--display);font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);margin-bottom:8px}
+  .sy-fpage .fy-done-p{margin:0 0 18px;color:#5a4632;font-size:15px}
+  .sy-fpage .fy-home{width:auto;padding:11px 22px}
+
+  @media (max-width:560px){
+    .sy-fpage{padding:40px 0 64px}
+    .sy-fpage .fy-card{padding:20px 16px;box-shadow:4px 4px 0 var(--ink)}
+  }
+</style>
+
+<script>
+(function(){
+  function init(root){
+    var form = root.querySelector('.fy-form');
+    if (!form || form.dataset.syInit) return;
+    form.dataset.syInit = '1';
+    var orderEl   = root.querySelector('.fy-order');
+    var ratings   = root.querySelector('.fy-ratings');
+    var commentIn = root.querySelector('.fy-comment');
+    var sendBtn   = root.querySelector('.fy-send');
+    var statusEl  = root.querySelector('.fy-status');
+    var doneEl    = root.querySelector('.fy-done');
+    var invalidEl = root.querySelector('.fy-invalid');
+    var sending = false;
+
+    /* Endpoint: section setting, else the floating widget's configured one. */
+    var endpoint = (root.dataset.endpoint || '').trim();
+    if (!endpoint){
+      var w = document.getElementById('bb-floating-contact');
+      endpoint = w ? (w.dataset.chatEndpoint || '').trim() : '';
+    }
+    endpoint = endpoint.replace(/\/+$/, '');
+
+    var q = new URLSearchParams(location.search);
+    var token    = (q.get('token') || '').trim().slice(0, 200);
+    var ticketId = parseInt(q.get('ticket') || '', 10);
+    var orderId  = (q.get('order') || '').trim().slice(0, 100);
+    var rating   = parseInt(q.get('rating') || '', 10);
+    if (!(rating >= 1 && rating <= 5)) rating = 0;
+
+    /* No credentials in the link -> the form can't identify the ticket. */
+    if (!token && !(ticketId > 0)){
+      form.hidden = true;
+      invalidEl.hidden = false;
+      return;
+    }
+    if (orderId){
+      orderEl.textContent = 'About order ' + orderId;
+      orderEl.hidden = false;
+    }
+
+    function paint(){
+      Array.prototype.forEach.call(ratings.querySelectorAll('.fy-rate'), function(b){
+        b.classList.toggle('is-on', parseInt(b.dataset.rate, 10) === rating);
+        b.setAttribute('aria-checked', parseInt(b.dataset.rate, 10) === rating ? 'true' : 'false');
+      });
+    }
+    paint();   /* pre-highlight the option clicked in the email */
+    ratings.addEventListener('click', function(e){
+      var b = e.target.closest ? e.target.closest('.fy-rate') : null;
+      if (!b || sending) return;
+      rating = parseInt(b.dataset.rate, 10) || 0;
+      paint();
+      statusEl.textContent = '';
+    });
+
+    sendBtn.addEventListener('click', async function(){
+      if (sending) return;
+      var comment = (commentIn.value || '').trim();
+      if (!rating && !comment){
+        statusEl.textContent = 'Pick a rating or write a comment first.';
+        return;
+      }
+      if (!endpoint){
+        statusEl.textContent = 'Feedback isn’t set up yet — please try again later.';
+        return;
+      }
+      sending = true;
+      sendBtn.disabled = true;
+      var lbl = sendBtn.textContent;
+      sendBtn.textContent = 'Sending…';
+      statusEl.textContent = '';
+      var payload = {};
+      if (token) payload.token = token;
+      if (ticketId > 0) payload.ticket_id = ticketId;
+      if (orderId) payload.order_id = orderId;
+      if (rating) payload.rating = rating;
+      if (comment) payload.comment = comment;
+      var ctrl  = ('AbortController' in window) ? new AbortController() : null;
+      var timer = ctrl && setTimeout(function(){ ctrl.abort(); }, 25000);
+      try {
+        var res = await fetch(endpoint + '/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          signal: ctrl ? ctrl.signal : undefined
+        });
+        var data = null;
+        try { data = await res.json(); } catch(e){}
+        if (res.ok && data && data.ok){
+          form.hidden = true;
+          orderEl.hidden = true;
+          doneEl.hidden = false;
+        } else {
+          statusEl.textContent = (data && data.error) ? String(data.error) : 'Something went wrong — please try again.';
+        }
+      } catch(e){
+        statusEl.textContent = 'Something went wrong — please try again.';
+      } finally {
+        if (timer) clearTimeout(timer);
+        sending = false;
+        sendBtn.disabled = false;
+        sendBtn.textContent = lbl;
+      }
+    });
+  }
+  function boot(){
+    Array.prototype.forEach.call(document.querySelectorAll('[data-sy-feedback-root]'), init);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Feedback Page",
+  "tag": "section",
+  "class": "section-feedback-page",
+  "enabled_on": { "templates": ["page"] },
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "How did we do?" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Tell us how we did" },
+    { "type": "text", "id": "lede", "label": "Intro text", "default": "Your feedback goes straight to the person who helped you — it takes ten seconds and makes us better." },
+    { "type": "text", "id": "submit_label", "label": "Submit button label", "default": "Send feedback" },
+    { "type": "header", "content": "Wiring" },
+    { "type": "text", "id": "chat_endpoint", "label": "Worker endpoint (optional)", "info": "Leave blank to reuse the floating chat widget's endpoint." }
+  ],
+  "presets": [{ "name": "Feedback Page" }]
+}
+{% endschema %}

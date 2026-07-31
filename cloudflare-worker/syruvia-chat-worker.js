@@ -29,6 +29,9 @@
  *     collected_at, in_transit_at, out_for_delivery_at, delivered_at}
  *   POST /order-items {order_number} -> {ok, found, items:[{title, quantity}]}
  *     (claim wizard's "which product?" picker — titles + quantities only)
+ *   POST /feedback {token, rating?, comment?, ticket_id?, order_id?} -> {ok}
+ *     ("How did we do?" survey landing page relay — attaches the CS key and
+ *      forwards to /api/external/feedback; re-submits safely overwrite)
  *
  * Abuse limits: browser Origin is REQUIRED and allowlisted, per-IP and
  * per-isolate rate limits apply, input sizes are capped, and every upstream
@@ -861,6 +864,57 @@ async function handleClaim(request, env, headers, origin) {
   }
 }
 
+/* ------- "How did we do?" feedback relay -------
+   The CS email's five options land on the theme's /pages/feedback page with
+   ?ticket&order&token&rating; the page confirms the rating + optional comment
+   and posts here. We attach the secret key and forward to the CS API — the
+   key never reaches the storefront. Re-submitting the same token safely
+   overwrites its own rating/comment upstream. */
+async function handleFeedback(request, env, headers) {
+  if (!env.SUPPORT_API_KEY) return json({ error: 'Feedback isn’t set up yet — please try again later.' }, 500, headers);
+  let body;
+  try {
+    const raw = await request.text();
+    if (raw.length > 6000) return json({ error: 'payload too large' }, 413, headers);
+    body = JSON.parse(raw);
+  } catch (e) { return json({ error: 'invalid json' }, 400, headers); }
+  const token = String((body && body.token) || '').trim().slice(0, 200);
+  const ticketId = parseInt((body && body.ticket_id) || '', 10);
+  if (!token && !(ticketId > 0)) return json({ error: 'This feedback link is missing its code — please use the link from your email.' }, 400, headers);
+  let rating;
+  if (body && body.rating != null && body.rating !== '') {
+    rating = parseInt(body.rating, 10);
+    if (!(rating >= 1 && rating <= 5)) return json({ error: 'Please pick a rating.' }, 400, headers);
+  }
+  const comment = String((body && body.comment) || '').trim().slice(0, 4000);
+  if (!rating && !comment) return json({ error: 'Pick a rating or write a comment first.' }, 400, headers);
+  const out = {};
+  if (token) out.token = token;
+  if (ticketId > 0) out.ticket_id = ticketId;
+  if (rating) out.rating = rating;
+  if (comment) out.comment = comment;
+  const orderId = String((body && body.order_id) || '').trim().slice(0, 100);
+  if (orderId) out.order_id = orderId;
+  const base = (env.SUPPORT_API_BASE || 'https://cs.brecx.com').replace(/\/+$/, '');
+  try {
+    const res = await timedFetch(base + '/api/external/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + env.SUPPORT_API_KEY },
+      body: JSON.stringify(out),
+    }, 15000);
+    let data = null;
+    try { data = await res.json(); } catch (e) {}
+    if (res.ok && data && data.ok) return json({ ok: true }, 200, headers);
+    if (res.status === 404) return json({ error: 'This feedback link has expired or was already replaced — no worries, your earlier response is safe with us.' }, 404, headers);
+    if (res.status === 400 && data && data.error) return json({ error: String(data.error).slice(0, 200) }, 400, headers);
+    console.error('feedback upstream HTTP ' + res.status + ': ' + JSON.stringify(data || {}).slice(0, 200));
+    return json({ error: 'We couldn’t save your feedback just now — please try again in a moment.' }, 502, headers);
+  } catch (e) {
+    console.error('feedback submit failed:', e && e.message ? e.message : e);
+    return json({ error: 'We couldn’t save your feedback just now — please try again in a moment.' }, 502, headers);
+  }
+}
+
 /* ---------------- HTTP ---------------- */
 
 function corsHeaders(origin) {
@@ -1025,6 +1079,13 @@ export default {
       const oip = request.headers.get('CF-Connecting-IP') || 'unknown';
       if (rateLimited(oip)) return json({ error: 'too many requests' }, 429, headers);
       return handleOrderItems(request, env, headers);
+    }
+
+    /* "How did we do?" survey submissions from the feedback landing page. */
+    if (path.endsWith('/feedback')) {
+      const fip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      if (rateLimited(fip)) return json({ error: 'too many requests' }, 429, headers);
+      return handleFeedback(request, env, headers);
     }
 
     if (!env.ANTHROPIC_API_KEY || !env.SHOPIFY_ADMIN_TOKEN) return json({ error: 'worker secrets not configured' }, 500, headers);
