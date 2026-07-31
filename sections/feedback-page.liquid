@@ -53,6 +53,12 @@
           <p class="fy-done-p">Please use the feedback link from your email — or just reply to it and tell us there, we read everything.</p>
           <a class="fy-btn fy-home" href="/">Back to the shop</a>
         </div>
+        <div class="fy-already" hidden>
+          <div class="fy-done-ic">💛</div>
+          <div class="fy-done-h">Feedback already received</div>
+          <p class="fy-done-p">You’ve already told us how we did for this conversation — thank you! If there’s anything more, just reply to our email.</p>
+          <a class="fy-btn fy-home" href="/">Back to the shop</a>
+        </div>
       </div>
     </div>
   </section>
@@ -82,8 +88,8 @@
   .sy-fpage .fy-btn:hover{transform:translate(-1.5px,-1.5px);box-shadow:4.5px 4.5px 0 var(--ink)}
   .sy-fpage .fy-btn[disabled]{opacity:.55;cursor:default;transform:none;box-shadow:var(--shadow-sm)}
   .sy-fpage .fy-status{margin-top:12px;min-height:20px;font-size:14.5px;color:var(--ink)}
-  .sy-fpage .fy-form[hidden],.sy-fpage .fy-done[hidden],.sy-fpage .fy-invalid[hidden]{display:none!important}
-  .sy-fpage .fy-done,.sy-fpage .fy-invalid{text-align:center;padding:16px 6px 8px}
+  .sy-fpage .fy-form[hidden],.sy-fpage .fy-done[hidden],.sy-fpage .fy-invalid[hidden],.sy-fpage .fy-already[hidden]{display:none!important}
+  .sy-fpage .fy-done,.sy-fpage .fy-invalid,.sy-fpage .fy-already{text-align:center;padding:16px 6px 8px}
   .sy-fpage .fy-done-ic{width:64px;height:64px;margin:0 auto 12px;border-radius:50%;background:var(--ink);font-size:28px;display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 var(--coral)}
   .sy-fpage .fy-done-h{font-family:var(--display);font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);margin-bottom:8px}
   .sy-fpage .fy-done-p{margin:0 0 18px;color:#5a4632;font-size:15px}
@@ -108,7 +114,13 @@
     var statusEl  = root.querySelector('.fy-status');
     var doneEl    = root.querySelector('.fy-done');
     var invalidEl = root.querySelector('.fy-invalid');
+    var alreadyEl = root.querySelector('.fy-already');
     var sending = false;
+    function showAlready(){
+      form.hidden = true;
+      orderEl.hidden = true;
+      alreadyEl.hidden = false;
+    }
 
     /* Endpoint: section setting, else the floating widget's configured one. */
     var endpoint = (root.dataset.endpoint || '').trim();
@@ -134,6 +146,19 @@
     if (orderId){
       orderEl.textContent = 'About order ' + orderId;
       orderEl.hidden = false;
+    }
+
+    /* One submission per link: if this token already holds a response, swap
+       the form for the "already received" note. The check is best-effort —
+       if it can't run, the form stays (the worker refuses re-submits anyway). */
+    if (token && endpoint){
+      fetch(endpoint + '/feedback-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token })
+      }).then(function(res){ return res.json(); }).then(function(data){
+        if (data && data.ok && data.found && data.submitted) showAlready();
+      }).catch(function(){});
     }
 
     function paint(){
@@ -188,6 +213,8 @@
           form.hidden = true;
           orderEl.hidden = true;
           doneEl.hidden = false;
+        } else if (res.status === 409 || (data && data.already)){
+          showAlready();
         } else {
           statusEl.textContent = (data && data.error) ? String(data.error) : 'Something went wrong — please try again.';
         }
