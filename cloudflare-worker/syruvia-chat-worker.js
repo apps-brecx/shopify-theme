@@ -31,7 +31,10 @@
  *     (claim wizard's "which product?" picker — titles + quantities only)
  *   POST /feedback {token, rating?, comment?, ticket_id?, order_id?} -> {ok}
  *     ("How did we do?" survey landing page relay — attaches the CS key and
- *      forwards to /api/external/feedback; re-submits safely overwrite)
+ *      forwards to /api/external/feedback. ONE submission per token: a token
+ *      that already holds a rating/comment answers 409 {already:true})
+ *   POST /feedback-status {token} -> {ok, found, submitted}
+ *     (page-load check so an already-used link shows "feedback received")
  *
  * Abuse limits: browser Origin is REQUIRED and allowlisted, per-IP and
  * per-isolate rate limits apply, input sizes are capped, and every upstream
@@ -864,12 +867,49 @@ async function handleClaim(request, env, headers, origin) {
   }
 }
 
+/* Reads the CS record for a feedback token (GET /api/external/feedback/:token).
+   Returns 'submitted' | 'fresh' | 'unknown-token' | null (couldn't check). */
+async function feedbackStatus(env, token) {
+  const base = (env.SUPPORT_API_BASE || 'https://cs.brecx.com').replace(/\/+$/, '');
+  try {
+    const res = await timedFetch(base + '/api/external/feedback/' + encodeURIComponent(token), {
+      headers: { 'Authorization': 'Bearer ' + env.SUPPORT_API_KEY },
+    }, 8000);
+    if (res.status === 404) return 'unknown-token';
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || !data.ok) return null;
+    return (data.rating != null || (data.comment && String(data.comment).trim())) ? 'submitted' : 'fresh';
+  } catch (e) { return null; }
+}
+
+/* Page-load check: lets an already-used link show "feedback received" instead
+   of the form. Exposes only booleans — never the stored rating or comment. */
+async function handleFeedbackStatus(request, env, headers) {
+  if (!env.SUPPORT_API_KEY) return json({ ok: false }, 500, headers);
+  let body;
+  try {
+    const raw = await request.text();
+    if (raw.length > 2000) return json({ error: 'payload too large' }, 413, headers);
+    body = JSON.parse(raw);
+  } catch (e) { return json({ error: 'invalid json' }, 400, headers); }
+  const token = String((body && body.token) || '').trim().slice(0, 200);
+  if (!token) return json({ error: 'token required' }, 400, headers);
+  const st = await feedbackStatus(env, token);
+  if (st === 'unknown-token') return json({ ok: true, found: false, submitted: false }, 200, headers);
+  if (st === null) return json({ ok: false }, 502, headers);
+  return json({ ok: true, found: true, submitted: st === 'submitted' }, 200, headers);
+}
+
 /* ------- "How did we do?" feedback relay -------
    The CS email's five options land on the theme's /pages/feedback page with
    ?ticket&order&token&rating; the page confirms the rating + optional comment
    and posts here. We attach the secret key and forward to the CS API — the
-   key never reaches the storefront. Re-submitting the same token safely
-   overwrites its own rating/comment upstream. */
+   key never reaches the storefront. Owner decision 2026-08-02: ONE submission
+   per token — the CS API itself allows overwrites, so the gate lives here (a
+   token that already holds a rating/comment is refused with 409). If the
+   pre-check itself fails we proceed: upstream overwrite semantics make a rare
+   double-accept harmless, while blocking on an outage would eat feedback. */
 async function handleFeedback(request, env, headers) {
   if (!env.SUPPORT_API_KEY) return json({ error: 'Feedback isn’t set up yet — please try again later.' }, 500, headers);
   let body;
@@ -888,6 +928,13 @@ async function handleFeedback(request, env, headers) {
   }
   const comment = String((body && body.comment) || '').trim().slice(0, 4000);
   if (!rating && !comment) return json({ error: 'Pick a rating or write a comment first.' }, 400, headers);
+  /* One submission per token. */
+  if (token) {
+    const st = await feedbackStatus(env, token);
+    if (st === 'submitted') return json({ already: true, error: 'You’ve already shared your feedback for this conversation — thank you! 💛' }, 409, headers);
+    if (st === 'unknown-token') return json({ error: 'This feedback link has expired or was already replaced — no worries, your earlier response is safe with us.' }, 404, headers);
+    /* null (check failed) falls through — see note above. */
+  }
   const out = {};
   if (token) out.token = token;
   if (ticketId > 0) out.ticket_id = ticketId;
@@ -1086,6 +1133,13 @@ export default {
       const fip = request.headers.get('CF-Connecting-IP') || 'unknown';
       if (rateLimited(fip)) return json({ error: 'too many requests' }, 429, headers);
       return handleFeedback(request, env, headers);
+    }
+
+    /* Page-load token check for the feedback landing page. */
+    if (path.endsWith('/feedback-status')) {
+      const fsip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      if (rateLimited(fsip)) return json({ error: 'too many requests' }, 429, headers);
+      return handleFeedbackStatus(request, env, headers);
     }
 
     if (!env.ANTHROPIC_API_KEY || !env.SHOPIFY_ADMIN_TOKEN) return json({ error: 'worker secrets not configured' }, 500, headers);
