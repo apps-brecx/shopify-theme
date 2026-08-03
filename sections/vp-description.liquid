@@ -300,6 +300,11 @@
 
 <script>
 (function(){
+  /* The Ingredients and Nutrition Facts sliders show the same flavor list, so
+     they move as one: whichever slider changes flavor (arrow or swipe) pushes
+     its index to every other slider in this section. Followers are moved
+     "silently" (no re-broadcast), so the sync can't ping-pong. */
+  var registry = [];
   function init(root){
     var track = root.querySelector('[data-vp-track]');
     if (!track) return;
@@ -314,11 +319,18 @@
       if (prev) prev.disabled = i <= 0;
       if (next) next.disabled = i >= slides.length - 1;
     }
-    function go(n){
+    function sync(n){
+      for (var k = 0; k < registry.length; k++){
+        if (registry[k].root !== root) registry[k].follow(n);
+      }
+    }
+    function go(n, silent){
       i = Math.max(0, Math.min(slides.length - 1, n));
       track.scrollTo({ left: slides[i].offsetLeft - track.offsetLeft, behavior: 'smooth' });
       render();
+      if (!silent) sync(i);
     }
+    registry.push({ root: root, follow: function(n){ go(n, true); } });
     /* These arrows sit inside .pd-nf-card / .pd-ing-card, whose ancestors listen for
        clicks to collapse the card — keep the click local. */
     function guard(e){ e.pdDescHandled = true; e.stopPropagation(); }
@@ -333,7 +345,11 @@
           var d = Math.abs(slides[k].offsetLeft - track.offsetLeft - track.scrollLeft);
           if (d < bestD){ bestD = d; best = k; }
         }
+        /* A follower settling on the index it was sent to must not broadcast
+           back; only a genuinely new position (user swipe) is announced. */
+        var changed = best !== i;
         i = best; render();
+        if (changed) sync(i);
       }, 60);
     }, { passive: true });
     render();
