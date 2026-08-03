@@ -91,7 +91,7 @@
             <div class="cp-pick-title">Which product is damaged?</div>
             <label class="cp-pick-all"><input type="checkbox" class="cp-pick-allcb"> Select all</label>
             <div class="cp-pick-list"></div>
-            <div class="cp-pick-note" hidden>Please pick at least one product.</div>
+            <div class="cp-pick-note" role="alert" hidden>Please pick at least one product.</div>
             <div class="cp-pick-nav">
               <button type="button" class="cp-btn cp-pick-ok">Continue</button>
             </div>
@@ -561,8 +561,14 @@
         var sel = row && row.querySelector('.cp-pick-qtysel');
         return { title: b.value, qty: sel ? (parseInt(sel.value, 10) || 1) : 1 };
       });
-      /* No Skip button any more: identifying the product is required. */
-      if (!next.length){ if (pickNote) pickNote.hidden = false; return; }
+      /* No Skip button any more: identifying the product is required.
+         While the list is still loading there is nothing to pick — swallow
+         the click instead of showing an impossible instruction. */
+      if (!next.length){
+        if (!pickBoxes().length) return;
+        if (pickNote) pickNote.hidden = false;
+        return;
+      }
       pickGen++;          /* any in-flight open is now stale */
       if (JSON.stringify(next) !== JSON.stringify(selItems)) contentChanged();
       selItems = next;

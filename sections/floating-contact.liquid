@@ -238,7 +238,7 @@
             <div class="bb-cpick-title" id="bb-cpick-title">Which product is damaged?</div>
             <label class="bb-cpick-all"><input type="checkbox" id="bb-cpick-allcb"> Select all</label>
             <div class="bb-cpick-list" id="bb-cpick-list"></div>
-            <div class="bb-cpick-note" id="bb-cpick-note" hidden>Please pick at least one product.</div>
+            <div class="bb-cpick-note" id="bb-cpick-note" role="alert" hidden>Please pick at least one product.</div>
             <div class="bb-cpick-nav">
               <button type="button" class="bb-submit bb-cpick-ok" id="bb-cpick-ok">Continue</button>
             </div>
@@ -1508,8 +1508,14 @@
           const sel = row && row.querySelector('.bb-cpick-qtysel');
           return { title: b.value, qty: sel ? (parseInt(sel.value, 10) || 1) : 1 };
         });
-        /* No Skip button any more: identifying the product is required. */
-        if (!next.length){ if (pickNote) pickNote.hidden = false; return; }
+        /* No Skip button any more: identifying the product is required.
+           While the list is still loading there is nothing to pick — swallow
+           the click instead of showing an impossible instruction. */
+        if (!next.length){
+          if (!pickBoxes().length) return;
+          if (pickNote) pickNote.hidden = false;
+          return;
+        }
         pickGen++;          /* any in-flight open is now stale */
         if (JSON.stringify(next) !== JSON.stringify(selItems)) contentChanged();
         selItems = next;
