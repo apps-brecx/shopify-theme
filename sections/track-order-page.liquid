@@ -20,12 +20,12 @@
       <div class="tp-hero">
         <span class="pd-eyebrow">{{ section.settings.eyebrow | default: 'Order status' }}</span>
         <h1 class="tp-h1">{{ section.settings.heading | default: 'Track your order' }}</h1>
-        <p class="tp-lede">{{ section.settings.lede | default: 'Enter your order number to see exactly where your package is.' }}</p>
+        <p class="tp-lede">{{ section.settings.lede | default: 'Enter your order number or tracking number to see exactly where your package is.' }}</p>
       </div>
 
       <div class="tp-card">
         <form class="tp-form" novalidate>
-          <input type="text" class="tp-num" placeholder="e.g. 154008587601" maxlength="30" autocomplete="off" inputmode="numeric" aria-label="Order number">
+          <input type="text" class="tp-num" placeholder="Order or tracking number" maxlength="34" autocomplete="off" aria-label="Order or tracking number">
           <button type="submit" class="tp-btn tp-go">{{ section.settings.button_label | default: 'Track' }}</button>
         </form>
         <div class="tp-status" aria-live="polite"></div>
@@ -350,7 +350,7 @@
         try { data = await res.json(); } catch(err){}
         if (res.ok && data && data.ok){
           if (data.found){ statusEl.textContent = ''; render(data); }
-          else statusCta('We couldn’t find a shipment for that order number. Double-check the number — brand-new orders can take a little while to appear.');
+          else statusCta('We couldn’t find a shipment for that number. Double-check your order number or tracking number — brand-new orders can take a little while to appear.');
         } else {
           /* A not-yet-updated worker answers /track from the chat handler with
              raw errors — swap those (and the terse 429) for a friendly message. */
