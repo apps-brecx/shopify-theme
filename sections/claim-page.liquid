@@ -65,9 +65,9 @@
               <span>Tell us more <b class="cp-badge is-opt" data-badge="msg">optional</b></span>
               <textarea class="cp-msg" rows="4" maxlength="8000" placeholder="Anything that helps us fix this faster…"></textarea>
             </label>
-            {%- if customer -%}
-              <input type="hidden" class="cp-email" value="{{ customer.email | escape }}">
-            {%- endif -%}
+            {%- comment -%} No account email is sent: a logged-in customer can
+               claim an order that isn't theirs, so the worker always resolves
+               the contact email from the ORDER number instead. {%- endcomment -%}
             <div class="cp-nav">
               <button type="button" class="cp-back" data-back="2">← Back</button>
               <button type="submit" class="cp-btn cp-submit" disabled>{{ section.settings.submit_label | default: 'Submit claim' }}</button>
@@ -91,8 +91,8 @@
             <div class="cp-pick-title">Which product is damaged?</div>
             <label class="cp-pick-all"><input type="checkbox" class="cp-pick-allcb"> Select all</label>
             <div class="cp-pick-list"></div>
+            <div class="cp-pick-note" role="alert" hidden>Please pick at least one product.</div>
             <div class="cp-pick-nav">
-              <button type="button" class="cp-back cp-pick-skip">Skip</button>
               <button type="button" class="cp-btn cp-pick-ok">Continue</button>
             </div>
           </div>
@@ -121,6 +121,10 @@
   .sy-cpage .cp-pick-row:hover{background:var(--butter)}
   .sy-cpage .cp-pick-row input,.sy-cpage .cp-pick-all input{width:17px;height:17px;accent-color:var(--ink);flex:0 0 auto}
   .sy-cpage .cp-pick-qty{color:#8a7a68;font-size:12.5px;margin-left:auto;white-space:nowrap}
+  .sy-cpage .cp-pick-qty[hidden],.sy-cpage .cp-pick-qtysel[hidden]{display:none!important}
+  .sy-cpage .cp-pick-qtysel{margin-left:auto;flex:0 0 auto;font-family:var(--serif);font-size:13px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--ink);border-radius:9px;padding:4px 7px;cursor:pointer}
+  .sy-cpage .cp-pick-note{font-size:13px;font-weight:700;color:#c0392b;padding:8px 8px 0}
+  .sy-cpage .cp-pick-note[hidden]{display:none!important}
   .sy-cpage .cp-pick-empty{font-size:14px;color:#8a7a68;padding:8px}
   .sy-cpage .cp-pick-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
   .sy-cpage .cp-pick-nav .cp-btn{width:auto;flex:1}
@@ -210,7 +214,6 @@
     var photoReq  = root.querySelector('[data-badge="photo"]');
     var msgReq    = root.querySelector('[data-badge="msg"]');
     var msgIn     = root.querySelector('.cp-msg');
-    var emailIn   = root.querySelector('.cp-email');
     var filesIn   = root.querySelector('.cp-files');
     var fileList  = root.querySelector('.cp-filelist');
     var submitBtn = root.querySelector('.cp-submit');
@@ -423,8 +426,8 @@
     var pickList  = root.querySelector('.cp-pick-list');
     var pickAll   = root.querySelector('.cp-pick-allcb');
     var pickOk    = root.querySelector('.cp-pick-ok');
-    var pickSkip  = root.querySelector('.cp-pick-skip');
-    var selItems = [];
+    var pickNote  = root.querySelector('.cp-pick-note');
+    var selItems = [];   /* [{title, qty}] — qty = how many of that product are affected */
     var itemsCache = null, itemsFor = '', itemsLoading = null;
     var PICK_TITLES = {
       'Damaged in transit': 'Which product is damaged?',
@@ -459,21 +462,48 @@
     }
     function renderPickList(items){
       pickList.textContent = '';
+      if (pickNote) pickNote.hidden = true;
       items.forEach(function(it){
         var row = document.createElement('label');
         row.className = 'cp-pick-row';
         var cb = document.createElement('input');
         cb.type = 'checkbox';
         cb.value = it.title;
-        cb.checked = selItems.indexOf(it.title) !== -1;
-        cb.addEventListener('change', syncPickAll);
+        var prev = selItems.find(function(s){ return s.title === it.title; });
+        cb.checked = !!prev;
         row.appendChild(cb);
         row.appendChild(document.createTextNode(it.title));
         if (it.quantity > 1){
+          /* multi-quantity item: "× N" hint when unchecked, an
+             affected-quantity chooser when checked */
           var q = document.createElement('span');
           q.className = 'cp-pick-qty';
           q.textContent = '× ' + it.quantity;
+          q.hidden = cb.checked;
           row.appendChild(q);
+          var sel = document.createElement('select');
+          sel.className = 'cp-pick-qtysel';
+          sel.setAttribute('aria-label', 'How many affected');
+          for (var n = 1; n <= Math.min(it.quantity, 30); n++){
+            var o = document.createElement('option');
+            o.value = String(n);
+            o.textContent = n + ' of ' + it.quantity;
+            sel.appendChild(o);
+          }
+          sel.value = String(prev && prev.qty ? Math.min(prev.qty, it.quantity) : 1);
+          sel.hidden = !cb.checked;
+          row.appendChild(sel);
+          cb.addEventListener('change', (function(qEl, selEl, cbEl){ return function(){
+            qEl.hidden = cbEl.checked;
+            selEl.hidden = !cbEl.checked;
+            syncPickAll();
+            if (pickNote) pickNote.hidden = true;
+          }; })(q, sel, cb));
+        } else {
+          cb.addEventListener('change', function(){
+            syncPickAll();
+            if (pickNote) pickNote.hidden = true;
+          });
         }
         pickList.appendChild(row);
       });
@@ -485,7 +515,15 @@
       if (pickAll) pickAll.checked = boxes.length > 0 && boxes.every(function(b){ return b.checked; });
     }
     if (pickAll) pickAll.addEventListener('change', function(){
-      pickBoxes().forEach(function(b){ b.checked = pickAll.checked; });
+      pickBoxes().forEach(function(b){
+        b.checked = pickAll.checked;
+        var row = b.closest('label');
+        var q = row && row.querySelector('.cp-pick-qty');
+        var sel = row && row.querySelector('.cp-pick-qtysel');
+        if (q) q.hidden = pickAll.checked;
+        if (sel) sel.hidden = !pickAll.checked;
+      });
+      if (pickNote) pickNote.hidden = true;
     });
     var pickGen = 0;   /* invalidates in-flight opens — a stale continuation must never touch a newer popup */
     async function openPicker(){
@@ -495,6 +533,7 @@
       pickTitle.textContent = PICK_TITLES[chosenType] || 'Which product?';
       pickList.innerHTML = '<div class="cp-pick-empty">Loading your order…</div>';
       if (pickAll) pickAll.checked = false;
+      if (pickNote) pickNote.hidden = true;
       pickEl.hidden = false;
       var items = await (itemsLoading || loadItems(orderNum)) || await loadItems(orderNum);
       if (gen !== pickGen || !pickEl || pickEl.hidden) return;   /* superseded or skipped while loading */
@@ -503,26 +542,45 @@
         if (selItems.length){ selItems = []; contentChanged(); updateChip(); }
         pickEl.hidden = true; goStep(3); return;
       }
+      /* One product, one unit: nothing to choose — auto-select it. */
+      if (items.length === 1 && (items[0].quantity || 1) === 1){
+        var auto = [{ title: items[0].title, qty: 1 }];
+        if (JSON.stringify(auto) !== JSON.stringify(selItems)) contentChanged();
+        selItems = auto;
+        pickEl.hidden = true;
+        updateChip();
+        goStep(3);
+        return;
+      }
       renderPickList(items);
     }
-    function closePicker(commit){
+    if (pickOk) pickOk.addEventListener('click', function(){
       if (!pickEl) return;
-      pickGen++;          /* any in-flight open is now stale */
-      if (commit){
-        var next = pickBoxes().filter(function(b){ return b.checked; }).map(function(b){ return b.value; });
-        if (String(next) !== String(selItems)) contentChanged();
-        selItems = next;
-      } else {
-        if (selItems.length) contentChanged();
-        selItems = [];
+      var next = pickBoxes().filter(function(b){ return b.checked; }).map(function(b){
+        var row = b.closest('label');
+        var sel = row && row.querySelector('.cp-pick-qtysel');
+        return { title: b.value, qty: sel ? (parseInt(sel.value, 10) || 1) : 1 };
+      });
+      /* No Skip button any more: identifying the product is required.
+         While the list is still loading there is nothing to pick — swallow
+         the click instead of showing an impossible instruction. */
+      if (!next.length){
+        if (!pickBoxes().length) return;
+        if (pickNote) pickNote.hidden = false;
+        return;
       }
+      pickGen++;          /* any in-flight open is now stale */
+      if (JSON.stringify(next) !== JSON.stringify(selItems)) contentChanged();
+      selItems = next;
       pickEl.hidden = true;
       updateChip();
       goStep(3);
-    }
-    if (pickOk) pickOk.addEventListener('click', function(){ closePicker(true); });
-    if (pickSkip) pickSkip.addEventListener('click', function(){ closePicker(false); });
-    if (pickEl) pickEl.addEventListener('click', function(e){ if (e.target === pickEl) closePicker(false); });
+    });
+    /* Backdrop click = cancel: close the popup and stay on the type step —
+       nothing commits; re-picking a type reopens the list. */
+    if (pickEl) pickEl.addEventListener('click', function(e){
+      if (e.target === pickEl){ pickGen++; pickEl.hidden = true; }
+    });
 
     function renderFiles(){
       if (!fileList) return;
@@ -575,7 +633,6 @@
       var msgVal = (msgIn ? msgIn.value : '').trim();
       if (needMsg && !msgVal){ status('Please tell us what happened.'); if (msgIn) msgIn.focus(); return; }
       if (totalPicked() > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — please remove one or use smaller photos.'); return; }
-      var emailVal = emailIn ? (emailIn.value || '').trim() : '';
 
       /* The picker's chosen products lead the message as a bullet list so
          the claim email names exactly which items are affected. */
@@ -584,13 +641,12 @@
         var head = chosenType === 'Damaged in transit' ? 'Damaged product(s):'
           : chosenType === 'Wrong item' ? 'Wrong product(s) received:'
           : chosenType === 'Missing item' ? 'Missing product(s):' : 'Product(s):';
-        msgOut = head + '\n' + selItems.map(function(t){ return '• ' + t; }).join('\n') + (msgVal ? '\n\n' + msgVal : '');
+        msgOut = head + '\n' + selItems.map(function(s){ return '• ' + s.title + (s.qty > 1 ? ' × ' + s.qty : ''); }).join('\n') + (msgVal ? '\n\n' + msgVal : '');
       }
       var fd = new FormData();
       fd.set('order_id', orderVal);
       fd.set('type', chosenType);
       fd.set('message', msgOut);
-      if (emailVal) fd.set('email', emailVal);
       fd.set('page_url', String(location.href).slice(0, 500));
       fd.set('idempotencyKey', idemKey);
       picked.forEach(function(f){ fd.append('files', f, f.name); });
@@ -608,8 +664,7 @@
           if (dots) dots.hidden = true;
           if (doneEl){
             doneEl.hidden = false;
-            if (doneText) doneText.textContent = 'Your reference is ' + data.reference + '.'
-              + (emailVal ? ' We’ll email you at ' + emailVal + '.' : ' Our reply goes to the email on your order.');
+            if (doneText) doneText.textContent = 'Your reference is ' + data.reference + '. Our reply goes to the email on your order.';
           }
           status('');
         } else {

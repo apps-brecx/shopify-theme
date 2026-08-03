@@ -23,7 +23,8 @@
  *
  * Theme contract (already wired in sections/floating-contact.liquid):
  *   POST {message, history:[{role:'user'|'assistant', text}...], page} -> {reply, show_contact, show_claim}
- *   POST /claim (multipart: order_id, type, message, email?, files[], idempotencyKey) -> {ok, reference}
+ *   POST /claim (multipart: order_id, type, message, files[], idempotencyKey) -> {ok, reference}
+ *     (contact email is ALWAYS resolved from the order — a form-sent email is ignored)
  *   POST /track {order_number} -> {ok, found, shipping_status, scan_status, carrier, tracking[],
  *     ...warehouse timestamps, and (with VEEQO_API_KEY) carrier timestamps:
  *     collected_at, in_transit_at, out_for_delivery_at, delivered_at}
@@ -533,11 +534,18 @@ async function fbmOrderItems(env, num, rawNum) {
     ]);
     if (!row || !Array.isArray(row.items)) return null;
     /* catalog_product_title is the clean name FBM's own UI shows; items[].title
-       is the raw sales-channel listing title — abbreviated ("SF Pumpkin
-       Spice"), typo'd, or a full Amazon-length listing string. Owner decision
-       2026-08-01: show the FBM catalog title. */
+       is the raw sales-channel listing title. Owner decision 2026-08-01: show
+       the FBM catalog title — EXCEPT for fixed packs (2026-08-03): a variety
+       pack arrives as ONE item whose catalog_product_title is just the FIRST
+       component's flavor ("Coconut Syrup" for a 4-flavor pack), so
+       multi-component items use the listing title (the pack's real name)
+       instead. Custom choose-your-flavor bundles already decompose into
+       single-component items and keep clean catalog titles. */
     const items = mergeItems(row.items.map(function (it) {
-      const t = (it && (it.catalog_product_title || it.catalog_product_name || it.title)) || '';
+      const isPack = Array.isArray(it && it.components) && it.components.length > 1;
+      const t = isPack
+        ? ((it && (it.title || it.catalog_product_title)) || '')
+        : ((it && (it.catalog_product_title || it.catalog_product_name || it.title)) || '');
       return { title: String(t).trim().slice(0, 200), quantity: (it && it.quantity) || 1 };
     }));
     return items.length ? items : null;
@@ -795,7 +803,6 @@ async function handleClaim(request, env, headers, origin) {
   if (!form) return json({ error: CLAIM_SIZE_MSG }, 413, headers);
 
   let   message = String(form.get('message') || '').trim().slice(0, 8000);
-  let   email   = String(form.get('email') || '').trim().toLowerCase().slice(0, 200);
   const orderId = String(form.get('order_id') || '').trim().slice(0, 100);
   let   type    = String(form.get('type') || '').trim();
   const idem    = String(form.get('idempotencyKey') || '').trim().slice(0, 200);
@@ -818,19 +825,17 @@ async function handleClaim(request, env, headers, origin) {
   if (type === 'Other' && !message) return json({ error: 'Please describe what happened.' }, 400, headers);
   if (!message) message = type + ' — reported via the claim form on syruvia.com.';
 
-  /* Email is OPTIONAL at the intake API. Prefer the form value (the hidden
-     account email of a logged-in customer); else try resolving it from the
-     Shopify order (needs the PCD "Email" approval — null until granted);
-     else forward the claim without one and the team replies via the order. */
-  let emailResolved = false;
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    email = (await shopifyOrderEmail(env, orderId)) || '';
-    emailResolved = !!email;
-  }
-  /* Triage signal for agents: this claim's contact email came from the order
-     lookup, not from the submitter — the submitter only proved they know the
-     order number. */
-  if (emailResolved) message += '\n\n[Storefront: customer email auto-resolved from the order — submitted with order number only.]';
+  /* Owner rule (2026-08-03): the claim contact is ALWAYS the email on the
+     ORDER — never the logged-in account email, because a logged-in customer
+     can file a claim for an order that isn't theirs. Any form-supplied email
+     is ignored. Resolution needs the PCD "Email" approval — until granted
+     this returns null and the claim goes through without an email (the CS
+     intake does its own order lookup and replies via the order record). */
+  const email = (await shopifyOrderEmail(env, orderId)) || '';
+  /* Triage signal for agents: the contact email came from the order lookup,
+     not from the submitter — the submitter only proved they know the order
+     number. */
+  if (email) message += '\n\n[Storefront: customer email auto-resolved from the order — submitted with order number only.]';
 
   const out = new FormData();
   out.set('message', message);
