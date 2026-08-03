@@ -212,9 +212,9 @@
               <span id="bb-claim-msg-lbl">Tell us more <b class="bb-req-badge is-opt" id="bb-claim-msg-req">optional</b></span>
               <textarea id="bb-claim-msg" rows="3" maxlength="8000" placeholder="Anything that helps us fix this faster…"></textarea>
             </label>
-            {%- if customer -%}
-              <input type="hidden" id="bb-claim-email" value="{{ customer.email | escape }}">
-            {%- endif -%}
+            {%- comment -%} No account email is sent: a logged-in customer can
+               claim an order that isn't theirs, so the worker always resolves
+               the contact email from the ORDER number instead. {%- endcomment -%}
             <div class="bb-wiz-nav">
               <button type="button" class="bb-wiz-back" data-back="2">← Back</button>
               <button type="submit" class="bb-submit bb-claim-send" id="bb-claim-submit" disabled>{{ section.settings.claim_submit_label | default: 'Submit claim' }}</button>
@@ -1171,7 +1171,6 @@
       const photoReq   = document.getElementById('bb-claim-photo-req');
       const msgReq     = document.getElementById('bb-claim-msg-req');
       const msgIn      = document.getElementById('bb-claim-msg');
-      const emailIn    = document.getElementById('bb-claim-email');
       const filesIn    = document.getElementById('bb-claim-files');
       const fileList   = document.getElementById('bb-claim-filelist');
       const submitBtn  = document.getElementById('bb-claim-submit');
@@ -1522,7 +1521,6 @@
         const msgVal = (msgIn ? msgIn.value : '').trim();
         if (needMsg && !msgVal){ status('Please tell us what happened.'); if (msgIn) msgIn.focus(); return; }
         if (totalPicked() > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — please remove one or use smaller photos.'); return; }
-        const emailVal = emailIn ? (emailIn.value || '').trim() : '';
 
         /* The picker's chosen products lead the message as a bullet list so
            the claim email names exactly which items are affected. */
@@ -1537,7 +1535,6 @@
         fd.set('order_id', orderVal);
         fd.set('type', chosenType);
         fd.set('message', msgOut);
-        if (emailVal) fd.set('email', emailVal);
         fd.set('page_url', String(location.href).slice(0, 500));
         fd.set('idempotencyKey', idemKey);
         picked.forEach(function(f){ fd.append('files', f, f.name); });
@@ -1555,8 +1552,7 @@
             if (dots) dots.hidden = true;
             if (doneEl){
               doneEl.hidden = false;
-              if (doneText) doneText.textContent = 'Your reference is ' + data.reference + '.'
-                + (emailVal ? ' We’ll email you at ' + emailVal + '.' : ' Our reply goes to the email on your order.');
+              if (doneText) doneText.textContent = 'Your reference is ' + data.reference + '. Our reply goes to the email on your order.';
             }
             status('');
           } else {

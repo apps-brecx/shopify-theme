@@ -65,9 +65,9 @@
               <span>Tell us more <b class="cp-badge is-opt" data-badge="msg">optional</b></span>
               <textarea class="cp-msg" rows="4" maxlength="8000" placeholder="Anything that helps us fix this faster…"></textarea>
             </label>
-            {%- if customer -%}
-              <input type="hidden" class="cp-email" value="{{ customer.email | escape }}">
-            {%- endif -%}
+            {%- comment -%} No account email is sent: a logged-in customer can
+               claim an order that isn't theirs, so the worker always resolves
+               the contact email from the ORDER number instead. {%- endcomment -%}
             <div class="cp-nav">
               <button type="button" class="cp-back" data-back="2">← Back</button>
               <button type="submit" class="cp-btn cp-submit" disabled>{{ section.settings.submit_label | default: 'Submit claim' }}</button>
@@ -210,7 +210,6 @@
     var photoReq  = root.querySelector('[data-badge="photo"]');
     var msgReq    = root.querySelector('[data-badge="msg"]');
     var msgIn     = root.querySelector('.cp-msg');
-    var emailIn   = root.querySelector('.cp-email');
     var filesIn   = root.querySelector('.cp-files');
     var fileList  = root.querySelector('.cp-filelist');
     var submitBtn = root.querySelector('.cp-submit');
@@ -575,7 +574,6 @@
       var msgVal = (msgIn ? msgIn.value : '').trim();
       if (needMsg && !msgVal){ status('Please tell us what happened.'); if (msgIn) msgIn.focus(); return; }
       if (totalPicked() > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — please remove one or use smaller photos.'); return; }
-      var emailVal = emailIn ? (emailIn.value || '').trim() : '';
 
       /* The picker's chosen products lead the message as a bullet list so
          the claim email names exactly which items are affected. */
@@ -590,7 +588,6 @@
       fd.set('order_id', orderVal);
       fd.set('type', chosenType);
       fd.set('message', msgOut);
-      if (emailVal) fd.set('email', emailVal);
       fd.set('page_url', String(location.href).slice(0, 500));
       fd.set('idempotencyKey', idemKey);
       picked.forEach(function(f){ fd.append('files', f, f.name); });
@@ -608,8 +605,7 @@
           if (dots) dots.hidden = true;
           if (doneEl){
             doneEl.hidden = false;
-            if (doneText) doneText.textContent = 'Your reference is ' + data.reference + '.'
-              + (emailVal ? ' We’ll email you at ' + emailVal + '.' : ' Our reply goes to the email on your order.');
+            if (doneText) doneText.textContent = 'Your reference is ' + data.reference + '. Our reply goes to the email on your order.';
           }
           status('');
         } else {
