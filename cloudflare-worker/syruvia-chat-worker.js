@@ -28,6 +28,8 @@
  *   POST /track {order_number} -> {ok, found, shipping_status, scan_status, carrier, tracking[],
  *     ...warehouse timestamps, and (with VEEQO_API_KEY) carrier timestamps:
  *     collected_at, in_transit_at, out_for_delivery_at, delivered_at}
+ *     (order_number accepts an ORDER NUMBER or a carrier TRACKING NUMBER —
+ *      1Z…/TBA…/USPS digits; `order` in the response is the matched order id)
  *   POST /order-items {order_number} -> {ok, found, items:[{title, quantity}]}
  *     (claim wizard's "which product?" picker — titles + quantities only)
  *   POST /feedback {token, rating?, comment?, ticket_id?, order_id?} -> {ok}
@@ -109,7 +111,7 @@ const TOOLS = [
   },
   {
     name: 'track_package',
-    description: 'Track a package by order number alone (no email needed). Works for orders from any sales channel (the syruvia.com shop, Amazon, Walmart, etc. — digits-only match, so dashes in marketplace order numbers are fine). Returns live shipment progress from the fulfillment system: status (being prepared / packed / in transit / delivered), carrier, tracking numbers, packed/shipped timestamps. Preferred for "where is my order/package" questions.',
+    description: 'Track a package by order number OR carrier tracking number alone (no email needed). Works for orders from any sales channel (the syruvia.com shop, Amazon, Walmart, etc. — digits-only match, so dashes in marketplace order numbers are fine) and with tracking numbers like 1Z… (UPS), TBA… (Amazon), or long USPS digits. Returns live shipment progress from the fulfillment system: status (being prepared / packed / in transit / delivered), carrier, tracking numbers, packed/shipped timestamps. Preferred for "where is my order/package" questions.',
     input_schema: {
       type: 'object',
       properties: { order_number: { type: 'string' } },
@@ -335,15 +337,44 @@ async function fbmFindRow(env, num, rawQuery) {
     const amz = num.replace(/^(\d{3})(\d{7})(\d{7})$/, '$1-$2-$3');
     if (queries.indexOf(amz) === -1) queries.push(amz);
   }
+  /* The input may also be a carrier TRACKING number (1Z…/TBA…/USPS digits) —
+     FBM's q search matches those (case-insensitively, verified live), so rows
+     come back; the row match just has to compare tracking fields too. A full
+     number is required (≥8 chars incl. a digit) — no partial guesses. */
+  const needle = String(rawQuery || '').toUpperCase().replace(/[^0-9A-Z]/g, '');
+  const trackable = needle.length >= 8 && needle.length <= 40 && /\d/.test(needle);
+  /* Hyphenated/spaced tracking input: the raw query keeps separators (they
+     matter for marketplace ORDER ids) which FBM may not fuzzy-match against
+     a stored bare number — also try the bare needle itself. */
+  if (trackable && queries.indexOf(needle) === -1) queries.push(needle);
+  const normTn = function (t) { return String(t).toUpperCase().replace(/[^0-9A-Z]/g, ''); };
+  const shopFirst = function (matches) {
+    return matches.find(function (r) {
+      return String(r.channel_name || '').toLowerCase() === 'shopify';
+    }) || matches[0];
+  };
   for (const q of queries) {
     const rows = await fbmSearch(env, q);
     const matches = rows.filter(function (r) {
-      return r && String(r.order_id || '').replace(/[^0-9]/g, '') === num;
+      return r && num && String(r.order_id || '').replace(/[^0-9]/g, '') === num;
     });
-    const hit = matches.find(function (r) {
-      return String(r.channel_name || '').toLowerCase() === 'shopify';
-    }) || matches[0];
+    const hit = shopFirst(matches);
     if (hit) return hit;
+    if (trackable) {
+      /* packed_tracking_numbers are per-order package labels — safe to match
+         directly. Pallet master numbers ride MANY orders on one pallet, so a
+         pallet-only hit counts just when it's unambiguous. */
+      const packed = rows.filter(function (r) {
+        return r && (r.packed_tracking_numbers || []).some(function (t) { return normTn(t) === needle; });
+      });
+      if (packed.length) return shopFirst(packed);
+      const pallet = rows.filter(function (r) {
+        return r && (r.pallet_tracking_numbers || []).some(function (t) {
+          return !/^PLT[-_ ]/i.test(String(t)) && normTn(t) === needle;
+        });
+      });
+      if (pallet.length === 1) return pallet[0];
+    }
   }
   return null;
 }
@@ -353,6 +384,7 @@ async function fbmShipment(env, orderNumber) {
   const row = await fbmFindRow(env, num, orderNumber);
   if (!row) return null;
   return {
+    order_ref: row.order_id || undefined,
     shipment_status: row.shipping_status,
     status_meaning: FBM_STATUS_HINTS[row.shipping_status],
     carrier: row.carrier_name,
@@ -373,18 +405,20 @@ function fbmCustomerTracking(row) {
 async function trackPackage(env, orderNumber) {
   if (!env.FBM_EMAIL || !env.FBM_PIN) return 'Package tracking is not configured yet.';
   const num = String(orderNumber || '').replace(/[^0-9]/g, '');
-  if (!num) return 'An order number is required.';
+  if (!num) return 'An order number or tracking number is required.';
   try {
     /* hard 12s cap over the 10s per-call timeouts — the Render-hosted FBM API
-       cold-starts after idle */
+       cold-starts after idle. Pass the RAW input through: it may be a carrier
+       tracking number (1Z…/TBA…) whose letters a digits-strip would destroy. */
     const shipment = await Promise.race([
-      fbmShipment(env, num),
+      fbmShipment(env, orderNumber),
       new Promise(function (resolve, reject) {
         setTimeout(function () { reject(new Error('fbm time budget exceeded')); }, 12000);
       }),
     ]);
-    if (!shipment) return 'No shipment found for that order number. The number may be mistyped, or the order is very new and not in the fulfillment system yet.';
-    shipment.order = '#' + num;
+    if (!shipment) return 'No shipment found for that number. It may be mistyped, or the order is very new and not in the fulfillment system yet.';
+    shipment.order = shipment.order_ref ? String(shipment.order_ref) : '#' + num;
+    delete shipment.order_ref;
     return shipment;
   } catch (e) {
     console.error('fbm lookup failed:', e && e.message ? e.message : e);
@@ -464,7 +498,12 @@ async function handleTrack(request, env, headers) {
   } catch (e) { return json({ error: 'invalid json' }, 400, headers); }
   const rawNum = String((body && body.order_number) || '');
   const num = rawNum.replace(/[^0-9]/g, '');
-  if (!num || num.length < 4 || num.length > 20) return json({ error: 'Please enter a valid order number.' }, 400, headers);
+  /* Accept an order number (4-20 digits) OR a carrier tracking number
+     (alphanumeric, 8-40 chars with at least one digit — 1Z…, TBA…, USPS). */
+  const alnum = rawNum.replace(/[^0-9A-Za-z]/g, '');
+  const okOrder = num.length >= 4 && num.length <= 20;
+  const okTrack = alnum.length >= 8 && alnum.length <= 40 && /\d/.test(alnum);
+  if (!okOrder && !okTrack) return json({ error: 'Please enter a valid order or tracking number.' }, 400, headers);
   try {
     /* hard cap over the 10s per-call FBM timeouts (Render cold-starts) */
     const row = await Promise.race([
@@ -474,15 +513,19 @@ async function handleTrack(request, env, headers) {
       }),
     ]);
     if (!row) return json({ ok: true, found: false }, 200, headers);
+    /* Veeqo's order lookup needs the ORDER's digits — when the customer
+       typed a tracking number, take them from the matched row instead. */
+    const orderDigits = String(row.order_id || '').replace(/[^0-9]/g, '') || num;
     /* Carrier-side timestamps from Veeqo (8s cap, null on any trouble). */
     const veeqo = await Promise.race([
-      veeqoTrackingTimes(env, row, num),
+      veeqoTrackingTimes(env, row, orderDigits),
       new Promise(function (resolve) { setTimeout(function () { resolve(null); }, 8000); }),
     ]);
+    const ordDisp = String(row.order_id || '').trim();
     return json({
       ok: true,
       found: true,
-      order: '#' + num,
+      order: ordDisp ? (/^\d+$/.test(ordDisp) ? '#' + ordDisp : ordDisp) : '#' + num,
       shipping_status: row.shipping_status || null,
       scan_status: row.scan_status || null,
       carrier: row.carrier_name || null,
