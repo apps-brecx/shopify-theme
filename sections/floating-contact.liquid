@@ -238,8 +238,8 @@
             <div class="bb-cpick-title" id="bb-cpick-title">Which product is damaged?</div>
             <label class="bb-cpick-all"><input type="checkbox" id="bb-cpick-allcb"> Select all</label>
             <div class="bb-cpick-list" id="bb-cpick-list"></div>
+            <div class="bb-cpick-note" id="bb-cpick-note" hidden>Please pick at least one product.</div>
             <div class="bb-cpick-nav">
-              <button type="button" class="bb-wiz-back" id="bb-cpick-skip">Skip</button>
               <button type="button" class="bb-submit bb-cpick-ok" id="bb-cpick-ok">Continue</button>
             </div>
           </div>
@@ -404,6 +404,10 @@
     .bb-cpick-row:hover{background:#FCE2A0}
     .bb-cpick-row input,.bb-cpick-all input{width:16px;height:16px;accent-color:#3C2005;flex:0 0 auto}
     .bb-cpick-qty{color:#8a7a68;font-size:12px;margin-left:auto;white-space:nowrap}
+    .bb-cpick-qty[hidden],.bb-cpick-qtysel[hidden]{display:none!important}
+    .bb-cpick-qtysel{margin-left:auto;flex:0 0 auto;font:inherit;font-size:12px;font-weight:700;color:#3C2005;background:#fff;border:1.5px solid #C9BBA4;border-radius:8px;padding:3px 6px;cursor:pointer}
+    .bb-cpick-note{font-size:12.5px;font-weight:700;color:#c0392b;padding:6px 8px 0}
+    .bb-cpick-note[hidden]{display:none!important}
     .bb-cpick-empty{font-size:13px;color:#8a7a68;padding:8px}
     .bb-cpick-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
     .bb-cpick-nav .bb-submit{width:auto;flex:1;margin:0}
@@ -1369,8 +1373,8 @@
       const pickList  = document.getElementById('bb-cpick-list');
       const pickAll   = document.getElementById('bb-cpick-allcb');
       const pickOk    = document.getElementById('bb-cpick-ok');
-      const pickSkip  = document.getElementById('bb-cpick-skip');
-      let selItems = [];
+      const pickNote  = document.getElementById('bb-cpick-note');
+      let selItems = [];   /* [{title, qty}] — qty = how many of that product are affected */
       let itemsCache = null, itemsFor = '', itemsLoading = null;
       const PICK_TITLES = {
         'Damaged in transit': 'Which product is damaged?',
@@ -1405,21 +1409,48 @@
       }
       function renderPickList(items){
         pickList.textContent = '';
+        if (pickNote) pickNote.hidden = true;
         items.forEach(function(it){
           const row = document.createElement('label');
           row.className = 'bb-cpick-row';
           const cb = document.createElement('input');
           cb.type = 'checkbox';
           cb.value = it.title;
-          cb.checked = selItems.indexOf(it.title) !== -1;
-          cb.addEventListener('change', syncPickAll);
+          const prev = selItems.find(function(s){ return s.title === it.title; });
+          cb.checked = !!prev;
           row.appendChild(cb);
           row.appendChild(document.createTextNode(it.title));
           if (it.quantity > 1){
+            /* multi-quantity item: "× N" hint when unchecked, an
+               affected-quantity chooser when checked */
             const q = document.createElement('span');
             q.className = 'bb-cpick-qty';
             q.textContent = '× ' + it.quantity;
+            q.hidden = cb.checked;
             row.appendChild(q);
+            const sel = document.createElement('select');
+            sel.className = 'bb-cpick-qtysel';
+            sel.setAttribute('aria-label', 'How many affected');
+            for (let n = 1; n <= Math.min(it.quantity, 30); n++){
+              const o = document.createElement('option');
+              o.value = String(n);
+              o.textContent = n + ' of ' + it.quantity;
+              sel.appendChild(o);
+            }
+            sel.value = String(prev && prev.qty ? Math.min(prev.qty, it.quantity) : 1);
+            sel.hidden = !cb.checked;
+            row.appendChild(sel);
+            cb.addEventListener('change', function(){
+              q.hidden = cb.checked;
+              sel.hidden = !cb.checked;
+              syncPickAll();
+              if (pickNote) pickNote.hidden = true;
+            });
+          } else {
+            cb.addEventListener('change', function(){
+              syncPickAll();
+              if (pickNote) pickNote.hidden = true;
+            });
           }
           pickList.appendChild(row);
         });
@@ -1431,7 +1462,15 @@
         if (pickAll) pickAll.checked = boxes.length > 0 && boxes.every(function(b){ return b.checked; });
       }
       if (pickAll) pickAll.addEventListener('change', function(){
-        pickBoxes().forEach(function(b){ b.checked = pickAll.checked; });
+        pickBoxes().forEach(function(b){
+          b.checked = pickAll.checked;
+          const row = b.closest('label');
+          const q = row && row.querySelector('.bb-cpick-qty');
+          const sel = row && row.querySelector('.bb-cpick-qtysel');
+          if (q) q.hidden = pickAll.checked;
+          if (sel) sel.hidden = !pickAll.checked;
+        });
+        if (pickNote) pickNote.hidden = true;
       });
       let pickGen = 0;   /* invalidates in-flight opens — a stale continuation must never touch a newer popup */
       async function openPicker(){
@@ -1441,6 +1480,7 @@
         pickTitle.textContent = PICK_TITLES[chosenType] || 'Which product?';
         pickList.innerHTML = '<div class="bb-cpick-empty">Loading your order…</div>';
         if (pickAll) pickAll.checked = false;
+        if (pickNote) pickNote.hidden = true;
         pickEl.hidden = false;
         const items = await (itemsLoading || loadItems(orderNum)) || await loadItems(orderNum);
         if (gen !== pickGen || !pickEl || pickEl.hidden) return;   /* superseded or skipped while loading */
@@ -1449,26 +1489,39 @@
           if (selItems.length){ selItems = []; contentChanged(); updateChip(); }
           pickEl.hidden = true; goStep(3); return;
         }
+        /* One product, one unit: nothing to choose — auto-select it. */
+        if (items.length === 1 && (items[0].quantity || 1) === 1){
+          const auto = [{ title: items[0].title, qty: 1 }];
+          if (JSON.stringify(auto) !== JSON.stringify(selItems)) contentChanged();
+          selItems = auto;
+          pickEl.hidden = true;
+          updateChip();
+          goStep(3);
+          return;
+        }
         renderPickList(items);
       }
-      function closePicker(commit){
+      if (pickOk) pickOk.addEventListener('click', function(){
         if (!pickEl) return;
+        const next = pickBoxes().filter(function(b){ return b.checked; }).map(function(b){
+          const row = b.closest('label');
+          const sel = row && row.querySelector('.bb-cpick-qtysel');
+          return { title: b.value, qty: sel ? (parseInt(sel.value, 10) || 1) : 1 };
+        });
+        /* No Skip button any more: identifying the product is required. */
+        if (!next.length){ if (pickNote) pickNote.hidden = false; return; }
         pickGen++;          /* any in-flight open is now stale */
-        if (commit){
-          const next = pickBoxes().filter(function(b){ return b.checked; }).map(function(b){ return b.value; });
-          if (String(next) !== String(selItems)) contentChanged();
-          selItems = next;
-        } else {
-          if (selItems.length) contentChanged();
-          selItems = [];
-        }
+        if (JSON.stringify(next) !== JSON.stringify(selItems)) contentChanged();
+        selItems = next;
         pickEl.hidden = true;
         updateChip();
         goStep(3);
-      }
-      if (pickOk) pickOk.addEventListener('click', function(){ closePicker(true); });
-      if (pickSkip) pickSkip.addEventListener('click', function(){ closePicker(false); });
-      if (pickEl) pickEl.addEventListener('click', function(e){ if (e.target === pickEl) closePicker(false); });
+      });
+      /* Backdrop click = cancel: close the popup and stay on the type step —
+         nothing commits; re-picking a type reopens the list. */
+      if (pickEl) pickEl.addEventListener('click', function(e){
+        if (e.target === pickEl){ pickGen++; pickEl.hidden = true; }
+      });
 
       function renderFiles(){
         if (!fileList) return;
@@ -1529,7 +1582,7 @@
           const head = chosenType === 'Damaged in transit' ? 'Damaged product(s):'
             : chosenType === 'Wrong item' ? 'Wrong product(s) received:'
             : chosenType === 'Missing item' ? 'Missing product(s):' : 'Product(s):';
-          msgOut = head + '\n' + selItems.map(function(t){ return '• ' + t; }).join('\n') + (msgVal ? '\n\n' + msgVal : '');
+          msgOut = head + '\n' + selItems.map(function(s){ return '• ' + s.title + (s.qty > 1 ? ' × ' + s.qty : ''); }).join('\n') + (msgVal ? '\n\n' + msgVal : '');
         }
         const fd = new FormData();
         fd.set('order_id', orderVal);
