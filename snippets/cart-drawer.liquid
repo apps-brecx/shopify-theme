@@ -6,7 +6,7 @@
 {%- endcomment -%}
 
 {%- liquid
-  assign FREE_SHIP = 3500
+  assign FREE_SHIP = 3600
   assign SHIP_COST = 495
   assign is_vip = false
   if customer and customer.tags contains 'VIP'
@@ -491,7 +491,7 @@
     var bar=r.querySelector('[data-ship]'); if(!bar) return;
     var tEl=r.querySelector('.d-sub .v');
     var cents=moneyToCents(tEl&&tEl.textContent); if(cents==null) return;
-    var free=parseInt(bar.getAttribute('data-free'),10)||3500;
+    var free=parseInt(bar.getAttribute('data-free'),10)||3600;
     var remain=free-cents; if(remain<0) remain=0;
     var pct=cents>0?Math.min(100,cents*100/free):0;
     var w=pct.toFixed(1)+'%';
