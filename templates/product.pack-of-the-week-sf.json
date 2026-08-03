@@ -13,7 +13,7 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272_1.jpg",
+        "bg_img": "shopify://shop_images/Rectangle_2272_b3c2137e-537b-4edb-bd6e-b7d7da22c6f3.png",
         "secondary_button_text": "View Regular",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week",
         "accent_color": "#bd1022"
@@ -532,7 +532,7 @@
         "custom_class1": "",
         "custom_class11": "",
         "custom_class12": "",
-        "title": "<strong>Bold Flavor. Zero Sugar.</strong>",
+        "title": "<strong>Tropical. Refreshing. Sugar-Free</strong>",
         "image_alt_text": "",
         "content": "",
         "additional_text": "",
@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This week’s Sugar-Free Cherry Blue Punch Pack brings together three bright fruit flavors for fun, colorful drinks without sugar. Cherry gives it a classic punch-style taste, Blue Raspberry adds the bold blue refresher vibe, and Pomegranate brings a rich fruity finish.</p>"
+            "text": "<p>This week’s Sugar Free Mango Coconut Chill Pack brings together juicy Mango, smooth Coconut, and fresh Watermelon for bright summer drinks without sugar. It is made for customers who want tropical flavor that feels light, fun, and easy to mix.</p>"
           }
         }
       },
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#7c3003"
+        "background_color": "#bd1022"
       }
     },
     "pack_steps_AbyNtH": {
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Punch-Style Trio",
-            "description": "Sugar Free Cherry, Blue Raspberry, and Pomegranate in one easy fruit drink pack."
+            "title": "Tropical Trio",
+            "description": "Mango, Coconut, and Watermelon create a smooth sugar-free summer mix."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Made For Fun Drinks",
-            "description": "Perfect for sugar-free lemonades, sodas, iced teas, mocktails, and colorful refreshers."
+            "title": "Cool Refreshers",
+            "description": "Made for lemonades, teas, sparkling drinks, sodas, and mocktails."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
             "title": "Save This Week",
-            "description": "Get the Sugar-Free Cherry Blue Punch Pack for $16.99 instead of $27.99."
+            "description": "Get the Sugar-Free Mango Coconut Chill Pack for $16.99 instead of $27.99."
           }
         }
       },
@@ -664,28 +664,28 @@
         "item_X9cE6d": {
           "type": "item",
           "settings": {
-            "icon": "shopify://shop_images/sugar-free_d9fecf16-f729-4501-85f1-1350f85167f4.png",
+            "icon": "shopify://shop_images/sugar-free_b656222a-1d42-4c89-a91f-22422675856c.png",
             "text": "Sugar Free"
           }
         },
         "item_XgLWHj": {
           "type": "item",
           "settings": {
-            "icon": "shopify://shop_images/U.png",
+            "icon": "shopify://shop_images/U_1.png",
             "text": "Kosher"
           }
         },
         "item_LWQDPF": {
           "type": "item",
           "settings": {
-            "icon": "shopify://shop_images/gluten-free.png",
+            "icon": "shopify://shop_images/gluten-free_2.png",
             "text": "Gluten Free"
           }
         },
         "item_Fd6MBH": {
           "type": "item",
           "settings": {
-            "icon": "shopify://shop_images/united-states.png",
+            "icon": "shopify://shop_images/united-states_1.png",
             "text": "Made in USA"
           }
         }
@@ -700,7 +700,7 @@
       "settings": {
         "background_color": "#bd1022",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Crafted for smooth mixing, bold fruit flavor, and easy sugar-free drinks at home.</p>",
+        "description": "<p>Crafted for smooth mixing, bright fruit flavor, and easy sugar-free drinks at home.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -714,6 +714,9 @@
             "show_sample_reviews": true,
             "reviews_selection": "current_product",
             "products": [],
+            "filter_pinned": false,
+            "filter_featured": false,
+            "filter_custom_tags": "",
             "star_rating": "all",
             "show_review_media": true,
             "display_order": "media_first",
@@ -755,7 +758,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Cherry and Blue Raspberry taste so good together, and Pomegranate makes it feel more like a real fruit punch.",
+            "quote": "I used this with sparkling water and lemonade. It tastes fruity, tropical, and light perfect for hot days.",
             "reviewer_initials": "AM",
             "reviewer_name": "Alyssa M.",
             "reviewer_role": ""
@@ -765,7 +768,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I used this pack with sparkling water and lemonade. The colors are fun, and the flavors still taste bold without sugar.",
+            "quote": "The Mango tastes bright, the Watermelon is super refreshing, and Coconut makes the drink feel smooth without sugar.",
             "reviewer_initials": "MD",
             "reviewer_name": "Marcus D.",
             "reviewer_role": ""
@@ -775,7 +778,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Blue Raspberry is my favorite, but Cherry and Pomegranate make the pack taste fuller. It is perfect for sugar-free mocktails.",
+            "quote": "This pack makes sugar-free drinks way more fun. Mango and Watermelon taste fresh, and Coconut gives it a nice soft finish.",
             "reviewer_initials": "TR",
             "reviewer_name": "Tina R.",
             "reviewer_role": ""
@@ -785,7 +788,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack makes plain drinks way more exciting. I like that it is fruity, colorful, and still sugar-free.",
+            "quote": "I like that the flavors do not taste boring. It is easy to mix and makes my iced drinks feel more exciting.",
             "reviewer_initials": "RK",
             "reviewer_name": "Rachel K.",
             "reviewer_role": ""
@@ -795,9 +798,9 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I mixed this pack into sparkling water and lemonade, and it worked great. The vibrant colors are fun, and the sugar-free flavors are still rich and refreshing.",
-            "reviewer_initials": "KS",
-            "reviewer_name": "Kayla S.",
+            "quote": "This pack is perfect for summer drinks. The Mango is juicy, Watermelon tastes refreshing, and Coconut adds a smooth tropical finish without any sugar.",
+            "reviewer_initials": "JP",
+            "reviewer_name": "Jessica P.",
             "reviewer_role": ""
           }
         }
@@ -811,7 +814,7 @@
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Sugar-Free Drink Fans\nLove This Pack",
+        "heading": "Sugar-Free Summer Sippers\nLove This Pack",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
@@ -837,8 +840,8 @@
       "name": "Start Pack",
       "settings": {
         "background_color": "#bd1022",
-        "title": "Make Every Drink Pop,Sugar-Free",
-        "description": "Cherry, Blue Raspberry, and Pomegranate are on deal this week — one bold sugar-free fruit pack for colorful refreshers, lemonades, sodas, and mocktails.",
+        "title": "Make Summer DrinksSugar-Free",
+        "description": "Mango, Coconut, and Watermelon are on deal this week now $16.99 instead of $27.99.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $36"

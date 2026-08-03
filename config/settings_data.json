@@ -278,7 +278,7 @@
           "chat_fallback": "I couldn’t find an instant answer for that.",
           "enable_track": true,
           "track_tab_label": "Track Order",
-          "track_intro": "Enter your order number to see exactly where your package is.",
+          "track_intro": "Enter your order number or tracking number to see exactly where your package is.",
           "track_button_label": "Track",
           "chat_endpoint": "https://gentle-shadow-e778.ti-243.workers.dev/",
           "enable_claim": true,

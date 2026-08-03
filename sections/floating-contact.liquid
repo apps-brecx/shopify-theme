@@ -212,9 +212,9 @@
               <span id="bb-claim-msg-lbl">Tell us more <b class="bb-req-badge is-opt" id="bb-claim-msg-req">optional</b></span>
               <textarea id="bb-claim-msg" rows="3" maxlength="8000" placeholder="Anything that helps us fix this faster…"></textarea>
             </label>
-            {%- if customer -%}
-              <input type="hidden" id="bb-claim-email" value="{{ customer.email | escape }}">
-            {%- endif -%}
+            {%- comment -%} No account email is sent: a logged-in customer can
+               claim an order that isn't theirs, so the worker always resolves
+               the contact email from the ORDER number instead. {%- endcomment -%}
             <div class="bb-wiz-nav">
               <button type="button" class="bb-wiz-back" data-back="2">← Back</button>
               <button type="submit" class="bb-submit bb-claim-send" id="bb-claim-submit" disabled>{{ section.settings.claim_submit_label | default: 'Submit claim' }}</button>
@@ -238,8 +238,8 @@
             <div class="bb-cpick-title" id="bb-cpick-title">Which product is damaged?</div>
             <label class="bb-cpick-all"><input type="checkbox" id="bb-cpick-allcb"> Select all</label>
             <div class="bb-cpick-list" id="bb-cpick-list"></div>
+            <div class="bb-cpick-note" id="bb-cpick-note" role="alert" hidden>Please pick at least one product.</div>
             <div class="bb-cpick-nav">
-              <button type="button" class="bb-wiz-back" id="bb-cpick-skip">Skip</button>
               <button type="button" class="bb-submit bb-cpick-ok" id="bb-cpick-ok">Continue</button>
             </div>
           </div>
@@ -251,9 +251,9 @@
       {%- comment -%} Track tab: order number -> <chat_endpoint>/track (FBM-backed)
           -> step timeline. Statuses/timestamps only; no personal data. {%- endcomment -%}
       <div class="bb-panel" id="bb-panel-track" role="tabpanel" aria-labelledby="bb-tab-track" hidden>
-        <p class="bb-track-intro">{{ section.settings.track_intro | default: 'Enter your order number to see exactly where your package is.' }}</p>
+        <p class="bb-track-intro">{{ section.settings.track_intro | default: 'Enter your order number or tracking number to see exactly where your package is.' }}</p>
         <form class="bb-trackform" id="bb-track-form" novalidate>
-          <input type="text" id="bb-track-num" placeholder="e.g. 154008587601" maxlength="30" autocomplete="off" inputmode="numeric" aria-label="Order number">
+          <input type="text" id="bb-track-num" placeholder="Order or tracking number" maxlength="34" autocomplete="off" aria-label="Order or tracking number">
           <button type="submit" class="bb-submit bb-track-go" id="bb-track-go">{{ section.settings.track_button_label | default: 'Track' }}</button>
         </form>
         <div class="bb-track-status" id="bb-track-status" aria-live="polite"></div>
@@ -404,6 +404,10 @@
     .bb-cpick-row:hover{background:#FCE2A0}
     .bb-cpick-row input,.bb-cpick-all input{width:16px;height:16px;accent-color:#3C2005;flex:0 0 auto}
     .bb-cpick-qty{color:#8a7a68;font-size:12px;margin-left:auto;white-space:nowrap}
+    .bb-cpick-qty[hidden],.bb-cpick-qtysel[hidden]{display:none!important}
+    .bb-cpick-qtysel{margin-left:auto;flex:0 0 auto;font:inherit;font-size:12px;font-weight:700;color:#3C2005;background:#fff;border:1.5px solid #C9BBA4;border-radius:8px;padding:3px 6px;cursor:pointer}
+    .bb-cpick-note{font-size:12.5px;font-weight:700;color:#c0392b;padding:6px 8px 0}
+    .bb-cpick-note[hidden]{display:none!important}
     .bb-cpick-empty{font-size:13px;color:#8a7a68;padding:8px}
     .bb-cpick-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
     .bb-cpick-nav .bb-submit{width:auto;flex:1;margin:0}
@@ -1171,7 +1175,6 @@
       const photoReq   = document.getElementById('bb-claim-photo-req');
       const msgReq     = document.getElementById('bb-claim-msg-req');
       const msgIn      = document.getElementById('bb-claim-msg');
-      const emailIn    = document.getElementById('bb-claim-email');
       const filesIn    = document.getElementById('bb-claim-files');
       const fileList   = document.getElementById('bb-claim-filelist');
       const submitBtn  = document.getElementById('bb-claim-submit');
@@ -1263,7 +1266,7 @@
           });
           let data = null;
           try { data = await res.json(); } catch(e){}
-          if (res.ok && data && data.ok) return { state: data.found ? 'found' : 'notfound' };
+          if (res.ok && data && data.ok) return { state: data.found ? 'found' : 'notfound', order: (data.found && data.order) || '' };
           if (res.status === 400) return { state: 'invalid', msg: (data && data.error) || 'Please enter a valid order number.' };
           if (res.status === 429) return { state: 'busy' };
           return { state: 'unknown' };   /* worker error → fail open */
@@ -1275,14 +1278,18 @@
       }
       if (next1) next1.addEventListener('click', async function(){
         if (checking) return;
-        const v = (orderIn.value || '').trim();
+        let v = (orderIn.value || '').trim();
         if (!v){ status('Please enter your order number.'); orderIn.focus(); return; }
-        /* Format gate BEFORE any network: order numbers are 4-20 digits (the
-           worker's own rule). Without this, garbage input rode the fail-open
+        /* Format gate BEFORE any network: an order number (4-20 digits) or a
+           carrier tracking number (8-40 alphanumerics — the worker resolves
+           it to its order). Without this, garbage input rode the fail-open
            path straight past verification. */
         const digits = v.replace(/[^0-9]/g, '');
-        if (digits.length < 4 || digits.length > 20){
-          status('Hmm, that doesn’t look like an order number — it’s the long number from your confirmation email, like 154008582984.');
+        const alnum = v.replace(/[^0-9A-Za-z]/g, '');
+        const orderShape = digits.length >= 4 && digits.length <= 20;
+        const trackShape = alnum.length >= 8 && alnum.length <= 40 && /\d/.test(alnum);
+        if (!orderShape && !trackShape){
+          status('Hmm, that doesn’t look like an order or tracking number — your order number is the long number from your confirmation email, like 154008582984.');
           orderIn.focus();
           return;
         }
@@ -1298,12 +1305,24 @@
         next1.disabled = false;
         syncNext();
         if (check.state === 'notfound'){
-          claimCta('We couldn’t find that order number. Double-check it — brand-new orders can take a little while to appear.');
+          claimCta('We couldn’t find that order. Double-check the number — brand-new orders can take a little while to appear.');
           orderIn.focus();
           return;
         }
         if (check.state === 'invalid'){ status(check.msg); orderIn.focus(); return; }
         if (check.state === 'busy'){ status('That’s a few checks in a row — give it a minute, then try again.'); return; }
+        /* Typed a TRACKING number? /track answers with the order it belongs
+           to — adopt that: claims are keyed to the ORDER number (the email
+           lookup and support intake need it), never a carrier number. */
+        let adopted = '';
+        if (check.order){
+          const canon = String(check.order).replace(/^#/, '').trim();
+          if (canon && canon.replace(/[^0-9]/g, '') !== v.replace(/[^0-9]/g, '')){
+            orderIn.value = canon;
+            v = canon;
+            adopted = canon;
+          }
+        }
         /* A different order = a different product list. Stale selections must
            never ride into the new order's claim (the picker's silent-skip
            path would otherwise submit order A's bullets on order B). */
@@ -1311,6 +1330,8 @@
         okOrder = v;
         prefetchItems(v);   /* warm the product picker while they pick a type */
         goStep(2);
+        /* after goStep — it clears the status area */
+        if (adopted) status('We matched that tracking number to order ' + adopted + ' — your claim will use the order number.', true);
       });
       if (orderIn) orderIn.addEventListener('keydown', function(e){
         if (e.key === 'Enter'){ e.preventDefault(); if (next1) next1.click(); }
@@ -1370,8 +1391,8 @@
       const pickList  = document.getElementById('bb-cpick-list');
       const pickAll   = document.getElementById('bb-cpick-allcb');
       const pickOk    = document.getElementById('bb-cpick-ok');
-      const pickSkip  = document.getElementById('bb-cpick-skip');
-      let selItems = [];
+      const pickNote  = document.getElementById('bb-cpick-note');
+      let selItems = [];   /* [{title, qty}] — qty = how many of that product are affected */
       let itemsCache = null, itemsFor = '', itemsLoading = null;
       const PICK_TITLES = {
         'Damaged in transit': 'Which product is damaged?',
@@ -1406,21 +1427,48 @@
       }
       function renderPickList(items){
         pickList.textContent = '';
+        if (pickNote) pickNote.hidden = true;
         items.forEach(function(it){
           const row = document.createElement('label');
           row.className = 'bb-cpick-row';
           const cb = document.createElement('input');
           cb.type = 'checkbox';
           cb.value = it.title;
-          cb.checked = selItems.indexOf(it.title) !== -1;
-          cb.addEventListener('change', syncPickAll);
+          const prev = selItems.find(function(s){ return s.title === it.title; });
+          cb.checked = !!prev;
           row.appendChild(cb);
           row.appendChild(document.createTextNode(it.title));
           if (it.quantity > 1){
+            /* multi-quantity item: "× N" hint when unchecked, an
+               affected-quantity chooser when checked */
             const q = document.createElement('span');
             q.className = 'bb-cpick-qty';
             q.textContent = '× ' + it.quantity;
+            q.hidden = cb.checked;
             row.appendChild(q);
+            const sel = document.createElement('select');
+            sel.className = 'bb-cpick-qtysel';
+            sel.setAttribute('aria-label', 'How many affected');
+            for (let n = 1; n <= Math.min(it.quantity, 30); n++){
+              const o = document.createElement('option');
+              o.value = String(n);
+              o.textContent = n + ' of ' + it.quantity;
+              sel.appendChild(o);
+            }
+            sel.value = String(prev && prev.qty ? Math.min(prev.qty, it.quantity) : 1);
+            sel.hidden = !cb.checked;
+            row.appendChild(sel);
+            cb.addEventListener('change', function(){
+              q.hidden = cb.checked;
+              sel.hidden = !cb.checked;
+              syncPickAll();
+              if (pickNote) pickNote.hidden = true;
+            });
+          } else {
+            cb.addEventListener('change', function(){
+              syncPickAll();
+              if (pickNote) pickNote.hidden = true;
+            });
           }
           pickList.appendChild(row);
         });
@@ -1432,7 +1480,15 @@
         if (pickAll) pickAll.checked = boxes.length > 0 && boxes.every(function(b){ return b.checked; });
       }
       if (pickAll) pickAll.addEventListener('change', function(){
-        pickBoxes().forEach(function(b){ b.checked = pickAll.checked; });
+        pickBoxes().forEach(function(b){
+          b.checked = pickAll.checked;
+          const row = b.closest('label');
+          const q = row && row.querySelector('.bb-cpick-qty');
+          const sel = row && row.querySelector('.bb-cpick-qtysel');
+          if (q) q.hidden = pickAll.checked;
+          if (sel) sel.hidden = !pickAll.checked;
+        });
+        if (pickNote) pickNote.hidden = true;
       });
       let pickGen = 0;   /* invalidates in-flight opens — a stale continuation must never touch a newer popup */
       async function openPicker(){
@@ -1442,6 +1498,7 @@
         pickTitle.textContent = PICK_TITLES[chosenType] || 'Which product?';
         pickList.innerHTML = '<div class="bb-cpick-empty">Loading your order…</div>';
         if (pickAll) pickAll.checked = false;
+        if (pickNote) pickNote.hidden = true;
         pickEl.hidden = false;
         const items = await (itemsLoading || loadItems(orderNum)) || await loadItems(orderNum);
         if (gen !== pickGen || !pickEl || pickEl.hidden) return;   /* superseded or skipped while loading */
@@ -1450,26 +1507,45 @@
           if (selItems.length){ selItems = []; contentChanged(); updateChip(); }
           pickEl.hidden = true; goStep(3); return;
         }
+        /* One product, one unit: nothing to choose — auto-select it. */
+        if (items.length === 1 && (items[0].quantity || 1) === 1){
+          const auto = [{ title: items[0].title, qty: 1 }];
+          if (JSON.stringify(auto) !== JSON.stringify(selItems)) contentChanged();
+          selItems = auto;
+          pickEl.hidden = true;
+          updateChip();
+          goStep(3);
+          return;
+        }
         renderPickList(items);
       }
-      function closePicker(commit){
+      if (pickOk) pickOk.addEventListener('click', function(){
         if (!pickEl) return;
-        pickGen++;          /* any in-flight open is now stale */
-        if (commit){
-          const next = pickBoxes().filter(function(b){ return b.checked; }).map(function(b){ return b.value; });
-          if (String(next) !== String(selItems)) contentChanged();
-          selItems = next;
-        } else {
-          if (selItems.length) contentChanged();
-          selItems = [];
+        const next = pickBoxes().filter(function(b){ return b.checked; }).map(function(b){
+          const row = b.closest('label');
+          const sel = row && row.querySelector('.bb-cpick-qtysel');
+          return { title: b.value, qty: sel ? (parseInt(sel.value, 10) || 1) : 1 };
+        });
+        /* No Skip button any more: identifying the product is required.
+           While the list is still loading there is nothing to pick — swallow
+           the click instead of showing an impossible instruction. */
+        if (!next.length){
+          if (!pickBoxes().length) return;
+          if (pickNote) pickNote.hidden = false;
+          return;
         }
+        pickGen++;          /* any in-flight open is now stale */
+        if (JSON.stringify(next) !== JSON.stringify(selItems)) contentChanged();
+        selItems = next;
         pickEl.hidden = true;
         updateChip();
         goStep(3);
-      }
-      if (pickOk) pickOk.addEventListener('click', function(){ closePicker(true); });
-      if (pickSkip) pickSkip.addEventListener('click', function(){ closePicker(false); });
-      if (pickEl) pickEl.addEventListener('click', function(e){ if (e.target === pickEl) closePicker(false); });
+      });
+      /* Backdrop click = cancel: close the popup and stay on the type step —
+         nothing commits; re-picking a type reopens the list. */
+      if (pickEl) pickEl.addEventListener('click', function(e){
+        if (e.target === pickEl){ pickGen++; pickEl.hidden = true; }
+      });
 
       function renderFiles(){
         if (!fileList) return;
@@ -1522,7 +1598,6 @@
         const msgVal = (msgIn ? msgIn.value : '').trim();
         if (needMsg && !msgVal){ status('Please tell us what happened.'); if (msgIn) msgIn.focus(); return; }
         if (totalPicked() > MAX_TOTAL_BYTES){ status('Photos can total 35 MB — please remove one or use smaller photos.'); return; }
-        const emailVal = emailIn ? (emailIn.value || '').trim() : '';
 
         /* The picker's chosen products lead the message as a bullet list so
            the claim email names exactly which items are affected. */
@@ -1531,13 +1606,12 @@
           const head = chosenType === 'Damaged in transit' ? 'Damaged product(s):'
             : chosenType === 'Wrong item' ? 'Wrong product(s) received:'
             : chosenType === 'Missing item' ? 'Missing product(s):' : 'Product(s):';
-          msgOut = head + '\n' + selItems.map(function(t){ return '• ' + t; }).join('\n') + (msgVal ? '\n\n' + msgVal : '');
+          msgOut = head + '\n' + selItems.map(function(s){ return '• ' + s.title + (s.qty > 1 ? ' × ' + s.qty : ''); }).join('\n') + (msgVal ? '\n\n' + msgVal : '');
         }
         const fd = new FormData();
         fd.set('order_id', orderVal);
         fd.set('type', chosenType);
         fd.set('message', msgOut);
-        if (emailVal) fd.set('email', emailVal);
         fd.set('page_url', String(location.href).slice(0, 500));
         fd.set('idempotencyKey', idemKey);
         picked.forEach(function(f){ fd.append('files', f, f.name); });
@@ -1555,8 +1629,7 @@
             if (dots) dots.hidden = true;
             if (doneEl){
               doneEl.hidden = false;
-              if (doneText) doneText.textContent = 'Your reference is ' + data.reference + '.'
-                + (emailVal ? ' We’ll email you at ' + emailVal + '.' : ' Our reply goes to the email on your order.');
+              if (doneText) doneText.textContent = 'Your reference is ' + data.reference + '. Our reply goes to the email on your order.';
             }
             status('');
           } else {
@@ -1827,13 +1900,13 @@
           try { data = await res.json(); } catch(err){}
           if (res.ok && data && data.ok){
             if (data.found){ statusEl.textContent = ''; render(data); }
-            else statusCta('We couldn’t find a shipment for that order number. Double-check the number — brand-new orders can take a little while to appear.');
+            else statusCta('We couldn’t find a shipment for that number. Double-check your order number or tracking number — brand-new orders can take a little while to appear.');
           } else {
             /* A not-yet-updated worker answers /track from the chat handler
                with raw errors — swap those (and the terse 429) for a friendly
                message that doesn't promise quick self-recovery. */
             const raw = (data && data.error) ? String(data.error) : '';
-            const stale = /empty message|invalid json|payload too large|worker secrets|^too many requests$/i.test(raw);
+            const stale = /empty message|invalid json|payload too large|worker secrets|^too many requests$|^please enter a valid order number\.$/i.test(raw);
             if (raw && !stale) statusEl.textContent = raw;
             else statusCta('Tracking isn’t available right now — please try again later.');
           }
@@ -1924,7 +1997,7 @@
       "info": "Live shipment steps from the fulfillment system, via the AI chat endpoint (Worker)."
     },
     { "type": "text", "id": "track_tab_label", "label": "Track tab label", "default": "Track order" },
-    { "type": "text", "id": "track_intro", "label": "Track intro text", "default": "Enter your order number to see exactly where your package is." },
+    { "type": "text", "id": "track_intro", "label": "Track intro text", "default": "Enter your order number or tracking number to see exactly where your package is." },
     { "type": "text", "id": "track_button_label", "label": "Track button label", "default": "Track" },
     { "type": "url", "id": "chat_endpoint", "label": "AI chat endpoint (optional)", "info": "Leave empty to answer typed questions from the store’s built-in policies/FAQ search. Set to your AI Worker URL later to switch to LLM replies." },
 
