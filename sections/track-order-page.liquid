@@ -355,7 +355,7 @@
           /* A not-yet-updated worker answers /track from the chat handler with
              raw errors — swap those (and the terse 429) for a friendly message. */
           var raw = (data && data.error) ? String(data.error) : '';
-          var stale = /empty message|invalid json|payload too large|worker secrets|^too many requests$/i.test(raw);
+          var stale = /empty message|invalid json|payload too large|worker secrets|^too many requests$|^please enter a valid order number\.$/i.test(raw);
           if (raw && !stale) statusEl.textContent = raw;
           else statusCta('Tracking isn’t available right now — please try again later.');
         }
@@ -386,7 +386,7 @@
     { "type": "header", "content": "Heading" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Order status" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Track your order" },
-    { "type": "text", "id": "lede", "label": "Intro text", "default": "Enter your order number to see exactly where your package is." },
+    { "type": "text", "id": "lede", "label": "Intro text", "default": "Enter your order number or tracking number to see exactly where your package is." },
     { "type": "text", "id": "button_label", "label": "Button label", "default": "Track" },
     { "type": "header", "content": "Wiring" },
     { "type": "text", "id": "chat_endpoint", "label": "Worker endpoint (optional)", "info": "Leave blank to reuse the floating chat widget's endpoint." },

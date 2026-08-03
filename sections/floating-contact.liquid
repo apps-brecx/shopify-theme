@@ -1266,7 +1266,7 @@
           });
           let data = null;
           try { data = await res.json(); } catch(e){}
-          if (res.ok && data && data.ok) return { state: data.found ? 'found' : 'notfound' };
+          if (res.ok && data && data.ok) return { state: data.found ? 'found' : 'notfound', order: (data.found && data.order) || '' };
           if (res.status === 400) return { state: 'invalid', msg: (data && data.error) || 'Please enter a valid order number.' };
           if (res.status === 429) return { state: 'busy' };
           return { state: 'unknown' };   /* worker error → fail open */
@@ -1278,14 +1278,18 @@
       }
       if (next1) next1.addEventListener('click', async function(){
         if (checking) return;
-        const v = (orderIn.value || '').trim();
+        let v = (orderIn.value || '').trim();
         if (!v){ status('Please enter your order number.'); orderIn.focus(); return; }
-        /* Format gate BEFORE any network: order numbers are 4-20 digits (the
-           worker's own rule). Without this, garbage input rode the fail-open
+        /* Format gate BEFORE any network: an order number (4-20 digits) or a
+           carrier tracking number (8-40 alphanumerics — the worker resolves
+           it to its order). Without this, garbage input rode the fail-open
            path straight past verification. */
         const digits = v.replace(/[^0-9]/g, '');
-        if (digits.length < 4 || digits.length > 20){
-          status('Hmm, that doesn’t look like an order number — it’s the long number from your confirmation email, like 154008582984.');
+        const alnum = v.replace(/[^0-9A-Za-z]/g, '');
+        const orderShape = digits.length >= 4 && digits.length <= 20;
+        const trackShape = alnum.length >= 8 && alnum.length <= 40 && /\d/.test(alnum);
+        if (!orderShape && !trackShape){
+          status('Hmm, that doesn’t look like an order or tracking number — your order number is the long number from your confirmation email, like 154008582984.');
           orderIn.focus();
           return;
         }
@@ -1301,12 +1305,24 @@
         next1.disabled = false;
         syncNext();
         if (check.state === 'notfound'){
-          claimCta('We couldn’t find that order number. Double-check it — brand-new orders can take a little while to appear.');
+          claimCta('We couldn’t find that order. Double-check the number — brand-new orders can take a little while to appear.');
           orderIn.focus();
           return;
         }
         if (check.state === 'invalid'){ status(check.msg); orderIn.focus(); return; }
         if (check.state === 'busy'){ status('That’s a few checks in a row — give it a minute, then try again.'); return; }
+        /* Typed a TRACKING number? /track answers with the order it belongs
+           to — adopt that: claims are keyed to the ORDER number (the email
+           lookup and support intake need it), never a carrier number. */
+        let adopted = '';
+        if (check.order){
+          const canon = String(check.order).replace(/^#/, '').trim();
+          if (canon && canon.replace(/[^0-9]/g, '') !== v.replace(/[^0-9]/g, '')){
+            orderIn.value = canon;
+            v = canon;
+            adopted = canon;
+          }
+        }
         /* A different order = a different product list. Stale selections must
            never ride into the new order's claim (the picker's silent-skip
            path would otherwise submit order A's bullets on order B). */
@@ -1314,6 +1330,8 @@
         okOrder = v;
         prefetchItems(v);   /* warm the product picker while they pick a type */
         goStep(2);
+        /* after goStep — it clears the status area */
+        if (adopted) status('We matched that tracking number to order ' + adopted + ' — your claim will use the order number.', true);
       });
       if (orderIn) orderIn.addEventListener('keydown', function(e){
         if (e.key === 'Enter'){ e.preventDefault(); if (next1) next1.click(); }
@@ -1888,7 +1906,7 @@
                with raw errors — swap those (and the terse 429) for a friendly
                message that doesn't promise quick self-recovery. */
             const raw = (data && data.error) ? String(data.error) : '';
-            const stale = /empty message|invalid json|payload too large|worker secrets|^too many requests$/i.test(raw);
+            const stale = /empty message|invalid json|payload too large|worker secrets|^too many requests$|^please enter a valid order number\.$/i.test(raw);
             if (raw && !stale) statusEl.textContent = raw;
             else statusCta('Tracking isn’t available right now — please try again later.');
           }
@@ -1979,7 +1997,7 @@
       "info": "Live shipment steps from the fulfillment system, via the AI chat endpoint (Worker)."
     },
     { "type": "text", "id": "track_tab_label", "label": "Track tab label", "default": "Track order" },
-    { "type": "text", "id": "track_intro", "label": "Track intro text", "default": "Enter your order number to see exactly where your package is." },
+    { "type": "text", "id": "track_intro", "label": "Track intro text", "default": "Enter your order number or tracking number to see exactly where your package is." },
     { "type": "text", "id": "track_button_label", "label": "Track button label", "default": "Track" },
     { "type": "url", "id": "chat_endpoint", "label": "AI chat endpoint (optional)", "info": "Leave empty to answer typed questions from the store’s built-in policies/FAQ search. Set to your AI Worker URL later to switch to LLM replies." },
 

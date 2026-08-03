@@ -343,6 +343,10 @@ async function fbmFindRow(env, num, rawQuery) {
      number is required (≥8 chars incl. a digit) — no partial guesses. */
   const needle = String(rawQuery || '').toUpperCase().replace(/[^0-9A-Z]/g, '');
   const trackable = needle.length >= 8 && needle.length <= 40 && /\d/.test(needle);
+  /* Hyphenated/spaced tracking input: the raw query keeps separators (they
+     matter for marketplace ORDER ids) which FBM may not fuzzy-match against
+     a stored bare number — also try the bare needle itself. */
+  if (trackable && queries.indexOf(needle) === -1) queries.push(needle);
   const normTn = function (t) { return String(t).toUpperCase().replace(/[^0-9A-Z]/g, ''); };
   const shopFirst = function (matches) {
     return matches.find(function (r) {
