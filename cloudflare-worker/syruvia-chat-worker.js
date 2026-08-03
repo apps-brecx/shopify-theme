@@ -534,11 +534,18 @@ async function fbmOrderItems(env, num, rawNum) {
     ]);
     if (!row || !Array.isArray(row.items)) return null;
     /* catalog_product_title is the clean name FBM's own UI shows; items[].title
-       is the raw sales-channel listing title — abbreviated ("SF Pumpkin
-       Spice"), typo'd, or a full Amazon-length listing string. Owner decision
-       2026-08-01: show the FBM catalog title. */
+       is the raw sales-channel listing title. Owner decision 2026-08-01: show
+       the FBM catalog title — EXCEPT for fixed packs (2026-08-03): a variety
+       pack arrives as ONE item whose catalog_product_title is just the FIRST
+       component's flavor ("Coconut Syrup" for a 4-flavor pack), so
+       multi-component items use the listing title (the pack's real name)
+       instead. Custom choose-your-flavor bundles already decompose into
+       single-component items and keep clean catalog titles. */
     const items = mergeItems(row.items.map(function (it) {
-      const t = (it && (it.catalog_product_title || it.catalog_product_name || it.title)) || '';
+      const isPack = Array.isArray(it && it.components) && it.components.length > 1;
+      const t = isPack
+        ? ((it && (it.title || it.catalog_product_title)) || '')
+        : ((it && (it.catalog_product_title || it.catalog_product_name || it.title)) || '');
       return { title: String(t).trim().slice(0, 200), quantity: (it && it.quantity) || 1 };
     }));
     return items.length ? items : null;
