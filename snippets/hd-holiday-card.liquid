@@ -1,0 +1,27 @@
+{%- comment -%}
+  Holiday landing page product card.
+  Params: fp (product), sett (section settings), badge_override (optional), attrs (optional shopify_attributes).
+  In stock: badge + price + add-to-cart. Out of stock: Coming Soon flag + disabled button.
+{%- endcomment -%}
+{%- assign disp = fp.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip -%}
+{%- if disp == blank -%}{%- assign disp = fp.title -%}{%- endif -%}
+<div class="hd-card hd-rev" {{ attrs }}>
+  {%- if fp.available -%}
+  <span class="hd-flag">{{ badge_override | default: sett.live_badge | default: 'Holiday' }}</span>
+  {%- else -%}
+  <span class="hd-flag soonf">{{ sett.coming_label | default: 'Coming soon' }}</span>
+  {%- endif -%}
+  <a class="ph" href="{{ fp.url }}">{%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 720 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}</a>
+  <div class="b">
+    <a class="t" href="{{ fp.url }}">{{ disp }}</a>
+    <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
+    {%- if fp.available -%}
+    {%- form 'product', fp -%}
+      <input type="hidden" name="id" value="{{ fp.selected_or_first_available_variant.id }}">
+      <button type="submit" class="atc">{{ sett.atc_label | default: 'Add to cart' }}</button>
+    {%- endform -%}
+    {%- else -%}
+    <form><button type="button" class="atc" disabled>{{ sett.coming_label | default: 'Coming soon' }}</button></form>
+    {%- endif -%}
+  </div>
+</div>

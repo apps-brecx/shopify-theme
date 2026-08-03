@@ -1,0 +1,29 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "page-holiday",
+      "blocks": {
+        "gift1": { "type": "box", "settings": { "title": "Gift-ready bottles", "text": "Beautiful bottles that need zero wrapping talent. Add a bow and take the credit.", "bg": "#1E4D38", "tx": "#ffffff" } },
+        "gift2": { "type": "box", "settings": { "title": "Limited winter flavors", "text": "Peppermint, gingerbread and friends visit once a year. When the batch is gone, it is gone.", "bg": "#B3232B", "tx": "#ffffff" } },
+        "gift3": { "type": "box", "settings": { "title": "Free shipping over $36", "text": "Stock up for the season and shipping is on us. Ships fast from New Jersey.", "bg": "#FCE2A0", "tx": "#3c2415" } },
+        "rec1": { "type": "recipe", "settings": { "title": "Peppermint Mocha", "text": "One pump peppermint, one pump chocolate, hot coffee, steamed milk. Candy cane optional but encouraged.", "tag": "2 pumps", "hint": "Photo idea: a red mug with whipped cream and crushed candy cane on top." } },
+        "rec2": { "type": "recipe", "settings": { "title": "Gingerbread Latte", "text": "Two pumps gingerbread, a double shot, warm milk. Tastes like a cookie you can drink.", "tag": "Cozy", "hint": "Photo idea: a glass latte next to gingerbread cookies on a wooden board." } },
+        "rec3": { "type": "recipe", "settings": { "title": "Eggnog Cream Soda", "text": "One pump vanilla, one pump caramel, sparkling water, a splash of eggnog over ice.", "tag": "No espresso", "hint": "Photo idea: a tall glass with ice and a cinnamon stick, fairy lights behind." } }
+      },
+      "block_order": ["gift1", "gift2", "gift3", "rec1", "rec2", "rec3"],
+      "settings": {
+        "collection_handle": "holiday-flavor-syrups"
+      }
+    }
+  },
+  "order": ["main"]
+}
