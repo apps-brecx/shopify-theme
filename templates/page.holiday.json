@@ -12,11 +12,11 @@
     "main": {
       "type": "page-holiday",
       "blocks": {
-        "gift1": { "type": "box", "settings": { "title": "Gift-ready bottles", "text": "Beautiful bottles that need zero wrapping talent. Add a bow and take the credit.", "bg": "#1E4D38", "tx": "#ffffff" } },
-        "gift2": { "type": "box", "settings": { "title": "Limited winter flavors", "text": "Peppermint, gingerbread and friends visit once a year. When the batch is gone, it is gone.", "bg": "#B3232B", "tx": "#ffffff" } },
-        "gift3": { "type": "box", "settings": { "title": "Free shipping over $36", "text": "Stock up for the season and shipping is on us. Ships fast from New Jersey.", "bg": "#FCE2A0", "tx": "#3c2415" } },
-        "rec1": { "type": "recipe", "settings": { "title": "Peppermint Mocha", "text": "One pump peppermint, one pump chocolate, hot coffee, steamed milk. Candy cane optional but encouraged.", "tag": "2 pumps", "hint": "Photo idea: a red mug with whipped cream and crushed candy cane on top." } },
-        "rec2": { "type": "recipe", "settings": { "title": "Gingerbread Latte", "text": "Two pumps gingerbread, a double shot, warm milk. Tastes like a cookie you can drink.", "tag": "Cozy", "hint": "Photo idea: a glass latte next to gingerbread cookies on a wooden board." } },
+        "gift1": { "type": "box", "settings": { "title": "Gift ready bottles", "text": "A bottle that looks good on a counter and even better under a tree. Add a bow and take the credit.", "bg": "#14332A", "tx": "#FAF6EE", "bordered": false } },
+        "gift2": { "type": "box", "settings": { "title": "Once a year flavors", "text": "Peppermint, gingerbread and friends visit for one short season. When the batch is gone, it is gone.", "bg": "#A61E2A", "tx": "#FAF6EE", "bordered": false } },
+        "gift3": { "type": "box", "settings": { "title": "Free shipping over $36", "text": "Stock up for the season and shipping is on us. Ships fast from New Jersey.", "bg": "#FAF6EE", "tx": "#14332A", "bordered": true } },
+        "rec1": { "type": "recipe", "settings": { "title": "Peppermint Mocha", "text": "One pump peppermint, one pump chocolate, hot coffee, steamed milk. Crushed candy cane if you are feeling festive.", "tag": "2 pumps", "hint": "Photo idea: a red mug with whipped cream and crushed candy cane, soft window light." } },
+        "rec2": { "type": "recipe", "settings": { "title": "Gingerbread Latte", "text": "Two pumps gingerbread, a double shot, warm milk. A cookie you can drink.", "tag": "Cozy", "hint": "Photo idea: a glass latte next to gingerbread cookies on a wooden board." } },
         "rec3": { "type": "recipe", "settings": { "title": "Eggnog Cream Soda", "text": "One pump vanilla, one pump caramel, sparkling water, a splash of eggnog over ice.", "tag": "No espresso", "hint": "Photo idea: a tall glass with ice and a cinnamon stick, fairy lights behind." } }
       },
       "block_order": ["gift1", "gift2", "gift3", "rec1", "rec2", "rec3"],
