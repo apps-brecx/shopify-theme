@@ -1,17 +1,18 @@
 {%- comment -%}
-  Holiday landing page product card.
+  Holiday collection page product card (hx design).
   Params: fp (product), sett (section settings), badge_override (optional), attrs (optional shopify_attributes).
-  In stock: badge + price + add-to-cart. Out of stock: Coming Soon flag + disabled button.
+  In stock: flag + price + add-to-cart. Out of stock: Coming Soon veil + disabled button.
 {%- endcomment -%}
 {%- assign disp = fp.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip -%}
 {%- if disp == blank -%}{%- assign disp = fp.title -%}{%- endif -%}
-<div class="hd-card hd-rev" {{ attrs }}>
-  {%- if fp.available -%}
-  <span class="hd-flag">{{ badge_override | default: sett.live_badge | default: 'Holiday' }}</span>
-  {%- else -%}
-  <span class="hd-flag soonf">{{ sett.coming_label | default: 'Coming soon' }}</span>
-  {%- endif -%}
-  <a class="ph" href="{{ fp.url }}">{%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 720 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}</a>
+<div class="hx-card hx-rev{% unless fp.available %} soon{% endunless %}" {{ attrs }}>
+  <a class="ph" href="{{ fp.url }}">
+    {%- if fp.available -%}
+    <span class="flag">{{ badge_override | default: sett.live_badge | default: 'Limited' }}</span>
+    {%- endif -%}
+    {%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 720 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}
+    {%- unless fp.available -%}<span class="veil">{{ sett.coming_label | default: 'Coming soon' }}</span>{%- endunless -%}
+  </a>
   <div class="b">
     <a class="t" href="{{ fp.url }}">{{ disp }}</a>
     <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>

@@ -1,611 +1,677 @@
 {%- comment -%}
-  Holiday landing page (Syruvia) · festive but brand-true.
-  Cream base with evergreen, cranberry and gold. Gentle falling snow (toggle),
-  sticky order-by countdown (counts down TO a date), cranberry marquee ribbon,
-  three gift info boxes (stacking on mobile), featured holiday products with
-  quick add-to-cart (blocks, collection fallback with in-stock first), a
-  Merry & Mixable drift statement, three holiday recipe cards with photo slots
-  (editor-only photo hints), two full-width picture bands and a closing CTA.
-  Every text, image, color and toggle is editable. Motion respects reduced-motion.
+  Syruvia Holiday Collection page. Editorial, big-brand seasonal landing.
+  Prefix: hx-. Sections: countdown strip, hero, ticker, intro, lineup, gift tiles,
+  image band, holiday menu (recipes), giant type marquee, closing CTA.
 {%- endcomment -%}
-{%- assign s = section.settings -%}
-{%- assign rad = s.card_radius | default: 16 -%}
-{%- assign cl = collections[s.collection_handle] -%}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:wght@300;400;600;700&display=swap"></noscript>
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Instrument+Sans:wght@400;500;600&display=swap"></noscript>
+
+{%- liquid
+  assign S = section.settings
+  assign coll = collections[S.collection_handle]
+  assign end_url = S.end_url
+  if end_url == blank and coll != blank
+    assign end_url = coll.url
+  endif
+  if end_url == blank
+    assign end_url = '/collections/all'
+  endif
+-%}
 
 <style>
-  #hd-{{ section.id }}{
-    --ink:{{ s.color_ink | default: '#1a1a1a' }};
-    --brand:{{ s.color_brand | default: '#3c2415' }};
-    --bg:{{ s.color_bg | default: '#FFFBF4' }};
-    --paper:{{ s.color_paper | default: '#ffffff' }};
-    --pine:{{ s.color_pine | default: '#1E4D38' }};
-    --berry:{{ s.color_berry | default: '#B3232B' }};
-    --gold:{{ s.color_gold | default: '#FCE2A0' }};
-    --rule-c:{{ s.color_rule | default: '#3c2415' }};
-    --wrap:{{ s.wrap_max | default: 1120 }}px;
-    --rad:{{ rad }}px;
-    --display:'Archivo Black','Josefin Sans',system-ui,sans-serif;
-    --serif:'Josefin Sans',system-ui,sans-serif;
-    --rule:1.5px solid var(--rule-c);
-    background:var(--bg);color:var(--ink);font-family:var(--serif);position:relative;overflow-x:clip;font-size:16px;line-height:1.6;scroll-behavior:smooth;
-  }
-  #hd-{{ section.id }} *{box-sizing:border-box;}
-  #hd-{{ section.id }} .hd-wrap{max-width:var(--wrap);margin:0 auto;padding:0 22px;}
-  #hd-{{ section.id }} .hd-eyebrow{font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;display:inline-block;padding:6px 14px;border:var(--rule);border-radius:999px;background:var(--paper);color:var(--pine);}
-  #hd-{{ section.id }} .hd-h2{font-family:var(--display);font-weight:400;font-size:clamp(26px,5vw,44px);line-height:1;letter-spacing:-.005em;text-transform:uppercase;margin:14px 0 0;color:var(--brand);text-wrap:balance;}
-  #hd-{{ section.id }} .hd-h2 em{font-family:var(--serif);font-weight:300;font-style:italic;text-transform:none;letter-spacing:0;color:var(--berry);}
-  #hd-{{ section.id }} .hd-lead{font-size:clamp(15px,2vw,17.5px);color:var(--ink);opacity:.8;max-width:56ch;margin:14px auto 0;}
-  #hd-{{ section.id }} .hd-head{text-align:center;}
-  #hd-{{ section.id }} .hd-rev{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.7,.2,1);}
-  #hd-{{ section.id }} .hd-rev.in{opacity:1;transform:none;}
-  #hd-{{ section.id }} .hd-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--display);font-weight:400;font-size:13.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:16px 30px;border:var(--rule);border-radius:999px;cursor:pointer;transition:transform .14s ease,box-shadow .14s ease,background .14s ease;background:var(--pine);color:#fff;box-shadow:3px 3px 0 rgba(60,36,21,.25);}
-  #hd-{{ section.id }} .hd-btn--berry{background:var(--berry);}
-  #hd-{{ section.id }} .hd-btn--ghost{background:var(--paper);color:var(--brand);box-shadow:none;}
-  @media(hover:hover){
-    #hd-{{ section.id }} .hd-btn:hover{transform:translateY(-2px);box-shadow:4px 5px 0 rgba(60,36,21,.28);}
-    #hd-{{ section.id }} .hd-btn--ghost:hover{background:var(--gold);}
-  }
-  #hd-{{ section.id }} .hd-btnrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
-  @media(max-width:560px){#hd-{{ section.id }} .hd-btnrow .hd-btn{width:100%;}}
-  #hd-{{ section.id }} .hd-sep{border:0;border-top:2px solid var(--rule-c);opacity:.14;margin:0;}
-  #hd-{{ section.id }} .hd-section{padding:clamp(52px,7vw,88px) 0;}
+#hx-{{ section.id }}{
+  --cream:{{ S.c_cream | default: '#FAF6EE' }};
+  --pine:{{ S.c_pine | default: '#14332A' }};
+  --berry:{{ S.c_berry | default: '#A61E2A' }};
+  --gold:{{ S.c_gold | default: '#C9A24B' }};
+  --paper:#ffffff;
+  --line:rgba(20,51,42,.14);
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Instrument Sans',system-ui,-apple-system,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+  background:var(--cream);color:var(--pine);font-family:var(--sans);
+  font-size:16px;line-height:1.6;overflow-x:clip;position:relative;
+}
+#hx-{{ section.id }} *{box-sizing:border-box;margin:0;}
+#hx-{{ section.id }} img{max-width:100%;display:block;}
+#hx-{{ section.id }} a{color:inherit;}
+#hx-{{ section.id }} .wrap{max-width:1200px;margin:0 auto;padding:0 24px;}
 
-  /* COUNTDOWN — sticky order-by bar */
-  #hd-{{ section.id }} .hd-count{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:center;gap:8px 14px;flex-wrap:wrap;background:var(--pine);color:#fff;padding:10px 16px;border-bottom:var(--rule);text-align:center;}
-  #hd-{{ section.id }} .hd-count .lb{font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.14em;text-transform:uppercase;}
-  #hd-{{ section.id }} .hd-count .tm{font-family:var(--display);font-weight:400;font-size:17px;letter-spacing:.08em;color:var(--gold);font-variant-numeric:tabular-nums;}
+/* ---------- type ---------- */
+#hx-{{ section.id }} .kick{
+  font-family:var(--sans);font-weight:600;font-size:11px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--berry);display:block;
+}
+#hx-{{ section.id }} .h2{
+  font-family:var(--serif);font-variation-settings:'opsz' 100;font-weight:420;
+  font-size:clamp(2rem,4.6vw,3.4rem);line-height:1.08;letter-spacing:-.01em;
+  margin-top:14px;text-wrap:balance;
+}
+#hx-{{ section.id }} .h2 em,#hx-{{ section.id }} .big em{font-style:italic;font-weight:380;color:var(--berry);}
 
-  /* SNOW */
-  #hd-{{ section.id }} .hd-snow{position:fixed;inset:0;pointer-events:none;z-index:5;}
-  @media (prefers-reduced-motion: reduce){#hd-{{ section.id }} .hd-snow{display:none;}}
+/* ---------- reveal ---------- */
+#hx-{{ section.id }} .hx-rev{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease),transform .7s var(--ease);}
+#hx-{{ section.id }} .hx-rev.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){
+  #hx-{{ section.id }} .hx-rev{opacity:1;transform:none;transition:none;}
+}
 
-  /* HERO */
-  #hd-{{ section.id }} .hd-hero{position:relative;overflow:hidden;text-align:center;padding:clamp(64px,10vw,120px) 0 clamp(70px,10vw,120px);background:linear-gradient(180deg,{{ s.hero_g1 | default: '#153A2B' }} 0%,{{ s.hero_g2 | default: '#1E4D38' }} 100%);}
-  #hd-{{ section.id }} .hd-hero .glow{position:absolute;inset:auto;left:50%;top:-30%;width:120vw;height:90%;transform:translateX(-50%);background:radial-gradient(50% 60% at 50% 40%, rgba(252,226,160,.16), transparent 70%);pointer-events:none;}
-  #hd-{{ section.id }} .hd-hero .hd-wrap{position:relative;z-index:2;}
-  #hd-{{ section.id }} .hd-hero .chip{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--pine);background:var(--gold);border:var(--rule);border-radius:999px;padding:8px 16px;}
-  #hd-{{ section.id }} .hd-h1{font-family:var(--display);font-weight:400;font-size:clamp(42px,9vw,96px);line-height:.95;letter-spacing:-.01em;text-transform:uppercase;color:#FFFBF4;margin:22px auto 0;max-width:14ch;text-wrap:balance;}
-  #hd-{{ section.id }} .hd-h1 em{font-family:var(--serif);font-weight:300;font-style:italic;text-transform:none;letter-spacing:0;color:var(--gold);}
-  #hd-{{ section.id }} .hd-hero .sub{font-size:clamp(16px,2.2vw,19px);margin:20px auto 0;max-width:46ch;color:#FFFBF4;opacity:.85;font-weight:300;}
-  #hd-{{ section.id }} .hd-hero .hd-btnrow{margin-top:28px;}
-  #hd-{{ section.id }} .hd-hero .meta{font-family:var(--display);font-weight:400;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-top:20px;opacity:.9;}
+/* ---------- countdown / notice strip ---------- */
+#hx-{{ section.id }} .hx-strip{
+  background:var(--pine);color:var(--cream);text-align:center;
+  padding:10px 20px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;
+}
+#hx-{{ section.id }} .hx-strip b{font-weight:600;color:var(--gold);letter-spacing:.12em;font-variant-numeric:tabular-nums;margin-left:10px;}
 
-  /* BANNER SLOT */
-  #hd-{{ section.id }} .hd-band a{display:block;line-height:0;}
-  #hd-{{ section.id }} .hd-band img{display:block;width:100%;height:auto;}
-  #hd-{{ section.id }} .hd-band .m{display:none;}
-  @media(max-width:760px){
-    #hd-{{ section.id }} .hd-band .has-m.d{display:none;}
-    #hd-{{ section.id }} .hd-band .m{display:block;}
-  }
+/* ---------- hero ---------- */
+#hx-{{ section.id }} .hx-hero{background:var(--pine);color:var(--cream);padding:clamp(84px,12vw,140px) 0 0;position:relative;overflow:hidden;}
+#hx-{{ section.id }} .hx-hero .eyebrow{
+  font-size:11px;letter-spacing:.26em;text-transform:uppercase;font-weight:600;color:var(--gold);
+}
+#hx-{{ section.id }} .hx-hero h1{
+  font-family:var(--serif);font-variation-settings:'opsz' 144;font-weight:380;
+  font-size:clamp(3rem,10vw,7rem);line-height:.98;letter-spacing:-.02em;margin-top:22px;color:var(--cream);
+}
+#hx-{{ section.id }} .hx-hero h1 .ln{display:block;overflow:hidden;}
+#hx-{{ section.id }} .hx-hero h1 .ln span{display:block;transform:translateY(112%);transition:transform 1s var(--ease);}
+#hx-{{ section.id }} .hx-hero h1 .ln:nth-child(2) span{transition-delay:.12s;}
+#hx-{{ section.id }} .hx-hero.go h1 .ln span{transform:none;}
+#hx-{{ section.id }} .hx-hero h1 em{font-style:italic;color:var(--gold);}
+#hx-{{ section.id }} .hx-hero .sub{
+  max-width:520px;margin-top:26px;font-size:1.05rem;line-height:1.65;color:rgba(250,246,238,.78);
+  opacity:0;transform:translateY(14px);transition:opacity .8s var(--ease) .35s,transform .8s var(--ease) .35s;
+}
+#hx-{{ section.id }} .hx-hero .ctas{
+  display:flex;gap:26px;align-items:center;margin-top:34px;flex-wrap:wrap;
+  opacity:0;transform:translateY(14px);transition:opacity .8s var(--ease) .5s,transform .8s var(--ease) .5s;
+}
+#hx-{{ section.id }} .hx-hero.go .sub,#hx-{{ section.id }} .hx-hero.go .ctas{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){
+  #hx-{{ section.id }} .hx-hero h1 .ln span,#hx-{{ section.id }} .hx-hero .sub,#hx-{{ section.id }} .hx-hero .ctas{transform:none;opacity:1;transition:none;}
+}
+#hx-{{ section.id }} .btn{
+  display:inline-block;background:var(--gold);color:var(--pine);text-decoration:none;
+  font-weight:600;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:16px 32px;border-radius:2px;transition:transform .35s var(--ease),filter .35s var(--ease);
+}
+#hx-{{ section.id }} .btn:hover{transform:translateY(-2px);filter:brightness(1.06);}
+#hx-{{ section.id }} .lnk{
+  font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;text-decoration:none;
+  border-bottom:1px solid rgba(250,246,238,.4);padding-bottom:4px;transition:border-color .3s;
+}
+#hx-{{ section.id }} .lnk:hover{border-color:var(--gold);}
+#hx-{{ section.id }} .hx-hero .frame{
+  margin-top:clamp(48px,7vw,84px);position:relative;overflow:hidden;border-radius:6px 6px 0 0;
+  aspect-ratio:21/9;background:rgba(250,246,238,.06);
+}
+#hx-{{ section.id }} .hx-hero .frame img{width:100%;height:118%;object-fit:cover;will-change:transform;}
+#hx-{{ section.id }} .hx-hero .frame .hint{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:24px;color:rgba(250,246,238,.55);font-size:.85rem;line-height:1.5;
+  border:1px dashed rgba(250,246,238,.25);border-radius:6px 6px 0 0;
+}
+@media (max-width:749px){
+  #hx-{{ section.id }} .hx-hero{text-align:center;}
+  #hx-{{ section.id }} .hx-hero .sub{margin-left:auto;margin-right:auto;}
+  #hx-{{ section.id }} .hx-hero .ctas{justify-content:center;}
+  #hx-{{ section.id }} .hx-hero .frame{aspect-ratio:4/5;}
+}
 
-  /* RIBBON */
-  #hd-{{ section.id }} .hd-mq{overflow:hidden;background:var(--berry);border-top:var(--rule);border-bottom:var(--rule);padding:11px 0;}
-  #hd-{{ section.id }} .hd-mq .tr{display:flex;gap:40px;white-space:nowrap;width:max-content;animation:hdmq{{ section.id }} 26s linear infinite;}
-  #hd-{{ section.id }} .hd-mq span{font-family:var(--display);font-weight:400;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:#fff;}
-  @keyframes hdmq{{ section.id }}{to{transform:translateX(-50%);}}
-  @media (prefers-reduced-motion: reduce){#hd-{{ section.id }} .hd-mq .tr{animation:none;}}
+/* ---------- ticker ---------- */
+#hx-{{ section.id }} .hx-tick{background:var(--berry);color:var(--cream);overflow:hidden;padding:12px 0;}
+#hx-{{ section.id }} .hx-tick .row{display:flex;width:max-content;animation:hxmq 36s linear infinite;}
+#hx-{{ section.id }} .hx-tick .half{display:flex;align-items:center;white-space:nowrap;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;}
+#hx-{{ section.id }} .hx-tick .half span{padding:0 18px;}
+@keyframes hxmq{to{transform:translateX(-50%);}}
+@media (prefers-reduced-motion:reduce){#hx-{{ section.id }} .hx-tick .row{animation:none;}}
 
-  /* GIFT BOXES */
-  #hd-{{ section.id }} .hd-boxes{position:relative;overflow:clip;background:linear-gradient(180deg,var(--bg),#EDF5F0);}
-  #hd-{{ section.id }} .hd-boxes .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:32px;}
-  @media(min-width:760px){#hd-{{ section.id }} .hd-boxes .grid{grid-template-columns:repeat(3,1fr);}}
-  #hd-{{ section.id }} .hd-box{background:var(--bxbg,var(--paper));color:var(--bxtx,var(--ink));border:var(--rule);border-radius:calc(var(--rad) + 4px);box-shadow:4px 4px 0 rgba(60,36,21,.18);padding:28px 20px;text-align:center;}
-  #hd-{{ section.id }} .hd-box .n{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--paper);color:var(--brand);border:var(--rule);font-family:var(--display);font-size:15px;margin-bottom:14px;box-shadow:2px 2px 0 rgba(60,36,21,.2);}
-  #hd-{{ section.id }} .hd-box h3{font-family:var(--display);font-weight:400;font-size:16px;text-transform:uppercase;color:var(--bxtx,var(--brand));margin:0;line-height:1.15;}
-  #hd-{{ section.id }} .hd-box p{font-size:14.5px;opacity:.9;margin:10px 0 0;line-height:1.55;}
-  @media(max-width:759px){
-    #hd-{{ section.id }} .hd-boxes .grid{gap:18px;}
-    #hd-{{ section.id }} .hd-box{position:sticky;top:calc(96px + (var(--i,0) * 16px));box-shadow:0 -8px 22px rgba(60,36,21,.14);}
-  }
+/* ---------- intro editorial ---------- */
+#hx-{{ section.id }} .hx-intro{padding:clamp(80px,11vw,150px) 0;}
+#hx-{{ section.id }} .hx-intro .grid{display:grid;grid-template-columns:7fr 5fr;gap:clamp(40px,6vw,96px);align-items:start;}
+#hx-{{ section.id }} .hx-intro .big{
+  font-family:var(--serif);font-variation-settings:'opsz' 120;font-weight:400;
+  font-size:clamp(2.2rem,5.4vw,4.2rem);line-height:1.06;letter-spacing:-.015em;text-wrap:balance;
+}
+#hx-{{ section.id }} .hx-intro p{margin-top:4px;font-size:1rem;line-height:1.75;color:rgba(20,51,42,.78);}
+#hx-{{ section.id }} .facts{margin-top:40px;}
+#hx-{{ section.id }} .facts .f{
+  display:flex;justify-content:space-between;gap:16px;align-items:baseline;
+  border-top:1px solid var(--line);padding:14px 0;
+}
+#hx-{{ section.id }} .facts .f:last-child{border-bottom:1px solid var(--line);}
+#hx-{{ section.id }} .facts .l{font-size:11px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:rgba(20,51,42,.55);}
+#hx-{{ section.id }} .facts .v{font-family:var(--serif);font-size:1.05rem;font-weight:450;}
+@media (max-width:849px){
+  #hx-{{ section.id }} .hx-intro .grid{grid-template-columns:1fr;}
+  #hx-{{ section.id }} .hx-intro{text-align:center;}
+  #hx-{{ section.id }} .facts .f{text-align:left;}
+}
 
-  /* PRODUCT SHELF */
-  #hd-{{ section.id }} .hd-prods{display:grid;grid-template-columns:1fr;gap:18px;margin-top:34px;}
-  @media(min-width:700px){#hd-{{ section.id }} .hd-prods{grid-template-columns:repeat(3,1fr);}}
-  #hd-{{ section.id }} .hd-card{position:relative;display:flex;flex-direction:column;background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 6px);overflow:hidden;box-shadow:3px 3px 0 rgba(60,36,21,.12);transition:transform .18s ease,box-shadow .18s ease;}
-  @media(hover:hover){#hd-{{ section.id }} .hd-card:hover{transform:translateY(-4px);box-shadow:5px 7px 0 rgba(60,36,21,.16);}}
-  #hd-{{ section.id }} .hd-card .ph{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:radial-gradient(rgba(255,255,255,.8) 1.4px, transparent 2px) 0 0/18px 18px, var(--phbg, #EAF3EE);border-bottom:var(--rule);padding:22px;text-decoration:none;}
-  #hd-{{ section.id }} .hd-prods .hd-card:nth-child(3n+1){--phbg:{{ s.ph_tint1 | default: '#EAF3EE' }};}
-  #hd-{{ section.id }} .hd-prods .hd-card:nth-child(3n+2){--phbg:{{ s.ph_tint2 | default: '#FAE7E8' }};}
-  #hd-{{ section.id }} .hd-prods .hd-card:nth-child(3n){--phbg:{{ s.ph_tint3 | default: '#FFF3D6' }};}
-  #hd-{{ section.id }} .hd-card .ph img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .3s ease;}
-  @media(hover:hover){#hd-{{ section.id }} .hd-card:hover .ph img{transform:scale(1.05) rotate(-2deg);}}
-  #hd-{{ section.id }} .hd-card .b{display:flex;flex-direction:column;gap:8px;padding:18px 18px 20px;text-align:center;flex:1;}
-  #hd-{{ section.id }} .hd-card .t{font-family:var(--display);font-weight:400;font-size:16px;line-height:1.15;text-transform:uppercase;color:var(--brand);text-decoration:none;}
-  #hd-{{ section.id }} .hd-card .pr{font-family:var(--display);font-weight:400;font-size:17px;color:var(--brand);}
-  #hd-{{ section.id }} .hd-card .pr s{opacity:.45;font-size:14px;margin-left:7px;}
-  #hd-{{ section.id }} .hd-card form{margin-top:auto;}
-  #hd-{{ section.id }} .hd-card .atc{width:100%;font-family:var(--display);font-weight:400;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;background:var(--pine);color:#fff;border:var(--rule);border-radius:999px;padding:14px 18px;cursor:pointer;transition:transform .14s ease,box-shadow .14s ease;box-shadow:2px 2px 0 rgba(60,36,21,.22);}
-  @media(hover:hover){#hd-{{ section.id }} .hd-card .atc:hover{transform:translateY(-2px);box-shadow:3px 4px 0 rgba(60,36,21,.26);}}
-  #hd-{{ section.id }} .hd-card .atc[disabled]{background:var(--bg);color:var(--brand);opacity:.65;cursor:default;box-shadow:none;}
-  #hd-{{ section.id }} .hd-flag{position:absolute;top:12px;left:12px;z-index:2;font-family:var(--display);font-weight:400;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--berry);border-radius:999px;padding:6px 12px;}
-  #hd-{{ section.id }} .hd-flag.soonf{background:var(--brand);}
-  @media (prefers-reduced-motion: no-preference){
-    #hd-{{ section.id }} .hd-prods .hd-card:nth-child(3n+2).hd-rev{transition-delay:.08s;}
-    #hd-{{ section.id }} .hd-prods .hd-card:nth-child(3n).hd-rev{transition-delay:.16s;}
-  }
-  #hd-{{ section.id }} .hd-seeall{margin-top:30px;}
-  @media(max-width:640px){
-    #hd-{{ section.id }} .hd-prods{grid-template-columns:1fr;gap:14px;}
-    #hd-{{ section.id }} .hd-card{flex-direction:row;align-items:stretch;}
-    #hd-{{ section.id }} .hd-card .ph{width:132px;min-width:132px;aspect-ratio:1/1;border-bottom:none;border-right:var(--rule);padding:12px;}
-    #hd-{{ section.id }} .hd-card .b{padding:14px 14px;justify-content:center;}
-    #hd-{{ section.id }} .hd-card .t{font-size:14.5px;}
-    #hd-{{ section.id }} .hd-card .pr{font-size:15px;}
-    #hd-{{ section.id }} .hd-card .atc{padding:12px 14px;font-size:11.5px;}
-    #hd-{{ section.id }} .hd-flag{top:8px;left:8px;}
-  }
+/* ---------- lineup ---------- */
+#hx-{{ section.id }} .hx-shop{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:clamp(72px,10vw,130px) 0;}
+#hx-{{ section.id }} .headrow{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:clamp(32px,5vw,56px);}
+#hx-{{ section.id }} .hx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px;}
+#hx-{{ section.id }} .hx-card{position:relative;display:flex;flex-direction:column;}
+#hx-{{ section.id }} .hx-card .ph{
+  position:relative;display:block;aspect-ratio:4/5;overflow:hidden;border-radius:4px;background:#EFECE3;
+}
+#hx-{{ section.id }} .hx-grid .hx-card:nth-child(3n+1) .ph{background:#ECF1EC;}
+#hx-{{ section.id }} .hx-grid .hx-card:nth-child(3n+2) .ph{background:#F6ECEA;}
+#hx-{{ section.id }} .hx-grid .hx-card:nth-child(3n+3) .ph{background:#F5EFE3;}
+#hx-{{ section.id }} .hx-card .ph img{width:100%;height:100%;object-fit:contain;padding:10%;transition:transform .8s var(--ease);}
+#hx-{{ section.id }} .hx-card:hover .ph img{transform:scale(1.05);}
+#hx-{{ section.id }} .hx-card .flag{
+  position:absolute;top:12px;left:12px;background:var(--pine);color:var(--cream);
+  font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;padding:6px 10px;border-radius:2px;z-index:2;
+}
+#hx-{{ section.id }} .hx-card.soon .ph img{filter:grayscale(.25);opacity:.75;}
+#hx-{{ section.id }} .hx-card .veil{
+  position:absolute;left:12px;right:12px;bottom:12px;background:rgba(255,255,255,.92);color:var(--pine);
+  text-align:center;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;padding:9px 8px;border-radius:2px;
+}
+#hx-{{ section.id }} .hx-card .b{padding:16px 2px 0;display:flex;flex-direction:column;gap:6px;flex:1;}
+#hx-{{ section.id }} .hx-card .t{
+  font-family:var(--serif);font-size:1.1rem;font-weight:480;line-height:1.25;text-decoration:none;
+}
+#hx-{{ section.id }} .hx-card .t:hover{color:var(--berry);}
+#hx-{{ section.id }} .hx-card .pr{font-size:.9rem;color:rgba(20,51,42,.65);font-variant-numeric:tabular-nums;}
+#hx-{{ section.id }} .hx-card .pr s{margin-left:8px;opacity:.55;}
+#hx-{{ section.id }} .hx-card form{margin-top:auto;}
+#hx-{{ section.id }} .hx-card .atc{
+  margin-top:10px;width:100%;background:none;border:1px solid var(--pine);color:var(--pine);
+  font-family:var(--sans);font-weight:600;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:12px 10px;border-radius:2px;cursor:pointer;transition:background .35s var(--ease),color .35s var(--ease);
+}
+#hx-{{ section.id }} .hx-card .atc:hover{background:var(--pine);color:var(--cream);}
+#hx-{{ section.id }} .hx-card .atc[disabled]{border-color:var(--line);color:rgba(20,51,42,.4);cursor:default;background:none;}
+@media (max-width:749px){
+  #hx-{{ section.id }} .hx-grid{grid-template-columns:repeat(2,1fr);gap:14px;}
+  #hx-{{ section.id }} .hx-card .t{font-size:.98rem;}
+  #hx-{{ section.id }} .headrow{flex-direction:column;align-items:center;text-align:center;}
+}
 
-  /* STATEMENT */
-  #hd-{{ section.id }} .hd-say{position:relative;padding:clamp(56px,9vw,110px) 0;text-align:center;overflow:clip;background:radial-gradient(60% 80% at 50% 40%, #FFF6E3, var(--bg));}
-  #hd-{{ section.id }} .hd-say .l1,#hd-{{ section.id }} .hd-say .l2{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:.92;will-change:transform;}
-  #hd-{{ section.id }} .hd-say .l1{font-size:clamp(52px,12vw,148px);color:var(--pine);}
-  #hd-{{ section.id }} .hd-say .l2{font-size:clamp(40px,9.5vw,116px);color:transparent;-webkit-text-stroke:2.5px var(--berry);}
-  @media(max-width:560px){#hd-{{ section.id }} .hd-say .l2{-webkit-text-stroke-width:1.8px;}}
-  #hd-{{ section.id }} .hd-say .sub{font-size:clamp(15px,2.2vw,18px);opacity:.78;font-weight:300;max-width:52ch;margin:22px auto 0;}
+/* ---------- gift tiles ---------- */
+#hx-{{ section.id }} .hx-gifts{padding:clamp(80px,11vw,150px) 0;}
+#hx-{{ section.id }} .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:clamp(32px,5vw,56px);}
+#hx-{{ section.id }} .tile{
+  border-radius:6px;padding:30px 28px;min-height:290px;display:flex;flex-direction:column;justify-content:space-between;gap:34px;
+}
+#hx-{{ section.id }} .tile .no{font-family:var(--serif);font-style:italic;font-size:1rem;opacity:.6;}
+#hx-{{ section.id }} .tile h3{font-family:var(--serif);font-weight:430;font-size:clamp(1.5rem,2.4vw,1.9rem);line-height:1.12;letter-spacing:-.01em;}
+#hx-{{ section.id }} .tile p{margin-top:10px;font-size:.95rem;line-height:1.6;opacity:.82;}
+@media (max-width:849px){
+  #hx-{{ section.id }} .tiles{grid-template-columns:1fr;gap:16px;}
+  #hx-{{ section.id }} .tile{position:sticky;top:calc(92px + var(--i)*14px);min-height:0;gap:22px;text-align:left;}
+  #hx-{{ section.id }} .hx-gifts{text-align:center;}
+}
 
-  /* RECIPE CARDS */
-  #hd-{{ section.id }} .hd-recipes{position:relative;overflow:clip;background:linear-gradient(180deg,var(--bg),#FBEFEF);}
-  #hd-{{ section.id }} .hd-recipes .grid{display:grid;grid-template-columns:1fr;gap:20px;margin-top:34px;}
-  @media(min-width:760px){#hd-{{ section.id }} .hd-recipes .grid{grid-template-columns:repeat(3,1fr);}}
-  #hd-{{ section.id }} .hd-rec{background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 6px);box-shadow:4px 4px 0 rgba(60,36,21,.14);padding:16px 16px 22px;text-align:center;transform:rotate(-1.6deg);transition:transform .25s ease;}
-  #hd-{{ section.id }} .hd-recipes .grid > :nth-child(2){transform:rotate(1.4deg);}
-  #hd-{{ section.id }} .hd-recipes .grid > :nth-child(3){transform:rotate(-1deg);}
-  @media(hover:hover){#hd-{{ section.id }} .hd-rec:hover{transform:rotate(0deg) translateY(-6px);}}
-  #hd-{{ section.id }} .hd-rec img{width:100%;height:auto;display:block;border:var(--rule);border-radius:var(--rad);}
-  #hd-{{ section.id }} .hd-rec .ph-hint{border:1.5px dashed var(--rule-c);border-radius:var(--rad);background:var(--bg);min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;font-size:13px;opacity:.6;}
-  #hd-{{ section.id }} .hd-rec h3{font-family:var(--display);font-weight:400;font-size:17px;text-transform:uppercase;color:var(--brand);margin:16px 0 0;line-height:1.15;}
-  #hd-{{ section.id }} .hd-rec p{font-size:14px;opacity:.8;margin:8px 0 0;line-height:1.55;}
-  #hd-{{ section.id }} .hd-rec .tagx{display:inline-block;margin-top:12px;font-family:var(--display);font-weight:400;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--pine);border-radius:999px;padding:5px 12px;}
+/* ---------- image band ---------- */
+#hx-{{ section.id }} .hx-band{position:relative;overflow:hidden;height:clamp(340px,55vw,560px);background:var(--pine);}
+#hx-{{ section.id }} .hx-band img{position:absolute;top:0;left:0;width:100%;height:120%;object-fit:cover;will-change:transform;}
+#hx-{{ section.id }} .hx-band .cap{
+  position:absolute;left:0;right:0;bottom:26px;text-align:center;color:var(--cream);
+  font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2.2vw,1.4rem);text-shadow:0 1px 14px rgba(0,0,0,.35);padding:0 20px;
+}
+#hx-{{ section.id }} .hx-band .hint{
+  position:absolute;top:20px;left:20px;right:20px;bottom:20px;display:flex;align-items:center;justify-content:center;text-align:center;
+  color:rgba(250,246,238,.6);font-size:.85rem;border:1px dashed rgba(250,246,238,.3);border-radius:6px;padding:20px;
+}
 
-  /* ORNAMENTS — floating holiday shapes with scroll parallax */
-  #hd-{{ section.id }} .hd-orn{position:absolute;z-index:1;pointer-events:none;will-change:transform;}
-  #hd-{{ section.id }} .hd-orn svg{display:block;width:100%;height:auto;animation:hdbob{{ section.id }} 6s ease-in-out infinite alternate;}
-  @keyframes hdbob{{ section.id }}{from{transform:translateY(0) rotate(-6deg);}to{transform:translateY(-12px) rotate(6deg);}}
-  @media (prefers-reduced-motion: reduce){#hd-{{ section.id }} .hd-orn svg{animation:none;}}
-  #hd-{{ section.id }} .hd-hero .o1{left:6%;top:16%;width:46px;opacity:.95;}
-  #hd-{{ section.id }} .hd-hero .o2{right:8%;top:22%;width:38px;opacity:.9;}
-  #hd-{{ section.id }} .hd-hero .o3{left:12%;bottom:14%;width:32px;opacity:.55;}
-  #hd-{{ section.id }} .hd-hero .o4{right:13%;bottom:18%;width:30px;opacity:.7;}
-  #hd-{{ section.id }} .hd-boxes .oa{left:-6px;top:10%;width:54px;opacity:.28;}
-  #hd-{{ section.id }} .hd-boxes .ob{right:-6px;bottom:8%;width:62px;opacity:.24;}
-  #hd-{{ section.id }} .hd-say .oa{left:4%;top:14%;width:44px;opacity:.5;}
-  #hd-{{ section.id }} .hd-say .ob{right:5%;bottom:16%;width:38px;opacity:.4;}
-  #hd-{{ section.id }} .hd-recipes .oa{left:2%;top:6%;width:42px;opacity:.5;}
-  #hd-{{ section.id }} .hd-recipes .ob{right:2%;bottom:10%;width:38px;opacity:.35;}
-  @media(max-width:700px){
-    #hd-{{ section.id }} .hd-hero .o3,#hd-{{ section.id }} .hd-hero .o4{display:none;}
-    #hd-{{ section.id }} .hd-orn{opacity:.5;}
-  }
+/* ---------- holiday menu ---------- */
+#hx-{{ section.id }} .hx-menu{background:var(--paper);padding:clamp(80px,11vw,150px) 0;border-bottom:1px solid var(--line);}
+#hx-{{ section.id }} .menu-list{margin-top:clamp(28px,4vw,48px);}
+#hx-{{ section.id }} .mrow{
+  display:grid;grid-template-columns:70px 1fr 130px;gap:24px;align-items:center;
+  border-top:1px solid var(--line);padding:26px 0;transition:background .4s var(--ease);
+}
+#hx-{{ section.id }} .mrow:last-child{border-bottom:1px solid var(--line);}
+#hx-{{ section.id }} .mrow:hover{background:var(--cream);}
+#hx-{{ section.id }} .mrow .no{font-family:var(--serif);font-style:italic;font-size:1.4rem;color:rgba(20,51,42,.4);padding-left:8px;}
+#hx-{{ section.id }} .mrow h3{font-family:var(--serif);font-weight:440;font-size:clamp(1.4rem,3vw,1.9rem);letter-spacing:-.01em;line-height:1.15;}
+#hx-{{ section.id }} .mrow .tag{
+  display:inline-block;margin-left:14px;vertical-align:middle;font-family:var(--sans);
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--berry);
+  border:1px solid currentColor;border-radius:999px;padding:4px 10px;
+}
+#hx-{{ section.id }} .mrow p{margin-top:8px;font-size:.95rem;line-height:1.6;color:rgba(20,51,42,.72);max-width:560px;}
+#hx-{{ section.id }} .mrow .im{aspect-ratio:1/1;border-radius:4px;overflow:hidden;background:#EFECE3;}
+#hx-{{ section.id }} .mrow .im img{width:100%;height:100%;object-fit:cover;}
+#hx-{{ section.id }} .mrow .im .hint{
+  display:flex;align-items:center;justify-content:center;height:100%;padding:10px;text-align:center;
+  font-size:.65rem;line-height:1.4;color:rgba(20,51,42,.5);border:1px dashed var(--line);border-radius:4px;
+}
+@media (max-width:749px){
+  #hx-{{ section.id }} .mrow{grid-template-columns:1fr;gap:14px;text-align:center;}
+  #hx-{{ section.id }} .mrow .no{padding:0;}
+  #hx-{{ section.id }} .mrow .tag{margin-left:10px;}
+  #hx-{{ section.id }} .mrow .im{max-width:220px;margin:0 auto;}
+  #hx-{{ section.id }} .mrow p{margin-left:auto;margin-right:auto;}
+  #hx-{{ section.id }} .hx-menu .headrow{align-items:center;text-align:center;}
+}
 
-  /* CLOSING CTA */
-  #hd-{{ section.id }} .hd-close{position:relative;overflow:hidden;text-align:center;padding:clamp(60px,9vw,100px) 0;background:linear-gradient(180deg,var(--berry),#8E1B22);}
-  #hd-{{ section.id }} .hd-close .hd-h2{color:#fff;}
-  #hd-{{ section.id }} .hd-close .hd-h2 em{color:var(--gold);}
-  #hd-{{ section.id }} .hd-close .hd-lead{color:#fff;opacity:.85;}
-  #hd-{{ section.id }} .hd-close .hd-btnrow{margin-top:26px;}
-  #hd-{{ section.id }} .hd-close .hd-btn{background:var(--gold);color:var(--brand);box-shadow:3px 3px 0 rgba(0,0,0,.28);}
+/* ---------- giant type ---------- */
+#hx-{{ section.id }} .hx-giant{background:var(--pine);overflow:hidden;padding:clamp(48px,7vw,90px) 0;}
+#hx-{{ section.id }} .hx-giant .row{display:flex;width:max-content;animation:hxmq 46s linear infinite;}
+#hx-{{ section.id }} .hx-giant .half{display:flex;white-space:nowrap;}
+#hx-{{ section.id }} .hx-giant .word{
+  font-family:var(--serif);font-style:italic;font-variation-settings:'opsz' 144;font-weight:340;
+  font-size:clamp(4.4rem,11vw,9rem);line-height:1;padding:0 36px;color:transparent;
+  -webkit-text-stroke:1px rgba(250,246,238,.6);
+}
+#hx-{{ section.id }} .hx-giant .word.fill{color:var(--gold);-webkit-text-stroke:0;}
+@media (prefers-reduced-motion:reduce){#hx-{{ section.id }} .hx-giant .row{animation:none;}}
 
-  /* mobile centering */
-  @media(max-width:760px){
-    #hd-{{ section.id }} .hd-lead{margin-left:auto;margin-right:auto;}
-  }
-  @media (prefers-reduced-motion: reduce){
-    #hd-{{ section.id }} .hd-rev{opacity:1;transform:none;}
-  }
+/* ---------- closing ---------- */
+#hx-{{ section.id }} .hx-end{background:var(--berry);color:var(--cream);text-align:center;padding:clamp(90px,13vw,170px) 24px;}
+#hx-{{ section.id }} .hx-end h2{
+  font-family:var(--serif);font-variation-settings:'opsz' 144;font-weight:380;
+  font-size:clamp(2.6rem,7vw,5rem);line-height:1.02;letter-spacing:-.015em;text-wrap:balance;
+}
+#hx-{{ section.id }} .hx-end p{margin:22px auto 0;max-width:440px;font-size:1rem;line-height:1.65;color:rgba(250,246,238,.85);}
+#hx-{{ section.id }} .hx-end .btn{margin-top:36px;background:var(--cream);color:var(--berry);}
+
+/* ---------- snow ---------- */
+#hx-{{ section.id }} .hx-snow{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;}
 </style>
 
-{%- capture orn_bauble -%}<svg viewBox="0 0 24 30" fill="none" aria-hidden="true"><circle cx="12" cy="18" r="10" fill="currentColor"/><rect x="9" y="4" width="6" height="5" rx="1" fill="currentColor" opacity=".7"/><circle cx="12" cy="2.5" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M6 15c2-3 6-4 9-3" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-linecap="round" fill="none"/></svg>{%- endcapture -%}
-{%- capture orn_star -%}<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1l2.7 7.6L23 9l-6.5 5 2.3 8L12 17.5 5.2 22l2.3-8L1 9l8.3-.4z"/></svg>{%- endcapture -%}
-{%- capture orn_flake -%}<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>{%- endcapture -%}
+<div id="hx-{{ section.id }}">
 
-<section id="hd-{{ section.id }}">
-
-  {%- if s.count_enable and s.count_to != blank -%}
-  <div class="hd-count" data-hd-count data-to="{{ s.count_to | strip }}" data-tz="{{ s.count_tz | default: '-05:00' }}">
-    <span class="lb">{{ s.count_label | default: 'Order by Dec 19 for delivery before Christmas' }}</span>
-    <span class="tm" data-hd-time>--:--:--:--</span>
+  {%- if S.count_enable -%}
+  <div class="hx-strip" data-hx-count data-to="{{ S.count_to | escape }}" data-tz="{{ S.count_tz | default: '-04:00' }}" hidden>
+    {{ S.count_label }}<b data-out></b>
   </div>
+  {%- elsif S.topbar_text != blank -%}
+  <div class="hx-strip">{{ S.topbar_text }}</div>
   {%- endif -%}
 
-  {%- if s.show_snow -%}<canvas class="hd-snow" data-hd-snow aria-hidden="true"></canvas>{%- endif -%}
-
-  {%- comment -%} ===== HERO ===== {%- endcomment -%}
-  <div class="hd-hero">
-    <span class="glow" aria-hidden="true"></span>
-    {%- if s.show_ornaments -%}
-    <span class="hd-orn o1" data-odrift="0.5" style="color:var(--gold);">{{ orn_bauble }}</span>
-    <span class="hd-orn o2" data-odrift="0.8" style="color:var(--berry);">{{ orn_bauble }}</span>
-    <span class="hd-orn o3" data-odrift="0.65" style="color:#fff;">{{ orn_flake }}</span>
-    <span class="hd-orn o4" data-odrift="0.4" style="color:var(--gold);">{{ orn_star }}</span>
-    {%- endif -%}
-    <div class="hd-wrap">
-      {%- if s.hero_chip != blank -%}<span class="chip hd-rev">{{ s.hero_chip }}</span>{%- endif -%}
-      <h1 class="hd-h1 hd-rev">{{ s.hero_title | default: 'Sip the <em>season</em>' }}</h1>
-      {%- if s.hero_sub != blank -%}<p class="sub hd-rev">{{ s.hero_sub }}</p>{%- endif -%}
-      <div class="hd-btnrow hd-rev">
-        <a class="hd-btn hd-btn--berry" href="#hd-shop-{{ section.id }}">{{ s.hero_btn | default: 'Shop holiday flavors' }}</a>
-        {%- if s.hero_btn2_url != blank -%}<a class="hd-btn hd-btn--ghost" href="{{ s.hero_btn2_url }}">{{ s.hero_btn2 | default: 'Gift guide' }}</a>{%- endif -%}
+  <header class="hx-hero" data-hx-hero>
+    {%- if S.show_snow -%}<canvas class="hx-snow" data-hx-snow></canvas>{%- endif -%}
+    <div class="wrap" style="position:relative;z-index:2">
+      <span class="eyebrow">{{ S.hero_eyebrow }}</span>
+      <h1>
+        <span class="ln"><span>{{ S.hero_t1 }}</span></span>
+        <span class="ln"><span><em>{{ S.hero_t2 }}</em></span></span>
+      </h1>
+      {%- if S.hero_sub != blank -%}<p class="sub">{{ S.hero_sub }}</p>{%- endif -%}
+      <div class="ctas">
+        {%- if S.hero_cta != blank -%}<a class="btn" href="{{ S.hero_cta_url | default: '#hx-lineup' }}">{{ S.hero_cta }}</a>{%- endif -%}
+        {%- if S.hero_cta2 != blank -%}<a class="lnk" href="{{ S.hero_cta2_url | default: '#hx-menu' }}">{{ S.hero_cta2 }}</a>{%- endif -%}
       </div>
-      {%- if s.hero_meta != blank -%}<p class="meta hd-rev">{{ s.hero_meta }}</p>{%- endif -%}
-    </div>
-  </div>
-
-  {%- comment -%} ===== OPTIONAL BANNER ===== {%- endcomment -%}
-  {%- if s.banner_img != blank -%}
-  <div class="hd-band">
-    {%- if s.banner_link != blank -%}<a href="{{ s.banner_link }}">{%- endif -%}
-    <img class="d {% if s.banner_img_m != blank %}has-m{% endif %}" src="{{ s.banner_img | image_url: width: 2400 }}" alt="{{ s.banner_alt | default: 'Syruvia Holiday' | escape }}" loading="lazy">
-    {%- if s.banner_img_m != blank -%}<img class="m" src="{{ s.banner_img_m | image_url: width: 1200 }}" alt="{{ s.banner_alt | default: 'Syruvia Holiday' | escape }}" loading="lazy">{%- endif -%}
-    {%- if s.banner_link != blank -%}</a>{%- endif -%}
-  </div>
-  {%- endif -%}
-
-  {%- if s.show_marquee -%}
-  {%- assign mqi = s.marquee_text | default: 'Holiday flavors are here · Limited winter batch · Free shipping over $36' -%}
-  <div class="hd-mq" aria-hidden="true"><div class="tr">{%- for i in (1..4) -%}<span>{{ mqi }}</span>{%- endfor -%}{%- for i in (1..4) -%}<span>{{ mqi }}</span>{%- endfor -%}</div></div>
-  {%- endif -%}
-
-  {%- comment -%} ===== GIFT BOXES ===== {%- endcomment -%}
-  {%- assign box_count = 0 -%}
-  {%- capture boxes_html -%}
-    {%- for block in section.blocks -%}
-      {%- if block.type != 'box' -%}{%- continue -%}{%- endif -%}
-      {%- assign box_count = box_count | plus: 1 -%}
-      <div class="hd-box hd-rev" style="--bxbg:{{ block.settings.bg | default: '#1E4D38' }};--bxtx:{{ block.settings.tx | default: '#ffffff' }};--i:{{ box_count | minus: 1 }};" {{ block.shopify_attributes }}>
-        <span class="n">{{ box_count }}</span>
-        {%- if block.settings.title != blank -%}<h3>{{ block.settings.title }}</h3>{%- endif -%}
-        {%- if block.settings.text != blank -%}<p>{{ block.settings.text }}</p>{%- endif -%}
-      </div>
-    {%- endfor -%}
-  {%- endcapture -%}
-  {%- if box_count > 0 -%}
-  <div class="hd-boxes hd-section">
-    {%- if s.show_ornaments -%}
-    <span class="hd-orn oa" data-odrift="0.55" style="color:var(--berry);">{{ orn_bauble }}</span>
-    <span class="hd-orn ob" data-odrift="0.35" style="color:var(--pine);">{{ orn_star }}</span>
-    {%- endif -%}
-    <div class="hd-wrap">
-      <div class="hd-head hd-rev">
-        {%- if s.boxes_eyebrow != blank -%}<span class="hd-eyebrow">{{ s.boxes_eyebrow }}</span>{%- endif -%}
-        <h2 class="hd-h2">{{ s.boxes_title | default: 'Make it a <em>Syruvia</em> holiday' }}</h2>
-      </div>
-      <div class="grid">{{ boxes_html }}</div>
-    </div>
-  </div>
-  {%- endif -%}
-
-  {%- comment -%} ===== PRODUCT SHELF ===== {%- endcomment -%}
-  {%- assign prod_count = 0 -%}
-  {%- for block in section.blocks -%}
-    {%- if block.type == 'product' and block.settings.product != blank -%}{%- assign prod_count = prod_count | plus: 1 -%}{%- endif -%}
-  {%- endfor -%}
-  {%- assign use_fallback = false -%}
-  {%- if prod_count == 0 and cl != blank and cl.products.size > 0 -%}
-    {%- assign use_fallback = true -%}
-    {%- assign prod_count = cl.products.size -%}
-  {%- endif -%}
-  {%- if prod_count > 0 -%}
-  <hr class="hd-sep">
-  <div class="hd-section" id="hd-shop-{{ section.id }}">
-    <div class="hd-wrap">
-      <div class="hd-head hd-rev">
-        {%- if s.feat_eyebrow != blank -%}<span class="hd-eyebrow">{{ s.feat_eyebrow }}</span>{%- endif -%}
-        <h2 class="hd-h2">{{ s.feat_title | default: 'The holiday <em>shelf</em>' }}</h2>
-        {%- if s.feat_sub != blank -%}<p class="hd-lead">{{ s.feat_sub }}</p>{%- endif -%}
-      </div>
-      <div class="hd-prods">
-      {%- assign passes = 'live,soon' | split: ',' -%}
-      {%- if use_fallback -%}
-        {%- assign shown = 0 -%}
-        {%- for pass in passes -%}
-          {%- for fp in cl.products limit: 48 -%}
-            {%- if shown >= 6 -%}{%- break -%}{%- endif -%}
-            {%- if pass == 'live' -%}{%- unless fp.available -%}{%- continue -%}{%- endunless -%}
-            {%- else -%}{%- if fp.available -%}{%- continue -%}{%- endif -%}{%- endif -%}
-            {%- assign shown = shown | plus: 1 -%}
-            {%- render 'hd-holiday-card', fp: fp, sett: s -%}
-          {%- endfor -%}
-        {%- endfor -%}
-      {%- else -%}
-        {%- for pass in passes -%}
-          {%- for block in section.blocks -%}
-            {%- if block.type != 'product' -%}{%- continue -%}{%- endif -%}
-            {%- assign fp = block.settings.product -%}
-            {%- if fp == blank -%}{%- continue -%}{%- endif -%}
-            {%- if pass == 'live' -%}{%- unless fp.available -%}{%- continue -%}{%- endunless -%}
-            {%- else -%}{%- if fp.available -%}{%- continue -%}{%- endif -%}{%- endif -%}
-            {%- render 'hd-holiday-card', fp: fp, sett: s, badge_override: block.settings.badge, attrs: block.shopify_attributes -%}
-          {%- endfor -%}
-        {%- endfor -%}
-      {%- endif -%}
-      </div>
-      {%- if s.feat_seeall != blank -%}
-      <div class="hd-btnrow hd-seeall hd-rev">
-        <a class="hd-btn hd-btn--ghost" href="{{ s.feat_seeall_url | default: '/collections/holiday-flavor-syrups' }}">{{ s.feat_seeall }} &rarr;</a>
-      </div>
-      {%- endif -%}
-    </div>
-  </div>
-  {%- endif -%}
-
-  {%- comment -%} ===== STATEMENT ===== {%- endcomment -%}
-  {%- if s.show_statement -%}
-  <hr class="hd-sep">
-  <div class="hd-say">
-    {%- if s.show_ornaments -%}
-    <span class="hd-orn oa" data-odrift="0.7" style="color:var(--gold);">{{ orn_star }}</span>
-    <span class="hd-orn ob" data-odrift="0.45" style="color:var(--berry);">{{ orn_flake }}</span>
-    {%- endif -%}
-    <div class="hd-wrap">
-      <span class="l1" data-drift="-0.055">{{ s.statement_l1 | default: 'Merry &' }}</span>
-      <span class="l2" data-drift="0.075">{{ s.statement_l2 | default: 'Mixable' }}</span>
-      {%- if s.statement_sub != blank -%}<p class="sub hd-rev">{{ s.statement_sub }}</p>{%- endif -%}
-    </div>
-  </div>
-  {%- endif -%}
-
-  {%- comment -%} ===== RECIPE CARDS ===== {%- endcomment -%}
-  {%- assign rec_count = 0 -%}
-  {%- capture recs_html -%}
-    {%- for block in section.blocks -%}
-      {%- if block.type != 'recipe' -%}{%- continue -%}{%- endif -%}
-      {%- assign rec_count = rec_count | plus: 1 -%}
-      <div class="hd-rec hd-rev" {{ block.shopify_attributes }}>
-        {%- if block.settings.img != blank -%}
-        <img src="{{ block.settings.img | image_url: width: 900 }}" alt="{{ block.settings.title | escape }}" loading="lazy">
-        {%- elsif request.design_mode -%}
-        <div class="ph-hint">{{ block.settings.hint | default: 'Upload a drink photo here.' }}</div>
+      {%- if S.hero_img != blank or request.design_mode -%}
+      <div class="frame">
+        {%- if S.hero_img != blank -%}
+          <picture>
+            {%- if S.hero_img_m != blank -%}<source media="(max-width:749px)" srcset="{{ S.hero_img_m | image_url: width: 1000 }}">{%- endif -%}
+            <img src="{{ S.hero_img | image_url: width: 2200 }}" alt="{{ S.hero_alt | escape }}" data-plx="26">
+          </picture>
+        {%- else -%}
+          <div class="hint">Upload a hero image. Photo idea: a wide, moody kitchen scene, two holiday drinks steaming, bottles in warm light, evergreen and candlelight in the background.</div>
         {%- endif -%}
-        {%- if block.settings.title != blank -%}<h3>{{ block.settings.title }}</h3>{%- endif -%}
-        {%- if block.settings.text != blank -%}<p>{{ block.settings.text }}</p>{%- endif -%}
-        {%- if block.settings.tag != blank -%}<span class="tagx">{{ block.settings.tag }}</span>{%- endif -%}
       </div>
-    {%- endfor -%}
-  {%- endcapture -%}
-  {%- if rec_count > 0 -%}
-  <hr class="hd-sep">
-  <div class="hd-recipes hd-section">
-    {%- if s.show_ornaments -%}
-    <span class="hd-orn oa" data-odrift="0.6" style="color:var(--pine);">{{ orn_flake }}</span>
-    <span class="hd-orn ob" data-odrift="0.4" style="color:var(--berry);">{{ orn_bauble }}</span>
+      {%- endif -%}
+    </div>
+  </header>
+
+  {%- if S.show_tick and S.tick_text != blank -%}
+  <div class="hx-tick" aria-hidden="true">
+    <div class="row">
+      <div class="half">{%- for i in (1..4) -%}<span>{{ S.tick_text }}</span>{%- endfor -%}</div>
+      <div class="half">{%- for i in (1..4) -%}<span>{{ S.tick_text }}</span>{%- endfor -%}</div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  <section class="hx-intro">
+    <div class="wrap">
+      <div class="grid">
+        <div class="hx-rev">
+          <span class="kick">{{ S.intro_kick }}</span>
+          <h2 class="big" style="margin-top:16px">{{ S.intro_big }}</h2>
+        </div>
+        <div class="hx-rev" style="transition-delay:.12s">
+          <p>{{ S.intro_p }}</p>
+          <div class="facts">
+            {%- if S.f1_l != blank -%}<div class="f"><span class="l">{{ S.f1_l }}</span><span class="v">{{ S.f1_v }}</span></div>{%- endif -%}
+            {%- if S.f2_l != blank -%}<div class="f"><span class="l">{{ S.f2_l }}</span><span class="v">{{ S.f2_v }}</span></div>{%- endif -%}
+            {%- if S.f3_l != blank -%}<div class="f"><span class="l">{{ S.f3_l }}</span><span class="v">{{ S.f3_v }}</span></div>{%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hx-shop" id="hx-lineup">
+    <div class="wrap">
+      <div class="headrow hx-rev">
+        <div>
+          <span class="kick">{{ S.feat_kick }}</span>
+          <h2 class="h2">{{ S.feat_title }}</h2>
+        </div>
+        {%- if S.seeall != blank -%}
+        <a class="lnk" style="border-color:var(--line);color:var(--pine)" href="{{ S.seeall_url | default: end_url }}">{{ S.seeall }}</a>
+        {%- endif -%}
+      </div>
+      <div class="hx-grid" data-hx-stagger>
+        {%- assign shown = 0 -%}
+        {%- if coll != blank -%}
+          {%- for fp in coll.products limit: 12 -%}
+            {%- if fp.available -%}
+              {%- render 'hd-holiday-card', fp: fp, sett: S -%}
+              {%- assign shown = shown | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- for fp in coll.products limit: 12 -%}
+            {%- unless fp.available -%}
+              {%- if shown < 12 -%}
+                {%- render 'hd-holiday-card', fp: fp, sett: S -%}
+                {%- assign shown = shown | plus: 1 -%}
+              {%- endif -%}
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- endif -%}
+        {%- if shown == 0 and request.design_mode -%}
+          <p style="grid-column:1/-1;color:rgba(20,51,42,.5)">No products found. Set the collection handle in section settings.</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+
+  {%- assign gift_blocks = section.blocks | where: 'type', 'box' -%}
+  {%- if gift_blocks.size > 0 -%}
+  <section class="hx-gifts">
+    <div class="wrap">
+      <div class="hx-rev">
+        <span class="kick">{{ S.gift_kick }}</span>
+        <h2 class="h2">{{ S.gift_title }}</h2>
+      </div>
+      <div class="tiles">
+        {%- for block in gift_blocks -%}
+        <div class="tile hx-rev" style="--i:{{ forloop.index0 }};background:{{ block.settings.bg | default: '#14332A' }};color:{{ block.settings.tx | default: '#FAF6EE' }};transition-delay:{{ forloop.index0 | times: 0.1 }}s{% if block.settings.bordered %};border:1px solid var(--line){% endif %}" {{ block.shopify_attributes }}>
+          <span class="no">{{ forloop.index | prepend: '0' }}</span>
+          <div>
+            <h3>{{ block.settings.title }}</h3>
+            <p>{{ block.settings.text }}</p>
+          </div>
+        </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+  {%- endif -%}
+
+  {%- if S.band_img != blank or request.design_mode -%}
+  <div class="hx-band">
+    {%- if S.band_img != blank -%}
+      <img src="{{ S.band_img | image_url: width: 2400 }}" alt="{{ S.band_alt | escape }}" data-plx="40">
+      {%- if S.band_cap != blank -%}<p class="cap">{{ S.band_cap }}</p>{%- endif -%}
+    {%- else -%}
+      <div class="hint">Upload a full width lifestyle image. Photo idea: hands cheersing two festive drinks over a table of cookies, shot from above, warm and slightly grainy.</div>
     {%- endif -%}
-    <div class="hd-wrap">
-      <div class="hd-head hd-rev">
-        {%- if s.rec_eyebrow != blank -%}<span class="hd-eyebrow">{{ s.rec_eyebrow }}</span>{%- endif -%}
-        <h2 class="hd-h2">{{ s.rec_title | default: 'Three sips of <em>December</em>' }}</h2>
-        {%- if s.rec_sub != blank -%}<p class="hd-lead">{{ s.rec_sub }}</p>{%- endif -%}
+  </div>
+  {%- endif -%}
+
+  {%- assign rec_blocks = section.blocks | where: 'type', 'recipe' -%}
+  {%- if rec_blocks.size > 0 -%}
+  <section class="hx-menu" id="hx-menu">
+    <div class="wrap">
+      <div class="headrow hx-rev">
+        <div>
+          <span class="kick">{{ S.menu_kick }}</span>
+          <h2 class="h2">{{ S.menu_title }}</h2>
+        </div>
       </div>
-      <div class="grid">{{ recs_html }}</div>
+      <div class="menu-list">
+        {%- for block in rec_blocks -%}
+        <div class="mrow hx-rev" style="transition-delay:{{ forloop.index0 | times: 0.08 }}s" {{ block.shopify_attributes }}>
+          <span class="no">{{ forloop.index | prepend: '0' }}</span>
+          <div>
+            <h3>{{ block.settings.title }}{%- if block.settings.tag != blank -%}<span class="tag">{{ block.settings.tag }}</span>{%- endif -%}</h3>
+            <p>{{ block.settings.text }}</p>
+          </div>
+          <div class="im">
+            {%- if block.settings.img != blank -%}
+              <img src="{{ block.settings.img | image_url: width: 400 }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+            {%- elsif request.design_mode -%}
+              <div class="hint">{{ block.settings.hint }}</div>
+            {%- endif -%}
+          </div>
+        </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+  {%- endif -%}
+
+  {%- if S.show_giant and S.giant_text != blank -%}
+  <div class="hx-giant" aria-hidden="true">
+    <div class="row">
+      <div class="half"><span class="word">{{ S.giant_text }}</span><span class="word fill">{{ S.giant_text }}</span><span class="word">{{ S.giant_text }}</span></div>
+      <div class="half"><span class="word">{{ S.giant_text }}</span><span class="word fill">{{ S.giant_text }}</span><span class="word">{{ S.giant_text }}</span></div>
     </div>
   </div>
   {%- endif -%}
 
-  {%- comment -%} ===== EXTRA PICTURE BANDS ===== {%- endcomment -%}
-  {%- if s.band1_img != blank -%}
-  <div class="hd-band">
-    <img class="d {% if s.band1_img_m != blank %}has-m{% endif %}" src="{{ s.band1_img | image_url: width: 2400 }}" alt="{{ s.band1_alt | default: 'Syruvia Holiday' | escape }}" loading="lazy">
-    {%- if s.band1_img_m != blank -%}<img class="m" src="{{ s.band1_img_m | image_url: width: 1200 }}" alt="{{ s.band1_alt | default: 'Syruvia Holiday' | escape }}" loading="lazy">{%- endif -%}
-  </div>
-  {%- endif -%}
-  {%- if s.band2_img != blank -%}
-  <div class="hd-band"><img src="{{ s.band2_img | image_url: width: 2400 }}" alt="{{ s.band2_alt | default: 'Syruvia Holiday' | escape }}" loading="lazy"></div>
-  {%- endif -%}
-
-  {%- comment -%} ===== CLOSING CTA ===== {%- endcomment -%}
-  {%- if s.show_close -%}
-  <div class="hd-close">
-    <div class="hd-wrap hd-rev">
-      <h2 class="hd-h2">{{ s.close_title | default: 'Stockings love <em>syrup</em>' }}</h2>
-      {%- if s.close_sub != blank -%}<p class="hd-lead">{{ s.close_sub }}</p>{%- endif -%}
-      <div class="hd-btnrow">
-        <a class="hd-btn" href="{{ s.close_btn_url | default: '/collections/holiday-flavor-syrups' }}">{{ s.close_btn | default: 'Shop the holiday collection' }}</a>
-      </div>
+  <section class="hx-end">
+    <div class="hx-rev">
+      <h2>{{ S.end_title }}</h2>
+      {%- if S.end_sub != blank -%}<p>{{ S.end_sub }}</p>{%- endif -%}
+      {%- if S.end_cta != blank -%}<a class="btn" href="{{ end_url }}">{{ S.end_cta }}</a>{%- endif -%}
     </div>
-  </div>
-  {%- endif -%}
+  </section>
 
-</section>
+</div>
 
 <script>
 (function(){
-  var root=document.getElementById('hd-{{ section.id }}');
-  if(!root) return;
-  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if('IntersectionObserver' in window && !reduce){
-    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });},{threshold:.1});
-    root.querySelectorAll('.hd-rev').forEach(function(el){io.observe(el);});
-  } else { root.querySelectorAll('.hd-rev').forEach(function(el){el.classList.add('in');}); }
+  var root=document.getElementById('hx-{{ section.id }}');
+  if(!root)return;
+  var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* statement drift */
-  var drifts=[].slice.call(root.querySelectorAll('[data-drift]'));
-  var orns=[].slice.call(root.querySelectorAll('[data-odrift]'));
-  if((drifts.length || orns.length) && !reduce){
-    var dT=false;
-    function drift(){
-      dT=false;
-      var vh=window.innerHeight||1;
-      for(var k=0;k<drifts.length;k++){
-        var dEl=drifts[k];
-        var dsp=parseFloat(dEl.getAttribute('data-drift'))||0;
-        var dr=dEl.getBoundingClientRect();
-        var prog=(dr.top + dr.height/2 - vh/2)/vh;
-        dEl.style.transform='translateX('+(prog*dsp*(window.innerWidth||1000)).toFixed(1)+'px)';
-      }
-      for(var q=0;q<orns.length;q++){
-        var oEl=orns[q];
-        var osp=parseFloat(oEl.getAttribute('data-odrift'))||0.5;
-        var orr=oEl.getBoundingClientRect();
-        var oprog=(orr.top + orr.height/2 - vh/2)/vh;
-        oEl.style.transform='translateY('+(oprog*osp*260).toFixed(1)+'px)';
-      }
+  /* hero entrance */
+  var hero=root.querySelector('[data-hx-hero]');
+  if(hero){requestAnimationFrame(function(){requestAnimationFrame(function(){hero.classList.add('go');});});}
+
+  /* reveals */
+  var revs=root.querySelectorAll('.hx-rev');
+  if('IntersectionObserver' in window && !reduced){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+    },{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+    var grid=root.querySelector('[data-hx-stagger]');
+    if(grid){
+      Array.prototype.forEach.call(grid.children,function(c,i){
+        if(c.classList.contains('hx-rev'))c.style.transitionDelay=(i%4)*0.07+'s';
+      });
     }
-    window.addEventListener('scroll',function(){ if(!dT){dT=true;requestAnimationFrame(drift);} },{passive:true});
-    drift();
+    Array.prototype.forEach.call(revs,function(el){io.observe(el);});
+  }else{
+    Array.prototype.forEach.call(revs,function(el){el.classList.add('in');});
   }
 
-  /* order-by countdown: counts DOWN TO the date, shows D:HH:MM:SS */
-  var cb=root.querySelector('[data-hd-count]');
-  if(cb){
-    var cto=(cb.getAttribute('data-to')||'').trim();
-    if(/^\d{4}-\d{2}-\d{2}$/.test(cto)) cto+=' 23:59';
-    var tz=cb.getAttribute('data-tz')||'-05:00';
-    var endMs=Date.parse(cto.replace(' ','T')+tz);
-    var tEl=cb.querySelector('[data-hd-time]');
-    if(isNaN(endMs)||!tEl){ cb.style.display='none'; }
-    else{
-      var two=function(n){return n<10?'0'+n:''+n;};
-      var tickC=function(){
-        var left=endMs-Date.now();
-        if(left<=0){ cb.style.display='none'; return; }
-        var d=Math.floor(left/86400000),h=Math.floor(left%86400000/3600000),m=Math.floor(left%3600000/60000),s2=Math.floor(left%60000/1000);
-        tEl.textContent=d+'d '+two(h)+':'+two(m)+':'+two(s2);
-        setTimeout(tickC,1000);
+  /* parallax */
+  var plx=Array.prototype.slice.call(root.querySelectorAll('[data-plx]'));
+  if(plx.length && !reduced){
+    var tick=false;
+    var run=function(){
+      tick=false;
+      var vh=window.innerHeight;
+      plx.forEach(function(img){
+        var host=img.closest('.frame')||img.closest('.hx-band')||img;
+        var box=host.getBoundingClientRect();
+        if(box.bottom<0||box.top>vh)return;
+        var prog=(box.top+box.height/2-vh/2)/(vh/2+box.height/2);
+        var amp=parseFloat(img.getAttribute('data-plx'))||24;
+        img.style.transform='translateY('+(-prog*amp)+'px)';
+      });
+    };
+    var onScroll=function(){if(!tick){tick=true;requestAnimationFrame(run);}};
+    window.addEventListener('scroll',onScroll,{passive:true});
+    window.addEventListener('resize',onScroll);
+    run();
+  }
+
+  /* countdown */
+  var cd=root.querySelector('[data-hx-count]');
+  if(cd){
+    var raw=(cd.getAttribute('data-to')||'').trim();
+    var tz=cd.getAttribute('data-tz')||'-04:00';
+    if(/^\d{4}-\d{2}-\d{2}$/.test(raw))raw+=' 23:59';
+    var iso=raw.replace(' ','T');
+    if(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(iso))iso+=':00';
+    var target=Date.parse(iso+tz);
+    var out=cd.querySelector('[data-out]');
+    if(!isNaN(target)&&out){
+      var pad=function(n){return (n<10?'0':'')+n;};
+      var step=function(){
+        var d=target-Date.now();
+        if(d<=0){cd.hidden=true;return;}
+        var days=Math.floor(d/86400000);
+        var h=Math.floor(d%86400000/3600000),m=Math.floor(d%3600000/60000),s=Math.floor(d%60000/1000);
+        out.textContent=(days>0?days+'d ':'')+pad(h)+':'+pad(m)+':'+pad(s);
+        cd.hidden=false;
+        setTimeout(step,1000);
       };
-      tickC();
+      step();
     }
   }
 
-  /* gentle snow */
-  var cv=root.querySelector('[data-hd-snow]');
-  if(cv && !reduce){
-    var cx=cv.getContext('2d');
-    var W,H,flakes=[];
-    function size(){ W=cv.width=window.innerWidth; H=cv.height=window.innerHeight; }
-    size();
-    window.addEventListener('resize',size);
-    var N=Math.min(70,Math.floor(W/18));
-    for(var i=0;i<N;i++){
-      flakes.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*2.4,v:.35+Math.random()*.85,w:Math.random()*6.28,ws:.004+Math.random()*.012});
+  /* snow, subtle */
+  var sc=root.querySelector('[data-hx-snow]');
+  if(sc && !reduced){
+    var ctx=sc.getContext('2d'),W,H,flakes=[],running=true;
+    var size=function(){
+      var r=sc.parentElement.getBoundingClientRect();
+      W=sc.width=r.width;H=sc.height=r.height;
+    };
+    size();window.addEventListener('resize',size);
+    for(var i=0;i<38;i++){
+      flakes.push({x:Math.random()*2000,y:Math.random()*1200,r:.6+Math.random()*1.6,v:.25+Math.random()*.5,w:Math.random()*Math.PI*2});
     }
-    var running=true;
-    function snow(){
-      if(!running) return;
-      cx.clearRect(0,0,W,H);
-      cx.fillStyle='rgba(255,255,255,.85)';
-      for(var i=0;i<flakes.length;i++){
-        var f=flakes[i];
-        f.y+=f.v; f.w+=f.ws; f.x+=Math.sin(f.w)*.5;
-        if(f.y>H+6){ f.y=-6; f.x=Math.random()*W; }
-        cx.beginPath(); cx.arc(f.x,f.y,f.r,0,6.283); cx.fill();
-      }
-      requestAnimationFrame(snow);
-    }
-    document.addEventListener('visibilitychange',function(){ running=!document.hidden; if(running) requestAnimationFrame(snow); });
-    requestAnimationFrame(snow);
+    var draw=function(){
+      if(!running)return;
+      ctx.clearRect(0,0,W,H);
+      ctx.fillStyle='rgba(250,246,238,.5)';
+      flakes.forEach(function(f){
+        f.y+=f.v;f.w+=.008;f.x+=Math.sin(f.w)*.3;
+        if(f.y>H+4){f.y=-4;f.x=Math.random()*W;}
+        ctx.beginPath();ctx.arc(f.x%W,f.y,f.r,0,6.283);ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    };
+    document.addEventListener('visibilitychange',function(){
+      running=!document.hidden;if(running)requestAnimationFrame(draw);
+    });
+    draw();
   }
 })();
 </script>
 
 {% schema %}
 {
-  "name": "Holiday Landing",
-  "tag": "section",
+  "name": "Holiday page",
   "settings": [
-    { "type": "header", "content": "Order-by countdown" },
-    { "type": "checkbox", "id": "count_enable", "label": "Show countdown bar", "default": false },
-    { "type": "text", "id": "count_to", "label": "Counts down to (date & time)", "info": "Format: 2026-12-19 23:59. Date alone works too. Hides itself when it hits zero." },
-    { "type": "text", "id": "count_tz", "label": "Timezone offset", "default": "-05:00", "info": "-05:00 = New York winter time" },
-    { "type": "text", "id": "count_label", "label": "Label", "default": "Order by Dec 19 for delivery before Christmas" },
-    { "type": "header", "content": "Snow" },
-    { "type": "checkbox", "id": "show_snow", "label": "Gentle falling snow", "default": true },
-    { "type": "checkbox", "id": "show_ornaments", "label": "Floating ornaments (scroll parallax)", "default": true },
-    { "type": "header", "content": "Product photo backgrounds" },
-    { "type": "color", "id": "ph_tint1", "label": "Tint 1 (evergreen wash)", "default": "#EAF3EE" },
-    { "type": "color", "id": "ph_tint2", "label": "Tint 2 (cranberry wash)", "default": "#FAE7E8" },
-    { "type": "color", "id": "ph_tint3", "label": "Tint 3 (gold wash)", "default": "#FFF3D6" },
+    { "type": "header", "content": "Top strip and countdown" },
+    { "type": "text", "id": "topbar_text", "label": "Top strip text (when countdown is off)", "default": "Free shipping on orders over $36" },
+    { "type": "checkbox", "id": "count_enable", "label": "Enable countdown", "default": false },
+    { "type": "text", "id": "count_label", "label": "Countdown label", "default": "Holiday orders close in" },
+    { "type": "text", "id": "count_to", "label": "Counts down to (YYYY-MM-DD or YYYY-MM-DD HH:MM)", "info": "Date only counts to the end of that day." },
+    { "type": "text", "id": "count_tz", "label": "Time zone offset", "default": "-04:00" },
+
     { "type": "header", "content": "Hero" },
-    { "type": "text", "id": "hero_chip", "label": "Chip", "default": "The Holiday Shop" },
-    { "type": "text", "id": "hero_title", "label": "Headline (<em> = gold italic)", "default": "Sip the <em>season</em>" },
-    { "type": "textarea", "id": "hero_sub", "label": "Subtitle", "default": "Peppermint, gingerbread, toasted marshmallow and every cozy flavor in between. Small batch, big holiday energy." },
-    { "type": "text", "id": "hero_btn", "label": "Main button", "default": "Shop holiday flavors" },
-    { "type": "text", "id": "hero_btn2", "label": "Second button text", "default": "Gift guide" },
-    { "type": "url", "id": "hero_btn2_url", "label": "Second button link (empty = hidden)" },
-    { "type": "text", "id": "hero_meta", "label": "Small line under buttons", "default": "Free shipping over $36 · Ships from New Jersey" },
-    { "type": "color", "id": "hero_g1", "label": "Hero gradient top", "default": "#153A2B" },
-    { "type": "color", "id": "hero_g2", "label": "Hero gradient bottom", "default": "#1E4D38" },
-    { "type": "header", "content": "Banner under hero" },
-    { "type": "image_picker", "id": "banner_img", "label": "Banner (desktop)" },
-    { "type": "image_picker", "id": "banner_img_m", "label": "Banner (mobile)" },
-    { "type": "url", "id": "banner_link", "label": "Banner link" },
-    { "type": "text", "id": "banner_alt", "label": "Banner alt text", "default": "Syruvia Holiday" },
-    { "type": "header", "content": "Ribbon" },
-    { "type": "checkbox", "id": "show_marquee", "label": "Show scrolling ribbon", "default": true },
-    { "type": "text", "id": "marquee_text", "label": "Ribbon text", "default": "Holiday flavors are here · Limited winter batch · Free shipping over $36" },
-    { "type": "header", "content": "Gift boxes" },
-    { "type": "text", "id": "boxes_eyebrow", "label": "Eyebrow", "default": "Why Syruvia" },
-    { "type": "text", "id": "boxes_title", "label": "Heading", "default": "Make it a <em>Syruvia</em> holiday" },
-    { "type": "header", "content": "Product shelf" },
-    { "type": "paragraph", "content": "Add 'Featured product' blocks to hand-pick. With no blocks, the first 6 from the collection show automatically, in-stock first." },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "Syruvia · Holiday 2026" },
+    { "type": "text", "id": "hero_t1", "label": "Headline line 1", "default": "The Holiday" },
+    { "type": "text", "id": "hero_t2", "label": "Headline line 2 (italic)", "default": "Collection" },
+    { "type": "textarea", "id": "hero_sub", "label": "Subline", "default": "Small batch winter syrups, gift ready bottles and recipes worth staying in for. Here for one short season." },
+    { "type": "text", "id": "hero_cta", "label": "Button label", "default": "Shop the collection" },
+    { "type": "url", "id": "hero_cta_url", "label": "Button link (default scrolls to lineup)" },
+    { "type": "text", "id": "hero_cta2", "label": "Text link label", "default": "See the holiday menu" },
+    { "type": "url", "id": "hero_cta2_url", "label": "Text link (default scrolls to menu)" },
+    { "type": "image_picker", "id": "hero_img", "label": "Hero image (wide)" },
+    { "type": "image_picker", "id": "hero_img_m", "label": "Hero image, mobile (tall)" },
+    { "type": "text", "id": "hero_alt", "label": "Hero image alt text", "default": "Syruvia holiday drinks" },
+    { "type": "checkbox", "id": "show_snow", "label": "Subtle snow in hero", "default": false },
+
+    { "type": "header", "content": "Ticker" },
+    { "type": "checkbox", "id": "show_tick", "label": "Show ticker", "default": true },
+    { "type": "text", "id": "tick_text", "label": "Ticker text", "default": "Limited winter batch · Peppermint · Gingerbread · Eggnog · Free shipping over $36" },
+
+    { "type": "header", "content": "Intro" },
+    { "type": "text", "id": "intro_kick", "label": "Eyebrow", "default": "For the season" },
+    { "type": "text", "id": "intro_big", "label": "Statement (supports <em>)", "default": "Warm drinks, <em>warmer moments.</em>" },
+    { "type": "textarea", "id": "intro_p", "label": "Paragraph", "default": "Every winter we bring back the flavors that taste like the holidays, made the way we make everything. Slowly, in small batches, with the same syrup you know from our bottles." },
+    { "type": "text", "id": "f1_l", "label": "Fact 1 label", "default": "Batch" },
+    { "type": "text", "id": "f1_v", "label": "Fact 1 value", "default": "Small and seasonal" },
+    { "type": "text", "id": "f2_l", "label": "Fact 2 label", "default": "Shipping" },
+    { "type": "text", "id": "f2_v", "label": "Fact 2 value", "default": "Free over $36" },
+    { "type": "text", "id": "f3_l", "label": "Fact 3 label", "default": "Ships from" },
+    { "type": "text", "id": "f3_v", "label": "Fact 3 value", "default": "New Jersey, fast" },
+
+    { "type": "header", "content": "Lineup" },
+    { "type": "text", "id": "feat_kick", "label": "Eyebrow", "default": "The lineup" },
+    { "type": "text", "id": "feat_title", "label": "Title", "default": "Winter flavors" },
     { "type": "text", "id": "collection_handle", "label": "Collection handle", "default": "holiday-flavor-syrups" },
-    { "type": "text", "id": "feat_eyebrow", "label": "Eyebrow", "default": "Limited winter batch" },
-    { "type": "text", "id": "feat_title", "label": "Heading", "default": "The holiday <em>shelf</em>" },
-    { "type": "textarea", "id": "feat_sub", "label": "Subtext", "default": "The flavors that make December taste like December." },
-    { "type": "text", "id": "live_badge", "label": "In-stock badge", "default": "Holiday" },
-    { "type": "text", "id": "coming_label", "label": "No-stock label", "default": "Coming soon" },
-    { "type": "text", "id": "atc_label", "label": "Add-to-cart button", "default": "Add to cart" },
-    { "type": "checkbox", "id": "show_deal", "label": "Show deal badge", "default": false },
-    { "type": "text", "id": "deal_text", "label": "Deal badge text", "default": "Holiday deal" },
-    { "type": "text", "id": "feat_seeall", "label": "See-all button text", "default": "See all holiday flavors" },
-    { "type": "text", "id": "feat_seeall_url", "label": "See-all link", "default": "/collections/holiday-flavor-syrups" },
-    { "type": "header", "content": "Big statement" },
-    { "type": "checkbox", "id": "show_statement", "label": "Show statement", "default": true },
-    { "type": "text", "id": "statement_l1", "label": "Line 1 (solid)", "default": "Merry &" },
-    { "type": "text", "id": "statement_l2", "label": "Line 2 (outlined)", "default": "Mixable" },
-    { "type": "textarea", "id": "statement_sub", "label": "Statement subtext", "default": "One pump turns any drink into a holiday drink. Coffee, cocoa, cocktails, soda water." },
-    { "type": "header", "content": "Recipe cards" },
-    { "type": "text", "id": "rec_eyebrow", "label": "Eyebrow", "default": "Holiday recipes" },
-    { "type": "text", "id": "rec_title", "label": "Heading", "default": "Three sips of <em>December</em>" },
-    { "type": "textarea", "id": "rec_sub", "label": "Subtext", "default": "Zero barista skills required. One pump, one stir, done." },
-    { "type": "header", "content": "Picture bands (bottom)" },
-    { "type": "image_picker", "id": "band1_img", "label": "Picture band 1" },
-    { "type": "image_picker", "id": "band1_img_m", "label": "Picture band 1 (mobile)" },
-    { "type": "text", "id": "band1_alt", "label": "Band 1 alt text", "default": "Syruvia Holiday" },
-    { "type": "image_picker", "id": "band2_img", "label": "Picture band 2" },
-    { "type": "text", "id": "band2_alt", "label": "Band 2 alt text", "default": "Syruvia Holiday" },
-    { "type": "header", "content": "Closing CTA" },
-    { "type": "checkbox", "id": "show_close", "label": "Show closing band", "default": true },
-    { "type": "text", "id": "close_title", "label": "Heading", "default": "Stockings love <em>syrup</em>" },
-    { "type": "textarea", "id": "close_sub", "label": "Subtext", "default": "Gift a flavor, keep a flavor. Nobody has to know the second bottle was for you." },
-    { "type": "text", "id": "close_btn", "label": "Button", "default": "Shop the holiday collection" },
-    { "type": "url", "id": "close_btn_url", "label": "Button link" },
-    { "type": "header", "content": "Colors & layout" },
-    { "type": "color", "id": "color_ink", "label": "Body text", "default": "#1a1a1a" },
-    { "type": "color", "id": "color_brand", "label": "Headings", "default": "#3c2415" },
-    { "type": "color", "id": "color_bg", "label": "Page background", "default": "#FFFBF4" },
-    { "type": "color", "id": "color_paper", "label": "Card background", "default": "#ffffff" },
-    { "type": "color", "id": "color_pine", "label": "Evergreen", "default": "#1E4D38" },
-    { "type": "color", "id": "color_berry", "label": "Cranberry", "default": "#B3232B" },
-    { "type": "color", "id": "color_gold", "label": "Gold", "default": "#FCE2A0" },
-    { "type": "color", "id": "color_rule", "label": "Borders", "default": "#3c2415" },
-    { "type": "range", "id": "wrap_max", "label": "Content width", "min": 900, "max": 1320, "step": 20, "unit": "px", "default": 1120 },
-    { "type": "range", "id": "card_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 16 }
+    { "type": "text", "id": "live_badge", "label": "Badge for in stock", "default": "Limited" },
+    { "type": "text", "id": "coming_label", "label": "Label for out of stock", "default": "Coming soon" },
+    { "type": "text", "id": "atc_label", "label": "Add to cart label", "default": "Add to cart" },
+    { "type": "text", "id": "seeall", "label": "See all label", "default": "Shop all holiday" },
+    { "type": "url", "id": "seeall_url", "label": "See all link (default: the collection)" },
+
+    { "type": "header", "content": "Gift tiles" },
+    { "type": "text", "id": "gift_kick", "label": "Eyebrow", "default": "Give flavor" },
+    { "type": "text", "id": "gift_title", "label": "Title", "default": "Gifting, handled" },
+
+    { "type": "header", "content": "Image band" },
+    { "type": "image_picker", "id": "band_img", "label": "Full width image" },
+    { "type": "text", "id": "band_alt", "label": "Alt text", "default": "Holiday drinks" },
+    { "type": "text", "id": "band_cap", "label": "Caption", "default": "Slow mornings, loud kitchens, drinks for both." },
+
+    { "type": "header", "content": "Holiday menu" },
+    { "type": "text", "id": "menu_kick", "label": "Eyebrow", "default": "The holiday menu" },
+    { "type": "text", "id": "menu_title", "label": "Title", "default": "Three drinks worth staying in for" },
+
+    { "type": "header", "content": "Giant scrolling type" },
+    { "type": "checkbox", "id": "show_giant", "label": "Show", "default": true },
+    { "type": "text", "id": "giant_text", "label": "Text", "default": "Merry and mixable" },
+
+    { "type": "header", "content": "Closing" },
+    { "type": "text", "id": "end_title", "label": "Title", "default": "Make it a Syruvia season" },
+    { "type": "textarea", "id": "end_sub", "label": "Subline", "default": "The flavors leave when winter does. Pour them while they are here." },
+    { "type": "text", "id": "end_cta", "label": "Button label", "default": "Shop holiday" },
+    { "type": "url", "id": "end_url", "label": "Button link (default: the collection)" },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "c_cream", "label": "Cream background", "default": "#FAF6EE" },
+    { "type": "color", "id": "c_pine", "label": "Pine", "default": "#14332A" },
+    { "type": "color", "id": "c_berry", "label": "Berry", "default": "#A61E2A" },
+    { "type": "color", "id": "c_gold", "label": "Gold", "default": "#C9A24B" }
   ],
   "blocks": [
-    { "type": "product", "name": "Featured product", "settings": [
-      { "type": "product", "id": "product", "label": "Product" },
-      { "type": "text", "id": "badge", "label": "Badge override (optional)" }
-    ] },
-    { "type": "box", "name": "Gift box", "settings": [
-      { "type": "text", "id": "title", "label": "Title", "default": "Gift-ready bottles" },
-      { "type": "textarea", "id": "text", "label": "Text", "default": "Beautiful bottles that need zero wrapping talent. Add a bow and take the credit." },
-      { "type": "color", "id": "bg", "label": "Box color", "default": "#1E4D38" },
-      { "type": "color", "id": "tx", "label": "Text color", "default": "#ffffff" }
-    ] },
-    { "type": "recipe", "name": "Recipe card", "settings": [
-      { "type": "text", "id": "title", "label": "Recipe name", "default": "Peppermint Mocha" },
-      { "type": "textarea", "id": "text", "label": "How to", "default": "One pump peppermint, one pump chocolate, hot coffee, steamed milk. Candy cane optional but encouraged." },
-      { "type": "text", "id": "tag", "label": "Little tag", "default": "2 pumps" },
-      { "type": "image_picker", "id": "img", "label": "Drink photo" },
-      { "type": "text", "id": "hint", "label": "Editor-only photo idea", "default": "Upload a cozy drink photo here." }
-    ] }
+    {
+      "type": "box",
+      "name": "Gift tile",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "text", "label": "Text" },
+        { "type": "color", "id": "bg", "label": "Background", "default": "#14332A" },
+        { "type": "color", "id": "tx", "label": "Text color", "default": "#FAF6EE" },
+        { "type": "checkbox", "id": "bordered", "label": "Add thin border (for light tiles)", "default": false }
+      ]
+    },
+    {
+      "type": "recipe",
+      "name": "Menu recipe",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Drink name" },
+        { "type": "textarea", "id": "text", "label": "How to make it" },
+        { "type": "text", "id": "tag", "label": "Small tag" },
+        { "type": "image_picker", "id": "img", "label": "Photo" },
+        { "type": "text", "id": "hint", "label": "Photo idea (shown in editor until you upload)" }
+      ]
+    }
   ],
-  "max_blocks": 20,
-  "presets": [ { "name": "Holiday Landing" } ]
+  "max_blocks": 12
 }
 {% endschema %}
