@@ -92,6 +92,7 @@
   @media (prefers-reduced-motion: reduce){#hd-{{ section.id }} .hd-mq .tr{animation:none;}}
 
   /* GIFT BOXES */
+  #hd-{{ section.id }} .hd-boxes{position:relative;overflow:clip;background:linear-gradient(180deg,var(--bg),#EDF5F0);}
   #hd-{{ section.id }} .hd-boxes .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:32px;}
   @media(min-width:760px){#hd-{{ section.id }} .hd-boxes .grid{grid-template-columns:repeat(3,1fr);}}
   #hd-{{ section.id }} .hd-box{background:var(--bxbg,var(--paper));color:var(--bxtx,var(--ink));border:var(--rule);border-radius:calc(var(--rad) + 4px);box-shadow:4px 4px 0 rgba(60,36,21,.18);padding:28px 20px;text-align:center;}
@@ -108,7 +109,10 @@
   @media(min-width:700px){#hd-{{ section.id }} .hd-prods{grid-template-columns:repeat(3,1fr);}}
   #hd-{{ section.id }} .hd-card{position:relative;display:flex;flex-direction:column;background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 6px);overflow:hidden;box-shadow:3px 3px 0 rgba(60,36,21,.12);transition:transform .18s ease,box-shadow .18s ease;}
   @media(hover:hover){#hd-{{ section.id }} .hd-card:hover{transform:translateY(-4px);box-shadow:5px 7px 0 rgba(60,36,21,.16);}}
-  #hd-{{ section.id }} .hd-card .ph{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:var(--bg);border-bottom:var(--rule);padding:22px;text-decoration:none;}
+  #hd-{{ section.id }} .hd-card .ph{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:radial-gradient(rgba(255,255,255,.8) 1.4px, transparent 2px) 0 0/18px 18px, var(--phbg, #EAF3EE);border-bottom:var(--rule);padding:22px;text-decoration:none;}
+  #hd-{{ section.id }} .hd-prods .hd-card:nth-child(3n+1){--phbg:{{ s.ph_tint1 | default: '#EAF3EE' }};}
+  #hd-{{ section.id }} .hd-prods .hd-card:nth-child(3n+2){--phbg:{{ s.ph_tint2 | default: '#FAE7E8' }};}
+  #hd-{{ section.id }} .hd-prods .hd-card:nth-child(3n){--phbg:{{ s.ph_tint3 | default: '#FFF3D6' }};}
   #hd-{{ section.id }} .hd-card .ph img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .3s ease;}
   @media(hover:hover){#hd-{{ section.id }} .hd-card:hover .ph img{transform:scale(1.05) rotate(-2deg);}}
   #hd-{{ section.id }} .hd-card .b{display:flex;flex-direction:column;gap:8px;padding:18px 18px 20px;text-align:center;flex:1;}
@@ -138,7 +142,7 @@
   }
 
   /* STATEMENT */
-  #hd-{{ section.id }} .hd-say{padding:clamp(56px,9vw,110px) 0;text-align:center;overflow:clip;}
+  #hd-{{ section.id }} .hd-say{position:relative;padding:clamp(56px,9vw,110px) 0;text-align:center;overflow:clip;background:radial-gradient(60% 80% at 50% 40%, #FFF6E3, var(--bg));}
   #hd-{{ section.id }} .hd-say .l1,#hd-{{ section.id }} .hd-say .l2{display:block;font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:.92;will-change:transform;}
   #hd-{{ section.id }} .hd-say .l1{font-size:clamp(52px,12vw,148px);color:var(--pine);}
   #hd-{{ section.id }} .hd-say .l2{font-size:clamp(40px,9.5vw,116px);color:transparent;-webkit-text-stroke:2.5px var(--berry);}
@@ -146,6 +150,7 @@
   #hd-{{ section.id }} .hd-say .sub{font-size:clamp(15px,2.2vw,18px);opacity:.78;font-weight:300;max-width:52ch;margin:22px auto 0;}
 
   /* RECIPE CARDS */
+  #hd-{{ section.id }} .hd-recipes{position:relative;overflow:clip;background:linear-gradient(180deg,var(--bg),#FBEFEF);}
   #hd-{{ section.id }} .hd-recipes .grid{display:grid;grid-template-columns:1fr;gap:20px;margin-top:34px;}
   @media(min-width:760px){#hd-{{ section.id }} .hd-recipes .grid{grid-template-columns:repeat(3,1fr);}}
   #hd-{{ section.id }} .hd-rec{background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 6px);box-shadow:4px 4px 0 rgba(60,36,21,.14);padding:16px 16px 22px;text-align:center;transform:rotate(-1.6deg);transition:transform .25s ease;}
@@ -157,6 +162,26 @@
   #hd-{{ section.id }} .hd-rec h3{font-family:var(--display);font-weight:400;font-size:17px;text-transform:uppercase;color:var(--brand);margin:16px 0 0;line-height:1.15;}
   #hd-{{ section.id }} .hd-rec p{font-size:14px;opacity:.8;margin:8px 0 0;line-height:1.55;}
   #hd-{{ section.id }} .hd-rec .tagx{display:inline-block;margin-top:12px;font-family:var(--display);font-weight:400;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--pine);border-radius:999px;padding:5px 12px;}
+
+  /* ORNAMENTS — floating holiday shapes with scroll parallax */
+  #hd-{{ section.id }} .hd-orn{position:absolute;z-index:1;pointer-events:none;will-change:transform;}
+  #hd-{{ section.id }} .hd-orn svg{display:block;width:100%;height:auto;animation:hdbob{{ section.id }} 6s ease-in-out infinite alternate;}
+  @keyframes hdbob{{ section.id }}{from{transform:translateY(0) rotate(-6deg);}to{transform:translateY(-12px) rotate(6deg);}}
+  @media (prefers-reduced-motion: reduce){#hd-{{ section.id }} .hd-orn svg{animation:none;}}
+  #hd-{{ section.id }} .hd-hero .o1{left:6%;top:16%;width:46px;opacity:.95;}
+  #hd-{{ section.id }} .hd-hero .o2{right:8%;top:22%;width:38px;opacity:.9;}
+  #hd-{{ section.id }} .hd-hero .o3{left:12%;bottom:14%;width:32px;opacity:.55;}
+  #hd-{{ section.id }} .hd-hero .o4{right:13%;bottom:18%;width:30px;opacity:.7;}
+  #hd-{{ section.id }} .hd-boxes .oa{left:-6px;top:10%;width:54px;opacity:.28;}
+  #hd-{{ section.id }} .hd-boxes .ob{right:-6px;bottom:8%;width:62px;opacity:.24;}
+  #hd-{{ section.id }} .hd-say .oa{left:4%;top:14%;width:44px;opacity:.5;}
+  #hd-{{ section.id }} .hd-say .ob{right:5%;bottom:16%;width:38px;opacity:.4;}
+  #hd-{{ section.id }} .hd-recipes .oa{left:2%;top:6%;width:42px;opacity:.5;}
+  #hd-{{ section.id }} .hd-recipes .ob{right:2%;bottom:10%;width:38px;opacity:.35;}
+  @media(max-width:700px){
+    #hd-{{ section.id }} .hd-hero .o3,#hd-{{ section.id }} .hd-hero .o4{display:none;}
+    #hd-{{ section.id }} .hd-orn{opacity:.5;}
+  }
 
   /* CLOSING CTA */
   #hd-{{ section.id }} .hd-close{position:relative;overflow:hidden;text-align:center;padding:clamp(60px,9vw,100px) 0;background:linear-gradient(180deg,var(--berry),#8E1B22);}
@@ -175,6 +200,10 @@
   }
 </style>
 
+{%- capture orn_bauble -%}<svg viewBox="0 0 24 30" fill="none" aria-hidden="true"><circle cx="12" cy="18" r="10" fill="currentColor"/><rect x="9" y="4" width="6" height="5" rx="1" fill="currentColor" opacity=".7"/><circle cx="12" cy="2.5" r="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M6 15c2-3 6-4 9-3" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-linecap="round" fill="none"/></svg>{%- endcapture -%}
+{%- capture orn_star -%}<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1l2.7 7.6L23 9l-6.5 5 2.3 8L12 17.5 5.2 22l2.3-8L1 9l8.3-.4z"/></svg>{%- endcapture -%}
+{%- capture orn_flake -%}<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none" aria-hidden="true"><path d="M12 2v20M2 12h20M4.9 4.9l14.2 14.2M19.1 4.9L4.9 19.1"/></svg>{%- endcapture -%}
+
 <section id="hd-{{ section.id }}">
 
   {%- if s.count_enable and s.count_to != blank -%}
@@ -189,6 +218,12 @@
   {%- comment -%} ===== HERO ===== {%- endcomment -%}
   <div class="hd-hero">
     <span class="glow" aria-hidden="true"></span>
+    {%- if s.show_ornaments -%}
+    <span class="hd-orn o1" data-odrift="0.5" style="color:var(--gold);">{{ orn_bauble }}</span>
+    <span class="hd-orn o2" data-odrift="0.8" style="color:var(--berry);">{{ orn_bauble }}</span>
+    <span class="hd-orn o3" data-odrift="0.65" style="color:#fff;">{{ orn_flake }}</span>
+    <span class="hd-orn o4" data-odrift="0.4" style="color:var(--gold);">{{ orn_star }}</span>
+    {%- endif -%}
     <div class="hd-wrap">
       {%- if s.hero_chip != blank -%}<span class="chip hd-rev">{{ s.hero_chip }}</span>{%- endif -%}
       <h1 class="hd-h1 hd-rev">{{ s.hero_title | default: 'Sip the <em>season</em>' }}</h1>
@@ -231,6 +266,10 @@
   {%- endcapture -%}
   {%- if box_count > 0 -%}
   <div class="hd-boxes hd-section">
+    {%- if s.show_ornaments -%}
+    <span class="hd-orn oa" data-odrift="0.55" style="color:var(--berry);">{{ orn_bauble }}</span>
+    <span class="hd-orn ob" data-odrift="0.35" style="color:var(--pine);">{{ orn_star }}</span>
+    {%- endif -%}
     <div class="hd-wrap">
       <div class="hd-head hd-rev">
         {%- if s.boxes_eyebrow != blank -%}<span class="hd-eyebrow">{{ s.boxes_eyebrow }}</span>{%- endif -%}
@@ -299,6 +338,10 @@
   {%- if s.show_statement -%}
   <hr class="hd-sep">
   <div class="hd-say">
+    {%- if s.show_ornaments -%}
+    <span class="hd-orn oa" data-odrift="0.7" style="color:var(--gold);">{{ orn_star }}</span>
+    <span class="hd-orn ob" data-odrift="0.45" style="color:var(--berry);">{{ orn_flake }}</span>
+    {%- endif -%}
     <div class="hd-wrap">
       <span class="l1" data-drift="-0.055">{{ s.statement_l1 | default: 'Merry &' }}</span>
       <span class="l2" data-drift="0.075">{{ s.statement_l2 | default: 'Mixable' }}</span>
@@ -328,6 +371,10 @@
   {%- if rec_count > 0 -%}
   <hr class="hd-sep">
   <div class="hd-recipes hd-section">
+    {%- if s.show_ornaments -%}
+    <span class="hd-orn oa" data-odrift="0.6" style="color:var(--pine);">{{ orn_flake }}</span>
+    <span class="hd-orn ob" data-odrift="0.4" style="color:var(--berry);">{{ orn_bauble }}</span>
+    {%- endif -%}
     <div class="hd-wrap">
       <div class="hd-head hd-rev">
         {%- if s.rec_eyebrow != blank -%}<span class="hd-eyebrow">{{ s.rec_eyebrow }}</span>{%- endif -%}
@@ -377,7 +424,8 @@
 
   /* statement drift */
   var drifts=[].slice.call(root.querySelectorAll('[data-drift]'));
-  if(drifts.length && !reduce){
+  var orns=[].slice.call(root.querySelectorAll('[data-odrift]'));
+  if((drifts.length || orns.length) && !reduce){
     var dT=false;
     function drift(){
       dT=false;
@@ -388,6 +436,13 @@
         var dr=dEl.getBoundingClientRect();
         var prog=(dr.top + dr.height/2 - vh/2)/vh;
         dEl.style.transform='translateX('+(prog*dsp*(window.innerWidth||1000)).toFixed(1)+'px)';
+      }
+      for(var q=0;q<orns.length;q++){
+        var oEl=orns[q];
+        var osp=parseFloat(oEl.getAttribute('data-odrift'))||0.5;
+        var orr=oEl.getBoundingClientRect();
+        var oprog=(orr.top + orr.height/2 - vh/2)/vh;
+        oEl.style.transform='translateY('+(oprog*osp*260).toFixed(1)+'px)';
       }
     }
     window.addEventListener('scroll',function(){ if(!dT){dT=true;requestAnimationFrame(drift);} },{passive:true});
@@ -459,6 +514,11 @@
     { "type": "text", "id": "count_label", "label": "Label", "default": "Order by Dec 19 for delivery before Christmas" },
     { "type": "header", "content": "Snow" },
     { "type": "checkbox", "id": "show_snow", "label": "Gentle falling snow", "default": true },
+    { "type": "checkbox", "id": "show_ornaments", "label": "Floating ornaments (scroll parallax)", "default": true },
+    { "type": "header", "content": "Product photo backgrounds" },
+    { "type": "color", "id": "ph_tint1", "label": "Tint 1 (evergreen wash)", "default": "#EAF3EE" },
+    { "type": "color", "id": "ph_tint2", "label": "Tint 2 (cranberry wash)", "default": "#FAE7E8" },
+    { "type": "color", "id": "ph_tint3", "label": "Tint 3 (gold wash)", "default": "#FFF3D6" },
     { "type": "header", "content": "Hero" },
     { "type": "text", "id": "hero_chip", "label": "Chip", "default": "The Holiday Shop" },
     { "type": "text", "id": "hero_title", "label": "Headline (<em> = gold italic)", "default": "Sip the <em>season</em>" },
