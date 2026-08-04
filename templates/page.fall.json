@@ -12,9 +12,9 @@
     "main": {
       "type": "page-fall",
       "blocks": {
-        "cozy1": { "type": "box", "settings": { "title": "The PSL, upgraded", "text": "Cafe quality pumpkin spice at home, for a fraction of the coffee shop price. Your barista era starts now.", "bg": "#3B2416", "tx": "#FBF4E6", "bordered": false } },
-        "cozy2": { "type": "box", "settings": { "title": "Rainy day approved", "text": "Maple, chai, cinnamon, pumpkin. Flavors that make staying in feel like the plan all along.", "bg": "#C2611E", "tx": "#FBF4E6", "bordered": false } },
-        "cozy3": { "type": "box", "settings": { "title": "Free shipping over $36", "text": "Stock the shelf for the whole season and shipping is on us. Ships fast from New Jersey.", "bg": "#FBF4E6", "tx": "#3B2416", "bordered": true } },
+        "cozy1": { "type": "box", "settings": { "title": "The PSL, upgraded", "text": "Cafe quality pumpkin spice at home, for a fraction of the coffee shop price. Your barista era starts now.", "bg": "#3c2415", "tx": "#FFFBF4", "bordered": false } },
+        "cozy2": { "type": "box", "settings": { "title": "Rainy day approved", "text": "Maple, chai, cinnamon, pumpkin. Flavors that make staying in feel like the plan all along.", "bg": "#e28f26", "tx": "#ffffff", "bordered": false } },
+        "cozy3": { "type": "box", "settings": { "title": "Free shipping over $36", "text": "Stock the shelf for the whole season and shipping is on us. Ships fast from New Jersey.", "bg": "#FCE2A0", "tx": "#3c2415", "bordered": false } },
         "rec1": { "type": "recipe", "settings": { "title": "Pumpkin Spice Latte", "text": "Two pumps pumpkin spice, a double shot, steamed milk. Cinnamon on top. The classic, but yours.", "tag": "The classic", "hint": "Photo idea: a latte with leaf latte art next to a small pumpkin on a knit blanket." } },
         "rec2": { "type": "recipe", "settings": { "title": "Maple Pecan Cold Brew", "text": "One pump maple bourbon pecan, cold brew over ice, a splash of oat milk. Sweater weather in a glass.", "tag": "Iced", "hint": "Photo idea: a tall iced coffee with cream swirling in, orange leaves on the table." } },
         "rec3": { "type": "recipe", "settings": { "title": "Dirty Chai", "text": "One pump chai, one shot of espresso, warm milk. Spicy, sweet and a little dramatic.", "tag": "Spiced", "hint": "Photo idea: a glass mug of chai with a cinnamon stick, steam catching window light." } }

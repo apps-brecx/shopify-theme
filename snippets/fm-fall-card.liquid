@@ -1,8 +1,10 @@
 {%- comment -%}
-  Fall Mood page product card (fm design).
+  Fall Mood page product card, Syruvia house style (bordered card, hard shadow, pill ATC).
   Params: fp (product), sett (section settings), badge_override (optional), attrs (optional shopify_attributes).
   In stock: flag + price + add-to-cart. Out of stock: Coming Soon veil + disabled button.
 {%- endcomment -%}
+{%- assign tdl = fp.title | downcase -%}
+{%- assign issf = false -%}{%- if tdl contains 'sugar free' or tdl contains 'sugar-free' -%}{%- assign issf = true -%}{%- endif -%}
 {%- assign disp = fp.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip -%}
 {%- if disp == blank -%}{%- assign disp = fp.title -%}{%- endif -%}
 <div class="fm-card fm-rev{% unless fp.available %} soon{% endunless %}" {{ attrs }}>
@@ -14,6 +16,7 @@
     {%- unless fp.available -%}<span class="veil">{{ sett.coming_label | default: 'Coming soon' }}</span>{%- endunless -%}
   </a>
   <div class="b">
+    {%- if issf -%}<span class="kick">{{ sett.sf_badge | default: 'Sugar-Free · 0g' }}</span>{%- endif -%}
     <a class="t" href="{{ fp.url }}">{{ disp }}</a>
     <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
     {%- if fp.available -%}
