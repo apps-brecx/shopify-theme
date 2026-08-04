@@ -1,0 +1,28 @@
+{%- comment -%}
+  Fall Mood page product card (fm design).
+  Params: fp (product), sett (section settings), badge_override (optional), attrs (optional shopify_attributes).
+  In stock: flag + price + add-to-cart. Out of stock: Coming Soon veil + disabled button.
+{%- endcomment -%}
+{%- assign disp = fp.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip -%}
+{%- if disp == blank -%}{%- assign disp = fp.title -%}{%- endif -%}
+<div class="fm-card fm-rev{% unless fp.available %} soon{% endunless %}" {{ attrs }}>
+  <a class="ph" href="{{ fp.url }}">
+    {%- if fp.available -%}
+    <span class="flag">{{ badge_override | default: sett.live_badge | default: 'Fall' }}</span>
+    {%- endif -%}
+    {%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 720 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}
+    {%- unless fp.available -%}<span class="veil">{{ sett.coming_label | default: 'Coming soon' }}</span>{%- endunless -%}
+  </a>
+  <div class="b">
+    <a class="t" href="{{ fp.url }}">{{ disp }}</a>
+    <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
+    {%- if fp.available -%}
+    {%- form 'product', fp -%}
+      <input type="hidden" name="id" value="{{ fp.selected_or_first_available_variant.id }}">
+      <button type="submit" class="atc">{{ sett.atc_label | default: 'Add to cart' }}</button>
+    {%- endform -%}
+    {%- else -%}
+    <form><button type="button" class="atc" disabled>{{ sett.coming_label | default: 'Coming soon' }}</button></form>
+    {%- endif -%}
+  </div>
+</div>
