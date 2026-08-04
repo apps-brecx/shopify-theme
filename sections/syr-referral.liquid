@@ -1,0 +1,198 @@
+{%- comment -%}
+  Syruvia Referral page — brand neubrutalist restyle (Archivo Black + Josefin
+  Sans, paper/ink/butter/copper). Same content + functionality as the old
+  page: hero, ReferralCandy candyjar widget, 3-step "how it works", the
+  copy-to-clipboard share message, and the "Better Shared" closer.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- assign rc_id = s.rc_campaign_id | default: 'tzxqlqlospwkhe1907ufrhmwv' -%}
+<style id="sref-{{ section.id }}-css">
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:ital,wght@0,300..700;1,300..600&display=swap');
+  #sref-{{ section.id }}{--ink:#39220f;--ink-2:#5a4632;--paper:#FFFBF4;--white:#fff;--butter:#FCE2A0;--copper:#c58548;--peach:#ffd4b8;--mint:#c5e4d4;--sky:#b8dceb;--fh:'Archivo Black','Arial Black',sans-serif;--fb:'Josefin Sans','Josefin',sans-serif;background:var(--paper);color:var(--ink);font-family:var(--fb);position:relative;}
+  #sref-{{ section.id }} *{box-sizing:border-box;}
+  #sref-{{ section.id }} .sref-wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  #sref-{{ section.id }} .sref-rev{opacity:0;transform:translateY(18px) scale(.95);transition:opacity .6s ease, transform .6s cubic-bezier(.2,.7,.3,1.25);}
+  #sref-{{ section.id }} .sref-rev.in{opacity:1;transform:none;}
+  #sref-{{ section.id }} .sref-eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--butter);color:var(--ink);border:2px solid var(--ink);border-radius:999px;box-shadow:3px 3px 0 var(--ink);font-family:var(--fh);font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding:8px 18px;line-height:1;}
+  #sref-{{ section.id }} .sref-h2{font-family:var(--fh);font-weight:400;font-size:clamp(26px,3.8vw,42px);line-height:1.04;letter-spacing:-.01em;text-transform:uppercase;margin:14px 0 0;}
+  #sref-{{ section.id }} .sref-h2 em{font-family:var(--fb);font-style:italic;font-weight:300;color:var(--copper);text-transform:none;}
+  #sref-{{ section.id }} .sref-head{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:34px;}
+  #sref-{{ section.id }} .sref-head .sub{font-size:15.5px;color:var(--ink-2);font-weight:500;max-width:54ch;margin:8px auto 0;line-height:1.6;}
+  /* hero */
+  #sref-{{ section.id }} .sref-hero{text-align:center;padding:70px 0 40px;position:relative;}
+  #sref-{{ section.id }} .sref-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(circle, rgba(57,34,15,.05) 1.4px, transparent 1.6px);background-size:26px 26px;opacity:.5;pointer-events:none;}
+  #sref-{{ section.id }} .sref-hero .sref-wrap{position:relative;z-index:2;}
+  #sref-{{ section.id }} .sref-hero h1{font-family:var(--fh);font-weight:400;font-size:clamp(38px,6.4vw,72px);line-height:.94;letter-spacing:-.02em;text-transform:uppercase;margin:20px 0 0;}
+  #sref-{{ section.id }} .sref-hero h1 em{font-family:var(--fb);font-style:italic;font-weight:300;color:var(--copper);text-transform:none;}
+  #sref-{{ section.id }} .sref-hero .sub{font-size:clamp(15px,2vw,18px);color:var(--ink-2);font-weight:500;margin:18px auto 0;max-width:58ch;line-height:1.6;}
+  /* referralcandy widget card */
+  #sref-{{ section.id }} .sref-widget{padding:10px 0 46px;}
+  #sref-{{ section.id }} .sref-widget-card{max-width:920px;margin:0 auto;background:var(--white);border:3px solid var(--ink);border-radius:26px;box-shadow:8px 8px 0 var(--ink);padding:clamp(18px,3.5vw,38px);text-align:center;overflow:hidden;}
+  #sref-{{ section.id }} .sref-widget-card iframe{max-width:100%;}
+  /* steps */
+  #sref-{{ section.id }} .sref-steps{padding:36px 0 46px;}
+  #sref-{{ section.id }} .sref-sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  #sref-{{ section.id }} .sref-scard{background:var(--white);border:2.5px solid var(--ink);border-radius:20px;box-shadow:5px 5px 0 var(--ink);padding:28px 22px;text-align:center;transition:transform .2s ease,box-shadow .2s ease;}
+  #sref-{{ section.id }} .sref-scard:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--ink);}
+  #sref-{{ section.id }} .sref-scard .ic{width:52px;height:52px;margin:0 auto 14px;border-radius:50%;border:2.5px solid var(--ink);box-shadow:3px 3px 0 var(--ink);display:flex;align-items:center;justify-content:center;font-size:24px;}
+  #sref-{{ section.id }} .sref-sgrid .sref-scard:nth-child(1) .ic{background:var(--peach);}
+  #sref-{{ section.id }} .sref-sgrid .sref-scard:nth-child(2) .ic{background:var(--mint);}
+  #sref-{{ section.id }} .sref-sgrid .sref-scard:nth-child(3) .ic{background:var(--sky);}
+  #sref-{{ section.id }} .sref-scard .t{font-family:var(--fh);font-weight:400;font-size:16px;text-transform:uppercase;line-height:1.15;}
+  #sref-{{ section.id }} .sref-scard .d{font-size:14px;color:var(--ink-2);font-weight:500;line-height:1.55;margin:8px 0 0;}
+  /* quick message */
+  #sref-{{ section.id }} .sref-msg{padding:10px 0 46px;}
+  #sref-{{ section.id }} .sref-msg-card{position:relative;max-width:820px;margin:0 auto;background:var(--butter);border:2.5px solid var(--ink);border-radius:22px;box-shadow:6px 6px 0 var(--ink);padding:clamp(24px,4vw,40px) clamp(20px,4vw,44px) clamp(24px,4vw,34px);text-align:center;}
+  #sref-{{ section.id }} .sref-msg-text{font-size:clamp(15px,2vw,17.5px);color:var(--ink);font-weight:500;line-height:1.7;margin:0;}
+  #sref-{{ section.id }} .sref-msg-text .lnk{display:inline-block;font-family:var(--fh);font-size:.82em;text-transform:uppercase;letter-spacing:.04em;background:var(--white);border:2px solid var(--ink);border-radius:999px;box-shadow:2px 2px 0 var(--ink);padding:5px 12px;margin:4px 0;}
+  #sref-{{ section.id }} .sref-copy{display:inline-flex;align-items:center;gap:8px;margin-top:20px;border-radius:999px;font-family:var(--fh);font-weight:400;font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;padding:14px 26px;border:2.5px solid var(--ink);cursor:pointer;background:var(--copper);color:#fff;box-shadow:4px 4px 0 var(--ink);transition:transform .16s ease, box-shadow .16s ease;}
+  #sref-{{ section.id }} .sref-copy:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
+  #sref-{{ section.id }} .sref-copy.copied{background:var(--mint);color:var(--ink);}
+  #sref-{{ section.id }} .sref-tagline{font-family:var(--fb);font-style:italic;font-weight:300;font-size:clamp(20px,3vw,28px);color:var(--copper);text-align:center;margin:34px auto 0;max-width:90%;}
+  /* closer */
+  #sref-{{ section.id }} .sref-cta{padding:26px 0 80px;}
+  #sref-{{ section.id }} .sref-cta-card{position:relative;overflow:hidden;background:linear-gradient(140deg,var(--copper),#8a5a2c);color:var(--paper);border:3px solid var(--ink);border-radius:30px;box-shadow:8px 8px 0 var(--ink);padding:54px clamp(26px,5vw,64px);text-align:center;}
+  #sref-{{ section.id }} .sref-cta-card::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(255,251,244,.5) 1.2px, transparent 1.4px);background-size:26px 26px;opacity:.14;pointer-events:none;}
+  #sref-{{ section.id }} .sref-cta-card .sref-h2{color:var(--paper);position:relative;}
+  #sref-{{ section.id }} .sref-cta-card .sref-h2 em{color:var(--butter);}
+  #sref-{{ section.id }} .sref-cta-card p{position:relative;color:rgba(255,251,244,.92);font-size:15.5px;font-weight:500;line-height:1.7;max-width:56ch;margin:16px auto 0;}
+  @media (max-width:860px){
+    #sref-{{ section.id }} .sref-hero{padding:46px 0 26px;}
+    /* sticky-stacking pile on mobile, same as the wholesale page */
+    #sref-{{ section.id }} .sref-sgrid{display:block;}
+    #sref-{{ section.id }} .sref-sgrid .sref-scard{position:sticky;margin-bottom:20px;}
+    #sref-{{ section.id }} .sref-sgrid .sref-scard:nth-child(1){top:90px;}
+    #sref-{{ section.id }} .sref-sgrid .sref-scard:nth-child(2){top:112px;}
+    #sref-{{ section.id }} .sref-sgrid .sref-scard:nth-child(3){top:134px;margin-bottom:0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    #sref-{{ section.id }} .sref-rev{opacity:1;transform:none;}
+    #sref-{{ section.id }} .sref-sgrid .sref-scard{position:static;}
+  }
+</style>
+
+<section id="sref-{{ section.id }}">
+  <div class="sref-hero">
+    <div class="sref-wrap">
+      <span class="sref-eyebrow sref-rev">{{ s.hero_eyebrow | default: 'Syruvia Referral Program' }}</span>
+      <h1 class="sref-rev">{{ s.hero_title | default: 'Love it? <em>Share it</em>' }}</h1>
+      <p class="sub sref-rev">{{ s.hero_sub | default: 'Spread the love, share your link, and earn when they fall in love too!' }}</p>
+    </div>
+  </div>
+
+  <div class="sref-widget">
+    <div class="sref-wrap">
+      <div class="sref-widget-card sref-rev">
+        <iframe id="refcandy-candyjar" data-id="{{ rc_id }}" data-id-type="campaign" data-height="700" data-width="80%" frameborder="0" title="Syruvia referral program"></iframe>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//portal.referralcandy.com/assets/widgets/refcandy-candyjar.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","refcandy-candyjar-js");</script>
+      </div>
+    </div>
+  </div>
+
+  <div class="sref-steps">
+    <div class="sref-wrap">
+      <div class="sref-head">
+        <span class="sref-eyebrow sref-rev">{{ s.steps_eyebrow | default: 'How it works' }}</span>
+        <h2 class="sref-h2 sref-rev">{{ s.steps_title | default: 'It&rsquo;s easy to share the <em>love</em>' }}</h2>
+      </div>
+      <div class="sref-sgrid">
+        <div class="sref-scard sref-rev"><div class="ic">💌</div><div class="t">Invite your Friends</div><p class="d">Send your referral link to friends who love coffee, smoothies, or sweet treats</p></div>
+        <div class="sref-scard sref-rev"><div class="ic">🎁</div><div class="t">They Get a Discount</div><p class="d">Your friend enjoys a special deal on their first order through your referral</p></div>
+        <div class="sref-scard sref-rev"><div class="ic">💵</div><div class="t">You Earn $5</div><p class="d">After they place an order, you earn a reward. It&rsquo;s as simple as that</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sref-msg">
+    <div class="sref-wrap">
+      <div class="sref-head">
+        <span class="sref-eyebrow sref-rev">{{ s.msg_eyebrow | default: 'Copy &amp; send' }}</span>
+        <h2 class="sref-h2 sref-rev">{{ s.msg_title | default: 'Need a quick <em>message</em> to send?' }}</h2>
+      </div>
+      <div class="sref-msg-card sref-rev">
+        <p class="sref-msg-text referral-text">
+          Hey! I just ordered from Syruvia&mdash;they make amazing syrups for coffee, tea, and more!<br>
+          I think you&rsquo;ll love them too. Plus, here&rsquo;s a 10% discount to try it out:<br>
+          <span class="lnk">[Your Referral Link]</span><br>
+          Every order through this link helps support a growing brand I love!
+        </p>
+        <button type="button" class="sref-copy" aria-label="Copy this message">📋 Copy message</button>
+      </div>
+      <p class="sref-tagline sref-rev">{{ s.msg_tagline | default: 'It&rsquo;s that simple&mdash;share, earn, and enjoy!' }}</p>
+    </div>
+  </div>
+
+  <div class="sref-cta">
+    <div class="sref-wrap">
+      <div class="sref-cta-card sref-rev">
+        <span class="sref-eyebrow">{{ s.cta_eyebrow | default: 'Better together' }}</span>
+        <h2 class="sref-h2">{{ s.cta_title | default: 'Syruvia is better <em>shared</em>' }}</h2>
+        <p>{{ s.cta_text | default: 'Whether it&rsquo;s your best friend, your sister, or your smoothie-loving neighbor&mdash;spread the sweetness. Share what you love and get rewarded for it. There are no limits&mdash;earn as many rewards as you like.' }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var root=document.getElementById('sref-{{ section.id }}');
+  if(!root) return;
+  /* copy-to-clipboard, same behavior as the old referral-share section */
+  var btn=root.querySelector('.sref-copy');
+  var msg=root.querySelector('.sref-msg-text');
+  if(btn&&msg){
+    btn.addEventListener('click',function(){
+      var text=msg.innerText;
+      var done=function(){
+        var orig=btn.innerHTML;
+        btn.innerHTML='✅ Copied!';
+        btn.classList.add('copied');
+        setTimeout(function(){btn.innerHTML=orig;btn.classList.remove('copied');},2000);
+      };
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done);
+      }else{
+        var ta=document.createElement('textarea');
+        ta.value=text;document.body.appendChild(ta);ta.select();
+        try{document.execCommand('copy');done();}catch(e){}
+        document.body.removeChild(ta);
+      }
+    });
+  }
+  /* reveal on scroll */
+  if('IntersectionObserver' in window && !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
+    root.querySelectorAll('.sref-rev').forEach(function(el){io.observe(el);});
+    setTimeout(function(){root.querySelectorAll('.sref-rev:not(.in)').forEach(function(el){el.classList.add('in');});},2800);
+  } else { root.querySelectorAll('.sref-rev').forEach(function(el){el.classList.add('in');}); }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Referral Page",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "Syruvia Referral Program" },
+    { "type": "text", "id": "hero_title", "label": "Title", "default": "Love it? <em>Share it</em>" },
+    { "type": "textarea", "id": "hero_sub", "label": "Subtitle", "default": "Spread the love, share your link, and earn when they fall in love too!" },
+    { "type": "header", "content": "ReferralCandy widget" },
+    { "type": "text", "id": "rc_campaign_id", "label": "Campaign ID", "default": "tzxqlqlospwkhe1907ufrhmwv" },
+    { "type": "header", "content": "How it works" },
+    { "type": "text", "id": "steps_eyebrow", "label": "Eyebrow", "default": "How it works" },
+    { "type": "text", "id": "steps_title", "label": "Heading", "default": "It’s easy to share the <em>love</em>" },
+    { "type": "header", "content": "Quick message" },
+    { "type": "text", "id": "msg_eyebrow", "label": "Eyebrow", "default": "Copy & send" },
+    { "type": "text", "id": "msg_title", "label": "Heading", "default": "Need a quick <em>message</em> to send?" },
+    { "type": "text", "id": "msg_tagline", "label": "Tagline", "default": "It’s that simple—share, earn, and enjoy!" },
+    { "type": "header", "content": "Closer" },
+    { "type": "text", "id": "cta_eyebrow", "label": "Eyebrow", "default": "Better together" },
+    { "type": "text", "id": "cta_title", "label": "Heading", "default": "Syruvia is better <em>shared</em>" },
+    { "type": "textarea", "id": "cta_text", "label": "Text", "default": "Whether it’s your best friend, your sister, or your smoothie-loving neighbor—spread the sweetness. Share what you love and get rewarded for it. There are no limits—earn as many rewards as you like." }
+  ],
+  "presets": [
+    { "name": "Referral Page" }
+  ]
+}
+{% endschema %}
