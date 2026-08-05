@@ -1,0 +1,56 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "page-learn-doc",
+      "blocks": {
+        "s1": { "type": "sec", "settings": { "num": "1", "title": "Purpose" } },
+        "s1p": { "type": "p", "settings": { "text": "The purpose of this Standard Operating Procedure (SOP) is to establish a consistent process for evaluating, improving, and developing Syruvia syrup flavors.\nThis SOP ensures that every flavor is developed using research, customer feedback, professional sensory evaluation, and documented formulation practices to maintain the highest quality standards." } },
+        "s2": { "type": "sec", "settings": { "num": "2", "title": "Scope" } },
+        "s2p": { "type": "p", "settings": { "text": "This SOP applies to all syrup flavors assigned to the R&D Flavor Developer, including:" } },
+        "s2l": { "type": "list", "settings": { "items": "Existing Regular Syrups\nExisting Sugar-Free Syrups\nCoffee Syrups\nFruit Syrups\nCocktail Syrups\nSeasonal Flavors\nLimited Edition Flavors\nNew Product Development" } },
+        "s3": { "type": "sec", "settings": { "num": "3", "title": "Primary Objectives" } },
+        "s3p": { "type": "p", "settings": { "text": "The primary objectives of the R&D department are to:" } },
+        "s3l": { "type": "list", "settings": { "items": "Continuously improve the quality of Syruvia flavors.\nTransition existing flavor systems to Sapphire Flavor House whenever possible.\nMaintain successful flavor profiles that customers already enjoy.\nImprove flavors based on customer feedback and market research.\nDevelop authentic, realistic, premium-quality flavors.\nCreate innovative new flavors that keep Syruvia ahead of market trends.\nMaintain detailed documentation throughout every project." } },
+        "s4": { "type": "sec", "settings": { "num": "4", "title": "General Guidelines" } },
+        "s4p": { "type": "p", "settings": { "text": "Every R&D project should follow these core principles:" } },
+        "g1": { "type": "sub", "settings": { "title": "Customer First" } },
+        "g1p": { "type": "p", "settings": { "text": "Customer feedback takes priority over personal preference.\nIf a flavor receives repeated complaints, those concerns must be investigated and addressed whenever appropriate." } },
+        "g2": { "type": "sub", "settings": { "title": "Authenticity" } },
+        "g2p": { "type": "p", "settings": { "text": "Whenever possible, flavors should taste like the real ingredient rather than an artificial imitation." } },
+        "g2n": { "type": "note", "settings": { "text": "Example: a Coconut Syrup should resemble real coconut rather than a generic tropical flavor." } },
+        "g3": { "type": "sub", "settings": { "title": "Preserve Successful Flavor Profiles" } },
+        "g3p": { "type": "p", "settings": { "text": "If customers already enjoy the current flavor profile, improvements should be made carefully.\nThe objective is to enhance the flavor, not completely redesign it, unless research clearly shows that significant changes are needed." } },
+        "g4": { "type": "sub", "settings": { "title": "Continuous Improvement" } },
+        "g4p": { "type": "p", "settings": { "text": "No flavor is ever considered permanently finished.\nEvery product should continue to be monitored and improved based on customer feedback and market trends." } },
+        "g5": { "type": "sub", "settings": { "title": "Documentation" } },
+        "g5p": { "type": "p", "settings": { "text": "Every formulation, revision, observation, and recommendation must be documented.\nGood documentation is just as important as creating a great flavor." } },
+        "s5": { "type": "sec", "settings": { "num": "5", "title": "Responsibilities" } },
+        "s5p": { "type": "p", "settings": { "text": "The R&D Flavor Developer is responsible for:" } },
+        "s5l": { "type": "list", "settings": { "items": "Researching customer feedback.\nResearching competitors.\nEvaluating existing formulas.\nDeveloping improved formulations.\nCreating new flavors.\nMaintaining accurate documentation.\nPreparing samples.\nPresenting final recommendations to management." } },
+        "s5c": { "type": "callout", "settings": { "text": "Final approval remains with Syruvia Management." } }
+      },
+      "block_order": ["s1", "s1p", "s2", "s2p", "s2l", "s3", "s3p", "s3l", "s4", "s4p", "g1", "g1p", "g2", "g2p", "g2n", "g3", "g3p", "g4", "g4p", "g5", "g5p", "s5", "s5p", "s5l", "s5c"],
+      "settings": {
+        "doc_kicker": "Research & Development",
+        "doc_title": "Flavor Development SOP · Overview & Objectives",
+        "doc_type": "Standard Operating Procedure · Sections 1 to 5",
+        "m_version": "1.0",
+        "m_date": "August 2026",
+        "m_owner": "R&D",
+        "m_status": "Approved",
+        "next_l": "Retasting Flavors",
+        "next_u": "/pages/learn-rd-retasting"
+      }
+    }
+  },
+  "order": ["main"]
+}
