@@ -11,11 +11,62 @@
   "sections": {
     "main": {
       "type": "vp-hero",
-      "settings": {}
+      "settings": {
+        "text_primary": "#1a1a1a",
+        "text_brand": "#1a1a1a",
+        "bg_section": "#fff8ee",
+        "hero_bg": "#fff8ee",
+        "star_color": "#ff6b5c",
+        "rating_text_color": "#3a3a3a",
+        "chip_text_color": "#1a1a1a",
+        "price_color": "#1a1a1a",
+        "cta_color_bg": "#1a1a1a",
+        "cta_color_text": "#fffbf4",
+        "atc_text_available": "Add to cart",
+        "atc_text_soldout": "Sold Out",
+        "sale_badge_bg": "#ff6b5c",
+        "sale_badge_text": "#fffbf4",
+        "sale_badge_prefix": "Save",
+        "reviews_label": "reviews",
+        "chip1_suffix": "Bottles Inside",
+        "bottle_count_fallback": 4,
+        "chip2": "Pure Cane Sugar",
+        "chip2_sf": "Sugar Free",
+        "chip3": "Gift-Ready",
+        "chip4": "Save vs Singles",
+        "show_breadcrumbs": true,
+        "breadcrumb_home": "Home",
+        "breadcrumb_category": "Variety Packs",
+        "show_mini_bundle": true,
+        "mb_headline": "Stock up, save more",
+        "mb_sub": "Bigger discount per pack",
+        "mb_tier2_num": "2",
+        "mb_tier2_label": "Packs",
+        "mb_tier2_save": "Save 5%",
+        "mb_tier3_flag": "Most Popular",
+        "mb_tier3_num": "3",
+        "mb_tier3_label": "Packs",
+        "mb_tier3_save": "Save 7%",
+        "mb_tier4_num": "4+",
+        "mb_tier4_label": "Packs",
+        "mb_tier4_save": "Save 10%",
+        "show_sticky_bar": true,
+        "sticky_bg": "#fffbf4",
+        "sticky_text_color": "#1a1a1a"
+      }
     },
     "vp_marquee": {
       "type": "vp-marquee",
-      "settings": {}
+      "settings": {
+        "marquee_bg": "#1a1a1a",
+        "marquee_text": "#fffbf4",
+        "mq_item1": "[count] Bottles Inside",
+        "mq_item2": "Pure Cane Sugar",
+        "mq_item3": "Gift-Ready",
+        "mq_item4": "Save vs Singles",
+        "mq_item5": "Gluten-Free · Kosher",
+        "mq_item6": "Made in the USA"
+      }
     },
     "vp_pack_flavors": {
       "type": "vp-pack-flavors",
@@ -23,19 +74,72 @@
     },
     "vp_description": {
       "type": "vp-description",
-      "settings": {}
+      "settings": {
+        "eyebrow": "About this pack",
+        "heading_pre": "Taste of",
+        "heading_em": "everything",
+        "heading_post": ".",
+        "description_override": "",
+        "flavors_label": "Flavors inside:",
+        "fb1": "Curated Lineup: A hand-picked set of bestseller flavors, balanced so every cup tastes different.",
+        "fb2": "Save vs Singles: Bundle pricing built in. Always cheaper than buying these flavors one bottle at a time.",
+        "fb3": "Gift-Ready: Comes packed and presentable. Hand it off as-is to a coffee fan, or split between friends.",
+        "fb4": "Same Real Flavor: Same Syruvia recipes inside, made with pure cane sugar and real fruit and natural notes.",
+        "fb5": "Café-Quality: 50+ servings per bottle. Roughly 200+ drinks per pack.",
+        "ingredients_label": "Ingredients",
+        "ingredients_fallback": "",
+        "nf_toggle_text": "Nutrition Facts",
+        "nf_title": "Nutrition Facts",
+        "section_bg": ""
+      }
     },
     "vp_standards": {
       "type": "vp-standards",
-      "settings": {}
+      "settings": {
+        "ingredients_label": "Ingredients",
+        "ingredients": "Varies by flavor. Each bottle: Pure Cane Sugar, Filtered Water, Natural Flavor, Citric Acid, Potassium Sorbate (preservative).",
+        "ingredients_sf": "Varies by flavor. Each bottle: Water, Natural Flavors, Gum, Sucralose, Sodium Acid Sulfate (Preservative) Citric Acid (Freshness), Sodium Benzoate, Potassium Sorbate & Ace K (Preservatives), Natural Color.",
+        "section_bg": ""
+      }
     },
     "vp_nutrition": {
       "type": "vp-nutrition",
-      "settings": {}
+      "settings": {
+        "title": "Nutrition Facts",
+        "serving": "Per bottle · Serving size 2 Tbsp (30 mL)",
+        "amount_label": "Amount per serving",
+        "calories": "60",
+        "fat": "0g",
+        "fat_dv": "0%",
+        "sodium": "5mg",
+        "sodium_dv": "0%",
+        "carbs": "15g",
+        "carbs_dv": "5%",
+        "sugars": "14g",
+        "added_sugars": "Incl. 14g Added Sugars",
+        "added_sugars_dv": "28%",
+        "protein": "0g",
+        "footnote": "*% DV based on a 2,000 calorie diet. Sugar-free flavors in this pack will list 0g sugar.",
+        "section_bg": ""
+      }
     },
     "vp_why": {
       "type": "vp-why",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Why this pack",
+        "heading_pre": "A tour of",
+        "heading_em": "flavor",
+        "heading_post": ".",
+        "c1_title": "Bestseller Lineup",
+        "c1_body": "Hand-picked flavors that work together. No filler. Every bottle pulls its weight.",
+        "c2_title": "Save vs Singles",
+        "c2_body": "Bundle price built in. Always less than the same bottles one-by-one.",
+        "c3_title": "Gift-Ready",
+        "c3_body": "Presentable as-is. A great drop for a coffee lover, or split it between friends.",
+        "c4_title": "Café Quality",
+        "c4_body": "Same real-flavor Syruvia recipes inside. Pure cane sugar, no funky aftertaste.",
+        "section_bg": ""
+      }
     },
     "vp_reels": {
       "type": "vp-reels",
@@ -43,19 +147,63 @@
     },
     "vp_recipe": {
       "type": "vp-recipe-feature",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Featured recipe",
+        "heading_pre": "Pour",
+        "heading_em": "a flight",
+        "heading_post": ".",
+        "lede": "Side-by-side mini lattes — try all the flavors in one sitting.",
+        "img_tag": "Signature flight",
+        "recipe_name": "Tasting Flight",
+        "ing_head": "INGREDIENTS",
+        "ing1": "[count] small glasses, each with 1 espresso shot (or 3 oz cold brew)",
+        "ing2": "1 pump from each flavor in this pack",
+        "ing3": "2 oz steamed or cold milk per glass",
+        "ing4": "Optional: ice + a sprinkle of cinnamon",
+        "time": "7 min",
+        "section_bg": ""
+      }
     },
     "vp_cat_recipes": {
       "type": "vp-cat-recipes",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Ways to pour",
+        "heading_pre": "More than a",
+        "heading_em": "latte",
+        "heading_post": ".",
+        "sub": "Once you have the pack, here’s how to use every bottle.",
+        "section_bg": "",
+        "c1_tag": "Hot Latte",
+        "c1_title": "Classic Café Latte",
+        "c1_body": "1 shot espresso, 8 oz steamed milk, 1 pump of any flavor in the pack. Stir + sip.",
+        "c2_tag": "Iced",
+        "c2_title": "Iced Flavored Coffee",
+        "c2_body": "Cold brew over ice, splash of milk, one pump. Endless combos.",
+        "c3_tag": "Dessert",
+        "c3_title": "Vanilla Ice Cream Drizzle",
+        "c3_body": "Drizzle any syrup over vanilla ice cream. Different flavor every night.",
+        "c4_tag": "Breakfast",
+        "c4_title": "Pancake Pour",
+        "c4_body": "Swap syrup for one of these on pancakes, waffles, or French toast.",
+        "c5_tag": "Mocktail",
+        "c5_title": "Sparkling Spritz",
+        "c5_body": "Soda water + 1 pump syrup + lemon = bright, zero-proof drink.",
+        "c6_tag": "Cocktail",
+        "c6_title": "Bar Cart Upgrade",
+        "c6_body": "Pump into bourbon, vodka, or rum cocktails. House signature in 30 seconds."
+      }
     },
     "pd_reviews": {
       "type": "pd-reviews",
-      "settings": {}
+      "settings": {
+        "pd_bg": ""
+      }
     },
     "pd_write_review": {
       "type": "pd-write-review",
-      "settings": {}
+      "settings": {
+        "wrapper_bg": ""
+      }
     },
     "pd_recommended": {
       "type": "pd-recommended",
@@ -63,11 +211,74 @@
     },
     "vp_faq": {
       "type": "vp-faq",
-      "settings": {}
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading_pre": "Before you",
+        "heading_em": "pour",
+        "heading_post": ".",
+        "lede": "Everything you might want to know about this variety pack.",
+        "q1": "What flavors come in this pack?",
+        "a1": "The flavors are listed in the product title and product images. Each bottle is 750 ml — 50+ servings per bottle.",
+        "q2": "How much do I save vs buying singles?",
+        "a2": "Pack pricing is built in. You always pay less than buying these exact flavors bottle-by-bottle.",
+        "q3": "Can I swap a flavor?",
+        "a3": "These are pre-packed sets so we can keep the price low. If you want full custom, check out our Build Your Own Bundle page.",
+        "q4": "How long does a bottle last?",
+        "a4": "Unopened, up to 18 months at room temperature. Once opened, refrigerate and use within 6 weeks for best flavor.",
+        "q5": "Are these gift-ready?",
+        "a5": "Yes — packs ship in their own clean carton. Hand it to a coffee fan as-is, no extra wrapping needed.",
+        "q6": "Are your syrups kosher and gluten free?",
+        "a6": "Yes. All Syruvia syrups are OU kosher certified and gluten free.",
+        "q7": "How fast do you ship?",
+        "a7": "Orders ship in 1 business day from our New Jersey warehouse. Flat-rate $5.99 shipping, free over $34.",
+        "q8": "What if I do not love it?",
+        "a8": "30-day taste guarantee on every pack. Email us — refund, swap, or store credit, your call.",
+        "section_bg": ""
+      }
     },
     "pd_vip": {
       "type": "pd-vip",
-      "settings": {}
+      "settings": {
+        "eyebrow_text": "VIP Pricing",
+        "heading_pre": "Become a",
+        "heading_em": "member",
+        "heading_post": ".",
+        "lede_text": "Create a free Syruvia account to unlock VIP pricing on every bottle, forever.",
+        "savings_label": "VIP price:",
+        "save_label": "· save",
+        "perk1_text": "$7.99 on every flavor",
+        "perk2_text": "Free to join · no fees",
+        "perk3_text": "Early access to new flavors",
+        "btn_primary_text": "Create free account",
+        "btn_secondary_text": "Sign in",
+        "already_text": "Already a member?",
+        "already_link_text": "Sign in to activate VIP pricing.",
+        "section_bg": "#fffbf4",
+        "section_border_color": "#39220f",
+        "card_bg": "#ffffff",
+        "card_border_color": "#39220f",
+        "card_blob1_color": "#fce2a0",
+        "card_blob2_color": "#c5e4d4",
+        "eyebrow_bg": "#fce2a0",
+        "eyebrow_color": "#39220f",
+        "heading_color": "#39220f",
+        "heading_em_color": "#c58548",
+        "lede_color": "#3a3a3a",
+        "savings_color": "#fffbf4",
+        "savings_bg": "#c58548",
+        "perk_color": "#39220f",
+        "perk_icon_bg": "#c5e4d4",
+        "perk_icon_color": "#39220f",
+        "btn_primary_bg": "#39220f",
+        "btn_primary_color": "#fffbf4",
+        "btn_primary_shadow_color": "#c58548",
+        "btn_secondary_bg": "#fffbf4",
+        "btn_secondary_color": "#39220f",
+        "btn_secondary_hover_bg": "#fce2a0",
+        "already_color": "#3a3a3a",
+        "already_link_color": "#2f7dc4",
+        "already_link_hover_color": "#1f5d9c"
+      }
     },
     "areviews_1784749659_30db11": {
       "type": "apps",
@@ -85,7 +296,10 @@
       "block_order": [
         "areviews_reviews_importer_areviews_display_reviews_14C802"
       ],
-      "settings": {}
+      "disabled": true,
+      "settings": {
+        "include_margins": true
+      }
     }
   },
   "order": [
