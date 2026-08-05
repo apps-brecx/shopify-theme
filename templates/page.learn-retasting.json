@@ -1,0 +1,69 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "page-learn-doc",
+      "blocks": {
+        "s6": { "type": "sec", "settings": { "num": "6", "title": "Existing Flavor Optimization Procedure" } },
+        "st1": { "type": "sub", "settings": { "title": "Step 1 · Research" } },
+        "st1p": { "type": "p", "settings": { "text": "Before creating any samples, research the assigned flavor using:" } },
+        "st1l": { "type": "list", "settings": { "items": "Amazon Reviews\nWalmart Reviews\nTikTok Shop Reviews\nSyruvia Website Reviews\nCustomer Emails\nCustomer Service Feedback\nSocial Media Comments" } },
+        "st1p2": { "type": "p", "settings": { "text": "Document:" } },
+        "st1l2": { "type": "list", "settings": { "items": "Most common compliments\nMost common complaints\nCustomer requests\nFrequently mentioned strengths\nFrequently mentioned weaknesses" } },
+        "st2": { "type": "sub", "settings": { "title": "Step 2 · Competitor Research" } },
+        "st2p": { "type": "p", "settings": { "text": "Review comparable products from competing brands. Examples include:" } },
+        "st2l": { "type": "list", "settings": { "items": "Torani\nMonin\nJordan's Skinny Mixes\nSkinny Mixes\nDaVinci\nStarbucks (when applicable)" } },
+        "st2p2": { "type": "p", "settings": { "text": "Review:" } },
+        "st2l2": { "type": "list", "settings": { "items": "Customer reviews\nProduct descriptions\nStrengths\nWeaknesses" } },
+        "st2n": { "type": "note", "settings": { "text": "If necessary, request approval to purchase competitor samples for comparison." } },
+        "st3": { "type": "sub", "settings": { "title": "Step 3 · Evaluate the Current Formula" } },
+        "st3p": { "type": "p", "settings": { "text": "Prepare the current Syruvia formula exactly as currently manufactured.\nTaste it using the intended application." } },
+        "st3n1": { "type": "note", "settings": { "text": "Coffee flavors: coffee, latte, milk.\nFruit flavors: water, sparkling water, lemonade (when appropriate)." } },
+        "st3p2": { "type": "p", "settings": { "text": "Evaluate:" } },
+        "st3l": { "type": "list", "settings": { "items": "Aroma\nAuthenticity\nSweetness\nMouthfeel\nBalance\nFlavor Strength\nFinish\nOverall Experience" } },
+        "st4": { "type": "sub", "settings": { "title": "Step 4 · Determine the Development Path" } },
+        "st4p": { "type": "p", "settings": { "text": "Choose the appropriate direction." } },
+        "o1": { "type": "opt", "settings": { "tag": "Option A", "title": "The current flavor is excellent", "text": "Recreate the flavor using Sapphire flavorings while maintaining the existing flavor profile. Minor improvements are acceptable." } },
+        "o2": { "type": "opt", "settings": { "tag": "Option B", "title": "The current flavor is good but can be improved", "text": "Maintain the existing flavor profile while improving realism, balance, aroma, finish, or overall quality." } },
+        "o3": { "type": "opt", "settings": { "tag": "Option C", "title": "The flavor profile no longer meets customer expectations", "text": "Develop a new flavor profile supported by customer feedback and market research. Major changes should only be recommended when justified by research." } },
+        "st5": { "type": "sub", "settings": { "title": "Step 5 · Sample Development" } },
+        "st5p": { "type": "p", "settings": { "text": "Develop only the number of samples necessary to identify the best formulation. Typical progression:" } },
+        "st5f": { "type": "flow", "settings": { "items": "Current Formula\nS1 · Sapphire Match\nS2 · Improved Version\nS3 · Alternative Version\nFinal Candidate" } },
+        "st5n": { "type": "note", "settings": { "text": "Each sample should have a clear purpose. Never create random variations." } },
+        "st6": { "type": "sub", "settings": { "title": "Step 6 · Documentation" } },
+        "st6p": { "type": "p", "settings": { "text": "Every version must include:" } },
+        "st6l": { "type": "list", "settings": { "items": "Formula Version\nDate\nFlavor Code\nPercentage Used\nWhat Changed\nWhy It Changed\nPersonal Notes" } },
+        "st6p2": { "type": "p", "settings": { "text": "All formulas must be entered into the Syruvia formulation system." } },
+        "st7": { "type": "sub", "settings": { "title": "Step 7 · Sensory Evaluation" } },
+        "st7p": { "type": "p", "settings": { "text": "Evaluate every sample using its intended application.\nWhen appropriate, conduct blind tastings.\nIf additional opinions are helpful, trusted friends or family members may participate in tasting evaluations without knowing which version is preferred." } },
+        "st8": { "type": "sub", "settings": { "title": "Step 8 · Final Recommendation" } },
+        "st8p": { "type": "p", "settings": { "text": "Submit the following to Syruvia Management:" } },
+        "st8l": { "type": "list", "settings": { "items": "Final Recommended Formula\nOptional Backup Formula\nResearch Summary\nCustomer Feedback Summary\nCompetitor Findings\nExplanation of Changes\nSamples" } },
+        "st8c": { "type": "callout", "settings": { "text": "Management will conduct the final approval before production." } }
+      },
+      "block_order": ["s6", "st1", "st1p", "st1l", "st1p2", "st1l2", "st2", "st2p", "st2l", "st2p2", "st2l2", "st2n", "st3", "st3p", "st3n1", "st3p2", "st3l", "st4", "st4p", "o1", "o2", "o3", "st5", "st5p", "st5f", "st5n", "st6", "st6p", "st6l", "st6p2", "st7", "st7p", "st8", "st8p", "st8l", "st8c"],
+      "settings": {
+        "doc_kicker": "Research & Development",
+        "doc_title": "Flavor Development SOP · Retasting Flavors",
+        "doc_type": "Existing Flavor Optimization · Section 6, Steps 1 to 8",
+        "m_version": "1.0",
+        "m_date": "August 2026",
+        "m_owner": "R&D",
+        "m_status": "Approved",
+        "prev_l": "Overview & Objectives",
+        "prev_u": "/pages/learn-rd-overview",
+        "next_l": "New Flavors & Standards",
+        "next_u": "/pages/learn-rd-new-flavors"
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,353 @@
+{%- comment -%}
+  Syruvia Learn: internal document page (SOPs, guides) for the team.
+  Sticky "Learn" side menu with sub pages, branded paper document with logo,
+  meta grid (version, date, owner), numbered sections, steps, lists, option
+  cards, sample-flow diagram, callouts, and a Download PDF (print) button.
+  Content is built from blocks so any document can be assembled in the editor.
+{%- endcomment -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:wght@300;400;600;700&display=swap"></noscript>
+
+{%- assign S = section.settings -%}
+
+<style>
+#ld-{{ section.id }}{
+  --bg:#FFFBF4;--paper:#ffffff;--brand:#3c2415;--orange:#e28f26;--gold:#FCE2A0;
+  --ink:#241a12;--mut:rgba(36,26,18,.62);--line:rgba(60,36,21,.16);
+  --rule:1.5px solid var(--brand);
+  --display:'Archivo Black','Josefin Sans',system-ui,sans-serif;
+  --serif:'Josefin Sans',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:15.5px;line-height:1.7;
+}
+#ld-{{ section.id }} *{box-sizing:border-box;margin:0;}
+#ld-{{ section.id }} img{max-width:100%;display:block;}
+#ld-{{ section.id }} a{color:inherit;}
+#ld-{{ section.id }} .wrap{max-width:1180px;margin:0 auto;padding:clamp(28px,4vw,56px) 22px clamp(56px,7vw,96px);display:grid;grid-template-columns:250px 1fr;gap:clamp(22px,3vw,40px);align-items:start;}
+
+/* ---------- side menu ---------- */
+#ld-{{ section.id }} .side{position:sticky;top:96px;}
+#ld-{{ section.id }} .side .box{background:var(--paper);border:var(--rule);border-radius:18px;box-shadow:3px 3px 0 rgba(60,36,21,.14);overflow:hidden;}
+#ld-{{ section.id }} .side .hd{background:var(--brand);color:var(--bg);padding:14px 18px;font-family:var(--display);font-weight:400;font-size:13px;letter-spacing:.16em;text-transform:uppercase;}
+#ld-{{ section.id }} .side nav{padding:10px;}
+#ld-{{ section.id }} .side a{
+  display:flex;align-items:baseline;gap:10px;text-decoration:none;padding:11px 12px;border-radius:12px;
+  font-weight:600;font-size:13.5px;line-height:1.35;color:var(--brand);transition:background .15s ease;
+}
+#ld-{{ section.id }} .side a .n{font-family:var(--display);font-weight:400;font-size:10px;color:var(--orange);min-width:18px;}
+#ld-{{ section.id }} .side a:hover{background:#FFF3DC;}
+#ld-{{ section.id }} .side a.on{background:var(--gold);}
+#ld-{{ section.id }} .side .dl{padding:12px;border-top:1px solid var(--line);}
+#ld-{{ section.id }} .btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  font-family:var(--display);font-weight:400;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+  padding:13px 16px;border:var(--rule);border-radius:999px;cursor:pointer;background:var(--orange);color:#fff;
+  box-shadow:2px 2px 0 rgba(60,36,21,.22);transition:transform .14s ease,box-shadow .14s ease;
+}
+@media(hover:hover){#ld-{{ section.id }} .btn:hover{transform:translateY(-2px);box-shadow:3px 4px 0 rgba(60,36,21,.26);}}
+@media (max-width:849px){
+  #ld-{{ section.id }} .wrap{grid-template-columns:1fr;}
+  #ld-{{ section.id }} .side{position:static;}
+}
+
+/* ---------- document paper ---------- */
+#ld-{{ section.id }} .paper{
+  background:var(--paper);border:var(--rule);border-radius:22px;box-shadow:4px 4px 0 rgba(60,36,21,.14);
+  padding:clamp(28px,4.5vw,64px);
+}
+#ld-{{ section.id }} .dochead{text-align:center;border-bottom:2px solid var(--brand);padding-bottom:clamp(20px,3vw,30px);}
+#ld-{{ section.id }} .dochead .logo{max-width:190px;margin:0 auto 18px;}
+#ld-{{ section.id }} .dochead .word{font-family:var(--display);font-weight:400;font-size:26px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);margin-bottom:14px;}
+#ld-{{ section.id }} .dochead .kick{font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);}
+#ld-{{ section.id }} .dochead h1{font-family:var(--display);font-weight:400;font-size:clamp(22px,3.6vw,34px);line-height:1.15;text-transform:uppercase;color:var(--brand);margin-top:10px;text-wrap:balance;}
+#ld-{{ section.id }} .dochead .type{margin-top:10px;font-size:14px;color:var(--mut);font-weight:600;}
+#ld-{{ section.id }} .meta{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1.5px solid var(--brand);border-radius:14px;overflow:hidden;
+  margin:clamp(20px,3vw,28px) 0 0;
+}
+#ld-{{ section.id }} .meta .m{padding:12px 10px;text-align:center;border-right:1px solid var(--line);}
+#ld-{{ section.id }} .meta .m:last-child{border-right:0;}
+#ld-{{ section.id }} .meta .l{font-family:var(--display);font-weight:400;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange);display:block;}
+#ld-{{ section.id }} .meta .v{font-weight:700;font-size:13.5px;color:var(--brand);display:block;margin-top:5px;}
+@media (max-width:649px){#ld-{{ section.id }} .meta{grid-template-columns:repeat(2,1fr);}#ld-{{ section.id }} .meta .m{border-bottom:1px solid var(--line);}#ld-{{ section.id }} .meta .m:nth-last-child(-n+2){border-bottom:0;}}
+
+/* ---------- content blocks ---------- */
+#ld-{{ section.id }} .body{margin-top:clamp(24px,3.5vw,40px);}
+#ld-{{ section.id }} .sec{display:flex;align-items:center;gap:14px;margin:clamp(34px,5vw,50px) 0 14px;}
+#ld-{{ section.id }} .sec:first-child{margin-top:0;}
+#ld-{{ section.id }} .sec .n{
+  min-width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;
+  background:var(--brand);color:var(--bg);border-radius:12px;font-family:var(--display);font-weight:400;font-size:15px;
+  box-shadow:2px 2px 0 rgba(60,36,21,.2);
+}
+#ld-{{ section.id }} .sec h2{font-family:var(--display);font-weight:400;font-size:clamp(17px,2.6vw,22px);text-transform:uppercase;color:var(--brand);line-height:1.15;}
+#ld-{{ section.id }} .sub{margin:26px 0 8px;display:flex;align-items:baseline;gap:10px;}
+#ld-{{ section.id }} .sub h3{font-family:var(--display);font-weight:400;font-size:14.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--orange);}
+#ld-{{ section.id }} .sub .bar{flex:1;height:1px;background:var(--line);}
+#ld-{{ section.id }} p.pp{margin:10px 0;color:var(--ink);}
+#ld-{{ section.id }} .note{margin:10px 0;padding:12px 16px;background:var(--bg);border-left:3px solid var(--orange);border-radius:0 12px 12px 0;font-size:14px;color:var(--mut);font-style:italic;}
+#ld-{{ section.id }} ul.ll{margin:10px 0;padding:0;list-style:none;display:grid;gap:7px;}
+#ld-{{ section.id }} ul.ll li{position:relative;padding-left:24px;font-size:14.5px;}
+#ld-{{ section.id }} ul.ll li::before{content:'';position:absolute;left:6px;top:.62em;width:7px;height:7px;border-radius:50%;background:var(--orange);}
+#ld-{{ section.id }} .opt{
+  margin:12px 0;border:1.5px solid var(--brand);border-radius:14px;padding:16px 18px;background:var(--paper);
+  box-shadow:2px 2px 0 rgba(60,36,21,.12);
+}
+#ld-{{ section.id }} .opt h4{font-family:var(--display);font-weight:400;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);}
+#ld-{{ section.id }} .opt h4 span{display:inline-block;background:var(--gold);border-radius:6px;padding:2px 8px;margin-right:8px;}
+#ld-{{ section.id }} .opt p{margin-top:6px;font-size:14px;color:var(--ink);}
+#ld-{{ section.id }} .flow{margin:16px auto;max-width:380px;display:grid;gap:0;text-align:center;}
+#ld-{{ section.id }} .flow .fstep{
+  border:1.5px solid var(--brand);border-radius:999px;padding:11px 18px;background:var(--bg);
+  font-family:var(--display);font-weight:400;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--brand);
+}
+#ld-{{ section.id }} .flow .fstep:last-child{background:var(--orange);color:#fff;}
+#ld-{{ section.id }} .flow .arr{color:var(--orange);font-size:18px;line-height:1;padding:6px 0;font-weight:700;}
+#ld-{{ section.id }} .callout{
+  margin:18px 0;background:var(--brand);color:var(--bg);border-radius:16px;padding:20px 22px;
+  box-shadow:3px 3px 0 rgba(60,36,21,.18);text-align:center;
+}
+#ld-{{ section.id }} .callout p{font-family:var(--display);font-weight:400;font-size:15px;line-height:1.5;text-transform:uppercase;letter-spacing:.02em;}
+#ld-{{ section.id }} .docfoot{margin-top:clamp(30px,4vw,44px);padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--mut);}
+
+/* ---------- pager ---------- */
+#ld-{{ section.id }} .pager{display:flex;justify-content:space-between;gap:12px;margin-top:20px;}
+#ld-{{ section.id }} .pager a{
+  font-family:var(--display);font-weight:400;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  border:var(--rule);border-radius:999px;padding:12px 20px;background:var(--paper);color:var(--brand);box-shadow:2px 2px 0 rgba(60,36,21,.14);
+}
+@media(hover:hover){#ld-{{ section.id }} .pager a:hover{background:#FFF3DC;}}
+
+/* ---------- print ---------- */
+@media print{
+  body *{visibility:hidden !important;}
+  #ld-{{ section.id }} .paper,#ld-{{ section.id }} .paper *{visibility:visible !important;}
+  #ld-{{ section.id }} .paper{position:absolute;left:0;top:0;width:100%;border:0;box-shadow:none;border-radius:0;padding:24px;}
+  #ld-{{ section.id }} .sec{break-after:avoid;}
+  #ld-{{ section.id }} .opt,#ld-{{ section.id }} .callout,#ld-{{ section.id }} .flow{break-inside:avoid;}
+}
+</style>
+
+<div id="ld-{{ section.id }}">
+  <div class="wrap">
+
+    <aside class="side">
+      <div class="box">
+        <div class="hd">{{ S.nav_title | default: 'Learn' }}</div>
+        <nav>
+          {%- for i in (1..6) -%}
+            {%- assign lkey = 'nav' | append: i | append: '_l' -%}
+            {%- assign ukey = 'nav' | append: i | append: '_u' -%}
+            {%- assign nl = S[lkey] -%}
+            {%- assign nu = S[ukey] -%}
+            {%- if nl != blank and nu != blank -%}
+              <a href="{{ nu }}" {% if request.path == nu %}class="on"{% endif %}><span class="n">0{{ forloop.index }}</span>{{ nl }}</a>
+            {%- endif -%}
+          {%- endfor -%}
+        </nav>
+        <div class="dl">
+          <button type="button" class="btn" onclick="window.print()">{{ S.dl_label | default: 'Download PDF' }}</button>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <article class="paper">
+        <header class="dochead">
+          {%- if settings.logo -%}
+            <img class="logo" src="{{ settings.logo | image_url: width: 380 }}" alt="{{ shop.name | escape }}">
+          {%- else -%}
+            <div class="word">Syruvia</div>
+          {%- endif -%}
+          <span class="kick">{{ S.doc_kicker }}</span>
+          <h1>{{ S.doc_title }}</h1>
+          {%- if S.doc_type != blank -%}<p class="type">{{ S.doc_type }}</p>{%- endif -%}
+          <div class="meta">
+            <div class="m"><span class="l">Version</span><span class="v">{{ S.m_version | default: '1.0' }}</span></div>
+            <div class="m"><span class="l">Effective</span><span class="v">{{ S.m_date }}</span></div>
+            <div class="m"><span class="l">Owner</span><span class="v">{{ S.m_owner | default: 'R&D' }}</span></div>
+            <div class="m"><span class="l">Status</span><span class="v">{{ S.m_status | default: 'Approved' }}</span></div>
+          </div>
+        </header>
+
+        <div class="body">
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+
+            {%- when 'sec' -%}
+              <div class="sec" {{ block.shopify_attributes }}>
+                <span class="n">{{ block.settings.num }}</span>
+                <h2>{{ block.settings.title }}</h2>
+              </div>
+
+            {%- when 'sub' -%}
+              <div class="sub" {{ block.shopify_attributes }}>
+                <h3>{{ block.settings.title }}</h3><span class="bar"></span>
+              </div>
+
+            {%- when 'p' -%}
+              <p class="pp" {{ block.shopify_attributes }}>{{ block.settings.text | newline_to_br }}</p>
+
+            {%- when 'note' -%}
+              <div class="note" {{ block.shopify_attributes }}>{{ block.settings.text | newline_to_br }}</div>
+
+            {%- when 'list' -%}
+              <ul class="ll" {{ block.shopify_attributes }}>
+                {%- assign items = block.settings.items | newline_to_br | split: '<br />' -%}
+                {%- for it in items -%}
+                  {%- assign itt = it | strip -%}
+                  {%- if itt != blank -%}<li>{{ itt }}</li>{%- endif -%}
+                {%- endfor -%}
+              </ul>
+
+            {%- when 'opt' -%}
+              <div class="opt" {{ block.shopify_attributes }}>
+                <h4><span>{{ block.settings.tag }}</span>{{ block.settings.title }}</h4>
+                <p>{{ block.settings.text | newline_to_br }}</p>
+              </div>
+
+            {%- when 'flow' -%}
+              <div class="flow" {{ block.shopify_attributes }}>
+                {%- assign fitems = block.settings.items | newline_to_br | split: '<br />' -%}
+                {%- assign fsize = 0 -%}
+                {%- for it in fitems -%}{%- assign itt = it | strip -%}{%- if itt != blank -%}{%- assign fsize = fsize | plus: 1 -%}{%- endif -%}{%- endfor -%}
+                {%- assign fi = 0 -%}
+                {%- for it in fitems -%}
+                  {%- assign itt = it | strip -%}
+                  {%- if itt != blank -%}
+                    {%- assign fi = fi | plus: 1 -%}
+                    <div class="fstep">{{ itt }}</div>
+                    {%- if fi < fsize -%}<div class="arr">&darr;</div>{%- endif -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+
+            {%- when 'callout' -%}
+              <div class="callout" {{ block.shopify_attributes }}>
+                <p>{{ block.settings.text }}</p>
+              </div>
+
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+
+        <footer class="docfoot">
+          <span>{{ S.foot_left | default: 'Syruvia LLC · Internal document' }}</span>
+          <span>{{ S.foot_right | default: 'For Syruvia team use only' }}</span>
+        </footer>
+      </article>
+
+      <div class="pager">
+        <span>{%- if S.prev_u != blank -%}<a href="{{ S.prev_u }}">&larr; {{ S.prev_l | default: 'Previous' }}</a>{%- endif -%}</span>
+        <span>{%- if S.next_u != blank -%}<a href="{{ S.next_u }}">{{ S.next_l | default: 'Next' }} &rarr;</a>{%- endif -%}</span>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Learn document",
+  "settings": [
+    { "type": "header", "content": "Document header" },
+    { "type": "text", "id": "doc_kicker", "label": "Kicker", "default": "Research & Development" },
+    { "type": "text", "id": "doc_title", "label": "Document title", "default": "Flavor Development SOP" },
+    { "type": "text", "id": "doc_type", "label": "Document type line", "default": "Standard Operating Procedure" },
+    { "type": "text", "id": "m_version", "label": "Version", "default": "1.0" },
+    { "type": "text", "id": "m_date", "label": "Effective date", "default": "August 2026" },
+    { "type": "text", "id": "m_owner", "label": "Owner", "default": "R&D" },
+    { "type": "text", "id": "m_status", "label": "Status", "default": "Approved" },
+
+    { "type": "header", "content": "Side menu" },
+    { "type": "text", "id": "nav_title", "label": "Menu title", "default": "Learn" },
+    { "type": "text", "id": "nav1_l", "label": "Item 1 label", "default": "Overview & Objectives" },
+    { "type": "text", "id": "nav1_u", "label": "Item 1 URL", "default": "/pages/learn-rd-overview" },
+    { "type": "text", "id": "nav2_l", "label": "Item 2 label", "default": "Retasting Flavors" },
+    { "type": "text", "id": "nav2_u", "label": "Item 2 URL", "default": "/pages/learn-rd-retasting" },
+    { "type": "text", "id": "nav3_l", "label": "Item 3 label", "default": "New Flavors & Standards" },
+    { "type": "text", "id": "nav3_u", "label": "Item 3 URL", "default": "/pages/learn-rd-new-flavors" },
+    { "type": "text", "id": "nav4_l", "label": "Item 4 label" },
+    { "type": "text", "id": "nav4_u", "label": "Item 4 URL" },
+    { "type": "text", "id": "nav5_l", "label": "Item 5 label" },
+    { "type": "text", "id": "nav5_u", "label": "Item 5 URL" },
+    { "type": "text", "id": "nav6_l", "label": "Item 6 label" },
+    { "type": "text", "id": "nav6_u", "label": "Item 6 URL" },
+    { "type": "text", "id": "dl_label", "label": "Download button label", "default": "Download PDF" },
+
+    { "type": "header", "content": "Prev / next" },
+    { "type": "text", "id": "prev_l", "label": "Previous label" },
+    { "type": "text", "id": "prev_u", "label": "Previous URL" },
+    { "type": "text", "id": "next_l", "label": "Next label" },
+    { "type": "text", "id": "next_u", "label": "Next URL" },
+
+    { "type": "header", "content": "Footer" },
+    { "type": "text", "id": "foot_left", "label": "Footer left", "default": "Syruvia LLC · Internal document" },
+    { "type": "text", "id": "foot_right", "label": "Footer right", "default": "For Syruvia team use only" }
+  ],
+  "blocks": [
+    {
+      "type": "sec",
+      "name": "Section heading",
+      "settings": [
+        { "type": "text", "id": "num", "label": "Number", "default": "1" },
+        { "type": "text", "id": "title", "label": "Title" }
+      ]
+    },
+    {
+      "type": "sub",
+      "name": "Sub heading / step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title" }
+      ]
+    },
+    {
+      "type": "p",
+      "name": "Paragraph",
+      "settings": [
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "note",
+      "name": "Note / example",
+      "settings": [
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "list",
+      "name": "Bullet list",
+      "settings": [
+        { "type": "textarea", "id": "items", "label": "Items (one per line)" }
+      ]
+    },
+    {
+      "type": "opt",
+      "name": "Option card",
+      "settings": [
+        { "type": "text", "id": "tag", "label": "Tag", "default": "Option A" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "flow",
+      "name": "Flow diagram",
+      "settings": [
+        { "type": "textarea", "id": "items", "label": "Steps (one per line, top to bottom)" }
+      ]
+    },
+    {
+      "type": "callout",
+      "name": "Callout",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "max_blocks": 50
+}
+{% endschema %}
