@@ -1,0 +1,66 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "page-new-drop",
+      "blocks": {
+        "f1": {
+          "type": "flavor",
+          "settings": {
+            "name": "Caramel Apple",
+            "tag": "The state fair, bottled.",
+            "desc": "Buttery caramel poured slow over a crisp, juicy apple. Sweet, a little tart, impossible to put down. It turns coffee, cider and soda into dessert.",
+            "notes": "Buttery, Crisp apple, Cozy",
+            "product": "caramel-apple-syrup",
+            "product_sf": "sugar-free-caramel-apple-syrup",
+            "hint": "Photo idea: thick caramel running down a shiny red apple, extreme close up, sticky and glossy.",
+            "bg": "#B23A2E",
+            "tx": "#FFFBF4",
+            "accent": "#F2B04C"
+          }
+        },
+        "f2": {
+          "type": "flavor",
+          "settings": {
+            "name": "Date",
+            "tag": "Nature's caramel.",
+            "desc": "Deep, silky sweetness straight from sun ripened dates. A rich caramel-like flavor that melts into lattes, shakes and oatmeal like it was born there.",
+            "notes": "Silky, Naturally rich, Warm",
+            "product": "date-syrup",
+            "product_sf": "sugar-free-date-syrup",
+            "hint": "Photo idea: juicy Medjool dates torn open, glossy and sticky, with a honey-like pull between the halves.",
+            "bg": "#6B4423",
+            "tx": "#FFFBF4",
+            "accent": "#FCE2A0"
+          }
+        },
+        "f3": {
+          "type": "flavor",
+          "settings": {
+            "name": "Pistachio Date",
+            "tag": "The it-girl latte.",
+            "desc": "Roasted pistachio cream meets sticky sweet date. Nutty, buttery, a little fancy. The latte everyone orders twice.",
+            "notes": "Nutty, Creamy, Sweet",
+            "product": "pistachio-date-syrup",
+            "product_sf": "sugar-free-pistachio-date-syrup",
+            "hint": "Photo idea: cracked pistachios and torn dates scattered around a green swirled iced latte.",
+            "bg": "#5F7042",
+            "tx": "#FFFBF4",
+            "accent": "#D9E3B0"
+          }
+        }
+      },
+      "block_order": ["f1", "f2", "f3"],
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
