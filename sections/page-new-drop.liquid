@@ -10,14 +10,13 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;700;800;900&family=Josefin+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;700;800;900&family=Josefin+Sans:wght@300;400;600&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;700;800;900&family=Josefin+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap">
 
 {%- assign S = section.settings -%}
 
 <style>
 #nd-{{ section.id }}{
-  --ink:#1a1a1a;--bg:#FFF8EE;--paper:#FFFBF4;--coral:#FF6B5C;--gray:#3a3a3a;
+  --ink:#1a1a1a;--bg:#FFF8EE;--paper:#FFFBF4;--coral:{{ S.c_accent | default: '#C8681E' }};--gray:#3a3a3a;
   --rad:20px;--rule:2px solid var(--ink);
   --display:'Archivo Black','Archivo',-apple-system,sans-serif;
   --body:'Archivo',-apple-system,sans-serif;
@@ -58,14 +57,13 @@
 /* ---------- strip ---------- */
 #nd-{{ section.id }} .nd-strip{background:var(--ink);color:var(--paper);text-align:center;padding:11px 16px;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;}
 
-/* ---------- banner ---------- */
-#nd-{{ section.id }} .nd-banner{padding:clamp(18px,3vw,30px) 22px 0;}
-#nd-{{ section.id }} .nd-banner .bwrap{max-width:1120px;margin:0 auto;display:block;overflow:hidden;border:var(--rule);border-radius:var(--rad);box-shadow:4px 4px 0 var(--ink);background:var(--paper);text-decoration:none;transition:transform .12s ease,box-shadow .12s ease;}
-#nd-{{ section.id }} a.bwrap:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
+/* ---------- banner, full screen width ---------- */
+#nd-{{ section.id }} .nd-banner{padding:0;}
+#nd-{{ section.id }} .nd-banner .bwrap{display:block;width:100%;overflow:hidden;border:0;border-bottom:var(--rule);background:var(--paper);text-decoration:none;}
 #nd-{{ section.id }} .nd-banner img{width:100%;height:auto;}
 #nd-{{ section.id }} .nd-banner .hint{
-  display:flex;align-items:center;justify-content:center;text-align:center;aspect-ratio:21/8;padding:24px;
-  color:var(--gray);font-family:var(--script);font-size:14px;line-height:1.5;border:2px dashed var(--ink);border-radius:calc(var(--rad) - 8px);margin:10px;opacity:.65;
+  display:flex;align-items:center;justify-content:center;text-align:center;aspect-ratio:21/6;padding:24px;
+  color:var(--gray);font-family:var(--script);font-size:14px;line-height:1.5;border:2px dashed var(--ink);border-radius:var(--rad);margin:16px 22px;opacity:.65;
 }
 #nd-{{ section.id }} .bm{display:none;}
 @media (max-width:749px){
@@ -127,7 +125,7 @@
   transition:transform .12s ease,box-shadow .12s ease;
 }
 @media(hover:hover){#nd-{{ section.id }} .card:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink);}}
-#nd-{{ section.id }} .card .ph{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:var(--paper);border-bottom:var(--rule);padding:20px;text-decoration:none;position:relative;}
+#nd-{{ section.id }} .card .ph{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:var(--fbg,var(--paper));border-bottom:var(--rule);padding:20px;text-decoration:none;position:relative;}
 #nd-{{ section.id }} .card .ph img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .3s ease;}
 @media(hover:hover){#nd-{{ section.id }} .card:hover .ph img{transform:scale(1.05) rotate(-1.5deg);}}
 #nd-{{ section.id }} .card .flag{
@@ -231,6 +229,49 @@
 #nd-{{ section.id }} .nd-end .endh{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(26px,5.4vw,44px);line-height:.98;color:var(--ink);text-wrap:balance;}
 #nd-{{ section.id }} .nd-end p{margin:16px auto 0;max-width:420px;font-family:var(--script);font-weight:400;font-size:15.5px;line-height:1.65;color:var(--gray);}
 #nd-{{ section.id }} .nd-end .btn{margin-top:26px;}
+
+/* ---------- font enforcement over theme globals (same approach as pd-fixes) ---------- */
+#nd-{{ section.id }} h1,
+#nd-{{ section.id }} .h2,
+#nd-{{ section.id }} .duo .dhead h2,
+#nd-{{ section.id }} .panel h2,
+#nd-{{ section.id }} .endh{
+  font-family:'Archivo Black','Archivo',-apple-system,sans-serif !important;
+  font-weight:400 !important;text-transform:uppercase !important;letter-spacing:-.005em !important;color:var(--ink) !important;
+}
+#nd-{{ section.id }} .nd-hero h1{font-size:clamp(38px,9vw,84px) !important;line-height:.95 !important;letter-spacing:-.01em !important;margin-top:20px !important;}
+#nd-{{ section.id }} .h2{font-size:clamp(28px,4.2vw,50px) !important;line-height:.95 !important;}
+#nd-{{ section.id }} .duo .dhead h2{font-size:clamp(22px,4.4vw,36px) !important;line-height:.95 !important;}
+#nd-{{ section.id }} .panel h2{font-size:clamp(28px,5.4vw,50px) !important;line-height:.95 !important;}
+#nd-{{ section.id }} .endh{font-size:clamp(26px,5.4vw,44px) !important;line-height:.98 !important;}
+#nd-{{ section.id }} .h2 em,#nd-{{ section.id }} h1 em,#nd-{{ section.id }} .endh em{
+  font-family:'Josefin Sans',sans-serif !important;font-weight:300 !important;font-style:italic !important;
+  text-transform:none !important;letter-spacing:0 !important;color:var(--coral) !important;
+}
+#nd-{{ section.id }} .eyebrow,
+#nd-{{ section.id }} .btn,
+#nd-{{ section.id }} .card .atc,
+#nd-{{ section.id }} .card .t,
+#nd-{{ section.id }} .card .kick,
+#nd-{{ section.id }} .card .pr,
+#nd-{{ section.id }} .card .flag,
+#nd-{{ section.id }} .duo .newtag,
+#nd-{{ section.id }} .panel .num,
+#nd-{{ section.id }} .panel .chip,
+#nd-{{ section.id }} .panel .pbtn,
+#nd-{{ section.id }} .nd-strip,
+#nd-{{ section.id }} .nd-mq .half{
+  font-family:'Archivo Black','Archivo',-apple-system,sans-serif !important;font-weight:400 !important;text-transform:uppercase !important;
+}
+#nd-{{ section.id }} .nd-hero .script,
+#nd-{{ section.id }} .nd-hero .sub,
+#nd-{{ section.id }} .duo .dtag,
+#nd-{{ section.id }} .panel .tag,
+#nd-{{ section.id }} .panel .desc,
+#nd-{{ section.id }} .nd-end p{
+  font-family:'Josefin Sans',-apple-system,sans-serif !important;
+}
+#nd-{{ section.id }} .nd-hero .script,#nd-{{ section.id }} .panel .tag{font-style:italic !important;color:var(--coral) !important;}
 </style>
 
 {%- capture svg_apple -%}
@@ -308,7 +349,7 @@
         {%- if block.type == 'flavor' -%}
           {%- assign prod = block.settings.product -%}
           {%- assign prod_sf = block.settings.product_sf -%}
-          <div class="duo nd-rev" style="--i:{{ di }}" {{ block.shopify_attributes }}>
+          <div class="duo nd-rev" style="--i:{{ di }};--fbg:{{ block.settings.bg | default: '#C8681E' }}" {{ block.shopify_attributes }}>
             <div class="dhead">
               <h2>{{ block.settings.name }}</h2>
               <span class="newtag">{{ S.new_tag | default: 'New Release' }}</span>
@@ -444,7 +485,7 @@
   var lc=root.querySelector('[data-nd-leaves]');
   if(lc && !reduced){
     var ctx=lc.getContext('2d'),W,H,leaves=[],running=true;
-    var tones=['rgba(226,143,38,.45)','rgba(192,57,43,.32)','rgba(140,70,30,.35)','rgba(255,107,92,.35)'];
+    var tones=['rgba(226,143,38,.45)','rgba(192,57,43,.32)','rgba(140,70,30,.35)','rgba(200,104,30,.4)'];
     var size=function(){
       var r=lc.parentElement.getBoundingClientRect();
       W=lc.width=r.width;H=lc.height=r.height;
@@ -487,6 +528,7 @@
   "settings": [
     { "type": "header", "content": "Top strip" },
     { "type": "text", "id": "topbar_text", "label": "Top strip text", "default": "New flavor drop · 3 new fall flavors just landed" },
+    { "type": "color", "id": "c_accent", "label": "Fall accent color", "default": "#C8681E" },
 
     { "type": "header", "content": "Banner" },
     { "type": "image_picker", "id": "banner", "label": "Banner (desktop)" },
