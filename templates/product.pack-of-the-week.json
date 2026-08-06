@@ -16,7 +16,7 @@
         "bg_img": "shopify://shop_images/Rectangle_2272_4.png",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
-        "accent_color": "#bd1022"
+        "accent_color": "#BC333A"
       }
     },
     "main": {
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#bd1022"
+        "background_color": "#BC333A"
       }
     },
     "pack_steps_AbyNtH": {
