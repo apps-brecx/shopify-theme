@@ -13,7 +13,7 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272_b3c2137e-537b-4edb-bd6e-b7d7da22c6f3.png",
+        "bg_img": "shopify://shop_images/Rectangle_2272_4.png",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
         "accent_color": "#bd1022"
