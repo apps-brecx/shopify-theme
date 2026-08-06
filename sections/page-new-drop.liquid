@@ -139,6 +139,19 @@
   #nd-{{ section.id }} .panel .bottle{width:150px;bottom:-10px;}
 }
 
+/* ---------- flying ingredients ---------- */
+#nd-{{ section.id }} .flyers{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+#nd-{{ section.id }} .fly{position:absolute;will-change:transform;animation:ndfly 7s ease-in-out infinite;filter:drop-shadow(2px 3px 0 rgba(60,36,21,.14));}
+#nd-{{ section.id }} .fly svg{display:block;width:100%;height:auto;}
+#nd-{{ section.id }} .fly.spin{animation:ndspin 16s linear infinite;}
+@keyframes ndfly{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-16px) rotate(calc(var(--r,0deg) + 6deg));}}
+@keyframes ndspin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .fly,#nd-{{ section.id }} .fly.spin{animation:none;}}
+#nd-{{ section.id }} .nd-hero,#nd-{{ section.id }} .panels,#nd-{{ section.id }} .nd-end,#nd-{{ section.id }} .nd-mq,#nd-{{ section.id }} .nd-strip{position:relative;z-index:2;}
+@media (max-width:749px){
+  #nd-{{ section.id }} .fly.mhide{display:none;}
+}
+
 /* ---------- closing ---------- */
 #nd-{{ section.id }} .nd-end{padding:clamp(20px,4vw,40px) 22px clamp(64px,9vw,110px);}
 #nd-{{ section.id }} .nd-end .card{
@@ -155,7 +168,37 @@
 <svg class="drip" viewBox="0 0 1200 44" preserveAspectRatio="none" aria-hidden="true"><g fill="DRIPFILL"><rect x="0" y="0" width="1200" height="12"/><rect x="30" y="0" width="26" height="30" rx="13"/><rect x="110" y="0" width="22" height="22" rx="11"/><rect x="185" y="0" width="28" height="40" rx="14"/><rect x="290" y="0" width="20" height="18" rx="10"/><rect x="360" y="0" width="26" height="34" rx="13"/><rect x="470" y="0" width="22" height="24" rx="11"/><rect x="545" y="0" width="30" height="42" rx="15"/><rect x="650" y="0" width="20" height="20" rx="10"/><rect x="720" y="0" width="26" height="32" rx="13"/><rect x="830" y="0" width="22" height="26" rx="11"/><rect x="905" y="0" width="28" height="38" rx="14"/><rect x="1010" y="0" width="20" height="18" rx="10"/><rect x="1080" y="0" width="26" height="34" rx="13"/><rect x="1160" y="0" width="22" height="24" rx="11"/></g></svg>
 {%- endcapture -%}
 
+{%- capture svg_apple -%}
+<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 14c-9 0-18 6-18 18 0 11 8 20 18 20s18-9 18-20c0-12-9-18-18-18z" fill="#C0392B" stroke="#3c2415" stroke-width="2"/><rect x="30" y="5" width="4" height="10" rx="2" fill="#3c2415"/><ellipse cx="40" cy="9" rx="6" ry="3.5" fill="#5F7042" stroke="#3c2415" stroke-width="1.5" transform="rotate(-18 40 9)"/><path d="M15 27c1-8 8-13 17-13s16 5 17 13c0 3-3 5-6 3-2-1-2 4-5 4s-3-5-6-5-3 4-6 4-3-3-6-3-5-1-5-3z" fill="#E8A34C" stroke="#3c2415" stroke-width="2"/></svg>
+{%- endcapture -%}
+{%- capture svg_date -%}
+<svg viewBox="0 0 48 64" aria-hidden="true"><ellipse cx="24" cy="32" rx="15" ry="24" fill="#6B4423" stroke="#3c2415" stroke-width="2"/><path d="M18 16c-3 5-4 12-3 20" stroke="#8A5A30" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M28 14c3 6 4 16 2 26" stroke="#8A5A30" stroke-width="2.5" fill="none" stroke-linecap="round"/><ellipse cx="29" cy="22" rx="3" ry="6" fill="rgba(255,255,255,.25)" transform="rotate(15 29 22)"/></svg>
+{%- endcapture -%}
+{%- capture svg_pist -%}
+<svg viewBox="0 0 64 56" aria-hidden="true"><ellipse cx="26" cy="30" rx="16" ry="22" fill="#D9B98A" stroke="#3c2415" stroke-width="2" transform="rotate(-24 26 30)"/><ellipse cx="38" cy="28" rx="14" ry="20" fill="#EBD3A8" stroke="#3c2415" stroke-width="2" transform="rotate(22 38 28)"/><ellipse cx="32" cy="30" rx="8" ry="14" fill="#7A8C4F" stroke="#3c2415" stroke-width="2"/></svg>
+{%- endcapture -%}
+{%- capture svg_drop -%}
+<svg viewBox="0 0 32 44" aria-hidden="true"><path d="M16 2c6 10 12 17 12 26a12 12 0 0 1-24 0C4 19 10 12 16 2z" fill="#E8A34C" stroke="#3c2415" stroke-width="2"/><ellipse cx="12" cy="28" rx="3" ry="5" fill="rgba(255,255,255,.35)"/></svg>
+{%- endcapture -%}
+
 <div id="nd-{{ section.id }}">
+
+  {%- if S.show_flyers -%}
+  <div class="flyers" aria-hidden="true">
+    <span class="fly" style="left:2.5%;top:5%;width:70px;--r:-8deg;animation-delay:0s">{{ svg_apple }}</span>
+    <span class="fly" style="right:5%;top:8%;width:34px;--r:6deg;animation-delay:.9s">{{ svg_drop }}</span>
+    <span class="fly mhide" style="right:2.5%;top:16%;width:58px;--r:14deg;animation-delay:1.6s">{{ svg_pist }}</span>
+    <span class="fly" style="left:4%;top:24%;width:44px;--r:-12deg;animation-delay:.4s">{{ svg_date }}</span>
+    <span class="fly mhide" style="right:3%;top:33%;width:56px;--r:10deg;animation-delay:2.2s">{{ svg_apple }}</span>
+    <span class="fly" style="left:2%;top:41%;width:30px;--r:6deg;animation-delay:1.1s">{{ svg_drop }}</span>
+    <span class="fly mhide" style="right:4.5%;top:50%;width:50px;--r:18deg;animation-delay:.7s">{{ svg_date }}</span>
+    <span class="fly" style="left:3%;top:58%;width:62px;--r:-16deg;animation-delay:1.9s">{{ svg_pist }}</span>
+    <span class="fly mhide" style="right:2.5%;top:66%;width:36px;--r:-6deg;animation-delay:.2s">{{ svg_drop }}</span>
+    <span class="fly" style="left:3.5%;top:74%;width:52px;--r:12deg;animation-delay:1.4s">{{ svg_apple }}</span>
+    <span class="fly mhide" style="left:2%;top:88%;width:40px;--r:-10deg;animation-delay:2.6s">{{ svg_date }}</span>
+    <span class="fly" style="right:3%;top:84%;width:54px;--r:8deg;animation-delay:.5s">{{ svg_pist }}</span>
+  </div>
+  {%- endif -%}
 
   {%- if S.topbar_text != blank -%}
   <div class="nd-strip">{{ S.topbar_text }}</div>
@@ -314,6 +357,7 @@
     { "type": "text", "id": "hero_cta", "label": "Button label", "default": "Meet the flavors" },
     { "type": "url", "id": "hero_cta_url", "label": "Button link (default scrolls to flavors)" },
     { "type": "checkbox", "id": "show_bottles", "label": "Show floating bottles", "default": true },
+    { "type": "checkbox", "id": "show_flyers", "label": "Flying ingredients all over the page", "default": true },
     { "type": "color", "id": "drip_color", "label": "Caramel drip color", "default": "#e28f26" },
 
     { "type": "header", "content": "Marquee" },
