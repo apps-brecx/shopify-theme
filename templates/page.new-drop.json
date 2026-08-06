@@ -23,9 +23,9 @@
             "product_sf": "sugar-free-caramel-apple-syrup",
             "img": "shopify://shop_images/Caramel_Apple.png",
             "hint": "Photo idea: thick caramel running down a shiny red apple, extreme close up, sticky and glossy.",
-            "bg": "#B23A2E",
-            "tx": "#FFFBF4",
-            "accent": "#F2B04C"
+            "bg": "#b23a2e",
+            "tx": "#fffbf4",
+            "accent": "#f2b04c"
           }
         },
         "f2": {
@@ -39,9 +39,9 @@
             "product_sf": "sugar-free-date-syrup",
             "img": "shopify://shop_images/Dates_2.png",
             "hint": "Photo idea: juicy Medjool dates torn open, glossy and sticky, with a honey-like pull between the halves.",
-            "bg": "#6B4423",
-            "tx": "#FFFBF4",
-            "accent": "#FCE2A0"
+            "bg": "#6b4423",
+            "tx": "#fffbf4",
+            "accent": "#fce2a0"
           }
         },
         "f3": {
@@ -55,15 +55,49 @@
             "product_sf": "sugar-free-pistachio-date-syrup",
             "img": "shopify://shop_images/Pistachio_Date.png",
             "hint": "Photo idea: cracked pistachios and torn dates scattered around a green swirled iced latte.",
-            "bg": "#5F7042",
-            "tx": "#FFFBF4",
-            "accent": "#D9E3B0"
+            "bg": "#5f7042",
+            "tx": "#fffbf4",
+            "accent": "#d9e3b0"
           }
         }
       },
-      "block_order": ["f1", "f2", "f3"],
-      "settings": {}
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ],
+      "settings": {
+        "topbar_text": "New flavor drop · 3 new fall flavors just landed",
+        "banner": "shopify://shop_images/image_64.png",
+        "banner_m": "shopify://shop_images/image_63.png",
+        "banner_link": "",
+        "banner_alt": "New fall flavors",
+        "hero_eyebrow": "New this season",
+        "hero_title": "3 New Fall Flavors",
+        "hero_script": "Cozy season just got tastier!",
+        "hero_sub": "Caramel Apple. Date. Pistachio Date. Three brand new ways to make every sip feel like fall.",
+        "show_leaves": true,
+        "show_flyers": true,
+        "show_tick": true,
+        "tick_text": "Caramel Apple · Date · Pistachio Date · New fall flavors",
+        "new_tag": "New Release",
+        "reg_label": "Regular",
+        "sf_label": "Sugar-Free · 0g",
+        "atc_label": "Add to cart",
+        "coming_label": "Coming soon",
+        "shopall_label": "Shop all syrups",
+        "shopall_url": "",
+        "story_kick": "Get to know them",
+        "story_title": "The flavors, up close",
+        "panel_btn": "Shop",
+        "end_title": "Taste them first.",
+        "end_sub": "New flavors never sit on the shelf long. Grab the drop while it is fresh.",
+        "end_cta": "Shop all syrups",
+        "end_url": ""
+      }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
