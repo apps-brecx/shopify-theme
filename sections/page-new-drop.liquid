@@ -1,8 +1,9 @@
 {%- comment -%}
-  Syruvia New Flavor Drop page. House style, appetite first.
-  Prefix: nd-. Notice strip, hero with floating bottles, caramel drip dividers,
-  marquee, one big color-blocked panel per flavor (blocks) with tasting chips,
-  photo slot, bottle, regular + sugar-free add-to-cart, closing CTA.
+  Syruvia New Fall Flavors page (Caramel Apple, Date, Pistachio Date).
+  House style, fall vibe. Notice strip, banner slot (desktop + mobile), fall hero
+  with dropping leaves, marquee, sticky-stacking flavor duos (Regular + Sugar-Free
+  cards tagged New Release), Shop all, color-blocked flavor story panels with
+  tasting notes, flying ingredient illustrations, closing CTA.
 {%- endcomment -%}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,14 +26,15 @@
 #nd-{{ section.id }} a{color:inherit;}
 #nd-{{ section.id }} .wrap{max-width:1120px;margin:0 auto;padding:0 22px;}
 #nd-{{ section.id }} .eyebrow{font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;display:inline-block;padding:6px 14px;border:var(--rule);border-radius:999px;background:var(--paper);color:var(--brand);}
-#nd-{{ section.id }} .h2{font-family:var(--display);font-weight:400;font-size:clamp(26px,5vw,44px);line-height:1;letter-spacing:-.005em;text-transform:uppercase;margin:14px 0 0;color:var(--brand);text-wrap:balance;}
 #nd-{{ section.id }} .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--display);font-weight:400;
   font-size:13.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:16px 30px;
   border:var(--rule);border-radius:999px;cursor:pointer;background:var(--brand);color:var(--bg);
-  box-shadow:3px 3px 0 rgba(60,36,21,.25);transition:transform .14s ease,box-shadow .14s ease,background .14s ease;
+  box-shadow:3px 3px 0 rgba(60,36,21,.25);transition:transform .14s ease,box-shadow .14s ease;
 }
 @media(hover:hover){#nd-{{ section.id }} .btn:hover{transform:translateY(-2px);box-shadow:4px 5px 0 rgba(60,36,21,.28);}}
+#nd-{{ section.id }} .btn--ghost{background:var(--paper);color:var(--brand);box-shadow:none;}
+@media(hover:hover){#nd-{{ section.id }} .btn--ghost:hover{background:#FFF3DC;}}
 #nd-{{ section.id }} .nd-rev{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease;}
 #nd-{{ section.id }} .nd-rev.in{opacity:1;transform:none;}
 @media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .nd-rev{opacity:1;transform:none;transition:none;}}
@@ -40,35 +42,36 @@
 /* ---------- strip ---------- */
 #nd-{{ section.id }} .nd-strip{background:var(--brand);color:var(--bg);text-align:center;border-bottom:var(--rule);padding:10px 16px;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;}
 
+/* ---------- banner ---------- */
+#nd-{{ section.id }} .nd-banner{padding:clamp(18px,3vw,30px) 22px 0;}
+#nd-{{ section.id }} .nd-banner .bwrap{max-width:1120px;margin:0 auto;display:block;overflow:hidden;border:var(--rule);border-radius:calc(var(--rad) + 8px);box-shadow:4px 4px 0 rgba(60,36,21,.16);background:var(--paper);text-decoration:none;}
+#nd-{{ section.id }} .nd-banner img{width:100%;height:auto;}
+#nd-{{ section.id }} .nd-banner .hint{
+  display:flex;align-items:center;justify-content:center;text-align:center;aspect-ratio:21/8;padding:24px;
+  color:rgba(60,36,21,.55);font-size:13.5px;line-height:1.5;border:1.5px dashed var(--brand);border-radius:var(--rad);margin:10px;opacity:.75;
+}
+#nd-{{ section.id }} .bm{display:none;}
+@media (max-width:749px){
+  #nd-{{ section.id }} .bm{display:block;}
+  #nd-{{ section.id }} .bd.hasm{display:none;}
+}
+
 /* ---------- hero ---------- */
-#nd-{{ section.id }} .nd-hero{position:relative;text-align:center;padding:clamp(52px,8vw,92px) 0 clamp(40px,6vw,64px);overflow:hidden;}
-#nd-{{ section.id }} .nd-hero h1{font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--brand);font-size:clamp(42px,11vw,96px);line-height:.95;letter-spacing:-.01em;margin-top:20px;}
+#nd-{{ section.id }} .nd-hero{position:relative;text-align:center;padding:clamp(40px,6vw,72px) 0 clamp(36px,5vw,56px);overflow:hidden;}
+#nd-{{ section.id }} .nd-hero h1{font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--brand);font-size:clamp(38px,9.5vw,82px);line-height:.96;letter-spacing:-.01em;margin-top:20px;}
 #nd-{{ section.id }} .nd-hero h1 .ln{display:block;overflow:hidden;}
 #nd-{{ section.id }} .nd-hero h1 .ln span{display:block;transform:translateY(112%);transition:transform .9s cubic-bezier(.16,1,.3,1);}
 #nd-{{ section.id }} .nd-hero.go h1 .ln span{transform:none;}
+#nd-{{ section.id }} .nd-hero h1 em{font-style:normal;color:var(--orange);}
 #nd-{{ section.id }} .nd-hero .script{
   font-family:var(--serif);font-style:italic;font-weight:600;color:var(--orange);font-size:clamp(19px,4.2vw,30px);
   margin-top:12px;display:inline-block;transform:rotate(-2deg) translateY(12px);opacity:0;transition:opacity .7s ease .3s,transform .7s ease .3s;
 }
 #nd-{{ section.id }} .nd-hero.go .script{opacity:1;transform:rotate(-2deg);}
 #nd-{{ section.id }} .nd-hero .sub{max-width:540px;margin:18px auto 0;font-size:15.5px;line-height:1.7;color:rgba(26,26,26,.75);opacity:0;transform:translateY(12px);transition:opacity .7s ease .45s,transform .7s ease .45s;}
-#nd-{{ section.id }} .nd-hero .btnrow{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:26px;opacity:0;transform:translateY(12px);transition:opacity .7s ease .6s,transform .7s ease .6s;}
-#nd-{{ section.id }} .nd-hero.go .sub,#nd-{{ section.id }} .nd-hero.go .btnrow{opacity:1;transform:none;}
-#nd-{{ section.id }} .nd-hero .bottles{display:flex;justify-content:center;align-items:flex-end;gap:clamp(10px,3vw,30px);margin-top:clamp(30px,5vw,48px);}
-#nd-{{ section.id }} .nd-hero .bcard{
-  width:min(200px,28vw);background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 4px);
-  box-shadow:3px 3px 0 rgba(60,36,21,.14);padding:16px 12px;animation:ndbob 5.5s ease-in-out infinite;
-}
-#nd-{{ section.id }} .nd-hero .bcard:nth-child(1){transform:rotate(-3deg);animation-delay:0s;}
-#nd-{{ section.id }} .nd-hero .bcard:nth-child(2){transform:rotate(1.5deg) translateY(-10px);animation-delay:.8s;}
-#nd-{{ section.id }} .nd-hero .bcard:nth-child(3){transform:rotate(3deg);animation-delay:1.6s;}
-#nd-{{ section.id }} .nd-hero .bcard img{width:100%;height:auto;}
-#nd-{{ section.id }} .nd-hero .bcard .nm{font-family:var(--display);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);margin-top:10px;}
-@keyframes ndbob{0%,100%{margin-top:0;}50%{margin-top:-10px;}}
-@media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .nd-hero .bcard{animation:none;}#nd-{{ section.id }} .nd-hero h1 .ln span,#nd-{{ section.id }} .nd-hero .script,#nd-{{ section.id }} .nd-hero .sub,#nd-{{ section.id }} .nd-hero .btnrow{transform:none;opacity:1;transition:none;}}
-
-/* ---------- drip divider ---------- */
-#nd-{{ section.id }} .drip{display:block;width:100%;height:44px;margin-bottom:-1px;}
+#nd-{{ section.id }} .nd-hero.go .sub{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .nd-hero h1 .ln span,#nd-{{ section.id }} .nd-hero .script,#nd-{{ section.id }} .nd-hero .sub{transform:none;opacity:1;transition:none;}#nd-{{ section.id }} .nd-hero .script{transform:rotate(-2deg);}}
+#nd-{{ section.id }} .nd-leaves{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;}
 
 /* ---------- marquee ---------- */
 #nd-{{ section.id }} .nd-mq{overflow:hidden;background:var(--orange);border-top:var(--rule);border-bottom:var(--rule);padding:11px 0;}
@@ -78,8 +81,64 @@
 @keyframes ndmq{to{transform:translateX(-50%);}}
 @media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .nd-mq .row{animation:none;}}
 
-/* ---------- flavor panels ---------- */
+/* ---------- flavor duos (sticky stacking) ---------- */
+#nd-{{ section.id }} .nd-shop{padding:clamp(44px,6vw,72px) 0 clamp(30px,4vw,48px);}
+#nd-{{ section.id }} .duos{display:grid;gap:clamp(24px,4vw,40px);}
+#nd-{{ section.id }} .duo{
+  position:sticky;top:calc(86px + var(--i)*18px);z-index:calc(2 + var(--i));
+  background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 10px);
+  box-shadow:0 -10px 26px rgba(60,36,21,.10),4px 4px 0 rgba(60,36,21,.16);
+  padding:clamp(20px,3.5vw,32px);
+}
+#nd-{{ section.id }} .duo .dhead{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;text-align:center;margin-bottom:clamp(16px,2.5vw,24px);}
+#nd-{{ section.id }} .duo .dhead h2{font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--brand);font-size:clamp(22px,4.4vw,36px);line-height:1;}
+#nd-{{ section.id }} .duo .newtag{
+  font-family:var(--display);font-weight:400;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  background:var(--orange);color:#fff;border:var(--rule);border-radius:999px;padding:7px 14px;
+  box-shadow:2px 2px 0 rgba(60,36,21,.2);transform:rotate(-2deg);
+}
+#nd-{{ section.id }} .duo .dtag{width:100%;font-style:italic;font-weight:600;color:rgba(26,26,26,.6);font-size:14.5px;}
+#nd-{{ section.id }} .duo .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+#nd-{{ section.id }} .card{
+  position:relative;display:flex;flex-direction:column;background:var(--bg);border:var(--rule);
+  border-radius:calc(var(--rad) + 4px);overflow:hidden;box-shadow:3px 3px 0 rgba(60,36,21,.1);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+@media(hover:hover){#nd-{{ section.id }} .card:hover{transform:translateY(-4px);box-shadow:5px 7px 0 rgba(60,36,21,.14);}}
+#nd-{{ section.id }} .card .ph{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:var(--paper);border-bottom:var(--rule);padding:20px;text-decoration:none;position:relative;}
+#nd-{{ section.id }} .card .ph img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .3s ease;}
+@media(hover:hover){#nd-{{ section.id }} .card:hover .ph img{transform:scale(1.05) rotate(-1.5deg);}}
+#nd-{{ section.id }} .card .flag{
+  position:absolute;top:10px;left:10px;z-index:2;font-family:var(--display);font-weight:400;font-size:9.5px;
+  letter-spacing:.12em;text-transform:uppercase;background:var(--orange);color:#fff;border:var(--rule);
+  border-radius:999px;padding:6px 11px;box-shadow:2px 2px 0 rgba(60,36,21,.2);
+}
+#nd-{{ section.id }} .card .b{display:flex;flex-direction:column;gap:7px;padding:16px;text-align:center;flex:1;}
+#nd-{{ section.id }} .card .kick{font-family:var(--display);font-weight:400;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);}
+#nd-{{ section.id }} .card .t{font-family:var(--display);font-weight:400;font-size:15px;line-height:1.15;text-transform:uppercase;color:var(--brand);text-decoration:none;}
+#nd-{{ section.id }} .card .pr{font-family:var(--display);font-weight:400;font-size:16px;color:var(--brand);}
+#nd-{{ section.id }} .card .pr s{opacity:.45;font-size:13px;margin-left:6px;}
+#nd-{{ section.id }} .card form{margin-top:auto;}
+#nd-{{ section.id }} .card .atc{
+  width:100%;font-family:var(--display);font-weight:400;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+  background:var(--brand);color:var(--bg);border:var(--rule);border-radius:999px;padding:13px 16px;cursor:pointer;
+  transition:transform .14s ease,box-shadow .14s ease;box-shadow:2px 2px 0 rgba(60,36,21,.22);
+}
+@media(hover:hover){#nd-{{ section.id }} .card .atc:hover{transform:translateY(-2px);box-shadow:3px 4px 0 rgba(60,36,21,.26);}}
+#nd-{{ section.id }} .card .atc[disabled]{background:var(--paper);color:var(--brand);opacity:.65;cursor:default;box-shadow:none;}
+#nd-{{ section.id }} .shopall{text-align:center;padding:clamp(26px,4vw,44px) 22px 0;}
+@media (max-width:649px){
+  #nd-{{ section.id }} .duo{top:calc(78px + var(--i)*14px);}
+  #nd-{{ section.id }} .duo .cards{grid-template-columns:1fr 1fr;gap:10px;}
+  #nd-{{ section.id }} .card .b{padding:12px 10px;}
+  #nd-{{ section.id }} .card .t{font-size:12.5px;}
+  #nd-{{ section.id }} .card .atc{font-size:10.5px;padding:11px 10px;}
+}
+
+/* ---------- flavor story panels ---------- */
 #nd-{{ section.id }} .panels{padding:clamp(48px,7vw,84px) 0;display:grid;gap:clamp(36px,6vw,64px);}
+#nd-{{ section.id }} .phead{text-align:center;margin-bottom:clamp(6px,1vw,10px);}
+#nd-{{ section.id }} .phead .h2{font-family:var(--display);font-weight:400;font-size:clamp(26px,5vw,44px);line-height:1;letter-spacing:-.005em;text-transform:uppercase;margin:14px 0 0;color:var(--brand);text-wrap:balance;}
 #nd-{{ section.id }} .panel{
   position:relative;border:var(--rule);border-radius:calc(var(--rad) + 10px);overflow:hidden;
   background:var(--pbg,#B23A2E);color:var(--ptx,#FFFBF4);box-shadow:5px 5px 0 rgba(60,36,21,.18);
@@ -95,20 +154,13 @@
 #nd-{{ section.id }} .panel .desc{margin-top:14px;font-size:15.5px;line-height:1.7;opacity:.92;max-width:480px;}
 #nd-{{ section.id }} .panel .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
 #nd-{{ section.id }} .panel .chip{font-family:var(--display);font-weight:400;font-size:10px;letter-spacing:.14em;text-transform:uppercase;border:1.5px solid currentColor;border-radius:999px;padding:6px 12px;opacity:.95;}
-#nd-{{ section.id }} .panel .buys{display:grid;gap:10px;margin-top:22px;max-width:440px;}
-#nd-{{ section.id }} .panel .buy{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.1);
-  border:1.5px solid currentColor;border-radius:999px;padding:8px 8px 8px 18px;
+#nd-{{ section.id }} .panel .pbtn{
+  display:inline-flex;margin-top:22px;font-family:var(--display);font-weight:400;font-size:11.5px;letter-spacing:.12em;
+  text-transform:uppercase;text-decoration:none;background:var(--pac,#FCE2A0);color:var(--brand);
+  border:1.5px solid var(--brand);border-radius:999px;padding:13px 24px;box-shadow:2px 2px 0 rgba(0,0,0,.18);
+  transition:transform .14s ease;
 }
-#nd-{{ section.id }} .panel .buy .bl{font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.1em;text-transform:uppercase;}
-#nd-{{ section.id }} .panel .buy .bp{font-family:var(--display);font-weight:400;font-size:13px;margin-left:auto;}
-#nd-{{ section.id }} .panel .buy button{
-  font-family:var(--display);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
-  background:var(--pac,#FCE2A0);color:var(--brand);border:1.5px solid var(--brand);border-radius:999px;
-  padding:10px 16px;cursor:pointer;white-space:nowrap;box-shadow:2px 2px 0 rgba(0,0,0,.18);transition:transform .14s ease;
-}
-@media(hover:hover){#nd-{{ section.id }} .panel .buy button:hover{transform:translateY(-2px);}}
-#nd-{{ section.id }} .panel .buy button[disabled]{background:transparent;color:inherit;opacity:.7;cursor:default;box-shadow:none;border-color:currentColor;}
+@media(hover:hover){#nd-{{ section.id }} .panel .pbtn:hover{transform:translateY(-2px);}}
 #nd-{{ section.id }} .panel .media{position:relative;min-height:300px;}
 #nd-{{ section.id }} .panel .photo{
   position:absolute;top:0;left:0;right:0;bottom:0;border-radius:var(--rad);overflow:hidden;border:1.5px solid currentColor;
@@ -123,6 +175,7 @@
   position:absolute;bottom:-14px;right:-6px;width:min(46%,190px);animation:ndbob 6s ease-in-out infinite;
   filter:drop-shadow(4px 6px 0 rgba(0,0,0,.22));transform:rotate(3deg);
 }
+@keyframes ndbob{0%,100%{margin-top:0;}50%{margin-top:-10px;}}
 @media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .panel .bottle{animation:none;}}
 #nd-{{ section.id }} .panel.alt .inner{grid-template-columns:1fr 1.15fr;}
 #nd-{{ section.id }} .panel.alt .txt{order:2;}
@@ -134,7 +187,6 @@
   #nd-{{ section.id }} .panel.alt .media{order:2;}
   #nd-{{ section.id }} .panel .desc{margin-left:auto;margin-right:auto;}
   #nd-{{ section.id }} .panel .chips{justify-content:center;}
-  #nd-{{ section.id }} .panel .buys{margin-left:auto;margin-right:auto;}
   #nd-{{ section.id }} .panel .media{min-height:260px;margin-top:6px;}
   #nd-{{ section.id }} .panel .bottle{width:150px;bottom:-10px;}
 }
@@ -143,18 +195,16 @@
 #nd-{{ section.id }} .flyers{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
 #nd-{{ section.id }} .fly{position:absolute;will-change:transform;animation:ndfly 7s ease-in-out infinite;filter:drop-shadow(2px 3px 0 rgba(60,36,21,.14));}
 #nd-{{ section.id }} .fly svg{display:block;width:100%;height:auto;}
-#nd-{{ section.id }} .fly.spin{animation:ndspin 16s linear infinite;}
 @keyframes ndfly{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-16px) rotate(calc(var(--r,0deg) + 6deg));}}
-@keyframes ndspin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-@media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .fly,#nd-{{ section.id }} .fly.spin{animation:none;}}
-#nd-{{ section.id }} .nd-hero,#nd-{{ section.id }} .panels,#nd-{{ section.id }} .nd-end,#nd-{{ section.id }} .nd-mq,#nd-{{ section.id }} .nd-strip{position:relative;z-index:2;}
+@media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .fly{animation:none;}}
+#nd-{{ section.id }} .nd-hero,#nd-{{ section.id }} .nd-banner,#nd-{{ section.id }} .nd-shop,#nd-{{ section.id }} .shopall,#nd-{{ section.id }} .panels,#nd-{{ section.id }} .nd-end,#nd-{{ section.id }} .nd-mq,#nd-{{ section.id }} .nd-strip{position:relative;z-index:2;}
 @media (max-width:749px){
   #nd-{{ section.id }} .fly.mhide{display:none;}
 }
 
 /* ---------- closing ---------- */
-#nd-{{ section.id }} .nd-end{padding:clamp(20px,4vw,40px) 22px clamp(64px,9vw,110px);}
-#nd-{{ section.id }} .nd-end .card{
+#nd-{{ section.id }} .nd-end{padding:clamp(30px,5vw,52px) 22px clamp(64px,9vw,110px);}
+#nd-{{ section.id }} .nd-end .card2{
   max-width:680px;margin:0 auto;background:var(--brand);color:var(--bg);border:var(--rule);
   border-radius:calc(var(--rad) + 10px);box-shadow:5px 5px 0 rgba(60,36,21,.2);padding:clamp(36px,6vw,60px) 28px;text-align:center;
 }
@@ -163,10 +213,6 @@
 #nd-{{ section.id }} .nd-end p{margin:16px auto 0;max-width:420px;font-size:15px;line-height:1.65;color:rgba(255,251,244,.85);}
 #nd-{{ section.id }} .nd-end .btn{margin-top:26px;background:var(--orange);color:#fff;}
 </style>
-
-{%- capture drip_svg -%}
-<svg class="drip" viewBox="0 0 1200 44" preserveAspectRatio="none" aria-hidden="true"><g fill="DRIPFILL"><rect x="0" y="0" width="1200" height="12"/><rect x="30" y="0" width="26" height="30" rx="13"/><rect x="110" y="0" width="22" height="22" rx="11"/><rect x="185" y="0" width="28" height="40" rx="14"/><rect x="290" y="0" width="20" height="18" rx="10"/><rect x="360" y="0" width="26" height="34" rx="13"/><rect x="470" y="0" width="22" height="24" rx="11"/><rect x="545" y="0" width="30" height="42" rx="15"/><rect x="650" y="0" width="20" height="20" rx="10"/><rect x="720" y="0" width="26" height="32" rx="13"/><rect x="830" y="0" width="22" height="26" rx="11"/><rect x="905" y="0" width="28" height="38" rx="14"/><rect x="1010" y="0" width="20" height="18" rx="10"/><rect x="1080" y="0" width="26" height="34" rx="13"/><rect x="1160" y="0" width="22" height="24" rx="11"/></g></svg>
-{%- endcapture -%}
 
 {%- capture svg_apple -%}
 <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 14c-9 0-18 6-18 18 0 11 8 20 18 20s18-9 18-20c0-12-9-18-18-18z" fill="#C0392B" stroke="#3c2415" stroke-width="2"/><rect x="30" y="5" width="4" height="10" rx="2" fill="#3c2415"/><ellipse cx="40" cy="9" rx="6" ry="3.5" fill="#5F7042" stroke="#3c2415" stroke-width="1.5" transform="rotate(-18 40 9)"/><path d="M15 27c1-8 8-13 17-13s16 5 17 13c0 3-3 5-6 3-2-1-2 4-5 4s-3-5-6-5-3 4-6 4-3-3-6-3-5-1-5-3z" fill="#E8A34C" stroke="#3c2415" stroke-width="2"/></svg>
@@ -185,18 +231,18 @@
 
   {%- if S.show_flyers -%}
   <div class="flyers" aria-hidden="true">
-    <span class="fly" style="left:2.5%;top:5%;width:70px;--r:-8deg;animation-delay:0s">{{ svg_apple }}</span>
-    <span class="fly" style="right:5%;top:8%;width:34px;--r:6deg;animation-delay:.9s">{{ svg_drop }}</span>
-    <span class="fly mhide" style="right:2.5%;top:16%;width:58px;--r:14deg;animation-delay:1.6s">{{ svg_pist }}</span>
-    <span class="fly" style="left:4%;top:24%;width:44px;--r:-12deg;animation-delay:.4s">{{ svg_date }}</span>
-    <span class="fly mhide" style="right:3%;top:33%;width:56px;--r:10deg;animation-delay:2.2s">{{ svg_apple }}</span>
-    <span class="fly" style="left:2%;top:41%;width:30px;--r:6deg;animation-delay:1.1s">{{ svg_drop }}</span>
-    <span class="fly mhide" style="right:4.5%;top:50%;width:50px;--r:18deg;animation-delay:.7s">{{ svg_date }}</span>
-    <span class="fly" style="left:3%;top:58%;width:62px;--r:-16deg;animation-delay:1.9s">{{ svg_pist }}</span>
-    <span class="fly mhide" style="right:2.5%;top:66%;width:36px;--r:-6deg;animation-delay:.2s">{{ svg_drop }}</span>
-    <span class="fly" style="left:3.5%;top:74%;width:52px;--r:12deg;animation-delay:1.4s">{{ svg_apple }}</span>
-    <span class="fly mhide" style="left:2%;top:88%;width:40px;--r:-10deg;animation-delay:2.6s">{{ svg_date }}</span>
-    <span class="fly" style="right:3%;top:84%;width:54px;--r:8deg;animation-delay:.5s">{{ svg_pist }}</span>
+    <span class="fly" style="left:2.5%;top:5%;width:64px;--r:-8deg;animation-delay:0s">{{ svg_apple }}</span>
+    <span class="fly" style="right:5%;top:8%;width:32px;--r:6deg;animation-delay:.9s">{{ svg_drop }}</span>
+    <span class="fly mhide" style="right:2.5%;top:16%;width:56px;--r:14deg;animation-delay:1.6s">{{ svg_pist }}</span>
+    <span class="fly" style="left:4%;top:24%;width:42px;--r:-12deg;animation-delay:.4s">{{ svg_date }}</span>
+    <span class="fly mhide" style="right:3%;top:33%;width:54px;--r:10deg;animation-delay:2.2s">{{ svg_apple }}</span>
+    <span class="fly" style="left:2%;top:41%;width:28px;--r:6deg;animation-delay:1.1s">{{ svg_drop }}</span>
+    <span class="fly mhide" style="right:4.5%;top:50%;width:48px;--r:18deg;animation-delay:.7s">{{ svg_date }}</span>
+    <span class="fly" style="left:3%;top:58%;width:58px;--r:-16deg;animation-delay:1.9s">{{ svg_pist }}</span>
+    <span class="fly mhide" style="right:2.5%;top:66%;width:34px;--r:-6deg;animation-delay:.2s">{{ svg_drop }}</span>
+    <span class="fly" style="left:3.5%;top:74%;width:50px;--r:12deg;animation-delay:1.4s">{{ svg_apple }}</span>
+    <span class="fly mhide" style="left:2%;top:88%;width:38px;--r:-10deg;animation-delay:2.6s">{{ svg_date }}</span>
+    <span class="fly" style="right:3%;top:84%;width:52px;--r:8deg;animation-delay:.5s">{{ svg_pist }}</span>
   </div>
   {%- endif -%}
 
@@ -204,33 +250,28 @@
   <div class="nd-strip">{{ S.topbar_text }}</div>
   {%- endif -%}
 
+  {%- if S.banner != blank or request.design_mode -%}
+  <div class="nd-banner">
+    {%- if S.banner != blank -%}
+      {%- if S.banner_link != blank -%}<a class="bwrap" href="{{ S.banner_link }}">{%- else -%}<div class="bwrap">{%- endif -%}
+        <img class="bd{% if S.banner_m != blank %} hasm{% endif %}" src="{{ S.banner | image_url: width: 2400 }}" alt="{{ S.banner_alt | escape }}">
+        {%- if S.banner_m != blank -%}<img class="bm" src="{{ S.banner_m | image_url: width: 1000 }}" alt="{{ S.banner_alt | escape }}">{%- endif -%}
+      {%- if S.banner_link != blank -%}</a>{%- else -%}</div>{%- endif -%}
+    {%- else -%}
+      <div class="bwrap"><div class="hint">Upload a banner here (desktop and mobile versions in section settings). Add a link to make the whole banner clickable.</div></div>
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+
   <header class="nd-hero" data-nd-hero>
-    <div class="wrap">
+    {%- if S.show_leaves -%}<canvas class="nd-leaves" data-nd-leaves></canvas>{%- endif -%}
+    <div class="wrap" style="position:relative;z-index:2">
       <span class="eyebrow">{{ S.hero_eyebrow }}</span>
       <h1><span class="ln"><span>{{ S.hero_title }}</span></span></h1>
       {%- if S.hero_script != blank -%}<span class="script">{{ S.hero_script }}</span>{%- endif -%}
       {%- if S.hero_sub != blank -%}<p class="sub">{{ S.hero_sub }}</p>{%- endif -%}
-      <div class="btnrow">
-        {%- if S.hero_cta != blank -%}<a class="btn" href="{{ S.hero_cta_url | default: '#nd-flavors' }}">{{ S.hero_cta }}</a>{%- endif -%}
-      </div>
-      {%- if S.show_bottles -%}
-      <div class="bottles">
-        {%- for block in section.blocks -%}
-          {%- if block.type == 'flavor' and block.settings.product != blank -%}
-          <div class="bcard">
-            {%- if block.settings.product.featured_image -%}
-            <img src="{{ block.settings.product.featured_image | image_url: width: 420 }}" alt="{{ block.settings.name | escape }}" loading="lazy">
-            {%- endif -%}
-            <div class="nm">{{ block.settings.name }}</div>
-          </div>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-      {%- endif -%}
     </div>
   </header>
-
-  {{ drip_svg | replace: 'DRIPFILL', S.drip_color | default: '#e28f26' }}
 
   {%- if S.show_tick and S.tick_text != blank -%}
   <div class="nd-mq" aria-hidden="true">
@@ -241,13 +282,83 @@
   </div>
   {%- endif -%}
 
+  <section class="nd-shop wrap" id="nd-shop">
+    <div class="duos">
+      {%- assign di = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'flavor' -%}
+          {%- assign prod = block.settings.product -%}
+          {%- assign prod_sf = block.settings.product_sf -%}
+          <div class="duo nd-rev" style="--i:{{ di }}" {{ block.shopify_attributes }}>
+            <div class="dhead">
+              <h2>{{ block.settings.name }}</h2>
+              <span class="newtag">{{ S.new_tag | default: 'New Release' }}</span>
+              {%- if block.settings.tag != blank -%}<span class="dtag">{{ block.settings.tag }}</span>{%- endif -%}
+            </div>
+            <div class="cards">
+              {%- if prod != blank -%}
+              <div class="card">
+                <a class="ph" href="{{ prod.url }}">
+                  <span class="flag">{{ S.new_tag | default: 'New Release' }}</span>
+                  {%- if prod.featured_image -%}<img src="{{ prod.featured_image | image_url: width: 640 }}" alt="{{ prod.title | escape }}" loading="lazy">{%- endif -%}
+                </a>
+                <div class="b">
+                  <span class="kick">{{ S.reg_label | default: 'Regular' }}</span>
+                  <a class="t" href="{{ prod.url }}">{{ prod.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip }}</a>
+                  <span class="pr">{{ prod.price | money }}{% if prod.compare_at_price > prod.price %}<s>{{ prod.compare_at_price | money }}</s>{% endif %}</span>
+                  {%- if prod.available -%}
+                  {%- form 'product', prod -%}
+                    <input type="hidden" name="id" value="{{ prod.selected_or_first_available_variant.id }}">
+                    <button type="submit" class="atc">{{ S.atc_label | default: 'Add to cart' }}</button>
+                  {%- endform -%}
+                  {%- else -%}
+                  <form><button type="button" class="atc" disabled>{{ S.coming_label | default: 'Coming soon' }}</button></form>
+                  {%- endif -%}
+                </div>
+              </div>
+              {%- endif -%}
+              {%- if prod_sf != blank -%}
+              <div class="card">
+                <a class="ph" href="{{ prod_sf.url }}">
+                  <span class="flag">{{ S.new_tag | default: 'New Release' }}</span>
+                  {%- if prod_sf.featured_image -%}<img src="{{ prod_sf.featured_image | image_url: width: 640 }}" alt="{{ prod_sf.title | escape }}" loading="lazy">{%- endif -%}
+                </a>
+                <div class="b">
+                  <span class="kick">{{ S.sf_label | default: 'Sugar-Free · 0g' }}</span>
+                  <a class="t" href="{{ prod_sf.url }}">{{ prod_sf.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip }}</a>
+                  <span class="pr">{{ prod_sf.price | money }}{% if prod_sf.compare_at_price > prod_sf.price %}<s>{{ prod_sf.compare_at_price | money }}</s>{% endif %}</span>
+                  {%- if prod_sf.available -%}
+                  {%- form 'product', prod_sf -%}
+                    <input type="hidden" name="id" value="{{ prod_sf.selected_or_first_available_variant.id }}">
+                    <button type="submit" class="atc">{{ S.atc_label | default: 'Add to cart' }}</button>
+                  {%- endform -%}
+                  {%- else -%}
+                  <form><button type="button" class="atc" disabled>{{ S.coming_label | default: 'Coming soon' }}</button></form>
+                  {%- endif -%}
+                </div>
+              </div>
+              {%- endif -%}
+            </div>
+          </div>
+          {%- assign di = di | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    {%- if S.shopall_label != blank -%}
+    <div class="shopall"><a class="btn btn--ghost" href="{{ S.shopall_url | default: '/collections/all' }}">{{ S.shopall_label }}</a></div>
+    {%- endif -%}
+  </section>
+
   <div class="panels wrap" id="nd-flavors">
+    <div class="phead nd-rev">
+      <span class="eyebrow">{{ S.story_kick | default: 'Get to know them' }}</span>
+      <h2 class="h2">{{ S.story_title | default: 'The flavors, up close' }}</h2>
+    </div>
     {%- assign pi = 0 -%}
     {%- for block in section.blocks -%}
       {%- if block.type == 'flavor' -%}
         {%- assign pi = pi | plus: 1 -%}
         {%- assign prod = block.settings.product -%}
-        {%- assign prod_sf = block.settings.product_sf -%}
         <article class="panel nd-rev{% cycle '', ' alt', '' %}" style="--pbg:{{ block.settings.bg | default: '#B23A2E' }};--ptx:{{ block.settings.tx | default: '#FFFBF4' }};--pac:{{ block.settings.accent | default: '#FCE2A0' }}" {{ block.shopify_attributes }}>
           <svg class="pdrip" viewBox="0 0 1200 38" preserveAspectRatio="none" aria-hidden="true"><g fill="{{ block.settings.accent | default: '#FCE2A0' }}" opacity=".9"><rect x="0" y="0" width="1200" height="9"/><rect x="70" y="0" width="22" height="24" rx="11"/><rect x="210" y="0" width="26" height="34" rx="13"/><rect x="380" y="0" width="20" height="18" rx="10"/><rect x="520" y="0" width="28" height="30" rx="14"/><rect x="700" y="0" width="22" height="22" rx="11"/><rect x="860" y="0" width="26" height="36" rx="13"/><rect x="1030" y="0" width="20" height="20" rx="10"/><rect x="1140" y="0" width="24" height="28" rx="12"/></g></svg>
           <div class="inner">
@@ -262,36 +373,9 @@
                 {%- for n in notes -%}<span class="chip">{{ n | strip }}</span>{%- endfor -%}
               </div>
               {%- endif -%}
-              <div class="buys">
-                {%- if prod != blank -%}
-                <div class="buy">
-                  <span class="bl">{{ S.reg_label | default: 'Regular' }}</span>
-                  <span class="bp">{{ prod.price | money }}</span>
-                  {%- if prod.available -%}
-                  {%- form 'product', prod -%}
-                    <input type="hidden" name="id" value="{{ prod.selected_or_first_available_variant.id }}">
-                    <button type="submit">{{ S.atc_label | default: 'Add to cart' }}</button>
-                  {%- endform -%}
-                  {%- else -%}
-                  <button type="button" disabled>{{ S.coming_label | default: 'Coming soon' }}</button>
-                  {%- endif -%}
-                </div>
-                {%- endif -%}
-                {%- if prod_sf != blank -%}
-                <div class="buy">
-                  <span class="bl">{{ S.sf_label | default: 'Sugar-Free · 0g' }}</span>
-                  <span class="bp">{{ prod_sf.price | money }}</span>
-                  {%- if prod_sf.available -%}
-                  {%- form 'product', prod_sf -%}
-                    <input type="hidden" name="id" value="{{ prod_sf.selected_or_first_available_variant.id }}">
-                    <button type="submit">{{ S.atc_label | default: 'Add to cart' }}</button>
-                  {%- endform -%}
-                  {%- else -%}
-                  <button type="button" disabled>{{ S.coming_label | default: 'Coming soon' }}</button>
-                  {%- endif -%}
-                </div>
-                {%- endif -%}
-              </div>
+              {%- if prod != blank -%}
+              <a class="pbtn" href="{{ prod.url }}">{{ S.panel_btn | default: 'Shop' }} {{ block.settings.name }}</a>
+              {%- endif -%}
             </div>
             <div class="media">
               <div class="photo">
@@ -314,7 +398,7 @@
   </div>
 
   <section class="nd-end">
-    <div class="card nd-rev">
+    <div class="card2 nd-rev">
       <h2>{{ S.end_title }}</h2>
       {%- if S.end_sub != blank -%}<p>{{ S.end_sub }}</p>{%- endif -%}
       {%- if S.end_cta != blank -%}<a class="btn" href="{{ S.end_url | default: '/collections/all' }}">{{ S.end_cta }}</a>{%- endif -%}
@@ -339,6 +423,45 @@
   }else{
     Array.prototype.forEach.call(revs,function(el){el.classList.add('in');});
   }
+
+  /* fall leaves dropping in hero */
+  var lc=root.querySelector('[data-nd-leaves]');
+  if(lc && !reduced){
+    var ctx=lc.getContext('2d'),W,H,leaves=[],running=true;
+    var tones=['rgba(226,143,38,.45)','rgba(192,57,43,.32)','rgba(140,70,30,.35)','rgba(220,165,74,.42)'];
+    var size=function(){
+      var r=lc.parentElement.getBoundingClientRect();
+      W=lc.width=r.width;H=lc.height=r.height;
+    };
+    size();window.addEventListener('resize',size);
+    for(var i=0;i<16;i++){
+      leaves.push({
+        x:Math.random()*2000,y:Math.random()*1200,
+        rx:4+Math.random()*5,ry:2+Math.random()*2.5,
+        v:.3+Math.random()*.5,w:Math.random()*Math.PI*2,
+        rot:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.02,
+        c:tones[i%4]
+      });
+    }
+    var draw=function(){
+      if(!running)return;
+      ctx.clearRect(0,0,W,H);
+      leaves.forEach(function(f){
+        f.y+=f.v;f.w+=.01;f.x+=Math.sin(f.w)*.5;f.rot+=f.rv;
+        if(f.y>H+8){f.y=-8;f.x=Math.random()*W;}
+        ctx.save();
+        ctx.translate(f.x%W,f.y);ctx.rotate(f.rot);
+        ctx.fillStyle=f.c;
+        ctx.beginPath();ctx.ellipse(0,0,f.rx,f.ry,0,0,6.283);ctx.fill();
+        ctx.restore();
+      });
+      requestAnimationFrame(draw);
+    };
+    document.addEventListener('visibilitychange',function(){
+      running=!document.hidden;if(running)requestAnimationFrame(draw);
+    });
+    draw();
+  }
 })();
 </script>
 
@@ -347,28 +470,39 @@
   "name": "New flavor drop page",
   "settings": [
     { "type": "header", "content": "Top strip" },
-    { "type": "text", "id": "topbar_text", "label": "Top strip text", "default": "New flavor drop · 3 new flavors just landed" },
+    { "type": "text", "id": "topbar_text", "label": "Top strip text", "default": "New flavor drop · 3 new fall flavors just landed" },
+
+    { "type": "header", "content": "Banner" },
+    { "type": "image_picker", "id": "banner", "label": "Banner (desktop)" },
+    { "type": "image_picker", "id": "banner_m", "label": "Banner (mobile)" },
+    { "type": "url", "id": "banner_link", "label": "Banner link (whole banner is clickable)" },
+    { "type": "text", "id": "banner_alt", "label": "Banner alt text", "default": "New fall flavors" },
 
     { "type": "header", "content": "Hero" },
-    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "Just dropped" },
-    { "type": "text", "id": "hero_title", "label": "Headline", "default": "3 New Flavors" },
-    { "type": "text", "id": "hero_script", "label": "Script line", "default": "Fresh from the Syruvia kitchen!" },
-    { "type": "textarea", "id": "hero_sub", "label": "Subline", "default": "Caramel Apple. Date. Pistachio Date. Sticky, juicy, nutty and very hard to stop pouring." },
-    { "type": "text", "id": "hero_cta", "label": "Button label", "default": "Meet the flavors" },
-    { "type": "url", "id": "hero_cta_url", "label": "Button link (default scrolls to flavors)" },
-    { "type": "checkbox", "id": "show_bottles", "label": "Show floating bottles", "default": true },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "New this season" },
+    { "type": "text", "id": "hero_title", "label": "Headline", "default": "3 New Fall Flavors" },
+    { "type": "text", "id": "hero_script", "label": "Script line", "default": "Cozy season just got tastier!" },
+    { "type": "textarea", "id": "hero_sub", "label": "Subline", "default": "Caramel Apple. Date. Pistachio Date. Three brand new ways to make every sip feel like fall." },
+    { "type": "checkbox", "id": "show_leaves", "label": "Fall leaves dropping in hero", "default": true },
     { "type": "checkbox", "id": "show_flyers", "label": "Flying ingredients all over the page", "default": true },
-    { "type": "color", "id": "drip_color", "label": "Caramel drip color", "default": "#e28f26" },
 
     { "type": "header", "content": "Marquee" },
     { "type": "checkbox", "id": "show_tick", "label": "Show marquee", "default": true },
-    { "type": "text", "id": "tick_text", "label": "Marquee text", "default": "Caramel Apple · Date · Pistachio Date · Just dropped" },
+    { "type": "text", "id": "tick_text", "label": "Marquee text", "default": "Caramel Apple · Date · Pistachio Date · New fall flavors" },
 
-    { "type": "header", "content": "Buy buttons" },
-    { "type": "text", "id": "reg_label", "label": "Regular row label", "default": "Regular" },
-    { "type": "text", "id": "sf_label", "label": "Sugar-free row label", "default": "Sugar-Free · 0g" },
+    { "type": "header", "content": "Flavor cards" },
+    { "type": "text", "id": "new_tag", "label": "New release tag", "default": "New Release" },
+    { "type": "text", "id": "reg_label", "label": "Regular card label", "default": "Regular" },
+    { "type": "text", "id": "sf_label", "label": "Sugar-free card label", "default": "Sugar-Free · 0g" },
     { "type": "text", "id": "atc_label", "label": "Add to cart label", "default": "Add to cart" },
     { "type": "text", "id": "coming_label", "label": "Out of stock label", "default": "Coming soon" },
+    { "type": "text", "id": "shopall_label", "label": "Shop all label", "default": "Shop all syrups" },
+    { "type": "url", "id": "shopall_url", "label": "Shop all link" },
+
+    { "type": "header", "content": "Flavor stories" },
+    { "type": "text", "id": "story_kick", "label": "Eyebrow", "default": "Get to know them" },
+    { "type": "text", "id": "story_title", "label": "Title", "default": "The flavors, up close" },
+    { "type": "text", "id": "panel_btn", "label": "Panel button prefix", "default": "Shop" },
 
     { "type": "header", "content": "Closing" },
     { "type": "text", "id": "end_title", "label": "Title (supports <em>)", "default": "Taste them <em>first.</em>" },
@@ -379,7 +513,7 @@
   "blocks": [
     {
       "type": "flavor",
-      "name": "Flavor panel",
+      "name": "Flavor",
       "settings": [
         { "type": "text", "id": "name", "label": "Flavor name" },
         { "type": "text", "id": "tag", "label": "Tagline (italic)" },
@@ -389,9 +523,9 @@
         { "type": "product", "id": "product_sf", "label": "Sugar-free product" },
         { "type": "image_picker", "id": "img", "label": "Big appetite photo" },
         { "type": "text", "id": "hint", "label": "Photo idea (shown in editor until you upload)" },
-        { "type": "color", "id": "bg", "label": "Panel background", "default": "#B23A2E" },
-        { "type": "color", "id": "tx", "label": "Panel text", "default": "#FFFBF4" },
-        { "type": "color", "id": "accent", "label": "Panel accent", "default": "#FCE2A0" }
+        { "type": "color", "id": "bg", "label": "Story panel background", "default": "#B23A2E" },
+        { "type": "color", "id": "tx", "label": "Story panel text", "default": "#FFFBF4" },
+        { "type": "color", "id": "accent", "label": "Story panel accent", "default": "#FCE2A0" }
       ]
     }
   ],
