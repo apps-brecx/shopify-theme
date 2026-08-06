@@ -190,8 +190,9 @@
 #nd-{{ section.id }} .panel .media{position:relative;}
 #nd-{{ section.id }} .panel .photo{
   position:relative;border-radius:calc(var(--rad) - 6px);overflow:hidden;border:0;background:transparent;box-shadow:none;
+  aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;
 }
-#nd-{{ section.id }} .panel .photo img{width:100%;height:auto;object-fit:contain;}
+#nd-{{ section.id }} .panel .photo img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;}
 #nd-{{ section.id }} .panel .photo .hint{
   display:flex;align-items:center;justify-content:center;min-height:240px;text-align:center;padding:22px;
   font-family:var(--script);font-size:13.5px;line-height:1.5;color:var(--gray);opacity:.75;
