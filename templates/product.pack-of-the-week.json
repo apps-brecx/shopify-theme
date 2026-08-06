@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#bd1022",
+        "background_color": "#BC333A",
         "heading": "<h2>A smarter way to<br/>Choose</h2>"
       }
     },
@@ -698,7 +698,7 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#bd1022",
+        "background_color": "#BC333A",
         "title": "<h2>Trusted Quality </h2>",
         "description": "<p>Smooth syrup flavor made to blend into cold drinks, party drinks, and homemade refreshers with no extra work.</p>",
         "button_text": "Shop The Pack",
