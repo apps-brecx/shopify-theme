@@ -654,7 +654,7 @@
       ],
       "name": "Pack Steps",
       "settings": {
-        "background_color": "#BC333A",
+        "background_color": "#bd1022",
         "heading": "<h2>A smarter way to<br/>Choose</h2>"
       }
     },
@@ -698,7 +698,7 @@
       ],
       "name": "Trusted Pack",
       "settings": {
-        "background_color": "#BC333A",
+        "background_color": "#bd1022",
         "title": "<h2>Trusted Quality </h2>",
         "description": "<p>Smooth syrup flavor made to blend into cold drinks, party drinks, and homemade refreshers with no extra work.</p>",
         "button_text": "Shop The Pack",
@@ -839,7 +839,7 @@
       "type": "start-pack",
       "name": "Start Pack",
       "settings": {
-        "background_color": "#BC333A",
+        "background_color": "#bd1022",
         "title": "Make Your Next Drink A Little Sweeter",
         "description": "The Candy Cooler Pack brings Blue Raspberry, Sour Gummy, and Cotton <br> Candy together for one fun weekly deal.\nNow $19.99 instead of $31.99.",
         "button_text": "Shop This Pack",

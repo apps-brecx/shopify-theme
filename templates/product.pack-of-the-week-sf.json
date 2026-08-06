@@ -13,7 +13,7 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272_b3c2137e-537b-4edb-bd6e-b7d7da22c6f3.png",
+        "bg_img": "shopify://shop_images/Rectangle_2272_4.png",
         "secondary_button_text": "View Regular",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week",
         "accent_color": "#bd1022"
@@ -532,7 +532,7 @@
         "custom_class1": "",
         "custom_class11": "",
         "custom_class12": "",
-        "title": "<strong>Tropical. Refreshing. Sugar-Free</strong>",
+        "title": "<strong>Sweet. Sour. Sugar-Free.</strong>",
         "image_alt_text": "",
         "content": "",
         "additional_text": "",
@@ -578,7 +578,7 @@
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This week’s Sugar Free Mango Coconut Chill Pack brings together juicy Mango, smooth Coconut, and fresh Watermelon for bright summer drinks without sugar. It is made for customers who want tropical flavor that feels light, fun, and easy to mix.</p>"
+            "text": "<p>The Sugar Free Candy Cooler Pack is made for customers who want playful, colorful drinks while keeping sugar out. It brings the candy-shop feeling into lemonades, sparkling water, iced teas, sodas, mocktails, and frozen drinks.</p>"
           }
         }
       },
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Tropical Trio",
-            "description": "Mango, Coconut, and Watermelon create a smooth sugar-free summer mix."
+            "title": "Candy Flavor",
+            "description": "Fun candy-style flavors without needing sugar."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Cool Refreshers",
-            "description": "Made for lemonades, teas, sparkling drinks, sodas, and mocktails."
+            "title": "Bright Drinks",
+            "description": "Perfect for colorful lemonades, sodas, mocktails, and refreshers."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Save This Week",
-            "description": "Get the Sugar-Free Mango Coconut Chill Pack for $16.99 instead of $27.99."
+            "title": "This Week’s Deal",
+            "description": "Get all 3 sugar free syrups for $16.99 instead of $27.99."
           }
         }
       },
@@ -700,7 +700,7 @@
       "settings": {
         "background_color": "#bd1022",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Crafted for smooth mixing, bright fruit flavor, and easy sugar-free drinks at home.</p>",
+        "description": "<p>Made for smooth mixing, bright candy-style flavor, and easy sugar free drinks at home.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -758,9 +758,9 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I used this with sparkling water and lemonade. It tastes fruity, tropical, and light perfect for hot days.",
-            "reviewer_initials": "AM",
-            "reviewer_name": "Alyssa M.",
+            "quote": "I wanted fun flavors without sugar, and this pack was perfect. Blue Raspberry made my sparkling water taste like a colorful summer drink.",
+            "reviewer_initials": "ER",
+            "reviewer_name": "Emily R.",
             "reviewer_role": ""
           }
         },
@@ -768,9 +768,9 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Mango tastes bright, the Watermelon is super refreshing, and Coconut makes the drink feel smooth without sugar.",
-            "reviewer_initials": "MD",
-            "reviewer_name": "Marcus D.",
+            "quote": "Sugar Free Sour Gummy is so different from regular fruit flavors. It gives my lemonade a sweet-tart candy taste without being too heavy.",
+            "reviewer_initials": "ML",
+            "reviewer_name": "Marcus L.",
             "reviewer_role": ""
           }
         },
@@ -778,9 +778,9 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack makes sugar-free drinks way more fun. Mango and Watermelon taste fresh, and Coconut gives it a nice soft finish.",
-            "reviewer_initials": "TR",
-            "reviewer_name": "Tina R.",
+            "quote": "Cotton Candy was my favorite. I added it to iced tea and it gave the drink a soft sweet flavor without the sugar.",
+            "reviewer_initials": "SK",
+            "reviewer_name": "Samantha K.",
             "reviewer_role": ""
           }
         },
@@ -788,7 +788,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I like that the flavors do not taste boring. It is easy to mix and makes my iced drinks feel more exciting.",
+            "quote": "Sugar Free Blue Raspberry is my favorite for sugar-free sodas. The flavor is bold, colorful, and makes simple drinks taste way more fun.",
             "reviewer_initials": "RK",
             "reviewer_name": "Rachel K.",
             "reviewer_role": ""
@@ -798,7 +798,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack is perfect for summer drinks. The Mango is juicy, Watermelon tastes refreshing, and Coconut adds a smooth tropical finish without any sugar.",
+            "quote": "Sugar Free Blue Raspberry has become my go-to for sugar-free drinks. The flavor is bold and makes every soda taste more exciting.",
             "reviewer_initials": "JP",
             "reviewer_name": "Jessica P.",
             "reviewer_role": ""
@@ -814,7 +814,7 @@
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Sugar-Free Summer Sippers\nLove This Pack",
+        "heading": "Sugar Free Drink Fans\nLove This Pack",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
@@ -840,8 +840,8 @@
       "name": "Start Pack",
       "settings": {
         "background_color": "#bd1022",
-        "title": "Make Summer DrinksSugar-Free",
-        "description": "Mango, Coconut, and Watermelon are on deal this week now $16.99 instead of $27.99.",
+        "title": "Keep It Sweet, Skip The Sugar",
+        "description": "The Sugar Free Candy Cooler Pack brings Blue <br> Raspberry, Sour Gummy, and Cotton Candy together <br>for one fun weekly deal.\nNow $16.99 instead of $27.99.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $36"
