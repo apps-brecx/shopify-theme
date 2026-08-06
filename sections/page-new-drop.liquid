@@ -58,7 +58,7 @@
 #nd-{{ section.id }} .nd-strip{background:var(--ink);color:var(--paper);text-align:center;padding:11px 16px;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;}
 
 /* ---------- banner, full screen width ---------- */
-#nd-{{ section.id }} .nd-banner{padding:0;}
+#nd-{{ section.id }} .nd-banner{padding:0;width:100vw;margin-left:calc(50% - 50vw);}
 #nd-{{ section.id }} .nd-banner .bwrap{display:block;width:100%;overflow:hidden;border:0;border-bottom:var(--rule);background:var(--paper);text-decoration:none;}
 #nd-{{ section.id }} .nd-banner img{width:100%;height:auto;}
 #nd-{{ section.id }} .nd-banner .hint{
@@ -155,6 +155,7 @@
   #nd-{{ section.id }} .card .b{padding:12px 8px;}
   #nd-{{ section.id }} .card .t{font-size:12px;}
   #nd-{{ section.id }} .card .atc{font-size:10.5px;height:44px;}
+  #nd-{{ section.id }} .card .flag{display:none;}
 }
 
 /* ---------- flavor story cards ---------- */
@@ -186,16 +187,15 @@
 }
 #nd-{{ section.id }} .panel .pbtn:hover{background:var(--coral);transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink);}
 #nd-{{ section.id }} .panel .pbtn:active{transform:translate(3px,3px);box-shadow:none;}
-#nd-{{ section.id }} .panel .media{position:relative;min-height:300px;}
+#nd-{{ section.id }} .panel .media{position:relative;}
 #nd-{{ section.id }} .panel .photo{
-  position:absolute;top:0;left:0;right:0;bottom:0;border-radius:calc(var(--rad) - 6px);overflow:hidden;border:var(--rule);
-  background:var(--bg);box-shadow:3px 3px 0 var(--ink);
+  position:relative;border-radius:calc(var(--rad) - 6px);overflow:hidden;border:0;background:transparent;box-shadow:none;
 }
-#nd-{{ section.id }} .panel .photo img{width:100%;height:100%;object-fit:cover;}
+#nd-{{ section.id }} .panel .photo img{width:100%;height:auto;object-fit:contain;}
 #nd-{{ section.id }} .panel .photo .hint{
-  display:flex;align-items:center;justify-content:center;height:100%;text-align:center;padding:22px;
+  display:flex;align-items:center;justify-content:center;min-height:240px;text-align:center;padding:22px;
   font-family:var(--script);font-size:13.5px;line-height:1.5;color:var(--gray);opacity:.75;
-  border:2px dashed var(--ink);border-radius:calc(var(--rad) - 10px);margin:8px;
+  border:2px dashed var(--ink);border-radius:calc(var(--rad) - 10px);
 }
 #nd-{{ section.id }} .panel.alt .inner{grid-template-columns:1fr 1.15fr;}
 #nd-{{ section.id }} .panel.alt .txt{order:2;}
@@ -206,7 +206,7 @@
   #nd-{{ section.id }} .panel.alt .media{order:2;}
   #nd-{{ section.id }} .panel .desc{margin-left:auto;margin-right:auto;}
   #nd-{{ section.id }} .panel .chips{justify-content:center;}
-  #nd-{{ section.id }} .panel .media{min-height:260px;margin-top:6px;}
+  #nd-{{ section.id }} .panel .media{margin-top:6px;}
 }
 
 /* ---------- flying ingredients ---------- */
@@ -239,7 +239,17 @@
   font-family:'Archivo Black','Archivo',-apple-system,sans-serif !important;
   font-weight:400 !important;text-transform:uppercase !important;letter-spacing:-.005em !important;color:var(--ink) !important;
 }
-#nd-{{ section.id }} .nd-hero h1{font-size:clamp(38px,9vw,84px) !important;line-height:.95 !important;letter-spacing:-.01em !important;margin-top:20px !important;}
+#nd-{{ section.id }} .nd-hero h1{margin-top:22px !important;line-height:1 !important;}
+#nd-{{ section.id }} .nd-hero h1 .ln1 span{
+  display:inline-flex !important;align-items:center !important;gap:16px !important;
+  font-size:clamp(16px,3.4vw,26px) !important;letter-spacing:.3em !important;line-height:1.2 !important;
+  color:var(--coral) !important;padding-left:.3em;
+}
+#nd-{{ section.id }} .nd-hero h1 .ln1 span::before,#nd-{{ section.id }} .nd-hero h1 .ln1 span::after{content:'';width:clamp(24px,4vw,44px);height:2px;background:var(--ink);flex:none;}
+#nd-{{ section.id }} .nd-hero h1 .ln2 span{
+  font-size:clamp(44px,10.5vw,100px) !important;letter-spacing:-.01em !important;line-height:.95 !important;
+  padding-top:6px;
+}
 #nd-{{ section.id }} .h2{font-size:clamp(28px,4.2vw,50px) !important;line-height:.95 !important;}
 #nd-{{ section.id }} .duo .dhead h2{font-size:clamp(22px,4.4vw,36px) !important;line-height:.95 !important;}
 #nd-{{ section.id }} .panel h2{font-size:clamp(28px,5.4vw,50px) !important;line-height:.95 !important;}
@@ -327,7 +337,10 @@
     {%- if S.show_leaves -%}<canvas class="nd-leaves" data-nd-leaves></canvas>{%- endif -%}
     <div class="wrap" style="position:relative;z-index:2">
       <span class="eyebrow">{{ S.hero_eyebrow }}</span>
-      <h1><span class="ln"><span>{{ S.hero_title }}</span></span></h1>
+      <h1>
+        <span class="ln ln1"><span>{{ S.hero_t1 | default: '3 New' }}</span></span>
+        <span class="ln ln2"><span>{{ S.hero_t2 | default: 'Fall Flavors' }}</span></span>
+      </h1>
       {%- if S.hero_script != blank -%}<span class="script">{{ S.hero_script }}</span>{%- endif -%}
       {%- if S.hero_sub != blank -%}<p class="sub">{{ S.hero_sub }}</p>{%- endif -%}
     </div>
@@ -538,7 +551,8 @@
 
     { "type": "header", "content": "Hero" },
     { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "New this season" },
-    { "type": "text", "id": "hero_title", "label": "Headline", "default": "3 New Fall Flavors" },
+    { "type": "text", "id": "hero_t1", "label": "Headline small line", "default": "3 New" },
+    { "type": "text", "id": "hero_t2", "label": "Headline big line", "default": "Fall Flavors" },
     { "type": "text", "id": "hero_script", "label": "Script line", "default": "Cozy season just got tastier!" },
     { "type": "textarea", "id": "hero_sub", "label": "Subline", "default": "Caramel Apple. Date. Pistachio Date. Three brand new ways to make every sip feel like fall." },
     { "type": "checkbox", "id": "show_leaves", "label": "Fall leaves dropping in hero", "default": true },
