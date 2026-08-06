@@ -13,10 +13,10 @@
       "type": "pack-of-week",
       "name": "Product Hero",
       "settings": {
-        "bg_img": "shopify://shop_images/Rectangle_2272_b3c2137e-537b-4edb-bd6e-b7d7da22c6f3.png",
+        "bg_img": "shopify://shop_images/Rectangle_2272_4.png",
         "secondary_button_text": "View Sugar Free",
         "secondary_button_url_sf": "https://syruvia.com/products/pack-of-the-week-sf",
-        "accent_color": "#bd1022"
+        "accent_color": "#BC333A"
       }
     },
     "main": {
@@ -571,14 +571,14 @@
           "type": "heading",
           "settings": {
             "show_image": false,
-            "heading": "<strong>What is Pack of the Week?</strong>",
+            "heading": "<strong>A Sweet Little Drink Upgrade</strong>",
             "heading_size": "h1"
           }
         },
         "text_WbBjqB": {
           "type": "text",
           "settings": {
-            "text": "<p>This week’s Mango Coconut Chill Pack brings together juicy Mango, smooth Coconut, and refreshing Watermelon for drinks that feel bright, cool, and easy to enjoy. It is made for customers who want tropical flavor without making drinks complicated.</p>"
+            "text": "<p>The Candy Cooler Pack is this week’s limited deal for anyone who wants drinks with more color, more flavor, and a little candy-shop energy. Mix these syrups into cold drinks and make something that feels fun without needing a complicated recipe.</p>"
           }
         }
       },
@@ -619,7 +619,7 @@
       "type": "try-pack",
       "name": "Try Pack Section",
       "settings": {
-        "background_color": "#bd1022"
+        "background_color": "#BC333A"
       }
     },
     "pack_steps_AbyNtH": {
@@ -628,22 +628,22 @@
         "step_Lf8EaQ": {
           "type": "step",
           "settings": {
-            "title": "Tropical Mix",
-            "description": "Mango, Coconut, and Watermelon create a smooth summer flavor combo."
+            "title": "Bold Color",
+            "description": "Blue Raspberry and Cotton Candy help drinks look bright, playful, and photo-ready."
           }
         },
         "step_TNaYFj": {
           "type": "step",
           "settings": {
-            "title": "Refreshing Drinks",
-            "description": "Made for lemonades, teas, sparkling drinks, sodas, and mocktails."
+            "title": "Sweet-Tart Fun",
+            "description": "Sour Gummy gives the pack a candy twist that feels different from basic fruit flavors."
           }
         },
         "step_3TXR63": {
           "type": "step",
           "settings": {
-            "title": "Save This Week",
-            "description": "Get the Mango Coconut Chill Pack for $19.99 instead of $31.99."
+            "title": "This Week’s Deal",
+            "description": "Get all 3 syrups for $19.99 instead of $31.99 while the pack is live."
           }
         }
       },
@@ -655,7 +655,7 @@
       "name": "Pack Steps",
       "settings": {
         "background_color": "#bd1022",
-        "heading": "<h2>A smarter<br/>Way to Choose</h2>"
+        "heading": "<h2>A smarter way to<br/>Choose</h2>"
       }
     },
     "trusted_pack_jggqKc": {
@@ -700,7 +700,7 @@
       "settings": {
         "background_color": "#bd1022",
         "title": "<h2>Trusted Quality </h2>",
-        "description": "<p>Crafted for smooth mixing, bright fruit flavor, and easy homemade drinks.</p>",
+        "description": "<p>Smooth syrup flavor made to blend into cold drinks, party drinks, and homemade refreshers with no extra work.</p>",
         "button_text": "Shop The Pack",
         "button_link": ""
       }
@@ -758,9 +758,9 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "The Mango and Watermelon make drinks taste so fresh, and the Coconut gives it a smooth tropical finish.",
-            "reviewer_initials": "MR",
-            "reviewer_name": "Maya R.",
+            "quote": "The Blue Raspberry made my lemonade look so bright and fun. This pack is perfect when you want drinks that feel colorful and different.",
+            "reviewer_initials": "MT",
+            "reviewer_name": "Megan T.",
             "reviewer_role": ""
           }
         },
@@ -768,7 +768,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "I used this pack for lemonade and sparkling water. Mango is bold, Watermelon is refreshing, and Coconut makes it feel different.",
+            "quote": "Sour Gummy was the surprise flavor for me. It gives sparkling water and mocktails that sweet-tart candy taste without needing anything extra.",
             "reviewer_initials": "JP",
             "reviewer_name": "Jordan P.",
             "reviewer_role": ""
@@ -778,9 +778,9 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "This pack is perfect for summer drinks. I made a mango coconut watermelon refresher, and it tasted like a café drink at home.",
-            "reviewer_initials": "MR",
-            "reviewer_name": "Sofia L.",
+            "quote": "Cotton Candy in iced tea was so good. It adds a soft sweet flavor that feels playful but still easy to drink.",
+            "reviewer_initials": "AM",
+            "reviewer_name": "Alyssa M.",
             "reviewer_role": ""
           }
         },
@@ -788,9 +788,9 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Watermelon keeps it light, Mango adds sweetness, and Coconut makes the whole drink feel smooth. Really fun pack.",
-            "reviewer_initials": "NK",
-            "reviewer_name": "Nina K.",
+            "quote": "I used these for a small party drink station and everyone wanted to try the colorful flavors. Blue Raspberry was the first bottle finished.",
+            "reviewer_initials": "CD",
+            "reviewer_name": "Chris D.",
             "reviewer_role": ""
           }
         },
@@ -798,7 +798,7 @@
           "type": "testimonial",
           "settings": {
             "rating": 5,
-            "quote": "Love this pack! Mango, Watermelon, and Coconut are perfect for refreshing drinks.",
+            "quote": "Bought these for a party drink bar, and guests couldn't stop mixing the flavors. Blue Raspberry was definitely the favorite.",
             "reviewer_initials": "ER",
             "reviewer_name": "Emily R.",
             "reviewer_role": ""
@@ -814,7 +814,7 @@
       ],
       "name": "People Love This Combo",
       "settings": {
-        "heading": "Summer Sippers\n Love This Pack",
+        "heading": "Candy Drink Fans\nLove This Pack",
         "show_average_rating": true,
         "average_rating": "4.9",
         "slides_desktop": 4,
@@ -840,8 +840,8 @@
       "name": "Start Pack",
       "settings": {
         "background_color": "#bd1022",
-        "title": "Turn Your Drink Into A Chill Sip",
-        "description": "Mango, Coconut, and Watermelon are on deal this week\nNow $19.99 instead of $31.99.",
+        "title": "Make Your Next Drink A Little Sweeter",
+        "description": "The Candy Cooler Pack brings Blue Raspberry, Sour Gummy, and Cotton <br> Candy together for one fun weekly deal.\nNow $19.99 instead of $31.99.",
         "button_text": "Shop This Pack",
         "bottom_icon": "shopify://shop_images/Icontruck.png",
         "bottom_text": "FREE SHIPPING ON ORDERS OVER $36"
