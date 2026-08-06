@@ -1,0 +1,356 @@
+{%- comment -%}
+  Syruvia New Flavor Drop page. House style, appetite first.
+  Prefix: nd-. Notice strip, hero with floating bottles, caramel drip dividers,
+  marquee, one big color-blocked panel per flavor (blocks) with tasting chips,
+  photo slot, bottle, regular + sugar-free add-to-cart, closing CTA.
+{%- endcomment -%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" media="print" onload="this.media='all'" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Josefin+Sans:wght@300;400;600;700&display=swap"></noscript>
+
+{%- assign S = section.settings -%}
+
+<style>
+#nd-{{ section.id }}{
+  --bg:#FFFBF4;--paper:#ffffff;--brand:#3c2415;--orange:#e28f26;--gold:#FCE2A0;--ink:#1a1a1a;
+  --rad:16px;--rule:1.5px solid var(--brand);
+  --display:'Archivo Black','Josefin Sans',system-ui,sans-serif;
+  --serif:'Josefin Sans',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:16px;line-height:1.6;overflow-x:clip;position:relative;
+}
+#nd-{{ section.id }} *{box-sizing:border-box;margin:0;}
+#nd-{{ section.id }} img{max-width:100%;display:block;}
+#nd-{{ section.id }} a{color:inherit;}
+#nd-{{ section.id }} .wrap{max-width:1120px;margin:0 auto;padding:0 22px;}
+#nd-{{ section.id }} .eyebrow{font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;display:inline-block;padding:6px 14px;border:var(--rule);border-radius:999px;background:var(--paper);color:var(--brand);}
+#nd-{{ section.id }} .h2{font-family:var(--display);font-weight:400;font-size:clamp(26px,5vw,44px);line-height:1;letter-spacing:-.005em;text-transform:uppercase;margin:14px 0 0;color:var(--brand);text-wrap:balance;}
+#nd-{{ section.id }} .btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--display);font-weight:400;
+  font-size:13.5px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:16px 30px;
+  border:var(--rule);border-radius:999px;cursor:pointer;background:var(--brand);color:var(--bg);
+  box-shadow:3px 3px 0 rgba(60,36,21,.25);transition:transform .14s ease,box-shadow .14s ease,background .14s ease;
+}
+@media(hover:hover){#nd-{{ section.id }} .btn:hover{transform:translateY(-2px);box-shadow:4px 5px 0 rgba(60,36,21,.28);}}
+#nd-{{ section.id }} .nd-rev{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease;}
+#nd-{{ section.id }} .nd-rev.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .nd-rev{opacity:1;transform:none;transition:none;}}
+
+/* ---------- strip ---------- */
+#nd-{{ section.id }} .nd-strip{background:var(--brand);color:var(--bg);text-align:center;border-bottom:var(--rule);padding:10px 16px;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.16em;text-transform:uppercase;}
+
+/* ---------- hero ---------- */
+#nd-{{ section.id }} .nd-hero{position:relative;text-align:center;padding:clamp(52px,8vw,92px) 0 clamp(40px,6vw,64px);overflow:hidden;}
+#nd-{{ section.id }} .nd-hero h1{font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--brand);font-size:clamp(42px,11vw,96px);line-height:.95;letter-spacing:-.01em;margin-top:20px;}
+#nd-{{ section.id }} .nd-hero h1 .ln{display:block;overflow:hidden;}
+#nd-{{ section.id }} .nd-hero h1 .ln span{display:block;transform:translateY(112%);transition:transform .9s cubic-bezier(.16,1,.3,1);}
+#nd-{{ section.id }} .nd-hero.go h1 .ln span{transform:none;}
+#nd-{{ section.id }} .nd-hero .script{
+  font-family:var(--serif);font-style:italic;font-weight:600;color:var(--orange);font-size:clamp(19px,4.2vw,30px);
+  margin-top:12px;display:inline-block;transform:rotate(-2deg) translateY(12px);opacity:0;transition:opacity .7s ease .3s,transform .7s ease .3s;
+}
+#nd-{{ section.id }} .nd-hero.go .script{opacity:1;transform:rotate(-2deg);}
+#nd-{{ section.id }} .nd-hero .sub{max-width:540px;margin:18px auto 0;font-size:15.5px;line-height:1.7;color:rgba(26,26,26,.75);opacity:0;transform:translateY(12px);transition:opacity .7s ease .45s,transform .7s ease .45s;}
+#nd-{{ section.id }} .nd-hero .btnrow{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:26px;opacity:0;transform:translateY(12px);transition:opacity .7s ease .6s,transform .7s ease .6s;}
+#nd-{{ section.id }} .nd-hero.go .sub,#nd-{{ section.id }} .nd-hero.go .btnrow{opacity:1;transform:none;}
+#nd-{{ section.id }} .nd-hero .bottles{display:flex;justify-content:center;align-items:flex-end;gap:clamp(10px,3vw,30px);margin-top:clamp(30px,5vw,48px);}
+#nd-{{ section.id }} .nd-hero .bcard{
+  width:min(200px,28vw);background:var(--paper);border:var(--rule);border-radius:calc(var(--rad) + 4px);
+  box-shadow:3px 3px 0 rgba(60,36,21,.14);padding:16px 12px;animation:ndbob 5.5s ease-in-out infinite;
+}
+#nd-{{ section.id }} .nd-hero .bcard:nth-child(1){transform:rotate(-3deg);animation-delay:0s;}
+#nd-{{ section.id }} .nd-hero .bcard:nth-child(2){transform:rotate(1.5deg) translateY(-10px);animation-delay:.8s;}
+#nd-{{ section.id }} .nd-hero .bcard:nth-child(3){transform:rotate(3deg);animation-delay:1.6s;}
+#nd-{{ section.id }} .nd-hero .bcard img{width:100%;height:auto;}
+#nd-{{ section.id }} .nd-hero .bcard .nm{font-family:var(--display);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);margin-top:10px;}
+@keyframes ndbob{0%,100%{margin-top:0;}50%{margin-top:-10px;}}
+@media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .nd-hero .bcard{animation:none;}#nd-{{ section.id }} .nd-hero h1 .ln span,#nd-{{ section.id }} .nd-hero .script,#nd-{{ section.id }} .nd-hero .sub,#nd-{{ section.id }} .nd-hero .btnrow{transform:none;opacity:1;transition:none;}}
+
+/* ---------- drip divider ---------- */
+#nd-{{ section.id }} .drip{display:block;width:100%;height:44px;margin-bottom:-1px;}
+
+/* ---------- marquee ---------- */
+#nd-{{ section.id }} .nd-mq{overflow:hidden;background:var(--orange);border-top:var(--rule);border-bottom:var(--rule);padding:11px 0;}
+#nd-{{ section.id }} .nd-mq .row{display:flex;width:max-content;animation:ndmq 30s linear infinite;}
+#nd-{{ section.id }} .nd-mq .half{display:flex;align-items:center;white-space:nowrap;font-family:var(--display);font-weight:400;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#fff;}
+#nd-{{ section.id }} .nd-mq .half span{padding:0 18px;}
+@keyframes ndmq{to{transform:translateX(-50%);}}
+@media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .nd-mq .row{animation:none;}}
+
+/* ---------- flavor panels ---------- */
+#nd-{{ section.id }} .panels{padding:clamp(48px,7vw,84px) 0;display:grid;gap:clamp(36px,6vw,64px);}
+#nd-{{ section.id }} .panel{
+  position:relative;border:var(--rule);border-radius:calc(var(--rad) + 10px);overflow:hidden;
+  background:var(--pbg,#B23A2E);color:var(--ptx,#FFFBF4);box-shadow:5px 5px 0 rgba(60,36,21,.18);
+}
+#nd-{{ section.id }} .panel .pdrip{display:block;width:100%;height:38px;}
+#nd-{{ section.id }} .panel .inner{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(20px,3.5vw,40px);align-items:center;padding:clamp(10px,2vw,20px) clamp(22px,4vw,48px) clamp(30px,4.5vw,52px);}
+#nd-{{ section.id }} .panel .num{
+  display:inline-block;font-family:var(--display);font-weight:400;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  background:rgba(255,255,255,.16);border:1.5px solid currentColor;border-radius:999px;padding:6px 14px;
+}
+#nd-{{ section.id }} .panel h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(32px,6.4vw,60px);line-height:.98;letter-spacing:-.01em;margin-top:14px;}
+#nd-{{ section.id }} .panel .tag{font-family:var(--serif);font-style:italic;font-weight:600;font-size:clamp(17px,2.6vw,23px);color:var(--pac,#FCE2A0);margin-top:8px;display:inline-block;transform:rotate(-1.5deg);}
+#nd-{{ section.id }} .panel .desc{margin-top:14px;font-size:15.5px;line-height:1.7;opacity:.92;max-width:480px;}
+#nd-{{ section.id }} .panel .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+#nd-{{ section.id }} .panel .chip{font-family:var(--display);font-weight:400;font-size:10px;letter-spacing:.14em;text-transform:uppercase;border:1.5px solid currentColor;border-radius:999px;padding:6px 12px;opacity:.95;}
+#nd-{{ section.id }} .panel .buys{display:grid;gap:10px;margin-top:22px;max-width:440px;}
+#nd-{{ section.id }} .panel .buy{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.1);
+  border:1.5px solid currentColor;border-radius:999px;padding:8px 8px 8px 18px;
+}
+#nd-{{ section.id }} .panel .buy .bl{font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.1em;text-transform:uppercase;}
+#nd-{{ section.id }} .panel .buy .bp{font-family:var(--display);font-weight:400;font-size:13px;margin-left:auto;}
+#nd-{{ section.id }} .panel .buy button{
+  font-family:var(--display);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--pac,#FCE2A0);color:var(--brand);border:1.5px solid var(--brand);border-radius:999px;
+  padding:10px 16px;cursor:pointer;white-space:nowrap;box-shadow:2px 2px 0 rgba(0,0,0,.18);transition:transform .14s ease;
+}
+@media(hover:hover){#nd-{{ section.id }} .panel .buy button:hover{transform:translateY(-2px);}}
+#nd-{{ section.id }} .panel .buy button[disabled]{background:transparent;color:inherit;opacity:.7;cursor:default;box-shadow:none;border-color:currentColor;}
+#nd-{{ section.id }} .panel .media{position:relative;min-height:300px;}
+#nd-{{ section.id }} .panel .photo{
+  position:absolute;top:0;left:0;right:0;bottom:0;border-radius:var(--rad);overflow:hidden;border:1.5px solid currentColor;
+  background:rgba(255,255,255,.08);
+}
+#nd-{{ section.id }} .panel .photo img{width:100%;height:100%;object-fit:cover;}
+#nd-{{ section.id }} .panel .photo .hint{
+  display:flex;align-items:center;justify-content:center;height:100%;text-align:center;padding:22px;
+  font-size:13px;line-height:1.5;opacity:.8;border:1.5px dashed currentColor;border-radius:calc(var(--rad) - 4px);margin:8px;
+}
+#nd-{{ section.id }} .panel .bottle{
+  position:absolute;bottom:-14px;right:-6px;width:min(46%,190px);animation:ndbob 6s ease-in-out infinite;
+  filter:drop-shadow(4px 6px 0 rgba(0,0,0,.22));transform:rotate(3deg);
+}
+@media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .panel .bottle{animation:none;}}
+#nd-{{ section.id }} .panel.alt .inner{grid-template-columns:1fr 1.15fr;}
+#nd-{{ section.id }} .panel.alt .txt{order:2;}
+#nd-{{ section.id }} .panel.alt .media{order:1;}
+#nd-{{ section.id }} .panel.alt .bottle{right:auto;left:-6px;transform:rotate(-3deg);}
+@media (max-width:799px){
+  #nd-{{ section.id }} .panel .inner{grid-template-columns:1fr;text-align:center;padding-bottom:26px;}
+  #nd-{{ section.id }} .panel.alt .txt{order:1;}
+  #nd-{{ section.id }} .panel.alt .media{order:2;}
+  #nd-{{ section.id }} .panel .desc{margin-left:auto;margin-right:auto;}
+  #nd-{{ section.id }} .panel .chips{justify-content:center;}
+  #nd-{{ section.id }} .panel .buys{margin-left:auto;margin-right:auto;}
+  #nd-{{ section.id }} .panel .media{min-height:260px;margin-top:6px;}
+  #nd-{{ section.id }} .panel .bottle{width:150px;bottom:-10px;}
+}
+
+/* ---------- closing ---------- */
+#nd-{{ section.id }} .nd-end{padding:clamp(20px,4vw,40px) 22px clamp(64px,9vw,110px);}
+#nd-{{ section.id }} .nd-end .card{
+  max-width:680px;margin:0 auto;background:var(--brand);color:var(--bg);border:var(--rule);
+  border-radius:calc(var(--rad) + 10px);box-shadow:5px 5px 0 rgba(60,36,21,.2);padding:clamp(36px,6vw,60px) 28px;text-align:center;
+}
+#nd-{{ section.id }} .nd-end h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(26px,5.4vw,44px);line-height:1.05;}
+#nd-{{ section.id }} .nd-end h2 em{font-style:normal;color:var(--gold);}
+#nd-{{ section.id }} .nd-end p{margin:16px auto 0;max-width:420px;font-size:15px;line-height:1.65;color:rgba(255,251,244,.85);}
+#nd-{{ section.id }} .nd-end .btn{margin-top:26px;background:var(--orange);color:#fff;}
+</style>
+
+{%- capture drip_svg -%}
+<svg class="drip" viewBox="0 0 1200 44" preserveAspectRatio="none" aria-hidden="true"><g fill="DRIPFILL"><rect x="0" y="0" width="1200" height="12"/><rect x="30" y="0" width="26" height="30" rx="13"/><rect x="110" y="0" width="22" height="22" rx="11"/><rect x="185" y="0" width="28" height="40" rx="14"/><rect x="290" y="0" width="20" height="18" rx="10"/><rect x="360" y="0" width="26" height="34" rx="13"/><rect x="470" y="0" width="22" height="24" rx="11"/><rect x="545" y="0" width="30" height="42" rx="15"/><rect x="650" y="0" width="20" height="20" rx="10"/><rect x="720" y="0" width="26" height="32" rx="13"/><rect x="830" y="0" width="22" height="26" rx="11"/><rect x="905" y="0" width="28" height="38" rx="14"/><rect x="1010" y="0" width="20" height="18" rx="10"/><rect x="1080" y="0" width="26" height="34" rx="13"/><rect x="1160" y="0" width="22" height="24" rx="11"/></g></svg>
+{%- endcapture -%}
+
+<div id="nd-{{ section.id }}">
+
+  {%- if S.topbar_text != blank -%}
+  <div class="nd-strip">{{ S.topbar_text }}</div>
+  {%- endif -%}
+
+  <header class="nd-hero" data-nd-hero>
+    <div class="wrap">
+      <span class="eyebrow">{{ S.hero_eyebrow }}</span>
+      <h1><span class="ln"><span>{{ S.hero_title }}</span></span></h1>
+      {%- if S.hero_script != blank -%}<span class="script">{{ S.hero_script }}</span>{%- endif -%}
+      {%- if S.hero_sub != blank -%}<p class="sub">{{ S.hero_sub }}</p>{%- endif -%}
+      <div class="btnrow">
+        {%- if S.hero_cta != blank -%}<a class="btn" href="{{ S.hero_cta_url | default: '#nd-flavors' }}">{{ S.hero_cta }}</a>{%- endif -%}
+      </div>
+      {%- if S.show_bottles -%}
+      <div class="bottles">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'flavor' and block.settings.product != blank -%}
+          <div class="bcard">
+            {%- if block.settings.product.featured_image -%}
+            <img src="{{ block.settings.product.featured_image | image_url: width: 420 }}" alt="{{ block.settings.name | escape }}" loading="lazy">
+            {%- endif -%}
+            <div class="nm">{{ block.settings.name }}</div>
+          </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      {%- endif -%}
+    </div>
+  </header>
+
+  {{ drip_svg | replace: 'DRIPFILL', S.drip_color | default: '#e28f26' }}
+
+  {%- if S.show_tick and S.tick_text != blank -%}
+  <div class="nd-mq" aria-hidden="true">
+    <div class="row">
+      <div class="half">{%- for i in (1..4) -%}<span>{{ S.tick_text }}</span>{%- endfor -%}</div>
+      <div class="half">{%- for i in (1..4) -%}<span>{{ S.tick_text }}</span>{%- endfor -%}</div>
+    </div>
+  </div>
+  {%- endif -%}
+
+  <div class="panels wrap" id="nd-flavors">
+    {%- assign pi = 0 -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'flavor' -%}
+        {%- assign pi = pi | plus: 1 -%}
+        {%- assign prod = block.settings.product -%}
+        {%- assign prod_sf = block.settings.product_sf -%}
+        <article class="panel nd-rev{% cycle '', ' alt', '' %}" style="--pbg:{{ block.settings.bg | default: '#B23A2E' }};--ptx:{{ block.settings.tx | default: '#FFFBF4' }};--pac:{{ block.settings.accent | default: '#FCE2A0' }}" {{ block.shopify_attributes }}>
+          <svg class="pdrip" viewBox="0 0 1200 38" preserveAspectRatio="none" aria-hidden="true"><g fill="{{ block.settings.accent | default: '#FCE2A0' }}" opacity=".9"><rect x="0" y="0" width="1200" height="9"/><rect x="70" y="0" width="22" height="24" rx="11"/><rect x="210" y="0" width="26" height="34" rx="13"/><rect x="380" y="0" width="20" height="18" rx="10"/><rect x="520" y="0" width="28" height="30" rx="14"/><rect x="700" y="0" width="22" height="22" rx="11"/><rect x="860" y="0" width="26" height="36" rx="13"/><rect x="1030" y="0" width="20" height="20" rx="10"/><rect x="1140" y="0" width="24" height="28" rx="12"/></g></svg>
+          <div class="inner">
+            <div class="txt">
+              <span class="num">New · 0{{ pi }}</span>
+              <h2>{{ block.settings.name }}</h2>
+              {%- if block.settings.tag != blank -%}<span class="tag">{{ block.settings.tag }}</span>{%- endif -%}
+              {%- if block.settings.desc != blank -%}<p class="desc">{{ block.settings.desc }}</p>{%- endif -%}
+              {%- if block.settings.notes != blank -%}
+              <div class="chips">
+                {%- assign notes = block.settings.notes | split: ',' -%}
+                {%- for n in notes -%}<span class="chip">{{ n | strip }}</span>{%- endfor -%}
+              </div>
+              {%- endif -%}
+              <div class="buys">
+                {%- if prod != blank -%}
+                <div class="buy">
+                  <span class="bl">{{ S.reg_label | default: 'Regular' }}</span>
+                  <span class="bp">{{ prod.price | money }}</span>
+                  {%- if prod.available -%}
+                  {%- form 'product', prod -%}
+                    <input type="hidden" name="id" value="{{ prod.selected_or_first_available_variant.id }}">
+                    <button type="submit">{{ S.atc_label | default: 'Add to cart' }}</button>
+                  {%- endform -%}
+                  {%- else -%}
+                  <button type="button" disabled>{{ S.coming_label | default: 'Coming soon' }}</button>
+                  {%- endif -%}
+                </div>
+                {%- endif -%}
+                {%- if prod_sf != blank -%}
+                <div class="buy">
+                  <span class="bl">{{ S.sf_label | default: 'Sugar-Free · 0g' }}</span>
+                  <span class="bp">{{ prod_sf.price | money }}</span>
+                  {%- if prod_sf.available -%}
+                  {%- form 'product', prod_sf -%}
+                    <input type="hidden" name="id" value="{{ prod_sf.selected_or_first_available_variant.id }}">
+                    <button type="submit">{{ S.atc_label | default: 'Add to cart' }}</button>
+                  {%- endform -%}
+                  {%- else -%}
+                  <button type="button" disabled>{{ S.coming_label | default: 'Coming soon' }}</button>
+                  {%- endif -%}
+                </div>
+                {%- endif -%}
+              </div>
+            </div>
+            <div class="media">
+              <div class="photo">
+                {%- if block.settings.img != blank -%}
+                  <img src="{{ block.settings.img | image_url: width: 1100 }}" alt="{{ block.settings.name | escape }}" loading="lazy">
+                {%- elsif request.design_mode -%}
+                  <div class="hint">{{ block.settings.hint }}</div>
+                {%- else -%}
+                  <div class="hint" style="border:0">{{ block.settings.tag }}</div>
+                {%- endif -%}
+              </div>
+              {%- if prod != blank and prod.featured_image -%}
+              <img class="bottle" src="{{ prod.featured_image | image_url: width: 480 }}" alt="{{ prod.title | escape }}" loading="lazy">
+              {%- endif -%}
+            </div>
+          </div>
+        </article>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  <section class="nd-end">
+    <div class="card nd-rev">
+      <h2>{{ S.end_title }}</h2>
+      {%- if S.end_sub != blank -%}<p>{{ S.end_sub }}</p>{%- endif -%}
+      {%- if S.end_cta != blank -%}<a class="btn" href="{{ S.end_url | default: '/collections/all' }}">{{ S.end_cta }}</a>{%- endif -%}
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  var root=document.getElementById('nd-{{ section.id }}');
+  if(!root)return;
+  var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hero=root.querySelector('[data-nd-hero]');
+  if(hero){requestAnimationFrame(function(){requestAnimationFrame(function(){hero.classList.add('go');});});}
+  var revs=root.querySelectorAll('.nd-rev');
+  if('IntersectionObserver' in window && !reduced){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+    },{threshold:.1,rootMargin:'0px 0px -5% 0px'});
+    Array.prototype.forEach.call(revs,function(el){io.observe(el);});
+  }else{
+    Array.prototype.forEach.call(revs,function(el){el.classList.add('in');});
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "New flavor drop page",
+  "settings": [
+    { "type": "header", "content": "Top strip" },
+    { "type": "text", "id": "topbar_text", "label": "Top strip text", "default": "New flavor drop · 3 new flavors just landed" },
+
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Eyebrow", "default": "Just dropped" },
+    { "type": "text", "id": "hero_title", "label": "Headline", "default": "3 New Flavors" },
+    { "type": "text", "id": "hero_script", "label": "Script line", "default": "Fresh from the Syruvia kitchen!" },
+    { "type": "textarea", "id": "hero_sub", "label": "Subline", "default": "Caramel Apple. Date. Pistachio Date. Sticky, juicy, nutty and very hard to stop pouring." },
+    { "type": "text", "id": "hero_cta", "label": "Button label", "default": "Meet the flavors" },
+    { "type": "url", "id": "hero_cta_url", "label": "Button link (default scrolls to flavors)" },
+    { "type": "checkbox", "id": "show_bottles", "label": "Show floating bottles", "default": true },
+    { "type": "color", "id": "drip_color", "label": "Caramel drip color", "default": "#e28f26" },
+
+    { "type": "header", "content": "Marquee" },
+    { "type": "checkbox", "id": "show_tick", "label": "Show marquee", "default": true },
+    { "type": "text", "id": "tick_text", "label": "Marquee text", "default": "Caramel Apple · Date · Pistachio Date · Just dropped" },
+
+    { "type": "header", "content": "Buy buttons" },
+    { "type": "text", "id": "reg_label", "label": "Regular row label", "default": "Regular" },
+    { "type": "text", "id": "sf_label", "label": "Sugar-free row label", "default": "Sugar-Free · 0g" },
+    { "type": "text", "id": "atc_label", "label": "Add to cart label", "default": "Add to cart" },
+    { "type": "text", "id": "coming_label", "label": "Out of stock label", "default": "Coming soon" },
+
+    { "type": "header", "content": "Closing" },
+    { "type": "text", "id": "end_title", "label": "Title (supports <em>)", "default": "Taste them <em>first.</em>" },
+    { "type": "textarea", "id": "end_sub", "label": "Subline", "default": "New flavors never sit on the shelf long. Grab the drop while it is fresh." },
+    { "type": "text", "id": "end_cta", "label": "Button label", "default": "Shop all syrups" },
+    { "type": "url", "id": "end_url", "label": "Button link" }
+  ],
+  "blocks": [
+    {
+      "type": "flavor",
+      "name": "Flavor panel",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Flavor name" },
+        { "type": "text", "id": "tag", "label": "Tagline (italic)" },
+        { "type": "textarea", "id": "desc", "label": "Description" },
+        { "type": "text", "id": "notes", "label": "Tasting chips (comma separated)" },
+        { "type": "product", "id": "product", "label": "Regular product" },
+        { "type": "product", "id": "product_sf", "label": "Sugar-free product" },
+        { "type": "image_picker", "id": "img", "label": "Big appetite photo" },
+        { "type": "text", "id": "hint", "label": "Photo idea (shown in editor until you upload)" },
+        { "type": "color", "id": "bg", "label": "Panel background", "default": "#B23A2E" },
+        { "type": "color", "id": "tx", "label": "Panel text", "default": "#FFFBF4" },
+        { "type": "color", "id": "accent", "label": "Panel accent", "default": "#FCE2A0" }
+      ]
+    }
+  ],
+  "max_blocks": 8
+}
+{% endschema %}
