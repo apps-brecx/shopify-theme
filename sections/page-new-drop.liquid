@@ -90,77 +90,80 @@
 @media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .nd-hero h1 .ln span,#nd-{{ section.id }} .nd-hero .script,#nd-{{ section.id }} .nd-hero .sub{transform:none;opacity:1;transition:none;}#nd-{{ section.id }} .nd-hero .script{transform:rotate(-2deg);}}
 #nd-{{ section.id }} .nd-leaves{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;}
 
-/* ---------- Fall Mood toggle animation ---------- */
+/* ---------- Fall Mood interactive toggle ---------- */
 #nd-{{ section.id }} .fmb{
-  --fsw:clamp(220px,30vw,320px);--fmoff:#DDD4C5;--fmoffink:#A2937E;--fmon:#8C3A1E;--fmline:#E3D5BE;--fmmut:#9A8672;
-  --fmdur:{{ S.fmb_dur | default: 9 }}s;
-  position:relative;overflow:visible;display:flex;align-items:center;justify-content:center;
+  --fsw:clamp(230px,30vw,330px);--fmoff:#DDD4C5;--fmoffink:#A2937E;--fmon:#8C3A1E;--fmline:#E3D5BE;--fmmut:#9A8672;
+  position:relative;display:flex;align-items:center;justify-content:center;
   padding:clamp(16px,3vw,30px) 0 6px;
 }
 #nd-{{ section.id }} .fmb-glow{
-  display:block !important;position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;
-  background:radial-gradient(52% 78% at 50% 50%, rgba(200,104,30,.26) 0%, rgba(200,104,30,.06) 46%, rgba(255,248,238,0) 76%);
-  opacity:.2;animation:ndfmglow-{{ section.id }} var(--fmdur) linear infinite;
+  display:block !important;position:absolute;top:-30%;left:0;right:0;bottom:-15%;pointer-events:none;
+  background:radial-gradient(52% 78% at 50% 50%, rgba(200,104,30,.3) 0%, rgba(200,104,30,.07) 46%, rgba(255,248,238,0) 76%);
+  opacity:0;transition:opacity .9s ease;
 }
-#nd-{{ section.id }} .fmb-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:clamp(26px,4vw,40px);animation:ndfmbreathe-{{ section.id }} var(--fmdur) ease-in-out infinite;}
+#nd-{{ section.id }} .fmb.on .fmb-glow{opacity:1;}
+#nd-{{ section.id }} .fmb-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:clamp(24px,3.5vw,36px);}
 #nd-{{ section.id }} .fmb-head{
   margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;text-align:center;
-  font-size:clamp(42px,9.5vw,96px);line-height:.98;letter-spacing:-.01em;color:var(--fmoffink);
-  animation:ndfmhead-{{ section.id }} var(--fmdur) linear infinite;
+  font-size:clamp(38px,8.5vw,88px);line-height:.98;letter-spacing:-.01em;color:var(--fmoffink);
+  transition:color .6s ease;text-wrap:balance;
 }
-#nd-{{ section.id }} .fmb-switchwrap{position:relative;width:var(--fsw);height:calc(var(--fsw) * .5);display:flex;align-items:center;justify-content:center;}
+#nd-{{ section.id }} .fmb.on .fmb-head{color:var(--fmon);}
+#nd-{{ section.id }} .fmb-switchwrap{
+  position:relative;width:var(--fsw);height:calc(var(--fsw) * .5);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;outline:none;
+}
+#nd-{{ section.id }} .fmb-switchwrap:focus-visible .fmb-switch{box-shadow:inset 0 4px 12px rgba(59,42,29,.1),0 0 0 3px var(--paper),0 0 0 5px var(--coral);}
 #nd-{{ section.id }} .fmb-switch{
-  width:100%;height:100%;border-radius:9999px;position:relative;background:var(--fmoff);
+  display:block !important;width:100%;height:100%;border-radius:9999px;position:relative;background:var(--fmoff);
   box-shadow:inset 0 4px 12px rgba(59,42,29,.1);
-  animation:ndfmtrack-{{ section.id }} var(--fmdur) linear infinite;
+  transition:background .5s ease,box-shadow .6s ease,filter .2s ease;
 }
+#nd-{{ section.id }} .fmb-switchwrap:hover .fmb-switch{filter:brightness(.97);}
+#nd-{{ section.id }} .fmb.on .fmb-switch{background:var(--coral);box-shadow:inset 0 4px 12px rgba(59,42,29,.03),0 18px 78px rgba(200,98,44,.42);}
 #nd-{{ section.id }} .fmb-knob{
-  display:block !important;position:absolute;top:7.5%;left:7.5%;width:42.5%;height:85%;border-radius:9999px;background:#FFFDF9;
+  display:block !important;position:absolute;top:7.5%;left:7.5%;width:42.5%;height:85%;border-radius:9999px;
+  background:radial-gradient(120% 120% at 32% 28%, #FFFFFF 0%, #FFFDF9 55%, #F0E8DA 100%);
   box-shadow:0 6px 20px rgba(59,42,29,.22);
-  animation:ndfmknob-{{ section.id }} var(--fmdur) linear infinite;
+  transition:transform .55s cubic-bezier(.34,1.56,.64,1);
 }
+#nd-{{ section.id }} .fmb.on .fmb-knob{transform:translateX(117.6%);}
+#nd-{{ section.id }} .fmb:not(.on) .fmb-knob{animation:ndnudge-{{ section.id }} 2.8s ease-in-out 1.2s infinite;}
+@keyframes ndnudge-{{ section.id }}{0%,100%{transform:translateX(0);}6%{transform:translateX(12%);}12%{transform:translateX(0);}}
 #nd-{{ section.id }} .fmb-ring{
   display:block !important;position:absolute;left:50%;top:50%;width:calc(var(--fsw) * .6);height:calc(var(--fsw) * .6);
-  margin:calc(var(--fsw) * -.3) 0 0 calc(var(--fsw) * -.3);border-radius:50%;border:2px solid var(--coral);
-  opacity:0;animation:ndfmring-{{ section.id }} var(--fmdur) linear infinite;
+  margin:calc(var(--fsw) * -.3) 0 0 calc(var(--fsw) * -.3);border-radius:50%;border:2px solid var(--coral);opacity:0;pointer-events:none;
 }
-#nd-{{ section.id }} .fmb-ring2{animation-delay:.2s;}
-#nd-{{ section.id }} .fmb-spark{
-  display:block !important;position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;
-  opacity:0;animation:ndfmspark-{{ section.id }} var(--fmdur) linear infinite;
-}
-#nd-{{ section.id }} .fmb-spark.s0{background:var(--coral);animation-delay:.06s;}
-#nd-{{ section.id }} .fmb-spark.s1{background:#D99A2B;animation-delay:.1s;width:5px;height:5px;}
-#nd-{{ section.id }} .fmb-spark.s2{background:#8C3A1E;animation-delay:.13s;width:4px;height:4px;}
-#nd-{{ section.id }} .fmb-spark.s3{background:#6E7746;animation-delay:.17s;}
-#nd-{{ section.id }} .fmb-spark.s4{background:#D99A2B;animation-delay:.2s;width:5px;height:5px;}
-#nd-{{ section.id }} .fmb-spark.s5{background:var(--coral);animation-delay:.24s;width:4px;height:4px;}
-#nd-{{ section.id }} .fmb-spark.s6{background:#6E7746;animation-delay:.27s;}
-#nd-{{ section.id }} .fmb-spark.s7{background:#D99A2B;animation-delay:.31s;width:5px;height:5px;}
+#nd-{{ section.id }} .fmb.on .fmb-ring{animation:ndring-{{ section.id }} .9s ease-out forwards;}
+#nd-{{ section.id }} .fmb.on .fmb-ring2{animation-delay:.15s;}
+@keyframes ndring-{{ section.id }}{0%{opacity:.35;transform:scale(.5);}100%{opacity:0;transform:scale(1.5);}}
+#nd-{{ section.id }} .fmb-spark{display:block !important;position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;opacity:0;pointer-events:none;}
+#nd-{{ section.id }} .fmb.on .fmb-spark{animation:ndspark-{{ section.id }} .85s ease-out forwards;}
+#nd-{{ section.id }} .fmb-spark.s0{background:var(--coral);animation-delay:.02s;}
+#nd-{{ section.id }} .fmb-spark.s1{background:#D99A2B;animation-delay:.06s;width:5px;height:5px;}
+#nd-{{ section.id }} .fmb-spark.s2{background:#8C3A1E;animation-delay:.09s;width:4px;height:4px;}
+#nd-{{ section.id }} .fmb-spark.s3{background:#6E7746;animation-delay:.12s;}
+#nd-{{ section.id }} .fmb-spark.s4{background:#D99A2B;animation-delay:.15s;width:5px;height:5px;}
+#nd-{{ section.id }} .fmb-spark.s5{background:var(--coral);animation-delay:.18s;width:4px;height:4px;}
+#nd-{{ section.id }} .fmb-spark.s6{background:#6E7746;animation-delay:.21s;}
+#nd-{{ section.id }} .fmb-spark.s7{background:#D99A2B;animation-delay:.24s;width:5px;height:5px;}
+@keyframes ndspark-{{ section.id }}{0%{opacity:0;transform:translate(0,0);}18%{opacity:.9;}100%{opacity:0;transform:translate(calc(var(--dx) * var(--fsw) * .62), calc(var(--dy) * var(--fsw) * .48));}}
 #nd-{{ section.id }} .fmb-sub{
   margin:0;display:inline-flex;align-items:center;gap:16px;font-family:var(--script);font-style:italic;font-weight:400;
   font-size:clamp(17px,2.6vw,24px);color:var(--fmmut);white-space:nowrap;
-  animation:ndfmsub-{{ section.id }} var(--fmdur) linear infinite;
 }
-#nd-{{ section.id }} .fmb-sub strong{font-weight:600;color:var(--fmmut);animation:ndfmbrand-{{ section.id }} var(--fmdur) linear infinite;}
+#nd-{{ section.id }} .fmb-sub strong{font-weight:600;color:var(--fmmut);transition:color .6s ease;}
+#nd-{{ section.id }} .fmb.on .fmb-sub strong{color:var(--coral);}
 #nd-{{ section.id }} .fmb-rule{width:44px;height:1.5px;background:var(--fmline);}
-@keyframes ndfmglow-{{ section.id }}{0%,6%{opacity:.05;}24%{opacity:.22;}37%,93%{opacity:1;}100%{opacity:.05;}}
-@keyframes ndfmbreathe-{{ section.id }}{0%{transform:scale(.985);}22%{transform:scale(.99);}28%{transform:scale(1.015);}38%{transform:scale(1);}100%{transform:scale(1.005);}}
-@keyframes ndfmhead-{{ section.id }}{0%{opacity:0;transform:translateY(24px);color:var(--fmoffink);}3%{opacity:0;transform:translateY(24px);}13%{opacity:1;transform:translateY(0);color:var(--fmoffink);}24%{color:var(--fmoffink);}37%,93%{opacity:1;transform:translateY(0);color:var(--fmon);}100%{opacity:0;color:var(--fmon);}}
-@keyframes ndfmtrack-{{ section.id }}{0%,22%{background:var(--fmoff);box-shadow:inset 0 4px 12px rgba(59,42,29,.1),0 0 0 rgba(200,98,44,0);}28%{background:var(--coral);}37%,100%{background:var(--coral);box-shadow:inset 0 4px 12px rgba(59,42,29,.03),0 18px 78px rgba(200,98,44,.42);}}
-@keyframes ndfmknob-{{ section.id }}{0%,22%{transform:translateX(0) scaleX(1);}25%{transform:translateX(90%) scaleX(1.14);}27.5%{transform:translateX(120%) scaleX(1.06);}30%{transform:translateX(115%) scaleX(1);}32%,100%{transform:translateX(117.6%) scaleX(1);}}
-@keyframes ndfmring-{{ section.id }}{0%,22%{opacity:0;transform:scale(.5);}23%{opacity:.32;transform:scale(.5);}33%{opacity:0;transform:scale(1.42);}100%{opacity:0;transform:scale(1.42);}}
-@keyframes ndfmspark-{{ section.id }}{0%,22%{opacity:0;transform:translate(0,0);}27%{opacity:.85;}34%{opacity:0;transform:translate(calc(var(--dx) * var(--fsw) * .62), calc(var(--dy) * var(--fsw) * .48));}100%{opacity:0;transform:translate(calc(var(--dx) * var(--fsw) * .62), calc(var(--dy) * var(--fsw) * .48));}}
-@keyframes ndfmsub-{{ section.id }}{0%,6%{opacity:0;transform:translateY(14px);}17%,93%{opacity:1;transform:translateY(0);}100%{opacity:0;}}
-@keyframes ndfmbrand-{{ section.id }}{0%,24%{color:var(--fmmut);}37%,100%{color:var(--coral);}}
+/* gate: content below stays hidden until the switch is on */
+#nd-{{ section.id }}.nd-gate .nd-shop,
+#nd-{{ section.id }}.nd-gate .panels,
+#nd-{{ section.id }}.nd-gate .nd-more,
+#nd-{{ section.id }}.nd-gate .nd-end,
+#nd-{{ section.id }}.nd-gate .nd-hero .sub{display:none;}
 @media (prefers-reduced-motion:reduce){
-  #nd-{{ section.id }} .fmb-glow,#nd-{{ section.id }} .fmb-stage,#nd-{{ section.id }} .fmb-head,#nd-{{ section.id }} .fmb-switch,#nd-{{ section.id }} .fmb-knob,#nd-{{ section.id }} .fmb-sub,#nd-{{ section.id }} .fmb-sub strong,#nd-{{ section.id }} .fmb-ring,#nd-{{ section.id }} .fmb-spark{animation:none !important;}
-  #nd-{{ section.id }} .fmb-glow{opacity:1;}
-  #nd-{{ section.id }} .fmb-head{color:var(--fmon);}
-  #nd-{{ section.id }} .fmb-switch{background:var(--coral);box-shadow:inset 0 4px 12px rgba(59,42,29,.03),0 18px 78px rgba(200,98,44,.42);}
-  #nd-{{ section.id }} .fmb-knob{transform:translateX(117.6%);}
-  #nd-{{ section.id }} .fmb-sub strong{color:var(--coral);}
-  #nd-{{ section.id }} .fmb-ring,#nd-{{ section.id }} .fmb-spark{opacity:0;}
+  #nd-{{ section.id }} .fmb:not(.on) .fmb-knob{animation:none;}
+  #nd-{{ section.id }} .fmb.on .fmb-ring,#nd-{{ section.id }} .fmb.on .fmb-spark{animation:none;opacity:0;}
 }
 
 /* ---------- marquee ---------- */
@@ -431,11 +434,11 @@
     <div class="wrap" style="position:relative;z-index:2">
       <span class="eyebrow">{{ S.hero_eyebrow }}</span>
       {%- if S.fmb_show -%}
-      <div class="fmb" role="img" aria-label="{{ S.fmb_head | default: 'Fall Mood On!' | escape }}">
+      <div class="fmb" data-nd-fmb data-auto="{{ S.fmb_auto | default: 8 }}" data-on-text="{{ S.fmb_head_on | default: 'Fall Mood On!' | escape }}" data-off-text="{{ S.fmb_head_off | default: 'Turn Fall Mode On' | escape }}">
         <div class="fmb-glow" aria-hidden="true"></div>
         <div class="fmb-stage">
-          <h1 class="fmb-head">{{ S.fmb_head | default: 'Fall Mood On!' }}</h1>
-          <div class="fmb-switchwrap" aria-hidden="true">
+          <h1 class="fmb-head">{{ S.fmb_head_off | default: 'Turn Fall Mode On' }}</h1>
+          <div class="fmb-switchwrap" role="switch" tabindex="0" aria-checked="false" aria-label="{{ S.fmb_head_off | default: 'Turn Fall Mode On' | escape }}">
             <div class="fmb-ring"></div>
             <div class="fmb-ring fmb-ring2"></div>
             {%- assign fdxs = "-1.05,0.15,1.1,-0.6,0.85,-1.35,1.35,0.45" | split: "," -%}
@@ -677,6 +680,36 @@
     Array.prototype.forEach.call(revs,function(el){el.classList.add('in');});
   }
 
+  /* Fall Mood interactive toggle: gates the content below until switched on */
+  var fmb=root.querySelector('[data-nd-fmb]');
+  if(fmb){
+    var fhead=fmb.querySelector('.fmb-head');
+    var fsw=fmb.querySelector('.fmb-switchwrap');
+    var onT=fmb.getAttribute('data-on-text')||'Fall Mood On!';
+    var offT=fmb.getAttribute('data-off-text')||'Turn Fall Mode On';
+    var setOn=function(on){
+      fmb.classList.toggle('on',on);
+      if(fsw)fsw.setAttribute('aria-checked',on?'true':'false');
+      if(fhead)fhead.textContent=on?onT:offT;
+      root.classList.toggle('nd-gate',!on);
+      try{sessionStorage.setItem('ndFallOn',on?'1':'0');}catch(e){}
+    };
+    var wasOn=false;
+    try{wasOn=sessionStorage.getItem('ndFallOn')==='1';}catch(e){}
+    if(reduced||wasOn){
+      setOn(true);
+    }else{
+      setOn(false);
+      var auto=parseFloat(fmb.getAttribute('data-auto'));
+      if(auto>0){setTimeout(function(){if(!fmb.classList.contains('on'))setOn(true);},auto*1000);}
+    }
+    var ftgl=function(){setOn(!fmb.classList.contains('on'));};
+    if(fsw){
+      fsw.addEventListener('click',ftgl);
+      fsw.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();ftgl();}});
+    }
+  }
+
   /* fall leaves dropping in hero */
   var lc=root.querySelector('[data-nd-leaves]');
   if(lc && !reduced){
@@ -739,12 +772,13 @@
     { "type": "checkbox", "id": "show_leaves", "label": "Fall leaves dropping in hero", "default": true },
     { "type": "checkbox", "id": "show_flyers", "label": "Flying ingredients all over the page", "default": true },
 
-    { "type": "header", "content": "Fall Mood toggle animation" },
-    { "type": "checkbox", "id": "fmb_show", "label": "Show toggle animation", "default": true },
-    { "type": "text", "id": "fmb_head", "label": "Headline", "default": "Fall Mood On!" },
+    { "type": "header", "content": "Fall Mood switch" },
+    { "type": "checkbox", "id": "fmb_show", "label": "Show the switch", "default": true },
+    { "type": "text", "id": "fmb_head_off", "label": "Headline when off", "default": "Turn Fall Mode On" },
+    { "type": "text", "id": "fmb_head_on", "label": "Headline when on", "default": "Fall Mood On!" },
     { "type": "text", "id": "fmb_sub", "label": "Sub line", "default": "Powered by" },
     { "type": "text", "id": "fmb_brand", "label": "Brand word (colored)", "default": "Pump(kin)!" },
-    { "type": "range", "id": "fmb_dur", "min": 6, "max": 16, "step": 0.5, "unit": "s", "label": "Loop length", "default": 9 },
+    { "type": "range", "id": "fmb_auto", "min": 0, "max": 20, "step": 1, "unit": "s", "label": "Auto turn on after (0 = never)", "default": 8 },
 
     { "type": "header", "content": "Marquee" },
     { "type": "checkbox", "id": "show_tick", "label": "Show marquee", "default": true },
