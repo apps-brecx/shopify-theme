@@ -12,6 +12,32 @@
     "hero": {
       "type": "syr-hero",
       "blocks": {
+        "slide_D76RDw": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/30_OFF_Banner.png",
+            "image_mobile": "shopify://shop_images/30_OFF_Mobile.png",
+            "video_autoplay": false,
+            "alt": "",
+            "link": "https://syruvia.com/pages/fall-mode-on",
+            "show_button": false,
+            "btn_text": "Shop Now",
+            "btn_bg": "#c8252b",
+            "btn_color": "#ffffff",
+            "show_text": false,
+            "text_heading": "",
+            "text_sub": "",
+            "text_font": "josefin_sans_n4",
+            "text_color": "#ffffff",
+            "text_shadow": true,
+            "text_position": "center",
+            "text_align": "center",
+            "heading_size_d": 48,
+            "heading_size_m": 30,
+            "sub_size_d": 20,
+            "sub_size_m": 15
+          }
+        },
         "slide_f8cggJ": {
           "type": "slide",
           "settings": {
@@ -222,63 +248,10 @@
             "sub_size_d": 20,
             "sub_size_m": 15
           }
-        },
-        "slide_F8daTC": {
-          "type": "slide",
-          "disabled": true,
-          "settings": {
-            "image_desktop": "shopify://shop_images/website.png",
-            "image_mobile": "shopify://shop_images/mobile_1.png",
-            "video_autoplay": true,
-            "alt": "",
-            "link": "shopify://collections/all-products",
-            "show_button": false,
-            "btn_text": "Shop Now",
-            "btn_bg": "#c8252b",
-            "btn_color": "#ffffff",
-            "show_text": false,
-            "text_heading": "",
-            "text_sub": "",
-            "text_font": "josefin_sans_n4",
-            "text_color": "#ffffff",
-            "text_shadow": true,
-            "text_position": "center",
-            "text_align": "center",
-            "heading_size_d": 48,
-            "heading_size_m": 30,
-            "sub_size_d": 20,
-            "sub_size_m": 15
-          }
-        },
-        "slide_3L9aTR": {
-          "type": "slide",
-          "disabled": true,
-          "settings": {
-            "image_desktop": "shopify://shop_images/Desktop.jpg",
-            "image_mobile": "shopify://shop_images/Mobile.jpg",
-            "video_autoplay": true,
-            "alt": "",
-            "link": "shopify://collections/coffee-house-sets",
-            "show_button": false,
-            "btn_text": "Shop Now",
-            "btn_bg": "#0b0001",
-            "btn_color": "#ffffff",
-            "show_text": false,
-            "text_heading": "",
-            "text_sub": "",
-            "text_font": "josefin_sans_n4",
-            "text_color": "#ffffff",
-            "text_shadow": true,
-            "text_position": "center",
-            "text_align": "center",
-            "heading_size_d": 48,
-            "heading_size_m": 30,
-            "sub_size_d": 20,
-            "sub_size_m": 15
-          }
         }
       },
       "block_order": [
+        "slide_D76RDw",
         "slide_f8cggJ",
         "slide_aUR3KP",
         "slide_kXgLVq",
@@ -286,9 +259,7 @@
         "slide_eXhJU3",
         "slide_qGkiAB",
         "slide_gUGR4D",
-        "slide_TeK4MJ",
-        "slide_F8daTC",
-        "slide_3L9aTR"
+        "slide_TeK4MJ"
       ],
       "settings": {
         "autoplay_s": 6,
