@@ -93,6 +93,79 @@
 @media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .nd-hero h1 .ln span,#nd-{{ section.id }} .nd-hero .script,#nd-{{ section.id }} .nd-hero .sub{transform:none;opacity:1;transition:none;}#nd-{{ section.id }} .nd-hero .script{transform:rotate(-2deg);}}
 #nd-{{ section.id }} .nd-leaves{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;}
 
+/* ---------- Fall Mood toggle animation ---------- */
+#nd-{{ section.id }} .fmb{
+  --fsw:clamp(220px,30vw,320px);--fmoff:#E2D6C2;--fmoffink:#B9A891;--fmline:#E3D5BE;--fmmut:#9A8672;
+  --fmdur:{{ S.fmb_dur | default: 9 }}s;
+  position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;
+  min-height:clamp(360px,48vw,470px);padding:34px 24px 54px;
+}
+#nd-{{ section.id }} .fmb-glow{
+  position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;
+  background:radial-gradient(52% 78% at 50% 50%, rgba(200,104,30,.26) 0%, rgba(200,104,30,.06) 46%, rgba(255,248,238,0) 76%);
+  opacity:.2;animation:ndfmglow-{{ section.id }} var(--fmdur) linear infinite;
+}
+#nd-{{ section.id }} .fmb-stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:clamp(26px,4vw,40px);animation:ndfmbreathe-{{ section.id }} var(--fmdur) ease-in-out infinite;}
+#nd-{{ section.id }} .fmb-head{
+  margin:0;font-family:var(--display);font-weight:400;text-transform:uppercase;text-align:center;
+  font-size:clamp(38px,8vw,86px);line-height:.98;letter-spacing:-.01em;color:var(--fmoffink);
+  animation:ndfmhead-{{ section.id }} var(--fmdur) linear infinite;
+}
+#nd-{{ section.id }} .fmb-switchwrap{position:relative;width:var(--fsw);height:calc(var(--fsw) * .5);display:flex;align-items:center;justify-content:center;}
+#nd-{{ section.id }} .fmb-switch{
+  width:100%;height:100%;border-radius:9999px;position:relative;background:var(--fmoff);
+  border:2px solid var(--ink);box-shadow:inset 0 4px 12px rgba(59,42,29,.1);
+  animation:ndfmtrack-{{ section.id }} var(--fmdur) linear infinite;
+}
+#nd-{{ section.id }} .fmb-knob{
+  position:absolute;top:7.5%;left:7.5%;width:42.5%;height:85%;border-radius:9999px;background:#FFFDF9;
+  border:2px solid var(--ink);box-shadow:3px 3px 0 rgba(26,26,26,.25);
+  animation:ndfmknob-{{ section.id }} var(--fmdur) linear infinite;
+}
+#nd-{{ section.id }} .fmb-ring{
+  position:absolute;left:50%;top:50%;width:calc(var(--fsw) * .6);height:calc(var(--fsw) * .6);
+  margin:calc(var(--fsw) * -.3) 0 0 calc(var(--fsw) * -.3);border-radius:50%;border:2px solid var(--coral);
+  opacity:0;animation:ndfmring-{{ section.id }} var(--fmdur) linear infinite;
+}
+#nd-{{ section.id }} .fmb-ring2{animation-delay:.2s;}
+#nd-{{ section.id }} .fmb-spark{
+  position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;
+  opacity:0;animation:ndfmspark-{{ section.id }} var(--fmdur) linear infinite;
+}
+#nd-{{ section.id }} .fmb-spark.s0{background:var(--coral);animation-delay:.06s;}
+#nd-{{ section.id }} .fmb-spark.s1{background:#D99A2B;animation-delay:.1s;width:5px;height:5px;}
+#nd-{{ section.id }} .fmb-spark.s2{background:#8C3A1E;animation-delay:.13s;width:4px;height:4px;}
+#nd-{{ section.id }} .fmb-spark.s3{background:#6E7746;animation-delay:.17s;}
+#nd-{{ section.id }} .fmb-spark.s4{background:#D99A2B;animation-delay:.2s;width:5px;height:5px;}
+#nd-{{ section.id }} .fmb-spark.s5{background:var(--coral);animation-delay:.24s;width:4px;height:4px;}
+#nd-{{ section.id }} .fmb-spark.s6{background:#6E7746;animation-delay:.27s;}
+#nd-{{ section.id }} .fmb-spark.s7{background:#D99A2B;animation-delay:.31s;width:5px;height:5px;}
+#nd-{{ section.id }} .fmb-sub{
+  margin:0;display:inline-flex;align-items:center;gap:16px;font-family:var(--script);font-style:italic;font-weight:400;
+  font-size:clamp(17px,2.6vw,24px);color:var(--fmmut);white-space:nowrap;
+  animation:ndfmsub-{{ section.id }} var(--fmdur) linear infinite;
+}
+#nd-{{ section.id }} .fmb-sub strong{font-weight:600;color:var(--fmmut);animation:ndfmbrand-{{ section.id }} var(--fmdur) linear infinite;}
+#nd-{{ section.id }} .fmb-rule{width:44px;height:1.5px;background:var(--fmline);}
+@keyframes ndfmglow-{{ section.id }}{0%,6%{opacity:.05;}24%{opacity:.22;}37%,93%{opacity:1;}100%{opacity:.05;}}
+@keyframes ndfmbreathe-{{ section.id }}{0%{transform:scale(.985);}22%{transform:scale(.99);}28%{transform:scale(1.015);}38%{transform:scale(1);}100%{transform:scale(1.005);}}
+@keyframes ndfmhead-{{ section.id }}{0%{opacity:0;transform:translateY(24px);color:var(--fmoffink);}3%{opacity:0;transform:translateY(24px);}13%{opacity:1;transform:translateY(0);color:var(--fmoffink);}24%{color:var(--fmoffink);}37%,93%{opacity:1;transform:translateY(0);color:var(--ink);}100%{opacity:0;color:var(--ink);}}
+@keyframes ndfmtrack-{{ section.id }}{0%,22%{background:var(--fmoff);}28%{background:var(--coral);}37%,100%{background:var(--coral);box-shadow:inset 0 4px 12px rgba(59,42,29,.03),0 14px 60px rgba(200,104,30,.4);}}
+@keyframes ndfmknob-{{ section.id }}{0%,22%{transform:translateX(0) scaleX(1);}25%{transform:translateX(90%) scaleX(1.14);}27.5%{transform:translateX(120%) scaleX(1.06);}30%{transform:translateX(115%) scaleX(1);}32%,100%{transform:translateX(117.6%) scaleX(1);}}
+@keyframes ndfmring-{{ section.id }}{0%,22%{opacity:0;transform:scale(.5);}23%{opacity:.32;transform:scale(.5);}33%{opacity:0;transform:scale(1.42);}100%{opacity:0;transform:scale(1.42);}}
+@keyframes ndfmspark-{{ section.id }}{0%,22%{opacity:0;transform:translate(0,0);}27%{opacity:.85;}34%{opacity:0;transform:translate(calc(var(--dx) * var(--fsw) * .62), calc(var(--dy) * var(--fsw) * .48));}100%{opacity:0;transform:translate(calc(var(--dx) * var(--fsw) * .62), calc(var(--dy) * var(--fsw) * .48));}}
+@keyframes ndfmsub-{{ section.id }}{0%,6%{opacity:0;transform:translateY(14px);}17%,93%{opacity:1;transform:translateY(0);}100%{opacity:0;}}
+@keyframes ndfmbrand-{{ section.id }}{0%,24%{color:var(--fmmut);}37%,100%{color:var(--coral);}}
+@media (prefers-reduced-motion:reduce){
+  #nd-{{ section.id }} .fmb-glow,#nd-{{ section.id }} .fmb-stage,#nd-{{ section.id }} .fmb-head,#nd-{{ section.id }} .fmb-switch,#nd-{{ section.id }} .fmb-knob,#nd-{{ section.id }} .fmb-sub,#nd-{{ section.id }} .fmb-sub strong,#nd-{{ section.id }} .fmb-ring,#nd-{{ section.id }} .fmb-spark{animation:none !important;}
+  #nd-{{ section.id }} .fmb-glow{opacity:1;}
+  #nd-{{ section.id }} .fmb-head{color:var(--ink);}
+  #nd-{{ section.id }} .fmb-switch{background:var(--coral);}
+  #nd-{{ section.id }} .fmb-knob{transform:translateX(117.6%);}
+  #nd-{{ section.id }} .fmb-sub strong{color:var(--coral);}
+  #nd-{{ section.id }} .fmb-ring,#nd-{{ section.id }} .fmb-spark{opacity:0;}
+}
+
 /* ---------- marquee ---------- */
 #nd-{{ section.id }} .nd-mq{overflow:hidden;background:var(--coral);border-top:var(--rule);border-bottom:var(--rule);padding:12px 0;}
 #nd-{{ section.id }} .nd-mq .row{display:flex;width:max-content;animation:ndmq 30s linear infinite;}
@@ -234,6 +307,12 @@
 /* ---------- font enforcement over theme globals (same approach as pd-fixes) ---------- */
 #nd-{{ section.id }} h1,
 #nd-{{ section.id }} .h2,
+#nd-{{ section.id }} .fmb-head{
+  font-family:'Archivo Black','Archivo',-apple-system,sans-serif !important;
+  font-weight:400 !important;text-transform:uppercase !important;
+}
+#nd-{{ section.id }} h1,
+#nd-{{ section.id }} .h2,
 #nd-{{ section.id }} .duo .dhead h2,
 #nd-{{ section.id }} .panel h2,
 #nd-{{ section.id }} .endh{
@@ -346,6 +425,30 @@
       {%- if S.hero_sub != blank -%}<p class="sub">{{ S.hero_sub }}</p>{%- endif -%}
     </div>
   </header>
+
+  {%- if S.fmb_show -%}
+  <section class="fmb" role="img" aria-label="{{ S.fmb_head | default: 'Fall Mood On!' | escape }}">
+    <div class="fmb-glow" aria-hidden="true"></div>
+    <div class="fmb-stage">
+      <h2 class="fmb-head">{{ S.fmb_head | default: 'Fall Mood On!' }}</h2>
+      <div class="fmb-switchwrap" aria-hidden="true">
+        <div class="fmb-ring"></div>
+        <div class="fmb-ring fmb-ring2"></div>
+        {%- assign fdxs = "-1.05,0.15,1.1,-0.6,0.85,-1.35,1.35,0.45" | split: "," -%}
+        {%- assign fdys = "-0.9,-1.35,-0.75,-1.45,-1.4,-0.35,-0.25,-1.5" | split: "," -%}
+        {%- for i in (0..7) -%}
+        <span class="fmb-spark s{{ i }}" style="--dx:{{ fdxs[i] }};--dy:{{ fdys[i] }};"></span>
+        {%- endfor -%}
+        <div class="fmb-switch"><div class="fmb-knob"></div></div>
+      </div>
+      <p class="fmb-sub">
+        <span class="fmb-rule" aria-hidden="true"></span>
+        <span>{{ S.fmb_sub | default: 'Powered by' }} <strong>{{ S.fmb_brand | default: 'Pump(kin)!' }}</strong></span>
+        <span class="fmb-rule" aria-hidden="true"></span>
+      </p>
+    </div>
+  </section>
+  {%- endif -%}
 
   {%- if S.show_tick and S.tick_text != blank -%}
   <div class="nd-mq" aria-hidden="true">
@@ -558,6 +661,13 @@
     { "type": "textarea", "id": "hero_sub", "label": "Subline", "default": "Caramel Apple. Date. Pistachio Date. Three brand new ways to make every sip feel like fall." },
     { "type": "checkbox", "id": "show_leaves", "label": "Fall leaves dropping in hero", "default": true },
     { "type": "checkbox", "id": "show_flyers", "label": "Flying ingredients all over the page", "default": true },
+
+    { "type": "header", "content": "Fall Mood toggle animation" },
+    { "type": "checkbox", "id": "fmb_show", "label": "Show toggle animation", "default": true },
+    { "type": "text", "id": "fmb_head", "label": "Headline", "default": "Fall Mood On!" },
+    { "type": "text", "id": "fmb_sub", "label": "Sub line", "default": "Powered by" },
+    { "type": "text", "id": "fmb_brand", "label": "Brand word (colored)", "default": "Pump(kin)!" },
+    { "type": "range", "id": "fmb_dur", "min": 6, "max": 16, "step": 0.5, "unit": "s", "label": "Loop length", "default": 9 },
 
     { "type": "header", "content": "Marquee" },
     { "type": "checkbox", "id": "show_tick", "label": "Show marquee", "default": true },
