@@ -424,10 +424,10 @@
   {%- if S.banner != blank or request.design_mode -%}
   <div class="nd-banner">
     {%- if S.banner != blank -%}
-      {%- if S.banner_link != blank -%}<a class="bwrap" href="{{ S.banner_link }}">{%- else -%}<div class="bwrap">{%- endif -%}
+      <a class="bwrap" href="{{ S.banner_link | default: '#nd-shop' }}" data-nd-shopnow>
         <img class="bd{% if S.banner_m != blank %} hasm{% endif %}" src="{{ S.banner | image_url: width: 2400 }}" alt="{{ S.banner_alt | escape }}">
         {%- if S.banner_m != blank -%}<img class="bm" src="{{ S.banner_m | image_url: width: 1000 }}" alt="{{ S.banner_alt | escape }}">{%- endif -%}
-      {%- if S.banner_link != blank -%}</a>{%- else -%}</div>{%- endif -%}
+      </a>
     {%- else -%}
       <div class="bwrap"><div class="hint">Upload a banner here (desktop and mobile versions in section settings). Add a link to make the whole banner clickable.</div></div>
     {%- endif -%}
@@ -690,6 +690,7 @@
   }
 
   /* Fall Mood interactive toggle: gates the content below until switched on */
+  var ndSetOn=null;
   var fmb=root.querySelector('[data-nd-fmb]');
   if(fmb){
     var fhead=fmb.querySelector('.fmb-head');
@@ -703,6 +704,7 @@
       root.classList.toggle('nd-gate',!on);
       try{sessionStorage.setItem('ndFallOn',on?'1':'0');}catch(e){}
     };
+    ndSetOn=setOn;
     var wasOn=false;
     try{wasOn=sessionStorage.getItem('ndFallOn')==='1';}catch(e){}
     if(reduced||wasOn){
@@ -718,6 +720,18 @@
       fsw.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();ftgl();}});
     }
   }
+
+  /* banner press: turn Fall Mode on and glide to the new products */
+  Array.prototype.forEach.call(root.querySelectorAll('[data-nd-shopnow]'),function(a){
+    var href=a.getAttribute('href')||'';
+    if(href.indexOf('#')!==0)return;
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      if(ndSetOn)ndSetOn(true);
+      var t=root.querySelector(href);
+      if(t)setTimeout(function(){t.scrollIntoView({behavior:'smooth',block:'start'});},80);
+    });
+  });
 
   /* fall leaves dropping in hero */
   var lc=root.querySelector('[data-nd-leaves]');
