@@ -624,12 +624,19 @@
             {%- assign mshown = mshown | plus: 1 -%}
             <div class="card nd-rev" style="transition-delay:{{ mshown | modulo: 4 | times: 0.06 }}s">
               <a class="ph" href="{{ fp.url }}">
+                {%- if S.more_badge != blank -%}<span class="flag">{{ S.more_badge }}</span>{%- endif -%}
                 {%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 560 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}
               </a>
               <div class="b">
                 <a class="t" href="{{ fp.url }}">{{ fp.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip }}</a>
-                <span class="pr">{{ fp.price | money }}</span>
-                <form><button type="button" class="atc" disabled>{{ S.coming_label | default: 'Coming soon' }}</button></form>
+                {%- assign vipc = S.vip_cents | default: 799 -%}
+                {%- if S.show_vip and customer and fp.price > vipc -%}
+                <span class="pr">{{ vipc | money }}<s>{{ fp.price | money }}</s><span class="vipb">&#9733; VIP</span></span>
+                {%- else -%}
+                <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
+                {%- if S.show_vip and customer == null and fp.price > vipc -%}<a class="vipu" href="/account/register">&#9733; VIP {{ vipc | money }} &middot; join free</a>{%- endif -%}
+                {%- endif -%}
+                <form><button type="button" class="atc" disabled>{{ S.oos_label | default: 'Out of stock' }}</button></form>
               </div>
             </div>
             {%- endif -%}
@@ -637,7 +644,7 @@
         {%- endfor -%}
       </div>
       {%- if S.more_seeall != blank -%}
-      <div class="shopall"><a class="btn btn--ghost" href="{{ mcoll.url }}">{{ S.more_seeall }}</a></div>
+      <div class="shopall"><a class="btn btn--ghost" href="{{ S.more_seeall_url | default: mcoll.url }}">{{ S.more_seeall }}</a></div>
       {%- endif -%}
     </div>
   </section>
@@ -770,6 +777,8 @@
     { "type": "text", "id": "more_handle", "label": "Collection handle", "default": "fall-flavor-syrups" },
     { "type": "text", "id": "more_badge", "label": "Card badge", "default": "Fall" },
     { "type": "text", "id": "more_seeall", "label": "See all button label", "default": "View the full collection" },
+    { "type": "url", "id": "more_seeall_url", "label": "See all button link (default: the collection)" },
+    { "type": "text", "id": "oos_label", "label": "Out of stock label (this grid only)", "default": "Out of stock" },
 
     { "type": "header", "content": "Closing" },
     { "type": "text", "id": "end_title", "label": "Title (supports <em>)", "default": "Taste them <em>first.</em>" },
