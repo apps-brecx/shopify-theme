@@ -292,8 +292,9 @@
 }
 
 /* ---------- more fall flavors (collection grid) ---------- */
-#nd-{{ section.id }} .nd-more{position:relative;z-index:2;padding:0 0 clamp(30px,4vw,50px);}
-#nd-{{ section.id }} .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;}
+#nd-{{ section.id }} .nd-more{position:relative;z-index:2;padding:clamp(30px,5vw,60px) 0 clamp(44px,6vw,72px);}
+#nd-{{ section.id }} .nd-more .headrow{text-align:center;margin-bottom:clamp(32px,5vw,54px);}
+#nd-{{ section.id }} .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;}
 @media (max-width:649px){
   #nd-{{ section.id }} .cgrid{grid-template-columns:repeat(2,1fr);gap:10px;}
 }
