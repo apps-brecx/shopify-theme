@@ -54,9 +54,6 @@
 #nd-{{ section.id }} .nd-rev.in{opacity:1;transform:none;}
 @media (prefers-reduced-motion:reduce){#nd-{{ section.id }} .nd-rev{opacity:1;transform:none;transition:none;}}
 
-/* ---------- strip ---------- */
-#nd-{{ section.id }} .nd-strip{background:var(--ink);color:var(--paper);text-align:center;padding:11px 16px;font-family:var(--display);font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase;}
-
 /* ---------- banner, full screen width ---------- */
 #nd-{{ section.id }} .nd-banner{padding:0;width:100vw;margin-left:calc(50% - 50vw);}
 #nd-{{ section.id }} .nd-banner .bwrap{display:block;width:100%;overflow:hidden;border:0;border-bottom:var(--rule);background:var(--paper);text-decoration:none;}
@@ -72,7 +69,7 @@
 }
 
 /* ---------- hero ---------- */
-#nd-{{ section.id }} .nd-hero{position:relative;text-align:center;padding:clamp(40px,6vw,72px) 0 clamp(36px,5vw,56px);overflow:hidden;}
+#nd-{{ section.id }} .nd-hero{position:relative;text-align:center;padding:clamp(30px,5vw,56px) 0 clamp(30px,4.5vw,48px);overflow:hidden;}
 #nd-{{ section.id }} .nd-hero h1{
   font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--ink);
   font-size:clamp(36px,8.5vw,78px);line-height:.95;letter-spacing:-.01em;margin-top:20px;text-wrap:balance;
@@ -98,7 +95,7 @@
   --fsw:clamp(220px,30vw,320px);--fmoff:#DDD4C5;--fmoffink:#A2937E;--fmon:#8C3A1E;--fmline:#E3D5BE;--fmmut:#9A8672;
   --fmdur:{{ S.fmb_dur | default: 9 }}s;
   position:relative;overflow:visible;display:flex;align-items:center;justify-content:center;
-  padding:clamp(22px,4vw,40px) 0 10px;
+  padding:clamp(16px,3vw,30px) 0 6px;
 }
 #nd-{{ section.id }} .fmb-glow{
   display:block !important;position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;
@@ -294,6 +291,13 @@
   #nd-{{ section.id }} .fly.mhide{display:none;}
 }
 
+/* ---------- more fall flavors (collection grid) ---------- */
+#nd-{{ section.id }} .nd-more{position:relative;z-index:2;padding:0 0 clamp(30px,4vw,50px);}
+#nd-{{ section.id }} .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;}
+@media (max-width:649px){
+  #nd-{{ section.id }} .cgrid{grid-template-columns:repeat(2,1fr);gap:10px;}
+}
+
 /* ---------- closing ---------- */
 #nd-{{ section.id }} .nd-end{padding:clamp(30px,5vw,52px) 22px clamp(64px,9vw,110px);}
 #nd-{{ section.id }} .nd-end .card2{
@@ -396,8 +400,13 @@
   </div>
   {%- endif -%}
 
-  {%- if S.topbar_text != blank -%}
-  <div class="nd-strip">{{ S.topbar_text }}</div>
+  {%- if S.show_tick and S.tick_text != blank -%}
+  <div class="nd-mq" aria-hidden="true">
+    <div class="row">
+      <div class="half">{%- for i in (1..4) -%}<span>{{ S.tick_text }}</span>{%- endfor -%}</div>
+      <div class="half">{%- for i in (1..4) -%}<span>{{ S.tick_text }}</span>{%- endfor -%}</div>
+    </div>
+  </div>
   {%- endif -%}
 
   {%- if S.banner != blank or request.design_mode -%}
@@ -440,19 +449,10 @@
         </div>
       </div>
       {%- endif -%}
-      {%- if S.hero_script != blank -%}<span class="script">{{ S.hero_script }}</span>{%- endif -%}
       {%- if S.hero_sub != blank -%}<p class="sub">{{ S.hero_sub }}</p>{%- endif -%}
     </div>
   </header>
 
-  {%- if S.show_tick and S.tick_text != blank -%}
-  <div class="nd-mq" aria-hidden="true">
-    <div class="row">
-      <div class="half">{%- for i in (1..4) -%}<span>{{ S.tick_text }}</span>{%- endfor -%}</div>
-      <div class="half">{%- for i in (1..4) -%}<span>{{ S.tick_text }}</span>{%- endfor -%}</div>
-    </div>
-  </div>
-  {%- endif -%}
 
   <section class="nd-shop wrap" id="nd-shop">
     <div class="duos">
@@ -565,6 +565,60 @@
       {%- endif -%}
     {%- endfor -%}
   </div>
+
+  {%- assign mcoll = collections[S.more_handle] -%}
+  {%- if S.more_handle != blank and mcoll != blank -%}
+  <section class="nd-more">
+    <div class="wrap">
+      <div class="headrow nd-rev">
+        <span class="eyebrow">{{ S.more_kick | default: 'Keep it cozy' }}</span>
+        <h2 class="h2">{{ S.more_title | default: 'More fall favorites' }}</h2>
+      </div>
+      <div class="cgrid">
+        {%- assign mshown = 0 -%}
+        {%- for fp in mcoll.products limit: 12 -%}
+          {%- if fp.available -%}
+            {%- assign mshown = mshown | plus: 1 -%}
+            <div class="card nd-rev" style="transition-delay:{{ mshown | modulo: 4 | times: 0.06 }}s">
+              <a class="ph" href="{{ fp.url }}">
+                {%- if S.more_badge != blank -%}<span class="flag">{{ S.more_badge }}</span>{%- endif -%}
+                {%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 560 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}
+              </a>
+              <div class="b">
+                <a class="t" href="{{ fp.url }}">{{ fp.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip }}</a>
+                <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
+                {%- form 'product', fp -%}
+                  <input type="hidden" name="id" value="{{ fp.selected_or_first_available_variant.id }}">
+                  <button type="submit" class="atc">{{ S.atc_label | default: 'Add to cart' }}</button>
+                {%- endform -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- for fp in mcoll.products limit: 12 -%}
+          {%- unless fp.available -%}
+            {%- if mshown < 12 -%}
+            {%- assign mshown = mshown | plus: 1 -%}
+            <div class="card nd-rev" style="transition-delay:{{ mshown | modulo: 4 | times: 0.06 }}s">
+              <a class="ph" href="{{ fp.url }}">
+                {%- if fp.featured_image -%}<img src="{{ fp.featured_image | image_url: width: 560 }}" alt="{{ fp.title | escape }}" loading="lazy">{%- endif -%}
+              </a>
+              <div class="b">
+                <a class="t" href="{{ fp.url }}">{{ fp.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip }}</a>
+                <span class="pr">{{ fp.price | money }}</span>
+                <form><button type="button" class="atc" disabled>{{ S.coming_label | default: 'Coming soon' }}</button></form>
+              </div>
+            </div>
+            {%- endif -%}
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+      {%- if S.more_seeall != blank -%}
+      <div class="shopall"><a class="btn btn--ghost" href="{{ mcoll.url }}">{{ S.more_seeall }}</a></div>
+      {%- endif -%}
+    </div>
+  </section>
+  {%- endif -%}
 
   <section class="nd-end">
     <div class="card2 nd-rev">
@@ -680,6 +734,13 @@
     { "type": "text", "id": "story_kick", "label": "Eyebrow", "default": "Get to know them" },
     { "type": "text", "id": "story_title", "label": "Title (supports <em>)", "default": "The flavors, <em>up close</em>" },
     { "type": "text", "id": "panel_btn", "label": "Panel button prefix", "default": "Shop" },
+
+    { "type": "header", "content": "More fall flavors (collection grid)" },
+    { "type": "text", "id": "more_kick", "label": "Eyebrow", "default": "Keep it cozy" },
+    { "type": "text", "id": "more_title", "label": "Title", "default": "More fall favorites" },
+    { "type": "text", "id": "more_handle", "label": "Collection handle", "default": "fall-flavor-syrups" },
+    { "type": "text", "id": "more_badge", "label": "Card badge", "default": "Fall" },
+    { "type": "text", "id": "more_seeall", "label": "See all button label", "default": "View the full collection" },
 
     { "type": "header", "content": "Closing" },
     { "type": "text", "id": "end_title", "label": "Title (supports <em>)", "default": "Taste them <em>first.</em>" },
