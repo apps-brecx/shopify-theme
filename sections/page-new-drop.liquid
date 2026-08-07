@@ -190,9 +190,9 @@
 #nd-{{ section.id }} .panel .media{position:relative;}
 #nd-{{ section.id }} .panel .photo{
   position:relative;border-radius:calc(var(--rad) - 6px);overflow:hidden;border:0;background:transparent;box-shadow:none;
-  aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;
+  aspect-ratio:7/6;display:flex;align-items:center;justify-content:center;
 }
-#nd-{{ section.id }} .panel .photo img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;}
+#nd-{{ section.id }} .panel .photo img{width:100%;height:100%;object-fit:cover;}
 #nd-{{ section.id }} .panel .photo .hint{
   display:flex;align-items:center;justify-content:center;min-height:240px;text-align:center;padding:22px;
   font-family:var(--script);font-size:13.5px;line-height:1.5;color:var(--gray);opacity:.75;
@@ -202,7 +202,7 @@
 #nd-{{ section.id }} .panel.alt .txt{order:2;}
 #nd-{{ section.id }} .panel.alt .media{order:1;}
 @media (max-width:799px){
-  #nd-{{ section.id }} .panel .inner{grid-template-columns:1fr;text-align:center;padding-bottom:30px;}
+  #nd-{{ section.id }} .panel .inner,#nd-{{ section.id }} .panel.alt .inner{grid-template-columns:1fr;text-align:center;padding-bottom:30px;}
   #nd-{{ section.id }} .panel.alt .txt{order:1;}
   #nd-{{ section.id }} .panel.alt .media{order:2;}
   #nd-{{ section.id }} .panel .desc{margin-left:auto;margin-right:auto;}
