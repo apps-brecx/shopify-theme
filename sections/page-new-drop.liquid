@@ -208,6 +208,9 @@
 #nd-{{ section.id }} .card .t{font-family:var(--display);font-weight:400;font-size:15px;line-height:1.1;text-transform:uppercase;color:var(--ink);text-decoration:none;}
 #nd-{{ section.id }} .card .pr{font-family:var(--display);font-weight:400;font-size:16px;color:var(--ink);}
 #nd-{{ section.id }} .card .pr s{opacity:.4;font-size:13px;margin-left:6px;}
+#nd-{{ section.id }} .vipb{display:inline-flex;align-items:center;gap:3px;background:#c58548;color:#FFFBF4;border-radius:999px;padding:3px 9px;font-family:var(--display);font-weight:400;font-size:9px;letter-spacing:.06em;text-transform:uppercase;margin-left:7px;vertical-align:middle;}
+#nd-{{ section.id }} .vipu{display:inline-flex;align-items:center;justify-content:center;gap:5px;margin:2px auto 0;font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#2F7DC4;background:#eaf2fb;border:1.5px solid #2F7DC4;border-radius:999px;padding:4px 10px;text-decoration:none;}
+#nd-{{ section.id }} .dealchip{font-family:var(--display);font-weight:400;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;background:#FCE2A0;color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:7px 14px;box-shadow:2px 2px 0 var(--ink);transform:rotate(2deg);}
 #nd-{{ section.id }} .card form{margin-top:auto;}
 #nd-{{ section.id }} .card .atc{
   width:100%;font-family:var(--display);font-weight:400;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;
@@ -466,6 +469,7 @@
             <div class="dhead">
               <h2>{{ block.settings.name }}</h2>
               <span class="newtag">{{ S.new_tag | default: 'New Release' }}</span>
+              {%- if S.show_deal and S.deal_text != blank -%}<span class="dealchip">{{ S.deal_text }}</span>{%- endif -%}
               {%- if block.settings.tag != blank -%}<span class="dtag">{{ block.settings.tag }}</span>{%- endif -%}
             </div>
             <div class="cards">
@@ -478,7 +482,13 @@
                 <div class="b">
                   <span class="kick">{{ S.reg_label | default: 'Regular' }}</span>
                   <a class="t" href="{{ prod.url }}">{{ prod.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip }}</a>
+                  {%- assign vipc = S.vip_cents | default: 799 -%}
+                  {%- if S.show_vip and customer and prod.price > vipc -%}
+                  <span class="pr">{{ vipc | money }}<s>{{ prod.price | money }}</s><span class="vipb">&#9733; VIP</span></span>
+                  {%- else -%}
                   <span class="pr">{{ prod.price | money }}{% if prod.compare_at_price > prod.price %}<s>{{ prod.compare_at_price | money }}</s>{% endif %}</span>
+                  {%- if S.show_vip and customer == null and prod.price > vipc -%}<a class="vipu" href="/account/register">&#9733; VIP {{ vipc | money }} &middot; join free</a>{%- endif -%}
+                  {%- endif -%}
                   {%- if prod.available -%}
                   {%- form 'product', prod -%}
                     <input type="hidden" name="id" value="{{ prod.selected_or_first_available_variant.id }}">
@@ -499,7 +509,13 @@
                 <div class="b">
                   <span class="kick">{{ S.sf_label | default: 'Sugar-Free · 0g' }}</span>
                   <a class="t" href="{{ prod_sf.url }}">{{ prod_sf.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip }}</a>
+                  {%- assign vipc = S.vip_cents | default: 799 -%}
+                  {%- if S.show_vip and customer and prod_sf.price > vipc -%}
+                  <span class="pr">{{ vipc | money }}<s>{{ prod_sf.price | money }}</s><span class="vipb">&#9733; VIP</span></span>
+                  {%- else -%}
                   <span class="pr">{{ prod_sf.price | money }}{% if prod_sf.compare_at_price > prod_sf.price %}<s>{{ prod_sf.compare_at_price | money }}</s>{% endif %}</span>
+                  {%- if S.show_vip and customer == null and prod_sf.price > vipc -%}<a class="vipu" href="/account/register">&#9733; VIP {{ vipc | money }} &middot; join free</a>{%- endif -%}
+                  {%- endif -%}
                   {%- if prod_sf.available -%}
                   {%- form 'product', prod_sf -%}
                     <input type="hidden" name="id" value="{{ prod_sf.selected_or_first_available_variant.id }}">
@@ -587,7 +603,13 @@
               </a>
               <div class="b">
                 <a class="t" href="{{ fp.url }}">{{ fp.title | replace: '(USA)', '' | replace: ' Syrup', '' | strip }}</a>
-                <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
+                {%- assign vipc = S.vip_cents | default: 799 -%}
+                  {%- if S.show_vip and customer and fp.price > vipc -%}
+                  <span class="pr">{{ vipc | money }}<s>{{ fp.price | money }}</s><span class="vipb">&#9733; VIP</span></span>
+                  {%- else -%}
+                  <span class="pr">{{ fp.price | money }}{% if fp.compare_at_price > fp.price %}<s>{{ fp.compare_at_price | money }}</s>{% endif %}</span>
+                  {%- if S.show_vip and customer == null and fp.price > vipc -%}<a class="vipu" href="/account/register">&#9733; VIP {{ vipc | money }} &middot; join free</a>{%- endif -%}
+                  {%- endif -%}
                 {%- form 'product', fp -%}
                   <input type="hidden" name="id" value="{{ fp.selected_or_first_available_variant.id }}">
                   <button type="submit" class="atc">{{ S.atc_label | default: 'Add to cart' }}</button>
@@ -735,6 +757,12 @@
     { "type": "text", "id": "story_kick", "label": "Eyebrow", "default": "Get to know them" },
     { "type": "text", "id": "story_title", "label": "Title (supports <em>)", "default": "The flavors, <em>up close</em>" },
     { "type": "text", "id": "panel_btn", "label": "Panel button prefix", "default": "Shop" },
+
+    { "type": "header", "content": "VIP pricing and deal badge" },
+    { "type": "checkbox", "id": "show_vip", "label": "Show VIP pricing for signed-in customers", "default": true },
+    { "type": "number", "id": "vip_cents", "label": "VIP price in cents (799 = $7.99)", "default": 799 },
+    { "type": "checkbox", "id": "show_deal", "label": "Show deal badge on flavor headers", "default": true },
+    { "type": "text", "id": "deal_text", "label": "Deal badge text", "default": "50% OFF" },
 
     { "type": "header", "content": "More fall flavors (collection grid)" },
     { "type": "text", "id": "more_kick", "label": "Eyebrow", "default": "Keep it cozy" },
